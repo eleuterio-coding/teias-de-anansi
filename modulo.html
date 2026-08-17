@@ -4,14 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Módulo - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .topo { margin-bottom: 24px; }
+    .fonte { opacity: .78; margin-top: -8px; }
+    .aviso { border: 1px solid currentColor; border-radius: 10px; padding: 12px 14px; margin: 18px 0; opacity: .9; }
+    .controles { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(180px, 280px); gap: 10px; margin: 18px 0 8px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .item { border: 1px solid #8885; border-radius: 10px; margin: 10px 0; overflow: hidden; }
+    .item summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .item summary:hover { background: #8881; }
+    .subtipo { font-size: .85rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 16px; }
+    .metadados { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; opacity: .78; }
+    .vazio, .erro { padding: 18px; border: 1px dashed #8888; border-radius: 10px; }
+    @media (max-width: 650px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr; }
+      .item summary { display: block; }
+      .subtipo { display: block; margin-top: 5px; }
+    }
+  </style>
 </head>
 <body>
-  <p><a href="biblioteca.html">← Bibliotecas</a></p>
-  <h1 id="titulo">Módulo</h1>
-  <div id="conteudo">Carregando...</div>
+  <header class="topo">
+    <p><a href="biblioteca.html">← Bibliotecas</a></p>
+    <h1 id="titulo">Módulo</h1>
+    <p class="fonte" id="fonte">Dungeon Master's Guide • 2024 • D&amp;D 5.5e</p>
+  </header>
+
+  <main id="app">
+    <p>Carregando dados do Dungeon Master's Guide...</p>
+  </main>
 
   <script>
-    const modulos = [
+    const MODULOS = [
       'Regras', 'Classes', 'Subclasses', 'Espécies', 'Antecedentes', 'Talentos',
       'Maestrias de Arma', 'Monstros', 'Armaduras', 'Armas', 'Equipamentos de Aventura',
       'Ferramentas', 'Montarias e Veículos', 'Comércio e Despesas', 'Bugigangas',
@@ -20,10 +50,16 @@
       'Divindades, Religiões & Cultos', 'História & Cronologia', 'Bastiões'
     ];
 
+    const PARTES = Array.from(
+      { length: 5 },
+      (_, i) => `dados/dmg-2024-hub.web.gz.b64.part${String(i + 1).padStart(2, '0')}`
+    );
+
     const params = new URLSearchParams(window.location.search);
     const modulo = params.get('modulo');
     const titulo = document.getElementById('titulo');
-    const conteudo = document.getElementById('conteudo');
+    const fonte = document.getElementById('fonte');
+    const app = document.getElementById('app');
 
     function esc(texto) {
       return String(texto ?? '')
@@ -34,61 +70,130 @@
         .replaceAll("'", '&#039;');
     }
 
-    function referencia(item) {
-      if (!item.referencia) return '';
-      const r = item.referencia;
-      const paginas = r.pagina_pdf_inicio === r.pagina_pdf_fim
-        ? `p. ${r.pagina_pdf_inicio}`
-        : `pp. ${r.pagina_pdf_inicio}–${r.pagina_pdf_fim}`;
-      return `<p><strong>Referência:</strong> ${esc(r.capitulo)} — ${paginas}</p>`;
+    function rotuloSubtipo(valor) {
+      if (!valor) return 'sem subtipo';
+      return String(valor).replaceAll('_', ' ');
     }
 
-    async function carregarRegras() {
-      const resposta = await fetch('dados/dmg_2024_regras_salao.min.json');
-      if (!resposta.ok) throw new Error('Não foi possível carregar o arquivo de regras.');
-      const dados = await resposta.json();
+    function pagina(item) {
+      const [inicio, fim] = item.p || [];
+      if (!inicio) return 'página não registrada';
+      return inicio === fim || !fim ? `p. ${inicio}` : `pp. ${inicio}–${fim}`;
+    }
 
-      const cabecalho = `
-        <p><strong>Livro:</strong> ${esc(dados.fonte?.livro || 'Dungeon Master’s Guide')}</p>
-        <p><strong>Ano:</strong> ${esc(dados.fonte?.ano || 2024)}</p>
-        <p><strong>Itens:</strong> ${dados.itens.length}</p>
+    async function carregarBase() {
+      if (!('DecompressionStream' in window)) {
+        throw new Error('Este navegador não oferece a descompactação necessária para abrir a biblioteca. Use uma versão atualizada do navegador.');
+      }
+
+      const textos = await Promise.all(PARTES.map(async (url) => {
+        const resposta = await fetch(url, { cache: 'no-store' });
+        if (!resposta.ok) throw new Error(`Falha ao carregar ${url} (${resposta.status}).`);
+        return (await resposta.text()).trim();
+      }));
+
+      const binario = atob(textos.join(''));
+      const bytes = new Uint8Array(binario.length);
+      for (let i = 0; i < binario.length; i++) bytes[i] = binario.charCodeAt(i);
+
+      const fluxo = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      return JSON.parse(await new Response(fluxo).text());
+    }
+
+    function montarInterface(dados) {
+      const todos = dados.itens
+        .filter(item => item.m === modulo)
+        .sort((a, b) => a.n.localeCompare(b.n, 'pt-BR'));
+
+      const subtipos = [...new Set(todos.map(item => item.s).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      const estado = dados.estado || {};
+      const aviso = estado.revisao_manual || estado.publicavel === false
+        ? `<div class="aviso"><strong>Estado da extração:</strong> normalização estrutural parcial. Relações externas e parte da normalização mecânica ainda exigem revisão manual; estes registros não devem ser interpretados como uma publicação final validada.</div>`
+        : '';
+
+      if (todos.length === 0) {
+        app.innerHTML = `${aviso}<div class="vazio">O <em>Dungeon Master's Guide</em> (2024) não gerou entidades para este módulo na extração atual.</div>`;
+        return;
+      }
+
+      app.innerHTML = `
+        ${aviso}
+        <div class="controles">
+          <input id="busca" type="search" placeholder="Pesquisar neste módulo..." aria-label="Pesquisar neste módulo">
+          <select id="filtroSubtipo" aria-label="Filtrar por subtipo">
+            <option value="">Todos os subtipos</option>
+            ${subtipos.map(s => `<option value="${esc(s)}">${esc(rotuloSubtipo(s))}</option>`).join('')}
+          </select>
+        </div>
+        <p class="resultado" id="resultado"></p>
+        <section id="lista"></section>
       `;
 
-      const itens = dados.itens.map((item, indice) => `
-        <article id="item-${indice + 1}">
-          <h2>${esc(item.nome)}</h2>
-          <p><strong>Tipo:</strong> ${esc(item.tipo)}</p>
-          <p><strong>Descrição:</strong></p>
-          <div style="white-space: pre-wrap;">${esc(item.descricao)}</div>
-          <p><strong>Livro:</strong> ${esc(item.livro)}</p>
-          ${referencia(item)}
-        </article>
-        <hr>
-      `).join('');
+      const busca = document.getElementById('busca');
+      const filtro = document.getElementById('filtroSubtipo');
+      const resultado = document.getElementById('resultado');
+      const lista = document.getElementById('lista');
 
-      conteudo.innerHTML = cabecalho + itens;
+      function renderizar() {
+        const termo = busca.value.trim().toLocaleLowerCase('pt-BR');
+        const subtipo = filtro.value;
+        const filtrados = todos.filter(item => {
+          const texto = `${item.n || ''} ${item.d || ''} ${item.s || ''} ${item.g || ''}`.toLocaleLowerCase('pt-BR');
+          return (!termo || texto.includes(termo)) && (!subtipo || item.s === subtipo);
+        });
+
+        resultado.textContent = `${filtrados.length} de ${todos.length} ${todos.length === 1 ? 'entidade' : 'entidades'}`;
+
+        if (!filtrados.length) {
+          lista.innerHTML = '<div class="vazio">Nenhum item corresponde aos filtros atuais.</div>';
+          return;
+        }
+
+        lista.innerHTML = filtrados.map(item => `
+          <details class="item">
+            <summary>
+              <strong>${esc(item.n)}</strong>
+              <span class="subtipo">${esc(rotuloSubtipo(item.s))}</span>
+            </summary>
+            <div class="corpo">
+              ${item.d ? `<p>${esc(item.d)}</p>` : '<p>Sem resumo disponível nesta passagem de extração.</p>'}
+              <div class="metadados">
+                <span><strong>Módulo:</strong> ${esc(item.m)}</span>
+                <span><strong>Subtipo:</strong> ${esc(rotuloSubtipo(item.s))}</span>
+                ${item.g ? `<span><strong>Setting:</strong> ${esc(item.g)}</span>` : ''}
+                <span><strong>Fonte:</strong> Dungeon Master's Guide (2024), ${esc(pagina(item))}</span>
+              </div>
+            </div>
+          </details>
+        `).join('');
+      }
+
+      busca.addEventListener('input', renderizar);
+      filtro.addEventListener('change', renderizar);
+      renderizar();
     }
 
     async function iniciar() {
-      if (!modulo || !modulos.includes(modulo)) {
+      if (!modulo || !MODULOS.includes(modulo)) {
         titulo.textContent = 'Módulo não encontrado';
-        conteudo.innerHTML = '<p>Escolha um módulo pela página Bibliotecas.</p>';
+        fonte.hidden = true;
+        app.innerHTML = '<div class="erro">Escolha um dos 25 módulos pela página Bibliotecas.</div>';
         return;
       }
 
       titulo.textContent = modulo;
       document.title = `${modulo} - Teias de Anansi`;
 
-      if (modulo === 'Regras') {
-        try {
-          await carregarRegras();
-        } catch (erro) {
-          conteudo.innerHTML = `<p>${esc(erro.message)}</p>`;
-        }
-        return;
+      try {
+        const dados = await carregarBase();
+        fonte.textContent = `${dados.fonte?.titulo || "Dungeon Master's Guide"} • ${dados.fonte?.ano || 2024} • D&D ${dados.fonte?.ruleset || '5.5e'}`;
+        montarInterface(dados);
+      } catch (erro) {
+        console.error(erro);
+        app.innerHTML = `<div class="erro"><strong>Não foi possível carregar este módulo.</strong><br>${esc(erro.message)}</div>`;
       }
-
-      conteudo.innerHTML = '<p>Nenhum item completo deste arquivo foi publicado neste módulo ainda.</p>';
     }
 
     iniciar();
