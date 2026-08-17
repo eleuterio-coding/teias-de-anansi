@@ -4,37 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bibliotecas - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 900px; margin: 0 auto; padding: 24px; line-height: 1.5; }
+    a { color: inherit; }
+    .resumo { opacity: .78; }
+    .modulos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+    .modulos li { border: 1px solid #8885; border-radius: 10px; }
+    .modulos a { display: flex; justify-content: space-between; gap: 14px; padding: 12px 14px; text-decoration: none; }
+    .modulos a:hover { background: #8881; }
+    .contagem { opacity: .65; white-space: nowrap; }
+    .zero { opacity: .58; }
+    .aviso { border: 1px solid #8888; border-radius: 10px; padding: 12px 14px; margin: 18px 0; }
+    @media (max-width: 600px) { body { padding: 16px; } }
+  </style>
 </head>
 <body>
   <p><a href="index.html">← Início</a></p>
   <h1>Bibliotecas</h1>
+  <p class="resumo"><strong>Dungeon Master's Guide (2024)</strong> • D&amp;D 5.5e • 874 entidades classificadas em 13 dos 25 módulos.</p>
+  <div class="aviso">A importação está em estado de <strong>normalização estrutural parcial</strong> e requer revisão manual de relações externas e de parte da mecânica antes de ser considerada publicação final validada.</div>
 
-  <ol>
-    <li><a href="modulo.html?modulo=Regras">Regras</a></li>
-    <li><a href="modulo.html?modulo=Classes">Classes</a></li>
-    <li><a href="modulo.html?modulo=Subclasses">Subclasses</a></li>
-    <li><a href="modulo.html?modulo=Esp%C3%A9cies">Espécies</a></li>
-    <li><a href="modulo.html?modulo=Antecedentes">Antecedentes</a></li>
-    <li><a href="modulo.html?modulo=Talentos">Talentos</a></li>
-    <li><a href="modulo.html?modulo=Maestrias%20de%20Arma">Maestrias de Arma</a></li>
-    <li><a href="modulo.html?modulo=Monstros">Monstros</a></li>
-    <li><a href="modulo.html?modulo=Armaduras">Armaduras</a></li>
-    <li><a href="modulo.html?modulo=Armas">Armas</a></li>
-    <li><a href="modulo.html?modulo=Equipamentos%20de%20Aventura">Equipamentos de Aventura</a></li>
-    <li><a href="modulo.html?modulo=Ferramentas">Ferramentas</a></li>
-    <li><a href="modulo.html?modulo=Montarias%20e%20Ve%C3%ADculos">Montarias e Veículos</a></li>
-    <li><a href="modulo.html?modulo=Com%C3%A9rcio%20e%20Despesas">Comércio e Despesas</a></li>
-    <li><a href="modulo.html?modulo=Bugigangas">Bugigangas</a></li>
-    <li><a href="modulo.html?modulo=Itens%20M%C3%A1gicos">Itens Mágicos</a></li>
-    <li><a href="modulo.html?modulo=Magias">Magias</a></li>
-    <li><a href="modulo.html?modulo=Planos%20e%20Cosmologia">Planos e Cosmologia</a></li>
-    <li><a href="modulo.html?modulo=Grupos%20e%20Fac%C3%A7%C3%B5es">Grupos e Facções</a></li>
-    <li><a href="modulo.html?modulo=Idiomas">Idiomas</a></li>
-    <li><a href="modulo.html?modulo=Lendas%20%26%20Personalidades">Lendas &amp; Personalidades</a></li>
-    <li><a href="modulo.html?modulo=Locais%20%26%20Assentamentos">Locais &amp; Assentamentos</a></li>
-    <li><a href="modulo.html?modulo=Divindades%2C%20Religi%C3%B5es%20%26%20Cultos">Divindades, Religiões &amp; Cultos</a></li>
-    <li><a href="modulo.html?modulo=Hist%C3%B3ria%20%26%20Cronologia">História &amp; Cronologia</a></li>
-    <li><a href="modulo.html?modulo=Basti%C3%B5es">Bastiões</a></li>
+  <ol class="modulos">
+    <li><a href="modulo.html?modulo=Regras"><span>1. Regras</span><span class="contagem">131 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Classes"><span>2. Classes</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Subclasses"><span>3. Subclasses</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Esp%C3%A9cies"><span>4. Espécies</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Antecedentes"><span>5. Antecedentes</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Talentos"><span>6. Talentos</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Maestrias%20de%20Arma"><span>7. Maestrias de Arma</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Monstros"><span>8. Monstros</span><span class="contagem">0 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Armaduras"><span>9. Armaduras</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Armas"><span>10. Armas</span><span class="contagem">8 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Equipamentos%20de%20Aventura"><span>11. Equipamentos de Aventura</span><span class="contagem">17 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Ferramentas"><span>12. Ferramentas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Montarias%20e%20Ve%C3%ADculos"><span>13. Montarias e Veículos</span><span class="contagem">2 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Com%C3%A9rcio%20e%20Despesas"><span>14. Comércio e Despesas</span><span class="contagem">31 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Bugigangas"><span>15. Bugigangas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Itens%20M%C3%A1gicos"><span>16. Itens Mágicos</span><span class="contagem">351 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Magias"><span>17. Magias</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Planos%20e%20Cosmologia"><span>18. Planos e Cosmologia</span><span class="contagem">35 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Grupos%20e%20Fac%C3%A7%C3%B5es"><span>19. Grupos e Facções</span><span class="contagem">18 itens</span></a></li>
+    <li class="zero"><a href="modulo.html?modulo=Idiomas"><span>20. Idiomas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Lendas%20%26%20Personalidades"><span>21. Lendas &amp; Personalidades</span><span class="contagem">62 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Locais%20%26%20Assentamentos"><span>22. Locais &amp; Assentamentos</span><span class="contagem">128 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Divindades%2C%20Religi%C3%B5es%20%26%20Cultos"><span>23. Divindades, Religiões &amp; Cultos</span><span class="contagem">35 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Hist%C3%B3ria%20%26%20Cronologia"><span>24. História &amp; Cronologia</span><span class="contagem">5 itens</span></a></li>
+    <li><a href="modulo.html?modulo=Basti%C3%B5es"><span>25. Bastiões</span><span class="contagem">51 itens</span></a></li>
   </ol>
 </body>
 </html>
