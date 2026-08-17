@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo - Teias de Anansi</title>
+</head>
+<body>
+  <p><a href="biblioteca.html">← Bibliotecas</a></p>
+  <h1 id="titulo">Módulo</h1>
+  <div id="conteudo">Carregando...</div>
+
+  <script>
+    const modulos = [
+      'Regras', 'Classes', 'Subclasses', 'Espécies', 'Antecedentes', 'Talentos',
+      'Maestrias de Arma', 'Monstros', 'Armaduras', 'Armas', 'Equipamentos de Aventura',
+      'Ferramentas', 'Montarias e Veículos', 'Comércio e Despesas', 'Bugigangas',
+      'Itens Mágicos', 'Magias', 'Planos e Cosmologia', 'Grupos e Facções', 'Idiomas',
+      'Lendas & Personalidades', 'Locais & Assentamentos',
+      'Divindades, Religiões & Cultos', 'História & Cronologia', 'Bastiões'
+    ];
+
+    const params = new URLSearchParams(window.location.search);
+    const modulo = params.get('modulo');
+    const titulo = document.getElementById('titulo');
+    const conteudo = document.getElementById('conteudo');
+
+    function esc(texto) {
+      return String(texto ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function referencia(item) {
+      if (!item.referencia) return '';
+      const r = item.referencia;
+      const paginas = r.pagina_pdf_inicio === r.pagina_pdf_fim
+        ? `p. ${r.pagina_pdf_inicio}`
+        : `pp. ${r.pagina_pdf_inicio}–${r.pagina_pdf_fim}`;
+      return `<p><strong>Referência:</strong> ${esc(r.capitulo)} — ${paginas}</p>`;
+    }
+
+    async function carregarRegras() {
+      const resposta = await fetch('dados/dmg_2024_regras_salao.min.json');
+      if (!resposta.ok) throw new Error('Não foi possível carregar o arquivo de regras.');
+      const dados = await resposta.json();
+
+      const cabecalho = `
+        <p><strong>Livro:</strong> ${esc(dados.fonte?.livro || 'Dungeon Master’s Guide')}</p>
+        <p><strong>Ano:</strong> ${esc(dados.fonte?.ano || 2024)}</p>
+        <p><strong>Itens:</strong> ${dados.itens.length}</p>
+      `;
+
+      const itens = dados.itens.map((item, indice) => `
+        <article id="item-${indice + 1}">
+          <h2>${esc(item.nome)}</h2>
+          <p><strong>Tipo:</strong> ${esc(item.tipo)}</p>
+          <p><strong>Descrição:</strong></p>
+          <div style="white-space: pre-wrap;">${esc(item.descricao)}</div>
+          <p><strong>Livro:</strong> ${esc(item.livro)}</p>
+          ${referencia(item)}
+        </article>
+        <hr>
+      `).join('');
+
+      conteudo.innerHTML = cabecalho + itens;
+    }
+
+    async function iniciar() {
+      if (!modulo || !modulos.includes(modulo)) {
+        titulo.textContent = 'Módulo não encontrado';
+        conteudo.innerHTML = '<p>Escolha um módulo pela página Bibliotecas.</p>';
+        return;
+      }
+
+      titulo.textContent = modulo;
+      document.title = `${modulo} - Teias de Anansi`;
+
+      if (modulo === 'Regras') {
+        try {
+          await carregarRegras();
+        } catch (erro) {
+          conteudo.innerHTML = `<p>${esc(erro.message)}</p>`;
+        }
+        return;
+      }
+
+      conteudo.innerHTML = '<p>Nenhum item completo deste arquivo foi publicado neste módulo ainda.</p>';
+    }
+
+    iniciar();
+  </script>
+</body>
+</html>
