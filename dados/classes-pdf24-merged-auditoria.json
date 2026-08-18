@@ -1,0 +1,48 @@
+{
+  "schema": "hub-rpg/classes-pdf-auditoria/v1",
+  "arquivo": "pdf24_merged.pdf",
+  "paginas": 1535,
+  "auditado_em": "2026-08-18",
+  "criterio": "Publicar somente classes-base completas, com identidade, dado de vida, atributo principal, salvaguardas, proficiencias, equipamento inicial, multiclasse, progressao completa 1-20 e caracteristicas suficientes para reproduzir a classe no padrao do modulo Classes.",
+  "resultado": {
+    "classes_completas_encontradas": 0,
+    "classes_publicadas_nesta_area": 0,
+    "referencias_incompletas": 1,
+    "classes_core_referenciadas_sem_bloco_base": 12
+  },
+  "referencias": [
+    {
+      "nome": "Tamer",
+      "tipo": "classe_referenciada",
+      "status": "nao_publicavel_incompleta",
+      "motivo": "O PDF informa que a classe Tamer foi introduzida em Heliana's Guide to Monster Hunting e remete a um PDF externo. O arquivo atual inclui subclasses, regras de companheiros/familiares e referencias a niveis de Tamer, mas nao inclui o bloco-base completo da classe nem sua progressao 1-20.",
+      "fonte_no_pdf": "L'Arsene's Ledger / Chapter 6: Subclasses e Chapter 7: Familiars",
+      "acao": "Nao criar entidade de Classe ate existir fonte contendo o bloco completo."
+    }
+  ],
+  "classes_core_referenciadas": [
+    "Barbarian",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Fighter",
+    "Monk",
+    "Paladin",
+    "Ranger",
+    "Rogue",
+    "Sorcerer",
+    "Warlock",
+    "Wizard"
+  ],
+  "observacoes": [
+    "Xanathar's Guide to Everything apresenta secoes organizadas pelas doze classes do Player's Handbook, mas o conteudo do arquivo e de subclasses, opcoes e expansoes; nao reproduz as classes-base completas.",
+    "Forgotten Realms: Heroes of Faerun apresenta oito subclasses no capitulo de opcoes de personagem; nao apresenta uma classe-base nova.",
+    "L'Arsene's Ledger possui um capitulo de subclasses e referencia a classe Tamer, mas nao inclui a definicao completa da classe.",
+    "As doze classes core ja publicadas no modulo Classes nao sao duplicadas nesta area porque o PDF nao fornece seus blocos-base completos e porque a area principal ja contem versoes completas e validadas do SRD 5.2.1."
+  ],
+  "controle": {
+    "auditoria_completa": true,
+    "publicado": true,
+    "itens_incompletos_publicados_como_classe": 0
+  }
+}
