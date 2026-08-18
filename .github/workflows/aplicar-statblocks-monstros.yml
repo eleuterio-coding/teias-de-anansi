@@ -1,0 +1,46 @@
+name: Aplicar stat blocks ao módulo Monstros
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/aplicar-statblocks-monstros.yml'
+      - 'monstros-statblocks.js'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ligar stat blocks à Biblioteca
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('biblioteca.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '  <script src="monstros-statblocks.js"></script>\n'
+          if tag not in s:
+              anchor = '  <script src="monstros.js"></script>\n'
+              if anchor in s:
+                  s = s.replace(anchor, anchor + tag, 1)
+              elif '</body>' in s:
+                  s = s.replace('</body>', tag + '</body>', 1)
+              else:
+                  raise SystemExit('Não foi possível localizar ponto de inserção')
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          if git diff --quiet -- biblioteca.html; then
+            echo "Stat blocks já ligados."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add biblioteca.html
+          git commit -m "Liga stat blocks ao módulo Monstros"
+          git pull --rebase origin main
+          git push
