@@ -1,1 +1,0 @@
-/mnt/data/regras_b64_rest/rest-17.txt
