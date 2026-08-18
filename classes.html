@@ -8,20 +8,65 @@
   <meta http-equiv="Expires" content="0">
   <title>Classes - Biblioteca - Teias de Anansi</title>
   <style>
-    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
-    a { color: inherit; }
-    .resumo { opacity: .78; }
-    .vazio { padding: 16px; border: 1px dashed #8888; border-radius: 10px; margin: 18px 0; }
-    @media (max-width: 750px) { body { padding: 16px; } }
+    :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--m:#777;--soft:#8881}
+    *{box-sizing:border-box}body{max-width:1180px;margin:0 auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.72}.top{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}.nota,.erro,.vazio{padding:14px 16px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.controles{display:grid;grid-template-columns:minmax(230px,1fr) minmax(180px,260px);gap:10px;margin:18px 0 8px}input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}.resultado{opacity:.7;margin:8px 0 14px}.classe{border:1px solid var(--b);border-radius:12px;margin:10px 0;overflow:hidden}.classe>summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:16px;align-items:baseline}.classe>summary:hover{background:var(--soft)}.classe .sub{font-size:.85rem;opacity:.68}.corpo{padding:0 16px 18px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:12px 0}.stat{border:1px solid var(--b);border-radius:9px;padding:9px 10px}.stat strong{display:block;font-size:.78rem;opacity:.7;text-transform:uppercase;letter-spacing:.03em}.bloco{margin-top:18px}.bloco h3{font-size:1.05rem;margin:0 0 8px}.feature{border-left:3px solid #8886;padding:1px 0 1px 12px;margin:11px 0}.feature h4{margin:0 0 4px}.feature p{margin:5px 0;white-space:pre-line}.tabela-wrap{overflow:auto;border:1px solid var(--b);border-radius:10px}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid #8883}th{position:sticky;top:0;background:Canvas;font-size:.82rem}tr:last-child td{border-bottom:0}.lista-spells{columns:3 220px;margin:0;padding-left:20px}.meta{border-top:1px solid #8883;margin-top:18px;padding-top:11px;font-size:.88rem;opacity:.78;display:flex;gap:8px 20px;flex-wrap:wrap}.licenca{font-size:.8rem;opacity:.72;margin-top:18px;padding-top:12px;border-top:1px solid #8883}.complete{font-weight:600}.loading{padding:20px 0;opacity:.72}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.classe>summary{display:block}.classe .sub{display:block;margin-top:4px}.lista-spells{columns:2 150px}}
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260818-1525">← Bibliotecas</a></p>
-  <header>
-    <h1>Classes</h1>
-    <p class="resumo">0 itens publicados neste módulo.</p>
-  </header>
-  <main><div class="vazio">Nenhum conteúdo publicado neste módulo.</div></main>
+  <p><a href="bibliotecas.html?v=20260818-1530">← Bibliotecas</a></p>
+  <div class="top"><header><h1>Classes</h1><p class="muted" id="resumo">Carregando catálogo validado...</p></header><div><span class="badge">D&D 5.5e</span><span class="badge">SRD 5.2.1</span><span class="badge">CC BY 4.0</span></div></div>
+  <div class="nota"><strong>Critério de publicação:</strong> somente classes com conteúdo aberto, progressão de 1º a 20º nível, características mecânicas completas, proficiências, equipamento inicial, multiclasse e conjuração/lista de magias quando aplicável. Pela precedência temporal do Hub, a versão 5.5e substitui a equivalente 5e/2014 no catálogo ativo.</div>
+  <div class="controles"><input id="busca" type="search" placeholder="Buscar classe, atributo, característica..."><select id="filtro"><option value="">Todas as classes</option><option value="conjurador">Com conjuração</option><option value="nao-conjurador">Sem conjuração</option></select></div>
+  <p class="resultado" id="resultado"></p>
+  <main id="lista"><p class="loading">Carregando dados...</p></main>
+<script>
+const DATA_URL='dados/classes-srd-5.2.1.json?v=20260818-1530';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const semAcento=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const arr=v=>Array.isArray(v)?v:[];
+const refNames=v=>arr(v).map(x=>x?.name||x?.desc||String(x)).filter(Boolean).join(', ');
+const title=s=>String(s??'').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
+function primary(c){return c.primary_ability?.desc||refNames(c.primary_ability?.ability_scores)||'—'}
+function profBlock(c){
+  const fixed=arr(c.proficiencies).map(x=>x.name);
+  const choices=arr(c.proficiency_choices).map(x=>x.desc).filter(Boolean);
+  return {fixed:fixed.join(', ')||'—',choices:choices.join(' • ')||'—'};
+}
+function prereqText(mc){
+  const ps=arr(mc?.prerequisites).map(p=>`${p.ability_score?.name||'?'} ${p.minimum_score??''}`.trim());
+  if(mc?.prerequisite_options?.from?.options){ps.push(mc.prerequisite_options.from.options.map(o=>o.item?.name||o.string||'').filter(Boolean).join(' ou '));}
+  return ps.filter(Boolean).join('; ')||'Nenhum requisito adicional publicado.';
+}
+function renderProgressao(item){
+  const levels=item.mecanica.progressao;
+  const metricas=[...new Set(levels.flatMap(l=>Object.keys(l.class_specific||{})))];
+  const head=['Nível','PB','Características',...metricas.map(title)];
+  return `<div class="tabela-wrap"><table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${levels.map(l=>`<tr><td>${l.level}</td><td>+${l.prof_bonus}</td><td>${esc(arr(l.features).map(f=>f.name).join(', ')||'—')}</td>${metricas.map(k=>`<td>${esc(l.class_specific?.[k]??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+function renderFeatures(item){
+  return item.mecanica.caracteristicas.map(f=>`<article class="feature"><h4>${esc(f.name)} <span class="muted">— nível ${esc(f._nivel)}</span></h4><p>${esc(f.description)}</p></article>`).join('');
+}
+function renderSpellcasting(item){
+  const sc=item.mecanica.conjuracao;if(!sc)return '';
+  const info=arr(sc.info).map(x=>`<article class="feature"><h4>${esc(x.name)}</h4>${arr(x.desc).map(p=>`<p>${esc(p)}</p>`).join('')}</article>`).join('');
+  const spells=arr(sc.lista_magias);
+  return `<section class="bloco"><h3>Conjuração</h3><div class="stats"><div class="stat"><strong>Atributo</strong>${esc(sc.spellcasting_ability?.name||'—')}</div><div class="stat"><strong>Início</strong>Nível ${esc(sc.level??'—')}</div><div class="stat"><strong>Lista vinculada</strong>${spells.length} magias</div></div>${info}<h3>Lista de magias da classe</h3><ul class="lista-spells">${spells.map(s=>`<li>${esc(s.name)}</li>`).join('')}</ul></section>`;
+}
+function renderClasse(item){
+  const c=item.mecanica.dados_base,p=profBlock(c),mc=item.mecanica.multiclasse||{};
+  const equip=arr(c.starting_equipment_options).map(o=>`<li>${esc(o.desc||'Opção de equipamento estruturada na fonte.')}</li>`).join('')||'<li>Sem pacote textual publicado.</li>';
+  const mcp=refNames(mc.proficiencies),mcc=arr(mc.proficiency_choices).map(x=>x.desc).filter(Boolean).join(' • ');
+  return `<div class="corpo"><p>${esc(item.conteudo.descricao)}</p><div class="stats"><div class="stat"><strong>Atributo principal</strong>${esc(primary(c))}</div><div class="stat"><strong>Dado de Vida</strong>d${esc(c.hit_die)}</div><div class="stat"><strong>Salvaguardas</strong>${esc(refNames(c.saving_throws))}</div><div class="stat"><strong>Subclasse</strong>${esc(refNames(c.subclasses)||'—')}</div></div><section class="bloco"><h3>Proficiências</h3><p><strong>Fixas:</strong> ${esc(p.fixed)}</p><p><strong>Escolhas:</strong> ${esc(p.choices)}</p></section><section class="bloco"><h3>Equipamento inicial</h3><ul>${equip}</ul></section><section class="bloco"><h3>Multiclasse</h3><p><strong>Pré-requisito:</strong> ${esc(prereqText(mc))}</p>${mcp?`<p><strong>Proficiências obtidas:</strong> ${esc(mcp)}</p>`:''}${mcc?`<p><strong>Escolhas adicionais:</strong> ${esc(mcc)}</p>`:''}</section><section class="bloco"><h3>Progressão completa — níveis 1–20</h3>${renderProgressao(item)}</section><section class="bloco"><h3>Características da classe</h3>${renderFeatures(item)}</section>${renderSpellcasting(item)}<div class="meta"><span><strong>Ruleset:</strong> 5.5e</span><span><strong>Revisão core:</strong> 2024</span><span><strong>Fonte:</strong> System Reference Document 5.2.1</span><span><strong>Ano:</strong> 2025</span><span><strong>Natureza:</strong> SRD</span><span class="complete"><strong>Completude:</strong> validado/publicado</span></div><p class="licenca">This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at D&D Beyond. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License.</p></div>`;
+}
+let DATA=[];
+function render(){
+  const termo=semAcento(document.getElementById('busca').value.trim()),f=document.getElementById('filtro').value;
+  const itens=DATA.filter(i=>{const conj=!!i.mecanica.conjuracao;if(f==='conjurador'&&!conj)return false;if(f==='nao-conjurador'&&conj)return false;return !termo||semAcento([i.identidade.nome,i.conteudo.descricao,primary(i.mecanica.dados_base),...i.mecanica.caracteristicas.map(x=>x.name)].join(' ')).includes(termo)});
+  document.getElementById('resultado').textContent=`${itens.length} de ${DATA.length} classes publicadas`;
+  const lista=document.getElementById('lista');lista.innerHTML=itens.map(i=>`<details class="classe" data-id="${esc(i.identidade.id)}"><summary><strong>${esc(i.identidade.nome)}</strong><span class="sub">d${esc(i.mecanica.dados_base.hit_die)} • ${esc(primary(i.mecanica.dados_base))}</span></summary><div class="slot"></div></details>`).join('')||'<div class="vazio">Nenhuma classe corresponde aos filtros.</div>';
+  lista.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open&&!d.dataset.rendered){const i=DATA.find(x=>x.identidade.id===d.dataset.id);d.querySelector('.slot').innerHTML=renderClasse(i);d.dataset.rendered='1'}}));
+}
+(async()=>{try{const r=await fetch(DATA_URL,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const db=await r.json();if(!db?.controle?.validado||!Array.isArray(db.items)||db.items.length!==12)throw new Error('Base não passou pelo contrato de validação.');DATA=db.items;document.getElementById('resumo').textContent=`${DATA.length} classes abertas, completas e ativas após sobreposição temporal.`;document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);render()}catch(e){document.getElementById('resumo').textContent='Base indisponível.';document.getElementById('lista').innerHTML=`<div class="erro"><strong>Falha ao carregar a base validada.</strong><br>${esc(e.message)}</div>`;console.error(e)}})();
+</script>
 </body>
 </html>
