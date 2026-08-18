@@ -13,9 +13,9 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260818-1536">← Bibliotecas</a></p>
-  <div class="top"><header><h1>Classes</h1><p class="muted" id="resumo">Validando o catálogo aberto...</p></header><div><span class="badge">D&D 5.5e</span><span class="badge">SRD 5.2.1</span><span class="badge">CC BY 4.0</span></div></div>
-  <div class="nota"><strong>Publicação com falha fechada:</strong> o módulo só exibe uma classe depois de validar dados básicos, progressão completa dos níveis 1–20, todas as características referenciadas, proficiências, equipamento inicial, multiclasse e, quando aplicável, conjuração e lista de magias. As versões SRD 5.2.1/5.5e são as versões ativas; suas equivalentes SRD 5.1/5e ficam registradas como versões substituídas e não são duplicadas no catálogo.</div>
+  <p><a href="bibliotecas.html?v=20260818-1549">← Bibliotecas</a></p>
+  <div class="top"><header><h1>Classes</h1><p class="muted" id="resumo">Validando o catálogo aberto...</p></header><div><span class="badge">D&amp;D 5.5e</span><span class="badge">SRD 5.2.1</span><span class="badge">CC BY 4.0</span></div></div>
+  <div class="nota"><strong>Critério de publicação:</strong> somente classes com conteúdo aberto e mecânica completa: dados básicos, progressão integral dos níveis 1–20, características referenciadas, proficiências, equipamento inicial, multiclasse e, quando aplicável, conjuração e relação de magias. Pela sobreposição temporal do Hub, as versões SRD 5.2.1/5.5e substituem suas equivalentes SRD 5.1/5e.</div>
   <div class="controles"><input id="busca" type="search" placeholder="Buscar classe, atributo, característica..."><select id="filtro"><option value="">Todas as classes</option><option value="conjurador">Com conjuração</option><option value="nao-conjurador">Sem conjuração</option></select></div>
   <p class="resultado" id="resultado"></p>
   <main id="lista"><p class="loading">Carregando e validando dados...</p></main>
@@ -43,12 +43,23 @@ const semAcento=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
 const arr=v=>Array.isArray(v)?v:[];
 const names=v=>arr(v).map(x=>x?.name||x?.desc||String(x)).filter(Boolean).join(', ');
 const title=s=>String(s??'').replaceAll('_',' ').replace(/\b\w/g,m=>m.toUpperCase());
-async function getJson(url){const r=await fetch(url,{cache:'force-cache'});if(!r.ok)throw new Error(`${url}: HTTP ${r.status}`);return r.json()}
+async function getJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error(`${url}: HTTP ${r.status}`);return r.json()}
 function primary(c){return c.primary_ability?.desc||names(c.primary_ability?.ability_scores)||'—'}
 function prereqText(mc){const p=arr(mc?.prerequisites).map(x=>`${x.ability_score?.name||'?'} ${x.minimum_score??''}`.trim());if(mc?.prerequisite_options?.from?.options)p.push(mc.prerequisite_options.from.options.map(o=>o.item?.name||o.string||'').filter(Boolean).join(' ou '));return p.filter(Boolean).join('; ')||'Nenhum requisito adicional publicado.'}
+function levelsForClass(levels,slug){
+  const list=arr(levels).filter(x=>{
+    const byClass=x?.class?.index===slug;
+    const idx=String(x?.index||'');
+    const byIndex=idx.startsWith(`${slug}-`);
+    return byClass||byIndex;
+  }).sort((a,b)=>Number(a.level)-Number(b.level));
+  const unique=[];const seen=new Set();
+  for(const x of list){const n=Number(x.level);if(n>=1&&n<=20&&!seen.has(n)){seen.add(n);unique.push(x)}}
+  return unique;
+}
 function normalizeClass(c,levels,featureMap,spells){
-  const slug=c.index,ls=levels.filter(x=>x.class?.index===slug).sort((a,b)=>a.level-b.level);
-  if(ls.length!==20||ls.some((x,i)=>x.level!==i+1))throw new Error(`${c.name}: progressão 1–20 incompleta.`);
+  const slug=c.index,ls=levelsForClass(levels,slug);
+  if(ls.length!==20||ls.some((x,i)=>Number(x.level)!==i+1))throw new Error(`${c.name}: progressão 1–20 incompleta (${ls.length}/20).`);
   for(const k of ['name','hit_die','primary_ability','saving_throws','proficiencies','starting_equipment_options','multi_classing'])if(c[k]===undefined)throw new Error(`${c.name}: campo obrigatório ausente: ${k}.`);
   const ids=[],first={};ls.forEach(l=>arr(l.features).forEach(f=>{if(first[f.index]===undefined)first[f.index]=l.level;if(!ids.includes(f.index))ids.push(f.index)}));
   const feats=ids.map(id=>{const f=featureMap.get(id);if(!f||typeof f.description!=='string'||!f.description.trim())throw new Error(`${c.name}: característica não resolvida: ${id}.`);return {...f,_nivel:first[id]}});
@@ -61,8 +72,18 @@ async function build(){
   const got=classes.map(c=>c.index).sort();if(JSON.stringify(got)!==JSON.stringify([...EXPECTED].sort()))throw new Error('O conjunto aberto de classes mudou e exige nova validação manual antes de publicar.');
   const fmap=new Map(features.map(f=>[f.index,f]));
   const out=[];
-  for(const c of classes){let spells=[];if(c.spellcasting){if(!c.spells)throw new Error(`${c.name}: endpoint de magias ausente.`);const payload=await getJson(`${API}${c.spells}`);spells=payload.results;if(!Array.isArray(spells)||!spells.length)throw new Error(`${c.name}: lista de magias aberta vazia.`)}out.push(normalizeClass(c,levels,fmap,spells))}
-  if(out.length!==12||out.some(x=>!x.controle.completo))throw new Error('A validação final de completude falhou.');return out.sort((a,b)=>a.identidade.nome.localeCompare(b.identidade.nome,'en'));
+  for(const c of classes){
+    let spells=[];
+    if(c.spellcasting){
+      if(!c.spells)throw new Error(`${c.name}: endpoint de magias ausente.`);
+      const payload=await getJson(`${API}${c.spells}`);
+      spells=Array.isArray(payload)?payload:arr(payload?.results);
+      if(!spells.length)throw new Error(`${c.name}: lista de magias aberta vazia.`);
+    }
+    out.push(normalizeClass(c,levels,fmap,spells));
+  }
+  if(out.length!==12||out.some(x=>!x.controle.completo))throw new Error('A validação final de completude falhou.');
+  return out.sort((a,b)=>a.identidade.nome.localeCompare(b.identidade.nome,'en'));
 }
 function renderProgressao(item){const levels=item.mecanica.progressao;const metrics=[...new Set(levels.flatMap(l=>Object.keys(l.class_specific||{})))];return `<div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>PB</th><th>Características</th>${metrics.map(k=>`<th>${esc(title(k))}</th>`).join('')}</tr></thead><tbody>${levels.map(l=>`<tr><td>${l.level}</td><td>+${l.prof_bonus}</td><td>${esc(arr(l.features).map(f=>f.name).join(', ')||'—')}</td>${metrics.map(k=>`<td>${esc(l.class_specific?.[k]??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
 function renderFeatures(item){return item.mecanica.caracteristicas.map(f=>`<article class="feature"><h4>${esc(f.name)} <span class="muted">— nível ${esc(f._nivel)}</span></h4><p>${esc(f.description)}</p></article>`).join('')}
