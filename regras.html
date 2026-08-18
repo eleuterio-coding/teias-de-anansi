@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regras - Bibliotecas - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .fonte,.resultado { opacity:.76; }
+    .controles { display:grid; grid-template-columns:minmax(240px,1fr) minmax(190px,260px) minmax(190px,260px); gap:10px; margin:18px 0 8px; }
+    input,select { width:100%; box-sizing:border-box; font:inherit; padding:10px 12px; border:1px solid #8887; border-radius:8px; background:transparent; color:inherit; }
+    .item { border:1px solid #8885; border-radius:10px; margin:10px 0; overflow:hidden; }
+    .item summary { cursor:pointer; padding:14px 16px; display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
+    .item summary:hover { background:#8881; }
+    .subtipo { font-size:.84rem; opacity:.68; white-space:nowrap; }
+    .corpo { padding:0 16px 16px; }
+    .descricao { white-space:pre-wrap; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:.9rem; opacity:.76; border-top:1px solid #8883; margin-top:14px; padding-top:10px; }
+    .erro,.vazio { padding:16px; border:1px dashed #8888; border-radius:10px; }
+    @media(max-width:750px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}.subtipo{display:block;margin-top:5px}}
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html">← Bibliotecas</a></p>
+  <h1>Regras</h1>
+  <p class="fonte" id="fonte">Livro do Jogador (2024) • D&amp;D 5.5e • carregando...</p>
+  <main id="app"></main>
+
+<script>
+const PARTES = Array.from({length:13},(_,i)=>`dados/regras-phb-2024.gz.b64.part${String(i+1).padStart(2,'0')}`);
+
+function esc(v){
+  return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");
+}
+function semAcento(v){ return String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function rotulo(v){ return String(v||'regra').replaceAll('_',' '); }
+function paginas(a,b){
+  if(!a) return '';
+  return !b||a===b ? `p. ${a}` : `pp. ${a}–${b}`;
+}
+async function carregar(){
+  const textos=await Promise.all(PARTES.map(async url=>{
+    const r=await fetch(url,{cache:'no-store'});
+    if(!r.ok) throw new Error(`Falha ao carregar ${url}.`);
+    return (await r.text()).trim();
+  }));
+  const bin=atob(textos.join(''));
+  const bytes=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+  if(!('DecompressionStream' in window)) throw new Error('Navegador sem suporte à descompactação gzip.');
+  const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const pacote=JSON.parse(await new Response(stream).text());
+  const f=pacote.f;
+  return pacote.i.map(row=>Object.fromEntries(f.map((k,i)=>[k,row[i]])));
+}
+function interfaceRegras(itens){
+  const app=document.getElementById('app');
+  const fonte=document.getElementById('fonte');
+  const cats=[...new Set(itens.map(i=>i.c).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const subs=[...new Set(itens.map(i=>i.s).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  fonte.innerHTML=`Livro do Jogador (2024) • D&amp;D 5.5e • <strong>${itens.length.toLocaleString('pt-BR')} regras ativas</strong>`;
+  app.innerHTML=`
+    <div class="controles">
+      <input id="busca" type="search" placeholder="Pesquisar regras..." aria-label="Pesquisar regras">
+      <select id="categoria"><option value="">Todas as categorias</option>${cats.map(v=>`<option value="${esc(v)}">${esc(rotulo(v))}</option>`).join('')}</select>
+      <select id="subtipo"><option value="">Todos os subtipos</option>${subs.map(v=>`<option value="${esc(v)}">${esc(rotulo(v))}</option>`).join('')}</select>
+    </div>
+    <p class="resultado" id="resultado"></p>
+    <section id="lista"></section>`;
+  const busca=document.getElementById('busca'), categoria=document.getElementById('categoria'), subtipo=document.getElementById('subtipo'), resultado=document.getElementById('resultado'), lista=document.getElementById('lista');
+  function render(){
+    const q=semAcento(busca.value.trim()).toLocaleLowerCase('pt-BR');
+    const filtrados=itens.filter(i=>{
+      const texto=semAcento(`${i.n||''} ${i.d||''} ${i.c||''} ${i.s||''}`).toLocaleLowerCase('pt-BR');
+      return (!q||texto.includes(q))&&(!categoria.value||i.c===categoria.value)&&(!subtipo.value||i.s===subtipo.value);
+    }).sort((a,b)=>a.n.localeCompare(b.n,'en'));
+    resultado.textContent=`${filtrados.length.toLocaleString('pt-BR')} de ${itens.length.toLocaleString('pt-BR')}`;
+    lista.innerHTML=filtrados.length?filtrados.map(i=>`
+      <details class="item">
+        <summary><strong>${esc(i.n)}</strong><span class="subtipo">${esc(rotulo(i.c||i.s))}</span></summary>
+        <div class="corpo">
+          <div class="descricao">${esc(i.d)}</div>
+          <div class="meta">
+            <span><strong>Fonte:</strong> Livro do Jogador (2024)</span>
+            <span><strong>Localização:</strong> ${esc(paginas(i.p1,i.p2))}</span>
+            <span><strong>Ruleset:</strong> D&amp;D 5.5e</span>
+            <span><strong>ID:</strong> ${esc(i.id)}</span>
+          </div>
+        </div>
+      </details>`).join(''):'<div class="vazio">Nenhuma regra corresponde aos filtros atuais.</div>';
+  }
+  busca.addEventListener('input',render); categoria.addEventListener('change',render); subtipo.addEventListener('change',render); render();
+}
+(async()=>{
+  try{ interfaceRegras(await carregar()); }
+  catch(e){ console.error(e); document.getElementById('fonte').textContent='Não foi possível carregar a base de regras.'; document.getElementById('app').innerHTML=`<div class="erro">${esc(e.message||e)}</div>`; }
+})();
+</script>
+</body>
+</html>
