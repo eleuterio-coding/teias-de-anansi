@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classes - Biblioteca - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .resumo, .meta { opacity: .78; }
+    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(220px,320px); gap: 10px; margin: 18px 0 10px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .classe { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .classe summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .classe summary:hover { background: #8881; }
+    .origem { font-size: .86rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 16px; }
+    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    @media (max-width: 750px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr; }
+      .classe summary { display: block; }
+      .origem { display: block; margin-top: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html">← Bibliotecas</a></p>
+  <header>
+    <h1>Classes</h1>
+    <p class="resumo">25 classes únicas ativas no recorte do Hub, com sobreposição aplicada às versões Legacy.</p>
+  </header>
+
+  <div class="nota"><strong>Precedência:</strong> versões 2024/5.5e substituem equivalentes de 2014. O Artificer atual substitui a versão de <em>Tasha’s Cauldron of Everything</em>. Conteúdo parceiro é identificado separadamente e não é apresentado como publicação oficial da Wizards.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar classe, fonte ou atributo...">
+    <select id="filtro">
+      <option value="">Todas as origens</option>
+      <option value="Oficial Wizards — Core">Oficial Wizards — Core</option>
+      <option value="Oficial Wizards — Expandida">Oficial Wizards — Expandida</option>
+      <option value="Parceiro/Terceiro">Parceiro/Terceiro</option>
+    </select>
+  </div>
+  <p class="resultado" id="resultado"></p>
+  <main id="lista"></main>
+
+<script>
+const CLASSES = [
+  {nome:'Artificer', origem:'Oficial Wizards — Expandida', fonte:'Eberron: Forge of the Artificer', descricao:'Inventor mágico que combina engenhosidade, criação de objetos e magia aplicada.', atributo:'Intelligence', dado:'d8', salvaguardas:'Constitution & Intelligence', status:'Ativa — versão soberana'},
+  {nome:'Barbarian', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Combatente movido por poder primal e fúria, resistente e ofensivo em combate corpo a corpo.', atributo:'Strength', dado:'d12', salvaguardas:'Strength & Constitution', status:'Ativa — substitui 2014'},
+  {nome:'Bard', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Especialista versátil que combina inspiração, perícias e magia baseada em Carisma.', atributo:'Charisma', dado:'d8', salvaguardas:'Dexterity & Charisma', status:'Ativa — substitui 2014'},
+  {nome:'Cleric', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Conjurador divino que canaliza poder sagrado para apoiar aliados, curar e enfrentar inimigos.', atributo:'Wisdom', dado:'d8', salvaguardas:'Wisdom & Charisma', status:'Ativa — substitui 2014'},
+  {nome:'Druid', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Conjurador primal ligado à natureza, transformação e forças elementais.', atributo:'Wisdom', dado:'d8', salvaguardas:'Intelligence & Wisdom', status:'Ativa — substitui 2014'},
+  {nome:'Fighter', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Especialista marcial em armas, armaduras e técnicas de combate adaptáveis.', atributo:'Strength ou Dexterity', dado:'d10', salvaguardas:'Strength & Constitution', status:'Ativa — substitui 2014'},
+  {nome:'Monk', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Artista marcial que transforma disciplina e foco sobrenatural em mobilidade e técnicas especiais.', atributo:'Dexterity & Wisdom', dado:'d8', salvaguardas:'Strength & Dexterity', status:'Ativa — substitui 2014'},
+  {nome:'Paladin', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Guerreiro sagrado vinculado a juramentos, combinando combate marcial, proteção e magia divina.', atributo:'Strength & Charisma', dado:'d10', salvaguardas:'Wisdom & Charisma', status:'Ativa — substitui 2014'},
+  {nome:'Ranger', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Combatente explorador com capacidades marciais, rastreamento e magia primal.', atributo:'Dexterity & Wisdom', dado:'d10', salvaguardas:'Strength & Dexterity', status:'Ativa — substitui 2014'},
+  {nome:'Rogue', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Especialista ágil em furtividade, perícias, precisão e resolução de problemas.', atributo:'Dexterity', dado:'d8', salvaguardas:'Dexterity & Intelligence', status:'Ativa — substitui 2014'},
+  {nome:'Sorcerer', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Conjurador cuja magia é inata, moldando poder arcano por meio de Carisma e metamagia.', atributo:'Charisma', dado:'d6', salvaguardas:'Constitution & Charisma', status:'Ativa — substitui 2014'},
+  {nome:'Warlock', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Ocultista que obtém e desenvolve poderes sobrenaturais por pactos, invocações e magia.', atributo:'Charisma', dado:'d8', salvaguardas:'Wisdom & Charisma', status:'Ativa — substitui 2014'},
+  {nome:'Wizard', origem:'Oficial Wizards — Core', fonte:'Player’s Handbook (2024)', descricao:'Estudioso da magia arcana, com grande amplitude de magias e preparação baseada em Inteligência.', atributo:'Intelligence', dado:'d6', salvaguardas:'Intelligence & Wisdom', status:'Ativa — substitui 2014'},
+
+  {nome:'Gunslinger', origem:'Parceiro/Terceiro', fonte:'The Gunslinger Class: Valda’s Spire of Secrets', descricao:'Especialista em armas de fogo, risco e decisões rápidas, estruturado como classe completa de parceiro.', atributo:'Dexterity', dado:'d8', salvaguardas:'Dexterity & Charisma', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Kindred', origem:'Parceiro/Terceiro', fonte:'Vampire: The Masquerade – Bound by Blood', descricao:'Classe vampírica centrada em sobrevivência, sangue e capacidades sobrenaturais.', atributo:'Charisma', dado:'d10', salvaguardas:'Constitution & Charisma', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Monster Hunter', origem:'Parceiro/Terceiro', fonte:'Grim Hollow: Player’s Guide', descricao:'Caçador especializado em identificar, rastrear e eliminar criaturas monstruosas.', atributo:'Strength ou Dexterity; Intelligence', dado:'d10', salvaguardas:'Dexterity & Intelligence', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Pugilist', origem:'Parceiro/Terceiro', fonte:'The Pugilist Class (2024)', descricao:'Lutador de rua resistente e agressivo, focado em combate corporal, determinação e risco.', atributo:'Strength', dado:'d10', salvaguardas:'Strength & Constitution', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Captain', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Líder marcial que combina presença, comando e capacidade de combate.', atributo:'Strength & Charisma', dado:'d10', salvaguardas:'Constitution & Charisma', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Champion', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Guerreiro de linha de frente voltado a armas, armaduras e proeza física.', atributo:'Strength & Dexterity', dado:'d10', salvaguardas:'Strength & Constitution', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Messenger', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Viajante e emissário experiente, orientado a mobilidade, comunicação e presença social.', atributo:'Dexterity & Charisma', dado:'d8', salvaguardas:'Dexterity & Charisma', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Scholar', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Especialista em conhecimento, tradições antigas e artes de cura.', atributo:'Intelligence & Wisdom', dado:'d8', salvaguardas:'Intelligence & Wisdom', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Treasure Hunter', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Aventureiro engenhoso voltado à exploração, recuperação de tesouros e soluções furtivas.', atributo:'Dexterity', dado:'d8', salvaguardas:'Dexterity & Intelligence', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Warden', origem:'Parceiro/Terceiro', fonte:'The Lord of the Rings Roleplaying', descricao:'Protetor marcial ligado ao território e à defesa de aliados e comunidades.', atributo:'Dexterity & Wisdom', dado:'d10', salvaguardas:'Strength & Wisdom', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Illrigger', origem:'Parceiro/Terceiro', fonte:'The Illrigger Revised', descricao:'Combatente infernal que mistura disciplina marcial, poderes sobrenaturais e controle de campo.', atributo:'Strength ou Dexterity', dado:'d10', salvaguardas:'Constitution & Charisma', status:'Ativa no catálogo parceiro do D&D Beyond'},
+  {nome:'Blood Hunter', origem:'Parceiro/Terceiro', fonte:'Critical Role', descricao:'Caçador sobrenatural que aceita custos pessoais para combater ameaças e ampliar suas técnicas.', atributo:'Strength ou Dexterity; Intelligence ou Wisdom', dado:'d10', salvaguardas:'Dexterity & Intelligence', status:'Ativa no catálogo parceiro do D&D Beyond'}
+];
+
+const busca = document.getElementById('busca');
+const filtro = document.getElementById('filtro');
+const lista = document.getElementById('lista');
+const resultado = document.getElementById('resultado');
+
+function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function texto(c) { return [c.nome,c.origem,c.fonte,c.descricao,c.atributo,c.salvaguardas].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function render() {
+  const termo = busca.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+  const itens = CLASSES.filter(c => (!termo || texto(c).includes(termo)) && (!filtro.value || c.origem === filtro.value));
+  resultado.textContent = `${itens.length} de ${CLASSES.length} classes`;
+  lista.innerHTML = itens.map(c => `
+    <details class="classe">
+      <summary><strong>${esc(c.nome)}</strong><span class="origem">${esc(c.origem)}</span></summary>
+      <div class="corpo">
+        <p>${esc(c.descricao)}</p>
+        <div class="meta">
+          <span><strong>Tipo:</strong> Classe</span>
+          <span><strong>Fonte:</strong> ${esc(c.fonte)}</span>
+          <span><strong>Atributo principal:</strong> ${esc(c.atributo)}</span>
+          <span><strong>Dado de Vida:</strong> ${esc(c.dado)}</span>
+          <span><strong>Salvaguardas:</strong> ${esc(c.salvaguardas)}</span>
+          <span><strong>Status:</strong> ${esc(c.status)}</span>
+        </div>
+      </div>
+    </details>`).join('');
+}
+
+busca.addEventListener('input', render);
+filtro.addEventListener('change', render);
+render();
+</script>
+</body>
+</html>
