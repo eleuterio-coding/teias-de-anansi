@@ -9,19 +9,382 @@
   <title>Subclasses - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
-    .resumo { opacity: .78; }
-    .vazio { padding: 16px; border: 1px dashed #8888; border-radius: 10px; margin: 18px 0; }
-    @media (max-width: 750px) { body { padding: 16px; } }
+    .resumo, .meta { opacity: .78; }
+    .nota { padding: 13px 15px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .licenca { font-size: .9rem; opacity: .8; }
+    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(200px,300px); gap: 10px; margin: 18px 0 10px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .subclasse { margin: 12px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .subclasse > summary { cursor: pointer; padding: 15px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .subclasse > summary:hover { background: #8881; }
+    .classe { font-size: .86rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 18px; }
+    .ficha { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 8px 18px; padding: 12px 0; border-top: 1px solid #8883; border-bottom: 1px solid #8883; margin-bottom: 14px; }
+    .ficha div { min-width: 0; }
+    .descricao { margin: 12px 0 16px; }
+    .mecanicas h3 { margin: 18px 0 5px; }
+    .mecanicas h4 { margin: 12px 0 4px; }
+    .mecanicas p { margin: 5px 0; }
+    .mecanicas ul { margin-top: 5px; }
+    table { width: 100%; border-collapse: collapse; margin: 9px 0 14px; }
+    th, td { text-align: left; vertical-align: top; padding: 7px 9px; border-bottom: 1px solid #8884; }
+    th { font-weight: 700; }
+    .fonte { margin-top: 18px; padding-top: 11px; border-top: 1px solid #8883; font-size: .9rem; opacity: .82; }
+    .tag { display: inline-block; border: 1px solid #8885; border-radius: 999px; padding: 2px 8px; font-size: .78rem; margin-left: 8px; opacity: .82; }
+    @media (max-width: 750px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr; }
+      .subclasse > summary { display: block; }
+      .classe { display: block; margin-top: 5px; }
+    }
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260818-1525">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260818-1532">← Bibliotecas</a></p>
   <header>
     <h1>Subclasses</h1>
-    <p class="resumo">0 itens publicados neste módulo.</p>
+    <p class="resumo">12 subclasses oficiais com conteúdo integralmente publicável no recorte aberto do D&amp;D 5e/5.5e. A precedência 2024/5.5e foi aplicada.</p>
   </header>
-  <main><div class="vazio">Nenhum conteúdo publicado neste módulo.</div></main>
+
+  <div class="nota"><strong>Critério editorial:</strong> este módulo publica somente conteúdo oficial cuja reprodução integral seja autorizada. O SRD 5.2.1 é CC-BY-4.0; as D&amp;D Beyond Basic Rules, embora gratuitas para leitura, não são usadas como fonte reproduzível. Como as 12 subclasses abertas do SRD 5.1 possuem equivalentes atualizados no SRD 5.2.1, apenas as versões 5.5e/2024 permanecem ativas no Hub.</div>
+  <div class="nota"><strong>Sobre “stat block”:</strong> subclasses não possuem stat block de criatura. Para este módulo, o requisito de completude é atendido pelo <strong>bloco mecânico integral da subclasse</strong>: descrição, níveis, features, opções, tabelas e limitações de uso.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar subclasse, classe, feature ou magia...">
+    <select id="filtro">
+      <option value="">Todas as classes</option>
+      <option>Barbarian</option><option>Bard</option><option>Cleric</option><option>Druid</option>
+      <option>Fighter</option><option>Monk</option><option>Paladin</option><option>Ranger</option>
+      <option>Rogue</option><option>Sorcerer</option><option>Warlock</option><option>Wizard</option>
+    </select>
+  </div>
+  <p class="resultado" id="resultado"></p>
+
+  <main id="lista">
+
+    <details class="subclasse" data-classe="Barbarian">
+      <summary><strong>Path of the Berserker <span class="tag">5.5e</span></strong><span class="classe">Barbarian</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Path of the Berserker</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Barbarian</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">Bárbaros que seguem o Path of the Berserker direcionam sua Fúria principalmente para a violência. Seu caminho é o de uma fúria sem amarras; eles se deleitam no caos da batalha enquanto permitem que a Fúria os domine e fortaleça.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Frenzy</h3>
+          <p>Se você usar Reckless Attack enquanto sua Rage estiver ativa, causa dano extra ao primeiro alvo que atingir no seu turno com um ataque baseado em Strength. Para determinar o dano extra, role uma quantidade de d6 igual ao seu bônus de Rage Damage e some os resultados. O dano é do mesmo tipo da arma ou Unarmed Strike usado no ataque.</p>
+          <h3>Nível 6 — Mindless Rage</h3>
+          <p>Você tem Immunity às condições Charmed e Frightened enquanto sua Rage estiver ativa. Se estiver Charmed ou Frightened quando entrar em Rage, a condição termina em você.</p>
+          <h3>Nível 10 — Retaliation</h3>
+          <p>Quando sofrer dano de uma criatura que esteja a até 5 pés de você, pode usar uma Reaction para realizar um ataque corpo a corpo contra essa criatura, usando uma arma ou Unarmed Strike.</p>
+          <h3>Nível 14 — Intimidating Presence</h3>
+          <p>Como Bonus Action, você pode aterrorizar outros com sua presença ameaçadora e poder primal. Cada criatura à sua escolha em uma Emanation de 30 pés originada em você deve realizar um Wisdom saving throw com DC igual a 8 + seu modificador de Strength + seu Proficiency Bonus. Em uma falha, a criatura fica Frightened por 1 minuto. Ao fim de cada turno da criatura amedrontada, ela repete o save, encerrando o efeito sobre si em caso de sucesso.</p>
+          <p>Depois de usar esta feature, você não pode usá-la novamente até terminar um Long Rest, a menos que gaste um uso de Rage, sem ação necessária, para restaurar o uso da feature.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 30. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Bard">
+      <summary><strong>College of Lore <span class="tag">5.5e</span></strong><span class="classe">Bard</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> College of Lore</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Bard</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">Bardos do College of Lore colecionam magias e segredos de fontes diversas, como tomos acadêmicos, ritos místicos e histórias populares. Seus membros se reúnem em bibliotecas e universidades para compartilhar conhecimento e também em festivais ou assuntos de Estado, onde podem expor corrupção, desvendar mentiras e ridicularizar figuras de autoridade excessivamente importantes.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Bonus Proficiencies</h3><p>Você ganha proficiency em três skills à sua escolha.</p>
+          <h3>Nível 3 — Cutting Words</h3>
+          <p>Quando uma criatura que você possa ver a até 60 pés de você fizer uma rolagem de dano ou obtiver sucesso em um ability check ou attack roll, você pode usar uma Reaction para gastar um uso de Bardic Inspiration. Role seu Bardic Inspiration die e subtraia o resultado da rolagem da criatura, reduzindo o dano ou potencialmente transformando o sucesso em falha.</p>
+          <h3>Nível 6 — Magical Discoveries</h3>
+          <p>Você aprende duas spells à sua escolha. Elas podem vir das listas de Cleric, Druid ou Wizard, em qualquer combinação. Cada spell escolhida deve ser um cantrip ou uma spell para a qual você possua spell slots, conforme a Bard Features table. Você sempre tem essas spells preparadas. Sempre que ganhar um nível de Bard, pode substituir uma delas por outra spell que cumpra esses requisitos.</p>
+          <h3>Nível 14 — Peerless Skill</h3>
+          <p>Quando fizer um ability check ou attack roll e falhar, pode gastar um uso de Bardic Inspiration, rolar o Bardic Inspiration die e somar o resultado ao d20, podendo transformar a falha em sucesso. Se ainda assim falhar, o Bardic Inspiration não é gasto.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 35. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Cleric">
+      <summary><strong>Life Domain <span class="tag">5.5e</span></strong><span class="classe">Cleric</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Life Domain</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Cleric</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">O Life Domain se concentra na energia positiva que ajuda a sustentar toda a vida no multiverso. Clerics que recorrem a esse domínio são mestres da cura, usando essa força vital para tratar muitos ferimentos. A própria existência depende da energia positiva associada ao domínio, por isso Clerics de quase qualquer tradição religiosa podem escolhê-lo. Ele é especialmente associado a divindades agrícolas, de cura ou resistência, deuses do lar e da comunidade e ordens religiosas dedicadas à cura.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Disciple of Life</h3><p>Quando uma spell lançada por você com spell slot restaura Hit Points de uma criatura, essa criatura recupera Hit Points adicionais no turno em que você conjura a spell. O valor adicional é igual a 2 + o nível do spell slot.</p>
+          <h3>Nível 3 — Life Domain Spells</h3>
+          <p>Quando alcançar um nível de Cleric indicado na tabela, você passa a ter permanentemente as spells listadas preparadas.</p>
+          <table><thead><tr><th>Cleric Level</th><th>Prepared Spells</th></tr></thead><tbody>
+            <tr><td>3</td><td>Aid, Bless, Cure Wounds, Lesser Restoration</td></tr>
+            <tr><td>5</td><td>Mass Healing Word, Revivify</td></tr>
+            <tr><td>7</td><td>Aura of Life, Death Ward</td></tr>
+            <tr><td>9</td><td>Greater Restoration, Mass Cure Wounds</td></tr>
+          </tbody></table>
+          <h3>Nível 3 — Preserve Life</h3>
+          <p>Como Magic action, você apresenta seu Holy Symbol e gasta um uso de Channel Divinity para invocar energia de cura capaz de restaurar uma quantidade total de Hit Points igual a cinco vezes seu nível de Cleric. Escolha criaturas Bloodied a até 30 pés de você, podendo incluir você mesmo, e distribua esses Hit Points entre elas. Esta feature não pode elevar uma criatura acima de metade de seu Hit Point maximum.</p>
+          <h3>Nível 6 — Blessed Healer</h3><p>Imediatamente depois de lançar com spell slot uma spell que restaure Hit Points de uma ou mais criaturas que não sejam você, você recupera Hit Points iguais a 2 + o nível do spell slot.</p>
+          <h3>Nível 17 — Supreme Healing</h3><p>Quando normalmente rolaria um ou mais dados para restaurar Hit Points de uma criatura com uma spell ou Channel Divinity, não role esses dados: use o maior número possível em cada dado. Por exemplo, em vez de restaurar 2d6 Hit Points, restaure 12.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 40. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Druid">
+      <summary><strong>Circle of the Land <span class="tag">5.5e</span></strong><span class="classe">Druid</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Circle of the Land</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Druid</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">O Circle of the Land reúne místicos e sábios que protegem conhecimento e ritos antigos. Esses Druids se encontram em círculos sagrados de árvores ou pedras erguidas para compartilhar segredos primais em Druidic, e os membros mais sábios presidem como sacerdotes principais de suas comunidades.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Circle of the Land Spells</h3><p>Sempre que terminar um Long Rest, escolha um tipo de terreno: arid, polar, temperate ou tropical. Você tem preparadas as spells da tabela correspondente ao terreno escolhido para seu nível de Druid e todos os níveis inferiores.</p>
+          <table><thead><tr><th>Land</th><th>Druid Level</th><th>Circle Spells</th></tr></thead><tbody>
+            <tr><td>Arid</td><td>3</td><td>Blur, Burning Hands, Fire Bolt</td></tr><tr><td>Arid</td><td>5</td><td>Fireball</td></tr><tr><td>Arid</td><td>7</td><td>Blight</td></tr><tr><td>Arid</td><td>9</td><td>Wall of Stone</td></tr>
+            <tr><td>Polar</td><td>3</td><td>Fog Cloud, Hold Person, Ray of Frost</td></tr><tr><td>Polar</td><td>5</td><td>Sleet Storm</td></tr><tr><td>Polar</td><td>7</td><td>Ice Storm</td></tr><tr><td>Polar</td><td>9</td><td>Cone of Cold</td></tr>
+            <tr><td>Temperate</td><td>3</td><td>Misty Step, Shocking Grasp, Sleep</td></tr><tr><td>Temperate</td><td>5</td><td>Lightning Bolt</td></tr><tr><td>Temperate</td><td>7</td><td>Freedom of Movement</td></tr><tr><td>Temperate</td><td>9</td><td>Tree Stride</td></tr>
+            <tr><td>Tropical</td><td>3</td><td>Acid Splash, Ray of Sickness, Web</td></tr><tr><td>Tropical</td><td>5</td><td>Stinking Cloud</td></tr><tr><td>Tropical</td><td>7</td><td>Polymorph</td></tr><tr><td>Tropical</td><td>9</td><td>Insect Plague</td></tr>
+          </tbody></table>
+          <h3>Nível 3 — Land’s Aid</h3>
+          <p>Como Magic action, gaste um uso de Wild Shape e escolha um ponto a até 60 pés de você. Flores vitalizantes e espinhos drenadores de vida surgem por um instante em uma Sphere de 10 pés de raio centrada nesse ponto. Cada criatura à sua escolha na Sphere faz um Constitution saving throw contra sua spell save DC, sofrendo 2d6 Necrotic damage em uma falha ou metade em um sucesso. Uma criatura à sua escolha na área recupera 2d6 Hit Points. O dano e a cura aumentam em 1d6 no nível 10 de Druid (3d6) e novamente no nível 14 (4d6).</p>
+          <h3>Nível 6 — Natural Recovery</h3>
+          <p>Você pode lançar uma das spells de nível 1+ preparadas pela feature Circle Spells sem gastar spell slot. Depois disso, precisa terminar um Long Rest antes de fazê-lo novamente.</p>
+          <p>Além disso, ao terminar um Short Rest, pode escolher spell slots gastos para recuperar. Os slots podem ter uma soma de níveis igual ou inferior à metade do seu nível de Druid, arredondada para cima, e nenhum deles pode ser de nível 6+. Depois de recuperar slots desta forma, não pode fazê-lo novamente até terminar um Long Rest.</p>
+          <h3>Nível 10 — Nature’s Ward</h3><p>Você é imune à condição Poisoned e possui Resistance a um tipo de dano ligado à escolha atual de terreno: Arid — Fire; Polar — Cold; Temperate — Lightning; Tropical — Poison.</p>
+          <h3>Nível 14 — Nature’s Sanctuary</h3>
+          <p>Como Magic action, gaste um uso de Wild Shape e faça árvores e vinhas espectrais surgirem em um Cube de 15 pés no chão a até 120 pés de você. Elas permanecem por 1 minuto ou até você ficar Incapacitated ou morrer. Você e seus aliados têm Half Cover enquanto estiverem na área, e seus aliados recebem a Resistance atual de Nature’s Ward enquanto estiverem nela. Como Bonus Action, você pode mover o Cube em até 60 pés para outro ponto no chão a até 120 pés de você.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 46. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Fighter">
+      <summary><strong>Champion <span class="tag">5.5e</span></strong><span class="classe">Fighter</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Champion</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Fighter</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">Um Champion se concentra no desenvolvimento de proeza marcial em uma busca incansável pela vitória. Champions combinam treinamento rigoroso e excelência física para desferir golpes devastadores, resistir ao perigo e conquistar glória, seja em competições atléticas ou em batalhas sangrentas.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Improved Critical</h3><p>Seus attack rolls com armas e Unarmed Strikes podem marcar Critical Hit com resultado 19 ou 20 no d20.</p>
+          <h3>Nível 3 — Remarkable Athlete</h3><p>Você tem Advantage em Initiative rolls e Strength (Athletics) checks. Além disso, imediatamente depois de marcar um Critical Hit, pode se mover até metade de seu Speed sem provocar Opportunity Attacks.</p>
+          <h3>Nível 7 — Additional Fighting Style</h3><p>Você recebe outro Fighting Style feat à sua escolha.</p>
+          <h3>Nível 10 — Heroic Warrior</h3><p>Durante combate, sempre que começar seu turno sem Heroic Inspiration, pode concedê-la a si mesmo.</p>
+          <h3>Nível 15 — Superior Critical</h3><p>Seus attack rolls com armas e Unarmed Strikes passam a marcar Critical Hit com 18–20 no d20.</p>
+          <h3>Nível 18 — Survivor</h3>
+          <h4>Defy Death</h4><p>Você tem Advantage em Death Saving Throws. Além disso, quando rolar 18–20 em um Death Saving Throw, recebe o benefício de rolar 20.</p>
+          <h4>Heroic Rally</h4><p>No início de cada um de seus turnos, você recupera Hit Points iguais a 5 + seu Constitution modifier se estiver Bloodied e tiver pelo menos 1 Hit Point.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 49. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Monk">
+      <summary><strong>Warrior of the Open Hand <span class="tag">5.5e</span></strong><span class="classe">Monk</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Warrior of the Open Hand</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Monk</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui Way of the Open Hand (5e/2014)</div>
+        </div>
+        <p class="descricao">Warriors of the Open Hand são mestres do combate desarmado. Eles aprendem técnicas para empurrar e derrubar adversários e para manipular a própria energia a fim de se proteger de danos.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Open Hand Technique</h3><p>Sempre que atingir uma criatura com um ataque concedido por Flurry of Blows, pode impor um dos efeitos abaixo ao alvo.</p>
+          <ul><li><strong>Addle:</strong> o alvo não pode realizar Opportunity Attacks até o início do próximo turno dele.</li><li><strong>Push:</strong> o alvo deve passar em um Strength saving throw ou ser empurrado até 15 pés para longe de você.</li><li><strong>Topple:</strong> o alvo deve passar em um Dexterity saving throw ou ficar com a condição Prone.</li></ul>
+          <h3>Nível 6 — Wholeness of Body</h3><p>Como Bonus Action, role seu Martial Arts die. Você recupera Hit Points iguais ao resultado + seu Wisdom modifier, com mínimo de 1 Hit Point recuperado. Pode usar esta feature uma quantidade de vezes igual ao seu Wisdom modifier, mínimo de uma vez, e recupera todos os usos ao terminar um Long Rest.</p>
+          <h3>Nível 11 — Fleet Step</h3><p>Quando usar uma Bonus Action que não seja Step of the Wind, pode também usar Step of the Wind imediatamente após essa Bonus Action.</p>
+          <h3>Nível 17 — Quivering Palm</h3>
+          <p>Quando atingir uma criatura com Unarmed Strike, pode gastar 4 Focus Points para iniciar vibrações imperceptíveis no corpo dela. Elas duram um número de dias igual ao seu nível de Monk e são inofensivas até você agir para encerrá-las. Alternativamente, quando realiza a Attack action em seu turno, pode abrir mão de um dos ataques para encerrá-las. Para isso, você e o alvo precisam estar no mesmo plane of existence.</p>
+          <p>Quando as vibrações terminam dessa forma, o alvo realiza um Constitution saving throw, sofrendo 10d12 Force damage em uma falha ou metade em um sucesso. Apenas uma criatura pode estar sob o efeito desta feature por vez. Você pode encerrar as vibrações de forma inofensiva, sem ação necessária.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 52. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Paladin">
+      <summary><strong>Oath of Devotion <span class="tag">5.5e</span></strong><span class="classe">Paladin</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Oath of Devotion</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Paladin</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">O Oath of Devotion vincula Paladins aos ideais de justiça e ordem. Eles seguem o arquétipo do cavaleiro de armadura brilhante, exigem de si os mais altos padrões de conduta e, para o bem ou para o mal, podem exigir os mesmos padrões do restante do mundo. Muitos servem deuses da lei e do bem; outros usam anjos como seus ideais e incorporam imagens de asas angelicais a seus elmos ou brasões.</p>
+        <p><strong>Tenets:</strong> deixe sua palavra ser sua promessa; proteja os fracos e nunca tema agir; deixe seus atos honrados servirem de exemplo.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Oath of Devotion Spells</h3><p>Ao alcançar os níveis indicados de Paladin, você passa a ter permanentemente as spells listadas preparadas.</p>
+          <table><thead><tr><th>Paladin Level</th><th>Spells</th></tr></thead><tbody>
+            <tr><td>3</td><td>Protection from Evil and Good, Shield of Faith</td></tr><tr><td>5</td><td>Aid, Zone of Truth</td></tr><tr><td>9</td><td>Beacon of Hope, Dispel Magic</td></tr><tr><td>13</td><td>Freedom of Movement, Guardian of Faith</td></tr><tr><td>17</td><td>Commune, Flame Strike</td></tr>
+          </tbody></table>
+          <h3>Nível 3 — Sacred Weapon</h3>
+          <p>Quando realiza a Attack action, pode gastar um uso de Channel Divinity para imbuir uma Melee weapon que esteja segurando com energia positiva. Por 10 minutos, ou até usar esta feature novamente, você adiciona seu Charisma modifier às attack rolls feitas com essa arma, com bônus mínimo de +1. Cada vez que acerta com ela, pode fazer com que cause seu tipo normal de dano ou Radiant damage.</p>
+          <p>A arma também emite Bright Light em raio de 20 pés e Dim Light por mais 20 pés. Você pode encerrar o efeito antes, sem ação necessária. O efeito também termina se você não estiver carregando a arma.</p>
+          <h3>Nível 7 — Aura of Devotion</h3><p>Você e seus aliados têm Immunity à condição Charmed enquanto estiverem em sua Aura of Protection. Se um aliado Charmed entrar na aura, a condição não produz efeito sobre ele enquanto permanecer nela.</p>
+          <h3>Nível 15 — Smite of Protection</h3><p>Sua smite mágica passa a irradiar energia protetora. Sempre que conjurar Divine Smite, você e seus aliados têm Half Cover enquanto estiverem em sua Aura of Protection. A aura concede esse benefício até o início do seu próximo turno.</p>
+          <h3>Nível 20 — Holy Nimbus</h3>
+          <p>Como Bonus Action, você pode imbuir sua Aura of Protection com poder sagrado, recebendo os benefícios abaixo por 10 minutos ou até encerrá-los, sem ação necessária. Depois de usar esta feature, não pode usá-la novamente até terminar um Long Rest. Também pode restaurar seu uso gastando um spell slot de nível 5, sem ação necessária.</p>
+          <ul><li><strong>Holy Ward:</strong> você tem Advantage em qualquer saving throw que seja forçado a realizar por um Fiend ou Undead.</li><li><strong>Radiant Damage:</strong> sempre que um inimigo começar o turno na aura, sofre Radiant damage igual ao seu Charisma modifier + seu Proficiency Bonus.</li><li><strong>Sunlight:</strong> a aura fica preenchida com Bright Light que conta como sunlight.</li></ul>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, pp. 56–57. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Ranger">
+      <summary><strong>Hunter <span class="tag">5.5e</span></strong><span class="classe">Ranger</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Hunter</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Ranger</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">Você persegue presas em regiões selvagens e em outros lugares, usando suas habilidades como Hunter para proteger a natureza e as pessoas de forças que poderiam destruí-las.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Hunter’s Lore</h3><p>Enquanto uma criatura estiver marcada por seu Hunter’s Mark, você sabe se ela possui Immunities, Resistances ou Vulnerabilities e, se possuir, quais são.</p>
+          <h3>Nível 3 — Hunter’s Prey</h3><p>Escolha uma das opções abaixo. Sempre que terminar um Short ou Long Rest, pode trocar a opção escolhida pela outra.</p>
+          <ul><li><strong>Colossus Slayer:</strong> quando acerta uma criatura com uma arma, a arma causa 1d8 de dano extra ao alvo se ele estiver com qualquer Hit Point faltando. Você só pode causar esse dano extra uma vez por turno.</li><li><strong>Horde Breaker:</strong> uma vez em cada um de seus turnos, quando fizer um ataque com uma arma, pode realizar outro ataque com a mesma arma contra uma criatura diferente que esteja a até 5 pés do alvo original, dentro do alcance da arma e que você ainda não tenha atacado neste turno.</li></ul>
+          <h3>Nível 7 — Defensive Tactics</h3><p>Escolha uma das opções abaixo. Sempre que terminar um Short ou Long Rest, pode trocar a opção escolhida pela outra.</p>
+          <ul><li><strong>Escape the Horde:</strong> Opportunity Attacks têm Disadvantage contra você.</li><li><strong>Multiattack Defense:</strong> quando uma criatura atinge você com um attack roll, ela tem Disadvantage em todos os outros attack rolls contra você neste turno.</li></ul>
+          <h3>Nível 11 — Superior Hunter’s Prey</h3><p>Uma vez por turno, quando causar dano a uma criatura marcada por seu Hunter’s Mark, pode também causar o dano extra dessa spell a uma criatura diferente que você possa ver a até 30 pés da primeira criatura.</p>
+          <h3>Nível 15 — Superior Hunter’s Defense</h3><p>Quando sofrer dano, pode usar uma Reaction para receber Resistance a esse dano e a qualquer outro dano do mesmo tipo até o fim do turno atual.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 61. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Rogue">
+      <summary><strong>Thief <span class="tag">5.5e</span></strong><span class="classe">Rogue</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Thief</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Rogue</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui a versão 5e/2014</div>
+        </div>
+        <p class="descricao">Mistura de ladrão, caçador de tesouros e explorador, você representa o aventureiro clássico. Além de aprimorar sua agilidade e furtividade, recebe habilidades úteis para explorar ruínas e extrair o máximo dos itens mágicos encontrados nelas.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Fast Hands</h3><p>Como Bonus Action, você pode fazer uma das opções abaixo.</p>
+          <ul><li><strong>Sleight of Hand:</strong> faça um Dexterity (Sleight of Hand) check para abrir uma fechadura ou desarmar uma armadilha com Thieves’ Tools, ou para bater uma carteira.</li><li><strong>Use an Object:</strong> realize a Utilize action ou a Magic action para usar um magic item que exija essa ação.</li></ul>
+          <h3>Nível 3 — Second-Story Work</h3>
+          <ul><li><strong>Climber:</strong> você recebe Climb Speed igual ao seu Speed.</li><li><strong>Jumper:</strong> pode determinar sua distância de salto usando Dexterity em vez de Strength.</li></ul>
+          <h3>Nível 9 — Supreme Sneak</h3><p>Você recebe a opção de Cunning Strike <strong>Stealth Attack (Cost: 1d6)</strong>. Se estiver sob a condição Invisible concedida pela Hide action, este ataque não encerra essa condição se você terminar o turno atrás de Three-Quarters Cover ou Total Cover.</p>
+          <h3>Nível 13 — Use Magic Device</h3><p>Você aprende a maximizar o uso de magic items, recebendo os benefícios abaixo.</p>
+          <ul><li><strong>Attunement:</strong> pode ficar attuned a até quatro magic items de uma vez.</li><li><strong>Charges:</strong> sempre que usar uma propriedade de magic item que gaste charges, role 1d6. Em resultado 6, você usa a propriedade sem gastar as charges.</li><li><strong>Scrolls:</strong> pode usar qualquer Spell Scroll, usando Intelligence como sua spellcasting ability para a spell. Se for cantrip ou spell de nível 1, você a conjura de forma confiável. Para uma spell de nível maior, deve passar em Intelligence (Arcana) check com DC 10 + nível da spell. Em sucesso, conjura a spell do scroll; em falha, o scroll se desintegra.</li></ul>
+          <h3>Nível 17 — Thief’s Reflexes</h3><p>Você pode realizar dois turnos durante a primeira rodada de qualquer combate. Faz o primeiro em sua Initiative normal e o segundo em sua Initiative menos 10.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 64. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Sorcerer">
+      <summary><strong>Draconic Sorcery <span class="tag">5.5e</span></strong><span class="classe">Sorcerer</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Draconic Sorcery</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Sorcerer</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui Draconic Bloodline (5e/2014)</div>
+        </div>
+        <p class="descricao">Sua magia inata vem do dom de um dragão. Um dragão antigo à beira da morte pode ter transmitido parte de seu poder a você ou a um ancestral; você pode ter absorvido magia de um local impregnado por poder dracônico, manipulado um tesouro de um covil de dragão ou possuir um dragão em sua ancestralidade.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Draconic Resilience</h3><p>A magia em seu corpo manifesta traços físicos de seu dom dracônico. Seu Hit Point maximum aumenta em 3 e aumenta em 1 sempre que ganhar outro nível de Sorcerer. Partes de você também ficam cobertas por escamas semelhantes às de dragão. Enquanto não estiver usando armor, sua base Armor Class é igual a 10 + seu Dexterity modifier + seu Charisma modifier.</p>
+          <h3>Nível 3 — Draconic Spells</h3><p>Ao alcançar os níveis indicados de Sorcerer, você passa a ter permanentemente as spells listadas preparadas.</p>
+          <table><thead><tr><th>Sorcerer Level</th><th>Spells</th></tr></thead><tbody>
+            <tr><td>3</td><td>Alter Self, Chromatic Orb, Command, Dragon’s Breath</td></tr><tr><td>5</td><td>Fear, Fly</td></tr><tr><td>7</td><td>Arcane Eye, Charm Monster</td></tr><tr><td>9</td><td>Legend Lore, Summon Dragon</td></tr>
+          </tbody></table>
+          <h3>Nível 6 — Elemental Affinity</h3><p>Sua magia dracônica possui afinidade com um tipo de dano associado a dragões. Escolha Acid, Cold, Fire, Lightning ou Poison. Você recebe Resistance ao tipo escolhido e, quando conjura uma spell que cause dano desse tipo, pode somar seu Charisma modifier a uma rolagem de dano da spell.</p>
+          <h3>Nível 14 — Dragon Wings</h3><p>Como Bonus Action, você pode fazer asas dracônicas surgirem em suas costas. Elas duram 1 hora ou até você dispensá-las, sem ação necessária. Enquanto durarem, você possui Fly Speed de 60 pés. Depois de usar esta feature, não pode usá-la novamente até terminar um Long Rest, a menos que gaste 3 Sorcery Points, sem ação necessária, para restaurar seu uso.</p>
+          <h3>Nível 18 — Dragon Companion</h3><p>Você pode conjurar Summon Dragon sem Material component. Também pode conjurá-la uma vez sem spell slot, recuperando essa capacidade ao terminar um Long Rest. Sempre que começar a conjurar a spell, pode modificá-la para que não exija Concentration. Se fizer isso, a duração da spell passa a ser 1 minuto para essa conjuração.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, pp. 69–70. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Warlock">
+      <summary><strong>Fiend Patron <span class="tag">5.5e</span></strong><span class="classe">Warlock</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Fiend Patron</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Warlock</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui The Fiend (5e/2014)</div>
+        </div>
+        <p class="descricao">Seu pacto extrai poder dos Lower Planes, reinos de perdição. Você pode ter feito uma barganha com um demon lord, um archdevil ou outro fiend especialmente poderoso. Os objetivos desse patrono são malignos — corrupção ou destruição de todas as coisas, no fim incluindo você — e seu caminho é definido pelo quanto você resiste a esses objetivos.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Dark One’s Blessing</h3><p>Quando reduzir um inimigo a 0 Hit Points, você ganha Temporary Hit Points iguais ao seu Charisma modifier + seu nível de Warlock, com mínimo de 1 Temporary Hit Point. Você também recebe esse benefício se outra pessoa reduzir a 0 Hit Points um inimigo que esteja a até 10 pés de você.</p>
+          <h3>Nível 3 — Fiend Spells</h3><p>Ao alcançar os níveis indicados de Warlock, você passa a ter permanentemente as spells listadas preparadas.</p>
+          <table><thead><tr><th>Warlock Level</th><th>Spells</th></tr></thead><tbody>
+            <tr><td>3</td><td>Burning Hands, Command, Scorching Ray, Suggestion</td></tr><tr><td>5</td><td>Fireball, Stinking Cloud</td></tr><tr><td>7</td><td>Fire Shield, Wall of Fire</td></tr><tr><td>9</td><td>Geas, Insect Plague</td></tr>
+          </tbody></table>
+          <h3>Nível 6 — Dark One’s Own Luck</h3><p>Quando fizer um ability check ou saving throw, pode usar esta feature para somar 1d10 à rolagem. Pode decidir depois de ver a rolagem, mas antes de qualquer efeito dela ocorrer. Pode usar esta feature uma quantidade de vezes igual ao seu Charisma modifier, mínimo de uma vez, mas no máximo uma vez por rolagem. Recupera todos os usos ao terminar um Long Rest.</p>
+          <h3>Nível 10 — Fiendish Resilience</h3><p>Sempre que terminar um Short ou Long Rest, escolha um tipo de dano diferente de Force. Você possui Resistance ao tipo escolhido até escolher outro com esta feature.</p>
+          <h3>Nível 14 — Hurl Through Hell</h3><p>Uma vez por turno, quando atingir uma criatura com um attack roll, pode tentar transportá-la instantaneamente pelos Lower Planes. O alvo deve passar em um Charisma saving throw contra sua spell save DC. Em falha, desaparece e atravessa uma paisagem de pesadelo. Se não for um Fiend, sofre 8d10 Psychic damage e fica Incapacitated até o fim do seu próximo turno, quando retorna ao espaço que ocupava ou ao espaço desocupado mais próximo.</p>
+          <p>Depois de usar esta feature, não pode usá-la novamente até terminar um Long Rest, a menos que gaste um Pact Magic spell slot, sem ação necessária, para restaurar seu uso.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 76. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+    <details class="subclasse" data-classe="Wizard">
+      <summary><strong>Evoker <span class="tag">5.5e</span></strong><span class="classe">Wizard</span></summary>
+      <div class="corpo">
+        <div class="ficha">
+          <div><strong>Nome:</strong> Evoker</div><div><strong>Tipo:</strong> Subclasses</div>
+          <div><strong>Classe:</strong> Wizard</div><div><strong>Edição:</strong> 5.5e / regras 2024</div>
+          <div><strong>Livro/Fonte:</strong> System Reference Document 5.2.1</div><div><strong>Status:</strong> Ativo — substitui School of Evocation (5e/2014)</div>
+        </div>
+        <p class="descricao">Seus estudos se concentram em magia que produz efeitos elementais poderosos, como frio intenso, chamas abrasadoras, trovões, relâmpagos e ácido corrosivo. Alguns Evokers servem em forças militares como artilharia mágica; outros usam seu poder para proteger pessoas, e alguns o empregam em benefício próprio.</p>
+        <section class="mecanicas">
+          <h3>Nível 3 — Evocation Savant</h3><p>Escolha duas Wizard spells da escola Evocation, cada uma de nível 2 ou inferior, e adicione-as gratuitamente ao seu spellbook. Além disso, sempre que ganhar acesso a um novo nível de spell slots nesta classe, pode adicionar gratuitamente ao spellbook uma Wizard spell da escola Evocation. A spell escolhida deve ser de um nível para o qual você possua spell slots.</p>
+          <h3>Nível 3 — Potent Cantrip</h3><p>Quando conjura um cantrip contra uma criatura e erra o attack roll ou o alvo obtém sucesso em um saving throw contra o cantrip, o alvo sofre metade do dano do cantrip, se houver, mas não sofre qualquer efeito adicional dele.</p>
+          <h3>Nível 6 — Sculpt Spells</h3><p>Quando conjura uma Evocation spell que afete outras criaturas que você possa ver, pode escolher uma quantidade delas igual a 1 + o nível da spell. As criaturas escolhidas obtêm sucesso automático em seus saving throws contra a spell e não sofrem dano se normalmente sofreriam metade do dano em um save bem-sucedido.</p>
+          <h3>Nível 10 — Empowered Evocation</h3><p>Sempre que conjurar uma Wizard spell da escola Evocation, pode somar seu Intelligence modifier a uma rolagem de dano dessa spell.</p>
+          <h3>Nível 14 — Overchannel</h3><p>Quando conjura uma Wizard spell com spell slot de níveis 1–5 que cause dano, pode causar o dano máximo com essa spell no turno em que a conjura.</p>
+          <p>Na primeira vez que fizer isso, não sofre efeito adverso. Se usar esta feature novamente antes de terminar um Long Rest, sofre 2d12 Necrotic damage para cada nível do spell slot imediatamente depois de conjurar a spell. Esse dano ignora Resistance e Immunity. Cada uso adicional antes de terminar um Long Rest aumenta em 1d12 o Necrotic damage por nível da spell.</p>
+        </section>
+        <p class="fonte"><strong>Fonte aberta:</strong> SRD 5.2.1, p. 82. Licença CC-BY-4.0.</p>
+      </div>
+    </details>
+
+  </main>
+
+  <footer class="licenca">
+    <hr>
+    <p><strong>Atribuição CC exigida pelo SRD:</strong> This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode.</p>
+    <p>As descrições em português desta página são traduções/adaptações editoriais do conteúdo aberto do SRD 5.2.1 para o Hub. Nomes próprios de regras, features e spells foram preservados em inglês para evitar atribuir traduções oficiais inexistentes.</p>
+  </footer>
+
+<script>
+const busca = document.getElementById('busca');
+const filtro = document.getElementById('filtro');
+const itens = [...document.querySelectorAll('.subclasse')];
+const resultado = document.getElementById('resultado');
+
+function filtrar() {
+  const termo = busca.value.trim().toLocaleLowerCase('pt-BR');
+  const classe = filtro.value;
+  let visiveis = 0;
+  for (const item of itens) {
+    const bateClasse = !classe || item.dataset.classe === classe;
+    const bateTexto = !termo || item.textContent.toLocaleLowerCase('pt-BR').includes(termo);
+    const ok = bateClasse && bateTexto;
+    item.hidden = !ok;
+    if (ok) visiveis++;
+  }
+  resultado.textContent = `${visiveis} de ${itens.length} subclasses exibidas.`;
+}
+busca.addEventListener('input', filtrar);
+filtro.addEventListener('change', filtrar);
+filtrar();
+</script>
 </body>
 </html>
