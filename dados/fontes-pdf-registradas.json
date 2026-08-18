@@ -8,12 +8,12 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes"],
+      "uso_no_hub": ["Classes", "Monstros"],
       "artefatos_relacionados": [
-        "classes-pdf24.html",
-        "dados/classes-pdf24-merged-auditoria.json"
+        "dados/classes-pdf24-merged-auditoria.json",
+        "dados/monstros-pdfs-auditoria.json"
       ],
-      "observacao": "Fonte já auditada no módulo Classes; manter disponível como referência documental do projeto."
+      "observacao": "Fonte auditada nos módulos Classes e Monstros; manter disponível como referência documental do projeto."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -21,12 +21,13 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes"],
+      "uso_no_hub": ["Classes", "Monstros"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
-        "dados/classes-pdf24-merged-1.json"
+        "dados/classes-pdf24-merged-1.json",
+        "dados/monstros-pdfs-auditoria.json"
       ],
-      "observacao": "Fonte já auditada no módulo Classes; manter disponível como referência documental do projeto."
+      "observacao": "Fonte auditada nos módulos Classes e Monstros; manter disponível como referência documental do projeto."
     }
   ],
   "controle": {
