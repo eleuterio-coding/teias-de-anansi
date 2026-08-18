@@ -1,0 +1,450 @@
+{
+  "schema": "hub-rpg/antecedentes/v1",
+  "gerado_em": "2026-08-18",
+  "politica_sobreposicao": "5.5e/2024 prevalece sobre equivalentes 5e/2014 no catálogo ativo",
+  "controle": {
+    "validado": true,
+    "quantidade": 4,
+    "filtro": "somente conteúdo oficial aberto, com descrição e bloco mecânico completos"
+  },
+  "licenca": {
+    "nome": "Creative Commons Attribution 4.0 International",
+    "atribuicao": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License."
+  },
+  "items": [
+    {
+      "id": "antecedentes:srd521:acolyte",
+      "nome": "Acólito",
+      "nome_original": "Acolyte",
+      "aliases": [],
+      "slug": "acolito",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "antecedente",
+        "categorias": ["Background"],
+        "tags": ["SRD 5.2.1", "core 2024", "Origem"],
+        "setting": "Multiverso D&D",
+        "campanha": null,
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "resumo": "Formação religiosa em templo ou comunidade sagrada, com estudo da fé e contato inicial com magia divina.",
+        "descricao": "Você dedicou parte importante de sua formação ao serviço em um templo ou outro lugar sagrado. Ali participou de ritos, estudou religião sob orientação sacerdotal e aprendeu a canalizar uma pequena parcela de poder divino em benefício do local de culto e das pessoas que recorriam a ele.",
+        "texto_integral": "Acólito é um antecedente de D&D 5.5e. Atributos associados: Inteligência, Sabedoria e Carisma. Talento de Origem: Iniciado em Magia, usando a lista de Clérigo. Perícias: Intuição e Religião. Ferramenta: Suprimentos de Calígrafo. Equipamento: escolha o pacote A — Suprimentos de Calígrafo, Livro de orações, Símbolo Sagrado, 10 folhas de Pergaminho, Veste e 8 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "notas": []
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5.5e",
+          "atributos_elegiveis": ["Inteligência", "Sabedoria", "Carisma"],
+          "aumento_atributos": {
+            "opcao_1": "+2 em um atributo elegível e +1 em outro atributo elegível",
+            "opcao_2": "+1 em cada um dos três atributos elegíveis",
+            "limite": 20
+          },
+          "talento_origem": {
+            "nome": "Iniciado em Magia",
+            "nome_original": "Magic Initiate",
+            "escolha_fixa": "Clérigo",
+            "href": "talentos.html"
+          },
+          "pericias": ["Intuição", "Religião"],
+          "ferramentas": ["Suprimentos de Calígrafo"],
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Suprimentos de Calígrafo", "quantidade": 1},
+                  {"nome": "Livro", "quantidade": 1, "observacao": "orações"},
+                  {"nome": "Símbolo Sagrado", "quantidade": 1},
+                  {"nome": "Pergaminho", "quantidade": 10, "unidade": "folhas"},
+                  {"nome": "Veste", "quantidade": 1},
+                  {"nome": "PO", "quantidade": 8}
+                ]
+              },
+              {"id": "B", "itens": [{"nome": "PO", "quantidade": 50}]}
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "titulo_original": "System Reference Document 5.2.1",
+        "editora": "Wizards of the Coast LLC",
+        "autores": [],
+        "ano": 2025,
+        "data_publicacao": "2025-05-01",
+        "natureza": "SRD",
+        "setting": "",
+        "ruleset": "5.5e",
+        "pagina_inicio": null,
+        "pagina_fim": null,
+        "pagina_pdf_mesclado_inicio": null,
+        "pagina_pdf_mesclado_fim": null,
+        "url_original": "https://www.dndbeyond.com/srd"
+      },
+      "compatibilidade": {
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "setting": "",
+        "depende_de": ["Iniciado em Magia (Clérigo)"],
+        "versao_de": "antecedentes:srd51:acolyte",
+        "substitui": "antecedentes:srd51:acolyte",
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [
+        {"tipo": "concede", "destino": "Iniciado em Magia", "modulo_destino": "Talentos", "contexto": "Clérigo", "href": "talentos.html"}
+      ],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": [],
+        "revisao_manual": false
+      }
+    },
+    {
+      "id": "antecedentes:srd521:criminal",
+      "nome": "Criminoso",
+      "nome_original": "Criminal",
+      "aliases": [],
+      "slug": "criminoso",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "antecedente",
+        "categorias": ["Background"],
+        "tags": ["SRD 5.2.1", "core 2024", "Origem"],
+        "setting": "Multiverso D&D",
+        "campanha": null,
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "resumo": "Passado ligado a furtos, invasões e vida clandestina, com experiência em agir antes que o perigo se imponha.",
+        "descricao": "Você aprendeu a sobreviver à margem da lei, em becos, estabelecimentos invadidos e outros ambientes onde discrição e rapidez valiam mais que reputação. Pode ter pertencido a um pequeno grupo criminoso ou trabalhado sozinho, enfrentando tanto autoridades quanto criminosos mais perigosos.",
+        "texto_integral": "Criminoso é um antecedente de D&D 5.5e. Atributos associados: Destreza, Constituição e Inteligência. Talento de Origem: Alerta. Perícias: Prestidigitação e Furtividade. Ferramenta: Ferramentas de Ladrão. Equipamento: escolha o pacote A — 2 Adagas, Ferramentas de Ladrão, Pé de Cabra, 2 Bolsas, Roupas de Viajante e 16 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "notas": []
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5.5e",
+          "atributos_elegiveis": ["Destreza", "Constituição", "Inteligência"],
+          "aumento_atributos": {
+            "opcao_1": "+2 em um atributo elegível e +1 em outro atributo elegível",
+            "opcao_2": "+1 em cada um dos três atributos elegíveis",
+            "limite": 20
+          },
+          "talento_origem": {
+            "nome": "Alerta",
+            "nome_original": "Alert",
+            "href": "talentos.html"
+          },
+          "pericias": ["Prestidigitação", "Furtividade"],
+          "ferramentas": ["Ferramentas de Ladrão"],
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Adaga", "quantidade": 2},
+                  {"nome": "Ferramentas de Ladrão", "quantidade": 1},
+                  {"nome": "Pé de Cabra", "quantidade": 1},
+                  {"nome": "Bolsa", "quantidade": 2},
+                  {"nome": "Roupas de Viajante", "quantidade": 1},
+                  {"nome": "PO", "quantidade": 16}
+                ]
+              },
+              {"id": "B", "itens": [{"nome": "PO", "quantidade": 50}]}
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "titulo_original": "System Reference Document 5.2.1",
+        "editora": "Wizards of the Coast LLC",
+        "autores": [],
+        "ano": 2025,
+        "data_publicacao": "2025-05-01",
+        "natureza": "SRD",
+        "setting": "",
+        "ruleset": "5.5e",
+        "pagina_inicio": null,
+        "pagina_fim": null,
+        "pagina_pdf_mesclado_inicio": null,
+        "pagina_pdf_mesclado_fim": null,
+        "url_original": "https://www.dndbeyond.com/srd"
+      },
+      "compatibilidade": {
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "setting": "",
+        "depende_de": ["Alerta"],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [
+        {"tipo": "concede", "destino": "Alerta", "modulo_destino": "Talentos", "href": "talentos.html"}
+      ],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": [],
+        "revisao_manual": false
+      }
+    },
+    {
+      "id": "antecedentes:srd521:sage",
+      "nome": "Sábio",
+      "nome_original": "Sage",
+      "aliases": [],
+      "slug": "sabio",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "antecedente",
+        "categorias": ["Background"],
+        "tags": ["SRD 5.2.1", "core 2024", "Origem"],
+        "setting": "Multiverso D&D",
+        "campanha": null,
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "resumo": "Formação erudita em bibliotecas, arquivos e mosteiros, com estudo de história, arcanismo e fundamentos de magia.",
+        "descricao": "Você passou seus anos de formação circulando por propriedades, bibliotecas e mosteiros, prestando serviços em troca de acesso a livros e coleções. Longas horas de estudo lhe deram conhecimento sobre a história do multiverso e até os fundamentos da prática mágica, alimentando uma curiosidade que continua ativa.",
+        "texto_integral": "Sábio é um antecedente de D&D 5.5e. Atributos associados: Constituição, Inteligência e Sabedoria. Talento de Origem: Iniciado em Magia, usando a lista de Mago. Perícias: Arcanismo e História. Ferramenta: Suprimentos de Calígrafo. Equipamento: escolha o pacote A — Bordão, Suprimentos de Calígrafo, Livro de história, 8 folhas de Pergaminho, Veste e 8 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "notas": []
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5.5e",
+          "atributos_elegiveis": ["Constituição", "Inteligência", "Sabedoria"],
+          "aumento_atributos": {
+            "opcao_1": "+2 em um atributo elegível e +1 em outro atributo elegível",
+            "opcao_2": "+1 em cada um dos três atributos elegíveis",
+            "limite": 20
+          },
+          "talento_origem": {
+            "nome": "Iniciado em Magia",
+            "nome_original": "Magic Initiate",
+            "escolha_fixa": "Mago",
+            "href": "talentos.html"
+          },
+          "pericias": ["Arcanismo", "História"],
+          "ferramentas": ["Suprimentos de Calígrafo"],
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Bordão", "quantidade": 1},
+                  {"nome": "Suprimentos de Calígrafo", "quantidade": 1},
+                  {"nome": "Livro", "quantidade": 1, "observacao": "história"},
+                  {"nome": "Pergaminho", "quantidade": 8, "unidade": "folhas"},
+                  {"nome": "Veste", "quantidade": 1},
+                  {"nome": "PO", "quantidade": 8}
+                ]
+              },
+              {"id": "B", "itens": [{"nome": "PO", "quantidade": 50}]}
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "titulo_original": "System Reference Document 5.2.1",
+        "editora": "Wizards of the Coast LLC",
+        "autores": [],
+        "ano": 2025,
+        "data_publicacao": "2025-05-01",
+        "natureza": "SRD",
+        "setting": "",
+        "ruleset": "5.5e",
+        "pagina_inicio": null,
+        "pagina_fim": null,
+        "pagina_pdf_mesclado_inicio": null,
+        "pagina_pdf_mesclado_fim": null,
+        "url_original": "https://www.dndbeyond.com/srd"
+      },
+      "compatibilidade": {
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "setting": "",
+        "depende_de": ["Iniciado em Magia (Mago)"],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [
+        {"tipo": "concede", "destino": "Iniciado em Magia", "modulo_destino": "Talentos", "contexto": "Mago", "href": "talentos.html"}
+      ],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": [],
+        "revisao_manual": false
+      }
+    },
+    {
+      "id": "antecedentes:srd521:soldier",
+      "nome": "Soldado",
+      "nome_original": "Soldier",
+      "aliases": [],
+      "slug": "soldado",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "antecedente",
+        "categorias": ["Background"],
+        "tags": ["SRD 5.2.1", "core 2024", "Origem"],
+        "setting": "Multiverso D&D",
+        "campanha": null,
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "resumo": "Treinamento militar e experiência de campo, combinando preparo físico, intimidação e familiaridade com combate.",
+        "descricao": "Você começou a se preparar para a guerra ao chegar à vida adulta e passou a executar exercícios de combate até que eles se tornassem quase reflexos. Mais tarde, colocou esse treinamento em prática no campo de batalha, usando disciplina, força e presença para sobreviver e proteger aquilo por que lutava.",
+        "texto_integral": "Soldado é um antecedente de D&D 5.5e. Atributos associados: Força, Destreza e Constituição. Talento de Origem: Atacante Selvagem. Perícias: Atletismo e Intimidação. Ferramenta: escolha um tipo de Conjunto de Jogo. Equipamento: escolha o pacote A — Lança, Arco Curto, 20 Flechas, o mesmo Conjunto de Jogo escolhido para a proficiência, Kit de Curandeiro, Aljava, Roupas de Viajante e 14 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "notas": []
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5.5e",
+          "atributos_elegiveis": ["Força", "Destreza", "Constituição"],
+          "aumento_atributos": {
+            "opcao_1": "+2 em um atributo elegível e +1 em outro atributo elegível",
+            "opcao_2": "+1 em cada um dos três atributos elegíveis",
+            "limite": 20
+          },
+          "talento_origem": {
+            "nome": "Atacante Selvagem",
+            "nome_original": "Savage Attacker",
+            "href": "talentos.html"
+          },
+          "pericias": ["Atletismo", "Intimidação"],
+          "ferramenta_escolha": {
+            "quantidade": 1,
+            "categoria": "Conjunto de Jogo",
+            "opcoes_abertas": ["Dados", "Dragonchess", "Cartas de Jogar", "Three-Dragon Ante"]
+          },
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Lança", "quantidade": 1},
+                  {"nome": "Arco Curto", "quantidade": 1},
+                  {"nome": "Flecha", "quantidade": 20},
+                  {"nome": "Conjunto de Jogo", "quantidade": 1, "observacao": "o mesmo escolhido para a proficiência"},
+                  {"nome": "Kit de Curandeiro", "quantidade": 1},
+                  {"nome": "Aljava", "quantidade": 1},
+                  {"nome": "Roupas de Viajante", "quantidade": 1},
+                  {"nome": "PO", "quantidade": 14}
+                ]
+              },
+              {"id": "B", "itens": [{"nome": "PO", "quantidade": 50}]}
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [
+          {
+            "nome": "Conjunto de Jogo",
+            "momento": "criação do personagem",
+            "quantidade": 1,
+            "opcoes": ["Dados", "Dragonchess", "Cartas de Jogar", "Three-Dragon Ante"],
+            "repetivel": false,
+            "pode_trocar": false,
+            "quando_pode_trocar": null
+          }
+        ],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "titulo_original": "System Reference Document 5.2.1",
+        "editora": "Wizards of the Coast LLC",
+        "autores": [],
+        "ano": 2025,
+        "data_publicacao": "2025-05-01",
+        "natureza": "SRD",
+        "setting": "",
+        "ruleset": "5.5e",
+        "pagina_inicio": null,
+        "pagina_fim": null,
+        "pagina_pdf_mesclado_inicio": null,
+        "pagina_pdf_mesclado_fim": null,
+        "url_original": "https://www.dndbeyond.com/srd"
+      },
+      "compatibilidade": {
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "setting": "",
+        "depende_de": ["Atacante Selvagem"],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [
+        {"tipo": "concede", "destino": "Atacante Selvagem", "modulo_destino": "Talentos", "href": "talentos.html"}
+      ],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": [],
+        "revisao_manual": false
+      }
+    }
+  ]
+}
