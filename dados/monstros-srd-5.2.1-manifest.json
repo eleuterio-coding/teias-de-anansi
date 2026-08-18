@@ -1,0 +1,42 @@
+{
+  "schema": "hub-rpg/monstros/v1",
+  "gerado_em": "2026-08-18",
+  "status": "publicado",
+  "escopo": "Monstros oficiais de D&D com conteúdo aberto, descrição completa e stat block completo",
+  "precedencia": "5.5e/2024 prevalece sobre equivalentes 5e/2014; não duplicar versões 2014 quando existe bloco 5.5e correspondente",
+  "fonte_autoritativa": {
+    "titulo": "System Reference Document 5.2.1",
+    "editora": "Wizards of the Coast LLC",
+    "data_publicacao": "2025-05-01",
+    "ruleset": "5.5e",
+    "licenca": "Creative Commons Attribution 4.0 International",
+    "url": "https://www.dndbeyond.com/srd"
+  },
+  "transporte_estruturado": {
+    "nome": "The DM's Toolkit — D&D 2024 SRD API",
+    "endpoint_lista": "https://apisearch.thedmstoolkit.com/api/2024/monsters",
+    "endpoint_detalhe": "https://apisearch.thedmstoolkit.com/api/2024/monsters/{slug}",
+    "declaracao": "A API declara o namespace SRD 5.2 auditado 1:1 contra o documento-fonte e fornece description, description_md e properties para cada registro.",
+    "quantidade_publicada": 345
+  },
+  "criterios_de_completude": {
+    "obrigatorios": [
+      "nome e identificação",
+      "descrição integral do registro",
+      "tamanho, tipo e alinhamento quando aplicáveis",
+      "CA e iniciativa quando presentes na fonte",
+      "PV e deslocamentos",
+      "seis atributos e modificadores/salvaguardas conforme a fonte",
+      "perícias, resistências, vulnerabilidades e imunidades quando aplicáveis",
+      "sentidos e idiomas",
+      "CR, XP e bônus de proficiência",
+      "traços",
+      "ações",
+      "reações quando aplicáveis",
+      "ações lendárias quando aplicáveis",
+      "conjuração e demais blocos especiais quando aplicáveis"
+    ],
+    "regra": "Nenhum item deve ser renderizado como bloco publicado se o endpoint de detalhe não fornecer descrição e propriedades estruturadas."
+  },
+  "licenca_atribuicao": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
+}
