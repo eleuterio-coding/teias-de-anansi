@@ -1,0 +1,301 @@
+{
+  "schema": "hub-rpg/antecedentes/v1",
+  "gerado_em": "2026-08-18",
+  "controle": {
+    "validado": true,
+    "quantidade": 3,
+    "filtro": "conteúdo oficial publicamente acessível com descrição e bloco mecânico completos; sem preencher lacunas de conteúdo fechado"
+  },
+  "items": [
+    {
+      "id": "antecedentes:phb2024:wayfarer",
+      "nome": "Wayfarer",
+      "nome_original": "Wayfarer",
+      "aliases": ["Andarilho"],
+      "slug": "wayfarer",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "background_5.5e",
+        "categorias": ["Background", "Origem"],
+        "tags": ["Player's Handbook 2024", "5.5e", "conteúdo oficial aberto"],
+        "status": "atual",
+        "natureza": "Core"
+      },
+      "conteudo": {
+        "resumo": "Sobrevivente das margens da sociedade urbana, acostumado a perceber intenções, mover-se sem chamar atenção e recorrer às ferramentas de ladrão.",
+        "descricao": "Este antecedente representa alguém que passou parte da vida entre pessoas deixadas à margem da sociedade, aprendendo a sobreviver em ruas e ambientes urbanos sem apoio estável. Essa experiência desenvolveu atenção ao comportamento alheio, discrição e familiaridade com fechaduras e outros obstáculos, sem determinar que o personagem seja necessariamente criminoso.",
+        "texto_integral": "Wayfarer é um antecedente de D&D 5.5e. Atributos associados: Destreza, Sabedoria e Carisma. Talento de Origem: Sortudo (Lucky). Perícias: Intuição e Furtividade. Ferramenta: Ferramentas de Ladrão. Equipamento: escolha o pacote A — 2 Adagas, Ferramentas de Ladrão, um Conjunto de Jogo à escolha, Saco de Dormir, 2 Bolsas, Roupas de Viajante e 16 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "notas": ["O nome original é mantido como título principal para evitar atribuir uma tradução oficial inexistente na fonte aberta consultada."]
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5.5e",
+          "atributos_elegiveis": ["Destreza", "Sabedoria", "Carisma"],
+          "aumento_atributos": {
+            "opcao_1": "+2 em um atributo elegível e +1 em outro atributo elegível",
+            "opcao_2": "+1 em cada um dos três atributos elegíveis",
+            "limite": 20
+          },
+          "talento_origem": {
+            "nome": "Sortudo",
+            "nome_original": "Lucky",
+            "descricao": "Ao terminar um Descanso Longo, você recebe uma quantidade de Pontos de Sorte igual ao seu Bônus de Proficiência. Pode gastar um ponto ao realizar um Teste de d20 para obter Vantagem, ou ao ser alvo de uma jogada de ataque para impor Desvantagem ao d20 do atacante.",
+            "fonte_aberta": "https://www.dndbeyond.com/posts/1785-the-backgrounds-and-origin-feats-in-the-2024"
+          },
+          "pericias": ["Intuição", "Furtividade"],
+          "ferramentas": ["Ferramentas de Ladrão"],
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Adaga", "quantidade": 2},
+                  {"nome": "Ferramentas de Ladrão", "quantidade": 1},
+                  {"nome": "Conjunto de Jogo", "quantidade": 1, "observacao": "à escolha"},
+                  {"nome": "Saco de Dormir", "quantidade": 1},
+                  {"nome": "Bolsa", "quantidade": 2},
+                  {"nome": "Roupas de Viajante", "quantidade": 1},
+                  {"nome": "PO", "quantidade": 16}
+                ]
+              },
+              {"id": "B", "itens": [{"nome": "PO", "quantidade": 50}]}
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [
+          {"nome": "Conjunto de Jogo", "momento": "criação do personagem", "quantidade": 1, "opcoes": [], "repetivel": false, "pode_trocar": false}
+        ],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "phb-2024",
+        "titulo": "Player's Handbook (2024)",
+        "titulo_original": "Player's Handbook (2024)",
+        "editora": "Wizards of the Coast LLC",
+        "ano": 2024,
+        "natureza": "Core",
+        "ruleset": "5.5e",
+        "url_original": "https://www.dndbeyond.com/posts/1785-the-backgrounds-and-origin-feats-in-the-2024",
+        "acesso": "Bloco completo publicado em artigo oficial gratuito da D&D Beyond"
+      },
+      "compatibilidade": {
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "depende_de": [],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": ["Lucky descrito integralmente no próprio artigo oficial aberto"],
+        "avisos_de_extracao": [],
+        "revisao_manual": true
+      }
+    },
+    {
+      "id": "antecedentes:basic2014:folk-hero",
+      "nome": "Herói do Povo",
+      "nome_original": "Folk Hero",
+      "aliases": [],
+      "slug": "heroi-do-povo",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "background_5e",
+        "categorias": ["Background", "Legacy"],
+        "tags": ["Basic Rules 2014", "5e", "conteúdo oficial aberto"],
+        "status": "legado-ativo-sem-equivalente-2024",
+        "natureza": "Basic Rules"
+      },
+      "conteudo": {
+        "resumo": "Pessoa de origem humilde reconhecida por sua comunidade como alguém capaz de enfrentar abusos, ameaças e adversidades em defesa das pessoas comuns.",
+        "descricao": "Você veio de uma posição social modesta e, antes de se tornar aventureiro, viveu entre trabalhadores e comunidades comuns. Um acontecimento decisivo fez com que as pessoas ao seu redor passassem a enxergá-lo como campeão local. Esse passado mantém uma ligação forte com gente simples e com a disposição de enfrentar ameaças que pesam sobre a comunidade.",
+        "texto_integral": "Herói do Povo é um antecedente de D&D 5e (2014). Perícias: Lidar com Animais e Sobrevivência. Ferramentas: um tipo de Ferramentas de Artesão à escolha e Veículos Terrestres. Equipamento: um conjunto das Ferramentas de Artesão escolhidas, uma Pá, uma Panela de Ferro, Roupas Comuns e uma Bolsa com 10 PO. Evento Definidor: escolha ou determine aleatoriamente um acontecimento que tenha transformado uma pessoa de origem comum em herói local. Característica — Hospitalidade Rústica: por pertencer ao povo comum, você normalmente encontra entre pessoas comuns um lugar para se esconder, descansar ou se recuperar, desde que não tenha se mostrado uma ameaça a elas; essas pessoas podem protegê-lo de autoridades ou perseguidores, mas não colocarão voluntariamente a própria vida em risco.",
+        "notas": ["Mantido como 5e porque não existe um antecedente 2024 de mesmo nome que o substitua diretamente no catálogo core."]
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5e",
+          "pericias": ["Lidar com Animais", "Sobrevivência"],
+          "ferramenta_escolha": {
+            "quantidade": 1,
+            "categoria": "Ferramentas de Artesão",
+            "opcoes_abertas": []
+          },
+          "ferramentas": ["Veículos Terrestres"],
+          "idiomas": [],
+          "caracteristica": {
+            "nome": "Hospitalidade Rústica",
+            "nome_original": "Rustic Hospitality",
+            "descricao": "Você se integra com facilidade entre pessoas comuns e, salvo se tiver se mostrado perigoso para elas, pode encontrar abrigo para se esconder, descansar ou se recuperar. Elas podem tentar ocultá-lo de autoridades ou de quem o procura, mas não arriscarão voluntariamente a própria vida por você."
+          },
+          "evento_definidor": {
+            "dado": "1d10",
+            "descricao": "Escolha ou determine aleatoriamente um acontecimento marcante que tenha feito a comunidade reconhecer o personagem como herói; os exemplos oficiais incluem resistência a tirania, salvamento em desastre, confronto com monstros, defesa armada da comunidade, protesto e reconhecimento militar ou sobrenatural."
+          },
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Ferramentas de Artesão", "quantidade": 1, "observacao": "o tipo escolhido para a proficiência"},
+                  {"nome": "Pá", "quantidade": 1},
+                  {"nome": "Panela de Ferro", "quantidade": 1},
+                  {"nome": "Roupas Comuns", "quantidade": 1},
+                  {"nome": "Bolsa", "quantidade": 1, "observacao": "contendo 10 PO"},
+                  {"nome": "PO", "quantidade": 10}
+                ]
+              }
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [
+          {"nome": "Ferramentas de Artesão", "momento": "criação do personagem", "quantidade": 1, "opcoes": [], "repetivel": false, "pode_trocar": false},
+          {"nome": "Evento Definidor", "momento": "criação do personagem", "quantidade": 1, "opcoes": [], "repetivel": false, "pode_trocar": false}
+        ],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "basic-rules-2014",
+        "titulo": "Basic Rules (2014)",
+        "titulo_original": "Basic Rules (2014)",
+        "editora": "Wizards of the Coast LLC",
+        "ano": 2014,
+        "natureza": "Basic Rules",
+        "ruleset": "5e",
+        "url_original": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/personality-and-background",
+        "acesso": "Conteúdo integral disponibilizado gratuitamente na D&D Beyond"
+      },
+      "compatibilidade": {
+        "ruleset": "5e",
+        "revisao_core": 2014,
+        "depende_de": [],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": null,
+        "adaptacao_de": null
+      },
+      "relacoes": [],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": ["Tabelas extensas de características pessoais não são reproduzidas; são elementos opcionais de interpretação, não campos necessários ao bloco mecânico do antecedente."],
+        "revisao_manual": true
+      }
+    },
+    {
+      "id": "antecedentes:basic2014:spy",
+      "nome": "Espião",
+      "nome_original": "Spy",
+      "aliases": ["Variant Criminal: Spy"],
+      "slug": "espiao",
+      "classificacao": {
+        "modulo": "Antecedentes",
+        "subtipo": "variante",
+        "categorias": ["Background", "Variant", "Legacy"],
+        "tags": ["Basic Rules 2014", "5e", "variante de Criminal", "conteúdo oficial aberto"],
+        "status": "legado-ativo-sem-equivalente-2024",
+        "natureza": "Basic Rules"
+      },
+      "conteudo": {
+        "resumo": "Variante do Criminoso 2014 que aplica as mesmas capacidades à atividade de espionagem, seja a serviço de uma autoridade ou como agente independente.",
+        "descricao": "Seu treinamento ocorreu no contexto de espionagem. Em vez de se definir principalmente por roubos ou contrabando, você aprendeu a obter e transmitir segredos, podendo ter servido oficialmente a uma autoridade ou negociado informações por conta própria. Mecanicamente, a variante utiliza o bloco do Criminoso 2014.",
+        "texto_integral": "Espião é uma variante do antecedente Criminoso de D&D 5e (2014). Perícias: Enganação e Furtividade. Ferramentas: um tipo de Conjunto de Jogo à escolha e Ferramentas de Ladrão. Equipamento: Pé de Cabra, Roupas Comuns escuras com capuz e uma Bolsa com 15 PO. Característica — Contato Criminal: você possui um contato confiável que serve de ligação com uma rede criminosa e conhece meios e intermediários capazes de levar mensagens entre você e esse contato mesmo a grandes distâncias. A diferença temática da variante é que essas capacidades foram desenvolvidas no exercício da espionagem.",
+        "notas": ["O Criminoso 2014 não é duplicado como antecedente ativo porque existe Criminoso 2024; Espião é preservado como variante própria, pois não possui equivalente 2024 direto."]
+      },
+      "mecanica": {
+        "dados_especificos": {
+          "modelo_de_antecedente": "5e",
+          "pericias": ["Enganação", "Furtividade"],
+          "ferramenta_escolha": {
+            "quantidade": 1,
+            "categoria": "Conjunto de Jogo",
+            "opcoes_abertas": []
+          },
+          "ferramentas": ["Ferramentas de Ladrão"],
+          "idiomas": [],
+          "caracteristica": {
+            "nome": "Contato Criminal",
+            "nome_original": "Criminal Contact",
+            "descricao": "Você possui um contato confiável ligado a uma rede criminosa e sabe como enviar e receber mensagens por meio de intermediários apropriados mesmo quando está longe dele."
+          },
+          "equipamento_inicial": {
+            "escolher": 1,
+            "opcoes": [
+              {
+                "id": "A",
+                "itens": [
+                  {"nome": "Pé de Cabra", "quantidade": 1},
+                  {"nome": "Roupas Comuns", "quantidade": 1, "observacao": "escuras e com capuz"},
+                  {"nome": "Bolsa", "quantidade": 1, "observacao": "contendo 15 PO"},
+                  {"nome": "PO", "quantidade": 15}
+                ]
+              }
+            ]
+          }
+        },
+        "prerequisitos": [],
+        "efeitos": [],
+        "recursos": [],
+        "escolhas": [
+          {"nome": "Conjunto de Jogo", "momento": "criação do personagem", "quantidade": 1, "opcoes": [], "repetivel": false, "pode_trocar": false}
+        ],
+        "progressao": [],
+        "receitas": []
+      },
+      "fonte": {
+        "publicacao_id": "basic-rules-2014",
+        "titulo": "Basic Rules (2014)",
+        "titulo_original": "Basic Rules (2014)",
+        "editora": "Wizards of the Coast LLC",
+        "ano": 2014,
+        "natureza": "Basic Rules",
+        "ruleset": "5e",
+        "url_original": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/personality-and-background",
+        "acesso": "Conteúdo integral disponibilizado gratuitamente na D&D Beyond"
+      },
+      "compatibilidade": {
+        "ruleset": "5e",
+        "revisao_core": 2014,
+        "depende_de": [],
+        "versao_de": null,
+        "substitui": null,
+        "substituido_por": null,
+        "variante_de": "antecedentes:basic2014:criminal",
+        "adaptacao_de": null
+      },
+      "relacoes": [
+        {"tipo": "variante_de", "destino": "Criminoso (2014)", "modulo_destino": "Antecedentes", "contexto": "Mecânica herdada do antecedente Criminal das Basic Rules 2014; base não exibida como item ativo por ter versão 2024 equivalente."}
+      ],
+      "assets": [],
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "dependencias_nao_resolvidas": [],
+        "referencias_externas": [],
+        "avisos_de_extracao": ["Tabelas de especialidade e características pessoais do Criminoso 2014 não são reproduzidas como conteúdo obrigatório da variante."],
+        "revisao_manual": true
+      }
+    }
+  ]
+}
