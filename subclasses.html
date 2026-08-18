@@ -3,101 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Subclasses - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
-    .resumo, .meta { opacity: .78; }
-    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(180px,260px) minmax(180px,280px); gap: 10px; margin: 18px 0 10px; }
-    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
-    .resultado { margin: 8px 0 16px; opacity: .75; }
-    .subclasse { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
-    .subclasse summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-    .subclasse summary:hover { background: #8881; }
-    .classe { font-size: .86rem; opacity: .68; white-space: nowrap; }
-    .corpo { padding: 0 16px 16px; }
-    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
-    @media (max-width: 850px) {
-      body { padding: 16px; }
-      .controles { grid-template-columns: 1fr; }
-      .subclasse summary { display: block; }
-      .classe { display: block; margin-top: 5px; }
-    }
+    .resumo { opacity: .78; }
+    .vazio { padding: 16px; border: 1px dashed #8888; border-radius: 10px; margin: 18px 0; }
+    @media (max-width: 750px) { body { padding: 16px; } }
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260818-1525">← Bibliotecas</a></p>
   <header>
     <h1>Subclasses</h1>
-    <p class="resumo">129 subclasses oficiais ativas no catálogo consolidado do Hub: 68 em versão D&amp;D 2024/5.5e e 61 opções Legacy de 2014/5e ainda sem substituição.</p>
+    <p class="resumo">0 itens publicados neste módulo.</p>
   </header>
-
-  <div class="nota"><strong>Precedência:</strong> quando uma subclasse recebeu versão 2024/5.5e, a versão 2014 equivalente não aparece no catálogo ativo. Conteúdo de parceiros, Unearthed Arcana e homebrew não está incluído.</div>
-
-  <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar subclasse, classe ou livro...">
-    <select id="filtroClasse">
-      <option value="">Todas as classes</option>
-      <option value="Artífice">Artífice</option><option value="Bárbaro">Bárbaro</option><option value="Bardo">Bardo</option><option value="Clérigo">Clérigo</option><option value="Druida">Druida</option><option value="Guerreiro">Guerreiro</option><option value="Monge">Monge</option><option value="Paladino">Paladino</option><option value="Patrulheiro">Patrulheiro</option><option value="Ladino">Ladino</option><option value="Feiticeiro">Feiticeiro</option><option value="Bruxo">Bruxo</option><option value="Mago">Mago</option>
-    </select>
-    <select id="filtroEdicao">
-      <option value="">Todas as edições ativas</option>
-      <option value="D&D 2024 / 5.5e">D&D 2024 / 5.5e</option>
-      <option value="D&D 2014 / 5e — Legacy ativo">D&D 2014 / 5e — Legacy ativo</option>
-    </select>
-  </div>
-  <p class="resultado" id="resultado"></p>
-  <main id="lista"></main>
-
-<script>
-const GRUPOS = [["Artífice","Eberron: Forge of the Artificer","D&D 2024 / 5.5e",["Alchemist","Armorer","Artillerist","Battle Smith","Cartographer"]],["Artífice","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Reanimator"]],["Bárbaro","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Path of the Berserker","Path of the Wild Heart","Path of the World Tree","Path of the Zealot"]],["Bárbaro","Sword Coast Adventurer’s Guide","D&D 2014 / 5e — Legacy ativo",["Path of the Battlerager"]],["Bárbaro","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Path of the Ancestral Guardian","Path of the Storm Herald"]],["Bárbaro","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Path of the Beast","Path of Wild Magic"]],["Bárbaro","Bigby Presents: Glory of the Giants","D&D 2014 / 5e — Legacy ativo",["Path of the Giant"]],["Bardo","Player’s Handbook (2024)","D&D 2024 / 5.5e",["College of Dance","College of Glamour","College of Lore","College of Valor"]],["Bardo","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["College of the Moon"]],["Bardo","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["College of Spirits"]],["Bardo","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["College of Swords","College of Whispers"]],["Bardo","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["College of Creation","College of Eloquence"]],["Clérigo","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Life Domain","Light Domain","Trickery Domain","War Domain"]],["Clérigo","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Knowledge Domain"]],["Clérigo","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Grave Domain"]],["Clérigo","Player’s Handbook (2014)","D&D 2014 / 5e — Legacy ativo",["Nature Domain","Tempest Domain"]],["Clérigo","Dungeon Master’s Guide (2014)","D&D 2014 / 5e — Legacy ativo",["Death Domain"]],["Clérigo","Sword Coast Adventurer’s Guide","D&D 2014 / 5e — Legacy ativo",["Arcana Domain"]],["Clérigo","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Forge Domain"]],["Clérigo","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Order Domain","Peace Domain","Twilight Domain"]],["Druida","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Circle of the Land","Circle of the Moon","Circle of the Sea","Circle of the Stars"]],["Druida","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Circle of Dreams","Circle of the Shepherd"]],["Druida","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Circle of Spores","Circle of Wildfire"]],["Guerreiro","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Battle Master","Champion","Eldritch Knight","Psi Warrior"]],["Guerreiro","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Banneret"]],["Guerreiro","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Arcane Archer","Cavalier","Samurai"]],["Guerreiro","Explorer’s Guide to Wildemount","D&D 2014 / 5e — Legacy ativo",["Echo Knight"]],["Guerreiro","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Rune Knight"]],["Monge","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Warrior of the Elements","Warrior of Mercy","Warrior of the Open Hand","Warrior of Shadow"]],["Monge","Sword Coast Adventurer’s Guide","D&D 2014 / 5e — Legacy ativo",["Way of the Long Death","Way of the Sun Soul"]],["Monge","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Way of the Drunken Master","Way of the Kensei"]],["Monge","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Way of the Astral Self"]],["Monge","Fizban’s Treasury of Dragons","D&D 2014 / 5e — Legacy ativo",["Way of the Ascendant Dragon"]],["Paladino","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Oath of the Ancients","Oath of Devotion","Oath of Glory","Oath of Vengeance"]],["Paladino","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Oath of the Noble Genies"]],["Paladino","Dungeon Master’s Guide (2014)","D&D 2014 / 5e — Legacy ativo",["Oathbreaker"]],["Paladino","Sword Coast Adventurer’s Guide","D&D 2014 / 5e — Legacy ativo",["Oath of the Crown"]],["Paladino","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Oath of Conquest","Oath of Redemption"]],["Paladino","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Oath of the Watchers"]],["Patrulheiro","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Beast Master","Fey Wanderer","Gloom Stalker","Hunter"]],["Patrulheiro","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Winter Walker"]],["Patrulheiro","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Hollow Warden"]],["Patrulheiro","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Horizon Walker","Monster Slayer"]],["Patrulheiro","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Swarmkeeper"]],["Patrulheiro","Fizban’s Treasury of Dragons","D&D 2014 / 5e — Legacy ativo",["Drakewarden"]],["Ladino","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Arcane Trickster","Assassin","Soulknife","Thief"]],["Ladino","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Scion of the Three"]],["Ladino","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Phantom"]],["Ladino","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Mastermind","Swashbuckler","Inquisitive","Scout"]],["Feiticeiro","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Aberrant Sorcery","Clockwork Sorcery","Draconic Sorcery","Wild Magic Sorcery"]],["Feiticeiro","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Spellfire Sorcery"]],["Feiticeiro","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Shadow Sorcery"]],["Feiticeiro","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["Storm Sorcery","Divine Soul"]],["Feiticeiro","Dragonlance: Shadow of the Dragon Queen","D&D 2014 / 5e — Legacy ativo",["Lunar Sorcery"]],["Bruxo","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Archfey Patron","Celestial Patron","Fiend Patron","Great Old One Patron"]],["Bruxo","Ravenloft: The Horrors Within","D&D 2024 / 5.5e",["Undead Patron"]],["Bruxo","Sword Coast Adventurer’s Guide","D&D 2014 / 5e — Legacy ativo",["The Undying"]],["Bruxo","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["The Hexblade"]],["Bruxo","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["The Fathomless","The Genie"]],["Mago","Player’s Handbook (2024)","D&D 2024 / 5.5e",["Abjurer","Diviner","Evoker","Illusionist"]],["Mago","Forgotten Realms: Heroes of Faerûn","D&D 2024 / 5.5e",["Bladesinger"]],["Mago","Player’s Handbook (2014)","D&D 2014 / 5e — Legacy ativo",["School of Conjuration","School of Enchantment","School of Necromancy","School of Transmutation"]],["Mago","Xanathar’s Guide to Everything","D&D 2014 / 5e — Legacy ativo",["War Magic"]],["Mago","Explorer’s Guide to Wildemount","D&D 2014 / 5e — Legacy ativo",["Chronurgy Magic","Graviturgy Magic"]],["Mago","Tasha’s Cauldron of Everything","D&D 2014 / 5e — Legacy ativo",["Order of Scribes"]]];
-
-const SUBCLASSES = GRUPOS.flatMap(([classe,fonte,edicao,nomes]) => nomes.map(nome => ({
-  nome, classe, fonte, edicao,
-  status: edicao.startsWith('D&D 2024') ? 'Ativa — versão 5.5e soberana' : 'Ativa — Legacy sem substituição 5.5e'
-})));
-
-const busca = document.getElementById('busca');
-const filtroClasse = document.getElementById('filtroClasse');
-const filtroEdicao = document.getElementById('filtroEdicao');
-const lista = document.getElementById('lista');
-const resultado = document.getElementById('resultado');
-
-function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function normalizar(v='') { return String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
-function texto(s) { return normalizar([s.nome,s.classe,s.fonte,s.edicao,s.status].join(' ')); }
-
-function render() {
-  const termo = normalizar(busca.value.trim());
-  const itens = SUBCLASSES.filter(s =>
-    (!termo || texto(s).includes(termo)) &&
-    (!filtroClasse.value || s.classe === filtroClasse.value) &&
-    (!filtroEdicao.value || s.edicao === filtroEdicao.value)
-  );
-
-  resultado.textContent = `${itens.length} de ${SUBCLASSES.length} subclasses`;
-  lista.innerHTML = itens.map(s => `
-    <details class="subclasse">
-      <summary><strong>${esc(s.nome)}</strong><span class="classe">${esc(s.classe)}</span></summary>
-      <div class="corpo">
-        <p>Subclasse oficial de <strong>${esc(s.classe)}</strong>, publicada em <em>${esc(s.fonte)}</em>.</p>
-        <div class="meta">
-          <span><strong>Tipo:</strong> Subclasse</span>
-          <span><strong>Classe:</strong> ${esc(s.classe)}</span>
-          <span><strong>Livro:</strong> ${esc(s.fonte)}</span>
-          <span><strong>Edição:</strong> ${esc(s.edicao)}</span>
-          <span><strong>Status:</strong> ${esc(s.status)}</span>
-        </div>
-      </div>
-    </details>`).join('');
-}
-
-busca.addEventListener('input', render);
-filtroClasse.addEventListener('change', render);
-filtroEdicao.addEventListener('change', render);
-render();
-</script>
+  <main><div class="vazio">Nenhum conteúdo publicado neste módulo.</div></main>
 </body>
 </html>
