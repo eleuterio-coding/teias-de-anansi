@@ -1,0 +1,36 @@
+{
+  "schema": "hub-rpg/fontes-pdf/v1",
+  "registrado_em": "2026-08-18",
+  "fontes": [
+    {
+      "id": "fonte:pdf24_merged",
+      "arquivo": "pdf24_merged.pdf",
+      "alias": "pdf24_merged",
+      "tipo": "PDF mesclado",
+      "status": "registrado",
+      "uso_no_hub": ["Classes"],
+      "artefatos_relacionados": [
+        "classes-pdf24.html",
+        "dados/classes-pdf24-merged-auditoria.json"
+      ],
+      "observacao": "Fonte já auditada no módulo Classes; manter disponível como referência documental do projeto."
+    },
+    {
+      "id": "fonte:pdf24_merged-1",
+      "arquivo": "pdf24_merged-1.pdf",
+      "alias": "pdf24_merged-1",
+      "tipo": "PDF mesclado",
+      "status": "registrado",
+      "uso_no_hub": ["Classes"],
+      "artefatos_relacionados": [
+        "classes-pdf24-merged-1.html",
+        "dados/classes-pdf24-merged-1.json"
+      ],
+      "observacao": "Fonte já auditada no módulo Classes; manter disponível como referência documental do projeto."
+    }
+  ],
+  "controle": {
+    "quantidade": 2,
+    "nomes_canonicos": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"]
+  }
+}
