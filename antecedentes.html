@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Antecedentes - Biblioteca - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .resumo, .meta { opacity: .78; }
+    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .controles { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 18px 0 10px; }
+    input { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .antecedente { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .antecedente summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .antecedente summary:hover { background: #8881; }
+    .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 16px; }
+    .nome-original { opacity: .72; margin-top: -2px; }
+    .grade { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin: 12px 0; }
+    .bloco { border: 1px solid #8884; border-radius: 8px; padding: 10px 12px; }
+    .bloco h3 { margin: 0 0 6px; font-size: 1rem; }
+    .bloco p { margin: 5px 0; }
+    .equipamento { padding-left: 20px; margin: 6px 0 0; }
+    .equipamento li { margin: 4px 0; }
+    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .erro { padding: 16px; border: 1px solid #b44; border-radius: 10px; }
+    @media (max-width: 750px) {
+      body { padding: 16px; }
+      .grade { grid-template-columns: 1fr; }
+      .antecedente summary { display: block; }
+      .categoria { display: block; margin-top: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html?v=20260818-1541">← Bibliotecas</a></p>
+  <header>
+    <h1>Antecedentes</h1>
+    <p class="resumo">4 antecedentes oficiais de D&D 5.5e publicados com descrição e bloco mecânico completos a partir do conteúdo aberto do SRD 5.2.1.</p>
+  </header>
+
+  <div class="nota"><strong>Critério de publicação:</strong> entram somente antecedentes cuja descrição e mecânica integral estejam disponíveis em fonte oficial aberta. A revisão 2024 / 5.5e prevalece sobre equivalentes de 2014 no catálogo ativo.</div>
+  <div class="nota"><strong>Regra de atributos dos antecedentes 5.5e:</strong> cada antecedente lista três atributos. Aumente um deles em 2 e outro em 1, ou aumente os três em 1. Nenhum desses aumentos pode elevar um atributo acima de 20.</div>
+  <div class="nota"><strong>Fonte aberta:</strong> System Reference Document 5.2.1, Wizards of the Coast LLC, publicado sob CC BY 4.0. Referência oficial: <a href="https://www.dndbeyond.com/srd" target="_blank" rel="noopener noreferrer">D&D Beyond SRD</a>. Licença: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY 4.0</a>.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar antecedente, atributo, perícia, ferramenta ou talento..." aria-label="Buscar antecedentes">
+  </div>
+  <p class="resultado" id="resultado">Carregando antecedentes...</p>
+  <main id="lista"></main>
+
+<script>
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const semAcento = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const lista = document.getElementById('lista');
+const resultado = document.getElementById('resultado');
+const busca = document.getElementById('busca');
+let ITENS = [];
+
+function ferramentaTexto(d) {
+  if (d.ferramenta_escolha) return `Escolha ${d.ferramenta_escolha.quantidade} tipo de ${d.ferramenta_escolha.categoria}: ${d.ferramenta_escolha.opcoes_abertas.join(', ')}.`;
+  return (d.ferramentas || []).join(', ');
+}
+
+function talentoTexto(t) {
+  if (!t) return '—';
+  return `${t.nome}${t.escolha_fixa ? ` (${t.escolha_fixa})` : ''}`;
+}
+
+function itemTexto(i) {
+  if (i.nome === 'PO') return `${i.quantidade} PO`;
+  const qtd = i.quantidade > 1 ? `${i.quantidade}× ` : '';
+  const unidade = i.unidade ? ` (${i.quantidade} ${i.unidade})` : '';
+  if (i.unidade) return `${i.nome}${unidade}${i.observacao ? ` — ${i.observacao}` : ''}`;
+  return `${qtd}${i.nome}${i.observacao ? ` — ${i.observacao}` : ''}`;
+}
+
+function render() {
+  const termo = semAcento(busca.value.trim());
+  const filtrados = ITENS.filter(x => {
+    const d = x.mecanica.dados_especificos;
+    const texto = [x.nome, x.nome_original, x.conteudo.descricao, ...(d.atributos_elegiveis || []), ...(d.pericias || []), ferramentaTexto(d), talentoTexto(d.talento_origem)].join(' ');
+    return !termo || semAcento(texto).includes(termo);
+  });
+  resultado.textContent = `${filtrados.length} de ${ITENS.length} antecedentes`;
+  lista.innerHTML = filtrados.map(x => {
+    const d = x.mecanica.dados_especificos;
+    const opcoes = d.equipamento_inicial.opcoes || [];
+    const equipamento = opcoes.map(o => `
+      <div class="bloco">
+        <h3>Equipamento — Opção ${esc(o.id)}</h3>
+        <ul class="equipamento">${o.itens.map(i => `<li>${esc(itemTexto(i))}</li>`).join('')}</ul>
+      </div>`).join('');
+    const t = d.talento_origem;
+    return `
+      <details class="antecedente" id="${esc(x.slug)}">
+        <summary><strong>${esc(x.nome)}</strong><span class="categoria">D&D 5.5e · SRD 5.2.1</span></summary>
+        <div class="corpo">
+          <p class="nome-original"><strong>Nome original:</strong> ${esc(x.nome_original)}</p>
+          <p>${esc(x.conteudo.descricao)}</p>
+          <div class="grade">
+            <div class="bloco"><h3>Atributos associados</h3><p>${esc(d.atributos_elegiveis.join(', '))}</p><p><strong>Aumento:</strong> +2 em um e +1 em outro, ou +1 nos três; máximo 20.</p></div>
+            <div class="bloco"><h3>Talento de Origem</h3><p><a href="${esc(t.href || 'talentos.html')}">${esc(talentoTexto(t))}</a></p></div>
+            <div class="bloco"><h3>Proficiências em perícias</h3><p>${esc(d.pericias.join(' e '))}</p></div>
+            <div class="bloco"><h3>Proficiência em ferramenta</h3><p>${esc(ferramentaTexto(d))}</p></div>
+          </div>
+          <div class="grade">${equipamento}</div>
+          <div class="bloco"><h3>Bloco mecânico consolidado</h3><p>${esc(x.conteudo.texto_integral)}</p></div>
+          <div class="meta">
+            <span><strong>Fonte:</strong> ${esc(x.fonte.titulo)}</span>
+            <span><strong>Ruleset:</strong> ${esc(x.compatibilidade.ruleset)}</span>
+            <span><strong>Revisão:</strong> ${esc(x.compatibilidade.revisao_core)}</span>
+            <span><strong>Completude:</strong> ${esc(x.controle.status_completude)}</span>
+          </div>
+        </div>
+      </details>`;
+  }).join('') || '<div class="nota">Nenhum antecedente corresponde à busca.</div>';
+}
+
+fetch('dados/antecedentes-srd-5.2.1.json?v=20260818-1541', {cache:'no-store'})
+  .then(r => {
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+  })
+  .then(d => {
+    if (!d?.controle?.validado || d?.controle?.quantidade !== 4 || !Array.isArray(d.items) || d.items.length !== 4) throw new Error('Pacote de antecedentes não passou na validação de integridade.');
+    if (d.items.some(x => !x?.controle?.completo || x?.controle?.status_completude !== 'publicado')) throw new Error('Existe antecedente incompleto no pacote.');
+    ITENS = d.items;
+    busca.addEventListener('input', render);
+    render();
+  })
+  .catch(err => {
+    resultado.textContent = 'Falha ao carregar os antecedentes.';
+    lista.innerHTML = `<div class="erro"><strong>Conteúdo indisponível:</strong> ${esc(err.message)}</div>`;
+  });
+</script>
+</body>
+</html>
