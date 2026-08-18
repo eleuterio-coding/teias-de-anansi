@@ -10,8 +10,7 @@
     a { color: inherit; }
     .topo { margin-bottom: 24px; }
     .fonte { opacity: .78; margin-top: -8px; }
-    .aviso { border: 1px solid currentColor; border-radius: 10px; padding: 12px 14px; margin: 18px 0; opacity: .9; }
-    .controles { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(180px, 280px); gap: 10px; margin: 18px 0 8px; }
+    .controles { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(170px, 250px) minmax(170px, 250px); gap: 10px; margin: 18px 0 8px; }
     input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
     .item { border: 1px solid #8885; border-radius: 10px; margin: 10px 0; overflow: hidden; }
@@ -19,9 +18,10 @@
     .item summary:hover { background: #8881; }
     .subtipo { font-size: .85rem; opacity: .68; white-space: nowrap; }
     .corpo { padding: 0 16px 16px; }
-    .metadados { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; opacity: .78; }
+    .descricao { white-space: pre-wrap; }
+    .metadados { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; opacity: .78; border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; }
     .vazio, .erro { padding: 18px; border: 1px dashed #8888; border-radius: 10px; }
-    @media (max-width: 650px) {
+    @media (max-width: 750px) {
       body { padding: 16px; }
       .controles { grid-template-columns: 1fr; }
       .item summary { display: block; }
@@ -30,173 +30,186 @@
   </style>
 </head>
 <body>
-  <header class="topo">
-    <p><a href="biblioteca.html">← Bibliotecas</a></p>
-    <h1 id="titulo">Módulo</h1>
-    <p class="fonte" id="fonte">Dungeon Master's Guide • 2024 • D&amp;D 5.5e</p>
-  </header>
+<header class="topo">
+  <p><a href="biblioteca.html">← Bibliotecas</a></p>
+  <h1 id="titulo">Módulo</h1>
+  <p class="fonte" id="fonte">Base mecânica consolidada • D&amp;D 5.5e</p>
+</header>
+<main id="app"><p>Carregando base mecânica...</p></main>
 
-  <main id="app">
-    <p>Carregando dados do Dungeon Master's Guide...</p>
-  </main>
+<script>
+const MODULOS = [
+  'Regras', 'Classes', 'Subclasses', 'Espécies', 'Antecedentes', 'Talentos',
+  'Maestrias de Arma', 'Monstros', 'Armaduras', 'Armas', 'Equipamentos de Aventura',
+  'Ferramentas', 'Montarias e Veículos', 'Comércio e Despesas', 'Bugigangas',
+  'Itens Mágicos', 'Magias', 'Idiomas'
+];
+const DMG_PARTES = Array.from({ length: 5 }, (_, i) =>
+  `dados/dmg-2024-hub.web.gz.b64.part${String(i + 1).padStart(2, '0')}`
+);
+const PHB_GZIP = 'dados/phb-2024-hub.web.json.gz';
+const params = new URLSearchParams(window.location.search);
+const modulo = params.get('modulo');
+const titulo = document.getElementById('titulo');
+const app = document.getElementById('app');
 
-  <script>
-    const MODULOS = [
-      'Regras', 'Classes', 'Subclasses', 'Espécies', 'Antecedentes', 'Talentos',
-      'Maestrias de Arma', 'Monstros', 'Armaduras', 'Armas', 'Equipamentos de Aventura',
-      'Ferramentas', 'Montarias e Veículos', 'Comércio e Despesas', 'Bugigangas',
-      'Itens Mágicos', 'Magias', 'Planos e Cosmologia', 'Grupos e Facções', 'Idiomas',
-      'Lendas & Personalidades', 'Locais & Assentamentos',
-      'Divindades, Religiões & Cultos', 'História & Cronologia', 'Bastiões'
-    ];
-
-    const PARTES = Array.from(
-      { length: 5 },
-      (_, i) => `dados/dmg-2024-hub.web.gz.b64.part${String(i + 1).padStart(2, '0')}`
-    );
-
-    const params = new URLSearchParams(window.location.search);
-    const modulo = params.get('modulo');
-    const titulo = document.getElementById('titulo');
-    const fonte = document.getElementById('fonte');
-    const app = document.getElementById('app');
-
-    function esc(texto) {
-      return String(texto ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+function esc(texto) {
+  return String(texto ?? '')
+    .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+}
+function semAcento(texto) {
+  return String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function chaveItem(item) {
+  return `${item.m}|${semAcento(item.n).toLocaleLowerCase('pt-BR').replace(/[^a-z0-9]+/g, ' ').trim()}`;
+}
+function pagina(item) {
+  const [inicio, fim] = item.p || [];
+  if (!inicio) return '';
+  return inicio === fim || !fim ? `p. ${inicio}` : `pp. ${inicio}–${fim}`;
+}
+function rotuloSubtipo(valor) {
+  if (!valor) return 'sem subtipo';
+  return String(valor).replaceAll('_', ' ');
+}
+async function descompactarGzip(bytes) {
+  if (!('DecompressionStream' in window)) throw new Error('Navegador sem suporte à descompactação gzip necessária.');
+  const fluxo = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return JSON.parse(await new Response(fluxo).text());
+}
+async function carregarDmg() {
+  const textos = await Promise.all(DMG_PARTES.map(async url => {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`Falha ao carregar ${url}.`);
+    return (await r.text()).trim();
+  }));
+  const binario = atob(textos.join(''));
+  const bytes = new Uint8Array(binario.length);
+  for (let i = 0; i < binario.length; i++) bytes[i] = binario.charCodeAt(i);
+  return descompactarGzip(bytes);
+}
+async function carregarPhb() {
+  const r = await fetch(PHB_GZIP, { cache: 'no-store' });
+  if (!r.ok) throw new Error(`Falha ao carregar ${PHB_GZIP}.`);
+  return descompactarGzip(new Uint8Array(await r.arrayBuffer()));
+}
+function normalizarDmg(item) {
+  const x = { ...item, _fonte: "Dungeon Master's Guide" };
+  if (x.m === 'Bastiões') {
+    x.m = 'Regras';
+    x.s = x.s ? `Bastiões — ${x.s}` : 'Bastiões';
+  }
+  return MODULOS.includes(x.m) ? x : null;
+}
+function normalizarPhb(item) {
+  const x = { ...item, _fonte: 'Livro do Jogador' };
+  return MODULOS.includes(x.m) ? x : null;
+}
+function prioridade(item) {
+  if (item.m === 'Itens Mágicos') return item._fonte === "Dungeon Master's Guide" ? 30 : 20;
+  return item._fonte === 'Livro do Jogador' ? 30 : 20;
+}
+function consolidar(dmg, phb) {
+  const candidatos = [
+    ...(dmg.itens || []).map(normalizarDmg).filter(Boolean),
+    ...(phb.itens || []).map(normalizarPhb).filter(Boolean)
+  ];
+  const mapa = new Map();
+  for (const item of candidatos) {
+    const k = chaveItem(item);
+    const anterior = mapa.get(k);
+    if (!anterior) {
+      item._fontes = [item._fonte];
+      mapa.set(k, item);
+      continue;
     }
+    const fontes = [...new Set([...(anterior._fontes || [anterior._fonte]), item._fonte])];
+    const melhor = prioridade(item) > prioridade(anterior)
+      ? item
+      : prioridade(item) < prioridade(anterior)
+        ? anterior
+        : String(item.d || '').length > String(anterior.d || '').length ? item : anterior;
+    melhor._fontes = fontes;
+    mapa.set(k, melhor);
+  }
+  return [...mapa.values()];
+}
+function montarInterface(itens) {
+  const todos = itens.filter(item => item.m === modulo).sort((a, b) => a.n.localeCompare(b.n, 'pt-BR'));
+  const subtipos = [...new Set(todos.map(item => item.s).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  const fontes = [...new Set(todos.flatMap(item => item._fontes || [item._fonte]).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  if (!todos.length) {
+    app.innerHTML = '<div class="vazio">Nenhuma entidade ativa neste módulo.</div>';
+    return;
+  }
+  app.innerHTML = `
+    <div class="controles">
+      <input id="busca" type="search" placeholder="Pesquisar neste módulo..." aria-label="Pesquisar neste módulo">
+      <select id="filtroSubtipo" aria-label="Filtrar por subtipo"><option value="">Todos os subtipos</option>${subtipos.map(s => `<option value="${esc(s)}">${esc(rotuloSubtipo(s))}</option>`).join('')}</select>
+      <select id="filtroFonte" aria-label="Filtrar por fonte"><option value="">Todas as fontes</option>${fontes.map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join('')}</select>
+    </div>
+    <p class="resultado" id="resultado"></p>
+    <section id="lista"></section>`;
 
-    function rotuloSubtipo(valor) {
-      if (!valor) return 'sem subtipo';
-      return String(valor).replaceAll('_', ' ');
+  const busca = document.getElementById('busca');
+  const filtroSubtipo = document.getElementById('filtroSubtipo');
+  const filtroFonte = document.getElementById('filtroFonte');
+  const resultado = document.getElementById('resultado');
+  const lista = document.getElementById('lista');
+
+  function renderizar() {
+    const termo = semAcento(busca.value.trim()).toLocaleLowerCase('pt-BR');
+    const subtipo = filtroSubtipo.value;
+    const fonte = filtroFonte.value;
+    const filtrados = todos.filter(item => {
+      const texto = semAcento(`${item.n || ''} ${item.d || ''} ${item.s || ''}`).toLocaleLowerCase('pt-BR');
+      const itemFontes = item._fontes || [item._fonte];
+      return (!termo || texto.includes(termo)) && (!subtipo || item.s === subtipo) && (!fonte || itemFontes.includes(fonte));
+    });
+    resultado.textContent = `${filtrados.length.toLocaleString('pt-BR')} de ${todos.length.toLocaleString('pt-BR')} ${todos.length === 1 ? 'entidade' : 'entidades'}`;
+    if (!filtrados.length) {
+      lista.innerHTML = '<div class="vazio">Nenhum item corresponde aos filtros atuais.</div>';
+      return;
     }
-
-    function pagina(item) {
-      const [inicio, fim] = item.p || [];
-      if (!inicio) return 'página não registrada';
-      return inicio === fim || !fim ? `p. ${inicio}` : `pp. ${inicio}–${fim}`;
-    }
-
-    async function carregarBase() {
-      if (!('DecompressionStream' in window)) {
-        throw new Error('Este navegador não oferece a descompactação necessária para abrir a biblioteca. Use uma versão atualizada do navegador.');
-      }
-
-      const textos = await Promise.all(PARTES.map(async (url) => {
-        const resposta = await fetch(url, { cache: 'no-store' });
-        if (!resposta.ok) throw new Error(`Falha ao carregar ${url} (${resposta.status}).`);
-        return (await resposta.text()).trim();
-      }));
-
-      const binario = atob(textos.join(''));
-      const bytes = new Uint8Array(binario.length);
-      for (let i = 0; i < binario.length; i++) bytes[i] = binario.charCodeAt(i);
-
-      const fluxo = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-      return JSON.parse(await new Response(fluxo).text());
-    }
-
-    function montarInterface(dados) {
-      const todos = dados.itens
-        .filter(item => item.m === modulo)
-        .sort((a, b) => a.n.localeCompare(b.n, 'pt-BR'));
-
-      const subtipos = [...new Set(todos.map(item => item.s).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-      const estado = dados.estado || {};
-      const aviso = estado.revisao_manual || estado.publicavel === false
-        ? `<div class="aviso"><strong>Estado da extração:</strong> normalização estrutural parcial. Relações externas e parte da normalização mecânica ainda exigem revisão manual; estes registros não devem ser interpretados como uma publicação final validada.</div>`
-        : '';
-
-      if (todos.length === 0) {
-        app.innerHTML = `${aviso}<div class="vazio">O <em>Dungeon Master's Guide</em> (2024) não gerou entidades para este módulo na extração atual.</div>`;
-        return;
-      }
-
-      app.innerHTML = `
-        ${aviso}
-        <div class="controles">
-          <input id="busca" type="search" placeholder="Pesquisar neste módulo..." aria-label="Pesquisar neste módulo">
-          <select id="filtroSubtipo" aria-label="Filtrar por subtipo">
-            <option value="">Todos os subtipos</option>
-            ${subtipos.map(s => `<option value="${esc(s)}">${esc(rotuloSubtipo(s))}</option>`).join('')}
-          </select>
+    lista.innerHTML = filtrados.map(item => {
+      const fonteTexto = (item._fontes || [item._fonte]).join(' + ');
+      const pag = pagina(item);
+      return `<details class="item">
+        <summary><strong>${esc(item.n)}</strong><span class="subtipo">${esc(rotuloSubtipo(item.s))}</span></summary>
+        <div class="corpo">
+          <div class="descricao">${esc(item.d || 'Sem descrição.')}</div>
+          <div class="metadados">
+            <span><strong>Fonte:</strong> ${esc(fonteTexto)}</span>
+            ${pag ? `<span><strong>Localização:</strong> ${esc(pag)}</span>` : ''}
+            <span><strong>Ruleset:</strong> D&amp;D ${esc(item.r || '5.5e')}</span>
+          </div>
         </div>
-        <p class="resultado" id="resultado"></p>
-        <section id="lista"></section>
-      `;
-
-      const busca = document.getElementById('busca');
-      const filtro = document.getElementById('filtroSubtipo');
-      const resultado = document.getElementById('resultado');
-      const lista = document.getElementById('lista');
-
-      function renderizar() {
-        const termo = busca.value.trim().toLocaleLowerCase('pt-BR');
-        const subtipo = filtro.value;
-        const filtrados = todos.filter(item => {
-          const texto = `${item.n || ''} ${item.d || ''} ${item.s || ''} ${item.g || ''}`.toLocaleLowerCase('pt-BR');
-          return (!termo || texto.includes(termo)) && (!subtipo || item.s === subtipo);
-        });
-
-        resultado.textContent = `${filtrados.length} de ${todos.length} ${todos.length === 1 ? 'entidade' : 'entidades'}`;
-
-        if (!filtrados.length) {
-          lista.innerHTML = '<div class="vazio">Nenhum item corresponde aos filtros atuais.</div>';
-          return;
-        }
-
-        lista.innerHTML = filtrados.map(item => `
-          <details class="item">
-            <summary>
-              <strong>${esc(item.n)}</strong>
-              <span class="subtipo">${esc(rotuloSubtipo(item.s))}</span>
-            </summary>
-            <div class="corpo">
-              ${item.d ? `<p>${esc(item.d)}</p>` : '<p>Sem resumo disponível nesta passagem de extração.</p>'}
-              <div class="metadados">
-                <span><strong>Módulo:</strong> ${esc(item.m)}</span>
-                <span><strong>Subtipo:</strong> ${esc(rotuloSubtipo(item.s))}</span>
-                ${item.g ? `<span><strong>Setting:</strong> ${esc(item.g)}</span>` : ''}
-                <span><strong>Fonte:</strong> Dungeon Master's Guide (2024), ${esc(pagina(item))}</span>
-              </div>
-            </div>
-          </details>
-        `).join('');
-      }
-
-      busca.addEventListener('input', renderizar);
-      filtro.addEventListener('change', renderizar);
-      renderizar();
-    }
-
-    async function iniciar() {
-      if (!modulo || !MODULOS.includes(modulo)) {
-        titulo.textContent = 'Módulo não encontrado';
-        fonte.hidden = true;
-        app.innerHTML = '<div class="erro">Escolha um dos 25 módulos pela página Bibliotecas.</div>';
-        return;
-      }
-
-      titulo.textContent = modulo;
-      document.title = `${modulo} - Teias de Anansi`;
-
-      try {
-        const dados = await carregarBase();
-        fonte.textContent = `${dados.fonte?.titulo || "Dungeon Master's Guide"} • ${dados.fonte?.ano || 2024} • D&D ${dados.fonte?.ruleset || '5.5e'}`;
-        montarInterface(dados);
-      } catch (erro) {
-        console.error(erro);
-        app.innerHTML = `<div class="erro"><strong>Não foi possível carregar este módulo.</strong><br>${esc(erro.message)}</div>`;
-      }
-    }
-
-    iniciar();
-  </script>
+      </details>`;
+    }).join('');
+  }
+  busca.addEventListener('input', renderizar);
+  filtroSubtipo.addEventListener('change', renderizar);
+  filtroFonte.addEventListener('change', renderizar);
+  renderizar();
+}
+async function iniciar() {
+  if (!modulo || !MODULOS.includes(modulo)) {
+    titulo.textContent = 'Módulo não encontrado';
+    app.innerHTML = '<div class="erro">Escolha um dos 18 módulos pela página Bibliotecas.</div>';
+    return;
+  }
+  titulo.textContent = modulo;
+  document.title = `${modulo} - Teias de Anansi`;
+  try {
+    const [dmg, phb] = await Promise.all([carregarDmg(), carregarPhb()]);
+    montarInterface(consolidar(dmg, phb));
+  } catch (erro) {
+    console.error(erro);
+    app.innerHTML = `<div class="erro"><strong>Não foi possível carregar este módulo.</strong><br>${esc(erro.message)}</div>`;
+  }
+}
+iniciar();
+</script>
 </body>
 </html>
