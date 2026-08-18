@@ -1,0 +1,129 @@
+{
+  "schema": "hub-rpg/monstros-auditoria-fontes/v1",
+  "auditado_em": "2026-08-18",
+  "fontes": [
+    {
+      "arquivo": "pdf24_merged.pdf",
+      "paginas": 1535,
+      "status": "auditado",
+      "segmentos_relevantes": [
+        {
+          "fonte": "Dungeon Master's Guide (2024)",
+          "ano": 2024,
+          "tipo": "oficial",
+          "blocos_completos_localizados": ["Avatar of Death", "Giant Fly"],
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "O livro não é identificado no PDF como conteúdo aberto para republicação integral; os blocos não são promovidos apenas por estarem presentes no arquivo."
+        },
+        {
+          "fonte": "Xanathar's Guide to Everything",
+          "ano": 2017,
+          "tipo": "oficial",
+          "blocos_completos_localizados": ["Tiny Servant"],
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "A própria publicação informa proteção autoral e proibição de reprodução não autorizada."
+        },
+        {
+          "fonte": "Mordenkainen's Tome of Foes",
+          "ano": 2018,
+          "tipo": "oficial",
+          "publicacao_no_catalogo": "suprimido",
+          "motivo": "Conteúdo posterior equivalente/revisado está presente em Mordenkainen Presents: Monsters of the Multiverse (2022), e nenhum desses livros é tratado como fonte aberta do catálogo."
+        },
+        {
+          "fonte": "L'Arsène's Ledger of Treasure and Trinkets",
+          "ano": 2023,
+          "tipo": "terceiros",
+          "publicacao_no_catalogo": "excluido",
+          "motivo": "A seção Legal declara expressamente que spells, items e monsters são Product Identity e não são open content."
+        }
+      ]
+    },
+    {
+      "arquivo": "pdf24_merged-1.pdf",
+      "status": "auditado",
+      "segmentos_relevantes": [
+        {
+          "fonte": "Mordenkainen Presents: Monsters of the Multiverse",
+          "ano": 2022,
+          "tipo": "oficial",
+          "statblocks_completos_localizados": 260,
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "O PDF fornece os blocos completos, mas a publicação não é identificada como conteúdo aberto para republicação integral. Quando há equivalente aberto em SRD 5.2.1, permanece a versão 5.5e já publicada."
+        },
+        {
+          "fonte": "Forgotten Realms: Adventures in Faerûn",
+          "ano": 2025,
+          "tipo": "oficial",
+          "statblocks_completos_localizados": 42,
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "O bestiário é completo no arquivo, mas não é identificado como conteúdo aberto para republicação integral."
+        },
+        {
+          "fonte": "Eberron: Rising from the Last War",
+          "ano": 2019,
+          "tipo": "oficial",
+          "statblocks_completos_localizados": 35,
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "Conteúdo completo, porém não identificado como aberto para republicação integral."
+        },
+        {
+          "fonte": "Tasha's Cauldron of Everything",
+          "ano": 2020,
+          "tipo": "oficial",
+          "statblocks_completos_localizados": 17,
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "Conteúdo completo, porém não identificado como aberto para republicação integral; Steel Defender e Homunculus Servant possuem versões posteriores em Eberron: Forge of the Artificer (2025)."
+        },
+        {
+          "fonte": "Eberron: Forge of the Artificer",
+          "ano": 2025,
+          "tipo": "oficial",
+          "statblocks_completos_localizados": 25,
+          "publicacao_no_catalogo": "nao_adicionado",
+          "motivo": "Conteúdo completo, porém não identificado como aberto para republicação integral."
+        },
+        {
+          "fonte": "Volo's Guide to Monsters",
+          "ano": 2016,
+          "tipo": "oficial",
+          "publicacao_no_catalogo": "suprimido",
+          "motivo": "Revisado por Mordenkainen Presents: Monsters of the Multiverse (2022) para as criaturas correspondentes; também não é fonte aberta."
+        },
+        {
+          "fonte": "Wayfinder's Guide to Eberron",
+          "ano": 2018,
+          "tipo": "terceiros_DMsGuild",
+          "publicacao_no_catalogo": "suprimido",
+          "motivo": "Material posterior oficial de Eberron prevalece e a publicação não concede abertura geral para republicação."
+        },
+        {
+          "fonte": "L'Arsène's Crafting Catalogue",
+          "tipo": "terceiros",
+          "publicacao_no_catalogo": "excluido",
+          "motivo": "A seção Legal declara expressamente que spells e monsters são Product Identity e não são open content."
+        },
+        {
+          "fonte": "Frontiers of Eberron: Quickstone",
+          "ano": 2024,
+          "tipo": "terceiros_DMsGuild",
+          "publicacao_no_catalogo": "excluido",
+          "motivo": "Não é fonte oficial aberta e, pelas regras do HUB, conteúdo de terceiros não substitui nem entra no catálogo canônico como oficial."
+        }
+      ]
+    }
+  ],
+  "resultado": {
+    "statblocks_completos_localizados_em_fontes_oficiais_dos_pdfs_antes_do_filtro_de_abertura": 382,
+    "observacao_contagem": "A soma inclui 2 do DMG 2024, 1 de Xanathar, 260 de Monsters of the Multiverse, 42 de Forgotten Realms: Adventures in Faerûn, 35 de Eberron: Rising from the Last War, 17 de Tasha e 25 de Eberron: Forge of the Artificer. Blocos de fontes mais antigas integralmente suprimidas e conteúdo de terceiros não entram nesta soma consolidada.",
+    "novos_registros_que_passam_abertura_completude_e_precedencia": 0,
+    "registros_abertos_ativos_no_modulo": 345,
+    "fonte_ativa": "System Reference Document 5.2.1",
+    "acao": "Nenhum stat block fechado foi copiado para o catálogo público. Os dois PDFs foram registrados como fontes auditadas do módulo Monstros."
+  },
+  "criterios": {
+    "completude": "Nome/identidade, descrição, estatísticas essenciais, atributos, sentidos/idiomas/CR e todas as ações, traços, reações, ações lendárias e conjuração aplicáveis.",
+    "abertura": "A presença de conteúdo num PDF disponível ao projeto não equivale a autorização de republicação. É exigida indicação de conteúdo aberto/licença reutilizável para publicar o bloco integral.",
+    "precedencia": "Versões 5.5e/2024 ou publicações posteriores equivalentes prevalecem sobre 5e/2014 e versões anteriores."
+  }
+}
