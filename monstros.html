@@ -12,13 +12,14 @@
 </style>
 </head>
 <body>
-<p><a href="bibliotecas.html?v=20260818-1755">← Bibliotecas</a></p>
+<p><a href="bibliotecas.html?v=20260818-1851">← Bibliotecas</a></p>
 <div class="top">
   <header><h1>Monstros</h1><p class="muted">Catálogo ativo de monstros oficiais com conteúdo aberto e stat blocks completos.</p></header>
-  <div class="badges"><span class="badge">D&amp;D 5.5e</span><span class="badge">SRD 5.2.1</span><span class="badge">345 registros</span><span class="badge">CC BY 4.0</span></div>
+  <div class="badges"><span class="badge">D&amp;D 5.5e</span><span class="badge">SRD 5.2.1</span><span class="badge">345 registros</span><span class="badge">2 PDFs auditados</span><span class="badge">CC BY 4.0</span></div>
 </div>
-<div class="nota"><strong>Filtro do HUB:</strong> somente monstros presentes no conteúdo aberto do SRD 5.2.1 entram aqui. As versões 2014 equivalentes não são duplicadas, porque a revisão 5.5e tem precedência. Um registro só é exibido como publicado quando o detalhe fornece descrição integral e propriedades estruturadas.</div>
+<div class="nota"><strong>Filtro do HUB:</strong> somente monstros presentes em conteúdo com autorização aberta para republicação integral entram no catálogo. As versões 2014 equivalentes não são duplicadas quando existe revisão 5.5e posterior. Um registro só é exibido como publicado quando o detalhe fornece descrição integral e propriedades estruturadas.</div>
 <div class="nota"><strong>Completude:</strong> o bloco integral preserva todos os elementos existentes na fonte — identidade, CA, iniciativa, PV, deslocamentos, atributos, salvaguardas/perícias, resistências/imunidades, sentidos, idiomas, CR/XP/PB, traços, ações, reações, ações lendárias e conjuração quando aplicáveis.</div>
+<div class="nota"><strong>Auditoria de pdf24_merged.pdf e pdf24_merged-1.pdf concluída:</strong> a varredura localizou 382 stat blocks completos em segmentos oficiais selecionados antes do filtro de abertura, além de outros blocos em material de terceiros. Após aplicar abertura, completude e precedência, houve <strong>0 novos registros publicáveis</strong>: os monstros reutilizáveis já estão cobertos pelo SRD 5.2.1 vigente, enquanto os bestiários adicionais dos PDFs não são designados como conteúdo aberto para republicação integral; alguns materiais de terceiros declaram expressamente seus monstros como Product Identity. <a href="dados/monstros-pdfs-auditoria.json?v=20260818-1851">Abrir auditoria estruturada dos PDFs</a>.</div>
 <div id="erro-global"></div>
 <div class="layout">
   <aside class="painel" aria-label="Lista de monstros">
@@ -40,62 +41,15 @@ const EXPECTED_COUNT=345;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 let INDEX=[];const CACHE=new Map();let current='';
-
-function inlineMd(s){
-  let x=esc(s);
-  x=x.replace(/`([^`]+)`/g,'<code>$1</code>');
-  x=x.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
-  x=x.replace(/__([^_]+)__/g,'<strong>$1</strong>');
-  x=x.replace(/\*([^*]+)\*/g,'<em>$1</em>');
-  return x;
-}
+function inlineMd(s){let x=esc(s);x=x.replace(/`([^`]+)`/g,'<code>$1</code>');x=x.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');x=x.replace(/__([^_]+)__/g,'<strong>$1</strong>');x=x.replace(/\*([^*]+)\*/g,'<em>$1</em>');return x;}
 function isTableSep(line){return /^\s*\|?\s*:?-{3,}/.test(line)&&line.includes('|')}
 function cells(line){return line.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(x=>x.trim())}
-function md(mdText){
-  const lines=String(mdText||'').replace(/\r/g,'').split('\n');let out='',i=0,para=[],ul=[];
-  const flushP=()=>{if(para.length){out+=`<p>${inlineMd(para.join(' '))}</p>`;para=[]}};
-  const flushU=()=>{if(ul.length){out+='<ul>'+ul.map(x=>`<li>${inlineMd(x)}</li>`).join('')+'</ul>';ul=[]}};
-  while(i<lines.length){const line=lines[i],t=line.trim();
-    if(t.includes('|')&&i+1<lines.length&&isTableSep(lines[i+1])){flushP();flushU();const head=cells(line);i+=2;const rows=[];while(i<lines.length&&lines[i].includes('|')&&lines[i].trim()){rows.push(cells(lines[i]));i++}out+='<div class="tabela-wrap"><table><thead><tr>'+head.map(c=>`<th>${inlineMd(c)}</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+head.map((_,k)=>`<td>${inlineMd(r[k]||'')}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';continue}
-    if(!t){flushP();flushU();i++;continue}
-    const h=t.match(/^(#{1,5})\s+(.+)$/);if(h){flushP();flushU();const n=Math.min(5,h[1].length+1);out+=`<h${n}>${inlineMd(h[2])}</h${n}>`;i++;continue}
-    if(/^[-*_]{3,}$/.test(t)){flushP();flushU();out+='<hr>';i++;continue}
-    if(/^[-*+]\s+/.test(t)){flushP();ul.push(t.replace(/^[-*+]\s+/,''));i++;continue}
-    if(/^>\s?/.test(t)){flushP();flushU();out+=`<blockquote>${inlineMd(t.replace(/^>\s?/,''))}</blockquote>`;i++;continue}
-    para.push(t);i++;
-  }flushP();flushU();return out;
-}
-function renderIndex(){
-  const q=norm(document.getElementById('busca').value.trim());const items=INDEX.filter(x=>!q||norm(x.name).includes(q));
-  document.getElementById('contagem').textContent=`${items.length} de ${INDEX.length} monstros`;
-  document.getElementById('lista').innerHTML=items.map(x=>`<button class="item ${current===x.slug?'ativo':''}" data-slug="${esc(x.slug)}"><strong>${esc(x.name)}</strong><small>SRD 5.2.1 · 5.5e</small></button>`).join('')||'<div class="vazio">Nenhum monstro encontrado.</div>';
-  document.querySelectorAll('.item').forEach(b=>b.addEventListener('click',()=>openMonster(b.dataset.slug)));
-}
-function validateDetail(r){
-  if(!r||typeof r!=='object')throw new Error('Registro de detalhe ausente.');
-  if(!r.name||!r.slug)throw new Error('Identidade incompleta.');
-  if(!(String(r.description_md||'').trim()||String(r.description||'').trim()))throw new Error('Descrição integral ausente.');
-  if(!r.properties||typeof r.properties!=='object'||!Object.keys(r.properties).length)throw new Error('Propriedades estruturadas ausentes.');
-  return r;
-}
-async function getDetail(slug){
-  if(CACHE.has(slug))return CACHE.get(slug);
-  const res=await fetch(`${API}/${encodeURIComponent(slug)}`,{cache:'force-cache'});if(!res.ok)throw new Error(`HTTP ${res.status}`);
-  const payload=await res.json();const r=validateDetail(payload?.data||payload);CACHE.set(slug,r);return r;
-}
-async function openMonster(slug){
-  current=slug;renderIndex();const box=document.getElementById('detalhe');box.innerHTML='<div class="loading">Carregando stat block completo...</div>';
-  try{const r=await getDetail(slug);const text=r.description_md||r.description;box.innerHTML=`<h2>${esc(r.name)}</h2><div class="meta"><span><strong>Ruleset:</strong> 5.5e</span><span><strong>Fonte:</strong> ${esc(r.source||'SRD 5.2')}</span><span><strong>Status:</strong> completo/publicado</span></div><div class="statblock">${r.description_md?md(text):`<p>${esc(text)}</p>`}</div><details class="raw"><summary>Dados estruturados completos</summary><pre>${esc(JSON.stringify(r.properties,null,2))}</pre></details><p class="fonte-link"><a href="https://www.dndbeyond.com/sources/dnd/br-2024/creature-stat-blocks" target="_blank" rel="noopener noreferrer">Consultar a seção oficial de Creature Stat Blocks</a></p>`;box.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){box.innerHTML=`<div class="erro"><strong>Registro não publicado por falha de completude:</strong> ${esc(e.message)}</div>`;}
-}
-(async()=>{
-  try{
-    const res=await fetch(`${API}?fields=name,slug,source`,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    const p=await res.json();const rows=Array.isArray(p?.data)?p.data:[];const count=Number(p?.count??rows.length);
-    if(count!==EXPECTED_COUNT||rows.length!==EXPECTED_COUNT)throw new Error(`A fonte retornou ${rows.length}/${count} registros; eram esperados ${EXPECTED_COUNT}. O HUB bloqueou publicação parcial.`);
-    if(rows.some(x=>!x?.name||!x?.slug))throw new Error('A lista contém registro sem nome ou slug.');
-    INDEX=rows.slice().sort((a,b)=>a.name.localeCompare(b.name,'en'));document.getElementById('busca').addEventListener('input',renderIndex);renderIndex();
-  }catch(e){document.getElementById('erro-global').innerHTML=`<div class="erro"><strong>Catálogo bloqueado para evitar publicação parcial:</strong> ${esc(e.message)}</div>`;document.getElementById('lista').innerHTML='';document.getElementById('contagem').textContent='0 registros carregados';}
-})();
+function md(mdText){const lines=String(mdText||'').replace(/\r/g,'').split('\n');let out='',i=0,para=[],ul=[];const flushP=()=>{if(para.length){out+=`<p>${inlineMd(para.join(' '))}</p>`;para=[]}};const flushU=()=>{if(ul.length){out+='<ul>'+ul.map(x=>`<li>${inlineMd(x)}</li>`).join('')+'</ul>';ul=[]}};while(i<lines.length){const line=lines[i],t=line.trim();if(t.includes('|')&&i+1<lines.length&&isTableSep(lines[i+1])){flushP();flushU();const head=cells(line);i+=2;const rows=[];while(i<lines.length&&lines[i].includes('|')&&lines[i].trim()){rows.push(cells(lines[i]));i++}out+='<div class="tabela-wrap"><table><thead><tr>'+head.map(c=>`<th>${inlineMd(c)}</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+head.map((_,k)=>`<td>${inlineMd(r[k]||'')}</td>`).join('')+'</tr>').join('')+'</tbody></table></div>';continue}if(!t){flushP();flushU();i++;continue}const h=t.match(/^(#{1,5})\s+(.+)$/);if(h){flushP();flushU();const n=Math.min(5,h[1].length+1);out+=`<h${n}>${inlineMd(h[2])}</h${n}>`;i++;continue}if(/^[-*_]{3,}$/.test(t)){flushP();flushU();out+='<hr>';i++;continue}if(/^[-*+]\s+/.test(t)){flushP();ul.push(t.replace(/^[-*+]\s+/,''));i++;continue}if(/^>\s?/.test(t)){flushP();flushU();out+=`<blockquote>${inlineMd(t.replace(/^>\s?/,''))}</blockquote>`;i++;continue}para.push(t);i++;}flushP();flushU();return out;}
+function renderIndex(){const q=norm(document.getElementById('busca').value.trim());const items=INDEX.filter(x=>!q||norm(x.name).includes(q));document.getElementById('contagem').textContent=`${items.length} de ${INDEX.length} monstros`;document.getElementById('lista').innerHTML=items.map(x=>`<button class="item ${current===x.slug?'ativo':''}" data-slug="${esc(x.slug)}"><strong>${esc(x.name)}</strong><small>SRD 5.2.1 · 5.5e</small></button>`).join('')||'<div class="vazio">Nenhum monstro encontrado.</div>';document.querySelectorAll('.item').forEach(b=>b.addEventListener('click',()=>openMonster(b.dataset.slug)));}
+function validateDetail(r){if(!r||typeof r!=='object')throw new Error('Registro de detalhe ausente.');if(!r.name||!r.slug)throw new Error('Identidade incompleta.');if(!(String(r.description_md||'').trim()||String(r.description||'').trim()))throw new Error('Descrição integral ausente.');if(!r.properties||typeof r.properties!=='object'||!Object.keys(r.properties).length)throw new Error('Propriedades estruturadas ausentes.');return r;}
+async function getDetail(slug){if(CACHE.has(slug))return CACHE.get(slug);const res=await fetch(`${API}/${encodeURIComponent(slug)}`,{cache:'force-cache'});if(!res.ok)throw new Error(`HTTP ${res.status}`);const payload=await res.json();const r=validateDetail(payload?.data||payload);CACHE.set(slug,r);return r;}
+async function openMonster(slug){current=slug;renderIndex();const box=document.getElementById('detalhe');box.innerHTML='<div class="loading">Carregando stat block completo...</div>';try{const r=await getDetail(slug);const text=r.description_md||r.description;box.innerHTML=`<h2>${esc(r.name)}</h2><div class="meta"><span><strong>Ruleset:</strong> 5.5e</span><span><strong>Fonte:</strong> ${esc(r.source||'SRD 5.2')}</span><span><strong>Status:</strong> completo/publicado</span></div><div class="statblock">${r.description_md?md(text):`<p>${esc(text)}</p>`}</div><details class="raw"><summary>Dados estruturados completos</summary><pre>${esc(JSON.stringify(r.properties,null,2))}</pre></details><p class="fonte-link"><a href="https://www.dndbeyond.com/sources/dnd/br-2024/creature-stat-blocks" target="_blank" rel="noopener noreferrer">Consultar a seção oficial de Creature Stat Blocks</a></p>`;box.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){box.innerHTML=`<div class="erro"><strong>Registro não publicado por falha de completude:</strong> ${esc(e.message)}</div>`;}}
+(async()=>{try{const res=await fetch(`${API}?fields=name,slug,source`,{cache:'no-store'});if(!res.ok)throw new Error(`HTTP ${res.status}`);const p=await res.json();const rows=Array.isArray(p?.data)?p.data:[];const count=Number(p?.count??rows.length);if(count!==EXPECTED_COUNT||rows.length!==EXPECTED_COUNT)throw new Error(`A fonte retornou ${rows.length}/${count} registros; eram esperados ${EXPECTED_COUNT}. O HUB bloqueou publicação parcial.`);if(rows.some(x=>!x?.name||!x?.slug))throw new Error('A lista contém registro sem nome ou slug.');INDEX=rows.slice().sort((a,b)=>a.name.localeCompare(b.name,'en'));document.getElementById('busca').addEventListener('input',renderIndex);renderIndex();}catch(e){document.getElementById('erro-global').innerHTML=`<div class="erro"><strong>Catálogo bloqueado para evitar publicação parcial:</strong> ${esc(e.message)}</div>`;document.getElementById('lista').innerHTML='';document.getElementById('contagem').textContent='0 registros carregados';}})();
 </script>
 </body>
 </html>
