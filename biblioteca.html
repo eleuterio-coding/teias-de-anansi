@@ -8,39 +8,21 @@
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
-    .resumo, .fonte { opacity: .78; }
+    .resumo { opacity: .78; }
     .modulos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
-    .modulos li, .item { border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .modulos li { border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
     .modulos a { display: flex; justify-content: space-between; gap: 14px; padding: 12px 14px; text-decoration: none; }
-    .modulos a:hover, .item summary:hover { background: #8881; }
+    .modulos a:hover { background: #8881; }
     .contagem { opacity: .65; white-space: nowrap; }
-    .zero { opacity: .58; }
-    .voltar { margin-bottom: 18px; }
-    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(170px,240px) minmax(170px,240px); gap: 10px; margin: 18px 0 8px; }
-    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
-    .resultado { margin: 8px 0 16px; opacity: .75; }
-    .item { margin: 10px 0; }
-    .item summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-    .subtipo { font-size: .85rem; opacity: .68; white-space: nowrap; }
-    .corpo { padding: 0 16px 16px; }
-    .metadados { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; opacity: .78; border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; }
-    .bloco { margin-top: 12px; }
-    .bloco h3 { font-size: 1rem; margin: 0 0 6px; }
-    .bloco ul { margin: 0; padding-left: 22px; }
-    .aviso, .erro, .vazio { padding: 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
-    @media (max-width: 750px) {
-      body { padding: 16px; }
-      .controles { grid-template-columns: 1fr; }
-      .item summary { display: block; }
-      .subtipo { display: block; margin-top: 5px; }
-    }
+    .vazio { padding: 16px; border: 1px dashed #8888; border-radius: 10px; margin: 18px 0; }
+    @media (max-width: 750px) { body { padding: 16px; } }
   </style>
 </head>
 <body>
-  <p class="voltar"><a href="index.html">← Início</a></p>
+  <p><a href="bibliotecas.html">← Bibliotecas</a></p>
   <header>
     <h1 id="titulo">Biblioteca</h1>
-    <p class="resumo" id="resumo">Carregando base mecânica...</p>
+    <p class="resumo" id="resumo"></p>
   </header>
   <main id="app"></main>
 
@@ -51,146 +33,27 @@ const MODULOS = [
   'Ferramentas','Montarias e Veículos','Comércio e Despesas','Bugigangas',
   'Itens Mágicos','Magias','Idiomas'
 ];
-const PHB_GZIP = 'dados/phb-2024-hub.web.json.gz';
-const FEATS_B64 = 'H4sIADhfhGoC/+Vb624kt5V+FaJ/LGbgbq2luTir/FI0Hnvg2DuxBjGMwDDYVewu7lQVy0WWepTAgF9jgezL+Un2O+eQdeku3UZjx0mAgUYiq3jIc75z5am/LXxWmEovThdFt17tzHp1ebJYLjauDmZx+reFzTG1MTr41eUnmAg2dKXD2Esaw8Clab2mAZ7WXXCt8YvTv+CB0r5TX5S684vvlovceLutaeKs3ppLWxsarXXoWvNXoh9MmxnbOlq07UrjTcCo60LraOH2h85e9oTVSj37VP2HOvn45OlRk28WPy4XxgedO9o0fgmd/z5zVVOa0OU4yaJ2baVL+1d6BASwA2z7+0rXnS4Xp6HtzHLRdOvSZvrSYGSjS2+wqg2mpvPssWKlm6Y1dbCZWek20zX/V5gWi+OUi7N+Wp3xNP0n0xWm3+gSs3xWH1fFrw3oPFk+AV+aljj1NBSr0mA7Kit0q7PA7zet29jMmjq7UjsbCqVVq8HTXO2MblxNfG1NQ4zAfyZYPo+csNLvbAUePaVHfGhxWvxVd2WJo66J5qs6a432Rl25rlUvzDsQteFqqV4BEWVpt6Brluob63NXLZVr1Tn2Zn2l1fpKHS9VcNgQ0+kq5TYQ0RE2/WldaLyYq4sGq2TaB1tvT9W3rsOzV6pLBP1oWum1LUFbbUBlckSlQ9DZW69s7YPROdHpt3qkzvLcButqXZbYONZVkADT0PXV3ko0q1ujeq6GyFQ/s6GNyzpPx/lSb8G6Up1VVVczrdPR70ISbAxG5QZAUoI+1ViAnBbKdaW3Rq27oKxXmau9zU2LXVVxYTpyKLCtrm2cN55O6KBrwDRzRpaH7vz80/96BVlagB4M9jhirmzcisFmv/txuY/dCscx7Sxuv+SpB2D2DTb9Z4M1wPHJKiq+MCfhu0CWQDpBLZPykBF0jDQeZw+FDsx8wlTQbw1GwF+irPRW2/po8UvjvGrcjiU5B5FviVbCLsNMUOgBTmbHLIQIvAQj9dK22NK5K/OlOsssfr4puhrA4f390W6LUA/oWsrRssLBCs0oRRvXz8dkp2j86ORIRFOyBQy2Ib635oeOUQGbDim672tXkYmdFfvosSkIL+XpPRT+OAPX+ScFr9fRvB9gr7PWgtl/GXC+qmDlLq/HJiMtgm6ECZjCRreB1rkaAHwkaL4dQ8dskrB07YJaG7LDOW1T42/icbJkE7vKJE7VN4WJqgCDQVZP1+BwQydmOyJMFRsbbSoRC7rdGkQJri6v8MP0NAZvoPNcga+tTu8B1CAMxvEZRS/ZuMb51pU8TVZ5NHQfBbkhKJjXkWuDjDk18R0erubDkQuZe6CazDmHfw+z/tq0G5OF64367WrwZF4D94HeR0II92gV7GeK/QHCFXFCz0ZGpLM4kas7Hxcaa9fr1mTW8+aJ2bwAnRWuQdTKJ5Ulgn5QsrGOFYiTBwUTjaMzQ9KlpkiP/VsYr8/nmmz3PtpzTWgyrzmzIc6c1uhqDQnBELjOx7dSCD+aidB/cPQ+qxCcagwacXzf2JxQfBFgKLZguM+QgN0comxSoPuCLB7etG/NCIECqx5JMcWI8NoVtjSqQAjCeh5NeJy0texMBhHw5wNYEZKa3EJHAJg5CgSUyWIjr0NzXsN8CZSX47A/Bk5TrPfOrOqNhdj6SDHCFhamAUE4hno2Tl7rK2A7TGHxBxn8V0LE51fr1uaHSChsSoZUZUpjEvt6ngsrlsk2L28UGhsQ3UehB363NxX52Puu6XTxUTwE/GUClkicTA5vqzBAm3nXmJqhSUYJ6VYmhq23yqwA75rSeXCabf8WJ361kSPANGMxVRqyuCcfw8MQAWARnqjVFF+r0pK1czvd5qMs7MAoT/jVAzztecY6c4mk4cpJfGoekSVleSu3WXGe0WOSh+mor+Pwzah8unzao/J3s1WGHj7Hz/DXgCz8+SEh25NxY/jeDlnGKCFqlE0LVAezAmNierkgDUIeTauRh50lK0KUOG8I8gTsa9gm4CO3G6TwXAL49u4LczafHDNc5yh8jGlg44C5tkrp4Lw1ctV6zxRh5K52aCzxX88O3S5ICkBenDOHvL4kVoeidTsvgR3UkI7NtRiZIH3/nfpon1ASTZoZF8lY0cYik4Vk4QNVXHJVJsEGsQXgwP5C3iK7Qm+y50BoUOdT3aVF56QHTpeQzRZBiV8hvC2jDM/7cTZ3FzLzm5AlHTWV4ESQKYaTmsKNciVeU4710cnIeqfSR5JtMp8xxKQ63BPVc0R9rSmb8OrR+df+MbzRlsIDPFmnXcQDK2ZAokprU9Z5dv5L0ZkTb1eCgC5XUUws2jimXsrY3YX6lZPy+P2TJy6odnRkMUtIb+1mYyiLhHOFzIwm/2krM+RMPdPCDl4Yfg6Z86Z1FecW2b7UlzFMY/5M4WEjcjxZP9EpZhBnPpvo4LFgoT2DC09V9F5ttprOF4kvle8yrsD+/NPffVeX7Hi9QS6Fp0Du55/+TzZIK75grYQtQNKw1VIKw3ufmdpKcZRyLutdXYEHkzf5Ed6RWH4oiIuMKIh3e9tiA9BtiyH5lDgzvhGjnbqr1uAOeLb/uvY9ByYmg1kiz5CnxXHoPzkNfht2yRcmLsj1yihL7ryRpQHRis5OD+Okv+fBzzvYKkDEtJcJ/zvXcow0CqO9JVzCyiFlvTQtZ/GI/qCzdMVCWSGMqWcKSLZKt72aVwNMeQ81EEc2dVfncVJ9IxH+b9Bz3SNoJtH7jnRL1Y5DRwIY3AJiW6q8U/yBfMkaSZVSobePBXtuwFXBl4SrPqxhXyeJi4kFglQNcNEkUcqyl5mxZIsIsoPF+xidPO02FrlwcFn2kQVcHQxjiaGcr2Pyx3Ruidnrcdh+nB+fTCIugZRsgv+ZFP5Hcz9Be7+z+Eba4DU+0+5jiIb+2WOe3mo8kwyDMpSBwS2b6FvQ8zU/lJg3uDWSYgwm4c/M0fZoSTlT4x+PAyC8BBhU6rNWN00J83dRAL9LDk5fWE+RqCCjdwR5vF/aS9d4F8k/pJLOQKcvZg05vVbnpSUTybb5Cxsm6JBj7UMDRlA2SnkJ7ZQMJG8Tv+wtN4cjzv2lCBSuGhOh9ClXBM5Gozej6dnyWY+m45O7wukWhz0G1FDsjilF8jNDdumRVmaBdWwjIU0UEHibDjL461J7P/L//KQUaHb1kXqTlqdVOGZYi8nZ2BZ/pBnHr3PFPqIs0cEf5NdKZJw+9LHRIEyh3z/v/9N3ax4zsxGyaWyGJAdeIwfEDsWFafUHR0VLrlu9p+D+CwrEW32g9vc6rGO6uEkhJmlzrItNZKKjQEiWjSMueC6YlI6KKTJekTmg1QRbVAq1LTsWzykSq0ekdKRe0sg7XbEK201/lw00fFrmMEZ4+Iuaoqflfvmcax9Vw9c7g0Ch/nwmznY936Bs+oOxbLOxJBZ3k/Vysbcb0tpI/WYgxCpuNvYAIxzEivD53bzBLwYDrgJQxYjU8qTOo2GQCyq+jkJcfezDeJyKVrDmsAZs0x1SzqF2JW/60gVBiGV3eqXoYrmvys+I4yZWcp8OktkZdfrzaOofqUmCoV6PuobczLNEJXkiecrWsRTIdUq6ikAQxs+BZdOEZWTpVO6MZx9pJ847eWgqeDbOkrbV0K1tC16PXbMQuF0RGPTT48z3YSDQZlOHvy0VKHUwfSMGz8HMYTOvhrm7C2i+e6gvbx5HtoKTcrfX04Or/1BaIY6M9OJJm/RisDcTF0Y26XAjIu6JW5nZ7XJmcGSM5nnPd2HIWNxb6Nwh++Wq7Fym308CXyVIEpPPC7P5AGyl0E7SzcGiTJBGCeCXiNzk3uozTb/UrpomzW/YAZjNiL0UlnNYK36k1GRaxcMNSKF3xJeUkwjlQEB82uVibiNz0mg7zCC+vNqXw9dp4n0lcF0h5T3D/Nuvke8W/vc+gzrSxN4TV9/WbhcrzmCJ6c0/zbH11yy6xBXTTtKJY5ow6jVZsHSDyzG4ZPIU0l9Sb8coRTMbutf2AzKAnmERz6DpA8EeOmP6e4IfprCz0UpzUve10W9XkiWmRgUaiknvB7B2HNaSvWcXQbweFLJ1W4Tm6vOuJqQTuy4KW7u1fXAg//6ZYZ8CpNuCvnQpwTfUrav1To9qsVzb4cuflqZNvdXbdPu+32LDo5O804ZpS8xx/nzaFnNNx8udrEXk8C3mgp+iW0gWBKd4UQxzPS5V5ajHbZWJgZHmljiYrM5DUUP6MXGOH8B2TzFxTnbRho6rL7fDIvY8fEExtDns1eqtecWNUGI/hFVAQl/8vs5IT18nhh28OisLWyKoXAWkL10y1xc8pt6ksZsl8Xz5/Ferz9zDPn+lpWz/wjYlbFk4xcuxmA67n8PoDXVfTTcNUuqmxWBgekIQFd11DC0V8TKCFTktxKGpvD9Uz7E5rMr5Hrh5pQrO2TdUmw227sidepdRqGNJZWIRr68NDZfSEkIPR5z2uPU7TZdnXKdvpZnYrku5H68EbmJA80tExGQIQO810oZOUxtROurhdcuucJKRhsAyzXviGZXY68QHvmJeGY+QS/NhXlKn9XWU91lc6Vyuly6dBWhdtdbi/3KzIfcHUpTeKA+N4+XnL1iRsobSzJauL3jqnoXrXxPe93EyZwg24oFSXZHjCyo2DrcZfN05FOHUI2njevKx2oTH1ywzNIodJ49BAY2M5E/TGCEbFKXeKHctozeH50bvPt97d2LLJru4saLsqTtF1yspZibhyqC6SIMPE+vcFxop6SLPgmhPS7wBY1QQ0x+IhJe2rSh2wUqDaxBpaqo9rKgTC6onhHlDtI+CvxQYqkZ9U1fclYpA4BCCmyALajN5Rw1Ckyaw+HwyN1Tt0IiR6VuE/H90RqXHpPWl2QQKVFq+0uuxtja12VgpN4EIWbrLvdiSN0/CEI4tF8Nzc4KGuWl8haNGGb8Z/f1b1FrwRJKJe+QP3kj6QGcVBZLPTMqrVDj00MMKHiOIeQRMYutW3XfKMWPm3x4eo7eJGlFdG1qIWl3nWkz7ALZxdOdKAASBpXzLEoeaBuDIVU3OTeUtAcV105iQxUcC4VcWsx8FxKLVQaG4L2fdo0Q8Fvrn5G8YxPuFCs+IpaOHUVldMooPlzTcpe3i5NC3Mzw4Fe1rW3yI8Up+roNjIrad65IT0JDQblqjkcbk8QWAlqthmLsYMT9Kd/fPQrFUz+nHJ/Tj+GP6aUJ29HjUFBovoIceKr9LWO4JU+8UXzK0URfTzCNBkI4dG3EW7Hs83FolIU0q8f1lfax+DCrFjT6xg3l8y3IUWwTHp+fqIIKPrgwIFEcg0THG4/0Mlfe+GBZbpmUjFZ06Ukz9UDE22r+biYeSYw7CSpe2HCfxjRyFWbFXIX54JhUi+KUtNuhZ8SeXB5okFRm41i3+WUoveP2+k2Qo4e3dPUmS2WiSMDVP8VUyS3yQCThYSwKYAZpLKWhvqT2CgFwY2462kNYPsR8jkTjYgdC7XtoPuY8aLAxMaH5gXL6UwZvtyifLT37btajzoUJLt0x02y8G4/T25VObNVWxpH7VpssNcTNyXyjrzUbcu8K21MG58tx6HHn8TRyNDcn/WCa/f4Pq5BCn6r9Tu7kvXBvok80w/TZ176uPrqaQsUgWliQzaciXDuNx84d8BuWB6II7oFu1Lrt8a9zoo8Cjobs7h7V1sgXfQMmcdLqlto4NWELGl4TfGtpLCvZc9nbHORm3P0o0LiZ0/I3IpFHg8HOq3JJJGbqlqCXN7yWoB02c6tFmbLUiJz56MvOkxNd/6hDaQ2WD3mzGTEJCsRzXtWCWnuTPH8d8PH3lEmujBO4hpR1OLZ3hrc5t5689Lhtk7jqnq9u+EBcDX8TdWux77BsfQWzUDXsE9GByo2F4cpoRAzoqDuJtLyJLcuY34IwzGHxMxLeoEszPcvgcn41uh56gXlw+yqjLdl4F+o7bR6OA4vEN/bfjYL5XAZD+YSSjSav5mAOwHt/9+P//wK/4rkAAAA==';
 
-function esc(v) {
-  return String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");
+const params = new URLSearchParams(location.search);
+const modulo = params.get('modulo');
+const titulo = document.getElementById('titulo');
+const resumo = document.getElementById('resumo');
+const app = document.getElementById('app');
+
+function linkModulo(nome) {
+  return `biblioteca.html?modulo=${encodeURIComponent(nome)}`;
 }
-function semAcento(v) { return String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
-function pagina(item) {
-  const p = item.p || [];
-  if (!p[0]) return '';
-  return p[0] === p[1] || !p[1] ? `p. ${p[0]}` : `pp. ${p[0]}–${p[1]}`;
+
+if (modulo && MODULOS.includes(modulo)) {
+  titulo.textContent = modulo;
+  document.title = `${modulo} - Biblioteca - Teias de Anansi`;
+  resumo.textContent = '0 itens publicados neste módulo.';
+  app.innerHTML = '<div class="vazio">Nenhum conteúdo publicado neste módulo.</div>';
+} else {
+  titulo.textContent = 'Biblioteca';
+  resumo.textContent = 'Selecione um módulo.';
+  app.innerHTML = `<ul class="modulos">${MODULOS.map(nome => `<li><a href="${linkModulo(nome)}"><span>${nome}</span><span class="contagem">0 itens</span></a></li>`).join('')}</ul>`;
 }
-function repetir(rep) {
-  if (!rep) return '';
-  if (!rep.repetivel) return 'Não';
-  if (rep.maximo) return `Sim, até ${rep.maximo} vezes`;
-  return rep.restricao ? `Sim — ${rep.restricao}` : 'Sim';
-}
-async function gunzip(bytes) {
-  if (!('DecompressionStream' in window)) throw new Error('Seu navegador não oferece suporte à descompactação gzip necessária.');
-  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-  return JSON.parse(await new Response(stream).text());
-}
-async function carregarPhb() {
-  const r = await fetch(PHB_GZIP, { cache:'no-store' });
-  if (!r.ok) throw new Error(`Falha ao carregar ${PHB_GZIP}.`);
-  return gunzip(new Uint8Array(await r.arrayBuffer()));
-}
-async function carregarFeats() {
-  const bin = atob(FEATS_B64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
-  return gunzip(bytes);
-}
-function normalizarPhb(item) {
-  return {...item, _fonte:'Livro do Jogador (2024)', _natureza:'oficial', _ruleset:item.r || '5.5e'};
-}
-function normalizarFeat(item) {
-  return {...item, _fonte:'Feats v7 — Felix Klaus', _natureza:'terceiros', _ruleset:'outro'};
-}
-function rotulo(item) {
-  return item.c || (item.s ? String(item.s).replaceAll('_',' ') : 'sem subtipo');
-}
-function textoBusca(item) {
-  return semAcento([item.n,item.d,item.s,item.c,...(item.pr||[]),...(item.b||[]),...(item.deps||[])].join(' ')).toLocaleLowerCase('pt-BR');
-}
-function renderDetalhes(item) {
-  const feats = item._fonte.startsWith('Feats v7');
-  if (!feats) {
-    return `
-      <div class="corpo">
-        <p>${esc(item.d || 'Sem descrição disponível nesta extração.')}</p>
-        <div class="metadados">
-          <span><strong>Fonte:</strong> ${esc(item._fonte)}</span>
-          ${pagina(item) ? `<span><strong>Localização:</strong> ${esc(pagina(item))}</span>` : ''}
-          <span><strong>Ruleset:</strong> D&amp;D ${esc(item._ruleset)}</span>
-          <span><strong>Natureza:</strong> ${esc(item._natureza)}</span>
-        </div>
-      </div>`;
-  }
-  const lista = (titulo, valores) => valores && valores.length
-    ? `<section class="bloco"><h3>${esc(titulo)}</h3><ul>${valores.map(v=>`<li>${esc(v)}</li>`).join('')}</ul></section>` : '';
-  return `
-    <div class="corpo">
-      ${item.c ? `<p><strong>Categoria:</strong> ${esc(item.c)}</p>` : ''}
-      ${lista('Pré-requisitos', item.pr)}
-      <p><strong>Repetível:</strong> ${esc(repetir(item.rep))}</p>
-      ${lista('Benefícios', item.b)}
-      ${lista('Condições de perda', item.loss)}
-      ${lista('Dependências não resolvidas', item.deps)}
-      ${lista('Notas de fidelidade', item.notes)}
-      <div class="metadados">
-        <span><strong>Fonte:</strong> Feats v7 — Felix Klaus</span>
-        <span><strong>Localização:</strong> ${esc(pagina(item))}</span>
-        <span><strong>Ruleset:</strong> outro / não declarado de forma unívoca</span>
-        <span><strong>Natureza:</strong> terceiros</span>
-      </div>
-    </div>`;
-}
-function mostrarModulos(itens) {
-  const app = document.getElementById('app');
-  const resumo = document.getElementById('resumo');
-  const cont = Object.fromEntries(MODULOS.map(m=>[m,0]));
-  for (const i of itens) if (MODULOS.includes(i.m)) cont[i.m]++;
-  resumo.innerHTML = `<strong>Base mecânica ativa</strong> • Livro do Jogador (2024) + Feats v7 • ${itens.length.toLocaleString('pt-BR')} entidades nos 18 módulos.`;
-  app.innerHTML = `<ol class="modulos">${MODULOS.map((m,idx)=>{
-    const n=cont[m]||0;
-    return `<li class="${n?'':'zero'}"><a href="biblioteca.html?modulo=${encodeURIComponent(m)}"><span>${idx+1}. ${esc(m)}</span><span class="contagem">${n.toLocaleString('pt-BR')} ${n===1?'item':'itens'}</span></a></li>`;
-  }).join('')}</ol>`;
-}
-function mostrarModulo(modulo,itens) {
-  const titulo=document.getElementById('titulo');
-  const resumo=document.getElementById('resumo');
-  const app=document.getElementById('app');
-  titulo.textContent=modulo;
-  document.title=`${modulo} - Biblioteca - Teias de Anansi`;
-  const todos=itens.filter(i=>i.m===modulo).sort((a,b)=>a.n.localeCompare(b.n,'pt-BR'));
-  const subtipos=[...new Set(todos.map(rotulo).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  const fontes=[...new Set(todos.map(i=>i._fonte))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  resumo.textContent=`${todos.length.toLocaleString('pt-BR')} ${todos.length===1?'entidade':'entidades'} ativas neste módulo.`;
-  const aviso = modulo==='Talentos'
-    ? `<div class="aviso"><strong>Feats v7:</strong> 28 talentos foram extraídos das páginas 3–7. A publicação é de terceiros e o corpo do PDF não declara um único ruleset canônico; referências externas ausentes foram mantidas como dependências não resolvidas.</div>` : '';
-  app.innerHTML = `${aviso}
-    <div class="controles">
-      <input id="busca" type="search" placeholder="Pesquisar neste módulo..." aria-label="Pesquisar">
-      <select id="subtipo"><option value="">Todos os subtipos/categorias</option>${subtipos.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}</select>
-      <select id="fonte"><option value="">Todas as fontes</option>${fontes.map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('')}</select>
-    </div>
-    <p class="resultado" id="resultado"></p><section id="lista"></section>`;
-  const busca=document.getElementById('busca'), sub=document.getElementById('subtipo'), fonte=document.getElementById('fonte'), resultado=document.getElementById('resultado'), lista=document.getElementById('lista');
-  function render() {
-    const termo=semAcento(busca.value.trim()).toLocaleLowerCase('pt-BR');
-    const filtrados=todos.filter(i=>(!termo||textoBusca(i).includes(termo))&&(!sub.value||rotulo(i)===sub.value)&&(!fonte.value||i._fonte===fonte.value));
-    resultado.textContent=`${filtrados.length.toLocaleString('pt-BR')} de ${todos.length.toLocaleString('pt-BR')}`;
-    lista.innerHTML=filtrados.length?filtrados.map(i=>`<details class="item"><summary><strong>${esc(i.n)}</strong><span class="subtipo">${esc(rotulo(i))}</span></summary>${renderDetalhes(i)}</details>`).join(''):'<div class="vazio">Nenhum item corresponde aos filtros atuais.</div>';
-  }
-  busca.addEventListener('input',render); sub.addEventListener('change',render); fonte.addEventListener('change',render); render();
-}
-async function iniciar() {
-  const params=new URLSearchParams(location.search);
-  const modulo=params.get('modulo');
-  const app=document.getElementById('app');
-  try {
-    const [phb,feats]=await Promise.all([carregarPhb(),carregarFeats()]);
-    const itens=[...(phb.itens||[]).map(normalizarPhb),...(feats.itens||[]).map(normalizarFeat)].filter(i=>MODULOS.includes(i.m));
-    if (!modulo) return mostrarModulos(itens);
-    if (!MODULOS.includes(modulo)) {
-      document.getElementById('titulo').textContent='Módulo não encontrado';
-      document.getElementById('resumo').textContent='';
-      app.innerHTML='<div class="erro">Escolha um dos 18 módulos pela Biblioteca.</div>';
-      return;
-    }
-    mostrarModulo(modulo,itens);
-  } catch(e) {
-    console.error(e);
-    document.getElementById('resumo').textContent='Não foi possível carregar a base mecânica.';
-    app.innerHTML=`<div class="erro">${esc(e.message||e)}</div>`;
-  }
-}
-iniciar();
 </script>
 </body>
 </html>

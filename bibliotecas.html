@@ -9,66 +9,39 @@
     body { max-width: 920px; margin: 0 auto; padding: 24px; line-height: 1.5; }
     a { color: inherit; }
     .resumo { opacity: .76; }
-    .modulos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
-    .modulos li { border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .modulos { list-style: none; padding: 0; counter-reset: modulo; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+    .modulos li { counter-increment: modulo; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
     .modulos a { display: flex; justify-content: space-between; gap: 12px; padding: 13px 14px; text-decoration: none; }
     .modulos a:hover { background: #8881; }
+    .nome::before { content: counter(modulo) ". "; }
     .contagem { opacity: .62; font-size: .86rem; white-space: nowrap; }
-    .destaque { border-width: 2px !important; }
-    .suplementos { margin-top: 24px; padding-top: 14px; border-top: 1px solid #8884; }
-    .fonte { margin-top: 14px; border: 1px solid #8885; border-radius: 10px; padding: 14px; }
-    .fonte h2 { font-size: 1.08rem; margin: 0 0 5px; }
-    .fonte p { margin: 5px 0 10px; }
-    .atalhos { display: flex; flex-wrap: wrap; gap: 7px; }
-    .atalhos a { border: 1px solid #8885; border-radius: 999px; padding: 6px 9px; text-decoration: none; font-size: .88rem; }
-    .atalhos a:hover { background: #8881; }
     @media (max-width: 600px) { body { padding: 16px; } }
   </style>
 </head>
 <body>
   <p><a href="index.html">← Início</a></p>
   <h1>Bibliotecas</h1>
-  <p class="resumo">Catálogos mecânicos do Hub. A base principal abaixo utiliza o Livro do Jogador (2024) para os módulos publicados nesta ingestão.</p>
+  <p class="resumo">Catálogos mecânicos do Hub.</p>
 
   <ol class="modulos">
-    <li class="destaque"><a href="regras.html"><span>1. Regras</span><span class="contagem">234 itens</span></a></li>
-    <li><a href="biblioteca.html?modulo=Classes"><span>2. Classes</span></a></li>
-    <li><a href="biblioteca.html?modulo=Subclasses"><span>3. Subclasses</span></a></li>
-    <li><a href="biblioteca.html?modulo=Esp%C3%A9cies"><span>4. Espécies</span></a></li>
-    <li><a href="biblioteca.html?modulo=Antecedentes"><span>5. Antecedentes</span></a></li>
-    <li class="destaque"><a href="feats.html"><span>6. Feats</span><span class="contagem">catálogo existente</span></a></li>
-    <li><a href="biblioteca.html?modulo=Maestrias%20de%20Arma"><span>7. Maestrias de Arma</span></a></li>
-    <li><a href="biblioteca.html?modulo=Monstros"><span>8. Monstros</span></a></li>
-    <li><a href="biblioteca.html?modulo=Armaduras"><span>9. Armaduras</span></a></li>
-    <li><a href="biblioteca.html?modulo=Armas"><span>10. Armas</span></a></li>
-    <li><a href="biblioteca.html?modulo=Equipamentos%20de%20Aventura"><span>11. Equipamentos de Aventura</span></a></li>
-    <li><a href="biblioteca.html?modulo=Ferramentas"><span>12. Ferramentas</span></a></li>
-    <li><a href="biblioteca.html?modulo=Montarias%20e%20Ve%C3%ADculos"><span>13. Montarias e Veículos</span></a></li>
-    <li><a href="biblioteca.html?modulo=Com%C3%A9rcio%20e%20Despesas"><span>14. Comércio e Despesas</span></a></li>
-    <li><a href="biblioteca.html?modulo=Bugigangas"><span>15. Bugigangas</span></a></li>
-    <li><a href="biblioteca.html?modulo=Itens%20M%C3%A1gicos"><span>16. Itens Mágicos</span></a></li>
-    <li><a href="biblioteca.html?modulo=Magias"><span>17. Magias</span></a></li>
-    <li><a href="biblioteca.html?modulo=Idiomas"><span>18. Idiomas</span></a></li>
+    <li><a href="biblioteca.html?modulo=Regras"><span class="nome">Regras</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Classes"><span class="nome">Classes</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Subclasses"><span class="nome">Subclasses</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Esp%C3%A9cies"><span class="nome">Espécies</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Antecedentes"><span class="nome">Antecedentes</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Talentos"><span class="nome">Talentos</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Maestrias%20de%20Arma"><span class="nome">Maestrias de Arma</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Monstros"><span class="nome">Monstros</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Armaduras"><span class="nome">Armaduras</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Armas"><span class="nome">Armas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Equipamentos%20de%20Aventura"><span class="nome">Equipamentos de Aventura</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Ferramentas"><span class="nome">Ferramentas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Montarias%20e%20Ve%C3%ADculos"><span class="nome">Montarias e Veículos</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Com%C3%A9rcio%20e%20Despesas"><span class="nome">Comércio e Despesas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Bugigangas"><span class="nome">Bugigangas</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Itens%20M%C3%A1gicos"><span class="nome">Itens Mágicos</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Magias"><span class="nome">Magias</span><span class="contagem">0 itens</span></a></li>
+    <li><a href="biblioteca.html?modulo=Idiomas"><span class="nome">Idiomas</span><span class="contagem">0 itens</span></a></li>
   </ol>
-
-  <div class="suplementos">
-    <strong>Conteúdo suplementar já publicado:</strong>
-    <a href="biblioteca-suplementos.html">abrir catálogos de suplementos</a>.
-
-    <section class="fonte">
-      <h2>Wayfinder's Guide to Eberron</h2>
-      <p class="resumo">91 registros catalogados como D&D 5e — playtest legado. Esta camada preserva a fonte de 2018 sem substituir versões posteriores.</p>
-      <div class="atalhos">
-        <a href="biblioteca-wayfinder.html?modulo=Regras">Regras · 5</a>
-        <a href="biblioteca-wayfinder.html?modulo=Esp%C3%A9cies">Espécies · 11</a>
-        <a href="biblioteca-wayfinder.html?modulo=Antecedentes">Antecedentes · 14</a>
-        <a href="biblioteca-wayfinder.html?modulo=Feats">Feats/Dragonmarks · 14</a>
-        <a href="biblioteca-wayfinder.html?modulo=Montarias%20e%20Ve%C3%ADculos">Montarias e Veículos · 4</a>
-        <a href="biblioteca-wayfinder.html?modulo=Com%C3%A9rcio%20e%20Despesas">Comércio e Despesas · 10</a>
-        <a href="biblioteca-wayfinder.html?modulo=Itens%20M%C3%A1gicos">Itens Mágicos · 23</a>
-        <a href="biblioteca-wayfinder.html?modulo=Idiomas">Idiomas · 10</a>
-      </div>
-    </section>
-  </div>
 </body>
 </html>
