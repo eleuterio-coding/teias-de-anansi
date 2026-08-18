@@ -1,81 +1,10 @@
-name: Publicar area Classes pdf24_merged
+name: Arquivado - area Classes pdf24_merged
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/publicar-area-classes-pdf24.yml'
-
-permissions:
-  contents: write
+  workflow_dispatch:
 
 jobs:
-  publicar:
+  noop:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Inserir area auditada do PDF dentro de Classes
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('classes-v3.html')
-          s=p.read_text(encoding='utf-8')
-          marker='<div class="nota"><strong>Critério de publicação:</strong> cada classe é validada separadamente. São exigidos dados básicos, progressão completa dos níveis 1–20, características com descrição integral, proficiências, equipamento inicial, multiclasse e regras de conjuração quando aplicável. A relação de magias pertence ao módulo Magias e não é consultada por endpoint externo nesta página.</div>'
-          block='''<div class="nota"><strong>Critério de publicação:</strong> cada classe é validada separadamente. São exigidos dados básicos, progressão completa dos níveis 1–20, características com descrição integral, proficiências, equipamento inicial, multiclasse e regras de conjuração quando aplicável. A relação de magias pertence ao módulo Magias e não é consultada por endpoint externo nesta página.</div>
-<section id="pdf24-merged" class="bloco">
-  <h2>Classes - pdf24_merged.pdf</h2>
-  <p class="muted">Área separada dentro do módulo Classes para conteúdo localizado especificamente no PDF mesclado fornecido pelo projeto.</p>
-  <details class="classe" open>
-    <summary><strong>Resultado da varredura integral</strong><span class="sub">0 classes-base completas · 1 referência incompleta</span></summary>
-    <div class="corpo">
-      <p>O arquivo foi auditado como fonte independente. Nenhuma classe-base completa nova aparece com o conjunto de dados necessário para ser publicada no mesmo padrão das classes abaixo. Por isso, nenhum registro incompleto foi promovido a Classe.</p>
-      <div class="stats">
-        <div class="stat"><strong>Páginas auditadas</strong>1535</div>
-        <div class="stat"><strong>Classes completas novas</strong>0</div>
-        <div class="stat"><strong>Referências incompletas</strong>1</div>
-        <div class="stat"><strong>Duplicações criadas</strong>0</div>
-      </div>
-      <section class="bloco">
-        <h3>Referência de classe detectada</h3>
-        <article class="feature"><h4>Tamer <span class="muted">- não publicado como classe</span></h4><p>O próprio PDF informa que a classe Tamer foi introduzida em Heliana's Guide to Monster Hunting e remete a um PDF externo. O arquivo atual traz subclasses, melhorias de companheiros e referências a níveis de Tamer, mas não contém o bloco-base completo nem a progressão 1-20. Pela regra de completude do Hub, a entidade não é criada até que a fonte completa esteja disponível.</p></article>
-      </section>
-      <section class="bloco">
-        <h3>Classes core citadas no PDF</h3>
-        <p>Barbarian, Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Warlock e Wizard aparecem como classes-parentes de subclasses e expansões, especialmente em Xanathar's Guide to Everything. O PDF não reproduz ali seus blocos-base completos, e elas já existem abaixo em versões completas e validadas do SRD 5.2.1; portanto não são duplicadas nesta área.</p>
-      </section>
-      <div class="meta"><span><strong>Fonte auditada:</strong> pdf24_merged.pdf</span><span><strong>Status:</strong> auditoria publicada</span><span><strong>Regra:</strong> não publicar classe incompleta</span></div>
-    </div>
-  </details>
-</section>
-<hr style="border:0;border-top:1px solid #8883;margin:26px 0">
-<h2>Classes abertas - SRD 5.2.1</h2>'''
-          if 'id="pdf24-merged"' not in s:
-              if marker not in s:
-                  raise SystemExit('Marcador de insercao nao encontrado em classes-v3.html')
-              s=s.replace(marker,block,1)
-          s=s.replace('<span class="badge">build 1608</span>','<span class="badge">PDF24 auditado</span><span class="badge">build 1634</span>')
-          s=s.replace('bibliotecas.html?v=20260818-1608','bibliotecas.html?v=20260818-1634')
-          p.write_text(s,encoding='utf-8')
-
-          # Atualiza o redirecionamento principal para quebrar cache.
-          q=Path('classes.html')
-          t=q.read_text(encoding='utf-8')
-          t=t.replace('classes-v3.html?v=20260818-1608','classes-v3.html?v=20260818-1634')
-          q.write_text(t,encoding='utf-8')
-
-          # Atualiza apenas o cache-buster do link de Classes na Biblioteca; contagem permanece 12.
-          b=Path('bibliotecas.html')
-          u=b.read_text(encoding='utf-8')
-          u=u.replace('classes.html?v=20260818-1549','classes.html?v=20260818-1634')
-          b.write_text(u,encoding='utf-8')
-          PY
-      - name: Remover workflow temporario
-        run: rm -f .github/workflows/publicar-area-classes-pdf24.yml
-      - name: Commit da publicacao
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Publica area auditada do pdf24_merged dentro de Classes"
-          git pull --rebase origin main
-          git push
+      - run: echo "A publicacao foi concluida diretamente; este workflow esta arquivado."
