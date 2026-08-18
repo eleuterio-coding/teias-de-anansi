@@ -1,0 +1,223 @@
+{
+  "schema": "hub-rpg/classes-fonte/v2",
+  "arquivo": "pdf24_merged-1.pdf",
+  "paginas": 2186,
+  "auditado_em": "2026-08-18",
+  "criterio": "Publicar classes completas no padrão do módulo Classes. Versões mais novas prevalecem sobre versões anteriores equivalentes. Classes de sidekick são preservadas como subtipo próprio, pois usam regras de progressão diferentes das classes de personagem.",
+  "resultado": {
+    "classes_personagem_publicadas": 1,
+    "classes_sidekick_publicadas": 3,
+    "versoes_completas_suprimidas_por_precedencia": 2,
+    "referencias_incompletas_nao_publicadas": 6
+  },
+  "classes": [
+    {
+      "id": "classes:pdf24merged1:artificer:2025",
+      "nome": "Artificer",
+      "tipo": "classe",
+      "subtipo": "classe-de-personagem",
+      "ruleset": "5.5e",
+      "revisao_core": 2024,
+      "fonte": {
+        "titulo": "Eberron: Forge of the Artificer",
+        "editora": "Wizards of the Coast LLC",
+        "ano": 2025,
+        "primeira_impressao": "December 2025",
+        "paginas_pdf": [1503, 1504, 1505, 1506, 1507, 1508]
+      },
+      "descricao": "Mestre de invenções que combina engenhosidade, ferramentas e magia para criar, replicar, recarregar, transformar e armazenar efeitos mágicos em objetos. Esta é a versão revisada para a estrutura de classes alinhada ao Player's Handbook de 2024.",
+      "dados_base": {
+        "atributo_principal": "Intelligence",
+        "dado_de_vida": "d8 por nível de Artificer",
+        "salvaguardas": ["Constitution", "Intelligence"],
+        "pericias": "Escolha 2: Arcana, History, Investigation, Medicine, Nature, Perception ou Sleight of Hand.",
+        "armas": "Simple weapons",
+        "ferramentas": "Thieves' Tools, Tinker's Tools e um tipo de Artisan's Tools à escolha.",
+        "armaduras": "Light armor, Medium armor e Shields",
+        "equipamento_inicial": {
+          "A": "Studded Leather Armor, Dagger, Thieves' Tools, Tinker's Tools, Dungeoneer's Pack e 16 GP",
+          "B": "150 GP"
+        }
+      },
+      "multiclasse": {
+        "ganhos": "Hit Point Die; proficiência com Tinker's Tools; uma perícia à escolha da lista do Artificer; treinamento com Light armor, Medium armor e Shields; e as características de nível 1 da classe.",
+        "conjuracao": "Para determinar spell slots de multiclasse, some metade dos níveis de Artificer, arredondando para cima, conforme as regras de multiclasse do Player's Handbook."
+      },
+      "progressao": [
+        {"nivel":1,"pb":"+2","caracteristicas":"Spellcasting; Tinker's Magic","planos":"—","itens_magicos":"—","cantrips":2,"magias_preparadas":2,"slots":[2,0,0,0,0]},
+        {"nivel":2,"pb":"+2","caracteristicas":"Replicate Magic Item","planos":4,"itens_magicos":2,"cantrips":2,"magias_preparadas":3,"slots":[2,0,0,0,0]},
+        {"nivel":3,"pb":"+2","caracteristicas":"Artificer Subclass","planos":4,"itens_magicos":2,"cantrips":2,"magias_preparadas":4,"slots":[3,0,0,0,0]},
+        {"nivel":4,"pb":"+2","caracteristicas":"Ability Score Improvement","planos":4,"itens_magicos":2,"cantrips":2,"magias_preparadas":5,"slots":[3,0,0,0,0]},
+        {"nivel":5,"pb":"+3","caracteristicas":"Subclass feature","planos":4,"itens_magicos":2,"cantrips":2,"magias_preparadas":6,"slots":[4,2,0,0,0]},
+        {"nivel":6,"pb":"+3","caracteristicas":"Magic Item Tinker","planos":5,"itens_magicos":3,"cantrips":2,"magias_preparadas":6,"slots":[4,2,0,0,0]},
+        {"nivel":7,"pb":"+3","caracteristicas":"Flash of Genius","planos":5,"itens_magicos":3,"cantrips":2,"magias_preparadas":7,"slots":[4,3,0,0,0]},
+        {"nivel":8,"pb":"+3","caracteristicas":"Ability Score Improvement","planos":5,"itens_magicos":3,"cantrips":2,"magias_preparadas":7,"slots":[4,3,0,0,0]},
+        {"nivel":9,"pb":"+4","caracteristicas":"Subclass feature","planos":5,"itens_magicos":3,"cantrips":2,"magias_preparadas":9,"slots":[4,3,2,0,0]},
+        {"nivel":10,"pb":"+4","caracteristicas":"Magic Item Adept","planos":6,"itens_magicos":4,"cantrips":3,"magias_preparadas":9,"slots":[4,3,2,0,0]},
+        {"nivel":11,"pb":"+4","caracteristicas":"Spell-Storing Item","planos":6,"itens_magicos":4,"cantrips":3,"magias_preparadas":10,"slots":[4,3,3,0,0]},
+        {"nivel":12,"pb":"+4","caracteristicas":"Ability Score Improvement","planos":6,"itens_magicos":4,"cantrips":3,"magias_preparadas":10,"slots":[4,3,3,0,0]},
+        {"nivel":13,"pb":"+5","caracteristicas":"—","planos":6,"itens_magicos":4,"cantrips":3,"magias_preparadas":11,"slots":[4,3,3,1,0]},
+        {"nivel":14,"pb":"+5","caracteristicas":"Advanced Artifice","planos":7,"itens_magicos":5,"cantrips":4,"magias_preparadas":11,"slots":[4,3,3,1,0]},
+        {"nivel":15,"pb":"+5","caracteristicas":"Subclass feature","planos":7,"itens_magicos":5,"cantrips":4,"magias_preparadas":12,"slots":[4,3,3,2,0]},
+        {"nivel":16,"pb":"+5","caracteristicas":"Ability Score Improvement","planos":7,"itens_magicos":5,"cantrips":4,"magias_preparadas":12,"slots":[4,3,3,2,0]},
+        {"nivel":17,"pb":"+6","caracteristicas":"—","planos":7,"itens_magicos":5,"cantrips":4,"magias_preparadas":14,"slots":[4,3,3,3,1]},
+        {"nivel":18,"pb":"+6","caracteristicas":"Magic Item Master","planos":8,"itens_magicos":6,"cantrips":4,"magias_preparadas":14,"slots":[4,3,3,3,1]},
+        {"nivel":19,"pb":"+6","caracteristicas":"Epic Boon","planos":8,"itens_magicos":6,"cantrips":4,"magias_preparadas":15,"slots":[4,3,3,3,2]},
+        {"nivel":20,"pb":"+6","caracteristicas":"Soul of Artifice","planos":8,"itens_magicos":6,"cantrips":4,"magias_preparadas":15,"slots":[4,3,3,3,2]}
+      ],
+      "conjuracao": {
+        "atributo": "Intelligence",
+        "foco": "Thieves' Tools, Tinker's Tools ou outro Artisan's Tools no qual seja proficiente; o foco deve estar em mãos ao conjurar uma magia de Artificer.",
+        "cantrips": "Conhece 2 cantrips de Artificer no nível 1. Ao terminar um Long Rest, pode substituir um deles por outro cantrip de Artificer. Aprende um cantrip adicional nos níveis 10 e 14.",
+        "slots": "Os spell slots seguem a tabela de progressão e todos os slots gastos retornam após um Long Rest.",
+        "preparo": "No nível 1 prepara 2 magias de Artificer de nível 1. O total preparado aumenta conforme a tabela. Sempre que o total aumentar, escolha magias adicionais de níveis para os quais possua slots. Magias concedidas por outras características que estejam sempre preparadas não contam nesse limite. Ao terminar um Long Rest, pode trocar quaisquer magias preparadas por outras magias de Artificer para as quais possua slots.",
+        "lista_de_magias": "A relação nominal de magias é tratada pelo módulo Magias; as regras de conjuração da classe estão integralmente registradas aqui."
+      },
+      "tinkers_magic": {
+        "descricao": "Você conhece Mending. Como Magic action enquanto segura Tinker's Tools, cria um item da lista em um espaço desocupado a até 5 pés. O item dura até você terminar um Long Rest. Você pode usar esta característica um número de vezes igual ao modificador de Intelligence, mínimo 1, recuperando todos os usos após Long Rest.",
+        "itens": ["Ball Bearings","Basket","Bedroll","Bell","Blanket","Block and Tackle","Bottle, Glass","Bucket","Caltrops","Candle","Crowbar","Flask","Grappling Hook","Hunting Trap","Jug","Lamp","Manacles","Net","Oil","Paper","Parchment","Pole","Pouch","Rope","Sack","Shovel","Spikes, Iron","String","Tinderbox","Torch","Vial"]
+      },
+      "replicate_magic_item": {
+        "regras": "No nível 2 você aprende 4 planos. Ao ganhar nível de Artificer, pode substituir um plano por outro para o qual se qualifique. O total de planos conhecidos aumenta conforme a tabela. Ao terminar um Long Rest com Tinker's Tools em mãos, cria itens mágicos baseados em planos conhecidos até o limite de Magic Items da tabela, cada item usando um plano diferente. Pode realizar Attunement instantaneamente no momento da criação quando necessário. O item funciona como o item normal, mas desaparece 1d4 dias após sua morte; se o plano correspondente for substituído, o item desaparece imediatamente. Se um recipiente desaparecer, seu conteúdo surge de forma inofensiva no espaço e ao redor. Wands e Weapons criadas por esta característica podem ser usadas como Spellcasting Focus no lugar de Artisan's Tools.",
+        "planos_nivel_2": [
+          ["Alchemy Jug","No"],["Bag of Holding","No"],["Cap of Water Breathing","No"],["Common magic item that isn't a Potion, a Scroll, or cursed*","Varies"],["Goggles of Night","No"],["Manifold Tool†","Yes"],["Repeating Shot†","Yes"],["Returning Weapon†","No"],["Rope of Climbing","No"],["Sending Stones","No"],["Shield, +1","No"],["Wand of Magic Detection","No"],["Wand of Secrets","No"],["Wand of the War Mage, +1","Yes"],["Weapon, +1","No"],["Wraps of Unarmed Power, +1","No"]
+        ],
+        "planos_nivel_6": [
+          ["Armor, +1","No"],["Boots of Elvenkind","No"],["Boots of the Winding Path†","Yes"],["Cloak of Elvenkind","Yes"],["Cloak of the Manta Ray","Yes"],["Dazzling Weapon†","Yes"],["Eyes of Charming","Yes"],["Eyes of Minute Seeing","No"],["Gloves of Thievery","No"],["Helm of Awareness","No"],["Lantern of Revealing","No"],["Mind Sharpener†","Yes"],["Necklace of Adaptation","Yes"],["Pipes of Haunting","No"],["Repulsion Shield†","No"],["Ring of Swimming","No"],["Ring of Water Walking","No"],["Sentinel Shield","No"],["Spell-Refueling Ring†","Yes"],["Wand of Magic Missiles","No"],["Wand of Web","Yes"],["Weapon of Warning","Yes"]
+        ],
+        "planos_nivel_10": [
+          ["Armor of Resistance","Yes"],["Dagger of Venom","No"],["Elven Chain","No"],["Ring of Feather Falling","Yes"],["Ring of Jumping","Yes"],["Ring of Mind Shielding","Yes"],["Shield, +2","No"],["Uncommon Wondrous Item that isn't cursed*","Varies"],["Wand of the War Mage, +2","Yes"],["Weapon, +2","No"],["Wraps of Unarmed Power, +2","No"]
+        ],
+        "planos_nivel_14": [
+          ["Armor, +2","No"],["Arrow-Catching Shield","Yes"],["Flame Tongue","Yes"],["Rare Wondrous Item that isn't cursed*","Varies"],["Ring of Free Action","Yes"],["Ring of Protection","Yes"],["Ring of the Ram","Yes"]
+        ],
+        "notas": "* Esta opção pode ser aprendida várias vezes, escolhendo um item diferente a cada vez; cada escolha conta como um plano distinto. † Item descrito no apêndice da própria fonte."
+      },
+      "caracteristicas": [
+        {"nivel":3,"nome":"Artificer Subclass","descricao":"Escolha uma subclasse de Artificer. A fonte apresenta Alchemist, Armorer, Artillerist, Battle Smith e Cartographer. A subclasse concede suas características quando você alcança os níveis correspondentes de Artificer."},
+        {"nivel":4,"nome":"Ability Score Improvement","descricao":"Você recebe Ability Score Improvement ou outro feat para o qual se qualifique. Repete esta característica nos níveis 8, 12 e 16 de Artificer."},
+        {"nivel":6,"nome":"Magic Item Tinker","descricao":"Charge Magic Item: Bonus Action para tocar um item criado por Replicate Magic Item que use charges; gaste um spell slot de nível 1+ e recupere um número de charges igual ao nível do slot. Drain Magic Item: Bonus Action para fazer um item criado por Replicate Magic Item desaparecer e convertê-lo em spell slot: nível 1 se o item for Common, nível 2 se for Uncommon ou Rare; após usar esta opção, só pode usá-la novamente após Long Rest, e qualquer slot criado assim desaparece no Long Rest. Transmute Magic Item: Magic action para tocar um item criado por Replicate Magic Item e transformá-lo em outro item baseado em um plano que você conheça; após usar esta opção, só pode usá-la novamente após Long Rest."},
+        {"nivel":7,"nome":"Flash of Genius","descricao":"Quando você ou uma criatura que possa ver a até 30 pés falha em um ability check ou saving throw, use Reaction para somar um bônus igual ao seu modificador de Intelligence, mínimo +1, podendo transformar a falha em sucesso. Usos iguais ao modificador de Intelligence, mínimo 1; recupera todos após Long Rest."},
+        {"nivel":10,"nome":"Magic Item Adept","descricao":"Você pode manter Attunement com até quatro magic items ao mesmo tempo."},
+        {"nivel":11,"nome":"Spell-Storing Item","descricao":"Ao terminar um Long Rest, toque uma Simple ou Martial weapon ou um item que possa usar como Spellcasting Focus e armazene nele uma magia de Artificer de nível 1, 2 ou 3, com casting time de uma action e sem Material component consumido; a magia não precisa estar preparada. Enquanto segura o objeto, uma criatura pode usar Magic action para produzir o efeito usando seu modificador de spellcasting. Se exigir Concentration, a criatura concentra. Depois de usar o objeto, aquela criatura não pode usá-lo novamente dessa forma até o início do próximo turno dela. A magia permanece até ser usada um número de vezes igual a duas vezes seu modificador de Intelligence, mínimo 2, ou até você usar esta característica novamente."},
+        {"nivel":14,"nome":"Advanced Artifice","descricao":"Magic Item Savant: você pode manter Attunement com até cinco magic items ao mesmo tempo. Refreshed Genius: ao terminar um Short Rest, recupera um uso gasto de Flash of Genius."},
+        {"nivel":18,"nome":"Magic Item Master","descricao":"Você pode manter Attunement com até seis magic items ao mesmo tempo."},
+        {"nivel":19,"nome":"Epic Boon","descricao":"Você recebe um Epic Boon feat ou outro feat para o qual se qualifique; Boon of Energy Resistance é a recomendação da fonte."},
+        {"nivel":20,"nome":"Soul of Artifice","descricao":"Cheat Death: se for reduzido a 0 Hit Points sem morrer instantaneamente, pode desintegrar qualquer quantidade de magic items Uncommon ou Rare criados por Replicate Magic Item; seus Hit Points passam a ser 20 vezes a quantidade de itens desintegrados. Magical Guidance: ao terminar um Short Rest, recupera todos os usos gastos de Flash of Genius se tiver Attunement com pelo menos um magic item."}
+      ],
+      "controle": {"completo": true, "publicado": true, "substitui": ["Artificer - Eberron: Rising from the Last War (2019)", "Artificer - Tasha's Cauldron of Everything (2020)"]}
+    },
+    {
+      "id": "classes:pdf24merged1:sidekick:expert:2020",
+      "nome": "Expert",
+      "tipo": "classe",
+      "subtipo": "classe-sidekick",
+      "ruleset": "5e",
+      "fonte": {"titulo":"Tasha's Cauldron of Everything","editora":"Wizards of the Coast LLC","ano":2020,"paginas_pdf":[1444,1445,1446]},
+      "requisito": "Para receber a classe Expert, a criatura precisa ter ao menos um idioma em seu stat block que seja capaz de falar.",
+      "progressao": [
+        [1,"+2","Bonus Proficiencies; Helpful"],[2,"+2","Cunning Action"],[3,"+2","Expertise"],[4,"+2","Ability Score Improvement"],[5,"+3","—"],[6,"+3","Coordinated Strike"],[7,"+3","Evasion"],[8,"+3","Ability Score Improvement"],[9,"+4","—"],[10,"+4","Ability Score Improvement"],[11,"+4","Inspiring Help (1d6)"],[12,"+4","Ability Score Improvement"],[13,"+5","—"],[14,"+5","Reliable Talent"],[15,"+5","Expertise"],[16,"+5","Ability Score Improvement"],[17,"+6","—"],[18,"+6","Sharp Mind"],[19,"+6","Ability Score Improvement"],[20,"+6","Inspiring Help (2d6)"]
+      ],
+      "caracteristicas": [
+        {"nivel":1,"nome":"Bonus Proficiencies","descricao":"Proficiência em um saving throw à escolha entre Dexterity, Intelligence ou Charisma; proficiência em cinco skills à escolha; proficiência com Light armor. Se a criatura for Humanoid ou possuir uma Simple ou Martial weapon em seu stat block, também recebe proficiência com todas as Simple weapons e com duas tools à escolha."},
+        {"nivel":1,"nome":"Helpful","descricao":"Pode realizar a Help action como Bonus Action."},
+        {"nivel":2,"nome":"Cunning Action","descricao":"No próprio turno, pode usar Bonus Action para Dash, Disengage ou Hide."},
+        {"nivel":3,"nome":"Expertise","descricao":"Escolha duas skill proficiencies; o Proficiency Bonus é dobrado em ability checks que usem qualquer uma delas. No nível 15, escolha mais duas skill proficiencies para receber o mesmo benefício."},
+        {"nivel":4,"nome":"Ability Score Improvement","descricao":"Nos níveis 4, 8, 10, 12, 16 e 19, aumente um ability score em 2 ou dois ability scores em 1, sem ultrapassar 20."},
+        {"nivel":6,"nome":"Coordinated Strike","descricao":"Ao usar Helpful para auxiliar um aliado a atacar uma criatura, o alvo pode estar a até 30 pés do sidekick. O sidekick causa 2d6 de dano extra ao alvo na próxima vez que acertá-lo com um attack roll antes do fim do turno atual; o tipo do dano extra é o mesmo do ataque."},
+        {"nivel":7,"nome":"Evasion","descricao":"Quando sofrer um efeito que permita Dexterity saving throw para receber metade do dano, não recebe dano em sucesso e recebe metade em falha. Não funciona enquanto Incapacitated."},
+        {"nivel":11,"nome":"Inspiring Help","descricao":"Ao realizar Help, a criatura ajudada também recebe 1d6 para somar ao d20 roll. Se o roll for um attack roll, ela pode deixar de somar o dado ao ataque e, caso acerte, somá-lo ao damage roll contra um alvo. No nível 20 o bônus passa a 2d6."},
+        {"nivel":14,"nome":"Reliable Talent","descricao":"Em ability checks que incluam todo o Proficiency Bonus do sidekick, resultados de d20 iguais a 9 ou menos são tratados como 10."},
+        {"nivel":18,"nome":"Sharp Mind","descricao":"Recebe proficiência em um saving throw à escolha entre Intelligence, Wisdom ou Charisma."}
+      ],
+      "controle": {"completo": true, "publicado": true}
+    },
+    {
+      "id": "classes:pdf24merged1:sidekick:spellcaster:2020",
+      "nome": "Spellcaster",
+      "tipo": "classe",
+      "subtipo": "classe-sidekick",
+      "ruleset": "5e",
+      "fonte": {"titulo":"Tasha's Cauldron of Everything","editora":"Wizards of the Coast LLC","ano":2020,"paginas_pdf":[1446,1447,1448]},
+      "requisito": "Para receber a classe Spellcaster, a criatura precisa ter ao menos um idioma em seu stat block que seja capaz de falar.",
+      "roles": [
+        {"role":"Mage","lista":"Wizard","atributo":"Intelligence","foco":"Arcane Focus"},
+        {"role":"Healer","lista":"Cleric e Druid","atributo":"Wisdom","foco":"Holy Symbol"},
+        {"role":"Prodigy","lista":"Bard e Warlock","atributo":"Charisma","foco":"Arcane Focus ou Musical Instrument"}
+      ],
+      "progressao": [
+        {"nivel":1,"pb":"+2","caracteristicas":"Bonus Proficiencies; Spellcasting","cantrips":2,"magias":1,"slots":[2,0,0,0,0]},
+        {"nivel":2,"pb":"+2","caracteristicas":"—","cantrips":2,"magias":2,"slots":[2,0,0,0,0]},
+        {"nivel":3,"pb":"+2","caracteristicas":"—","cantrips":2,"magias":3,"slots":[3,0,0,0,0]},
+        {"nivel":4,"pb":"+2","caracteristicas":"Ability Score Improvement","cantrips":3,"magias":3,"slots":[3,0,0,0,0]},
+        {"nivel":5,"pb":"+3","caracteristicas":"—","cantrips":3,"magias":4,"slots":[4,2,0,0,0]},
+        {"nivel":6,"pb":"+3","caracteristicas":"Potent Cantrips","cantrips":3,"magias":4,"slots":[4,2,0,0,0]},
+        {"nivel":7,"pb":"+3","caracteristicas":"—","cantrips":3,"magias":5,"slots":[4,3,0,0,0]},
+        {"nivel":8,"pb":"+3","caracteristicas":"Ability Score Improvement","cantrips":3,"magias":5,"slots":[4,3,0,0,0]},
+        {"nivel":9,"pb":"+4","caracteristicas":"—","cantrips":3,"magias":6,"slots":[4,3,2,0,0]},
+        {"nivel":10,"pb":"+4","caracteristicas":"—","cantrips":4,"magias":6,"slots":[4,3,2,0,0]},
+        {"nivel":11,"pb":"+4","caracteristicas":"—","cantrips":4,"magias":7,"slots":[4,3,3,0,0]},
+        {"nivel":12,"pb":"+4","caracteristicas":"Ability Score Improvement","cantrips":4,"magias":7,"slots":[4,3,3,0,0]},
+        {"nivel":13,"pb":"+5","caracteristicas":"—","cantrips":4,"magias":8,"slots":[4,3,3,1,0]},
+        {"nivel":14,"pb":"+5","caracteristicas":"Empowered Spells","cantrips":4,"magias":8,"slots":[4,3,3,1,0]},
+        {"nivel":15,"pb":"+5","caracteristicas":"—","cantrips":4,"magias":9,"slots":[4,3,3,2,0]},
+        {"nivel":16,"pb":"+5","caracteristicas":"Ability Score Improvement","cantrips":4,"magias":9,"slots":[4,3,3,2,0]},
+        {"nivel":17,"pb":"+6","caracteristicas":"—","cantrips":4,"magias":10,"slots":[4,3,3,3,1]},
+        {"nivel":18,"pb":"+6","caracteristicas":"Ability Score Improvement","cantrips":4,"magias":10,"slots":[4,3,3,3,1]},
+        {"nivel":19,"pb":"+6","caracteristicas":"—","cantrips":4,"magias":11,"slots":[4,3,3,3,2]},
+        {"nivel":20,"pb":"+6","caracteristicas":"Focused Casting","cantrips":4,"magias":11,"slots":[4,3,3,3,2]}
+      ],
+      "caracteristicas": [
+        {"nivel":1,"nome":"Bonus Proficiencies","descricao":"Proficiência em um saving throw à escolha entre Wisdom, Intelligence ou Charisma; duas skills à escolha entre Arcana, History, Insight, Investigation, Medicine, Performance, Persuasion e Religion; proficiência com Light armor; se for Humanoid ou possuir Simple/Martial weapon no stat block, recebe proficiência com todas as Simple weapons."},
+        {"nivel":1,"nome":"Spellcasting","descricao":"Escolha o role Mage, Healer ou Prodigy, que determina listas, atributo e foco. No nível 1 conhece 2 cantrips e 1 magia de nível 1. O total conhecido e os slots aumentam conforme a tabela. Ao ganhar um nível nesta classe, pode substituir uma magia conhecida por outra da lista do role, desde que seja cantrip ou de nível para o qual tenha slot. Spell save DC = 8 + Proficiency Bonus + modificador do atributo de conjuração. Spell attack modifier = Proficiency Bonus + modificador do atributo de conjuração. Todos os spell slots gastos retornam em Long Rest."},
+        {"nivel":4,"nome":"Ability Score Improvement","descricao":"Nos níveis 4, 8, 12, 16 e 18, aumente um ability score em 2 ou dois ability scores em 1, sem ultrapassar 20."},
+        {"nivel":6,"nome":"Potent Cantrips","descricao":"Some o modificador do atributo de conjuração ao dano causado por qualquer cantrip."},
+        {"nivel":14,"nome":"Empowered Spells","descricao":"Escolha uma escola de magia. Sempre que conjurar uma magia dessa escola gastando spell slot, some o modificador do atributo de conjuração ao damage roll ou healing roll da magia, se houver."},
+        {"nivel":20,"nome":"Focused Casting","descricao":"Receber dano não pode quebrar a Concentration do sidekick em uma magia."}
+      ],
+      "controle": {"completo": true, "publicado": true}
+    },
+    {
+      "id": "classes:pdf24merged1:sidekick:warrior:2020",
+      "nome": "Warrior",
+      "tipo": "classe",
+      "subtipo": "classe-sidekick",
+      "ruleset": "5e",
+      "fonte": {"titulo":"Tasha's Cauldron of Everything","editora":"Wizards of the Coast LLC","ano":2020,"paginas_pdf":[1448,1449]},
+      "progressao": [
+        [1,"+2","Bonus Proficiencies; Martial Role"],[2,"+2","Second Wind (1 use)"],[3,"+2","Improved Critical"],[4,"+2","Ability Score Improvement"],[5,"+3","—"],[6,"+3","Extra Attack (1 extra)"],[7,"+3","Battle Readiness"],[8,"+3","Ability Score Improvement"],[9,"+4","—"],[10,"+4","Improved Defense"],[11,"+4","Indomitable (1 use)"],[12,"+4","Ability Score Improvement"],[13,"+5","—"],[14,"+5","Ability Score Improvement"],[15,"+5","Extra Attack (2 extra)"],[16,"+5","Ability Score Improvement"],[17,"+6","—"],[18,"+6","Indomitable (2 uses)"],[19,"+6","Ability Score Improvement"],[20,"+6","Second Wind (2 uses)"]
+      ],
+      "caracteristicas": [
+        {"nivel":1,"nome":"Bonus Proficiencies","descricao":"Proficiência em um saving throw à escolha entre Strength, Dexterity ou Constitution; duas skills à escolha entre Acrobatics, Animal Handling, Athletics, Intimidation, Nature, Perception e Survival; proficiência com todas as armaduras. Se for Humanoid ou possuir uma Simple/Martial weapon no stat block, recebe proficiência com Shields e com todas as Simple e Martial weapons."},
+        {"nivel":1,"nome":"Martial Role","descricao":"Escolha Attacker ou Defender. Attacker concede +2 a todos os attack rolls. Defender permite usar Reaction para impor Disadvantage ao attack roll de uma criatura a até 5 pés cujo alvo não seja o sidekick, desde que o sidekick veja o atacante."},
+        {"nivel":2,"nome":"Second Wind","descricao":"Bonus Action para recuperar Hit Points iguais a 1d10 + nível nesta classe. Após usar, exige Short ou Long Rest para usar novamente. A partir do nível 20, pode usar duas vezes entre descansos."},
+        {"nivel":3,"nome":"Improved Critical","descricao":"Attack rolls do sidekick obtêm Critical Hit com 19 ou 20 no d20."},
+        {"nivel":4,"nome":"Ability Score Improvement","descricao":"Nos níveis 4, 8, 12, 14, 16 e 19, aumente um ability score em 2 ou dois ability scores em 1, sem ultrapassar 20."},
+        {"nivel":6,"nome":"Extra Attack","descricao":"Ao realizar Attack action, pode atacar duas vezes em vez de uma. No nível 15, passa a três ataques. Se possuir Multiattack, em um turno usa Extra Attack ou Multiattack, nunca ambos."},
+        {"nivel":7,"nome":"Battle Readiness","descricao":"Tem Advantage em Initiative rolls."},
+        {"nivel":10,"nome":"Improved Defense","descricao":"Armor Class aumenta em 1."},
+        {"nivel":11,"nome":"Indomitable","descricao":"Pode rerrolar um saving throw em que falhou, devendo usar o novo resultado. Uma vez por Long Rest; a partir do nível 18, duas vezes entre Long Rests."}
+      ],
+      "controle": {"completo": true, "publicado": true}
+    }
+  ],
+  "regras_gerais_sidekick": {
+    "escolha": "Ao criar um sidekick, escolha Expert, Spellcaster ou Warrior; a classe permanece a mesma por toda a carreira.",
+    "nivel_inicial": "O nível inicial do sidekick é igual ao nível médio do grupo.",
+    "subir_nivel": "Quando o nível médio do grupo aumenta, o sidekick ganha um nível.",
+    "hit_points": "Ao ganhar nível, o sidekick recebe um Hit Die do tipo indicado em seu stat block e aumenta o máximo de Hit Points em uma rolagem desse dado + modificador de Constitution, mínimo 1 HP por nível.",
+    "proficiency_bonus": "Segue a tabela da classe. Quando o PB aumenta em 1, some 1 aos modificadores de acerto dos ataques do stat block e aumente em 1 as DCs do stat block.",
+    "ability_score": "Quando receber Ability Score Improvement, ajuste também qualquer valor do stat block que dependa do modificador alterado."
+  },
+  "nao_publicados": [
+    {"nome":"Artificer","fonte":"Eberron: Rising from the Last War","ano":2019,"status":"suprimido_por_precedencia","motivo":"O mesmo PDF contém a revisão de 2025 alinhada ao Player's Handbook de 2024."},
+    {"nome":"Artificer","fonte":"Tasha's Cauldron of Everything","ano":2020,"status":"suprimido_por_precedencia","motivo":"O mesmo PDF contém a revisão de 2025 alinhada ao Player's Handbook de 2024."},
+    {"nome":"The Chef","status":"referencia_incompleta","motivo":"O PDF apenas referencia a classe e remete a conteúdo externo; não contém a classe-base completa."},
+    {"nome":"The Martial Artist","status":"referencia_incompleta","motivo":"Há referência em feat, mas não há classe-base completa no PDF."},
+    {"nome":"The Runomancer","status":"referencia_incompleta","motivo":"Há referência em feat, mas não há classe-base completa no PDF."},
+    {"nome":"Tamer","status":"referencia_incompleta","motivo":"O PDF contém melhorias e companheiros dependentes da classe, mas não contém o bloco-base completo e a progressão integral da classe."},
+    {"nome":"Hunter","status":"referencia_incompleta","motivo":"Aparece apenas como referência de classe em pré-requisito; sem bloco-base completo."},
+    {"nome":"Shinobi","status":"referencia_incompleta","motivo":"Aparece apenas como referência de classe em pré-requisito; sem bloco-base completo."}
+  ],
+  "controle": {"auditoria_completa": true, "publicado": true, "itens_incompletos_publicados_como_classe": 0}
+}
