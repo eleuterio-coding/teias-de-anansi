@@ -1,0 +1,79 @@
+name: Corrigir progressão das classes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/corrigir-classes-niveis.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Corrigir carregamento e validação dos níveis
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p=Path('classes.html')
+          s=p.read_text(encoding='utf-8')
+
+          old="""function normalizeClass(c,levels,featureMap,spells){
+  const slug=c.index,ls=levels.filter(x=>x.class?.index===slug).sort((a,b)=>a.level-b.level);
+  if(ls.length!==20||ls.some((x,i)=>x.level!==i+1))throw new Error(`${c.name}: progressão 1–20 incompleta.`);"""
+          new="""function normalizeClass(c,levels,featureMap,spells){
+  const slug=c.index;
+  const rawLevels=Array.isArray(levels)?levels:arr(levels?.results);
+  const ls=rawLevels.filter(x=>Number(x?.level)>=1&&Number(x?.level)<=20).sort((a,b)=>Number(a.level)-Number(b.level));
+  if(ls.length!==20||ls.some((x,i)=>Number(x.level)!==i+1))throw new Error(`${c.name}: progressão 1–20 incompleta (${ls.length}/20).`);"""
+          if old not in s:
+            raise SystemExit('Trecho normalizeClass esperado não encontrado.')
+          s=s.replace(old,new,1)
+
+          old="""async function build(){
+  const [classes,levels,features]=await Promise.all([getJson(`${RAW}/5e-SRD-Classes.json`),getJson(`${RAW}/5e-SRD-Levels.json`),getJson(`${RAW}/5e-SRD-Features.json`)]);
+  const got=classes.map(c=>c.index).sort();if(JSON.stringify(got)!==JSON.stringify([...EXPECTED].sort()))throw new Error('O conjunto aberto de classes mudou e exige nova validação manual antes de publicar.');
+  const fmap=new Map(features.map(f=>[f.index,f]));
+  const out=[];
+  for(const c of classes){let spells=[];if(c.spellcasting){if(!c.spells)throw new Error(`${c.name}: endpoint de magias ausente.`);const payload=await getJson(`${API}${c.spells}`);spells=payload.results;if(!Array.isArray(spells)||!spells.length)throw new Error(`${c.name}: lista de magias aberta vazia.`)}out.push(normalizeClass(c,levels,fmap,spells))}
+  if(out.length!==12||out.some(x=>!x.controle.completo))throw new Error('A validação final de completude falhou.');return out.sort((a,b)=>a.identidade.nome.localeCompare(b.identidade.nome,'en'));
+}"""
+          new="""async function build(){
+  const [classes,features]=await Promise.all([getJson(`${RAW}/5e-SRD-Classes.json`),getJson(`${RAW}/5e-SRD-Features.json`)]);
+  const got=classes.map(c=>c.index).sort();if(JSON.stringify(got)!==JSON.stringify([...EXPECTED].sort()))throw new Error('O conjunto aberto de classes mudou e exige nova validação manual antes de publicar.');
+  const fmap=new Map(features.map(f=>[f.index,f]));
+  const out=[];
+  for(const c of classes){
+    if(!c.class_levels)throw new Error(`${c.name}: endpoint de progressão ausente.`);
+    const classLevels=await getJson(`${API}${c.class_levels}`);
+    let spells=[];
+    if(c.spellcasting){if(!c.spells)throw new Error(`${c.name}: endpoint de magias ausente.`);const payload=await getJson(`${API}${c.spells}`);spells=Array.isArray(payload)?payload:payload.results;if(!Array.isArray(spells)||!spells.length)throw new Error(`${c.name}: lista de magias aberta vazia.`)}
+    out.push(normalizeClass(c,classLevels,fmap,spells));
+  }
+  if(out.length!==12||out.some(x=>!x.controle.completo))throw new Error('A validação final de completude falhou.');return out.sort((a,b)=>a.identidade.nome.localeCompare(b.identidade.nome,'en'));
+}"""
+          if old not in s:
+            raise SystemExit('Trecho build esperado não encontrado.')
+          s=s.replace(old,new,1)
+          s=s.replace('bibliotecas.html?v=20260818-1536','bibliotecas.html?v=20260818-1547',1)
+          p.write_text(s,encoding='utf-8')
+
+          b=Path('bibliotecas.html')
+          bs=b.read_text(encoding='utf-8')
+          bs=bs.replace('classes.html?v=20260818-1536','classes.html?v=20260818-1547',1)
+          b.write_text(bs,encoding='utf-8')
+          PY
+      - name: Remover workflow temporário
+        run: rm -f .github/workflows/corrigir-classes-niveis.yml
+      - name: Publicar correção
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Corrige progressão 1-20 das classes"
+          git pull --rebase origin main
+          git push
