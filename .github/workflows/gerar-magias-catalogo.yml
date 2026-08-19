@@ -7,6 +7,8 @@ on:
       - 'scripts/gerar_magias_catalogo.py'
       - 'dados/magias-suplementos-locais.json'
       - '.github/workflows/gerar-magias-catalogo.yml'
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
@@ -17,6 +19,7 @@ concurrency:
 
 jobs:
   gerar:
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[hub] gerar magias')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
