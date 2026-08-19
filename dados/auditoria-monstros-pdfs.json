@@ -1023,5 +1023,40 @@
       "Ward Sweeper",
       "Diorite, Voice of Orlassk"
     ]
-  }
+  },
+  "status_correcao": "corrigido_e_publicado",
+  "corrigido_em": "2026-08-19T10:11:00-03:00",
+  "registros_estruturados_agora_carregados": 395,
+  "extras_pdf_carregados": 92,
+  "registros_pdf_publicados": 487,
+  "faltantes_corrigidos": [
+    "Hound of Ill Omen",
+    "Tiny Servant",
+    "Avatar of Death",
+    "Sacred Statue",
+    "Corrin Delmaco",
+    "Garra",
+    "Sergeant",
+    "Aberrant Spirit",
+    "Adult Red Dracolich",
+    "Beast of the Land",
+    "Beast of the Sea",
+    "Beast of the Sky",
+    "Bestial Spirit",
+    "Celestial Spirit",
+    "Construct Spirit",
+    "Dancing Item",
+    "Elemental Spirit",
+    "Fey Spirit",
+    "Fiendish Spirit",
+    "Homunculus Servant",
+    "Mighty Servant of Leuk-o",
+    "Reflection",
+    "Shadow Spirit",
+    "Steel Defender",
+    "Undead Spirit",
+    "Wildfire Spirit",
+    "Homunculus Servant",
+    "Steel Defender"
+  ]
 }
