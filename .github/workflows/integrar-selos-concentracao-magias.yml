@@ -1,0 +1,54 @@
+name: Integrar selos de Concentração Expandida em Magias
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/concentracao-expandida-selos.js'
+      - '.github/workflows/integrar-selos-concentracao-magias.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: integrar-selos-concentracao-magias
+  cancel-in-progress: false
+
+jobs:
+  integrar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Integrar script ao módulo Magias
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('magias.html')
+          html = path.read_text(encoding='utf-8')
+          marker = 'data-concentracao-expandida-selos="1"'
+          tag = '<script src="scripts/concentracao-expandida-selos.js?v=20260819-1713" data-concentracao-expandida-selos="1"></script>'
+          if marker not in html:
+              if '</body>' not in html:
+                  raise RuntimeError('Elemento </body> não encontrado em magias.html')
+              html = html.replace('</body>', tag + '\n</body>', 1)
+              path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Publicar integração no repositório
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add magias.html
+          if git diff --cached --quiet; then
+            echo 'Integração já presente.'
+          else
+            git commit -m 'Integra selos de Concentração Expandida ao módulo Magias'
+            git push
+          fi
