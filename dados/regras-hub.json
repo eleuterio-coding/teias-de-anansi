@@ -11,7 +11,81 @@
       "nome": "Espaços de Itens Mágicos",
       "original": "Magic Items on the Body (D&D 3.5e)",
       "familia": "Regra da Casa",
-      "descricao": "Alguns itens mágicos são feitos para ser vestidos em uma parte específica do corpo. Para obter as propriedades de um desses itens, uma criatura deve usá-lo no Espaço de Item Mágico apropriado. Uma criatura de anatomia humanoide possui os seguintes Espaços de Itens Mágicos: Braços, Corpo, Face, Pés, Mãos, Cabeça, Anéis, Ombros, Garganta, Torso e Cintura. Os itens normalmente associados a cada espaço são: Braços — braçadeiras, pulseiras e braceletes; Corpo — armaduras e robes; Face — óculos de proteção, lentes, máscaras, óculos e terceiros olhos; Pés — botas, sandálias, sapatos e pantufas; Mãos — manoplas e luvas; Cabeça — diademas, coroas, chapéus, faixas de cabeça, elmos e filactérios; Anéis — anéis, com dois espaços disponíveis; Ombros — capas, mantos, mantilhas e xales; Garganta — amuletos, insígnias, broches, gargantilhas, medalhas, medalhões, colares, pingentes, periaptos, escaravelhos, cachecóis e torques; Torso — camisas, túnicas, coletes e vestes; Cintura — cintos, cinturões e faixas. Uma criatura pode obter os benefícios de apenas um item em cada espaço, exceto Anéis, que permite até dois itens, totalizando até doze itens mágicos corporais ativos. Vestir um segundo item destinado a um espaço já ocupado não concede as propriedades mágicas desse item. Um item formado por um par, como botas, luvas ou braceletes, ocupa um único espaço e exige que o par completo seja usado, salvo se o item disser o contrário. Armas, escudos, varinhas, cajados, poções, pergaminhos e outros itens que não sejam vestidos não ocupam Espaços de Itens Mágicos, salvo se sua descrição disser o contrário. Se uma criatura não possuir a parte do corpo necessária, ela não pode usar um item destinado àquele espaço. Para anatomias não humanoides, o Mestre determina quais espaços estão disponíveis. Membros adicionais não concedem espaços adicionais, salvo se uma regra disser o contrário. Se a descrição de um item contradisser esta regra, a descrição do item prevalece.",
+      "descricao": "Alguns itens mágicos são feitos para ser vestidos em uma parte específica do corpo. Para obter as propriedades de um desses itens, uma criatura deve usá-lo no Espaço de Item Mágico apropriado.",
+      "secoes": [
+        {
+          "titulo": "Espaços e Exemplos",
+          "texto": "Uma criatura de anatomia humanoide possui os seguintes Espaços de Itens Mágicos: Braços — braçadeiras, pulseiras e braceletes; Corpo — armaduras e robes; Face — óculos de proteção, lentes, máscaras, óculos e terceiros olhos; Pés — botas, sandálias, sapatos e pantufas; Mãos — manoplas e luvas; Cabeça — diademas, coroas, chapéus, faixas de cabeça, elmos e filactérios; Anéis — anéis, com dois espaços disponíveis; Ombros — capas curtas, capas, mantos e xales; Garganta — amuletos, insígnias, broches, gargantilhas, medalhas, medalhões, colares, pingentes, periaptos, escaravelhos, cachecóis e torques; Torso — camisas, túnicas, coletes e vestes; Cintura — cintos, cinturões e faixas."
+        },
+        {
+          "titulo": "Limite de Espaços",
+          "texto": "Uma criatura pode obter os benefícios de apenas um item em cada espaço, exceto Anéis, que permite até dois itens. Uma criatura humanoide pode, portanto, obter os benefícios de até doze itens mágicos corporais ao mesmo tempo."
+        },
+        {
+          "titulo": "Troca de Itens",
+          "texto": "Quando um item é retirado de um Espaço de Item Mágico, ele deixa de fornecer suas propriedades naquele espaço. Quando outro item apropriado passa a ocupar o espaço e pode ser usado normalmente, esse item torna-se automaticamente o item ativo daquele espaço e suas propriedades passam a se aplicar conforme sua descrição. A troca não exige qualquer procedimento adicional de vinculação ou Sintonização. Se uma propriedade do item exigir uma ação, comando ou outra forma de ativação, essa exigência continua valendo."
+        },
+        {
+          "titulo": "Itens em Pares",
+          "texto": "Um item formado por um par, como botas, luvas, manoplas, braceletes ou lentes, ocupa um único Espaço de Item Mágico. Salvo se o item disser o contrário, todas as peças que formam o par devem ser usadas para que suas propriedades funcionem."
+        },
+        {
+          "titulo": "Itens sem Espaço",
+          "texto": "Armas, escudos, varinhas, cajados, poções, pergaminhos e outros itens que não sejam vestidos não ocupam Espaços de Itens Mágicos, salvo se sua descrição disser o contrário. Esses itens seguem suas próprias regras de uso e ativação."
+        },
+        {
+          "titulo": "Anatomias Diferentes",
+          "texto": "Se uma criatura não possuir a parte do corpo necessária para usar um item, ela não pode obter as propriedades desse item por meio daquele espaço. Para criaturas de anatomia não humanoide, o Mestre determina quais Espaços de Itens Mágicos estão disponíveis. Membros adicionais não concedem Espaços de Itens Mágicos adicionais, salvo se uma regra disser o contrário."
+        },
+        {
+          "titulo": "1. Mudança de Forma",
+          "texto": "Se a criatura perde temporariamente a anatomia necessária, o item deixa de fornecer suas propriedades enquanto não puder ser usado adequadamente. Se a nova forma possuir anatomia compatível e o item permanecer utilizável, suas propriedades continuam funcionando normalmente."
+        },
+        {
+          "titulo": "2. Polimorfismo",
+          "texto": "Quando a criatura assume uma forma que substitui amplamente sua anatomia e características físicas, itens corporais deixam de fornecer suas propriedades se forem absorvidos pela nova forma, deixarem de estar acessíveis ou não puderem ser usados pela nova anatomia. Quando a transformação termina, os itens voltam a fornecer suas propriedades se puderem ser usados normalmente."
+        },
+        {
+          "titulo": "3. Metamorfose Maior",
+          "texto": "Ao assumir uma nova forma por meio de uma transformação ampla, cada item corporal é avaliado separadamente. Um item continua fornecendo suas propriedades apenas se a nova forma possuir anatomia adequada para usá-lo e o efeito da transformação permitir que o equipamento permaneça funcional."
+        },
+        {
+          "titulo": "4. Alteração Corporal Parcial",
+          "texto": "Uma alteração localizada afeta somente os itens relacionados à parte do corpo modificada. Se a alteração impedir o uso adequado de um item, suas propriedades ficam suspensas. Todos os demais itens continuam funcionando normalmente."
+        },
+        {
+          "titulo": "5. Mudança de Tamanho",
+          "texto": "Se o efeito também altera o tamanho dos equipamentos, os itens corporais continuam funcionando normalmente. Se o equipamento não acompanhar a mudança e deixar de servir ou de poder ser usado adequadamente, suas propriedades ficam suspensas até que volte a ser compatível com o tamanho da criatura."
+        },
+        {
+          "titulo": "6. Mudança de Estado",
+          "texto": "Se a criatura assume uma forma gasosa, líquida, incorpórea ou outro estado que não permita o uso normal de equipamentos corporais, esses itens deixam de fornecer suas propriedades. Quando a criatura retorna a um estado físico compatível, os itens voltam a funcionar normalmente."
+        },
+        {
+          "titulo": "7. Transformação Material",
+          "texto": "Alterar a substância que compõe o corpo não desativa automaticamente os itens corporais. Entretanto, se a transformação impedir fisicamente o uso adequado de determinado item, suas propriedades ficam suspensas enquanto durar essa incompatibilidade."
+        },
+        {
+          "titulo": "8. Alteração Ilusória",
+          "texto": "Uma alteração puramente ilusória não modifica a anatomia real da criatura. Itens corporais permanecem equipados e continuam fornecendo suas propriedades normalmente, independentemente da aparência ilusória assumida."
+        },
+        {
+          "titulo": "9. Recriação ou Substituição Corporal",
+          "texto": "Se a criatura recebe um corpo diferente do anterior, os itens do corpo original não passam automaticamente para o novo corpo. Somente itens efetivamente colocados no novo corpo e compatíveis com sua anatomia fornecem suas propriedades."
+        },
+        {
+          "titulo": "10. Regeneração Corporal",
+          "texto": "A perda de uma parte do corpo pode impedir temporariamente o uso de itens que dependam diretamente daquela anatomia. Enquanto não puder ser usado adequadamente, o item deixa de fornecer suas propriedades. Quando a parte corporal necessária for restaurada, o item poderá voltar a funcionar normalmente."
+        },
+        {
+          "titulo": "11. Posse ou Transferência Corporal",
+          "texto": "Os itens utilizados pertencem mecanicamente ao corpo que os está vestindo ou carregando. Uma consciência que passa a controlar outro corpo utiliza apenas os itens que esse corpo puder usar adequadamente. Os equipamentos do corpo original não transferem suas propriedades para o novo corpo."
+        },
+        {
+          "titulo": "Regra Específica",
+          "texto": "Se a descrição de um item contradisser esta regra, a descrição do item prevalece."
+        }
+      ],
       "inserir_depois_de": "Attunement",
       "fonte": {
         "livro": "Regra da Casa — baseada em D&D 3.5e",
