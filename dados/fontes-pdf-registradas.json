@@ -9,7 +9,7 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras", "Armas"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -26,9 +26,13 @@
         "idiomas.html",
         "montarias-veiculos.html",
         "dados/armaduras-pdfs.json",
-        "armaduras.html"
+        "armaduras.html",
+        "dados/armas-pdfs-manifest.json",
+        "dados/armas-fontes/dmg-2024.json",
+        "dados/armas-fontes/larsene-ledger.json",
+        "armas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras foram localizadas também ocorrências de armaduras e escudos mágicos; elas foram excluídas deste catálogo por taxonomia e permanecem destinadas ao módulo Itens Mágicos."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas foram publicados 24 registros derivados deste PDF: 8 armas oficiais opcionais do Dungeon Master's Guide 2024 e 16 armas suplementares de L'Arsène's Ledger. Armas mágicas, ataques de stat blocks e explosivos tratados como equipamentos separados foram excluídos por taxonomia."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -36,7 +40,7 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras", "Armas"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -54,9 +58,17 @@
         "idiomas.html",
         "montarias-veiculos.html",
         "dados/armaduras-pdfs.json",
-        "armaduras.html"
+        "armaduras.html",
+        "dados/armas-pdfs-manifest.json",
+        "dados/armas-fontes/helianas-guide.json",
+        "dados/armas-fontes/erlw.json",
+        "dados/armas-fontes/xyleff-weapons-1.json",
+        "dados/armas-fontes/xyleff-weapons-2.json",
+        "dados/armas-fontes/xyleff-weapons-3.json",
+        "dados/armas-fontes/xyleff-weapons-4.json",
+        "armas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras contém a tabela demonstrativa de Xyleff, mantida em bloco separado com status não canonizar, além de uma tabela de crafting que reproduz os modelos mundanos padrão usados para conferência dos valores; a regra oficial de 2024 permanece soberana."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas foram publicados 91 registros derivados deste PDF: 3 Tommybows de Heliana, 1 Double-Bladed Scimitar oficial de Eberron e 87 armas da tabela demonstrativa de Xyleff. O conteúdo de Xyleff permanece isolado como não canônico e não substitui nenhuma arma oficial."
     }
   ],
   "controle": {
