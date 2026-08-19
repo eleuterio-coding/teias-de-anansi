@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Comércio e Despesas - Biblioteca - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1100px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .resumo, .meta, .status { opacity: .78; }
+    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .controles { display: grid; grid-template-columns: minmax(240px,1fr) minmax(220px,340px); gap: 10px; margin: 18px 0 10px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .grupo { margin: 12px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .grupo > summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .grupo > summary:hover { background: #8881; }
+    .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 16px; }
+    .corpo h3 { margin: 18px 0 7px; font-size: 1rem; }
+    .corpo p { margin: 7px 0; }
+    .tabela { overflow-x: auto; margin: 8px 0 14px; }
+    table { width: 100%; border-collapse: collapse; font-size: .94rem; }
+    th, td { border: 1px solid #8884; padding: 7px 9px; text-align: left; vertical-align: top; }
+    th { background: #8881; }
+    .meta { border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .roteamento { font-size: .92rem; padding: 9px 11px; border-left: 3px solid #8888; margin: 10px 0; }
+    @media (max-width: 750px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr; }
+      .grupo > summary { display: block; }
+      .categoria { display: block; margin-top: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html?v=20260819-1">← Bibliotecas</a></p>
+  <header>
+    <h1>Comércio e Despesas</h1>
+    <p class="resumo">6 grupos econômicos extraídos de <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, preservando a taxonomia do Hub e a precedência das regras de 2024/2025.</p>
+  </header>
+
+  <div class="nota"><strong>Critério do módulo:</strong> entram moedas, preços, serviços, estilo de vida, comércio, tesouro negociável e custos de subsistemas. Preços de entidades específicas — armas, armaduras, ferramentas, montarias, veículos e itens mágicos — permanecem nos módulos próprios; aqui ficam as regras e tabelas econômicas, evitando duplicação. Mecânicas completas de Bastiões também permanecem no módulo Bastiões; seus custos e operações comerciais são referenciados aqui.</div>
+  <div class="nota"><strong>Precedência:</strong> conteúdo de 2024/2025 substitui equivalentes anteriores. Material antigo ou de cenário só é mantido quando acrescenta economia regional ou serviço único não substituído. O trecho de <em>Forgotten Realms: Heroes of Faerûn</em> está majoritariamente em imagem no compilado; por isso o grupo de Aurora é registrado no nível de índice econômico, sem inventar valores não extraídos.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar moeda, serviço, preço, fonte ou regra...">
+    <select id="filtro">
+      <option value="">Todos os grupos</option>
+    </select>
+  </div>
+  <p class="resultado" id="resultado"></p>
+  <main id="lista"></main>
+
+<script>
+const GRUPOS = [
+  {
+    nome:'Coins, Services e custos 2024', categoria:'Base do jogador', fonte:'Player’s Handbook (2024)', paginas:'213–233', status:'Vigente — versão mais recente',
+    resumo:'Base econômica do personagem: moedas, manutenção de estilo de vida, alimentação, hospedagem, transporte e contratação de serviços. Custos de itens são roteados para os módulos dos próprios itens.',
+    secoes:[
+      {titulo:'Estilo de vida — custo por dia', colunas:['Nível','Custo','Uso econômico'], linhas:[
+        ['Miserável (Wretched)','Grátis','Sobrevivência sem despesas regulares.'],['Esquálido (Squalid)','1 SP/dia','Necessidades mínimas.'],['Pobre (Poor)','2 SP/dia','Subsistência frugal.'],['Modesto (Modest)','1 GP/dia','Padrão médio.'],['Confortável (Comfortable)','2 GP/dia','Conforto e alguns luxos.'],['Rico (Wealthy)','4 GP/dia','Padrão elevado.'],['Aristocrático (Aristocratic)','10 GP/dia','Luxo máximo e possível equipe de apoio.']
+      ]},
+      {titulo:'Comida, bebida e hospedagem', colunas:['Entrada','Custo','Observação'], linhas:[
+        ['Cerveja, caneca','4 CP','Bebida comum.'],['Pão, um pão','2 CP','Alimento básico.'],['Queijo, porção','1 SP','Alimento.'],['Estalagem — esquálida','7 CP/dia','Hospedagem.'],['Estalagem — pobre','1 SP/dia','Hospedagem.'],['Estalagem — modesta','5 SP/dia','Hospedagem.'],['Estalagem — confortável','8 SP/dia','Hospedagem.'],['Estalagem — rica','2 GP/dia','Hospedagem.'],['Estalagem — aristocrática','4 GP/dia','Hospedagem.'],['Refeição — esquálida / pobre / modesta','1 CP / 2 CP / 1 SP','Preço por refeição.'],['Refeição — confortável / rica / aristocrática','2 SP / 3 SP / 6 SP','Preço por refeição.'],['Vinho comum / fino, garrafa','2 SP / 10 GP','Bebida.']
+      ]},
+      {titulo:'Viagem e contratação', colunas:['Serviço','Custo','Observação'], linhas:[
+        ['Carruagem entre cidades','3 CP por milha','Além de pedágios e despesas adicionais.'],['Carruagem dentro de cidade','1 CP por milha','Transporte urbano.'],['Pedágio de estrada ou portão','1 CP','Cobrança básica.'],['Passagem de navio','1 SP por milha','Transporte de passageiro.'],['Ajudante qualificado','2 GP/dia','Mínimo para serviço que exige proficiência.'],['Trabalhador não treinado','2 SP/dia','Serviço sem proficiência especializada.'],['Mensageiro','2 CP por milha','Entrega de mensagem.']
+      ]},
+      {titulo:'Serviços de conjuração', colunas:['Nível da magia','Preço de referência','Disponibilidade'], linhas:[
+        ['Truque','30 GP','Aldeia, vila ou cidade.'],['1º','50 GP','Aldeia, vila ou cidade.'],['2º','200 GP','Aldeia, vila ou cidade.'],['3º','300 GP','Vila ou cidade.'],['4º–5º','2.000 GP','Vila ou cidade.'],['6º–8º','20.000 GP','Cidade.'],['9º','100.000 GP','Cidade.']
+      ], nota:'Componentes materiais com preço monetário são cobrados além do serviço.'},
+      {titulo:'Custos de equipamento e fabricação', nota:'O PHB 2024 fornece preços de equipamento e referências de fabricação. Para evitar duplicação, cada arma, armadura, ferramenta, montaria, veículo ou equipamento permanece catalogado no módulo correspondente; Comércio e Despesas conserva a regra econômica e o preço como atributo pesquisável do item.'}
+    ]
+  },
+  {
+    nome:'Tesouro e economia do Mestre 2024', categoria:'Economia do Mestre', fonte:'Dungeon Master’s Guide (2024)', paginas:'211–408', status:'Vigente — versão mais recente',
+    resumo:'Moedas e tesouro negociável, barras comerciais, mercadorias, gemas, objetos de arte, economia de criação de itens mágicos e custos operacionais de Bastiões.',
+    secoes:[
+      {titulo:'Moedas e barras comerciais', colunas:['Entrada','Valor','Detalhe'], linhas:[
+        ['Moedas','CP, SP, EP, GP e PP','50 moedas de qualquer tipo pesam 1 lb.'],['Barra de prata — 2 lb','10 GP','5 × 2 × 1/2 pol.'],['Barra de prata — 5 lb','25 GP','6 × 2 × 1 pol.'],['Barra de ouro — 5 lb','250 GP','5 × 2 × 3/4 pol.']
+      ]},
+      {titulo:'Mercadorias de troca', colunas:['Valor','Mercadoria','Uso'], linhas:[
+        ['1 CP','1 lb de trigo','Bem comercial.'],['2 CP','2 lb de farinha ou 1 galinha','Bem comercial.'],['5 CP','1 lb de sal','Bem comercial.'],['1 SP','1 lb de ferro ou 1 jarda² de lona','Bem comercial.'],['5 SP','1 lb de cobre ou 1 jarda² de algodão','Bem comercial.'],['1 GP','1 lb de gengibre ou 1 cabra','Bem comercial.'],['2 GP','1 lb de canela ou pimenta, ou 1 ovelha','Bem comercial.'],['3 GP','1 lb de cravo-da-índia ou 1 porco','Bem comercial.'],['5 GP','1 lb de prata ou 1 jarda² de linho','Bem comercial.'],['10 GP','1 lb de seda ou 1 vaca','Bem comercial.'],['15 GP','1 lb de açafrão ou 1 boi','Bem comercial.'],['50 GP','1 lb de ouro','Bem comercial.'],['500 GP','1 lb de platina','Bem comercial.']
+      ]},
+      {titulo:'Gemas por faixa de valor', colunas:['Valor','Exemplos da tabela','Rolagem'], linhas:[
+        ['10 GP','Azurita, ágata listrada, quartzo azul, ágata ocular, hematita, lápis-lazúli, malaquita, ágata musgo, obsidiana, rodocrosita, olho-de-tigre, turquesa','1d12'],['50 GP','Pedra-sangue, cornalina, calcedônia, crisoprásio, citrino, jaspe, pedra-da-lua, ônix, quartzo, sardônica, quartzo rosa estrelado, zircão','1d12'],['100 GP','Âmbar, ametista, crisoberilo, coral, granada, jade, azeviche, pérola, espinélio, turmalina','1d10'],['500 GP','Alexandrita, água-marinha, pérola negra, espinélio azul, peridoto, topázio','1d6'],['1.000 GP','Opala negra, safira azul, esmeralda, opala de fogo, opala, rubi estrelado, safira estrelada, safira amarela','1d8'],['5.000 GP','Safira negra, diamante, jacinto, rubi','1d4']
+      ]},
+      {titulo:'Objetos de arte', colunas:['Faixa','Tipos presentes','Uso econômico'], linhas:[
+        ['25 GP','Peças pequenas de prata/ouro, estatuetas, vestes, cálices, dados, espelhos e pequenos adornos','Tesouro negociável.'],['250 GP','Joias, estatuetas de marfim, coroa de bronze, tapeçaria, caneca ornamentada, caixa de figuras e gaiola decorada','Tesouro negociável.'],['750 GP','Cálice com gemas, partituras raras, harpa ornamentada, ídolo, pente, broche, máscara e outras peças finas','Tesouro negociável.'],['2.500 GP','Joias com pedras preciosas, obra-prima, manto ornamentado, caixa de música, circlet e colares','Tesouro de alto valor.'],['7.500 GP','Coroa, anel, estatueta, taça, caixa, conjunto de bonecas, tabuleiro, chifre, carruagem/barca cerimonial e armadura cerimonial','Tesouro excepcional.']
+      ]},
+      {titulo:'Criação de itens mágicos — custo e tempo', colunas:['Raridade','Tempo-base','Custo-base'], linhas:[
+        ['Comum','5 dias','50 GP'],['Incomum','10 dias','200 GP'],['Raro','50 dias','2.000 GP'],['Muito raro','125 dias','20.000 GP'],['Lendário','250 dias','100.000 GP']
+      ], nota:'Consumíveis, exceto Pergaminhos de Magia, usam metade do tempo e do custo. O custo do item-base também se aplica quando houver. A descrição completa da fabricação permanece no módulo de regras/itens apropriado.'},
+      {titulo:'Bastiões — recorte econômico', colunas:['Facilidade/operação','Limite ou custo','Efeito comercial'], linhas:[
+        ['Estábulo — Trade','Preço normal dos animais','Venda com lucro de +20%; +50% no nível 13; +100% no nível 17.'],['Storehouse — Trade','Até 500 GP em bens; 2.000 GP no nível 9; 5.000 GP no nível 13','Venda com margem crescente por nível.'],['Scriptorium','1 GP por cópia, até 50 cópias','Produção documental em 7 dias; livros podem ser replicados com livro em branco.'],['Shipbuilders Guild','Custo integral do veículo','1 dia de trabalho por 1.000 GP de valor; barco a remo leva 1 dia.'],['Laboratory — poison','Metade do preço do veneno','Produção em 7 dias.'],['Teleportation Circle','Componentes monetários à parte','O proprietário paga materiais com custo em dinheiro.']
+      ]},
+      {titulo:'Manutenção de propriedades', colunas:['Estrutura','Custo diário','Observação'], linhas:[
+        ['Posto fortificado / torre de vigia','50 GP/dia','Custo operacional.'],['Fortaleza pequena / castelo pequeno','100 GP/dia','Custo operacional.'],['Castelo grande / fortaleza','400 GP/dia','Custo operacional.']
+      ]}
+    ]
+  },
+  {
+    nome:'Economia e casas de Eberron', categoria:'Eberron', fonte:'Eberron: Forge of the Artificer (2025) + legado único de Eberron', paginas:'46–111', status:'Mantido — expansão econômica de cenário',
+    resumo:'Custos e operações comerciais ligados às Casas Marcadas, facilidades de Bastião, serviços financeiros, transporte e criação especializada.',
+    secoes:[
+      {titulo:'Kundarak Vault — Trade', colunas:['Operação','Regra econômica','Escalonamento'], linhas:[
+        ['Compra de bens não mágicos','Até 2.000 GP em 7 dias','Limite sobe para 5.000 GP no nível 13.'],['Venda de bens','Comprador paga 20% acima do preço padrão','Lucro sobe para +50% no nível 13 e +100% no nível 17.'],['Acesso Kundarak','Acesso pessoal ao conteúdo do cofre em bancos Kundarak','Rede presente em cidades de Khorvaire e Stormreach.']
+      ]},
+      {titulo:'Construct Forge', colunas:['Constructo','Tempo','Custo'], linhas:[
+        ['Animated Armor','14 dias','1.000 GP'],['Animated Broom','7 dias','250 GP'],['Animated Flying Sword','7 dias','250 GP'],['Animated Rug of Smothering','21 dias','2.000 GP'],['Helmed Horror','42 dias','5.000 GP'],['Scarecrow','14 dias','1.000 GP'],['Shield Guardian','63 dias','25.000 GP'],['Warforged Titan','250 dias','200.000 GP']
+      ], nota:'A fonte observa que fabricar novos Warforged Titans viola o Tratado de Korth.'},
+      {titulo:'Outros custos de facilidades', colunas:['Entrada','Custo/efeito','Nota'], linhas:[
+        ['Museum — ampliação para Vast','2.000 GP','Permite manter dois tesouros de origens diferentes.'],['Artificer’s Forge','Usa as regras de fabricação do DMG','Hirelings podem auxiliar e fabricar itens Comuns ou Incomuns.'],['Lyrandar Helm','Viagem na velocidade do veículo, 8 h/dia','Sem tarifa adicional explícita no trecho econômico extraído.'],['Orien Helm','30 milhas/h, 8 h/dia','Mobilidade de Bastião em lightning rail; sem tarifa adicional explícita no trecho extraído.']
+      ]},
+      {titulo:'Serviços das Casas — conteúdo regional único não substituído', colunas:['Serviço','Casa','Preço'], linhas:[
+        ['Arcane Lock','Kundarak','20 GP'],['Courier','Orien','1 SP por milha'],['Glyph of Warding','Kundarak','350 GP'],['Illusory Script','Sivis','15 GP'],['Mail','Orien','1 CP por milha'],['Message station','Sivis','2 SP por palavra'],['Translation','Sivis','2 CP por palavra']
+      ], nota:'Essas referências antigas de Eberron são retidas apenas onde não existe substituição econômica direta no material mais recente.'}
+    ]
+  },
+  {
+    nome:'Comércio regional de Quickstone', categoria:'Quickstone', fonte:'Frontiers of Eberron: Quickstone (2024)', paginas:'45–146', status:'Mantido — conteúdo regional único',
+    resumo:'Economia local da fronteira: hospedagem, descontos, serviços financeiros, permuta em festividades, impostos, contrabando e práticas de mercado.',
+    secoes:[
+      {titulo:'Hospedagem e alimentação', colunas:['Local','Oferta','Preço/condição'], linhas:[
+        ['The Crown','Quarto e pensão Modestos','45 SP por semana; o proprietário pode negociar condições narrativas.'],['Gold Dragon Inn','Quarto e pensão Modestos','5 GP por semana.'],['Gold Dragon Inn','Quarto e pensão Confortáveis','8 GP por semana.'],['Gold Dragon Inn','Desconto para Guild Artisan ou House Agent','10% sobre os valores de hospedagem.'],['Gold Dragon Inn','Quartos de nível Wealthy','Oferta limitada: dois quartos e uma suíte; o trecho não fixa preço específico além da categoria.']
+      ]},
+      {titulo:'Mercado, permuta e finanças', colunas:['Entrada','Regra econômica','Detalhe'], linhas:[
+        ['Market Day','Compras tradicionalmente por permuta, não por ouro','Troca de bens ou favores; famílias também fazem trocas de presentes.'],['Kemble Bank','Poupança e empréstimos básicos','Instituição financeira local independente da Casa Kundarak.'],['Ardev / fronteira','Mercadorias podem ser inspecionadas e tributadas','A fonte menciona cobrança de impostos aplicáveis e controle de contrabando, sem taxa universal no trecho.'],['Mercado local','Preços e disponibilidade dependem do estabelecimento e da qualidade de vida','Quando a fonte usa apenas a categoria de estilo de vida, aplica-se a referência econômica do PHB 2024.']
+      ]}
+    ]
+  },
+  {
+    nome:'Aurora’s Whole Realms Catalog — moeda e comércio', categoria:'Forgotten Realms', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', paginas:'1–197', status:'Mantido — economia regional',
+    resumo:'O catálogo registra Currency e regional wares como parte da economia de Faerûn. O recorte do PDF está majoritariamente em imagem, então esta publicação conserva a presença e o roteamento econômico sem inventar preços não extraídos.',
+    secoes:[
+      {titulo:'Currency', nota:'Entrada econômica oficial do catálogo para moeda e convenções comerciais regionais. Valores não legíveis no texto indexado não foram inferidos nem reconstruídos por aproximação.'},
+      {titulo:'Regional wares', nota:'As mercadorias regionais fazem parte do catálogo econômico, mas cada arma, armadura, ferramenta, equipamento, montaria, veículo ou item mágico deve ser publicado no módulo específico de sua entidade. Este módulo registra o vínculo econômico e evita criar duplicatas.'},
+      {titulo:'Roteamento editorial', colunas:['Conteúdo','Destino principal','Aqui no Comércio'], linhas:[
+        ['Moeda e convenções de troca','Comércio e Despesas','Mantido.'],['Mercadoria com stat block ou propriedades de item','Módulo do item','Preço e origem ficam pesquisáveis como metadados econômicos.'],['Serviço regional','Comércio e Despesas','Mantido quando houver preço/regra de contratação.']
+      ]}
+    ]
+  },
+  {
+    nome:'Mercados e crafting de L’Arsène', categoria:'L’Arsène', fonte:'L’Arsène’s Ledger of Treasures and Trinkets (2024)', paginas:'11–58', status:'Mantido — subsistema terceiro',
+    resumo:'Economia própria de manufatura, encantamento, receitas de itens mágicos, loot e aquisição/refino de ingredientes.',
+    secoes:[
+      {titulo:'Manufacturing', nota:'O subsistema relaciona custo de material, ferramenta necessária, tempo de fabricação e valor do item. As linhas de armas/equipamentos permanecem nos módulos correspondentes; Comércio e Despesas conserva o modelo econômico de produção.'},
+      {titulo:'Ingredientes mundanos', colunas:['Regra','Valor/expressão','Detalhe'], linhas:[
+        ['Classes de ingrediente','Minerais, fibras e madeira','Cada classe exige ferramentas ou maquinário adequados para coletar/refinar.'],['Tempo de coleta/refino','8 horas','Normalmente resolvido com Nature ou Survival e um atributo apropriado.'],['Quantidade encontrada','5 × (1 + resultado do teste − CD)','Aplicada em um sucesso.'],['Exemplo de madeira básica','95 unidades = 95 CP','Exemplo explícito do subsistema.'],['Materiais mais raros','Prata, ouro, platina, adamantina, mithral, seda, seda de aranha, madeiras exóticas e xyxlwood','Possuem maior custo por unidade.'],['Compra em assentamentos','Pode ser disponibilizada em aldeia, vila ou cidade','Alternativa simplificada à coleta em campo.']
+      ]},
+      {titulo:'Enchanting', nota:'Encantamento integra o mercado de crafting do subsistema e usa ingredientes, tempo e capacidade de produção próprios. Itens mágicos resultantes são roteados para Itens Mágicos; aqui permanece a camada de custo e produção.'},
+      {titulo:'Magic Item Recipes', nota:'As receitas definem a economia de fabricação de itens mágicos do Ledger. A receita é tratada aqui como custo/processo; o item final permanece no catálogo de Itens Mágicos.'},
+      {titulo:'Loot Tables', nota:'As tabelas de loot alimentam a disponibilidade de matérias-primas, tesouros e componentes negociáveis. Quando o resultado é um item específico, ele é catalogado no módulo próprio; quando é valor, ingrediente ou bem comercial, permanece vinculado a Comércio e Despesas.'}
+    ]
+  }
+];
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const filtro = document.getElementById('filtro');
+[...new Set(GRUPOS.map(g => g.categoria))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(c => {
+  const o=document.createElement('option'); o.value=c; o.textContent=c; filtro.appendChild(o);
+});
+
+function secao(s){
+  let h=`<section><h3>${esc(s.titulo)}</h3>`;
+  if(s.nota) h+=`<p>${esc(s.nota)}</p>`;
+  if(s.linhas){
+    h+=`<div class="tabela"><table><thead><tr>${s.colunas.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>`;
+    h+=s.linhas.map(l=>`<tr>${l.map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('');
+    h+=`</tbody></table></div>`;
+  }
+  return h+'</section>';
+}
+
+function render(){
+  const q=document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR');
+  const cat=filtro.value;
+  const filtrados=GRUPOS.filter(g=>{
+    if(cat && g.categoria!==cat) return false;
+    if(!q) return true;
+    return JSON.stringify(g).toLocaleLowerCase('pt-BR').includes(q);
+  });
+  document.getElementById('resultado').textContent=`${filtrados.length} de ${GRUPOS.length} grupos exibidos`;
+  document.getElementById('lista').innerHTML=filtrados.map(g=>`
+    <details class="grupo">
+      <summary><strong>${esc(g.nome)}</strong><span class="categoria">${esc(g.categoria)}</span></summary>
+      <div class="corpo">
+        <p>${esc(g.resumo)}</p>
+        ${g.secoes.map(secao).join('')}
+        <div class="meta"><span><strong>Fonte:</strong> ${esc(g.fonte)}</span><span><strong>Páginas-fonte:</strong> ${esc(g.paginas)}</span><span><strong>Status:</strong> ${esc(g.status)}</span></div>
+      </div>
+    </details>`).join('');
+}
+
+document.getElementById('busca').addEventListener('input',render);
+filtro.addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
