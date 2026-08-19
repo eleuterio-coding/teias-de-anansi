@@ -9,7 +9,7 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -24,9 +24,11 @@
         "dados/idiomas-core-rare.json",
         "dados/idiomas-forgotten-realms.json",
         "idiomas.html",
-        "montarias-veiculos.html"
+        "montarias-veiculos.html",
+        "dados/armaduras-pdfs.json",
+        "armaduras.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas e Montarias e Veículos. No catálogo de Montarias e Veículos contribui com o catálogo-base de 2024 e opções adicionais, incluindo o Apparatus of Kwalish; equivalentes genéricos antigos são suprimidos quando existe versão soberana mais recente."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras fornece o catálogo-base de 2024 e metadados complementares de fabricação; armaduras mágicas localizadas permanecem destinadas ao módulo Itens Mágicos."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -34,7 +36,7 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -50,9 +52,11 @@
         "dados/idiomas-core-standard.json",
         "dados/idiomas-core-rare.json",
         "idiomas.html",
-        "montarias-veiculos.html"
+        "montarias-veiculos.html",
+        "dados/armaduras-pdfs.json",
+        "armaduras.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas e Montarias e Veículos. No catálogo de Montarias e Veículos contribui com opções de Eberron, Quickstone e Forgotten Realms, incluindo veículos das Moonshae Isles, Windskiff, Gyrocopter Wonder, Nimblewright Steed, Thunder Coach e Argonth, preservando conteúdo regional único e evitando duplicatas narrativas."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras contribui com 21 registros de um catálogo demonstrativo, mantidos em bloco separado com status não canonizar; o material oficial de 2024 permanece soberano."
     }
   ],
   "controle": {
