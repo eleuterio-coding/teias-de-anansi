@@ -1,131 +1,832 @@
 {
-  "schema": "hub-rpg/maestrias-de-arma/v2",
+  "schema": "hub-rpg/maestrias-de-arma/v3",
   "gerado_em": "2026-08-19",
   "modulo": "Maestrias de Arma",
   "politica_ruleset": "5e = regras de 2014; 5.5e = revisão iniciada em 2024. O ano da fonte é registrado separadamente do ruleset.",
+  "criterio_consolidacao": "Uma entrada por propriedade de maestria única. Variantes com o mesmo nome são anexadas à entrada canônica e não substituem a regra oficial mais recente.",
   "controle": {
     "validado": true,
-    "quantidade": 8,
-    "quantidade_5e_2014": 0,
-    "quantidade_5_5e": 8,
-    "filtro": "somente conteúdo oficial com licença aberta, descrição mecânica completa e publicação integral permitida",
-    "excluidos": "armas individuais, focos opcionais, playtests, material demonstrativo e conteúdo apenas visível sem licença aberta"
+    "quantidade": 15,
+    "oficiais_canonicas": 8,
+    "demonstrativas_unicas": 7,
+    "variantes_demonstrativas_de_oficiais": 8,
+    "aplicacoes_opcionais_sem_nova_maestria": 4,
+    "arquivos_auditados": [
+      "pdf24_merged.pdf",
+      "pdf24_merged-1.pdf"
+    ],
+    "filtro": "todas as propriedades de Maestria de Arma localizadas nos dois PDFs, com separação entre regra oficial, variante opcional e material demonstrativo"
   },
-  "licenca": {
-    "nome": "Creative Commons Attribution 4.0 International",
-    "identificador": "CC-BY-4.0",
-    "atribuicao": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
-  },
-  "fonte": {
-    "publicacao_id": "srd-5.2.1",
-    "titulo": "System Reference Document 5.2.1",
-    "editora": "Wizards of the Coast LLC",
-    "ano": 2025,
-    "data_publicacao": "2025-05-01",
-    "natureza": "SRD",
-    "ruleset": "5.5e",
-    "revisao_core": 2024,
-    "pagina_inicio": 90,
-    "pagina_fim": 90,
-    "url_original": "https://www.dndbeyond.com/srd"
-  },
-  "regra_geral": "Cada arma possui uma propriedade de maestria. Essa propriedade só pode ser usada por um personagem que tenha um recurso, como Maestria de Arma, que libere a propriedade para ele.",
+  "fontes": [
+    {
+      "id": "srd-5.2.1",
+      "titulo": "System Reference Document 5.2.1",
+      "editora": "Wizards of the Coast LLC",
+      "ano": 2025,
+      "data_publicacao": "2025-05-01",
+      "natureza": "SRD",
+      "ruleset": "5.5e",
+      "revisao_core": 2024,
+      "pagina": 90,
+      "licenca": "CC-BY-4.0",
+      "url_original": "https://www.dndbeyond.com/srd"
+    },
+    {
+      "id": "xyleff-demo",
+      "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+      "autoria": "Felix Klaus",
+      "design": "Angevine",
+      "natureza": "material demonstrativo de terceiros",
+      "arquivo": "pdf24_merged-1.pdf",
+      "paginas_fonte": [
+        2,
+        5
+      ],
+      "status": "demo, não final",
+      "direitos": "A própria fonte declara aberto apenas o material derivado do SRD; as regras originais são resumidas pelo Hub em paráfrase e marcadas como não canônicas."
+    },
+    {
+      "id": "quickstone",
+      "titulo": "Frontiers of Eberron: Quickstone",
+      "natureza": "terceiros",
+      "arquivo": "pdf24_merged-1.pdf",
+      "pagina_fonte": 20,
+      "status": "regra opcional"
+    }
+  ],
+  "auditoria_pdf": [
+    {
+      "arquivo": "pdf24_merged.pdf",
+      "resultado": "Foram localizadas aplicações de maestrias oficiais, inclusive em armas modernas e futuristas. Não foi localizada nova propriedade de Maestria de Arma com definição própria além do conjunto oficial consolidado."
+    },
+    {
+      "arquivo": "pdf24_merged-1.pdf",
+      "resultado": "O material demonstrativo de Xyleff define 15 nomes de maestria: 8 coincidem com as oficiais e 7 são propriedades próprias. Frontiers of Eberron: Quickstone também aplica quatro maestrias oficiais a focos arcanos, sem criar novos nomes."
+    }
+  ],
+  "aplicacoes_opcionais": [
+    {
+      "fonte_id": "quickstone",
+      "nome": "Wand",
+      "maestria": "Vex",
+      "condicao": "Regra opcional aprovada pelo Mestre; requer Weapon Mastery para o foco escolhido e só se aplica a truque que exija jogada de ataque."
+    },
+    {
+      "fonte_id": "quickstone",
+      "nome": "Rod",
+      "maestria": "Slow",
+      "condicao": "Regra opcional aprovada pelo Mestre; requer Weapon Mastery para o foco escolhido e só se aplica a truque que exija jogada de ataque."
+    },
+    {
+      "fonte_id": "quickstone",
+      "nome": "Staff",
+      "maestria": "Push",
+      "condicao": "Regra opcional aprovada pelo Mestre; requer Weapon Mastery para o foco escolhido e só se aplica a truque que exija jogada de ataque."
+    },
+    {
+      "fonte_id": "quickstone",
+      "nome": "Orb / Crystal",
+      "maestria": "Sap",
+      "condicao": "Regra opcional aprovada pelo Mestre; requer Weapon Mastery para o foco escolhido e só se aplica a truque que exija jogada de ataque."
+    }
+  ],
   "itens": [
     {
       "id": "maestrias-de-arma:srd521:cleave",
       "nome": "Cleave",
       "nome_original": "Cleave",
       "slug": "cleave",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com uma jogada de ataque corpo a corpo usando esta arma, pode fazer uma jogada de ataque corpo a corpo com a arma contra uma segunda criatura a até 5 pés da primeira e também dentro do seu alcance. Em um acerto, a segunda criatura sofre o dano da arma, mas você não adiciona seu modificador de atributo a esse dano, a menos que o modificador seja negativo. Você pode fazer esse ataque extra apenas uma vez por turno."},
-      "mecanica": {"gatilho": "acertar uma criatura com ataque corpo a corpo usando a arma", "efeito": "ataque adicional contra uma segunda criatura adjacente ao primeiro alvo e dentro do alcance", "limite": "uma vez por turno"},
-      "armas_srd": ["Greataxe", "Halberd"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com uma jogada de ataque corpo a corpo usando esta arma, pode fazer uma jogada de ataque corpo a corpo com a arma contra uma segunda criatura a até 5 pés da primeira e também dentro do seu alcance. Em um acerto, a segunda criatura sofre o dano da arma, mas você não adiciona seu modificador de atributo a esse dano, a menos que o modificador seja negativo. Você pode fazer esse ataque extra apenas uma vez por turno."
+      },
+      "mecanica": {
+        "gatilho": "Acertar uma criatura com um ataque corpo a corpo usando a arma",
+        "efeito": "Fazer um ataque adicional contra uma segunda criatura a até 5 pés do primeiro alvo e dentro do alcance",
+        "dano_segundo_ataque": "Sem modificador de atributo, salvo se negativo",
+        "limite": "Uma vez por turno"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Greataxe",
+          "Halberd"
+        ],
+        "pdf24_merged": []
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa amplia o gatilho para ataques corpo a corpo ou à distância e acrescenta uma regra específica para armas Colossais à distância."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:graze",
       "nome": "Graze",
       "nome_original": "Graze",
       "slug": "graze",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se sua jogada de ataque com esta arma errar uma criatura, você pode causar a essa criatura dano igual ao modificador de atributo usado para fazer a jogada de ataque. O dano é do mesmo tipo causado pela arma e só pode ser aumentado aumentando o modificador de atributo."},
-      "mecanica": {"gatilho": "errar uma jogada de ataque com a arma", "efeito": "causar dano igual ao modificador de atributo usado no ataque", "tipo_dano": "o mesmo da arma"},
-      "armas_srd": ["Glaive", "Greatsword"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se sua jogada de ataque com esta arma errar uma criatura, você pode causar a essa criatura dano igual ao modificador de atributo usado para fazer a jogada de ataque. O dano é do mesmo tipo causado pela arma e só pode ser aumentado aumentando o modificador de atributo."
+      },
+      "mecanica": {
+        "gatilho": "Errar uma jogada de ataque com a arma",
+        "efeito": "Causar dano igual ao modificador de atributo usado no ataque",
+        "tipo_de_dano": "O mesmo tipo causado pela arma",
+        "limite_de_aumento": "Somente pelo aumento do modificador de atributo"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Glaive",
+          "Greatsword"
+        ],
+        "pdf24_merged": []
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa mantém o efeito básico e acrescenta dano adicional próprio para armas Colossais quando a mecânica reduz o número de ataques."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:nick",
       "nome": "Nick",
       "nome_original": "Nick",
       "slug": "nick",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Quando você faz o ataque extra da propriedade Leve, pode realizá-lo como parte da ação Atacar em vez de como uma Ação Bônus. Você pode fazer esse ataque extra apenas uma vez por turno."},
-      "mecanica": {"gatilho": "fazer o ataque extra da propriedade Leve", "efeito": "o ataque extra passa a fazer parte da ação Atacar", "limite": "uma vez por turno"},
-      "armas_srd": ["Dagger", "Light Hammer", "Sickle", "Scimitar"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Quando você faz o ataque extra da propriedade Leve, pode realizá-lo como parte da ação Atacar em vez de como uma Ação Bônus. Você pode fazer esse ataque extra apenas uma vez por turno."
+      },
+      "mecanica": {
+        "gatilho": "Fazer o ataque extra da propriedade Leve",
+        "efeito": "Realizar esse ataque como parte da ação Atacar, em vez de usar Ação Bônus",
+        "limite": "Uma vez por turno"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Dagger",
+          "Light Hammer",
+          "Sickle",
+          "Scimitar"
+        ],
+        "pdf24_merged": []
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa reproduz essencialmente o mesmo funcionamento da regra oficial."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:push",
       "nome": "Push",
       "nome_original": "Push",
       "slug": "push",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, pode empurrá-la até 10 pés em linha reta para longe de você, desde que ela seja Grande ou menor."},
-      "mecanica": {"gatilho": "acertar uma criatura com a arma", "efeito": "empurrar o alvo até 10 pés diretamente para longe", "limite_alvo": "Grande ou menor"},
-      "armas_srd": ["Greatclub", "Pike", "Warhammer", "Heavy Crossbow"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com esta arma, pode empurrá-la até 10 pés em linha reta para longe de você, desde que ela seja Grande ou menor."
+      },
+      "mecanica": {
+        "gatilho": "Acertar uma criatura com a arma",
+        "efeito": "Empurrar o alvo até 10 pés diretamente para longe",
+        "limite_de_tamanho": "Grande ou menor"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Greatclub",
+          "Pike",
+          "Warhammer",
+          "Heavy Crossbow"
+        ],
+        "pdf24_merged": [
+          "Shotgun"
+        ]
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa aumenta o deslocamento para 15 pés quando a arma possui a propriedade Colossal."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:sap",
       "nome": "Sap",
       "nome_original": "Sap",
       "slug": "sap",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, essa criatura tem Desvantagem na próxima jogada de ataque que fizer antes do início do seu próximo turno."},
-      "mecanica": {"gatilho": "acertar uma criatura com a arma", "efeito": "Desvantagem na próxima jogada de ataque do alvo", "duracao": "até o início do seu próximo turno"},
-      "armas_srd": ["Mace", "Spear", "Flail", "Longsword", "Morningstar", "War Pick"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com esta arma, essa criatura tem Desvantagem na próxima jogada de ataque que fizer antes do início do seu próximo turno."
+      },
+      "mecanica": {
+        "gatilho": "Acertar uma criatura com a arma",
+        "efeito": "Desvantagem na próxima jogada de ataque do alvo",
+        "duracao": "Até o início do seu próximo turno"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Mace",
+          "Spear",
+          "Flail",
+          "Longsword",
+          "Morningstar",
+          "War Pick"
+        ],
+        "pdf24_merged": [
+          "Revolver",
+          "Antimatter Rifle"
+        ]
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa mantém o mesmo funcionamento básico da regra oficial."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:slow",
       "nome": "Slow",
       "nome_original": "Slow",
       "slug": "slow",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, pode reduzir a Velocidade da criatura em 10 pés até o início do seu próximo turno. Se a criatura for atingida mais de uma vez por armas que tenham esta propriedade, a redução de Velocidade não excede 10 pés."},
-      "mecanica": {"gatilho": "acertar e causar dano com a arma", "efeito": "reduzir a Velocidade em 10 pés", "duracao": "até o início do seu próximo turno", "limite_acumulacao": "a redução total não excede 10 pés"},
-      "armas_srd": ["Club", "Javelin", "Light Crossbow", "Sling", "Whip", "Longbow", "Musket"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, pode reduzir a Velocidade da criatura em 10 pés até o início do seu próximo turno. Se a criatura for atingida mais de uma vez por armas que tenham esta propriedade, a redução de Velocidade não excede 10 pés."
+      },
+      "mecanica": {
+        "gatilho": "Acertar e causar dano com a arma",
+        "efeito": "Reduzir a Velocidade do alvo em 10 pés",
+        "duracao": "Até o início do seu próximo turno",
+        "limite_de_acumulacao": "A redução total não excede 10 pés"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Club",
+          "Javelin",
+          "Light Crossbow",
+          "Sling",
+          "Whip",
+          "Longbow",
+          "Musket"
+        ],
+        "pdf24_merged": [
+          "Automatic Rifle",
+          "Hunting Rifle",
+          "Laser Rifle"
+        ]
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa declara redução de 15 pés para armas Colossais, mas também afirma que múltiplos acertos não excedem 10 pés; a redação é internamente inconsistente e foi preservada apenas como observação de variante."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:topple",
       "nome": "Topple",
       "nome_original": "Topple",
       "slug": "topple",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, pode forçá-la a fazer uma salvaguarda de Constituição com CD igual a 8 + o modificador de atributo usado para fazer a jogada de ataque + seu Bônus de Proficiência. Em uma falha, a criatura fica Caída (Prone)."},
-      "mecanica": {"gatilho": "acertar uma criatura com a arma", "salvaguarda": "Constituição", "cd": "8 + modificador de atributo usado no ataque + Bônus de Proficiência", "efeito_falha": "Caído (Prone)"},
-      "armas_srd": ["Quarterstaff", "Battleaxe", "Lance", "Maul", "Trident"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com esta arma, pode forçá-la a fazer uma salvaguarda de Constituição com CD igual a 8 + o modificador de atributo usado para fazer a jogada de ataque + seu Bônus de Proficiência. Em uma falha, a criatura fica Caída (Prone)."
+      },
+      "mecanica": {
+        "gatilho": "Acertar uma criatura com a arma",
+        "salvaguarda": "Constituição",
+        "cd": "8 + modificador de atributo usado no ataque + Bônus de Proficiência",
+        "efeito_na_falha": "Caído (Prone)"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Quarterstaff",
+          "Battleaxe",
+          "Lance",
+          "Maul",
+          "Trident"
+        ],
+        "pdf24_merged": []
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa mantém essencialmente o mesmo funcionamento da regra oficial."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
     },
     {
       "id": "maestrias-de-arma:srd521:vex",
       "nome": "Vex",
       "nome_original": "Vex",
       "slug": "vex",
-      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
-      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, tem Vantagem na sua próxima jogada de ataque contra essa criatura antes do fim do seu próximo turno."},
-      "mecanica": {"gatilho": "acertar e causar dano com a arma", "efeito": "Vantagem na próxima jogada de ataque contra o mesmo alvo", "duracao": "antes do fim do seu próximo turno"},
-      "armas_srd": ["Handaxe", "Dart", "Shortbow", "Rapier", "Shortsword", "Blowgun", "Hand Crossbow", "Pistol"],
-      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
-      "controle": {"completo": true, "status_completude": "publicado"}
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "oficial_aberta",
+        "status": "atual",
+        "natureza": "SRD"
+      },
+      "conteudo": {
+        "descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, tem Vantagem na sua próxima jogada de ataque contra essa criatura antes do fim do seu próximo turno."
+      },
+      "mecanica": {
+        "gatilho": "Acertar e causar dano com a arma",
+        "efeito": "Vantagem na próxima jogada de ataque contra o mesmo alvo",
+        "duracao": "Antes do fim do seu próximo turno"
+      },
+      "armas_associadas": {
+        "srd_5_2_1": [
+          "Handaxe",
+          "Dart",
+          "Shortbow",
+          "Rapier",
+          "Shortsword",
+          "Blowgun",
+          "Hand Crossbow",
+          "Pistol"
+        ],
+        "pdf24_merged": [
+          "Semiautomatic Pistol",
+          "Laser Pistol"
+        ]
+      },
+      "variantes_encontradas": [
+        {
+          "fonte_id": "xyleff-demo",
+          "arquivo": "pdf24_merged-1.pdf",
+          "pagina_fonte": 5,
+          "status": "demonstrativo_nao_canonico",
+          "descricao_resumida": "A versão demonstrativa mantém essencialmente o mesmo funcionamento da regra oficial."
+        }
+      ],
+      "fonte": {
+        "publicacao_id": "srd-5.2.1",
+        "titulo": "System Reference Document 5.2.1",
+        "pagina": 90,
+        "ruleset": "5.5e",
+        "revisao_core": 2024,
+        "licenca": "CC-BY-4.0"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": true
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:disarm",
+      "nome": "Disarm",
+      "nome_original": "Disarm",
+      "slug": "disarm",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Quando uma criatura erra você com um ataque corpo a corpo feito com uma arma, você pode usar sua Reação para tentar desarmar a arma usada no ataque.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "gatilho": "Uma criatura errar você com um ataque corpo a corpo usando uma arma",
+        "reacao": "Usar sua Reação para tentar desarmar a arma usada no ataque",
+        "resolucao": "Não especificada no texto da maestria"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": [
+          "Tekko-kagi",
+          "Triple Nunchaku",
+          "Jitte",
+          "Kpinga",
+          "Hook Sword",
+          "Whip",
+          "Kusarigama"
+        ]
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": false,
+        "status_completude": "publicado_com_aviso",
+        "canonico": false,
+        "nao_canonizar": true,
+        "aviso": "A fonte manda realizar uma tentativa de desarme, mas não define nessa maestria qual teste, CD ou procedimento resolve a tentativa."
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:bleed",
+      "nome": "Bleed",
+      "nome_original": "Bleed",
+      "slug": "bleed",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Ao acertar uma criatura com esta arma, você pode exigir uma salvaguarda de Constituição. Em falha, o alvo recebe a condição Bleeding. A maestria não pode aplicar mais de uma instância de Bleeding ao mesmo alvo, embora a condição possa se acumular por outras fontes.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "gatilho": "Acertar uma criatura com a arma",
+        "salvaguarda": "Constituição",
+        "cd": "8 + modificador de atributo usado no ataque + Bônus de Proficiência",
+        "efeito_na_falha": "Aplicar Bleeding",
+        "bleeding": "Perde 3 PV no início de cada turno; uma ação e teste de Sabedoria (Medicina) CD 12 encerra o sangramento; com kit de curandeiro, não há teste",
+        "imunidade": "Criaturas sem sangue, como mortos-vivos e constructos"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": [
+          "Kris Dagger",
+          "Urumi",
+          "Flamberge",
+          "Metal Card"
+        ]
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:form",
+      "nome": "Form",
+      "nome_original": "Form",
+      "slug": "form",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Quando você obtém um acerto crítico com esta arma, o dano crítico da arma passa a usar 1d10 no lugar do dado de dano crítico original.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "gatilho": "Obter um acerto crítico com a arma",
+        "efeito": "O dano crítico passa a ser 1d10 em vez do dano crítico original"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": [
+          "Needle",
+          "Stiletto",
+          "Weighted Chain"
+        ]
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:deflect",
+      "nome": "Deflect",
+      "nome_original": "Deflect",
+      "slug": "deflect",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Quando uma criatura faz um ataque à distância contra você, você pode usar sua Reação para aumentar sua CA contra esse ataque em valor igual ao seu Bônus de Proficiência, podendo fazer o ataque errar.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "gatilho": "Ser alvo de um ataque à distância",
+        "reacao": "Usar sua Reação",
+        "efeito": "Adicionar o Bônus de Proficiência à CA contra aquele ataque"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": []
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true,
+        "aviso": "A amostra define a maestria, mas não associa nenhuma das armas apresentadas a ela."
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:parry",
+      "nome": "Parry",
+      "nome_original": "Parry",
+      "slug": "parry",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Quando uma criatura acerta você com um ataque corpo a corpo, você pode usar sua Reação para reduzir o dano sofrido em valor igual ao dobro do seu Bônus de Proficiência.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "gatilho": "Ser acertado por um ataque corpo a corpo",
+        "reacao": "Usar sua Reação",
+        "efeito": "Reduzir o dano em 2 × Bônus de Proficiência"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": [
+          "Tonfa",
+          "Sai",
+          "Hunga-munga"
+        ]
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:critic",
+      "nome": "Critic",
+      "nome_original": "Critic",
+      "slug": "critic",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Armas com esta maestria obtêm acerto crítico em 19–20. Se o personagem já possui um recurso que concede crítico em 19–20, a faixa é ampliada para 18–20.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "efeito_base": "Faixa de crítico 19–20",
+        "interacao": "Se já houver crítico em 19–20 por outro recurso, a faixa passa a 18–20"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": [
+          "Colossal Axe"
+        ]
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true
+      }
+    },
+    {
+      "id": "maestrias-de-arma:xyleff-demo:distance",
+      "nome": "Distance",
+      "nome_original": "Distance",
+      "slug": "distance",
+      "classificacao": {
+        "modulo": "Maestrias de Arma",
+        "subtipo": "propriedade_de_maestria",
+        "origem": "terceiros_demo",
+        "status": "demonstrativo_nao_canonico",
+        "natureza": "Terceiros"
+      },
+      "conteudo": {
+        "descricao_resumida": "Em armas corpo a corpo, esta maestria aumenta o alcance em 5 pés. Em armas à distância, o antigo alcance longo passa a ser o alcance normal, eliminando a Desvantagem por distância dentro desse limite.",
+        "tipo_de_texto": "parafrase_editorial"
+      },
+      "mecanica": {
+        "arma_corpo_a_corpo": "Aumenta o alcance em 5 pés",
+        "arma_a_distancia": "O alcance longo passa a funcionar como alcance normal"
+      },
+      "armas_associadas": {
+        "pdf24_merged-1": []
+      },
+      "fonte": {
+        "publicacao_id": "xyleff-demo",
+        "titulo": "Weapons, Masteries, and Properties: A Complete Customization Guide",
+        "arquivo": "pdf24_merged-1.pdf",
+        "pagina_fonte": 5,
+        "ruleset_compativel": "5.5e",
+        "status_da_fonte": "material demonstrativo, não final"
+      },
+      "controle": {
+        "completo": true,
+        "status_completude": "publicado",
+        "canonico": false,
+        "nao_canonizar": true,
+        "aviso": "A amostra define a maestria, mas não associa nenhuma das armas apresentadas a ela."
+      }
     }
   ]
 }
