@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: gerar-magias-catalogo
+  cancel-in-progress: false
+
 jobs:
   gerar:
     runs-on: ubuntu-latest
