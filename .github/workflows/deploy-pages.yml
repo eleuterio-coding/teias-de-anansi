@@ -38,12 +38,30 @@ jobs:
 
           for path in Path('.').rglob('*.html'):
               html = path.read_text(encoding='utf-8')
-              if tag in html:
-                  continue
-              if '</head>' not in html:
-                  raise RuntimeError(f'Elemento </head> não encontrado: {path}')
-              html = html.replace('</head>', f'  {tag}\n</head>', 1)
-              path.write_text(html, encoding='utf-8')
+              if tag not in html:
+                  if '</head>' not in html:
+                      raise RuntimeError(f'Elemento </head> não encontrado: {path}')
+                  html = html.replace('</head>', f'  {tag}\n</head>', 1)
+                  path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Inject Expanded Concentration seals into Spells
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          page = Path('magias.html')
+          script_file = Path('scripts/concentracao-expandida-selos.js')
+          marker = 'data-concentracao-expandida-selos="1"'
+          html = page.read_text(encoding='utf-8')
+          js = script_file.read_text(encoding='utf-8')
+          if marker not in html:
+              if '</body>' not in html:
+                  raise RuntimeError('Elemento </body> não encontrado em magias.html')
+              tag = f'<script {marker}>\n{js}\n</script>\n'
+              html = html.replace('</body>', tag + '</body>', 1)
+              page.write_text(html, encoding='utf-8')
           PY
 
       - name: Upload artifact
