@@ -3,58 +3,8 @@
 }
 
 html,
-body {
-  background: #ffffff !important;
-  color: #000000 !important;
-}
-
+body,
 body * {
-  color: #000000 !important;
-}
-
-main,
-section,
-article,
-header,
-footer,
-nav,
-aside,
-div,
-form,
-fieldset,
-dialog,
-details,
-summary,
-blockquote,
-pre,
-code,
-table,
-thead,
-tbody,
-tfoot,
-tr,
-th,
-td,
-ul,
-ol,
-li,
-p,
-span,
-strong,
-b,
-em,
-i,
-small,
-label,
-legend,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-dt,
-dd {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
@@ -63,15 +13,18 @@ a,
 a:link,
 a:visited,
 a:hover,
-a:active {
+a:active,
+a:focus {
   color: #000000 !important;
+  background-color: #ffffff !important;
 }
 
 input,
 select,
 textarea,
 button,
-option {
+option,
+optgroup {
   background: #ffffff !important;
   color: #000000 !important;
 }
@@ -82,17 +35,18 @@ textarea::placeholder {
   opacity: 1;
 }
 
-.card,
-.item,
-.nota,
-.badge,
-.modulos li,
-.modulos a,
-.controles,
-.meta,
-.corpo,
-.erro {
+input:focus,
+select:focus,
+textarea:focus,
+button:focus,
+button:hover,
+button:active {
   background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+::selection {
+  background: #ffffff !important;
   color: #000000 !important;
 }
 
@@ -108,7 +62,8 @@ textarea::placeholder {
   select,
   textarea,
   button,
-  option {
+  option,
+  optgroup {
     background-color: #ffffff !important;
     color: #000000 !important;
   }
