@@ -6,175 +6,36 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <title>Maestrias de Arma - Teias de Anansi</title>
+  <title>Maestrias de Arma - Biblioteca - Teias de Anansi</title>
   <style>
-    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
-    a { color: inherit; }
-    .resumo, .meta, .original { opacity: .76; }
-    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
-    .controles { display: grid; grid-template-columns: minmax(240px,1fr) minmax(180px,260px) minmax(210px,300px); gap: 10px; margin: 18px 0 10px; }
-    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
-    .resultado { margin: 8px 0 16px; opacity: .75; }
-    .item, .referencia, .demo { border: 1px solid #8885; border-radius: 10px; overflow: hidden; margin: 10px 0; }
-    .item summary, .referencia summary, .demo summary { cursor: pointer; padding: 14px 16px; }
-    .item summary:hover, .referencia summary:hover, .demo summary:hover { background: #8881; }
-    .item summary { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-    .nome { min-width: 0; }
-    .original { font-weight: 400; font-size: .86rem; margin-left: 8px; }
-    .badge { font-size: .82rem; padding: 2px 8px; border: 1px solid #8887; border-radius: 999px; white-space: nowrap; }
-    .corpo { padding: 0 16px 16px; }
-    .campos { list-style: none; padding: 0; margin: 10px 0; display: flex; flex-wrap: wrap; gap: 8px; }
-    .campos li { border: 1px solid #8886; border-radius: 999px; padding: 5px 10px; }
-    .campos li.maestria { font-weight: 700; }
-    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    .grade-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 10px; margin: 12px 0 20px; }
-    .ref-card { border: 1px solid #8885; border-radius: 10px; padding: 12px 14px; }
-    .ref-card h3 { margin: 0 0 6px; font-size: 1rem; }
-    .ref-card p { margin: 0; }
-    .demo-lista { display: flex; flex-wrap: wrap; gap: 7px; padding: 0; list-style: none; }
-    .demo-lista li { border: 1px dashed #8888; border-radius: 999px; padding: 4px 9px; }
-    .erro { padding: 16px; border: 1px solid #b55; border-radius: 10px; }
-    @media (max-width: 800px) {
-      body { padding: 16px; }
-      .controles { grid-template-columns: 1fr; }
-      .item summary { display: block; }
-      .badge { display: inline-block; margin-top: 6px; }
-    }
+    :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}
+    *{box-sizing:border-box} body{max-width:1120px;margin:auto;padding:24px;line-height:1.55} a{color:inherit}.muted{opacity:.74}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem}.controles{display:grid;grid-template-columns:1fr 220px;gap:10px;margin:18px 0}.controles input,.controles select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}.item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item summary:hover{background:var(--soft)}.corpo{padding:0 16px 16px}.mecanica{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin:14px 0}.campo{border:1px solid #8884;border-radius:8px;padding:9px 10px}.campo b,.campo span{display:block}.campo span{margin-top:2px}.armas{display:flex;flex-wrap:wrap;gap:7px;padding:0;list-style:none}.armas li{border:1px solid #8885;border-radius:999px;padding:4px 9px}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.78;display:flex;gap:8px 18px;flex-wrap:wrap}.licenca{font-size:.9rem;opacity:.8}.erro{padding:16px;border:1px solid #b55;border-radius:10px}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}}
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1100">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1218">← Bibliotecas</a></p>
   <header>
     <h1>Maestrias de Arma</h1>
-    <p class="resumo" id="resumo">Carregando catálogo...</p>
+    <p class="muted">Catálogo das propriedades de Maestria de Arma publicáveis integralmente no Hub.</p>
+    <div class="badges"><span class="badge">8 itens</span><span class="badge">5e/2014: 0</span><span class="badge">5.5e: 8</span><span class="badge">SRD 5.2.1 · CC-BY-4.0</span></div>
   </header>
 
-  <main id="app"></main>
+  <div class="nota"><strong>Critério editorial:</strong> este módulo contém as próprias propriedades de Maestria de Arma, não as armas que as utilizam. Só entram itens oficiais cuja regra completa esteja em fonte aberta com licença que permita republicação integral. Conteúdo apenas visível online, playtests, material demonstrativo e opções sem licença aberta ficam de fora.</div>
+  <div class="nota"><strong>Escopo por edição:</strong> as regras de 2014 (5e) não possuem Maestrias de Arma. O recurso foi acrescentado à revisão de 2024 e aparece no SRD 5.2.1, publicado em 2025, que representa o ruleset 5.5e.</div>
+
+  <div id="status" class="nota">Carregando catálogo...</div>
+  <div class="controles"><input id="busca" type="search" placeholder="Buscar maestria, efeito ou arma associada..."><select id="filtro"><option value="">Todas as maestrias</option></select></div>
+  <div id="resultado" class="muted"></div>
+  <main id="lista"></main>
+  <section class="nota licenca" id="licenca"></section>
 
 <script>
-const esc = (v='') => String(v)
-  .replaceAll('&','&amp;')
-  .replaceAll('<','&lt;')
-  .replaceAll('>','&gt;')
-  .replaceAll('"','&quot;')
-  .replaceAll("'",'&#039;');
-
-const semAcento = (v='') => String(v).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-
-async function iniciar() {
-  const app = document.getElementById('app');
-  const resumo = document.getElementById('resumo');
-
-  try {
-    const resposta = await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1100', { cache: 'no-store' });
-    if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
-    const dados = await resposta.json();
-    const itens = dados.itens || [];
-    const oficiais = itens.filter(i => i.status === 'vigente_mais_recente');
-    const opcionais = itens.filter(i => i.status === 'complemento_opcional');
-
-    resumo.textContent = `${itens.length} itens publicados: ${oficiais.length} armas da revisão de 2024 e ${opcionais.length} focos arcanos opcionais.`;
-
-    const categorias = [...new Set(itens.map(i => i.categoria))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-    const maestrias = [...new Set(itens.map(i => i.maestria))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
-
-    app.innerHTML = `
-      <div class="nota">
-        <strong>Organização:</strong> o item principal é a arma ou foco. Dentro dele aparecem, separadamente, todas as propriedades relevantes e a Maestria de Arma, seguindo o padrão já adotado pelo módulo. Em sobreposição, a revisão de 2024 tem precedência.
-      </div>
-
-      <details class="referencia">
-        <summary><strong>Referência das 8 Maestrias oficiais de 2024</strong></summary>
-        <div class="corpo">
-          <div class="grade-ref">
-            ${(dados.maestrias_oficiais || []).map(m => `
-              <article class="ref-card">
-                <h3>${esc(m.nome)}</h3>
-                <p>${esc(m.descricao)}</p>
-              </article>
-            `).join('')}
-          </div>
-        </div>
-      </details>
-
-      <div class="controles">
-        <input id="busca" type="search" placeholder="Buscar arma, propriedade ou maestria..." autocomplete="off">
-        <select id="maestria">
-          <option value="">Todas as maestrias</option>
-          ${maestrias.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join('')}
-        </select>
-        <select id="categoria">
-          <option value="">Todas as categorias</option>
-          ${categorias.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
-        </select>
-      </div>
-      <div class="resultado" id="resultado"></div>
-      <section id="lista"></section>
-
-      ${dados.conteudo_nao_canonizado ? `
-        <details class="demo">
-          <summary><strong>Conteúdo encontrado no PDF, mas não canonizado</strong></summary>
-          <div class="corpo">
-            <p>O conjunto demonstrativo de <strong>${esc(dados.conteudo_nao_canonizado.fonte)}</strong> foi identificado em <strong>${esc(dados.conteudo_nao_canonizado.arquivo)}</strong>, mas não foi misturado às armas ativas porque o índice de curadoria do projeto o classifica como <strong>não canonizar</strong>.</p>
-            <p>${esc(dados.conteudo_nao_canonizado.motivo)}</p>
-            <ul class="demo-lista">
-              ${(dados.conteudo_nao_canonizado.maestrias_encontradas || []).map(m => `<li>${esc(m)}</li>`).join('')}
-            </ul>
-          </div>
-        </details>
-      ` : ''}
-    `;
-
-    const busca = document.getElementById('busca');
-    const filtroMaestria = document.getElementById('maestria');
-    const filtroCategoria = document.getElementById('categoria');
-    const resultado = document.getElementById('resultado');
-    const lista = document.getElementById('lista');
-
-    function render() {
-      const termo = semAcento(busca.value.trim());
-      const filtrados = itens.filter(i => {
-        const texto = semAcento(`${i.nome} ${i.nome_original || ''} ${i.categoria} ${(i.campos || []).join(' ')} ${i.maestria} ${i.fonte}`);
-        return (!termo || texto.includes(termo)) &&
-          (!filtroMaestria.value || i.maestria === filtroMaestria.value) &&
-          (!filtroCategoria.value || i.categoria === filtroCategoria.value);
-      });
-
-      resultado.textContent = `${filtrados.length} de ${itens.length} itens`;
-      lista.innerHTML = filtrados.length ? filtrados.map(i => `
-        <details class="item">
-          <summary>
-            <span class="nome"><strong>${esc(i.nome)}</strong>${i.nome_original && i.nome_original !== i.nome ? `<span class="original">${esc(i.nome_original)}</span>` : ''}</span>
-            <span class="badge">${esc(i.maestria)}</span>
-          </summary>
-          <div class="corpo">
-            <ul class="campos">
-              ${(i.campos || []).map(c => `<li class="${c === i.maestria ? 'maestria' : ''}">${esc(c)}</li>`).join('')}
-            </ul>
-            ${i.observacao ? `<p>${esc(i.observacao)}</p>` : ''}
-            <div class="meta">
-              <span><strong>Categoria:</strong> ${esc(i.categoria)}</span>
-              <span><strong>Livro:</strong> ${esc(i.fonte)}</span>
-              <span><strong>PDF:</strong> ${esc(i.arquivo)}</span>
-              ${i.status === 'complemento_opcional' ? '<span><strong>Status:</strong> regra opcional</span>' : '<span><strong>Status:</strong> vigente 2024</span>'}
-            </div>
-          </div>
-        </details>
-      `).join('') : '<p class="nota">Nenhum item corresponde aos filtros selecionados.</p>';
-    }
-
-    busca.addEventListener('input', render);
-    filtroMaestria.addEventListener('change', render);
-    filtroCategoria.addEventListener('change', render);
-    render();
-  } catch (erro) {
-    resumo.textContent = 'Não foi possível carregar o catálogo.';
-    app.innerHTML = `<p class="erro">Falha ao carregar os dados de Maestrias de Arma: ${esc(erro.message)}</p>`;
-  }
-}
-
-iniciar();
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+let DATA=null,ALL=[];
+function mecanica(x){const m=x.mecanica||{};return Object.entries(m).map(([k,v])=>`<div class="campo"><b>${esc(k.replaceAll('_',' '))}</b><span>${esc(v)}</span></div>`).join('')}
+function render(){const q=norm(document.getElementById('busca').value.trim()),f=document.getElementById('filtro').value;const rows=ALL.filter(x=>(!f||x.nome===f)&&(!q||norm([x.nome,x.conteudo?.descricao,Object.values(x.mecanica||{}).join(' '),(x.armas_srd||[]).join(' ')].join(' ')).includes(q)));document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} itens`;document.getElementById('lista').innerHTML=rows.map(x=>`<details class="item"><summary><strong>${esc(x.nome)}</strong><span class="badge">5.5e · SRD</span></summary><div class="corpo"><p>${esc(x.conteudo?.descricao)}</p><div class="mecanica">${mecanica(x)}</div><h3>Armas do SRD com esta maestria</h3><ul class="armas">${(x.armas_srd||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="meta"><span><b>Tipo:</b> Maestrias de Arma</span><span><b>Livro/Fonte:</b> System Reference Document 5.2.1</span><span><b>Página:</b> ${esc(x.fonte?.pagina)}</span><span><b>Ruleset:</b> ${esc(x.fonte?.ruleset)}</span><span><b>Revisão core:</b> ${esc(x.fonte?.revisao_core)}</span></div></div></details>`).join('')||'<p class="nota">Nenhuma maestria corresponde aos filtros.</p>'}
+(async()=>{try{const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1218',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);DATA=await r.json();ALL=DATA.itens||[];if(ALL.length!==8)throw new Error(`catálogo incompleto: ${ALL.length}/8`);document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 8 propriedades oficiais de Maestria de Arma, todas provenientes do SRD 5.2.1 aberto sob CC-BY-4.0.';document.getElementById('licenca').innerHTML=`<strong>Atribuição da fonte:</strong> ${esc(DATA.licenca?.atribuicao||'')}`;render()}catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;document.getElementById('lista').innerHTML='<p class="erro">Não foi possível abrir o catálogo.</p>'}})();document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
 </script>
 </body>
 </html>
