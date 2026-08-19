@@ -13,13 +13,18 @@
     body { max-width: 920px; margin: 0 auto; padding: 24px; line-height: 1.5; }
     a, a:visited, a:hover, a:active { color: #000000; }
     .resumo { opacity: .76; }
-    .modulos { list-style: none; padding: 0; counter-reset: modulo; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
-    .modulos li { counter-increment: modulo; border: 1px solid #8885; border-radius: 10px; overflow: hidden; background: #ffffff; color: #000000; }
-    .modulos a { display: flex; justify-content: space-between; gap: 12px; padding: 13px 14px; text-decoration: none; background: #ffffff; color: #000000; }
+    .modulos { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 10px; }
+    .modulos li { border: 1px solid #8885; border-radius: 10px; overflow: hidden; background: #ffffff; color: #000000; }
+    .modulos a { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 13px 14px; text-decoration: none; background: #ffffff; color: #000000; }
     .modulos a:hover { background: #f5f5f5; }
-    .nome::before { content: counter(modulo) ". "; }
+    .nome { font-size: .95rem; line-height: 1.2; font-weight: 600; white-space: nowrap; }
+    .nome::before { content: attr(data-numero) ". "; font-variant-numeric: tabular-nums; }
     .contagem { opacity: .62; font-size: .86rem; white-space: nowrap; }
-    @media (max-width: 600px) { body { padding: 16px; } }
+    @media (max-width: 600px) {
+      body { padding: 16px; }
+      .modulos { grid-template-columns: 1fr; }
+      .nome { font-size: .92rem; }
+    }
   </style>
 </head>
 <body>
@@ -28,24 +33,24 @@
   <p class="resumo">Catálogos mecânicos do Hub.</p>
 
   <ol class="modulos">
-    <li><a href="regras.html?v=20260819-1648"><span class="nome">Regras</span><span class="contagem">159 itens</span></a></li>
-    <li><a href="classes.html?v=20260819-1148"><span class="nome">Classes</span><span class="contagem">13 classes</span></a></li>
-    <li><a href="subclasses.html?v=20260818-1532"><span class="nome">Subclasses</span><span class="contagem">12 itens</span></a></li>
-    <li><a href="especies.html?v=20260818-1618"><span class="nome">Espécies</span><span class="contagem">11 itens</span></a></li>
-    <li><a href="antecedentes.html?v=20260818-1551"><span class="nome">Antecedentes</span><span class="contagem">7 itens</span></a></li>
-    <li><a href="talentos.html?v=20260819-1126"><span class="nome">Talentos</span><span class="contagem">172 itens</span></a></li>
-    <li><a href="maestrias-de-arma.html?v=20260819-1224"><span class="nome">Maestrias de Arma</span><span class="contagem">15 itens</span></a></li>
-    <li><a href="monstros.html?v=20260819-1011"><span class="nome">Monstros</span><span class="contagem">SRD + 2 PDFs</span></a></li>
-    <li><a href="armaduras.html?v=20260819-1100"><span class="nome">Armaduras</span><span class="contagem">34 registros</span></a></li>
-    <li><a href="armas.html?v=20260819-1300"><span class="nome">Armas</span><span class="contagem">146 itens</span></a></li>
-    <li><a href="equipamentos-aventura.html?v=20260819-1135"><span class="nome">Equipamentos de Aventura</span><span class="contagem">185 itens</span></a></li>
-    <li><a href="ferramentas.html?v=20260819-1029"><span class="nome">Ferramentas</span><span class="contagem">25 itens</span></a></li>
-    <li><a href="montarias-veiculos.html?v=20260819-2"><span class="nome">Montarias e Veículos</span><span class="contagem">60 itens</span></a></li>
-    <li><a href="comercio-e-despesas.html?v=20260819-1"><span class="nome">Comércio e Despesas</span><span class="contagem">6 grupos</span></a></li>
-    <li><a href="bugigangas.html?v=20260819-1043"><span class="nome">Bugigangas</span><span class="contagem">109 itens</span></a></li>
-    <li><a href="itens-magicos.html?v=20260819-1812"><span class="nome">Itens Mágicos</span><span class="contagem">259 itens</span></a></li>
-    <li><a href="magias.html?v=20260819-1719"><span class="nome">Magias</span><span class="contagem">catálogo consolidado</span></a></li>
-    <li><a href="idiomas.html?v=20260819-1043"><span class="nome">Idiomas</span><span class="contagem">67 itens</span></a></li>
+    <li><a href="regras.html?v=20260819-1648"><span class="nome" data-numero="1">Regras</span><span class="contagem">159 itens</span></a></li>
+    <li><a href="classes.html?v=20260819-1148"><span class="nome" data-numero="2">Classes</span><span class="contagem">13 classes</span></a></li>
+    <li><a href="subclasses.html?v=20260818-1532"><span class="nome" data-numero="3">Subclasses</span><span class="contagem">119 itens</span></a></li>
+    <li><a href="especies.html?v=20260818-1618"><span class="nome" data-numero="4">Espécies</span><span class="contagem">51 itens</span></a></li>
+    <li><a href="antecedentes.html?v=20260818-1551"><span class="nome" data-numero="5">Antecedentes</span><span class="contagem">58 itens</span></a></li>
+    <li><a href="talentos.html?v=20260819-1126"><span class="nome" data-numero="6">Talentos</span><span class="contagem">172 itens</span></a></li>
+    <li><a href="maestrias-de-arma.html?v=20260819-1224"><span class="nome" data-numero="7">Maestrias de Arma</span><span class="contagem">15 itens</span></a></li>
+    <li><a href="monstros.html?v=20260819-1011"><span class="nome" data-numero="8">Monstros</span><span class="contagem">SRD + 2 PDFs</span></a></li>
+    <li><a href="armaduras.html?v=20260819-1100"><span class="nome" data-numero="9">Armaduras</span><span class="contagem">34 registros</span></a></li>
+    <li><a href="armas.html?v=20260819-1300"><span class="nome" data-numero="10">Armas</span><span class="contagem">146 itens</span></a></li>
+    <li><a href="equipamentos-aventura.html?v=20260819-1135"><span class="nome" data-numero="11">Equipamentos de Aventura</span><span class="contagem">185 itens</span></a></li>
+    <li><a href="ferramentas.html?v=20260819-1029"><span class="nome" data-numero="12">Ferramentas</span><span class="contagem">25 itens</span></a></li>
+    <li><a href="montarias-veiculos.html?v=20260819-2"><span class="nome" data-numero="13">Montarias e Veículos</span><span class="contagem">60 itens</span></a></li>
+    <li><a href="comercio-e-despesas.html?v=20260819-1"><span class="nome" data-numero="14">Comércio e Despesas</span><span class="contagem">6 grupos</span></a></li>
+    <li><a href="bugigangas.html?v=20260819-1043"><span class="nome" data-numero="15">Bugigangas</span><span class="contagem">109 itens</span></a></li>
+    <li><a href="itens-magicos.html?v=20260819-1812"><span class="nome" data-numero="16">Itens Mágicos</span><span class="contagem">259 itens</span></a></li>
+    <li><a href="magias.html?v=20260819-1719"><span class="nome" data-numero="17">Magias</span><span class="contagem">catálogo consolidado</span></a></li>
+    <li><a href="idiomas.html?v=20260819-1043"><span class="nome" data-numero="18">Idiomas</span><span class="contagem">67 itens</span></a></li>
   </ol>
 </body>
 </html>
