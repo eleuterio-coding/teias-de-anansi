@@ -76,12 +76,16 @@
   "classes_sidekick_publicadas": 0,
   "areas_separadas_de_classes": 0,
   "artificer_integrado_ao_catalogo_padrao": true,
+  "ferramentas_publicadas_dos_pdfs": 25,
+  "ferramentas_arquivo": "dados/ferramentas-pdfs.json",
+  "ferramentas_exclusoes_taxonomicas": ["Land Vehicles", "Water Vehicles", "Air Vehicles"],
   "verificacao": {
     "classes": "13 classes padrão no módulo, incluindo Artificer 2025; Sidekicks removidos",
     "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
+    "ferramentas": "25 categorias primárias publicadas; pdf24_merged.pdf fornece as descrições detalhadas e pdf24_merged-1.pdf acrescenta relações de Eberron/Artificer; veículos direcionados ao módulo próprio",
     "publicacao": "concluida"
   },
-  "revisado_em": "2026-08-19T10:11:00-03:00",
+  "revisado_em": "2026-08-19T10:29:00-03:00",
   "registros_estruturados_carregados": 395,
   "monstros_extras_carregados": 92,
   "registros_pdf_publicados": 487,
