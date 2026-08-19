@@ -18,23 +18,26 @@
   <script>
     const params = new URLSearchParams(location.search);
     const modulo = params.get('modulo');
+    const v = '20260819-1900';
     const destinos = {
-      'Regras': 'regras.html?v=20260819-1236',
-      'Classes': 'classes.html?v=20260819-1216',
-      'Subclasses': 'subclasses.html?v=20260819-1216',
-      'Espécies': 'especies.html?v=20260819-1216',
-      'Antecedentes': 'antecedentes.html?v=20260819-1216',
-      'Talentos': 'talentos.html?v=20260819-1216',
-      'Maestrias de Arma': 'maestrias-de-arma.html?v=20260819-1216',
-      'Monstros': 'monstros.html?v=20260819-1216',
-      'Armaduras': 'armaduras.html?v=20260819-1216',
-      'Equipamentos de Aventura': 'equipamentos-aventura.html?v=20260819-1216',
-      'Ferramentas': 'ferramentas.html?v=20260819-1216',
-      'Montarias e Veículos': 'montarias-veiculos.html?v=20260819-1216',
-      'Comércio e Despesas': 'comercio-e-despesas.html?v=20260819-1216',
-      'Bugigangas': 'bugigangas.html?v=20260819-1216',
-      'Itens Mágicos': 'itens-magicos.html?v=20260819-1216',
-      'Idiomas': 'idiomas.html?v=20260819-1216'
+      'Regras': `regras.html?v=${v}`,
+      'Classes': `classes.html?v=${v}`,
+      'Subclasses': `subclasses.html?v=${v}`,
+      'Espécies': `especies.html?v=${v}`,
+      'Antecedentes': `antecedentes.html?v=${v}`,
+      'Talentos': `talentos.html?v=${v}`,
+      'Maestrias de Arma': `maestrias-de-arma.html?v=${v}`,
+      'Monstros': `monstros.html?v=${v}`,
+      'Armaduras': `armaduras.html?v=${v}`,
+      'Armas': `armas.html?v=${v}`,
+      'Equipamentos de Aventura': `equipamentos-aventura.html?v=${v}`,
+      'Ferramentas': `ferramentas.html?v=${v}`,
+      'Montarias e Veículos': `montarias-veiculos.html?v=${v}`,
+      'Comércio e Despesas': `comercio-e-despesas.html?v=${v}`,
+      'Bugigangas': `bugigangas.html?v=${v}`,
+      'Itens Mágicos': `itens-magicos.html?v=${v}`,
+      'Magias': `magias.html?v=${v}`,
+      'Idiomas': `idiomas.html?v=${v}`
     };
 
     if (modulo && destinos[modulo]) {
@@ -42,9 +45,9 @@
     } else if (modulo) {
       location.replace('biblioteca-legado.html' + location.search + location.hash);
     } else {
-      location.replace('bibliotecas.html?v=20260819-1820');
+      location.replace(`bibliotecas.html?v=${v}`);
     }
   </script>
-  <noscript><a href="bibliotecas.html?v=20260819-1820">Abrir Bibliotecas</a></noscript>
+  <noscript><a href="bibliotecas.html?v=20260819-1900">Abrir Bibliotecas</a></noscript>
 </body>
 </html>
