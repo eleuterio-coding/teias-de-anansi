@@ -28,45 +28,22 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Force Biblioteca modules to white background and black text
+      - name: Force white background and black text across the site
         shell: bash
         run: |
           python <<'PY'
           from pathlib import Path
 
-          files = [
-              'bibliotecas.html',
-              'regras.html',
-              'classes.html',
-              'subclasses.html',
-              'especies.html',
-              'antecedentes.html',
-              'talentos.html',
-              'maestrias-de-arma.html',
-              'monstros.html',
-              'armaduras.html',
-              'armas.html',
-              'equipamentos-aventura.html',
-              'ferramentas.html',
-              'montarias-veiculos.html',
-              'comercio-e-despesas.html',
-              'bugigangas.html',
-              'itens-magicos.html',
-              'magias.html',
-              'idiomas.html',
-          ]
-          tag = '<link rel="stylesheet" href="biblioteca-light.css?v=20260819-1444">'
+          tag = '<link rel="stylesheet" href="site-light.css?v=20260819-1545">'
 
-          for filename in files:
-              path = Path(filename)
-              if not path.exists():
-                  raise FileNotFoundError(f'Módulo não encontrado: {filename}')
+          for path in Path('.').rglob('*.html'):
               html = path.read_text(encoding='utf-8')
-              if tag not in html:
-                  if '</head>' not in html:
-                      raise RuntimeError(f'Elemento </head> não encontrado: {filename}')
-                  html = html.replace('</head>', f'  {tag}\n</head>', 1)
-                  path.write_text(html, encoding='utf-8')
+              if tag in html:
+                  continue
+              if '</head>' not in html:
+                  raise RuntimeError(f'Elemento </head> não encontrado: {path}')
+              html = html.replace('</head>', f'  {tag}\n</head>', 1)
+              path.write_text(html, encoding='utf-8')
           PY
 
       - name: Upload artifact
