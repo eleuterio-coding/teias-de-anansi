@@ -5,18 +5,20 @@ const SKIP='script,style,noscript,textarea,input,select,option,button,a,.hub-ref
 const norm=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 const isWord=c=>c&&/[\p{L}\p{N}_]/u.test(c);
 const escAttr=s=>CSS.escape(String(s));
-let index=null,trie=null,scheduled=false;
+let index=null,trie=null,scheduled=false,observer=null;
 function buildTrie(rows,aliasRows){
   const byId=new Map(rows.map(r=>[r.id,r]));
+  const aliasToId=new Map();
   const root={n:new Map(),id:null};
   for(const a of aliasRows){
     const row=byId.get(a.id); if(!row)continue;
     const term=a.termo; if(term.length<2)continue;
+    aliasToId.set(term,row.id);
     let node=root;
     for(const ch of term){if(!node.n.has(ch))node.n.set(ch,{n:new Map(),id:null});node=node.n.get(ch)}
     node.id=row.id;
   }
-  return {root,byId};
+  return {root,byId,aliasToId};
 }
 function hrefFor(row){
   const base=row.url||'referencia.html';
@@ -37,7 +39,7 @@ function findMatches(text,selfId){
 }
 function linkTextNode(node){
   if(!node.nodeValue?.trim()||node.parentElement?.closest(SKIP))return;
-  const selfId=closestEntityId(node); const matches=findMatches(node.nodeValue,selfId); if(!matches.length)return;
+  const selfId=closestEntityId(node);const matches=findMatches(node.nodeValue,selfId);if(!matches.length)return;
   const frag=document.createDocumentFragment();let p=0;
   for(const m of matches){
     if(m.start>p)frag.append(document.createTextNode(node.nodeValue.slice(p,m.start)));
@@ -51,8 +53,8 @@ function decorateEntities(){
   for(const el of entityCandidates()){
     if(el.dataset.refId)continue;
     const label=(el.querySelector('summary strong, summary, h2, h3, .nome, .title')?.textContent||'').trim();if(!label)continue;
-    const n=norm(label);const a=index.aliases_resolvidos.find(x=>x.termo===n);if(!a)continue;
-    el.dataset.refId=a.id;el.id=`ref-${a.id}`;
+    const id=trie.aliasToId.get(norm(label));if(!id)continue;
+    el.dataset.refId=id;el.id=`ref-${id}`;
   }
 }
 function process(root=document.body){
@@ -67,11 +69,13 @@ function focusRequested(){
   if(el.tagName==='DETAILS')el.open=true;el.classList.add('hub-ref-target');
   if(!el.dataset.refFocused){el.dataset.refFocused='1';setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),60)}
 }
-function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;process(document.body)})}
+function startObserver(){if(observer)observer.observe(document.body,{childList:true,subtree:true,characterData:true})}
+function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;observer?.disconnect();process(document.body);startObserver()})}
 async function init(){
-  try{const r=await fetch(INDEX_URL,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);index=await r.json();trie=buildTrie(index.entidades||[],index.aliases_resolvidos||[]);
+  try{
+    const r=await fetch(INDEX_URL,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);index=await r.json();trie=buildTrie(index.entidades||[],index.aliases_resolvidos||[]);
     const style=document.createElement('style');style.textContent='.hub-ref{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}.hub-ref:hover{text-decoration-style:solid}.hub-ref-target{outline:2px solid currentColor;outline-offset:4px;border-radius:8px}';document.head.append(style);
-    process(document.body);new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true,characterData:true});
+    process(document.body);observer=new MutationObserver(schedule);startObserver();
   }catch(e){console.warn('[Hub referências]',e)}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
