@@ -1,0 +1,79 @@
+{
+  "fonte": {
+    "id": "eberron-forge-2025",
+    "titulo": "Eberron: Forge of the Artificer",
+    "ano": 2025,
+    "natureza": "Oficial",
+    "setting": "Eberron",
+    "ruleset": "5.5e",
+    "revisao_core": 2024,
+    "pdf": "pdf24_merged-1.pdf",
+    "paginas": "34-38"
+  },
+  "items": [
+    {
+      "nome": "Changeling",
+      "tipo": "Fey",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "descricao": "Metamorfos de essência feérica que constroem identidades e personas por meio de alterações físicas voluntárias.",
+      "tracos": [
+        {"nome":"Changeling Instincts","texto":"Ganha proficiência em duas perícias à escolha entre Deception, Insight, Intimidation, Performance e Persuasion."},
+        {"nome":"Shape-Shifter","texto":"Com uma ação, altera aparência e voz, incluindo coloração, cabelo, sexo, altura, peso e tamanho entre Medium e Small. Pode assumir a aparência de outra espécie jogável sem alterar estatísticas; não pode copiar um indivíduo nunca visto nem adotar anatomia básica incompatível, e roupas/equipamentos não mudam. Enquanto estiver nessa forma, tem Vantagem em testes de Carisma. A forma dura até usar uma ação para retornar à forma verdadeira."}
+      ]
+    },
+    {
+      "nome": "Kalashtar",
+      "tipo": "Aberration",
+      "tamanhos": ["Medium"],
+      "velocidade": 30,
+      "descricao": "Seres ligados espiritualmente aos quori renegados, com disciplina mental, telepatia e uma relação incomum com os sonhos.",
+      "tracos": [
+        {"nome":"Dual Mind","texto":"Vantagem em salvaguardas de Sabedoria e Carisma."},
+        {"nome":"Mental Discipline","texto":"Resistência a dano Psíquico."},
+        {"nome":"Mind Link","texto":"Telepatia com alcance em pés igual a 10 vezes o nível. Enquanto fala telepaticamente com uma criatura, pode usar uma ação Mágica para permitir que ela responda telepaticamente por 1 hora, ou até encerrar o efeito com outra ação Mágica."},
+        {"nome":"Severed from Dreams","texto":"Não pode ser alvo da magia Dream. Ao terminar um Descanso Longo, ganha proficiência em uma perícia à escolha até terminar o próximo Descanso Longo."}
+      ]
+    },
+    {
+      "nome": "Khoravar",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "descricao": "Descendentes de humanos e elfos de Khorvaire, com identidade cultural própria e aptidões que refletem sua herança feérica e versatilidade.",
+      "tracos": [
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Fey Ancestry","texto":"Vantagem em salvaguardas para evitar ou encerrar a condição Charmed."},
+        {"nome":"Fey Gift","texto":"Conhece o truque Friends. Ao terminar um Descanso Longo, pode substituí-lo por outro truque da lista de Cleric, Druid ou Wizard."},
+        {"nome":"Lethargy Resilience","texto":"Quando falha em uma salvaguarda para evitar ou encerrar a condição Unconscious, pode transformar a falha em sucesso. Depois de usar, só pode usar novamente após terminar 1d4 Descansos Longos."},
+        {"nome":"Skill Versatility","texto":"Ganha proficiência em uma perícia ou ferramenta à escolha. Ao terminar um Descanso Longo, pode trocar essa proficiência por outra perícia ou ferramenta."}
+      ]
+    },
+    {
+      "nome": "Shifter",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "descricao": "Humanoides de aspecto bestial capazes de intensificar temporariamente suas características animais por meio do shifting.",
+      "tracos": [
+        {"nome":"Bestial Instincts","texto":"Ganha proficiência em uma perícia à escolha entre Acrobatics, Athletics, Intimidation e Survival."},
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Shifting","texto":"Com uma Ação Bônus, assume aparência mais bestial por 1 minuto ou até reverter com Ação Bônus. Ao transformar, ganha Pontos de Vida Temporários iguais a 2 vezes o Bônus de Proficiência. Pode usar um número de vezes igual ao Bônus de Proficiência por Descanso Longo. Ao escolher a espécie, seleciona um benefício: Beasthide concede 1d6 PV Temporários adicionais e +1 CA durante o shifting; Longtooth permite, ao transformar e como Ação Bônus nos turnos seguintes, fazer Ataque Desarmado com presas que pode causar 1d6 + Força de dano Perfurante; Swiftstride aumenta o Deslocamento em 10 pés e permite mover até 10 pés como Reação quando uma criatura termina o turno a 5 pés, sem provocar Ataques de Oportunidade; Wildhunt concede Vantagem em testes de Sabedoria e impede criaturas a até 30 pés de terem Vantagem em ataques contra você, salvo se você estiver Incapacitated."}
+      ]
+    },
+    {
+      "nome": "Warforged",
+      "tipo": "Construct",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "descricao": "Seres mecânicos sencientes construídos para a Última Guerra e formados por uma combinação de materiais orgânicos e inorgânicos.",
+      "tracos": [
+        {"nome":"Construct Resilience","texto":"Resistência a dano de Poison e Vantagem em salvaguardas para evitar ou encerrar a condição Poisoned."},
+        {"nome":"Integrated Protection","texto":"Recebe +1 de bônus na Classe de Armadura. Armadura vestida não pode ser removida contra sua vontade enquanto estiver vivo."},
+        {"nome":"Sentry's Rest","texto":"Não precisa dormir e magia não pode fazê-lo dormir. Pode concluir um Descanso Longo em 6 horas passando esse tempo inativo e imóvel; parece inerte, mas permanece consciente."},
+        {"nome":"Specialized Design","texto":"Ganha proficiência em uma perícia e em uma ferramenta à escolha."},
+        {"nome":"Tireless","texto":"Não recebe níveis de Exhaustion decorrentes de desidratação, desnutrição ou sufocamento."}
+      ]
+    }
+  ]
+}
