@@ -8,7 +8,10 @@ body {
   color: #000000 !important;
 }
 
-body,
+body * {
+  color: #000000 !important;
+}
+
 main,
 section,
 article,
@@ -17,6 +20,24 @@ footer,
 nav,
 aside,
 div,
+form,
+fieldset,
+dialog,
+details,
+summary,
+blockquote,
+pre,
+code,
+table,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td,
+ul,
+ol,
+li,
 p,
 span,
 strong,
@@ -32,14 +53,10 @@ h3,
 h4,
 h5,
 h6,
-li,
 dt,
-dd,
-th,
-td,
-summary,
-details {
-  color: #000000;
+dd {
+  background-color: #ffffff !important;
+  color: #000000 !important;
 }
 
 a,
@@ -65,14 +82,16 @@ textarea::placeholder {
   opacity: 1;
 }
 
-fieldset,
-table,
 .card,
 .item,
 .nota,
 .badge,
 .modulos li,
-.modulos a {
+.modulos a,
+.controles,
+.meta,
+.corpo,
+.erro {
   background-color: #ffffff !important;
   color: #000000 !important;
 }
@@ -84,12 +103,13 @@ table,
 
   html,
   body,
+  body *,
   input,
   select,
   textarea,
   button,
   option {
-    background: #ffffff !important;
+    background-color: #ffffff !important;
     color: #000000 !important;
   }
 }
