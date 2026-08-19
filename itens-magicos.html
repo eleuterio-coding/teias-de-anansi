@@ -8,17 +8,19 @@
   <meta http-equiv="Expires" content="0">
   <title>Itens Mágicos - Biblioteca - Teias de Anansi</title>
   <style>
-    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    html, body { background: #fff; color: #000; }
     body { max-width: 1120px; margin: 0 auto; padding: 24px; line-height: 1.55; }
-    a { color: inherit; }
+    a, a:visited, a:hover, a:active { color: inherit; }
     .resumo, .meta { opacity: .78; }
     .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
     .controles { display: grid; grid-template-columns: minmax(240px, 1fr) repeat(3, minmax(150px, 220px)); gap: 10px; margin: 18px 0 10px; }
-    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: #fff; color: #000; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
-    .item { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .aviso { padding: 10px 12px; border: 1px solid #aa7b1f88; border-radius: 9px; margin: 10px 0 16px; }
+    .item { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; background: #fff; color: #000; }
     .item summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
-    .item summary:hover { background: #8881; }
+    .item summary:hover { background: #f5f5f5; }
     .categoria { font-size: .86rem; opacity: .68; text-align: right; }
     .corpo { padding: 0 16px 16px; }
     .stat { margin: 0 0 12px; font-style: italic; font-weight: 600; }
@@ -27,6 +29,7 @@
     .legado { display: inline-block; margin-left: 8px; font-size: .75rem; padding: 2px 7px; border: 1px solid #8887; border-radius: 999px; opacity: .75; vertical-align: middle; }
     .atribuicao { margin-top: 26px; padding-top: 14px; border-top: 1px solid #8884; font-size: .88rem; opacity: .76; }
     .erro { padding: 16px; border: 1px solid #b55; border-radius: 10px; }
+    .vazio { padding: 16px; border: 1px dashed #8887; border-radius: 10px; }
     @media (max-width: 850px) {
       body { padding: 16px; }
       .controles { grid-template-columns: 1fr 1fr; }
@@ -41,7 +44,7 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1158">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1812">← Bibliotecas</a></p>
   <header>
     <h1>Itens Mágicos</h1>
     <p class="resumo">Catálogo ativo de itens mágicos de D&amp;D 5e/5.5e com conteúdo integral legalmente reutilizável.</p>
@@ -62,43 +65,111 @@
   </div>
 
   <p class="resultado" id="resultado">Carregando catálogo...</p>
+  <div id="avisos"></div>
   <main id="lista"></main>
   <footer class="atribuicao" id="atribuicao"></footer>
 
 <script>
+const VERSION = '20260819-1812';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let DATA = null;
+let ITEMS_BY_ID = new Map();
+let LOAD_WARNINGS = [];
 
 function tipoDo(bloco) {
-  return String(bloco || '').split(',')[0].replace(/\s*\(.*/, '').trim();
+  const texto = String(bloco || '').trim();
+  const m = texto.match(/^([^,(]+)/);
+  return (m ? m[1] : texto).trim();
 }
-function raridadeDo(bloco) {
+
+function raridadesDo(bloco) {
   const b = String(bloco || '').toLowerCase();
-  if (b.includes('rarity varies')) return 'Rarity Varies';
-  if (b.includes('very rare')) return 'Very Rare';
-  if (b.includes('legendary')) return 'Legendary';
-  if (b.includes('artifact')) return 'Artifact';
-  if (b.includes('uncommon')) return 'Uncommon';
-  if (/(^|[^a-z])rare([^a-z]|$)/.test(b)) return 'Rare';
-  if (b.includes('common')) return 'Common';
-  return 'Other';
+  if (b.includes('rarity varies')) return ['Rarity Varies'];
+  const found = [];
+  if (/(^|[^a-z])common([^a-z]|$)/.test(b) && !/(^|[^a-z])uncommon([^a-z]|$)/.test(b)) found.push('Common');
+  if (/(^|[^a-z])uncommon([^a-z]|$)/.test(b)) found.push('Uncommon');
+  if (/(^|[^a-z])rare([^a-z]|$)/.test(b.replace(/very rare/g, ''))) found.push('Rare');
+  if (b.includes('very rare')) found.push('Very Rare');
+  if (b.includes('legendary')) found.push('Legendary');
+  if (b.includes('artifact')) found.push('Artifact');
+  return [...new Set(found)];
 }
+
+function raridadeDo(bloco) {
+  const rs = raridadesDo(bloco);
+  if (!rs.length) return 'Other';
+  return rs.length === 1 ? rs[0] : 'Rarity Varies';
+}
+
+function sintoniaDo(bloco) {
+  return /requires attunement/i.test(String(bloco || ''));
+}
+
 function paginaTexto(item) {
-  return item.pagina_inicio === item.pagina_fim
-    ? String(item.pagina_inicio)
-    : `${item.pagina_inicio}–${item.pagina_fim}`;
+  const ini = item.pagina_inicio;
+  const fim = item.pagina_fim;
+  if (ini == null && fim == null) return '—';
+  if (fim == null || ini === fim) return String(ini);
+  if (ini == null) return String(fim);
+  return `${ini}–${fim}`;
 }
+
 function popularFiltros() {
+  const tipoSelect = document.getElementById('tipo');
+  const raridadeSelect = document.getElementById('raridade');
+  tipoSelect.innerHTML = '<option value="">Todos os tipos</option>';
+  raridadeSelect.innerHTML = '<option value="">Todas as raridades</option>';
+
   const tipos = [...new Set(DATA.items.map(x => tipoDo(x.bloco)))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'en'));
   const ordem = ['Common','Uncommon','Rare','Very Rare','Legendary','Artifact','Rarity Varies','Other'];
-  document.getElementById('tipo').insertAdjacentHTML('beforeend', tipos.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
-  document.getElementById('raridade').insertAdjacentHTML('beforeend', ordem.filter(r => DATA.items.some(x => raridadeDo(x.bloco) === r)).map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
+  tipoSelect.insertAdjacentHTML('beforeend', tipos.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
+  raridadeSelect.insertAdjacentHTML('beforeend', ordem.filter(r => DATA.items.some(x => raridadeDo(x.bloco) === r)).map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
 }
+
 function textoBusca(item) {
   const fonte = DATA.fontes[item.fonte] || {};
   return [item.nome, item.bloco, item.descricao, fonte.titulo, fonte.ruleset]
     .join(' ').toLocaleLowerCase('pt-BR');
 }
+
+function corpoHtml(item) {
+  const fonte = DATA.fontes[item.fonte] || {};
+  return `
+    <p class="stat">${esc(item.bloco)}</p>
+    <div class="descricao">${esc(item.descricao)}</div>
+    <div class="meta">
+      <span><strong>Tipo:</strong> ${esc(tipoDo(item.bloco))}</span>
+      <span><strong>Raridade:</strong> ${esc(raridadeDo(item.bloco))}</span>
+      <span><strong>Sintonia:</strong> ${sintoniaDo(item.bloco) ? 'Sim' : 'Não'}</span>
+      <span><strong>Livro:</strong> ${esc(fonte.titulo || '—')}</span>
+      <span><strong>Edição:</strong> ${esc(fonte.ruleset || '—')}</span>
+      <span><strong>Página(s):</strong> ${esc(paginaTexto(item))}</span>
+      <span><strong>Licença:</strong> ${esc(fonte.licenca || '—')}</span>
+    </div>`;
+}
+
+function preencherCorpo(details) {
+  if (!details || details.dataset.loaded === '1') return;
+  const item = ITEMS_BY_ID.get(details.dataset.itemId);
+  if (!item) return;
+  const corpo = details.querySelector('.corpo');
+  corpo.innerHTML = corpoHtml(item);
+  details.dataset.loaded = '1';
+}
+
+function abrirReferenciaSolicitada() {
+  const ref = new URLSearchParams(location.search).get('ref');
+  if (!ref) return;
+  const el = document.getElementById(`ref-${ref}`);
+  if (!el) return;
+  el.open = true;
+  preencherCorpo(el);
+  if (!el.dataset.refFocused) {
+    el.dataset.refFocused = '1';
+    setTimeout(() => el.scrollIntoView({behavior:'smooth', block:'center'}), 60);
+  }
+}
+
 function render() {
   if (!DATA) return;
   const q = document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR');
@@ -113,47 +184,87 @@ function render() {
     (!raridade || raridadeDo(item.bloco) === raridade)
   );
 
-  document.getElementById('resultado').textContent = `${itens.length} de ${DATA.controle.quantidade} registros exibidos`;
-  document.getElementById('lista').innerHTML = itens.map(item => {
-    const fonte = DATA.fontes[item.fonte];
+  const totalEsperado = Number(DATA.controle?.quantidade || DATA.items.length);
+  document.getElementById('resultado').textContent = `${itens.length} de ${DATA.items.length} registros carregados${DATA.items.length !== totalEsperado ? ` — catálogo esperado: ${totalEsperado}` : ''}`;
+
+  const lista = document.getElementById('lista');
+  if (!itens.length) {
+    lista.innerHTML = '<p class="vazio">Nenhum item corresponde aos filtros atuais.</p>';
+    return;
+  }
+
+  lista.innerHTML = itens.map(item => {
     const legado = item.fonte === 'srd51' ? '<span class="legado">5e legado ativo</span>' : '';
-    return `<details class="item">
+    return `<details class="item" data-item-id="${esc(item.id)}" data-ref-id="${esc(item.id)}" id="ref-${esc(item.id)}">
       <summary>
         <span><strong>${esc(item.nome)}</strong>${legado}</span>
         <span class="categoria">${esc(item.bloco)}</span>
       </summary>
-      <div class="corpo">
-        <p class="stat">${esc(item.bloco)}</p>
-        <div class="descricao">${esc(item.descricao)}</div>
-        <div class="meta">
-          <span><strong>Tipo:</strong> ${esc(tipoDo(item.bloco))}</span>
-          <span><strong>Raridade:</strong> ${esc(raridadeDo(item.bloco))}</span>
-          <span><strong>Sintonia:</strong> ${/requires attunement/i.test(item.bloco) ? 'Sim' : 'Não'}</span>
-          <span><strong>Livro:</strong> ${esc(fonte.titulo)}</span>
-          <span><strong>Edição:</strong> ${esc(fonte.ruleset)}</span>
-          <span><strong>Página(s):</strong> ${esc(paginaTexto(item))}</span>
-          <span><strong>Licença:</strong> ${esc(fonte.licenca)}</span>
-        </div>
-      </div>
+      <div class="corpo"></div>
     </details>`;
   }).join('');
+
+  lista.querySelectorAll('details.item').forEach(el => {
+    el.addEventListener('toggle', () => { if (el.open) preencherCorpo(el); });
+  });
+
+  abrirReferenciaSolicitada();
 }
+
+async function fetchJson(url, contexto) {
+  const r = await fetch(url, {cache:'no-store'});
+  if (!r.ok) throw new Error(`HTTP ${r.status}${contexto ? ` em ${contexto}` : ''}`);
+  return r.json();
+}
+
+async function carregarChunk(caminho) {
+  const url = new URL(caminho, document.baseURI);
+  url.searchParams.set('v', VERSION);
+  const data = await fetchJson(url, caminho);
+  if (!Array.isArray(data)) throw new Error(`Formato inválido em ${caminho}`);
+  return data;
+}
+
 async function carregarDados() {
-  const mr = await fetch('dados/itens-magicos/manifest.json?v=20260819-1158', {cache:'no-store'});
-  if (!mr.ok) throw new Error(`HTTP ${mr.status} ao carregar o manifesto`);
-  const manifest = await mr.json();
-  const partes = await Promise.all(manifest.chunks.map(async caminho => {
-    const r = await fetch(`${caminho}?v=20260819-1158`, {cache:'no-store'});
-    if (!r.ok) throw new Error(`HTTP ${r.status} em ${caminho}`);
-    return r.json();
-  }));
-  return {...manifest, items: partes.flat()};
+  const manifestUrl = new URL('dados/itens-magicos/manifest.json', document.baseURI);
+  manifestUrl.searchParams.set('v', VERSION);
+  const manifest = await fetchJson(manifestUrl, 'manifest.json');
+  if (!Array.isArray(manifest.chunks) || !manifest.chunks.length) throw new Error('Manifesto sem chunks válidos');
+
+  const resultados = await Promise.allSettled(manifest.chunks.map(carregarChunk));
+  const partes = [];
+  LOAD_WARNINGS = [];
+
+  resultados.forEach((resultado, i) => {
+    if (resultado.status === 'fulfilled') partes.push(...resultado.value);
+    else LOAD_WARNINGS.push(`${manifest.chunks[i]}: ${resultado.reason?.message || resultado.reason}`);
+  });
+
+  if (!partes.length) throw new Error('Nenhum bloco de dados pôde ser carregado');
+
+  const obrigatorios = ['id','nome','bloco','descricao','fonte'];
+  const validos = [];
+  const vistos = new Set();
+  for (const item of partes) {
+    if (!item || obrigatorios.some(k => !String(item[k] ?? '').trim())) continue;
+    if (vistos.has(item.id)) continue;
+    vistos.add(item.id);
+    validos.push(item);
+  }
+
+  validos.sort((a,b) => String(a.nome).localeCompare(String(b.nome), 'en'));
+  return {...manifest, items: validos};
 }
+
 carregarDados()
   .then(data => {
     DATA = data;
+    ITEMS_BY_ID = new Map(data.items.map(item => [item.id, item]));
     popularFiltros();
-    document.getElementById('atribuicao').textContent = data.atribuicao;
+    document.getElementById('atribuicao').textContent = data.atribuicao || '';
+    if (LOAD_WARNINGS.length) {
+      document.getElementById('avisos').innerHTML = `<div class="aviso"><strong>Aviso:</strong> ${LOAD_WARNINGS.length} parte(s) do catálogo não carregaram. Os registros disponíveis abaixo continuam utilizáveis.</div>`;
+    }
     render();
   })
   .catch(err => {
