@@ -8,12 +8,14 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
-        "dados/monstros-pdfs-auditoria.json"
+        "dados/monstros-pdfs-auditoria.json",
+        "dados/ferramentas-pdfs.json",
+        "ferramentas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes e Monstros; manter disponível como referência documental do projeto."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros e Ferramentas; contém a seção detalhada de ferramentas usada como base do catálogo e referências de fabricação de 2024."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -21,13 +23,15 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
-        "dados/monstros-pdfs-auditoria.json"
+        "dados/monstros-pdfs-auditoria.json",
+        "dados/ferramentas-pdfs.json",
+        "ferramentas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes e Monstros; manter disponível como referência documental do projeto."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros e Ferramentas; no catálogo de Ferramentas acrescenta ocorrências e relações em Eberron/Artificer, sem nova categoria primária localizada."
     }
   ],
   "controle": {
