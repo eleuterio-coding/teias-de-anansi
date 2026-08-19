@@ -82,6 +82,7 @@
 
   function applySeal(record, raw) {
     if (!record) return record;
+    if (record.limite_coexistencia && raw == null) return record;
     record.limite_coexistencia = classify(raw, record);
     record.limite_coexistencia_nome = LABELS[record.limite_coexistencia];
     return record;
