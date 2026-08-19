@@ -39,22 +39,22 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260818-1551">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1014">← Bibliotecas</a></p>
   <header>
     <h1>Antecedentes</h1>
-    <p class="resumo">7 antecedentes e variantes oficiais de D&D 5e/5.5e publicados somente quando a fonte aberta permite reconstruir o bloco mecânico completo e a descrição do item.</p>
+    <p class="resumo">58 antecedentes e variantes de D&amp;D 5e/5.5e consolidados no catálogo. A coleção combina os registros já publicados com os antecedentes identificados em <em>pdf24_merged.pdf</em> e <em>pdf24_merged-1.pdf</em>.</p>
   </header>
 
-  <div class="nota"><strong>Precedência:</strong> quando existe antecedente 2024 equivalente, a versão 5.5e é a entrada ativa e a versão 2014 não é duplicada. Conteúdo 5e permanece apenas quando não existe substituto direto em 2024 ou quando se trata de uma variante própria sem equivalente atual.</div>
-  <div class="nota"><strong>Critério de completude:</strong> para 5.5e, o registro precisa expor atributos, Talento de Origem, duas perícias, ferramenta e equipamento. Para 5e, precisa expor perícias, ferramentas/idiomas aplicáveis, equipamento e característica do antecedente. Não são preenchidas lacunas a partir de índices de conteúdo fechado.</div>
-  <div class="nota"><strong>Fontes abertas usadas:</strong> SRD 5.2.1 / Basic Rules 2024, artigo oficial da D&D Beyond que publica integralmente o bloco do Wayfarer e Basic Rules 2014. O material do SRD 5.2.1 é CC BY 4.0; os demais registros são apresentados aqui em forma de dados mecânicos e descrição parafraseada a partir de páginas oficiais publicamente acessíveis.</div>
+  <div class="nota"><strong>Precedência:</strong> quando existe uma revisão mais recente do mesmo antecedente, a versão mais nova é a entrada ativa. Por isso, os antecedentes 2024 do Livro do Jogador não duplicam os registros 2014 equivalentes, e <em>House Agent</em> usa a versão de <em>Eberron: Forge of the Artificer</em> (2025).</div>
+  <div class="nota"><strong>Escopo:</strong> foram catalogados apenas antecedentes jogáveis nomeados com bloco próprio. A seção <em>Creating a Background</em> é um procedimento de criação/customização, não um antecedente; recomendações como <em>Military Backgrounds</em> também não geram cartões duplicados.</div>
+  <div class="nota"><strong>Completude:</strong> os registros 5.5e exibem atributos, talento concedido, duas perícias, ferramenta e equipamento. Os textos narrativos importados são paráfrases editoriais; os campos mecânicos seguem os dados das fontes.</div>
 
   <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar antecedente, perícia, ferramenta, talento ou característica..." aria-label="Buscar antecedentes">
+    <input id="busca" type="search" placeholder="Buscar antecedente, perícia, ferramenta, talento, cenário ou fonte..." aria-label="Buscar antecedentes">
     <select id="edicao" aria-label="Filtrar por edição">
       <option value="">Todas as edições</option>
-      <option value="5.5e">D&D 5.5e / 2024</option>
-      <option value="5e">D&D 5e / 2014</option>
+      <option value="5.5e">D&amp;D 5.5e / 2024+</option>
+      <option value="5e">D&amp;D 5e / 2014</option>
     </select>
   </div>
   <p class="resultado" id="resultado">Carregando antecedentes...</p>
@@ -63,6 +63,7 @@
 <script>
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const semAcento = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const slug = v => semAcento(v).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 const lista = document.getElementById('lista');
 const resultado = document.getElementById('resultado');
 const busca = document.getElementById('busca');
@@ -96,7 +97,9 @@ function blocoEquipamento(d) {
   return opcoes.map(o => `
     <div class="bloco">
       <h3>Equipamento${opcoes.length > 1 ? ` — Opção ${esc(o.id)}` : ''}</h3>
-      <ul class="equipamento">${(o.itens || []).map(i => `<li>${esc(itemTexto(i))}</li>`).join('')}</ul>
+      ${o.texto
+        ? `<p>${esc(o.texto)}</p>`
+        : `<ul class="equipamento">${(o.itens || []).map(i => `<li>${esc(itemTexto(i))}</li>`).join('')}</ul>`}
     </div>`).join('');
 }
 
@@ -105,7 +108,7 @@ function blocos55(d) {
   return `
     <div class="grade">
       <div class="bloco"><h3>Atributos associados</h3><p>${esc((d.atributos_elegiveis || []).join(', '))}</p><p><strong>Aumento:</strong> +2 em um e +1 em outro, ou +1 nos três; máximo 20.</p></div>
-      <div class="bloco"><h3>Talento de Origem</h3><p>${t.href ? `<a href="${esc(t.href)}">${esc(talentoTexto(t))}</a>` : esc(talentoTexto(t))}</p>${t.descricao ? `<p>${esc(t.descricao)}</p>` : ''}</div>
+      <div class="bloco"><h3>Talento concedido</h3><p>${t.href ? `<a href="${esc(t.href)}">${esc(talentoTexto(t))}</a>` : esc(talentoTexto(t))}</p>${t.descricao ? `<p>${esc(t.descricao)}</p>` : ''}</div>
       <div class="bloco"><h3>Proficiências em perícias</h3><p>${esc((d.pericias || []).join(' e '))}</p></div>
       <div class="bloco"><h3>Proficiência em ferramenta</h3><p>${esc(ferramentaTexto(d))}</p></div>
     </div>`;
@@ -123,6 +126,38 @@ function blocos5e(d) {
     ${d.evento_definidor ? `<div class="bloco"><h3>Evento Definidor</h3><p>${esc(d.evento_definidor.descricao)}</p></div>` : ''}`;
 }
 
+function expandirPacote(pacote) {
+  const f = pacote.fonte || {};
+  return (pacote.items || []).map(r => {
+    const ferramenta = r.ferramenta
+      ? { ferramentas: [r.ferramenta] }
+      : { ferramentas: [], ferramenta_escolha: { quantidade: 1, categoria: r.ferramenta_escolha, opcoes_abertas: [] } };
+    const d = {
+      modelo_de_antecedente: '5.5e',
+      atributos_elegiveis: r.atributos || [],
+      talento_origem: { nome: r.talento, href: 'talentos.html', ...(r.talento_escolha ? {escolha_fixa:r.talento_escolha} : {}) },
+      pericias: r.pericias || [],
+      ...ferramenta,
+      equipamento_inicial: { opcoes: [{id:'A', texto:r.equipamento}, {id:'B', texto:'50 PO'}] }
+    };
+    const nomeExibicao = r.pt || r.nome;
+    const textoIntegral = `Atributos: ${(r.atributos || []).join(', ')}. Talento: ${r.talento}${r.talento_escolha ? ` (${r.talento_escolha})` : ''}. Perícias: ${(r.pericias || []).join(' e ')}. Ferramenta: ${r.ferramenta || r.ferramenta_escolha || '—'}. Equipamento: Opção A — ${r.equipamento}; Opção B — 50 PO.`;
+    return {
+      id:`antecedentes:pdf:${slug(r.nome)}`,
+      nome:nomeExibicao,
+      nome_original:r.nome,
+      aliases:[],
+      slug:slug(r.nome),
+      classificacao:{modulo:'Antecedentes',subtipo:'antecedente',categorias:['Background'],setting:f.setting || 'Geral',status:'ativo',natureza:f.natureza || 'Oficial'},
+      conteudo:{descricao:r.descricao || '',texto_integral:textoIntegral},
+      mecanica:{dados_especificos:d},
+      fonte:{titulo:f.titulo || r.fonte_id,ano:f.ano,ruleset:'5.5e'},
+      compatibilidade:{ruleset:'5.5e',revisao_core:'2024'},
+      controle:{completo:true,status_completude:'publicado'}
+    };
+  });
+}
+
 function render() {
   const termo = semAcento(busca.value.trim());
   const filtrados = ITENS.filter(x => {
@@ -130,7 +165,8 @@ function render() {
     const texto = [
       x.nome, x.nome_original, ...(x.aliases || []), x.conteudo?.descricao,
       ...(d.atributos_elegiveis || []), ...(d.pericias || []), ferramentaTexto(d),
-      talentoTexto(d.talento_origem), d.caracteristica?.nome, d.caracteristica?.descricao
+      talentoTexto(d.talento_origem), d.caracteristica?.nome, d.caracteristica?.descricao,
+      x.fonte?.titulo, x.classificacao?.setting, x.classificacao?.natureza
     ].join(' ');
     const ruleset = x.compatibilidade?.ruleset || x.fonte?.ruleset || d.modelo_de_antecedente;
     return (!termo || semAcento(texto).includes(termo)) && (!edicao.value || ruleset === edicao.value);
@@ -142,17 +178,18 @@ function render() {
     const ruleset = x.compatibilidade?.ruleset || x.fonte?.ruleset || d.modelo_de_antecedente;
     const revisao = x.compatibilidade?.revisao_core || x.fonte?.ano || '';
     const subtipo = x.classificacao?.subtipo === 'variante' ? ' · Variante' : '';
+    const setting = x.classificacao?.setting && x.classificacao.setting !== 'Geral' ? ` · ${x.classificacao.setting}` : '';
     return `
       <details class="antecedente" id="${esc(x.slug)}">
-        <summary><strong>${esc(x.nome)}</strong><span class="categoria">D&D ${esc(ruleset)} · ${esc(revisao)}${esc(subtipo)}</span></summary>
+        <summary><strong>${esc(x.nome)}</strong><span class="categoria">D&amp;D ${esc(ruleset)} · ${esc(revisao)}${esc(subtipo)}${esc(setting)}</span></summary>
         <div class="corpo">
           ${x.nome !== x.nome_original ? `<p class="nome-original"><strong>Nome original:</strong> ${esc(x.nome_original)}</p>` : ''}
           <p>${esc(x.conteudo.descricao)}</p>
           ${ruleset === '5.5e' ? blocos55(d) : blocos5e(d)}
           <div class="grade">${blocoEquipamento(d)}</div>
-          <div class="bloco"><h3>Bloco mecânico consolidado</h3><p>${esc(x.conteudo.texto_integral)}</p></div>
+          <div class="bloco"><h3>Bloco mecânico consolidado</h3><p>${esc(x.conteudo.texto_integral || '')}</p></div>
           <div class="meta">
-            <span><strong>Fonte:</strong> ${esc(x.fonte.titulo)}</span>
+            <span><strong>Fonte:</strong> ${esc(x.fonte.titulo)}${x.fonte.ano ? ` (${esc(x.fonte.ano)})` : ''}</span>
             <span><strong>Ruleset:</strong> ${esc(ruleset)}</span>
             <span><strong>Modelo:</strong> ${esc(d.modelo_de_antecedente)}</span>
             <span><strong>Completude:</strong> ${esc(x.controle.status_completude)}</span>
@@ -162,14 +199,46 @@ function render() {
   }).join('') || '<div class="nota">Nenhum antecedente corresponde aos filtros.</div>';
 }
 
+const V = '20260819-1014';
+const ler = (url, rotulo) => fetch(`${url}?v=${V}`, {cache:'no-store'}).then(r => {
+  if (!r.ok) throw new Error(`${rotulo}: HTTP ${r.status}`);
+  return r.json();
+});
+
 Promise.all([
-  fetch('dados/antecedentes-srd-5.2.1.json?v=20260818-1551', {cache:'no-store'}).then(r => { if (!r.ok) throw new Error(`SRD: HTTP ${r.status}`); return r.json(); }),
-  fetch('dados/antecedentes-abertos-adicionais.json?v=20260818-1551', {cache:'no-store'}).then(r => { if (!r.ok) throw new Error(`Adicionais: HTTP ${r.status}`); return r.json(); })
-]).then(([srd, adicionais]) => {
-  if (!srd?.controle?.validado || srd?.controle?.quantidade !== 4 || !Array.isArray(srd.items) || srd.items.length !== 4) throw new Error('Pacote SRD não passou na validação de integridade.');
-  if (!adicionais?.controle?.validado || adicionais?.controle?.quantidade !== 3 || !Array.isArray(adicionais.items) || adicionais.items.length !== 3) throw new Error('Pacote adicional não passou na validação de integridade.');
-  ITENS = [...srd.items, ...adicionais.items];
-  if (ITENS.length !== 7 || ITENS.some(x => !x?.controle?.completo || x?.controle?.status_completude !== 'publicado')) throw new Error('O catálogo final contém item incompleto.');
+  ler('dados/antecedentes-srd-5.2.1.json','SRD'),
+  ler('dados/antecedentes-abertos-adicionais.json','Adicionais'),
+  ler('dados/antecedentes-pdf-phb-2024.json','PHB 2024'),
+  ler('dados/antecedentes-pdf-forge-2025.json','Forge 2025'),
+  ler('dados/antecedentes-pdf-quickstone-2024.json','Quickstone 2024'),
+  ler('dados/antecedentes-pdf-heroes-2025.json','Heroes of Faerûn 2025')
+]).then(([srd, adicionais, phb, forge, quickstone, heroes]) => {
+  const pacotes = [
+    [srd,4,'SRD'],
+    [adicionais,3,'Adicionais'],
+    [phb,11,'PHB 2024'],
+    [forge,17,'Forge 2025'],
+    [quickstone,5,'Quickstone 2024'],
+    [heroes,18,'Heroes 2025']
+  ];
+  for (const [p,q,n] of pacotes) {
+    if (!p?.controle?.validado || p?.controle?.quantidade !== q || !Array.isArray(p.items) || p.items.length !== q) {
+      throw new Error(`Pacote ${n} não passou na validação de integridade.`);
+    }
+  }
+
+  const importados = [phb,forge,quickstone,heroes].flatMap(expandirPacote);
+  ITENS = [...srd.items, ...adicionais.items, ...importados];
+
+  const chaves = new Set();
+  for (const x of ITENS) {
+    const chave = semAcento(x.nome_original || x.nome);
+    if (chaves.has(chave)) throw new Error(`Duplicidade detectada: ${x.nome_original || x.nome}.`);
+    chaves.add(chave);
+    if (!x?.controle?.completo || x?.controle?.status_completude !== 'publicado') throw new Error(`Item incompleto: ${x.nome}.`);
+  }
+  if (ITENS.length !== 58) throw new Error(`Catálogo deveria ter 58 itens, mas carregou ${ITENS.length}.`);
+
   ITENS.sort((a,b) => {
     const ra = a.compatibilidade?.ruleset === '5.5e' ? 0 : 1;
     const rb = b.compatibilidade?.ruleset === '5.5e' ? 0 : 1;
