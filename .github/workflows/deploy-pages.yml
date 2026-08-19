@@ -21,6 +21,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -35,18 +36,53 @@ jobs:
             --root . \
             --output dados/referencias-hub-index.json \
             --stubs dados/referencias-hub-stubs.json
+
           python - <<'PY'
           import json
+          import unicodedata
           from pathlib import Path
-          p = Path('dados/referencias-hub-index.json')
-          data = json.loads(p.read_text(encoding='utf-8'))
-          if data.get('total_entidades', 0) < 100:
-              raise RuntimeError(f"Índice semântico anormalmente pequeno: {data.get('total_entidades')}")
-          nomes = {str(x.get('nome', '')).casefold() for x in data.get('entidades', [])}
-          for obrigatorio in ('sangrando', 'pontos de vida'):
-              if obrigatorio not in nomes:
-                  raise RuntimeError(f'Referência obrigatória ausente: {obrigatorio}')
-          print(f"Índice semântico validado: {data['total_entidades']} entidades")
+
+          def norm(value):
+              text = unicodedata.normalize("NFKD", str(value or ""))
+              text = "".join(ch for ch in text if not unicodedata.combining(ch))
+              return " ".join(text.casefold().split())
+
+          p = Path("dados/referencias-hub-index.json")
+          data = json.loads(p.read_text(encoding="utf-8"))
+
+          if data.get("total_entidades", 0) < 170:
+              raise RuntimeError(
+                  f"Índice semântico anormalmente pequeno: {data.get('total_entidades')}"
+              )
+
+          aliases = {
+              norm(item.get("termo")): item.get("id")
+              for item in data.get("aliases_resolvidos", [])
+          }
+
+          for obrigatorio in ("sangrando", "pontos de vida"):
+              if obrigatorio not in aliases:
+                  raise RuntimeError(
+                      f"Referência obrigatória não resolvida no índice: {obrigatorio}"
+                  )
+
+          expected_modules = {
+              "Regras", "Classes", "Subclasses", "Espécies", "Antecedentes",
+              "Talentos", "Maestrias de Arma", "Monstros", "Armaduras", "Armas",
+              "Equipamentos de Aventura", "Ferramentas", "Montarias e Veículos",
+              "Comércio e Despesas", "Bugigangas", "Itens Mágicos", "Magias", "Idiomas"
+          }
+          indexed_modules = set(data.get("modulos", {}))
+          missing_modules = sorted(expected_modules - indexed_modules)
+          if missing_modules:
+              raise RuntimeError(
+                  "Módulos ausentes do resolvedor: " + ", ".join(missing_modules)
+              )
+
+          print(
+              f"Índice semântico validado: {data['total_entidades']} entidades; "
+              f"{len(expected_modules)}/18 módulos registrados."
+          )
           PY
 
       - name: Force white background and black text across the site
@@ -66,22 +102,121 @@ jobs:
                   path.write_text(html, encoding='utf-8')
           PY
 
-      - name: Inject global semantic references
+      - name: Inject global semantic references in every module
         shell: bash
         run: |
           python <<'PY'
+          import json
           from pathlib import Path
 
+          module_pages = [
+              'regras.html',
+              'classes.html',
+              'subclasses.html',
+              'especies.html',
+              'antecedentes.html',
+              'talentos.html',
+              'maestrias-de-arma.html',
+              'monstros.html',
+              'armaduras.html',
+              'armas.html',
+              'equipamentos-aventura.html',
+              'ferramentas.html',
+              'montarias-veiculos.html',
+              'comercio-e-despesas.html',
+              'bugigangas.html',
+              'itens-magicos.html',
+              'magias.html',
+              'idiomas.html',
+          ]
+
           marker = 'data-hub-referencias="1"'
-          tag = '<script data-hub-referencias="1" src="scripts/referencias-hub.js?v=20260819-refs1"></script>\n'
+          tag = (
+              '<script data-hub-referencias="1" '
+              'src="scripts/referencias-hub.js?v=20260819-refs2"></script>\n'
+          )
+
           for path in Path('.').glob('*.html'):
               html = path.read_text(encoding='utf-8')
-              if marker in html:
-                  continue
-              if '</body>' not in html:
-                  raise RuntimeError(f'Elemento </body> não encontrado: {path}')
-              html = html.replace('</body>', tag + '</body>', 1)
-              path.write_text(html, encoding='utf-8')
+              if marker not in html:
+                  if '</body>' not in html:
+                      raise RuntimeError(f'Elemento </body> não encontrado: {path}')
+                  html = html.replace('</body>', tag + '</body>', 1)
+                  path.write_text(html, encoding='utf-8')
+
+          status = []
+          for filename in module_pages:
+              path = Path(filename)
+              if not path.exists():
+                  raise RuntimeError(f'Módulo sem página publicada: {filename}')
+              html = path.read_text(encoding='utf-8')
+              active = marker in html
+              status.append({'pagina': filename, 'referencias_semanticas': active})
+              if not active:
+                  raise RuntimeError(f'Resolvedor não injetado em: {filename}')
+
+          Path('dados/referencias-hub-status.json').write_text(
+              json.dumps(
+                  {
+                      'schema': 'hub-rpg.referencias-status.v2',
+                      'total_modulos': len(module_pages),
+                      'modulos_ativos': sum(1 for x in status if x['referencias_semanticas']),
+                      'status': status,
+                  },
+                  ensure_ascii=False,
+                  indent=2,
+              ),
+              encoding='utf-8',
+          )
+
+          print(f'Resolvedor injetado e validado em {len(module_pages)}/18 módulos.')
+          PY
+
+      - name: Validate Sangrando to Pontos de Vida relation
+        shell: bash
+        run: |
+          python <<'PY'
+          import json
+          import unicodedata
+          from pathlib import Path
+
+          def norm(value):
+              text = unicodedata.normalize("NFKD", str(value or ""))
+              text = "".join(ch for ch in text if not unicodedata.combining(ch))
+              return " ".join(text.casefold().split())
+
+          data = json.loads(
+              Path('dados/referencias-hub-index.json').read_text(encoding='utf-8')
+          )
+          aliases = {
+              norm(item['termo']): item['id']
+              for item in data.get('aliases_resolvidos', [])
+          }
+
+          sangrando = aliases.get('sangrando')
+          pontos_de_vida = aliases.get('pontos de vida')
+
+          if not sangrando or not pontos_de_vida:
+              raise RuntimeError(
+                  'Caso de controle Sangrando → Pontos de Vida não pôde ser resolvido.'
+              )
+
+          rules_text = ''.join(
+              Path(f'dados/regras-dndbeyond-2024.part{n}.txt').read_text(
+                  encoding='utf-8'
+              )
+              for n in range(1, 5)
+          )
+
+          if 'Sangrando' not in rules_text or 'Pontos de Vida' not in rules_text:
+              raise RuntimeError(
+                  'Fonte de Regras não contém o caso de controle esperado.'
+              )
+
+          print(
+              'Caso de controle validado: Sangrando e Pontos de Vida possuem '
+              'IDs distintos e resolvidos.'
+          )
           PY
 
       - name: Inject Expanded Concentration seals into Spells
@@ -95,6 +230,7 @@ jobs:
           marker = 'data-concentracao-expandida-selos="1"'
           html = page.read_text(encoding='utf-8')
           js = script_file.read_text(encoding='utf-8')
+
           if marker not in html:
               if '</body>' not in html:
                   raise RuntimeError('Elemento </body> não encontrado em magias.html')
