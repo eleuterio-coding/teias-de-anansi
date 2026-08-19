@@ -9,9 +9,12 @@
   <title>Montarias e Veículos - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1100px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
     .resumo, .meta, .subtitulo { opacity: .78; }
+    .painel { display:grid; grid-template-columns:repeat(4,minmax(130px,1fr)); gap:10px; margin:16px 0; }
+    .painel div { border:1px solid #8885; border-radius:10px; padding:12px 14px; }
+    .painel strong { display:block; font-size:1.35rem; }
     .controles { display: grid; grid-template-columns: minmax(240px,1fr) minmax(210px,300px) minmax(210px,300px); gap: 10px; margin: 18px 0 10px; }
     input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
@@ -23,26 +26,29 @@
     .dados { margin: 10px 0 0; padding-left: 20px; }
     .dados li { margin: 3px 0; }
     .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
-    .regras { margin: 18px 0; padding: 14px 16px; border: 1px solid #8885; border-radius: 10px; }
+    .nota, .regras, .auditoria { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .regras { border-style:solid; }
     .regras h2 { margin-top: 0; font-size: 1.08rem; }
-    .regras ul { margin-bottom: 0; }
-    @media (max-width: 850px) {
-      body { padding: 16px; }
-      .controles { grid-template-columns: 1fr; }
-      .registro summary { display: block; }
-      .categoria { display: block; margin-top: 5px; }
-    }
+    .regras ul, .auditoria ul { margin-bottom: 0; }
+    .aviso { font-size:.9rem; opacity:.78; }
+    @media (max-width: 850px) { body { padding: 16px; } .controles, .painel { grid-template-columns: 1fr; } .registro summary { display: block; } .categoria { display: block; margin-top: 5px; } }
   </style>
 </head>
 <body>
   <p><a href="bibliotecas.html">← Bibliotecas</a></p>
   <header>
     <h1>Montarias e Veículos</h1>
-    <p class="resumo">44 registros consolidados dos PDFs <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>: 14 montarias e animais de transporte, 20 veículos e 10 estações ou melhorias de veículo.</p>
+    <p class="resumo">Catálogo consolidado e deduplicado a partir de <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, preservando a organização do módulo em montarias/animais, veículos, estações de tripulação e melhorias.</p>
   </header>
 
-  <div class="nota"><strong>Critério editorial:</strong> o módulo segue a taxonomia do Hub para <em>montaria</em>, <em>veículo</em>, <em>estação de tripulação</em> e <em>melhoria de veículo</em>. Revisões mais recentes substituem versões anteriores equivalentes; conteúdo oficial ou regional único é preservado. O Airship genérico de Eberron 2019, por exemplo, não foi duplicado diante das aeronaves atualizadas de 2025, enquanto Lyrandar Galleon e Orien Lightning Rail foram mantidos por continuarem únicos. Helm e Elemental Core aparecem como dependências dos veículos/estações, e não como registros independentes sem bloco próprio completo.</div>
+  <section class="painel" aria-label="Resumo do catálogo">
+    <div><strong id="total">0</strong><span>registros</span></div>
+    <div><strong id="qMontarias">0</strong><span>montarias / animais</span></div>
+    <div><strong id="qVeiculos">0</strong><span>veículos</span></div>
+    <div><strong id="qSub">0</strong><span>estações / melhorias</span></div>
+  </section>
+
+  <div class="nota"><strong>Critério editorial:</strong> entram como registros próprios as entradas de tabelas de transporte, criaturas explicitamente apresentadas como montarias e veículos com mecânica reutilizável. Menções narrativas incidentais não criam duplicatas. Conteúdo oficial mais recente substitui equivalentes genéricos antigos; opções regionais ou de cenário com mecânica própria são mantidas.</div>
 
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar montaria, veículo, estação, fonte...">
@@ -53,131 +59,132 @@
       <option value="Estação de tripulação">Estações de tripulação</option>
       <option value="Melhoria de veículo">Melhorias de veículo</option>
     </select>
-    <select id="filtroFonte">
-      <option value="">Todas as fontes</option>
-      <option value="Player’s Handbook (2024)">Player’s Handbook (2024)</option>
-      <option value="Eberron: Forge of the Artificer (2025)">Eberron: Forge of the Artificer (2025)</option>
-      <option value="Eberron: Rising from the Last War (2019)">Eberron: Rising from the Last War (2019)</option>
-      <option value="Frontiers of Eberron: Quickstone (2024)">Frontiers of Eberron: Quickstone (2024)</option>
-      <option value="Forgotten Realms: Heroes of Faerûn (2025)">Forgotten Realms: Heroes of Faerûn (2025)</option>
-    </select>
+    <select id="filtroFonte"><option value="">Todas as fontes</option></select>
   </div>
   <p class="resultado" id="resultado"></p>
 
   <section class="regras">
     <h2>Regras transversais preservadas</h2>
     <ul>
-      <li><strong>Tração:</strong> um animal puxando carruagem, carroça, biga, trenó ou vagão pode mover até cinco vezes sua capacidade básica de carga; vários animais somam suas capacidades.</li>
-      <li><strong>Barda e selas:</strong> barda custa quatro vezes o preço da armadura equivalente e pesa o dobro. Sela militar ajuda o cavaleiro a permanecer montado; sela exótica é exigida para montarias aquáticas ou voadoras.</li>
-      <li><strong>Navios:</strong> vento e corrente podem alterar o deslocamento. Reparar 1 PV de um navio normalmente exige 1 dia e 20 GP em materiais e mão de obra; em um grande estaleiro, tempo e custo são reduzidos pela metade.</li>
-      <li><strong>Aeronaves elementais:</strong> usam a velocidade em milhas por hora para viagens; precipitação intensa reduz sua velocidade de viagem pela metade.</li>
-      <li><strong>Serviços relacionados:</strong> tarifas de viagem, pedágios, passagens e contratação de transporte permanecem vinculados ao módulo Comércio e Despesas, mesmo quando citados aqui para contextualizar um veículo.</li>
+      <li><strong>Tração:</strong> animais de tração podem ampliar a capacidade útil de carruagens, carroças, bigas, trenós e vagões; quando vários animais puxam o mesmo veículo, suas capacidades são combinadas conforme as regras do jogo.</li>
+      <li><strong>Barda e selas:</strong> a proteção e o equipamento de montaria seguem as regras do catálogo de equipamentos; selas especiais podem ser necessárias para montarias aquáticas ou voadoras.</li>
+      <li><strong>Navios:</strong> vento, corrente e condições do mar podem modificar o deslocamento; reparos e operação permanecem vinculados às regras gerais de veículos aquáticos.</li>
+      <li><strong>Aeronaves elementais:</strong> veículos de Eberron preservam suas velocidades de viagem, estações e dependências de núcleo elemental quando explicitamente indicadas.</li>
+      <li><strong>Serviços de transporte:</strong> tarifas, pedágios e passagens continuam no módulo Comércio e Despesas; aqui ficam os veículos e suas propriedades mecânicas.</li>
     </ul>
   </section>
 
   <main id="lista"></main>
 
+  <details class="auditoria">
+    <summary><strong>Auditoria e deduplicação</strong></summary>
+    <ul>
+      <li>Montarias e veículos genéricos antigos equivalentes às entradas de 2024 não são repetidos.</li>
+      <li>Carroças, carruagens e vagões citados apenas em encontros de Quickstone apontam para os veículos genéricos, salvo quando possuem mecânica própria, como o Thunder Coach.</li>
+      <li>O Airship genérico de Eberron 2019 não ganhou um segundo card: o catálogo já possui o Airship de 2024 e aeronaves de Eberron atualizadas em 2025. Lyrandar Galleon, Lightning Rail, Magebred Coach e Skycoach permanecem por serem mecanicamente distintos.</li>
+      <li>Helm e Elemental Core permanecem como dependências citadas nos veículos/estações, em vez de cards autônomos sem bloco independente completo no recorte usado pelo módulo.</li>
+      <li>Participantes narrativos da Race of Eight Winds sem bloco próprio de transporte não foram transformados em novas entradas.</li>
+      <li>Soarsled não foi incluído: a ocorrência localizada está no arquivo autônomo Exploring Eberron, e não foi confirmada nos dois PDFs solicitados.</li>
+    </ul>
+  </details>
+
 <script>
+const R=(nome,original,tipo,fonte,status,descricao,...dados)=>({nome,original,tipo,fonte,status,descricao,dados});
 const REGISTROS = [
-  {nome:'Camelo', original:'Camel', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Montaria básica de viagem e transporte de carga.', dados:['Capacidade de carga: 450 lb.','Custo: 50 GP']},
-  {nome:'Elefante', original:'Elephant', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Animal de grande porte usado como montaria e para transporte pesado.', dados:['Capacidade de carga: 1.320 lb.','Custo: 200 GP']},
-  {nome:'Cavalo de tração', original:'Horse, Draft', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Cavalo voltado a tração e transporte de carga.', dados:['Capacidade de carga: 540 lb.','Custo: 50 GP']},
-  {nome:'Cavalo de montaria', original:'Horse, Riding', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Cavalo destinado ao deslocamento montado.', dados:['Capacidade de carga: 480 lb.','Custo: 75 GP']},
-  {nome:'Mastim', original:'Mastiff', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Animal de transporte adequado especialmente a cavaleiros menores.', dados:['Capacidade de carga: 195 lb.','Custo: 25 GP']},
-  {nome:'Mula', original:'Mule', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Animal resistente e econômico para carga e viagem.', dados:['Capacidade de carga: 420 lb.','Custo: 8 GP']},
-  {nome:'Pônei', original:'Pony', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Montaria menor para viagem e transporte leve.', dados:['Capacidade de carga: 225 lb.','Custo: 30 GP']},
-  {nome:'Cavalo de guerra', original:'Warhorse', tipo:'Montaria / animal de transporte', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Cavalo treinado para uso marcial.', dados:['Capacidade de carga: 540 lb.','Custo: 400 GP']},
+  // Montarias e animais de transporte — Player's Handbook 2024
+  R("Camelo","Camel","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Montaria básica de viagem e transporte de carga.","Capacidade de carga: 450 lb.","Custo: 50 GP"),
+  R("Elefante","Elephant","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Animal de grande porte usado como montaria e para transporte pesado.","Capacidade de carga: 1.320 lb.","Custo: 200 GP"),
+  R("Cavalo de tração","Horse, Draft","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Cavalo voltado a tração e transporte de carga.","Capacidade de carga: 540 lb.","Custo: 50 GP"),
+  R("Cavalo de montaria","Horse, Riding","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Cavalo destinado ao deslocamento montado.","Capacidade de carga: 480 lb.","Custo: 75 GP"),
+  R("Mastim","Mastiff","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Animal de transporte adequado especialmente a cavaleiros menores.","Capacidade de carga: 195 lb.","Custo: 25 GP"),
+  R("Mula","Mule","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Animal resistente e econômico para carga e viagem.","Capacidade de carga: 420 lb.","Custo: 8 GP"),
+  R("Pônei","Pony","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Montaria menor para viagem e transporte leve.","Capacidade de carga: 225 lb.","Custo: 30 GP"),
+  R("Cavalo de guerra","Warhorse","Montaria / animal de transporte","Player's Handbook (2024)","Vigente — 2024","Cavalo treinado para uso marcial.","Capacidade de carga: 540 lb.","Custo: 400 GP"),
 
-  {nome:'Tribex das Planícies', original:'Tribex, Plains', tipo:'Montaria / animal de transporte', fonte:'Frontiers of Eberron: Quickstone (2024)', status:'Regional — mantido', descricao:'Tribex robusto das planícies, usado sobretudo como animal de carga e tração.', dados:['Tamanho: Large Beast','CA 12; PV 42 (5d10 + 15)','Deslocamento: 40 ft.','ND 2','Beast of Burden: conta como Huge para determinar capacidade de carga','Ram: ataque de investida capaz de derrubar alvos após corrida em linha reta']},
-  {nome:'Tribex de montaria', original:'Riding Tribex', tipo:'Montaria / animal de transporte', fonte:'Frontiers of Eberron: Quickstone (2024)', status:'Regional — mantido', descricao:'Variedade criada para servir como montaria veloz e resistente.', dados:['Tamanho: Large Beast','CA 12; PV 15 (2d10 + 4)','Deslocamento: 50 ft.','ND 1/4','Enduring Mount: vantagem em salvaguardas de Constituição relacionadas a marcha forçada','Sure-Footed Runner: após Dash, ignora Difficult Terrain até o fim do turno']},
-  {nome:'Tribex de guerra', original:'War Tribex', tipo:'Montaria / animal de transporte', fonte:'Frontiers of Eberron: Quickstone (2024)', status:'Regional — mantido', descricao:'Variedade de tribex selecionada para combate montado e resistência a controle físico.', dados:['Tamanho: Large Beast','CA 13; PV 29 (4d10 + 8)','Deslocamento: 40 ft.','ND 1','Enduring Mount','Unstoppable: vantagem contra efeitos que causariam Grappled, Restrained, Paralyzed ou Prone','Gore: investida pode causar dano adicional e derrubar o alvo']},
+  // Montarias regionais
+  R("Tribex das Planícies","Tribex, Plains","Montaria / animal de transporte","Frontiers of Eberron: Quickstone (2024)","Regional — mantido","Tribex robusto das planícies, usado sobretudo como animal de carga e tração.","Large Beast","CA 12; PV 42 (5d10 + 15)","Deslocamento: 40 ft.","ND 2","Beast of Burden: conta como Huge para capacidade de carga","Ram: investida capaz de derrubar alvos"),
+  R("Tribex de montaria","Riding Tribex","Montaria / animal de transporte","Frontiers of Eberron: Quickstone (2024)","Regional — mantido","Variedade criada para servir como montaria veloz e resistente.","Large Beast","CA 12; PV 15 (2d10 + 4)","Deslocamento: 50 ft.","ND 1/4","Enduring Mount","Sure-Footed Runner: após Dash, ignora Difficult Terrain até o fim do turno"),
+  R("Tribex de guerra","War Tribex","Montaria / animal de transporte","Frontiers of Eberron: Quickstone (2024)","Regional — mantido","Variedade selecionada para combate montado e resistência a controle físico.","Large Beast","CA 13; PV 29 (4d10 + 8)","Deslocamento: 40 ft.","ND 1","Enduring Mount","Unstoppable: vantagem contra efeitos que causariam Grappled, Restrained, Paralyzed ou Prone","Gore: investida com dano adicional e chance de derrubar"),
+  R("Ave-bico-de-machado","Axe Beak","Montaria / animal de transporte","Forgotten Realms: Heroes of Faerûn (2025)","Regional — mantido","Animal de transporte comercializado entre as mercadorias de Icewind Dale.","Capacidade de carga: 210 lb.","Custo: 50 GP","Catálogo: Icewind Dale Wares"),
+  R("Cobra voadora","Flying Snake","Montaria / animal de transporte","Forgotten Realms: Heroes of Faerûn (2025)","Regional — mantido","Animal voador mantido no grupo de montarias e outros animais do catálogo regional.","Capacidade de carga: 60 lb.","Custo: 25 GP","Catálogo: Baldur's Gate Wares"),
+  R("Cão de trenó","Sled Dog","Montaria / animal de transporte","Forgotten Realms: Heroes of Faerûn (2025)","Regional — mantido","Animal de tração próprio para trenós e deslocamento em regiões frias.","Capacidade de carga: 210 lb.","Custo: 50 GP","Catálogo: Icewind Dale Wares"),
+  R("Clawfoot","Clawfoot","Montaria / animal de transporte","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Dinossauro bípede tradicionalmente treinado como montaria de guerra pelos halflings das Planícies de Talenta.","Medium Beast","CA 13; PV 19 (3d8 + 6)","Deslocamento: 40 ft.","ND 1","Pack Tactics","Pounce: investida pode derrubar e abrir ataque adicional"),
+  R("Fastieth","Fastieth","Montaria / animal de transporte","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Dinossauro herbívoro criado para velocidade e usado como a montaria mais comum dos halflings de Talenta.","Medium Beast","CA 14; PV 9 (2d8)","Deslocamento: 50 ft.","ND 1/4","Quickness (Recharge 5–6): pode usar Dodge como Bonus Action"),
+  R("Hipogrifo","Hippogriff","Montaria / animal de transporte","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Montaria voadora exótica fornecida pela Casa Vadalis em Khorvaire.","Use o bloco de estatísticas da criatura no módulo Monstros","Classificação aqui: uso explícito como montaria"),
+  R("Grifo","Griffon","Montaria / animal de transporte","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Montaria voadora exótica fornecida pela Casa Vadalis.","Use o bloco de estatísticas da criatura no módulo Monstros","Classificação aqui: uso explícito como montaria"),
+  R("Corcel Nimblewright","Nimblewright Steed","Montaria / animal de transporte","Forgotten Realms: Adventures in Faerûn (2025)","Vigente — 2025","Montaria mecânica incansável, apta a carregar cavaleiro ou puxar uma carruagem.","Large Construct","CA 16; PV 47 (5d10 + 20)","Deslocamento: 60 ft.","ND 2","Imunidades: Poison, Psychic; Charmed, Exhaustion, Paralyzed, Petrified, Poisoned","Hooves: +6, 7 (1d8 + 3) Bludgeoning; após 20 ft. em linha reta causa +4 (1d8) e pode derrubar alvo Huge ou menor","Nimble Movement: Disengage como Bonus Action"),
 
-  {nome:'Ave-bico-de-machado', original:'Axe Beak', tipo:'Montaria / animal de transporte', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', status:'Regional — mantido', descricao:'Animal de transporte comercializado entre as mercadorias de Icewind Dale.', dados:['Capacidade de carga: 210 lb.','Custo: 50 GP','Catálogo: Icewind Dale Wares']},
-  {nome:'Cobra voadora', original:'Flying Snake', tipo:'Montaria / animal de transporte', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', status:'Regional — mantido', descricao:'Animal voador listado no catálogo regional de Baldur’s Gate.', dados:['Capacidade de carga: 60 lb.','Custo: 25 GP','Catálogo: Baldur’s Gate Wares']},
-  {nome:'Cão de trenó', original:'Sled Dog', tipo:'Montaria / animal de transporte', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', status:'Regional — mantido', descricao:'Animal de tração próprio para trenós e deslocamento em regiões frias.', dados:['Capacidade de carga: 210 lb.','Custo: 50 GP','Catálogo: Icewind Dale Wares']},
+  // Veículos básicos — Player's Handbook 2024
+  R("Carruagem","Carriage","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo terrestre puxado por animais.","Peso: 600 lb.","Custo: 100 GP"),
+  R("Carroça","Cart","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo terrestre simples para carga.","Peso: 200 lb.","Custo: 15 GP"),
+  R("Biga","Chariot","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo terrestre leve puxado por animais.","Peso: 100 lb.","Custo: 250 GP"),
+  R("Trenó","Sled","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo de tração para superfícies adequadas a deslizamento.","Peso: 300 lb.","Custo: 20 GP"),
+  R("Vagão","Wagon","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo terrestre de carga puxado por animais.","Peso: 400 lb.","Custo: 35 GP"),
+  R("Dirigível","Airship","Veículo","Player's Handbook (2024)","Vigente — 2024","Veículo aéreo de grande porte do catálogo básico.","Velocidade: 8 mph","Tripulação: 10","Passageiros: 20","Carga: 1 ton","CA 13; PV 300","Custo: 40.000 GP"),
+  R("Galé","Galley","Veículo","Player's Handbook (2024)","Vigente — 2024","Grande embarcação aquática com numerosa tripulação.","Velocidade: 4 mph","Tripulação: 80","Passageiros: 150","Carga: 15 tons","CA 15; PV 500; Damage Threshold 20","Custo: 30.000 GP"),
+  R("Barco de quilha","Keelboat","Veículo","Player's Handbook (2024)","Vigente — 2024","Embarcação compacta adequada a lagos e rios.","Velocidade: 1 mph","Tripulação: 1","Passageiros: 6","Carga: 1/2 ton","CA 15; PV 100; Damage Threshold 10","Custo: 3.000 GP"),
+  R("Navio longo","Longship","Veículo","Player's Handbook (2024)","Vigente — 2024","Grande embarcação para transporte de tripulação e passageiros.","Velocidade: 3 mph","Tripulação: 40","Passageiros: 150","Carga: 10 tons","CA 15; PV 300; Damage Threshold 15","Custo: 10.000 GP"),
+  R("Barco a remo","Rowboat","Veículo","Player's Handbook (2024)","Vigente — 2024","Pequena embarcação a remo que pode ser carregada em terra.","Velocidade: 1½ mph","Tripulação: 1","Passageiros: 3","Peso: 100 lb.","CA 11; PV 50","Custo: 50 GP"),
+  R("Veleiro","Sailing Ship","Veículo","Player's Handbook (2024)","Vigente — 2024","Navio à vela com grande capacidade de carga.","Velocidade: 2 mph","Tripulação: 20","Passageiros: 20","Carga: 100 tons","CA 15; PV 300; Damage Threshold 15","Custo: 10.000 GP"),
+  R("Navio de guerra","Warship","Veículo","Player's Handbook (2024)","Vigente — 2024","Navio de grande porte preparado para operações militares.","Velocidade: 2½ mph","Tripulação: 60","Passageiros: 60","Carga: 200 tons","CA 15; PV 500; Damage Threshold 20","Custo: 25.000 GP"),
 
-  {nome:'Carruagem', original:'Carriage', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo terrestre puxado por animais.', dados:['Peso: 600 lb.','Custo: 100 GP']},
-  {nome:'Carroça', original:'Cart', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo terrestre simples para carga.', dados:['Peso: 200 lb.','Custo: 15 GP']},
-  {nome:'Biga', original:'Chariot', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo terrestre leve puxado por animais.', dados:['Peso: 100 lb.','Custo: 250 GP']},
-  {nome:'Trenó', original:'Sled', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo de tração para superfícies adequadas a deslizamento.', dados:['Peso: 300 lb.','Custo: 20 GP']},
-  {nome:'Vagão', original:'Wagon', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo terrestre de carga puxado por animais.', dados:['Peso: 400 lb.','Custo: 35 GP']},
+  // Aeronaves elementais — Eberron 2025
+  R("Lyrandar Air Cruiser","Lyrandar Air Cruiser","Veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Grande aeronave elemental Lyrandar voltada a viagens de longo alcance e transporte de passageiros.","CA 16; PV 600; Damage Threshold 20","Velocidade de viagem: 10 mph","Fly Speed: 100 ft. (hover)","Tripulação: 10; passageiros: 40; carga: 2 tons","Custo: 50.000 GP","Estações: Helm, 6 Lightning Turrets e Shield Station"),
+  R("Lyrandar Skyskiff","Lyrandar Skyskiff","Veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Aeronave elemental compacta, ágil e adequada a deslocamentos curtos, resgate e reboque.","CA 18; PV 150; Damage Threshold 5","Velocidade de viagem: 7 mph","Fly Speed: 70 ft. (hover)","Tripulação: 2; passageiros: 2; carga: 1/2 ton","Custo: 20.000 GP","Estações: Helm e Tow Cable"),
+  R("Strider Airship","Strider Airship","Veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Aeronave intermediária usada por mercadores independentes, exploradores e corsários.","CA 16; PV 350; Damage Threshold 10","Velocidade de viagem: 8 mph","Fly Speed: 80 ft. (hover)","Tripulação: 6; passageiros: 20; carga: 1 ton","Custo: 40.000 GP","Estações: Helm e 4 Arcane Launchers"),
 
-  {nome:'Dirigível', original:'Airship', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Veículo aéreo de grande porte do catálogo básico.', dados:['Velocidade: 8 mph','Tripulação: 10','Passageiros: 20','Carga: 1 ton','CA 13; PV 300','Custo: 40.000 GP']},
-  {nome:'Galé', original:'Galley', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Grande embarcação aquática com numerosa tripulação.', dados:['Velocidade: 4 mph','Tripulação: 80','Passageiros: 150','Carga: 15 tons','CA 15; PV 500; Damage Threshold 20','Custo: 30.000 GP']},
-  {nome:'Barco de quilha', original:'Keelboat', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Embarcação compacta adequada a lagos e rios.', dados:['Velocidade: 1 mph','Tripulação: 1','Passageiros: 6','Carga: 1/2 ton','CA 15; PV 100; Damage Threshold 10','Custo: 3.000 GP']},
-  {nome:'Navio longo', original:'Longship', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Grande embarcação para transporte de tripulação e passageiros.', dados:['Velocidade: 3 mph','Tripulação: 40','Passageiros: 150','Carga: 10 tons','CA 15; PV 300; Damage Threshold 15','Custo: 10.000 GP']},
-  {nome:'Barco a remo', original:'Rowboat', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Pequena embarcação a remo que pode ser carregada em terra.', dados:['Velocidade: 1½ mph','Tripulação: 1','Passageiros: 3','Peso: 100 lb.','CA 11; PV 50','Custo: 50 GP']},
-  {nome:'Veleiro', original:'Sailing Ship', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Navio à vela com grande capacidade de carga.', dados:['Velocidade: 2 mph','Tripulação: 20','Passageiros: 20','Carga: 100 tons','CA 15; PV 300; Damage Threshold 15','Custo: 10.000 GP']},
-  {nome:'Navio de guerra', original:'Warship', tipo:'Veículo', fonte:'Player’s Handbook (2024)', status:'Vigente — 2024', descricao:'Navio de grande porte preparado para operações militares.', dados:['Velocidade: 2½ mph','Tripulação: 60','Passageiros: 60','Carga: 200 tons','CA 15; PV 500; Damage Threshold 20','Custo: 25.000 GP']},
+  // Eberron 2019 — veículos únicos preservados
+  R("Lyrandar Galleon","Elemental Galleon / Lyrandar Galleon","Veículo","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Embarcação Lyrandar impulsionada por elemental ligado.","Velocidade de viagem: 10 mph","Serviço de referência: 5 SP por milha","Propulsão: elemental vinculado","Mantido por não possuir substituto equivalente nas aeronaves de 2025"),
+  R("Orien Lightning Rail","Orien Lightning Rail","Veículo","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Sistema ferroviário elemental da Casa Orien, com carros que flutuam sobre uma linha de pedras condutoras.","Velocidade aproximada: 30 mph","Serviço de referência: 5 SP por milha","Propulsão: elemental vinculado","Um conjunto de carros forma o trem; operação é associada à Casa Orien"),
+  R("Carruagem Magebred","Magebred Coach","Veículo","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Serviço terrestre de alta qualidade associado à Casa Orien e a animais de tração magebred.","Velocidade de viagem: 5 mph","Serviço de referência: 3 SP por milha","Mantido como perfil de transporte próprio de Eberron"),
+  R("Skycoach","Skycoach","Veículo","Eberron: Rising from the Last War (2019)","Retido — conteúdo único","Veículo aéreo urbano comum em Sharn, conduzido por pilotos proficientes em veículos aéreos.","Um skycoach sem piloto pode cair","Em uma cena publicada, personagem proficiente com veículos aéreos pode usar uma ação e obter sucesso em teste de Inteligência CD 12 para recuperar o controle","Uso: transporte urbano aéreo em Sharn"),
+  R("Disco mágico Daask","Magical flying disk (Daask)","Veículo","Eberron: Rising from the Last War (2019)","Retido — mecânica de cenário","Disco mágico temporário usado como transporte aéreo individual por agentes Daask; o nome em português é rótulo editorial do Hub.","Diâmetro: 3 ft.","Suporta até 250 lb.","O ocupante pode usar Bonus Action para mover o disco até 60 ft. em qualquer direção","Sem comando, paira no lugar","A versão da cena dura 30 minutos antes de desaparecer"),
 
-  {nome:'Lyrandar Air Cruiser', original:'Lyrandar Air Cruiser', tipo:'Veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Grande aeronave elemental Lyrandar voltada a viagens de longo alcance e transporte de passageiros.', dados:['CA 16; PV 600; Damage Threshold 20','Velocidade de viagem: 10 mph','Fly Speed: 100 ft. (hover)','Tripulação: 10; passageiros: 40; carga: 2 tons','Custo: 50.000 GP','Estações: Helm, 6 Lightning Turrets e Shield Station']},
-  {nome:'Lyrandar Skyskiff', original:'Lyrandar Skyskiff', tipo:'Veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Aeronave elemental compacta, ágil e adequada a deslocamentos curtos, resgate e reboque.', dados:['CA 18; PV 150; Damage Threshold 5','Velocidade de viagem: 7 mph','Fly Speed: 70 ft. (hover)','Tripulação: 2; passageiros: 2; carga: 1/2 ton','Custo: 20.000 GP','Estações: Helm e Tow Cable']},
-  {nome:'Strider Airship', original:'Strider Airship', tipo:'Veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Aeronave intermediária usada por mercadores independentes, exploradores e corsários.', dados:['CA 16; PV 350; Damage Threshold 10','Velocidade de viagem: 8 mph','Fly Speed: 80 ft. (hover)','Tripulação: 6; passageiros: 20; carga: 1 ton','Custo: 40.000 GP','Estações: Helm e 4 Arcane Launchers']},
+  // Quickstone
+  R("Thunder Coach","Thunder Coach","Veículo","Frontiers of Eberron: Quickstone (2024)","Regional — mantido","Carruagem mágica da Casa Orien, chamada de 'galeão da estrada', com grande capacidade de carga.","Wondrous Item, Rare; attunement por criatura com Mark of Passage","Dimensões típicas: 10 × 40 × 15 ft.","Com equipe grande, normalmente 8 tribex: até 5 mph","Com condutor marcado e 4 animais fortes: 10 mph","Em Orien trade road: até 15 mph","Condutor marcado permanece sentado e mantém Concentration para a aceleração","Cabine dianteira: até 3 tripulantes; posições no teto concedem Half Cover","Compartimento extradimensional padrão: 20 × 15 × 50 ft.; abertura 10 × 10 ft.","Compartimento mundano lateral: 10 × 10 × 20 ft."),
+  R("Argonth","Argonth","Veículo","Frontiers of Eberron: Quickstone (2024)","Regional — mantido","Fortaleza flutuante de Breland, tratada como veículo estratégico de escala urbana e militar.","Velocidade sustentável: 2 mph","Em repouso paira cerca de 20 ft. acima do solo; teto operacional citado: 40 ft.","Ignora o terreno e pode flutuar sobre água","Mais de 1.400 tripulantes combatentes, além de pessoal de apoio","9 Siege Staffs: 4 Blast, 3 Force, 2 Focus; 16 Long Rods","Propulsão/controle: elementais vinculados de terra, fogo e água, com equipe de pilotos","Registro histórico: sustentou 10 mph por dois dias, com extremo desgaste dos pilotos","Proa: aríete maciço de aço capaz de destruir estruturas leves"),
 
-  {nome:'Lyrandar Galleon', original:'Elemental Galleon / Lyrandar Galleon', tipo:'Veículo', fonte:'Eberron: Rising from the Last War (2019)', status:'Retido — conteúdo único', descricao:'Embarcação Lyrandar impulsionada por um elemental da água ligado a um anel elemental.', dados:['Velocidade: 10 mph','Propulsão: elemental da água','Mantido por não possuir substituto equivalente entre as aeronaves atualizadas de 2025']},
-  {nome:'Orien Lightning Rail', original:'Orien Lightning Rail', tipo:'Veículo', fonte:'Eberron: Rising from the Last War (2019)', status:'Retido — conteúdo único', descricao:'Sistema ferroviário elemental da Casa Orien, composto por carros que flutuam sobre uma linha de pedras condutoras.', dados:['Velocidade aproximada: 30 mph','Altura típica sobre o solo: cerca de 5 ft.','Propulsão: elemental do ar no crew cart','Um elemental pode mover até 10 carts','Composição típica: 2 crew carts, 2 cargo carts, 4 passenger carts e 2 lounge carts','Operação vinculada a piloto da Casa Orien com marca apropriada']},
+  // Forgotten Realms — catálogo regional e Aventuras em Faerûn
+  R("Vagão coberto","Covered Wagon","Veículo","Forgotten Realms: Heroes of Faerûn (2025)","Regional — mantido","Versão reforçada e coberta do vagão básico, com lona resistente para proteger os ocupantes.","Peso: 1.300 lb.","Custo: 250 GP","Base mecânica: Wagon do Player's Handbook","Ocupantes no interior recebem Three-Quarters Cover"),
+  R("Carruagens de Cottle","Cottle's Carriages","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Regional — mantido","Rede de carruagens negras de Baldur's Gate criada por Narwin Cottle; além do transporte urbano, combinações nos mostradores permitem abrir a porta para outra carruagem vinculada.","Mais de uma dúzia em operação no cenário descrito","Tração: força mágica com cavalos ilusórios, à velocidade de um par de cavalos normais","Cada carruagem possui combinação própria para receber viajantes teleportados","O card representa a família de veículos, não cada unidade individual"),
+  R("Apparatus of Kwalish","Apparatus of Kwalish","Veículo","Dungeon Master's Guide (2024)","Vigente — 2024","Item lendário que se transforma em um veículo submersível semelhante a uma lagosta gigante.","Large object; peso: 500 lb.","CA 20; PV 200","Speed 30 ft.; Swim 30 ft. com as pernas estendidas","Imunidade a Poison e Psychic damage","Requer 1 piloto","Compartimento hermético e estanque; ar para 10 horas dividido entre criaturas que respiram","Profundidade operacional: até 900 ft.; abaixo disso sofre 2d6 Bludgeoning por minuto","10 alavancas controlam pernas, janelas, garras, direção, luz, profundidade e escotilha"),
+  R("Ffolk Sailing Ship","Ffolk Sailing Ship","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Regional — mantido","Veleiro Ffolk resistente, construído para enfrentar as águas difíceis das Moonshae Isles.","Velocidade: 2 mph","Tripulação: 20","Passageiros: 20","Carga: 100 tons","CA 15; PV 400; Damage Threshold 20","Custo: 20.000 GP"),
+  R("Norlander Longship","Norlander Longship","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Regional — mantido","Navio longo Norlander usado em viagens, incursões e caça às baleias, conhecido pela velocidade.","Velocidade: 6 mph","Tripulação: 50","Passageiros: 100","Carga: 10 tons","CA 17; PV 300; Damage Threshold 15","Custo: 20.000 GP","Em expedições de caça pode carregar até três Whaleboats"),
+  R("Rusted Hulk","Rusted Hulk","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Regional — mantido","Grande navio de guerra reforçado com placas de metal enferrujado por combatentes Rusted.","Velocidade: 2 mph","Tripulação: 60","Passageiros: 90","Carga: 250 tons","CA 18; PV 500; Damage Threshold 25","Custo: 50.000 GP"),
+  R("Whaleboat","Whaleboat","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Regional — mantido","Embarcação leve especializada, lançada por tripulações Norlander para perseguição de grandes presas.","Velocidade: 3 mph","Tripulação: 6","Passageiros: 1","Carga: —","CA 13; PV 100; Damage Threshold 10","Custo: 500 GP"),
+  R("Windskiff","Windskiff","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Vigente — 2025","Joia mágica que pode se transformar temporariamente em um veículo pessoal movido a vela.","Wondrous Item, Rare; 3 charges, recuperadas ao amanhecer","1 charge: transforma-se por até 1 hora","Medium object; CA 12; PV 30; Speed 40 ft.","Paira poucos centímetros acima da superfície","Pode planar: 5 ft. horizontais para cada 1 ft. de descida","O Windskiff e seus ocupantes não sofrem dano de queda"),
+  R("Gyrocopter Wonder","Gyrocopter Wonder","Veículo","Forgotten Realms: Adventures in Faerûn (2025)","Vigente — 2025","Mechanical Wonder raro em forma de veículo do tamanho de um vagão, com hélice espiral e compartimento aberto.","Rare Mechanical Wonder","Ativo por 8 horas após ser dado corda","Requer 1 piloto","Huge object; peso: 500 lb.","CA 14; PV 50; Speed 5 ft.; Fly 20 ft.","Capacidade de carga: 2.000 lb.; acima disso desativa","8 cordas espectrais permitem aos ocupantes saltar e planar 5 ft. horizontais por 1 ft. de descida","A mais de 500 ft. do veículo, a corda desaparece e retorna ao Gyrocopter"),
 
-  {nome:'Thunder Coach', original:'Thunder Coach', tipo:'Veículo', fonte:'Frontiers of Eberron: Quickstone (2024)', status:'Regional — mantido', descricao:'Carruagem mágica da Casa Orien capaz de atingir velocidades muito superiores quando conduzida por um herdeiro com Mark of Passage.', dados:['Com Mark of Passage e quatro animais fortes: 10 mph','Em uma Orien trade road: até 15 mph','Cabine dianteira: até 3 tripulantes','Posições no teto concedem Half Cover aos ocupantes','Compartimento traseiro extradimensional: abertura 10 × 10 ft.; espaço padrão 20 × 15 × 50 ft.','Compartimento mundano lateral: 10 × 10 × 20 ft.','O condutor marcado deve permanecer sentado e manter Concentration para a aceleração mágica']},
+  // Estações de tripulação — Forge of the Artificer 2025
+  R("Lightning Turret","Lightning Turret","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Torreta giratória de raio instalada no Lyrandar Air Cruiser.","Medium Object; CA 17; PV 50","Operadores: até 1 criatura Medium","Operador recebe Three-Quarters Cover","Lightning Blast requer Elemental Core: +9, alcance 80/320 ft., 22 (4d10) Lightning"),
+  R("Shield Station","Shield Station","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Estação que projeta proteção arcana sobre a aeronave e seus ocupantes.","Large Object; CA 15; PV 25","Até 2 operadores","Quando ativa: +5 CA para o veículo e suas estações; criaturas no convés recebem Half Cover","Duração de até 1 minuto, sujeita à operação/concentração indicada","Mark of Warding pode acelerar a ativação"),
+  R("Tow Cable","Tow Cable","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Sistema de arpão e cabo do Lyrandar Skyskiff, usado para prender, puxar ou rebocar alvos.","Small Object; CA 10; PV 40","Operadores: 1","Harpoon: +6, alcance 50/100 ft., 5 (2d4) Piercing","Separação máxima operacional: 100 ft.","Alvos Medium ou menores podem ficar Grappled","Reel pode puxar até 50 ft."),
+  R("Arcane Launcher","Arcane Launcher","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Lançador arcano ofensivo instalado, entre outros, nos Strider Airships.","Medium Object; CA 17; PV 30","Operadores: 1","Energy Blast: +7, alcance 100/500 ft., 14 (4d6) Force"),
+  R("Elemental Thrusters","Elemental Thrusters","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Propulsores auxiliares que convertem energia do núcleo elemental em aceleração temporária.","Custo: 7.500 GP","Huge Object; CA 18; PV 20","Operador: 1 criatura Medium, com Three-Quarters Cover","Boost: +50 ft. à Fly Speed até o próximo turno","Requer Elemental Core"),
+  R("Repair Clamps","Repair Clamps","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Braços e grampos de manutenção capazes de realizar reparos de emergência em voo.","Custo: 5.000 GP","Large Object; CA 20; PV 50","Até 3 operadores Medium; Half Cover","Quick Repair: 3/day; com Elemental Core e Mark of Making, o veículo recupera 2d8 PV"),
+  R("Sky Veil","Sky Veil","Estação de tripulação","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Estação de ocultação que pode tornar aeronave e ocupantes invisíveis por período limitado.","Custo: 15.000 GP","Medium Object; CA 15; PV 25","Operador: 1","Cloak: veículo e criaturas a bordo ficam Invisible por até 1 hora, conforme concentração/operação","Pode ser carregado por Elemental Core ou recurso mágico indicado","Mark of Shadows pode acelerar a ativação"),
 
-  {nome:'Vagão coberto', original:'Covered Wagon', tipo:'Veículo', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', status:'Regional — mantido', descricao:'Versão reforçada e coberta do vagão básico, com lona resistente para proteger os ocupantes.', dados:['Peso: 1.300 lb.','Custo: 250 GP','Base mecânica: Wagon do Player’s Handbook','Ocupantes no interior recebem Three-Quarters Cover']},
-  {nome:'Black Coach', original:'Black Coach', tipo:'Veículo', fonte:'Forgotten Realms: Heroes of Faerûn (2025)', status:'Regional — serviço de transporte', descricao:'Carruagem mágica de Baldur’s Gate vinculada a uma rede de outras Black Coaches por sigilos e um mecanismo de combinação.', dados:['Tarifa de serviço: 1 GP por viagem — não é preço de compra','Base mecânica: Carriage do Player’s Handbook','O mecanismo pode transportar os ocupantes para outra Black Coach vinculada quando o destino está livre','Se o destino escolhido estiver ocupado, o transporte é redirecionado para outra Black Coach da rede']},
-
-  {nome:'Lightning Turret', original:'Lightning Turret', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Torreta giratória de raio instalada no Lyrandar Air Cruiser.', dados:['Quantidade padrão no Air Cruiser: 6','Medium Object; CA 17; PV 50','Operadores: até 1 criatura Medium','Cobertura do operador: Three-Quarters Cover','Lightning Blast requer Elemental Core: +9, alcance 80/320 ft., 22 (4d10) Lightning']},
-  {nome:'Shield Station', original:'Shield Station', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Estação que converte as proteções de vento da aeronave em escudos defensivos.', dados:['Large Object; CA 15; PV 25','Operadores: até 2 criaturas Medium','Calibrate prepara a estação; Activate Shields exige Elemental Core e Calibrate','Efeito: +5 CA para navio e estações e Half Cover para criaturas no convés','Duração: até 1 minuto, condicionada à estação e à Concentration do operador','Mark of Warding permite Activate Shields como Bonus Action']},
-  {nome:'Tow Cable', original:'Tow Cable', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Sistema compacto de arpão, cabo e lançador do Lyrandar Skyskiff.', dados:['Small Object; CA 10; PV 40','Operadores: 1','Harpoon: +6, alcance 50/100 ft., 5 (2d4) Piercing','Alvo Medium ou menor pode ficar Grappled','Reel requer Elemental Core e puxa alvo Grappled até 50 ft. em direção ao navio']},
-  {nome:'Arcane Launcher', original:'Arcane Launcher', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Canhão arcano em miniatura usado pelo Strider Airship.', dados:['Quantidade padrão no Strider: 4','Medium Object; CA 17; PV 30','Energy Blast requer Elemental Core: +7, alcance 100/500 ft., 14 (4d6) Force']},
-  {nome:'Elemental Thrusters', original:'Elemental Thrusters', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Conjunto de propulsores conectado à matriz arcana para acelerar temporariamente uma aeronave.', dados:['Custo: 7.500 GP','Huge Object; CA 18; PV 20','Operadores: até 1 criatura Medium','Cobertura do operador: Three-Quarters Cover','Boost requer Elemental Core: +50 ft. de Fly Speed até o início do próximo turno do operador','Com Mark of Passage: aumento de 100 ft. em vez de 50 ft.']},
-  {nome:'Repair Clamps', original:'Repair Clamps', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Estação de manutenção para reparos rápidos durante a operação de uma aeronave.', dados:['Custo: 5.000 GP','Large Object; CA 20; PV 50','Capacidade: até 3 criaturas Medium; Half Cover','Quick Repair: 3/dia; requer Elemental Core e Mark of Making','Efeito: o navio recupera 2d8 PV','Operador precisa de Mark of Making para interagir com os controles']},
-  {nome:'Sky Veil', original:'Sky Veil', tipo:'Estação de tripulação', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Dispositivo de ilusão instalado na proa para ocultar a aeronave e seus ocupantes.', dados:['Custo: 15.000 GP','Medium Object; CA 15; PV 25','Operadores: até 1 criatura Medium','Charge consome um spell slot de nível 1+','Cloak requer Elemental Core e Charge: navio e criaturas a bordo ficam Invisible','Duração: até 1 hora, condicionada à estação e à Concentration do operador','Mark of Shadows permite Cloak como Bonus Action']},
-
-  {nome:'Melhoria de Classe de Armadura', original:'Armor Class Upgrade', tipo:'Melhoria de veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Runas protetoras reforçam as defesas da aeronave.', dados:['Tempo: 30 dias','Materiais: 15.000 GP','Efeito: +1 CA','Máximo: 5 aplicações']},
-  {nome:'Melhoria de Pontos de Vida', original:'Hit Points Upgrade', tipo:'Melhoria de veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Processos alquímicos aumentam a resistência estrutural do casco.', dados:['Tempo: 7 dias','Materiais: 1/10 do custo total do navio','Efeito: +20 ao máximo de PV e aos PV atuais','Máximo: 5 aplicações']},
-  {nome:'Estação de tripulação adicional', original:'Additional Crew Stations', tipo:'Melhoria de veículo', fonte:'Eberron: Forge of the Artificer (2025)', status:'Vigente — 2025', descricao:'Procedimento para instalar ou substituir estações de tripulação em uma aeronave.', dados:['Instalação: 14 dias','Substituir uma estação existente reduz à metade o custo da nova estação','O Helm não pode ser removido ou substituído','A critério do DM, equipamentos de cerco apropriados podem ser instalados como estações']}
+  // Melhorias de veículo — Forge of the Artificer 2025
+  R("Reforço de Classe de Armadura","Upgrade Armor Class","Melhoria de veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Melhoria estrutural que aumenta a Classe de Armadura do veículo.","Tempo: 30 dias","Materiais: 15.000 GP por melhoria","Efeito: +1 CA","Limite: até 5 aplicações"),
+  R("Reforço de Pontos de Vida","Upgrade Hit Points","Melhoria de veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Reforço estrutural que aumenta a durabilidade do veículo.","Tempo: 7 dias por melhoria","Materiais: custo equivalente a 1/10 do custo total do veículo por aplicação","Efeito: +20 PV máximos e atuais","Limite: até 5 aplicações"),
+  R("Estação de tripulação adicional","Additional Crew Station","Melhoria de veículo","Eberron: Forge of the Artificer (2025)","Vigente — 2025","Instala ou substitui uma estação de tripulação compatível no veículo.","Tempo de instalação: 14 dias","Substituição de estação existente reduz o custo de instalação conforme a regra da fonte","Helm não pode ser removido nem substituído","Equipamento de cerco adicional depende de autorização do DM")
 ];
 
-const busca = document.getElementById('busca');
-const filtroTipo = document.getElementById('filtroTipo');
-const filtroFonte = document.getElementById('filtroFonte');
-const lista = document.getElementById('lista');
-const resultado = document.getElementById('resultado');
-
-function esc(valor) {
-  return String(valor ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));
+const normal=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const lista=document.getElementById("lista"), busca=document.getElementById("busca"), filtroTipo=document.getElementById("filtroTipo"), filtroFonte=document.getElementById("filtroFonte"), resultado=document.getElementById("resultado");
+[...new Set(REGISTROS.map(r=>r.fonte))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(f=>{const o=document.createElement("option");o.value=f;o.textContent=f;filtroFonte.appendChild(o)});
+document.getElementById("total").textContent=REGISTROS.length;
+document.getElementById("qMontarias").textContent=REGISTROS.filter(r=>r.tipo==="Montaria / animal de transporte").length;
+document.getElementById("qVeiculos").textContent=REGISTROS.filter(r=>r.tipo==="Veículo").length;
+document.getElementById("qSub").textContent=REGISTROS.filter(r=>r.tipo==="Estação de tripulação"||r.tipo==="Melhoria de veículo").length;
+function render(){
+  const q=normal(busca.value), tipo=filtroTipo.value, fonte=filtroFonte.value;
+  const itens=REGISTROS.filter(r=>(!tipo||r.tipo===tipo)&&(!fonte||r.fonte===fonte)&&(!q||normal([r.nome,r.original,r.tipo,r.fonte,r.status,r.descricao,...r.dados].join(" ")).includes(q)));
+  resultado.textContent=`${itens.length} de ${REGISTROS.length} registros`;
+  lista.innerHTML=itens.map(r=>`<details class="registro"><summary><span><strong>${esc(r.nome)}</strong>${r.original&&r.original!==r.nome?` <span class="subtitulo">(${esc(r.original)})</span>`:""}</span><span class="categoria">${esc(r.tipo)}</span></summary><div class="corpo"><p>${esc(r.descricao)}</p>${r.dados.length?`<ul class="dados">${r.dados.map(d=>`<li>${esc(d)}</li>`).join("")}</ul>`:""}<div class="meta"><span><strong>Livro:</strong> ${esc(r.fonte)}</span><span><strong>Status:</strong> ${esc(r.status)}</span></div></div></details>`).join("");
 }
-
-function render() {
-  const termo = busca.value.trim().toLocaleLowerCase('pt-BR');
-  const tipo = filtroTipo.value;
-  const fonte = filtroFonte.value;
-  const filtrados = REGISTROS.filter(r => {
-    const texto = [r.nome, r.original, r.tipo, r.fonte, r.status, r.descricao, ...(r.dados || [])].join(' ').toLocaleLowerCase('pt-BR');
-    return (!termo || texto.includes(termo)) && (!tipo || r.tipo === tipo) && (!fonte || r.fonte === fonte);
-  });
-
-  resultado.textContent = `${filtrados.length} de ${REGISTROS.length} registros`;
-  lista.innerHTML = filtrados.map(r => `
-    <details class="registro">
-      <summary>
-        <strong>${esc(r.nome)}</strong>
-        <span class="categoria">${esc(r.tipo)}</span>
-      </summary>
-      <div class="corpo">
-        ${r.original && r.original !== r.nome ? `<div class="subtitulo"><strong>Nome original:</strong> ${esc(r.original)}</div>` : ''}
-        <p>${esc(r.descricao)}</p>
-        ${r.dados?.length ? `<ul class="dados">${r.dados.map(d => `<li>${esc(d)}</li>`).join('')}</ul>` : ''}
-        <div class="meta">
-          <span><strong>Fonte:</strong> ${esc(r.fonte)}</span>
-          <span><strong>Status:</strong> ${esc(r.status)}</span>
-          <span><strong>Corpus:</strong> pdf24_merged.pdf + pdf24_merged-1.pdf</span>
-        </div>
-      </div>
-    </details>
-  `).join('');
-}
-
-busca.addEventListener('input', render);
-filtroTipo.addEventListener('change', render);
-filtroFonte.addEventListener('change', render);
+[busca,filtroTipo,filtroFonte].forEach(el=>el.addEventListener(el===busca?"input":"change",render));
 render();
 </script>
 </body>
