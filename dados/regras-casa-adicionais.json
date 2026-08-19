@@ -1,0 +1,146 @@
+{
+  "itens": [
+    {
+      "nome": "Concentração Expandida",
+      "original": "Expanded Concentration (House Rule)",
+      "familia": "Regra da Casa",
+      "descricao": "Regra da Casa que permite manter combinações específicas de magias de concentração simultaneamente conforme a progressão de conjurador e os Limites de Coexistência.",
+      "secoes": [
+        {
+          "titulo": "Siglas Oficiais",
+          "texto": "CM — Concentração Maior; CI — Concentração de Invocação; CZ — Concentração de Zona; CL — Concentração Leve. As nomenclaturas anteriores ficam superadas para esta regra."
+        },
+        {
+          "titulo": "Progressão de Concentração",
+          "texto": "Conforme avança de nível, o conjurador desbloqueia novas combinações de magias que podem ser mantidas simultaneamente, conforme a tabela."
+        },
+        {
+          "titulo": "Limites de Coexistência",
+          "texto": "As magias de concentração são divididas em categorias. O número e os tipos que podem coexistir dependem do nível do conjurador."
+        },
+        {
+          "titulo": "Progressão Oficial por Nível",
+          "texto": "Nível 1: 1 magia de concentração qualquer. Nível 5: 1 CM, CI ou CZ + 1 CL. Nível 10: 1 CM, CI ou CZ + 2 CL. Nível 20: 1 CM, CI ou CZ + 2 CL; OU 1 CM + 1 CI; OU 1 CM + 1 CZ. Combinações não expressamente listadas não são permitidas."
+        },
+        {
+          "titulo": "Uma Única Categoria por Magia",
+          "texto": "Cada magia pertence a apenas uma categoria de Concentração Expandida, determinada pela lista oficial da regra. A categoria cadastrada prevalece sobre interpretações ocasionais baseadas apenas no efeito da magia."
+        },
+        {
+          "titulo": "Nível de Conjurador",
+          "texto": "Para esta regra, use o nível efetivo de conjuração do personagem, considerando a contribuição real de cada classe ou subclasse para sua progressão de magia. Progressões parciais contribuem proporcionalmente conforme a progressão de espaços de magia do ruleset utilizado; Pact Magic ou progressão equivalente é considerada por sua própria progressão."
+        },
+        {
+          "titulo": "Dano e Múltiplas Concentrações",
+          "texto": "Cada ocorrência de dano gera apenas um teste de concentração, independentemente de quantas magias de concentração o personagem esteja mantendo."
+        },
+        {
+          "titulo": "Falha no Teste",
+          "texto": "Se falhar no teste de concentração, o personagem encerra uma das magias de concentração que estiver mantendo, à sua escolha."
+        },
+        {
+          "titulo": "Aumento da CD",
+          "texto": "A CD do teste de concentração aumenta em +2 para cada magia de concentração mantida além da primeira, respeitando o teto aplicável da regra-base utilizada pela mesa."
+        },
+        {
+          "titulo": "Combinações Proibidas",
+          "texto": "Combinações não apresentadas na progressão não são permitidas. CI + CZ não é uma combinação válida no nível 20. Duas magias CM nunca podem coexistir."
+        },
+        {
+          "titulo": "Nova Magia Acima do Limite",
+          "texto": "Se uma nova magia criar uma combinação de concentração não permitida para seu nível, o personagem deve encerrar uma das concentrações incompatíveis antes de manter a nova magia."
+        },
+        {
+          "titulo": "Autoridade da Lista e Versionamento",
+          "texto": "A classificação da lista oficial é normativa. Para 5.5e/2024, use os dados da versão 2024 da magia para determinar se ela exige concentração e qual classificação se aplica; versões 2014 permanecem registradas separadamente e não determinam automaticamente a classificação da versão 2024."
+        }
+      ],
+      "inserir_depois_de": "Magic Items on the Body (D&D 3.5e)",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
+    },
+    {
+      "nome": "Antecedentes — Regras Mecânicas",
+      "original": "Backgrounds — Mechanical House Rules",
+      "familia": "Regra da Casa",
+      "descricao": "Regras da Casa para flexibilizar a construção mecânica dos antecedentes sem vincular o personagem a combinações fixas de atributos e talento de origem.",
+      "secoes": [
+        {
+          "titulo": "Estrutura dos Antecedentes",
+          "texto": "O antecedente define atributos, proficiências, equipamento e talento de origem."
+        },
+        {
+          "titulo": "Bônus de Atributos",
+          "texto": "O jogador escolhe +2 em um atributo e +1 em outro atributo diferente."
+        },
+        {
+          "titulo": "Talento de Origem Livre",
+          "texto": "O jogador pode escolher qualquer Talento de Origem, desde que a escolha seja coerente e justificável pela história do personagem."
+        }
+      ],
+      "inserir_depois_de": "Expanded Concentration (House Rule)",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
+    },
+    {
+      "nome": "Antecedentes e Organizações — Regras Narrativas",
+      "original": "Backgrounds and Organizations — Narrative House Rules",
+      "familia": "Regra da Casa",
+      "descricao": "Regras narrativas para tornar antecedentes, facções e organizações elementos ativos da identidade do personagem e da campanha.",
+      "secoes": [
+        {
+          "titulo": "Narrativa dos Antecedentes",
+          "texto": "Antecedentes podem possuir mais lore, vínculos sociais e consequências narrativas."
+        },
+        {
+          "titulo": "Antecedentes de Cenário",
+          "texto": "Podem ser criados antecedentes ligados a cidades, religiões, regiões, florestas, guildas, ordens militares ou facções."
+        },
+        {
+          "titulo": "Facções como Antecedentes",
+          "texto": "Facções podem ser transformadas em antecedentes jogáveis."
+        },
+        {
+          "titulo": "Organizações Jogáveis",
+          "texto": "A organização relacionada ao personagem continua relevante ao longo da campanha."
+        },
+        {
+          "titulo": "História do Antecedente",
+          "texto": "Um antecedente ou organização relevante pode incluir resumo, fundação, líderes, locais importantes e relação com o personagem."
+        },
+        {
+          "titulo": "Ranks Internos",
+          "texto": "Organizações podem possuir níveis internos de pertencimento, como Iniciado, Membro e Veterano."
+        },
+        {
+          "titulo": "Progressão por Missões",
+          "texto": "O avanço de rank pode depender de missões realizadas, nível mínimo e envolvimento real com a organização."
+        },
+        {
+          "titulo": "Benefícios por Rank",
+          "texto": "Cada rank pode conceder benefícios narrativos, contatos, acesso a locais, favores, reconhecimento, pequenos recursos ou outros benefícios apropriados."
+        },
+        {
+          "titulo": "Talentos Próprios de Organização",
+          "texto": "Organizações podem possuir talentos ligados à sua identidade. Esses talentos podem ter componentes narrativos e mecânicos, definidos individualmente quando forem criados ou utilizados."
+        },
+        {
+          "titulo": "Integração com a Campanha",
+          "texto": "Narrador e jogador constroem juntos conexões entre personagem, antecedente, organizações, mundo e campanha."
+        }
+      ],
+      "inserir_depois_de": "Backgrounds — Mechanical House Rules",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
+    }
+  ]
+}
