@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Armas - Biblioteca - Teias de Anansi</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}
+*{box-sizing:border-box}body{max-width:1280px;margin:auto;padding:22px;line-height:1.5}a{color:inherit}.muted{opacity:.72}
+.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}
+.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}
+.layout{display:grid;grid-template-columns:minmax(300px,380px) minmax(0,1fr);gap:16px;align-items:start}
+.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}.tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}
+.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}
+.filtros{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}
+.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:510px}
+.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.82}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1.02rem;margin-top:2px}
+.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.legacy{font-weight:700}.licenca{font-size:.9rem;opacity:.82}
+@media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:360px}.filtros{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<p><a href="bibliotecas.html?v=20260819-1222">← Bibliotecas</a></p>
+<header>
+<h1>Armas</h1>
+<p class="muted">Catálogo de armas mundanas publicáveis integralmente no Hub.</p>
+<span class="badge">39 registros</span><span class="badge">5.5e: 38 atuais</span><span class="badge">5e: 1 legado</span><span class="badge">SRD · CC-BY-4.0</span>
+</header>
+<div class="nota"><strong>Critério editorial:</strong> quando uma arma existe em 5e e 5.5e, o Hub publica apenas o registro 5.5e. A versão 5e permanece somente quando não existe equivalente atual. Armas mágicas pertencem ao módulo <strong>Itens Mágicos</strong>.</div>
+<div class="nota"><strong>Completude:</strong> no SRD 5.2.1, as armas comuns são definidas individualmente pela tabela de armas (dano, propriedades, maestria, peso e custo) e pelas regras compartilhadas das propriedades. Não existe descrição narrativa individual separada para a maioria delas. A <strong>Rede (Net)</strong>, preservada como legado 5e, possui regra especial própria e ela é exibida integralmente no registro.</div>
+<div id="status" class="nota">Carregando catálogo...</div>
+<div class="layout">
+<aside class="painel"><div class="tools">
+<input id="q" type="search" placeholder="Buscar arma, dano, propriedade ou maestria...">
+<div class="filtros"><select id="ruleset"><option value="">Todos os rulesets</option><option value="5.5e">5.5e atual</option><option value="5e">5e legado</option></select><select id="categoria"><option value="">Todas as categorias</option></select></div>
+<div class="filtros"><select id="maestria"><option value="">Todas as maestrias</option></select><select id="statusf"><option value="">Todos os status</option><option value="atual">Atual</option><option value="legado">Legado</option></select></div>
+<div id="count" class="count"></div></div><div id="lista" class="lista"></div></aside>
+<section id="detalhe" class="painel detalhe"><div class="vazio">Selecione uma arma para abrir os detalhes.</div></section>
+</div>
+<section class="nota licenca" id="licenca"></section>
+<script>
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+let DATA=null,ALL=[],CURRENT='',MASTERY={};
+function renderDetail(id){
+ CURRENT=id;renderList();const x=ALL.find(i=>i.id===id);if(!x)return;
+ const s=x,f=DATA.fontes?.[x.fonte]||{},props=(x.propriedades||[]).length?(x.propriedades||[]).join(', '):'—';
+ const mast=x.maestria?`<div class="box"><h3>Maestria de Arma — ${esc(x.maestria)}</h3><p>${esc(MASTERY[x.maestria]||'Consulte o módulo Maestrias de Arma para a regra completa.')}</p><p><a href="maestrias-de-arma.html?v=20260819-1218">Abrir módulo Maestrias de Arma →</a></p></div>`:'';
+ document.getElementById('detalhe').innerHTML=`<h2>${esc(x.nome)} <span class="muted">(${esc(x.nome_original)})</span></h2>
+ <div class="meta"><span class="badge">${esc(x.categoria)}</span><span class="badge">${esc(f.ruleset)}</span><span class="badge">${esc(x.status)}</span><span><b>Fonte:</b> ${esc(f.titulo)}</span></div>
+ <div class="stats"><div class="stat"><b>Dano</b><span>${esc(x.dano)}</span></div><div class="stat"><b>Propriedades</b><span>${esc(props)}</span></div><div class="stat"><b>Maestria</b><span>${esc(x.maestria||'—')}</span></div><div class="stat"><b>Peso</b><span>${esc(x.peso)}</span></div><div class="stat"><b>Custo</b><span>${esc(x.custo)}</span></div></div>
+ <div class="box"><h3>Descrição</h3><p>${esc(x.descricao||('No '+f.titulo+', esta arma não possui uma descrição narrativa individual separada. O registro individual completo é o bloco da tabela: dano, propriedades, maestria, peso e custo, exibidos acima.'))}</p></div>${mast}
+ <div class="meta"><span><b>Ruleset:</b> ${esc(f.ruleset)}</span><span><b>Revisão core:</b> ${esc(f.revisao_core)}</span><span><b>Seção:</b> ${esc(f.secao)}</span><span><b>Completude:</b> publicado</span></div>`;
+}
+function renderList(){
+ const q=norm(document.getElementById('q').value),rs=document.getElementById('ruleset').value,cat=document.getElementById('categoria').value,m=document.getElementById('maestria').value,st=document.getElementById('statusf').value;
+ const rows=ALL.filter(x=>(!rs||x.ruleset===rs)&&(!cat||x.categoria===cat)&&(!m||x.maestria===m)&&(!st||x.status===st)&&(!q||norm([x.nome,x.nome_original,x.categoria,x.dano,(x.propriedades||[]).join(' '),x.maestria,x.custo,x.peso,x.descricao].join(' ')).includes(q)));
+ document.getElementById('count').textContent=`${rows.length} de ${ALL.length} registros`;
+ document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.id?'on':''}" data-id="${esc(x.id)}"><strong>${esc(x.nome)}</strong><small>${esc(x.nome_original)} · ${esc(x.ruleset)} · ${esc(x.dano)}${x.status==='legado'?' · LEGADO':''}</small></button>`).join('')||'<div class="vazio">Nenhuma arma encontrada.</div>';
+ document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.id));
+}
+(async()=>{
+ try{
+  const [r,mr]=await Promise.all([fetch('dados/armas-srd.json?v=20260819-1222',{cache:'no-store'}),fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1218',{cache:'no-store'})]);
+  if(!r.ok)throw new Error(`HTTP ${r.status}`); DATA=await r.json(); ALL=DATA.itens||[];
+  if(ALL.length!==39)throw new Error(`catálogo incompleto: ${ALL.length}/39`);
+  if(mr.ok){const md=await mr.json();(md.itens||[]).forEach(x=>MASTERY[x.nome]=x.conteudo?.descricao||'');}
+  const cats=[...new Set(ALL.map(x=>x.categoria).filter(Boolean))],ms=[...new Set(ALL.map(x=>x.maestria).filter(Boolean))];
+  document.getElementById('categoria').innerHTML='<option value="">Todas as categorias</option>'+cats.map(t=>`<option>${esc(t)}</option>`).join('');
+  document.getElementById('maestria').innerHTML='<option value="">Todas as maestrias</option>'+ms.map(t=>`<option>${esc(t)}</option>`).join('');
+  document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 39 registros — 38 armas atuais 5.5e do SRD 5.2.1 e 1 arma legada 5e (Rede/Net) do SRD 5.1.';
+  document.getElementById('licenca').innerHTML='<strong>Atribuição:</strong><br>'+Object.values(DATA.fontes||{}).map(x=>esc(x.atribuicao)).join('<br><br>');
+  renderList(); if(ALL[0])renderDetail(ALL[0].id);
+ }catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;}
+})();
+['q','ruleset','categoria','maestria','statusf'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
+</script>
+</body></html>
