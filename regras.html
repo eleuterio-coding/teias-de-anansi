@@ -14,7 +14,8 @@
     .badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem}.controles{display:grid;grid-template-columns:1fr 240px;gap:10px;margin:18px 0}
     .controles input,.controles select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
     .item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
-    .item summary:hover{background:var(--soft)}.corpo{padding:0 16px 16px}.original{font-size:.9rem;opacity:.68;margin:.2rem 0 .8rem}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.78;display:flex;gap:8px 18px;flex-wrap:wrap}
+    .item summary:hover{background:var(--soft)}.corpo{padding:0 16px 16px}.original{font-size:.9rem;opacity:.68;margin:.2rem 0 .8rem}.secao-regra{margin:16px 0}.secao-regra h3{font-size:1rem;margin:0 0 5px}.secao-regra p{margin:0}
+    .meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.78;display:flex;gap:8px 18px;flex-wrap:wrap}
     .erro{padding:16px;border:1px solid #b55;border-radius:10px}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}.item summary .badge{margin-top:6px}}
   </style>
 </head>
@@ -38,15 +39,17 @@
 <script>
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const textoBusca=x=>[x.nome,x.original,x.familia,x.descricao,...(x.secoes||[]).flatMap(s=>[s.titulo,s.texto])].join(' ');
 let DATA=null,ALL=[];
 function render(){
   const q=norm(document.getElementById('busca').value.trim()),f=document.getElementById('filtro').value;
-  const rows=ALL.filter(x=>(!f||x.familia===f)&&(!q||norm([x.nome,x.original,x.familia,x.descricao].join(' ')).includes(q)));
+  const rows=ALL.filter(x=>(!f||x.familia===f)&&(!q||norm(textoBusca(x)).includes(q)));
   document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} itens`;
   document.getElementById('lista').innerHTML=rows.map(x=>{
     const fonte=x.fonte||DATA.fonte;
     const link=fonte.url?`<span><a href="${esc(fonte.url)}" target="_blank" rel="noopener noreferrer">${esc(fonte.rotulo||'Abrir fonte oficial')}</a></span>`:'';
-    return `<details class="item"><summary><strong>${esc(x.nome)}</strong><span class="badge">${esc(x.familia)}</span></summary><div class="corpo"><p class="original"><b>Original:</b> ${esc(x.original)}</p><p>${esc(x.descricao)}</p><div class="meta"><span><b>Tipo:</b> Regras</span><span><b>Fonte:</b> ${esc(fonte.livro)}</span><span><b>Edição:</b> ${esc(fonte.edicao)}</span>${link}</div></div></details>`;
+    const secoes=(x.secoes||[]).map(s=>`<section class="secao-regra"><h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p></section>`).join('');
+    return `<details class="item"><summary><strong>${esc(x.nome)}</strong><span class="badge">${esc(x.familia)}</span></summary><div class="corpo"><p class="original"><b>Original:</b> ${esc(x.original)}</p><p>${esc(x.descricao)}</p>${secoes}<div class="meta"><span><b>Tipo:</b> Regras</span><span><b>Fonte:</b> ${esc(fonte.livro)}</span><span><b>Edição:</b> ${esc(fonte.edicao)}</span>${link}</div></div></details>`;
   }).join('')||'<p class="nota">Nenhuma regra corresponde aos filtros.</p>';
 }
 (async()=>{
@@ -54,7 +57,7 @@ function render(){
     const urls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=20260819-1530`);
     const [rs,hubResponse]=await Promise.all([
       Promise.all(urls.map(u=>fetch(u,{cache:'no-store'}))),
-      fetch('dados/regras-hub.json?v=20260819-1530',{cache:'no-store'})
+      fetch('dados/regras-hub.json?v=20260819-1620',{cache:'no-store'})
     ]);
     const bad=rs.find(r=>!r.ok);if(bad)throw new Error(`HTTP ${bad.status}`);
     if(!hubResponse.ok)throw new Error(`HTTP ${hubResponse.status} ao carregar Regras da Casa`);
