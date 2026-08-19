@@ -9,7 +9,7 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -19,9 +19,13 @@
         "dados/antecedentes-pdf-heroes-2025.json",
         "antecedentes.html",
         "dados/bugigangas-pdfs.json",
-        "bugigangas.html"
+        "bugigangas.html",
+        "dados/idiomas-core-standard.json",
+        "dados/idiomas-core-rare.json",
+        "dados/idiomas-forgotten-realms.json",
+        "idiomas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes e Bugigangas; em Bugigangas fornece a tabela d100 do Player's Handbook 2024, com precedência 2024/5.5e aplicada na consolidação."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas e Idiomas; em Idiomas contribui especialmente com opções do Player's Handbook 2024 e Forgotten Realms: Heroes of Faerûn 2025, consolidadas contra as entradas já ativas e com descrições revisadas."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -29,7 +33,7 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -40,9 +44,13 @@
         "dados/antecedentes-pdf-quickstone-2024.json",
         "antecedentes.html",
         "dados/bugigangas-pdfs.json",
-        "bugigangas.html"
+        "bugigangas.html",
+        "dados/idiomas-eberron.json",
+        "dados/idiomas-core-standard.json",
+        "dados/idiomas-core-rare.json",
+        "idiomas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes e Bugigangas; em Bugigangas fornece Mournland Trinkets de Eberron: Rising from the Last War, com uma duplicata exata consolidada contra a tabela 2024."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas e Idiomas; em Idiomas contribui com Eberron: Rising from the Last War e Frontiers of Eberron: Quickstone, preservando procedência, status e relações linguísticas sem duplicar entradas já soberanas em 2024."
     }
   ],
   "controle": {
