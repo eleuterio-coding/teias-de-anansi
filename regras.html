@@ -20,11 +20,11 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1530">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1648">← Bibliotecas</a></p>
   <header>
     <h1>Regras</h1>
     <p class="muted">Definições mecânicas do Rules Glossary das Basic Rules 2024 e Regras da Casa.</p>
-    <div class="badges"><span class="badge">156 itens</span><span class="badge">155 oficiais + 1 Regra da Casa</span><span class="badge">D&D 2024 / 5.5e + Regras da Casa</span></div>
+    <div class="badges"><span class="badge">159 itens</span><span class="badge">155 oficiais + 4 Regras da Casa</span><span class="badge">D&D 2024 / 5.5e + Regras da Casa</span></div>
   </header>
 
   <div class="nota"><strong>Escopo atual:</strong> este catálogo preserva as 155 entradas da seção <em>Rules Definitions</em> do D&D Beyond Basic Rules 2024 e acrescenta Regras da Casa sem alterar o conjunto oficial armazenado.</div>
@@ -55,15 +55,18 @@ function render(){
 (async()=>{
   try{
     const urls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=20260819-1530`);
-    const [rs,hubResponse]=await Promise.all([
+    const [rs,hubResponse,extraResponse]=await Promise.all([
       Promise.all(urls.map(u=>fetch(u,{cache:'no-store'}))),
-      fetch('dados/regras-hub.json?v=20260819-1620',{cache:'no-store'})
+      fetch('dados/regras-hub.json?v=20260819-1648',{cache:'no-store'}),
+      fetch('dados/regras-casa-adicionais.json?v=20260819-1648',{cache:'no-store'})
     ]);
     const bad=rs.find(r=>!r.ok);if(bad)throw new Error(`HTTP ${bad.status}`);
     if(!hubResponse.ok)throw new Error(`HTTP ${hubResponse.status} ao carregar Regras da Casa`);
+    if(!extraResponse.ok)throw new Error(`HTTP ${extraResponse.status} ao carregar Regras da Casa adicionais`);
     const text=(await Promise.all(rs.map(r=>r.text()))).join('');
     DATA=JSON.parse(text);
     const HUB=await hubResponse.json();
+    const EXTRA=await extraResponse.json();
     ALL=[...(DATA.itens||[])];
 
     for(const patch of HUB.sobreposicoes||[]){
@@ -72,7 +75,7 @@ function render(){
       Object.assign(item,patch);
     }
 
-    for(const extraOriginal of HUB.itens||[]){
+    for(const extraOriginal of [...(HUB.itens||[]),...(EXTRA.itens||[])]){
       const extra={...extraOriginal};
       const depois=extra.inserir_depois_de;
       delete extra.inserir_depois_de;
@@ -80,7 +83,7 @@ function render(){
       if(idx>=0)ALL.splice(idx+1,0,extra);else ALL.push(extra);
     }
 
-    if(ALL.length!==156)throw new Error(`catálogo incompleto: ${ALL.length}/156`);
+    if(ALL.length!==159)throw new Error(`catálogo incompleto: ${ALL.length}/159`);
     const familias=['Regra Geral','Regra da Casa',...DATA.familias.filter(f=>f!=='Regra Geral'&&f!=='Regra da Casa')];
     const rotulos={
       'Regra Geral':'Regras Gerais',
@@ -93,7 +96,7 @@ function render(){
     };
     document.getElementById('filtro').innerHTML='<option value="">Todas</option>'+familias.map(f=>`<option value="${esc(f)}">${esc(rotulos[f]||f)}</option>`).join('');
     document.getElementById('precedencia').innerHTML=`<strong>Precedência:</strong> ${esc(HUB.precedencia||'Regras da Casa prevalecem sobre Regras Gerais, salvo indicação em contrário.')}`;
-    document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 155 definições oficiais + 1 Regra da Casa carregadas.';
+    document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 155 definições oficiais + 4 Regras da Casa carregadas.';
     render();
   }catch(e){
     document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;
