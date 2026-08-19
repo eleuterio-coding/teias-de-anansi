@@ -1,0 +1,718 @@
+{
+  "schema": "hub-rpg/classes/v1",
+  "status": "publicado",
+  "origem_pdf": "pdf24_merged-1.pdf",
+  "classe": {
+    "id": "classes:pdf24merged1:artificer:2025",
+    "nome": "Artificer",
+    "tipo": "classe",
+    "subtipo": "classe-de-personagem",
+    "ruleset": "5.5e",
+    "revisao_core": 2024,
+    "fonte": {
+      "titulo": "Eberron: Forge of the Artificer",
+      "editora": "Wizards of the Coast LLC",
+      "ano": 2025,
+      "primeira_impressao": "December 2025",
+      "paginas_pdf": [
+        1503,
+        1504,
+        1505,
+        1506,
+        1507,
+        1508
+      ]
+    },
+    "descricao": "Mestre de invenções que combina engenhosidade, ferramentas e magia para criar, replicar, recarregar, transformar e armazenar efeitos mágicos em objetos. Esta é a versão revisada para a estrutura de classes alinhada ao Player's Handbook de 2024.",
+    "dados_base": {
+      "atributo_principal": "Intelligence",
+      "dado_de_vida": "d8 por nível de Artificer",
+      "salvaguardas": [
+        "Constitution",
+        "Intelligence"
+      ],
+      "pericias": "Escolha 2: Arcana, History, Investigation, Medicine, Nature, Perception ou Sleight of Hand.",
+      "armas": "Simple weapons",
+      "ferramentas": "Thieves' Tools, Tinker's Tools e um tipo de Artisan's Tools à escolha.",
+      "armaduras": "Light armor, Medium armor e Shields",
+      "equipamento_inicial": {
+        "A": "Studded Leather Armor, Dagger, Thieves' Tools, Tinker's Tools, Dungeoneer's Pack e 16 GP",
+        "B": "150 GP"
+      }
+    },
+    "multiclasse": {
+      "ganhos": "Hit Point Die; proficiência com Tinker's Tools; uma perícia à escolha da lista do Artificer; treinamento com Light armor, Medium armor e Shields; e as características de nível 1 da classe.",
+      "conjuracao": "Para determinar spell slots de multiclasse, some metade dos níveis de Artificer, arredondando para cima, conforme as regras de multiclasse do Player's Handbook."
+    },
+    "progressao": [
+      {
+        "nivel": 1,
+        "pb": "+2",
+        "caracteristicas": "Spellcasting; Tinker's Magic",
+        "planos": "—",
+        "itens_magicos": "—",
+        "cantrips": 2,
+        "magias_preparadas": 2,
+        "slots": [
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 2,
+        "pb": "+2",
+        "caracteristicas": "Replicate Magic Item",
+        "planos": 4,
+        "itens_magicos": 2,
+        "cantrips": 2,
+        "magias_preparadas": 3,
+        "slots": [
+          2,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 3,
+        "pb": "+2",
+        "caracteristicas": "Artificer Subclass",
+        "planos": 4,
+        "itens_magicos": 2,
+        "cantrips": 2,
+        "magias_preparadas": 4,
+        "slots": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 4,
+        "pb": "+2",
+        "caracteristicas": "Ability Score Improvement",
+        "planos": 4,
+        "itens_magicos": 2,
+        "cantrips": 2,
+        "magias_preparadas": 5,
+        "slots": [
+          3,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 5,
+        "pb": "+3",
+        "caracteristicas": "Subclass feature",
+        "planos": 4,
+        "itens_magicos": 2,
+        "cantrips": 2,
+        "magias_preparadas": 6,
+        "slots": [
+          4,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 6,
+        "pb": "+3",
+        "caracteristicas": "Magic Item Tinker",
+        "planos": 5,
+        "itens_magicos": 3,
+        "cantrips": 2,
+        "magias_preparadas": 6,
+        "slots": [
+          4,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 7,
+        "pb": "+3",
+        "caracteristicas": "Flash of Genius",
+        "planos": 5,
+        "itens_magicos": 3,
+        "cantrips": 2,
+        "magias_preparadas": 7,
+        "slots": [
+          4,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 8,
+        "pb": "+3",
+        "caracteristicas": "Ability Score Improvement",
+        "planos": 5,
+        "itens_magicos": 3,
+        "cantrips": 2,
+        "magias_preparadas": 7,
+        "slots": [
+          4,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 9,
+        "pb": "+4",
+        "caracteristicas": "Subclass feature",
+        "planos": 5,
+        "itens_magicos": 3,
+        "cantrips": 2,
+        "magias_preparadas": 9,
+        "slots": [
+          4,
+          3,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 10,
+        "pb": "+4",
+        "caracteristicas": "Magic Item Adept",
+        "planos": 6,
+        "itens_magicos": 4,
+        "cantrips": 3,
+        "magias_preparadas": 9,
+        "slots": [
+          4,
+          3,
+          2,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 11,
+        "pb": "+4",
+        "caracteristicas": "Spell-Storing Item",
+        "planos": 6,
+        "itens_magicos": 4,
+        "cantrips": 3,
+        "magias_preparadas": 10,
+        "slots": [
+          4,
+          3,
+          3,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 12,
+        "pb": "+4",
+        "caracteristicas": "Ability Score Improvement",
+        "planos": 6,
+        "itens_magicos": 4,
+        "cantrips": 3,
+        "magias_preparadas": 10,
+        "slots": [
+          4,
+          3,
+          3,
+          0,
+          0
+        ]
+      },
+      {
+        "nivel": 13,
+        "pb": "+5",
+        "caracteristicas": "—",
+        "planos": 6,
+        "itens_magicos": 4,
+        "cantrips": 3,
+        "magias_preparadas": 11,
+        "slots": [
+          4,
+          3,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "nivel": 14,
+        "pb": "+5",
+        "caracteristicas": "Advanced Artifice",
+        "planos": 7,
+        "itens_magicos": 5,
+        "cantrips": 4,
+        "magias_preparadas": 11,
+        "slots": [
+          4,
+          3,
+          3,
+          1,
+          0
+        ]
+      },
+      {
+        "nivel": 15,
+        "pb": "+5",
+        "caracteristicas": "Subclass feature",
+        "planos": 7,
+        "itens_magicos": 5,
+        "cantrips": 4,
+        "magias_preparadas": 12,
+        "slots": [
+          4,
+          3,
+          3,
+          2,
+          0
+        ]
+      },
+      {
+        "nivel": 16,
+        "pb": "+5",
+        "caracteristicas": "Ability Score Improvement",
+        "planos": 7,
+        "itens_magicos": 5,
+        "cantrips": 4,
+        "magias_preparadas": 12,
+        "slots": [
+          4,
+          3,
+          3,
+          2,
+          0
+        ]
+      },
+      {
+        "nivel": 17,
+        "pb": "+6",
+        "caracteristicas": "—",
+        "planos": 7,
+        "itens_magicos": 5,
+        "cantrips": 4,
+        "magias_preparadas": 14,
+        "slots": [
+          4,
+          3,
+          3,
+          3,
+          1
+        ]
+      },
+      {
+        "nivel": 18,
+        "pb": "+6",
+        "caracteristicas": "Magic Item Master",
+        "planos": 8,
+        "itens_magicos": 6,
+        "cantrips": 4,
+        "magias_preparadas": 14,
+        "slots": [
+          4,
+          3,
+          3,
+          3,
+          1
+        ]
+      },
+      {
+        "nivel": 19,
+        "pb": "+6",
+        "caracteristicas": "Epic Boon",
+        "planos": 8,
+        "itens_magicos": 6,
+        "cantrips": 4,
+        "magias_preparadas": 15,
+        "slots": [
+          4,
+          3,
+          3,
+          3,
+          2
+        ]
+      },
+      {
+        "nivel": 20,
+        "pb": "+6",
+        "caracteristicas": "Soul of Artifice",
+        "planos": 8,
+        "itens_magicos": 6,
+        "cantrips": 4,
+        "magias_preparadas": 15,
+        "slots": [
+          4,
+          3,
+          3,
+          3,
+          2
+        ]
+      }
+    ],
+    "conjuracao": {
+      "atributo": "Intelligence",
+      "foco": "Thieves' Tools, Tinker's Tools ou outro Artisan's Tools no qual seja proficiente; o foco deve estar em mãos ao conjurar uma magia de Artificer.",
+      "cantrips": "Conhece 2 cantrips de Artificer no nível 1. Ao terminar um Long Rest, pode substituir um deles por outro cantrip de Artificer. Aprende um cantrip adicional nos níveis 10 e 14.",
+      "slots": "Os spell slots seguem a tabela de progressão e todos os slots gastos retornam após um Long Rest.",
+      "preparo": "No nível 1 prepara 2 magias de Artificer de nível 1. O total preparado aumenta conforme a tabela. Sempre que o total aumentar, escolha magias adicionais de níveis para os quais possua slots. Magias concedidas por outras características que estejam sempre preparadas não contam nesse limite. Ao terminar um Long Rest, pode trocar quaisquer magias preparadas por outras magias de Artificer para as quais possua slots.",
+      "lista_de_magias": "A relação nominal de magias é tratada pelo módulo Magias; as regras de conjuração da classe estão integralmente registradas aqui."
+    },
+    "tinkers_magic": {
+      "descricao": "Você conhece Mending. Como Magic action enquanto segura Tinker's Tools, cria um item da lista em um espaço desocupado a até 5 pés. O item dura até você terminar um Long Rest. Você pode usar esta característica um número de vezes igual ao modificador de Intelligence, mínimo 1, recuperando todos os usos após Long Rest.",
+      "itens": [
+        "Ball Bearings",
+        "Basket",
+        "Bedroll",
+        "Bell",
+        "Blanket",
+        "Block and Tackle",
+        "Bottle, Glass",
+        "Bucket",
+        "Caltrops",
+        "Candle",
+        "Crowbar",
+        "Flask",
+        "Grappling Hook",
+        "Hunting Trap",
+        "Jug",
+        "Lamp",
+        "Manacles",
+        "Net",
+        "Oil",
+        "Paper",
+        "Parchment",
+        "Pole",
+        "Pouch",
+        "Rope",
+        "Sack",
+        "Shovel",
+        "Spikes, Iron",
+        "String",
+        "Tinderbox",
+        "Torch",
+        "Vial"
+      ]
+    },
+    "replicate_magic_item": {
+      "regras": "No nível 2 você aprende 4 planos. Ao ganhar nível de Artificer, pode substituir um plano por outro para o qual se qualifique. O total de planos conhecidos aumenta conforme a tabela. Ao terminar um Long Rest com Tinker's Tools em mãos, cria itens mágicos baseados em planos conhecidos até o limite de Magic Items da tabela, cada item usando um plano diferente. Pode realizar Attunement instantaneamente no momento da criação quando necessário. O item funciona como o item normal, mas desaparece 1d4 dias após sua morte; se o plano correspondente for substituído, o item desaparece imediatamente. Se um recipiente desaparecer, seu conteúdo surge de forma inofensiva no espaço e ao redor. Wands e Weapons criadas por esta característica podem ser usadas como Spellcasting Focus no lugar de Artisan's Tools.",
+      "planos_nivel_2": [
+        [
+          "Alchemy Jug",
+          "No"
+        ],
+        [
+          "Bag of Holding",
+          "No"
+        ],
+        [
+          "Cap of Water Breathing",
+          "No"
+        ],
+        [
+          "Common magic item that isn't a Potion, a Scroll, or cursed*",
+          "Varies"
+        ],
+        [
+          "Goggles of Night",
+          "No"
+        ],
+        [
+          "Manifold Tool†",
+          "Yes"
+        ],
+        [
+          "Repeating Shot†",
+          "Yes"
+        ],
+        [
+          "Returning Weapon†",
+          "No"
+        ],
+        [
+          "Rope of Climbing",
+          "No"
+        ],
+        [
+          "Sending Stones",
+          "No"
+        ],
+        [
+          "Shield, +1",
+          "No"
+        ],
+        [
+          "Wand of Magic Detection",
+          "No"
+        ],
+        [
+          "Wand of Secrets",
+          "No"
+        ],
+        [
+          "Wand of the War Mage, +1",
+          "Yes"
+        ],
+        [
+          "Weapon, +1",
+          "No"
+        ],
+        [
+          "Wraps of Unarmed Power, +1",
+          "No"
+        ]
+      ],
+      "planos_nivel_6": [
+        [
+          "Armor, +1",
+          "No"
+        ],
+        [
+          "Boots of Elvenkind",
+          "No"
+        ],
+        [
+          "Boots of the Winding Path†",
+          "Yes"
+        ],
+        [
+          "Cloak of Elvenkind",
+          "Yes"
+        ],
+        [
+          "Cloak of the Manta Ray",
+          "Yes"
+        ],
+        [
+          "Dazzling Weapon†",
+          "Yes"
+        ],
+        [
+          "Eyes of Charming",
+          "Yes"
+        ],
+        [
+          "Eyes of Minute Seeing",
+          "No"
+        ],
+        [
+          "Gloves of Thievery",
+          "No"
+        ],
+        [
+          "Helm of Awareness",
+          "No"
+        ],
+        [
+          "Lantern of Revealing",
+          "No"
+        ],
+        [
+          "Mind Sharpener†",
+          "Yes"
+        ],
+        [
+          "Necklace of Adaptation",
+          "Yes"
+        ],
+        [
+          "Pipes of Haunting",
+          "No"
+        ],
+        [
+          "Repulsion Shield†",
+          "No"
+        ],
+        [
+          "Ring of Swimming",
+          "No"
+        ],
+        [
+          "Ring of Water Walking",
+          "No"
+        ],
+        [
+          "Sentinel Shield",
+          "No"
+        ],
+        [
+          "Spell-Refueling Ring†",
+          "Yes"
+        ],
+        [
+          "Wand of Magic Missiles",
+          "No"
+        ],
+        [
+          "Wand of Web",
+          "Yes"
+        ],
+        [
+          "Weapon of Warning",
+          "Yes"
+        ]
+      ],
+      "planos_nivel_10": [
+        [
+          "Armor of Resistance",
+          "Yes"
+        ],
+        [
+          "Dagger of Venom",
+          "No"
+        ],
+        [
+          "Elven Chain",
+          "No"
+        ],
+        [
+          "Ring of Feather Falling",
+          "Yes"
+        ],
+        [
+          "Ring of Jumping",
+          "Yes"
+        ],
+        [
+          "Ring of Mind Shielding",
+          "Yes"
+        ],
+        [
+          "Shield, +2",
+          "No"
+        ],
+        [
+          "Uncommon Wondrous Item that isn't cursed*",
+          "Varies"
+        ],
+        [
+          "Wand of the War Mage, +2",
+          "Yes"
+        ],
+        [
+          "Weapon, +2",
+          "No"
+        ],
+        [
+          "Wraps of Unarmed Power, +2",
+          "No"
+        ]
+      ],
+      "planos_nivel_14": [
+        [
+          "Armor, +2",
+          "No"
+        ],
+        [
+          "Arrow-Catching Shield",
+          "Yes"
+        ],
+        [
+          "Flame Tongue",
+          "Yes"
+        ],
+        [
+          "Rare Wondrous Item that isn't cursed*",
+          "Varies"
+        ],
+        [
+          "Ring of Free Action",
+          "Yes"
+        ],
+        [
+          "Ring of Protection",
+          "Yes"
+        ],
+        [
+          "Ring of the Ram",
+          "Yes"
+        ]
+      ],
+      "notas": "* Esta opção pode ser aprendida várias vezes, escolhendo um item diferente a cada vez; cada escolha conta como um plano distinto. † Item descrito no apêndice da própria fonte."
+    },
+    "caracteristicas": [
+      {
+        "nivel": 3,
+        "nome": "Artificer Subclass",
+        "descricao": "Escolha uma subclasse de Artificer. A fonte apresenta Alchemist, Armorer, Artillerist, Battle Smith e Cartographer. A subclasse concede suas características quando você alcança os níveis correspondentes de Artificer."
+      },
+      {
+        "nivel": 4,
+        "nome": "Ability Score Improvement",
+        "descricao": "Você recebe Ability Score Improvement ou outro feat para o qual se qualifique. Repete esta característica nos níveis 8, 12 e 16 de Artificer."
+      },
+      {
+        "nivel": 6,
+        "nome": "Magic Item Tinker",
+        "descricao": "Charge Magic Item: Bonus Action para tocar um item criado por Replicate Magic Item que use charges; gaste um spell slot de nível 1+ e recupere um número de charges igual ao nível do slot. Drain Magic Item: Bonus Action para fazer um item criado por Replicate Magic Item desaparecer e convertê-lo em spell slot: nível 1 se o item for Common, nível 2 se for Uncommon ou Rare; após usar esta opção, só pode usá-la novamente após Long Rest, e qualquer slot criado assim desaparece no Long Rest. Transmute Magic Item: Magic action para tocar um item criado por Replicate Magic Item e transformá-lo em outro item baseado em um plano que você conheça; após usar esta opção, só pode usá-la novamente após Long Rest."
+      },
+      {
+        "nivel": 7,
+        "nome": "Flash of Genius",
+        "descricao": "Quando você ou uma criatura que possa ver a até 30 pés falha em um ability check ou saving throw, use Reaction para somar um bônus igual ao seu modificador de Intelligence, mínimo +1, podendo transformar a falha em sucesso. Usos iguais ao modificador de Intelligence, mínimo 1; recupera todos após Long Rest."
+      },
+      {
+        "nivel": 10,
+        "nome": "Magic Item Adept",
+        "descricao": "Você pode manter Attunement com até quatro magic items ao mesmo tempo."
+      },
+      {
+        "nivel": 11,
+        "nome": "Spell-Storing Item",
+        "descricao": "Ao terminar um Long Rest, toque uma Simple ou Martial weapon ou um item que possa usar como Spellcasting Focus e armazene nele uma magia de Artificer de nível 1, 2 ou 3, com casting time de uma action e sem Material component consumido; a magia não precisa estar preparada. Enquanto segura o objeto, uma criatura pode usar Magic action para produzir o efeito usando seu modificador de spellcasting. Se exigir Concentration, a criatura concentra. Depois de usar o objeto, aquela criatura não pode usá-lo novamente dessa forma até o início do próximo turno dela. A magia permanece até ser usada um número de vezes igual a duas vezes seu modificador de Intelligence, mínimo 2, ou até você usar esta característica novamente."
+      },
+      {
+        "nivel": 14,
+        "nome": "Advanced Artifice",
+        "descricao": "Magic Item Savant: você pode manter Attunement com até cinco magic items ao mesmo tempo. Refreshed Genius: ao terminar um Short Rest, recupera um uso gasto de Flash of Genius."
+      },
+      {
+        "nivel": 18,
+        "nome": "Magic Item Master",
+        "descricao": "Você pode manter Attunement com até seis magic items ao mesmo tempo."
+      },
+      {
+        "nivel": 19,
+        "nome": "Epic Boon",
+        "descricao": "Você recebe um Epic Boon feat ou outro feat para o qual se qualifique; Boon of Energy Resistance é a recomendação da fonte."
+      },
+      {
+        "nivel": 20,
+        "nome": "Soul of Artifice",
+        "descricao": "Cheat Death: se for reduzido a 0 Hit Points sem morrer instantaneamente, pode desintegrar qualquer quantidade de magic items Uncommon ou Rare criados por Replicate Magic Item; seus Hit Points passam a ser 20 vezes a quantidade de itens desintegrados. Magical Guidance: ao terminar um Short Rest, recupera todos os usos gastos de Flash of Genius se tiver Attunement com pelo menos um magic item."
+      }
+    ],
+    "controle": {
+      "completo": true,
+      "publicado": true,
+      "substitui": [
+        "Artificer - Eberron: Rising from the Last War (2019)",
+        "Artificer - Tasha's Cauldron of Everything (2020)"
+      ]
+    }
+  },
+  "controle": {
+    "completo": true,
+    "sidekicks_publicados": 0,
+    "versoes_anteriores_suprimidas": [
+      "Artificer 2019 — Eberron: Rising from the Last War",
+      "Artificer 2020 — Tasha’s Cauldron of Everything"
+    ]
+  }
+}

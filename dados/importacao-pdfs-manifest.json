@@ -1,0 +1,72 @@
+{
+  "schema": "hub-rpg/importacao-pdfs/v1",
+  "gerado_em": "2026-08-18",
+  "status": "publicado",
+  "regra_abertura": "ignorada por solicitação explícita do usuário",
+  "regra_completude": "mantida",
+  "regra_precedencia": "mantida; versões posteriores equivalentes prevalecem na visualização ativa",
+  "fontes_estruturadas": [
+    {
+      "id": "mpmm",
+      "titulo": "Mordenkainen Presents: Monsters of the Multiverse",
+      "ano": 2022,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 261,
+      "arquivo": "dados/monstros-fontes/mpmm.json"
+    },
+    {
+      "id": "fraif",
+      "titulo": "Forgotten Realms: Adventures in Faerûn",
+      "ano": 2025,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 42,
+      "arquivo": "dados/monstros-fontes/fraif.json"
+    },
+    {
+      "id": "erlw",
+      "titulo": "Eberron: Rising from the Last War",
+      "ano": 2019,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 41,
+      "arquivo": "dados/monstros-fontes/erlw.json"
+    },
+    {
+      "id": "tce",
+      "titulo": "Tasha's Cauldron of Everything",
+      "ano": 2020,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 20,
+      "arquivo": "dados/monstros-fontes/tce.json"
+    },
+    {
+      "id": "efa",
+      "titulo": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 27,
+      "arquivo": "dados/monstros-fontes/efa.json"
+    },
+    {
+      "id": "xdmg",
+      "titulo": "Dungeon Master's Guide (2024)",
+      "ano": 2024,
+      "pdf": "pdf24_merged.pdf",
+      "registros": 2,
+      "arquivo": "dados/monstros-fontes/xdmg.json"
+    },
+    {
+      "id": "xge",
+      "titulo": "Xanathar's Guide to Everything",
+      "ano": 2017,
+      "pdf": "pdf24_merged.pdf",
+      "registros": 2,
+      "arquivo": "dados/monstros-fontes/xge.json"
+    }
+  ],
+  "registros_estruturados_brutos": 395,
+  "monstros_extras_extraidos_diretamente_dos_pdfs": 92,
+  "classes_publicadas_dos_pdfs": [
+    "Artificer 2025"
+  ],
+  "classes_sidekick_publicadas": 0
+}
