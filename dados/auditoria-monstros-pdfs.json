@@ -1,0 +1,1027 @@
+{
+  "schema": "hub-rpg/auditoria-monstros-pdfs/v2",
+  "fontes": {
+    "xge": {
+      "total": 2,
+      "diretos_completos": 0,
+      "copias": 1,
+      "outros_incompletos": 1,
+      "rejeitados": [
+        {
+          "fonte": "xge",
+          "indice": 0,
+          "nome": "Hound of Ill Omen",
+          "pagina": 50,
+          "motivos": [
+            "_copy",
+            "sem_ac",
+            "sem_hp",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_int",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Dire Wolf",
+            "source": "MM",
+            "_mod": {
+              "*": {
+                "mode": "replaceTxt",
+                "replace": "\\bwolf\\b",
+                "with": "hound"
+              },
+              "trait": [
+                {
+                  "mode": "appendArr",
+                  "items": [
+                    {
+                      "name": "Cloak of Shadows",
+                      "entries": [
+                        "The hound appears with a number of temporary hit points equal to half your sorcerer level."
+                      ]
+                    },
+                    {
+                      "name": "Incorporeal Movement",
+                      "entries": [
+                        "The hound can move through other creatures and objects as if they were {@quickref difficult terrain||3}. The hound takes 5 force damage if it ends its turn inside an object."
+                      ]
+                    },
+                    {
+                      "name": "Omen Sight",
+                      "entries": [
+                        "At the start of its turn, the hound automatically knows its target's location. If the target was hidden, it is no longer hidden from the hound."
+                      ]
+                    },
+                    {
+                      "name": "Ever at Your Heels",
+                      "entries": [
+                        "On its turn, it can move only toward its target by the most direct route, and it can use its action only to attack its target. The hound can make opportunity attacks, but only against its target. Additionally, while the hound is within 5 feet of the target, the target has disadvantage on saving throws against any spell you cast. The hound disappears if it is reduced to 0 hit points, if its target is reduced to 0 hit points, or after 5 minutes."
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "fonte": "xge",
+          "indice": 1,
+          "nome": "Tiny Servant",
+          "pagina": 169,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        }
+      ]
+    },
+    "xdmg": {
+      "total": 2,
+      "diretos_completos": 1,
+      "copias": 0,
+      "outros_incompletos": 1,
+      "rejeitados": [
+        {
+          "fonte": "xdmg",
+          "indice": 0,
+          "nome": "Avatar of Death",
+          "pagina": 252,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        }
+      ]
+    },
+    "mpmm": {
+      "total": 261,
+      "diretos_completos": 260,
+      "copias": 0,
+      "outros_incompletos": 1,
+      "rejeitados": [
+        {
+          "fonte": "mpmm",
+          "indice": 189,
+          "nome": "Sacred Statue",
+          "pagina": 114,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        }
+      ]
+    },
+    "erlw": {
+      "total": 41,
+      "diretos_completos": 38,
+      "copias": 3,
+      "outros_incompletos": 0,
+      "rejeitados": [
+        {
+          "fonte": "erlw",
+          "indice": 4,
+          "nome": "Corrin Delmaco",
+          "pagina": 271,
+          "motivos": [
+            "_copy",
+            "sem_size",
+            "sem_type",
+            "sem_ac",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_int",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Spy",
+            "source": "MM",
+            "_templates": [
+              {
+                "name": "Stout Halfling",
+                "source": "PHB"
+              }
+            ],
+            "_mod": {
+              "*": {
+                "mode": "replaceTxt",
+                "replace": "the spy",
+                "with": "Corrin",
+                "flags": "i"
+              }
+            }
+          }
+        },
+        {
+          "fonte": "erlw",
+          "indice": 11,
+          "nome": "Garra",
+          "pagina": 272,
+          "motivos": [
+            "_copy",
+            "sem_size",
+            "sem_type",
+            "sem_ac",
+            "sem_hp",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Half-Ogre (Ogrillon)",
+            "source": "MM"
+          }
+        },
+        {
+          "fonte": "erlw",
+          "indice": 26,
+          "nome": "Sergeant",
+          "pagina": 197,
+          "motivos": [
+            "_copy",
+            "sem_size",
+            "sem_type",
+            "sem_ac",
+            "sem_hp",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_int",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Guard",
+            "source": "MM"
+          }
+        }
+      ]
+    },
+    "tce": {
+      "total": 20,
+      "diretos_completos": 1,
+      "copias": 2,
+      "outros_incompletos": 17,
+      "rejeitados": [
+        {
+          "fonte": "tce",
+          "indice": 0,
+          "nome": "Aberrant Spirit",
+          "pagina": 109,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 1,
+          "nome": "Adult Red Dracolich",
+          "pagina": 137,
+          "motivos": [
+            "_copy",
+            "sem_size",
+            "sem_type",
+            "sem_ac",
+            "sem_hp",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_int",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Adult Red Dragon",
+            "source": "MM",
+            "_templates": [
+              {
+                "name": "Dracolich",
+                "source": "MM"
+              }
+            ]
+          }
+        },
+        {
+          "fonte": "tce",
+          "indice": 2,
+          "nome": "Beast of the Land",
+          "pagina": 61,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 3,
+          "nome": "Beast of the Sea",
+          "pagina": 61,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 4,
+          "nome": "Beast of the Sky",
+          "pagina": 61,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 5,
+          "nome": "Bestial Spirit",
+          "pagina": 109,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 6,
+          "nome": "Celestial Spirit",
+          "pagina": 110,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 7,
+          "nome": "Construct Spirit",
+          "pagina": 111,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 8,
+          "nome": "Dancing Item",
+          "pagina": 29,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 9,
+          "nome": "Elemental Spirit",
+          "pagina": 111,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 10,
+          "nome": "Fey Spirit",
+          "pagina": 112,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 11,
+          "nome": "Fiendish Spirit",
+          "pagina": 112,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 12,
+          "nome": "Homunculus Servant",
+          "pagina": 22,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 14,
+          "nome": "Mighty Servant of Leuk-o",
+          "pagina": 131,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 15,
+          "nome": "Reflection",
+          "pagina": 158,
+          "motivos": [
+            "_copy",
+            "sem_size",
+            "sem_ac",
+            "sem_hp",
+            "sem_speed",
+            "sem_str",
+            "sem_dex",
+            "sem_con",
+            "sem_int",
+            "sem_wis",
+            "sem_cha",
+            "sem_cr"
+          ],
+          "copy": {
+            "name": "Shadow",
+            "source": "MM",
+            "_mod": {
+              "*": {
+                "mode": "replaceTxt",
+                "replace": "shadow",
+                "with": "reflection"
+              }
+            }
+          }
+        },
+        {
+          "fonte": "tce",
+          "indice": 16,
+          "nome": "Shadow Spirit",
+          "pagina": 114,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 17,
+          "nome": "Steel Defender",
+          "pagina": 19,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 18,
+          "nome": "Undead Spirit",
+          "pagina": 114,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "tce",
+          "indice": 19,
+          "nome": "Wildfire Spirit",
+          "pagina": 40,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        }
+      ]
+    },
+    "efa": {
+      "total": 27,
+      "diretos_completos": 25,
+      "copias": 0,
+      "outros_incompletos": 2,
+      "rejeitados": [
+        {
+          "fonte": "efa",
+          "indice": 10,
+          "nome": "Homunculus Servant",
+          "pagina": 21,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        },
+        {
+          "fonte": "efa",
+          "indice": 19,
+          "nome": "Steel Defender",
+          "pagina": 19,
+          "motivos": [
+            "sem_cr"
+          ],
+          "copy": null
+        }
+      ]
+    },
+    "fraif": {
+      "total": 42,
+      "diretos_completos": 42,
+      "copias": 0,
+      "outros_incompletos": 0,
+      "rejeitados": []
+    }
+  },
+  "faltantes_no_filtro_atual": [
+    {
+      "fonte": "xge",
+      "indice": 0,
+      "nome": "Hound of Ill Omen",
+      "pagina": 50,
+      "motivos": [
+        "_copy",
+        "sem_ac",
+        "sem_hp",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_int",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Dire Wolf",
+        "source": "MM",
+        "_mod": {
+          "*": {
+            "mode": "replaceTxt",
+            "replace": "\\bwolf\\b",
+            "with": "hound"
+          },
+          "trait": [
+            {
+              "mode": "appendArr",
+              "items": [
+                {
+                  "name": "Cloak of Shadows",
+                  "entries": [
+                    "The hound appears with a number of temporary hit points equal to half your sorcerer level."
+                  ]
+                },
+                {
+                  "name": "Incorporeal Movement",
+                  "entries": [
+                    "The hound can move through other creatures and objects as if they were {@quickref difficult terrain||3}. The hound takes 5 force damage if it ends its turn inside an object."
+                  ]
+                },
+                {
+                  "name": "Omen Sight",
+                  "entries": [
+                    "At the start of its turn, the hound automatically knows its target's location. If the target was hidden, it is no longer hidden from the hound."
+                  ]
+                },
+                {
+                  "name": "Ever at Your Heels",
+                  "entries": [
+                    "On its turn, it can move only toward its target by the most direct route, and it can use its action only to attack its target. The hound can make opportunity attacks, but only against its target. Additionally, while the hound is within 5 feet of the target, the target has disadvantage on saving throws against any spell you cast. The hound disappears if it is reduced to 0 hit points, if its target is reduced to 0 hit points, or after 5 minutes."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fonte": "xge",
+      "indice": 1,
+      "nome": "Tiny Servant",
+      "pagina": 169,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "xdmg",
+      "indice": 0,
+      "nome": "Avatar of Death",
+      "pagina": 252,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "mpmm",
+      "indice": 189,
+      "nome": "Sacred Statue",
+      "pagina": 114,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "erlw",
+      "indice": 4,
+      "nome": "Corrin Delmaco",
+      "pagina": 271,
+      "motivos": [
+        "_copy",
+        "sem_size",
+        "sem_type",
+        "sem_ac",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_int",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Spy",
+        "source": "MM",
+        "_templates": [
+          {
+            "name": "Stout Halfling",
+            "source": "PHB"
+          }
+        ],
+        "_mod": {
+          "*": {
+            "mode": "replaceTxt",
+            "replace": "the spy",
+            "with": "Corrin",
+            "flags": "i"
+          }
+        }
+      }
+    },
+    {
+      "fonte": "erlw",
+      "indice": 11,
+      "nome": "Garra",
+      "pagina": 272,
+      "motivos": [
+        "_copy",
+        "sem_size",
+        "sem_type",
+        "sem_ac",
+        "sem_hp",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Half-Ogre (Ogrillon)",
+        "source": "MM"
+      }
+    },
+    {
+      "fonte": "erlw",
+      "indice": 26,
+      "nome": "Sergeant",
+      "pagina": 197,
+      "motivos": [
+        "_copy",
+        "sem_size",
+        "sem_type",
+        "sem_ac",
+        "sem_hp",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_int",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Guard",
+        "source": "MM"
+      }
+    },
+    {
+      "fonte": "tce",
+      "indice": 0,
+      "nome": "Aberrant Spirit",
+      "pagina": 109,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 1,
+      "nome": "Adult Red Dracolich",
+      "pagina": 137,
+      "motivos": [
+        "_copy",
+        "sem_size",
+        "sem_type",
+        "sem_ac",
+        "sem_hp",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_int",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Adult Red Dragon",
+        "source": "MM",
+        "_templates": [
+          {
+            "name": "Dracolich",
+            "source": "MM"
+          }
+        ]
+      }
+    },
+    {
+      "fonte": "tce",
+      "indice": 2,
+      "nome": "Beast of the Land",
+      "pagina": 61,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 3,
+      "nome": "Beast of the Sea",
+      "pagina": 61,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 4,
+      "nome": "Beast of the Sky",
+      "pagina": 61,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 5,
+      "nome": "Bestial Spirit",
+      "pagina": 109,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 6,
+      "nome": "Celestial Spirit",
+      "pagina": 110,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 7,
+      "nome": "Construct Spirit",
+      "pagina": 111,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 8,
+      "nome": "Dancing Item",
+      "pagina": 29,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 9,
+      "nome": "Elemental Spirit",
+      "pagina": 111,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 10,
+      "nome": "Fey Spirit",
+      "pagina": 112,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 11,
+      "nome": "Fiendish Spirit",
+      "pagina": 112,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 12,
+      "nome": "Homunculus Servant",
+      "pagina": 22,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 14,
+      "nome": "Mighty Servant of Leuk-o",
+      "pagina": 131,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 15,
+      "nome": "Reflection",
+      "pagina": 158,
+      "motivos": [
+        "_copy",
+        "sem_size",
+        "sem_ac",
+        "sem_hp",
+        "sem_speed",
+        "sem_str",
+        "sem_dex",
+        "sem_con",
+        "sem_int",
+        "sem_wis",
+        "sem_cha",
+        "sem_cr"
+      ],
+      "copy": {
+        "name": "Shadow",
+        "source": "MM",
+        "_mod": {
+          "*": {
+            "mode": "replaceTxt",
+            "replace": "shadow",
+            "with": "reflection"
+          }
+        }
+      }
+    },
+    {
+      "fonte": "tce",
+      "indice": 16,
+      "nome": "Shadow Spirit",
+      "pagina": 114,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 17,
+      "nome": "Steel Defender",
+      "pagina": 19,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 18,
+      "nome": "Undead Spirit",
+      "pagina": 114,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "tce",
+      "indice": 19,
+      "nome": "Wildfire Spirit",
+      "pagina": 40,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "efa",
+      "indice": 10,
+      "nome": "Homunculus Servant",
+      "pagina": 21,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    },
+    {
+      "fonte": "efa",
+      "indice": 19,
+      "nome": "Steel Defender",
+      "pagina": 19,
+      "motivos": [
+        "sem_cr"
+      ],
+      "copy": null
+    }
+  ],
+  "totais": {
+    "estruturados": 395,
+    "visiveis_pelo_filtro_atual": 367,
+    "copias_rejeitadas": 6,
+    "outros_rejeitados": 22,
+    "extras_pdf": 92,
+    "potencial_publicado_atual": 459
+  },
+  "extras_pdf": {
+    "total": 92,
+    "nomes": [
+      "Clockwork Wyvern",
+      "Accursed Feathered Ape",
+      "Garlycanthrope",
+      "Ship Mimic Offspring",
+      "Giant Moth",
+      "Anveleon",
+      "Caskadon",
+      "Oventurer",
+      "Dire Bunny",
+      "Swarm of Magnetite Cutlery",
+      "Flying Magnetite Weapon",
+      "Flying Magnetite Weapons",
+      "Arsenal of Flying Weapons",
+      "Swarm of Baby Mimics",
+      "Bonemonger Phalange",
+      "Bonemonger Ulna",
+      "Bonemonger Femur",
+      "Brain Devourer",
+      "Storm of Brain Devourers",
+      "Swarm of Brambleweeds",
+      "Thicket of Brambleweeds",
+      "Broodling",
+      "Swarm of Broodlings",
+      "Cherub",
+      "Swarm of Cherubim",
+      "Eclipse of Darkmantles",
+      "Death Shroud",
+      "Swarm of Death Shrouds",
+      "Black Dropling",
+      "Swarm of Black Droplings",
+      "Ochre Dropling",
+      "Swarm of Ochre Droplings",
+      "Swarm of Embers",
+      "Swarm of Droplets",
+      "Swarm of Sparks",
+      "Swarm of Pebbles",
+      "Rumble of Fulgurites",
+      "Swarm of Greyshade Stranglers",
+      "Greyshade Strangler",
+      "Pack of Housedrakes",
+      "Red Housedrake",
+      "Swarm of Skeletal Imps",
+      "Swarm of Imps",
+      "Swarm of Space Hamsters",
+      "Pitcrow",
+      "Murder of Pitcrows",
+      "Swarm of Pitcrows",
+      "Bristle of Spiketooths",
+      "Spiketooths",
+      "Swarm of Steel Darts",
+      "Swarm of Sun Jellies",
+      "Sun Jelly",
+      "Swarm of Sunsprites",
+      "Sunsprite",
+      "Swarm of Twilight Wasps",
+      "Twilight Wasp",
+      "Flight of Wyvnkin",
+      "Wyvnkin",
+      "Apostle of Blossoms",
+      "Journeyman Carpenter",
+      "Mead Brewmaster",
+      "Tavern Brawler",
+      "Brainmuncher",
+      "Caprisoul",
+      "Couatling",
+      "Slaghund",
+      "Tatzling",
+      "Breggan Blackcrown",
+      "Blackcrown Spellsword",
+      "Orlassk",
+      "Demonglass Goblin",
+      "Dolguul",
+      "Gantii'kaas",
+      "Demonglass Gargoyle",
+      "Quickstone Gargoyle",
+      "King Grayfinger",
+      "Merchant of Misthaven",
+      "Tol Kharash, the Horned King",
+      "Rhesh Turakbar",
+      "Steel Horse",
+      "Stoneborn Hobgoblin",
+      "Stone Listener",
+      "Stone Speaker",
+      "Tribex, Plains",
+      "Tribex, Riding",
+      "Tribex, War",
+      "Sentinel Marshal",
+      "Tharashk Hunter",
+      "Westwind Rider",
+      "Wandslinger",
+      "Ward Sweeper",
+      "Diorite, Voice of Orlassk"
+    ]
+  }
+}
