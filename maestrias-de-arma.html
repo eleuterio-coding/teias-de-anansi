@@ -9,33 +9,122 @@
   <title>Maestrias de Arma - Biblioteca - Teias de Anansi</title>
   <style>
     :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}
-    *{box-sizing:border-box} body{max-width:1120px;margin:auto;padding:24px;line-height:1.55} a{color:inherit}.muted{opacity:.74}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem}.controles{display:grid;grid-template-columns:1fr 220px;gap:10px;margin:18px 0}.controles input,.controles select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}.item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item summary:hover{background:var(--soft)}.corpo{padding:0 16px 16px}.mecanica{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin:14px 0}.campo{border:1px solid #8884;border-radius:8px;padding:9px 10px}.campo b,.campo span{display:block}.campo span{margin-top:2px}.armas{display:flex;flex-wrap:wrap;gap:7px;padding:0;list-style:none}.armas li{border:1px solid #8885;border-radius:999px;padding:4px 9px}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.78;display:flex;gap:8px 18px;flex-wrap:wrap}.licenca{font-size:.9rem;opacity:.8}.erro{padding:16px;border:1px solid #b55;border-radius:10px}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}}
+    *{box-sizing:border-box}body{max-width:1160px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.74}
+    .nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.warning{font-weight:650}
+    .badges,.meta,.chips{display:flex;gap:7px 14px;flex-wrap:wrap}.badge,.chip{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem}
+    .controles{display:grid;grid-template-columns:minmax(260px,1fr) 220px 220px;gap:10px;margin:18px 0}
+    input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
+    .item,.painel{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary,.painel summary{cursor:pointer;padding:14px 16px}.item summary{display:flex;justify-content:space-between;gap:12px;align-items:center}.item summary:hover,.painel summary:hover{background:var(--soft)}
+    .corpo{padding:0 16px 16px}.mecanica,.audit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin:14px 0}
+    .campo,.audit-card{border:1px solid #8884;border-radius:8px;padding:9px 10px}.campo b,.campo span{display:block}.campo span{margin-top:2px}
+    .sec{border-top:1px solid #8883;margin-top:14px;padding-top:12px}.meta{font-size:.9rem;opacity:.8}.origem-demo{border-style:dashed}.vazio{opacity:.7}
+    .variant{border-left:3px solid #8887;padding-left:12px;margin:10px 0}.resultado{margin:8px 0 14px;opacity:.75}.licenca{font-size:.9rem;opacity:.82}
+    @media(max-width:760px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}.badge{margin-top:6px}}
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1218">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1224">← Bibliotecas</a></p>
   <header>
     <h1>Maestrias de Arma</h1>
-    <p class="muted">Catálogo das propriedades de Maestria de Arma publicáveis integralmente no Hub.</p>
-    <div class="badges"><span class="badge">8 itens</span><span class="badge">5e/2014: 0</span><span class="badge">5.5e: 8</span><span class="badge">SRD 5.2.1 · CC-BY-4.0</span></div>
+    <p class="muted">Catálogo consolidado a partir de <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, mantendo uma entrada por propriedade de maestria única.</p>
+    <div class="badges"><span class="badge">15 maestrias únicas</span><span class="badge">8 oficiais</span><span class="badge">7 demonstrativas</span><span class="badge">2 PDFs auditados</span></div>
   </header>
 
-  <div class="nota"><strong>Critério editorial:</strong> este módulo contém as próprias propriedades de Maestria de Arma, não as armas que as utilizam. Só entram itens oficiais cuja regra completa esteja em fonte aberta com licença que permita republicação integral. Conteúdo apenas visível online, playtests, material demonstrativo e opções sem licença aberta ficam de fora.</div>
-  <div class="nota"><strong>Escopo por edição:</strong> as regras de 2014 (5e) não possuem Maestrias de Arma. O recurso foi acrescentado à revisão de 2024 e aparece no SRD 5.2.1, publicado em 2025, que representa o ruleset 5.5e.</div>
+  <div class="nota"><strong>Organização:</strong> as 8 propriedades oficiais continuam soberanas. Quando o material de terceiros usa o mesmo nome com uma regra modificada, essa versão aparece como <em>variante encontrada</em> dentro da maestria oficial, sem criar duplicata nem substituir a regra canônica.</div>
+  <div class="nota"><strong>Material demonstrativo:</strong> <em>Weapons, Masteries, and Properties</em> declara explicitamente ser uma amostra não final. Como a própria fonte restringe a reprodução das partes originais que não derivam do SRD, as 7 maestrias próprias são apresentadas aqui por <strong>resumo mecânico em paráfrase</strong> e marcadas como <strong>demonstrativas / não canônicas</strong>.</div>
 
   <div id="status" class="nota">Carregando catálogo...</div>
-  <div class="controles"><input id="busca" type="search" placeholder="Buscar maestria, efeito ou arma associada..."><select id="filtro"><option value="">Todas as maestrias</option></select></div>
-  <div id="resultado" class="muted"></div>
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar maestria, efeito, arma ou fonte...">
+    <select id="origem"><option value="">Todas as origens</option><option value="oficial_aberta">Oficial aberta</option><option value="terceiros_demo">Demonstrativa</option></select>
+    <select id="filtro"><option value="">Todas as maestrias</option></select>
+  </div>
+  <div id="resultado" class="resultado"></div>
   <main id="lista"></main>
-  <section class="nota licenca" id="licenca"></section>
+
+  <details class="painel">
+    <summary><strong>Aplicações opcionais que não criam nova maestria</strong></summary>
+    <div class="corpo" id="opcionais"></div>
+  </details>
+
+  <details class="painel" open>
+    <summary><strong>Auditoria dos dois PDFs</strong></summary>
+    <div class="corpo"><div class="audit-grid" id="auditoria"></div></div>
+  </details>
+
+  <section class="nota licenca" id="fontes"></section>
 
 <script>
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const labelCampo=k=>String(k).replaceAll('_',' ').replace(/\b\w/g,c=>c.toUpperCase());
 let DATA=null,ALL=[];
-function mecanica(x){const m=x.mecanica||{};return Object.entries(m).map(([k,v])=>`<div class="campo"><b>${esc(k.replaceAll('_',' '))}</b><span>${esc(v)}</span></div>`).join('')}
-function render(){const q=norm(document.getElementById('busca').value.trim()),f=document.getElementById('filtro').value;const rows=ALL.filter(x=>(!f||x.nome===f)&&(!q||norm([x.nome,x.conteudo?.descricao,Object.values(x.mecanica||{}).join(' '),(x.armas_srd||[]).join(' ')].join(' ')).includes(q)));document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} itens`;document.getElementById('lista').innerHTML=rows.map(x=>`<details class="item"><summary><strong>${esc(x.nome)}</strong><span class="badge">5.5e · SRD</span></summary><div class="corpo"><p>${esc(x.conteudo?.descricao)}</p><div class="mecanica">${mecanica(x)}</div><h3>Armas do SRD com esta maestria</h3><ul class="armas">${(x.armas_srd||[]).map(a=>`<li>${esc(a)}</li>`).join('')}</ul><div class="meta"><span><b>Tipo:</b> Maestrias de Arma</span><span><b>Livro/Fonte:</b> System Reference Document 5.2.1</span><span><b>Página:</b> ${esc(x.fonte?.pagina)}</span><span><b>Ruleset:</b> ${esc(x.fonte?.ruleset)}</span><span><b>Revisão core:</b> ${esc(x.fonte?.revisao_core)}</span></div></div></details>`).join('')||'<p class="nota">Nenhuma maestria corresponde aos filtros.</p>'}
-(async()=>{try{const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1218',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);DATA=await r.json();ALL=DATA.itens||[];if(ALL.length!==8)throw new Error(`catálogo incompleto: ${ALL.length}/8`);document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 8 propriedades oficiais de Maestria de Arma, todas provenientes do SRD 5.2.1 aberto sob CC-BY-4.0.';document.getElementById('licenca').innerHTML=`<strong>Atribuição da fonte:</strong> ${esc(DATA.licenca?.atribuicao||'')}`;render()}catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;document.getElementById('lista').innerHTML='<p class="erro">Não foi possível abrir o catálogo.</p>'}})();document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
+
+function descricao(x){return x.conteudo?.descricao || x.conteudo?.descricao_resumida || ''}
+function badge(x){return x.classificacao?.origem==='oficial_aberta'?'Oficial · 5.5e':'Demo · não canônico'}
+function armas(x){
+  const grupos=x.armas_associadas||{}, parts=[];
+  for(const [k,arr] of Object.entries(grupos)){
+    if(!arr?.length) continue;
+    const titulo=k==='srd_5_2_1'?'SRD 5.2.1':k.replaceAll('_',' ');
+    parts.push(`<div><strong>${esc(titulo)}:</strong><div class="chips">${arr.map(a=>`<span class="chip">${esc(a)}</span>`).join('')}</div></div>`);
+  }
+  return parts.join('') || '<p class="vazio">Nenhuma arma da amostra foi vinculada explicitamente a esta propriedade.</p>';
+}
+function variantes(x){
+  const vs=x.variantes_encontradas||[];
+  if(!vs.length) return '';
+  return `<div class="sec"><h3>Variante encontrada em pdf24_merged-1.pdf</h3>${vs.map(v=>`<div class="variant"><span class="badge">demonstrativa · não canônica</span><p>${esc(v.descricao_resumida)}</p><div class="meta"><span><b>Arquivo:</b> ${esc(v.arquivo)}</span><span><b>Página da fonte:</b> ${esc(v.pagina_fonte)}</span></div></div>`).join('')}</div>`;
+}
+function fonte(x){
+  const f=x.fonte||{};
+  return `<div class="meta"><span><b>Tipo:</b> Maestrias de Arma</span><span><b>Livro/Fonte:</b> ${esc(f.titulo)}</span>${f.arquivo?`<span><b>PDF:</b> ${esc(f.arquivo)}</span>`:''}${f.pagina||f.pagina_fonte?`<span><b>Página:</b> ${esc(f.pagina||f.pagina_fonte)}</span>`:''}<span><b>Status:</b> ${x.controle?.canonico?'canônico':'demonstrativo / não canonizar'}</span></div>`;
+}
+function render(){
+  const q=norm(document.getElementById('busca').value.trim()),o=document.getElementById('origem').value,f=document.getElementById('filtro').value;
+  const rows=ALL.filter(x=>{
+    const texto=norm([x.nome,descricao(x),Object.values(x.mecanica||{}).join(' '),JSON.stringify(x.armas_associadas||{}),x.fonte?.titulo,x.fonte?.arquivo,(x.variantes_encontradas||[]).map(v=>v.descricao_resumida).join(' ')].join(' '));
+    return(!o||x.classificacao?.origem===o)&&(!f||x.nome===f)&&(!q||texto.includes(q));
+  });
+  document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} maestrias`;
+  document.getElementById('lista').innerHTML=rows.map(x=>`
+    <details class="item ${x.classificacao?.origem==='terceiros_demo'?'origem-demo':''}">
+      <summary><strong>${esc(x.nome)}</strong><span class="badge">${esc(badge(x))}</span></summary>
+      <div class="corpo">
+        <p>${esc(descricao(x))}</p>
+        <div class="mecanica">${Object.entries(x.mecanica||{}).map(([k,v])=>`<div class="campo"><b>${esc(labelCampo(k))}</b><span>${esc(v)}</span></div>`).join('')}</div>
+        ${x.controle?.aviso?`<div class="nota warning">${esc(x.controle.aviso)}</div>`:''}
+        <div class="sec"><h3>Armas e aplicações encontradas</h3>${armas(x)}</div>
+        ${variantes(x)}
+        <div class="sec">${fonte(x)}</div>
+      </div>
+    </details>`).join('') || '<p class="nota">Nenhuma maestria corresponde aos filtros.</p>';
+}
+function renderOpcionais(){
+  const rows=DATA.aplicacoes_opcionais||[];
+  document.getElementById('opcionais').innerHTML=rows.map(x=>`<div class="campo"><b>${esc(x.nome)} → ${esc(x.maestria)}</b><span>${esc(x.condicao)}</span></div>`).join('');
+}
+function renderAuditoria(){
+  document.getElementById('auditoria').innerHTML=(DATA.auditoria_pdf||[]).map(x=>`<article class="audit-card"><strong>${esc(x.arquivo)}</strong><p>${esc(x.resultado)}</p></article>`).join('');
+}
+function renderFontes(){
+  const f=DATA.fontes||[];
+  document.getElementById('fontes').innerHTML='<strong>Fontes e direitos:</strong> '+f.map(x=>`${esc(x.titulo)}${x.licenca?` (${esc(x.licenca)})`:''}${x.status?` — ${esc(x.status)}`:''}`).join(' · ')+'. As regras próprias do material demonstrativo são resumidas em paráfrase; não são apresentadas como conteúdo oficial.';
+}
+(async()=>{
+  try{
+    const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1224',{cache:'no-store'});
+    if(!r.ok) throw new Error(`HTTP ${r.status}`);
+    DATA=await r.json();ALL=DATA.itens||[];
+    if(ALL.length!==15) throw new Error(`catálogo incompleto: ${ALL.length}/15`);
+    const oficiais=ALL.filter(x=>x.classificacao?.origem==='oficial_aberta').length;
+    const demos=ALL.filter(x=>x.classificacao?.origem==='terceiros_demo').length;
+    document.getElementById('status').innerHTML=`<strong>Publicado e verificado:</strong> ${ALL.length} maestrias únicas — ${oficiais} oficiais e ${demos} demonstrativas próprias. Variantes de mesmo nome permanecem anexadas às entradas oficiais.`;
+    document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');
+    renderOpcionais();renderAuditoria();renderFontes();render();
+  }catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;}
+})();
+['busca','origem','filtro'].forEach(id=>document.getElementById(id).addEventListener(id==='busca'?'input':'change',render));
 </script>
 </body>
 </html>
