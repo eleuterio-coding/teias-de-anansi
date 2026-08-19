@@ -1,0 +1,45 @@
+:root {
+  color-scheme: light !important;
+}
+
+html,
+body {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+body * {
+  color: #000000 !important;
+  background-color: transparent !important;
+}
+
+body *::before,
+body *::after {
+  color: #000000 !important;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+  color: #000000 !important;
+}
+
+input,
+select,
+textarea,
+button,
+option {
+  background: #ffffff !important;
+  color: #000000 !important;
+  color-scheme: light !important;
+}
+
+.muted,
+.resumo,
+.contagem,
+.original,
+.meta {
+  opacity: 1 !important;
+  color: #000000 !important;
+}
