@@ -1,10 +1,15 @@
 {
   "schema": "hub-rpg/importacao-pdfs/v1",
   "gerado_em": "2026-08-18",
-  "status": "publicado",
+  "republicado_em": "2026-08-19T10:03:00-03:00",
+  "status": "publicado_verificado",
   "regra_abertura": "ignorada por solicitação explícita do usuário",
   "regra_completude": "mantida",
   "regra_precedencia": "mantida; versões posteriores equivalentes prevalecem na visualização ativa",
+  "fontes_pdf": [
+    "pdf24_merged.pdf",
+    "pdf24_merged-1.pdf"
+  ],
   "fontes_estruturadas": [
     {
       "id": "mpmm",
@@ -68,5 +73,12 @@
   "classes_publicadas_dos_pdfs": [
     "Artificer 2025"
   ],
-  "classes_sidekick_publicadas": 0
+  "classes_sidekick_publicadas": 0,
+  "areas_separadas_de_classes": 0,
+  "artificer_integrado_ao_catalogo_padrao": true,
+  "verificacao": {
+    "classes": "13 classes padrão no módulo, incluindo Artificer 2025; Sidekicks removidos",
+    "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
+    "publicacao": "concluida"
+  }
 }
