@@ -14,6 +14,7 @@
     const params = new URLSearchParams(location.search);
     const modulo = params.get('modulo');
     const destinos = {
+      'Regras': 'regras.html?v=20260819-1236',
       'Classes': 'classes.html?v=20260819-1216',
       'Subclasses': 'subclasses.html?v=20260819-1216',
       'Espécies': 'especies.html?v=20260819-1216',
@@ -36,9 +37,9 @@
     } else if (modulo) {
       location.replace('biblioteca-legado.html' + location.search + location.hash);
     } else {
-      location.replace('bibliotecas.html?v=20260819-1216');
+      location.replace('bibliotecas.html?v=20260819-1236');
     }
   </script>
-  <noscript><a href="bibliotecas.html?v=20260819-1216">Abrir Bibliotecas</a></noscript>
+  <noscript><a href="bibliotecas.html?v=20260819-1236">Abrir Bibliotecas</a></noscript>
 </body>
 </html>
