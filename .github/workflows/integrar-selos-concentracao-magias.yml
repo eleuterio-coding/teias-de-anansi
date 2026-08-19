@@ -27,17 +27,25 @@ jobs:
         shell: bash
         run: |
           python <<'PY'
+          import os
+          import re
           from pathlib import Path
 
           path = Path('magias.html')
           html = path.read_text(encoding='utf-8')
           marker = 'data-concentracao-expandida-selos="1"'
-          tag = '<script src="scripts/concentracao-expandida-selos.js?v=20260819-1713" data-concentracao-expandida-selos="1"></script>'
-          if marker not in html:
+          version = os.environ.get('GITHUB_SHA', 'ce')[:12]
+          tag = f'<script src="scripts/concentracao-expandida-selos.js?v={version}" data-concentracao-expandida-selos="1"></script>'
+          pattern = r'<script src="scripts/concentracao-expandida-selos\.js\?v=[^"]+" data-concentracao-expandida-selos="1"></script>'
+
+          if re.search(pattern, html):
+              html = re.sub(pattern, tag, html, count=1)
+          else:
               if '</body>' not in html:
                   raise RuntimeError('Elemento </body> não encontrado em magias.html')
               html = html.replace('</body>', tag + '\n</body>', 1)
-              path.write_text(html, encoding='utf-8')
+
+          path.write_text(html, encoding='utf-8')
           PY
 
       - name: Publicar integração no repositório
@@ -47,7 +55,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add magias.html
           if git diff --cached --quiet; then
-            echo 'Integração já presente.'
+            echo 'Integração já está na versão atual.'
           else
             git commit -m 'Integra selos de Concentração Expandida ao módulo Magias'
             git push
