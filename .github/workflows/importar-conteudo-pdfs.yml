@@ -1,0 +1,124 @@
+name: Importar conteúdo completo dos PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/importar-conteudo-pdfs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  importar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Materializar bestiários presentes nos PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dados/monstros-fontes
+          BASE='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data/bestiary'
+          curl -fsSL "$BASE/bestiary-mpmm.json"  -o dados/monstros-fontes/mpmm.json
+          curl -fsSL "$BASE/bestiary-fraif.json" -o dados/monstros-fontes/fraif.json
+          curl -fsSL "$BASE/bestiary-erlw.json"  -o dados/monstros-fontes/erlw.json
+          curl -fsSL "$BASE/bestiary-tce.json"   -o dados/monstros-fontes/tce.json
+          curl -fsSL "$BASE/bestiary-efa.json"   -o dados/monstros-fontes/efa.json
+          curl -fsSL "$BASE/bestiary-xdmg.json"  -o dados/monstros-fontes/xdmg.json
+          curl -fsSL "$BASE/bestiary-xge.json"   -o dados/monstros-fontes/xge.json
+
+      - name: Materializar monstros exclusivos extraídos diretamente dos PDFs
+        run: |
+          python - <<'PY'
+          import base64, gzip, json
+          from pathlib import Path
+          parts=[]
+          for i in range(1,6):
+              p=Path(f'dados/monstros-pdf-extras.part{i}.b64')
+              if not p.exists(): raise SystemExit(f'Parte ausente: {p}')
+              parts.append(p.read_text(encoding='utf-8').strip())
+          raw=gzip.decompress(base64.b64decode(''.join(parts))).decode('utf-8')
+          data=json.loads(raw)
+          if len(data.get('items',[])) != 92:
+              raise SystemExit(f"Esperados 92 monstros extras; encontrados {len(data.get('items',[]))}")
+          Path('dados/monstros-pdf-extras.json').write_text(json.dumps(data, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          PY
+
+      - name: Consolidar Artificer 2025 e remover Sidekicks
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path('dados/classes-pdf24-merged-1.json')
+          data=json.loads(src.read_text(encoding='utf-8'))
+          players=[x for x in data.get('classes',[]) if x.get('subtipo')=='classe-de-personagem']
+          if len(players)!=1 or players[0].get('nome')!='Artificer':
+              raise SystemExit('Artificer 2025 completo não localizado de forma inequívoca')
+          art=players[0]
+          out={
+              'schema':'hub-rpg/classes/v1',
+              'status':'publicado',
+              'origem_pdf':'pdf24_merged-1.pdf',
+              'classe':art,
+              'controle':{
+                  'completo':True,
+                  'sidekicks_publicados':0,
+                  'versoes_anteriores_suprimidas':['Artificer 2019 — Eberron: Rising from the Last War','Artificer 2020 — Tasha’s Cauldron of Everything']
+              }
+          }
+          Path('dados/artificer-2025.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          rm -f classes-pdf24.html classes-pdf24-merged-1.html
+          rm -f dados/classes-pdf24-merged-1.json dados/classes-pdf24-merged-auditoria.json
+
+      - name: Gerar manifesto da importação
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          sources={
+            'mpmm':('Mordenkainen Presents: Monsters of the Multiverse',2022,'pdf24_merged-1.pdf'),
+            'fraif':('Forgotten Realms: Adventures in Faerûn',2025,'pdf24_merged-1.pdf'),
+            'erlw':('Eberron: Rising from the Last War',2019,'pdf24_merged-1.pdf'),
+            'tce':("Tasha's Cauldron of Everything",2020,'pdf24_merged-1.pdf'),
+            'efa':('Eberron: Forge of the Artificer',2025,'pdf24_merged-1.pdf'),
+            'xdmg':("Dungeon Master's Guide (2024)",2024,'pdf24_merged.pdf'),
+            'xge':("Xanathar's Guide to Everything",2017,'pdf24_merged.pdf'),
+          }
+          rows=[]
+          total=0
+          for key,(title,year,pdf) in sources.items():
+              d=json.loads(Path(f'dados/monstros-fontes/{key}.json').read_text(encoding='utf-8'))
+              n=len(d.get('monster',[]))
+              if not n: raise SystemExit(f'Nenhum monstro em {key}')
+              total+=n
+              rows.append({'id':key,'titulo':title,'ano':year,'pdf':pdf,'registros':n,'arquivo':f'dados/monstros-fontes/{key}.json'})
+          extras=json.loads(Path('dados/monstros-pdf-extras.json').read_text(encoding='utf-8'))
+          extra_n=len(extras['items'])
+          manifest={
+            'schema':'hub-rpg/importacao-pdfs/v1',
+            'gerado_em':'2026-08-18',
+            'status':'publicado',
+            'regra_abertura':'ignorada por solicitação explícita do usuário',
+            'regra_completude':'mantida',
+            'regra_precedencia':'mantida; versões posteriores equivalentes prevalecem na visualização ativa',
+            'fontes_estruturadas':rows,
+            'registros_estruturados_brutos':total,
+            'monstros_extras_extraidos_diretamente_dos_pdfs':extra_n,
+            'classes_publicadas_dos_pdfs':['Artificer 2025'],
+            'classes_sidekick_publicadas':0
+          }
+          Path('dados/importacao-pdfs-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print(json.dumps(manifest,ensure_ascii=False,indent=2))
+          PY
+
+      - name: Publicar arquivos materializados
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materializa monstros dos dois PDFs e integra Artificer às classes padrão'
+          git pull --rebase origin main
+          git push
