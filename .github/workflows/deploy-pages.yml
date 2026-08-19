@@ -122,7 +122,7 @@ jobs:
         run: |
           python <<'PY'
           from pathlib import Path
-          tag = '<link rel="stylesheet" href="site-light.css?v=20260819-1625">'
+          tag = '<link rel="stylesheet" href="site-light.css?v=20260819-1841">'
           for path in Path('.').rglob('*.html'):
               html = path.read_text(encoding='utf-8')
               if tag not in html:
