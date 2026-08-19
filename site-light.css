@@ -52,18 +52,18 @@ button:active {
 
 /*
  * Biblioteca: os módulos abrem direto no conteúdo mecânico.
- * O escopo abaixo só alcança páginas cujo primeiro link volta para
- * bibliotecas.html, preservando a própria página de Bibliotecas.
+ * Remove do topo resumos, badges, notas editoriais, corpus, precedência,
+ * publicação/verificação e demais avisos introdutórios.
  */
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > header > p,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > header > .badge,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > header > .badges,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > .top > header > p,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > .top > .badges,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > .top > div:first-child > p,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badge,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badges,
-body:has(> p:first-child > a[href^="bibliotecas.html"]) > :is(.nota, .note, .aviso, .warning, #status, #precedencia):has(~ :is(.controles, .controls, .layout, .grid, main, #lista)) {
+body:has(a[href^="bibliotecas.html"]) > header > p,
+body:has(a[href^="bibliotecas.html"]) > header > .badge,
+body:has(a[href^="bibliotecas.html"]) > header > .badges,
+body:has(a[href^="bibliotecas.html"]) > .top > header > p,
+body:has(a[href^="bibliotecas.html"]) > .top > .badges,
+body:has(a[href^="bibliotecas.html"]) > .top > div:first-child > p,
+body:has(a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badge,
+body:has(a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badges,
+body:has(a[href^="bibliotecas.html"]) > :is(.nota, .note, .aviso, .warning, .warn, #status, #precedencia):has(~ :is(.controles, .controls, .tools, .layout, .grid, main, #lista)) {
   display: none !important;
 }
 
