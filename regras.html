@@ -19,18 +19,19 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1517">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1530">← Bibliotecas</a></p>
   <header>
     <h1>Regras</h1>
-    <p class="muted">Definições mecânicas do Rules Glossary das Basic Rules 2024 e regras da casa do Hub.</p>
-    <div class="badges"><span class="badge">156 itens</span><span class="badge">155 oficiais + 1 regra da casa</span><span class="badge">D&D 2024 / 5.5e + Hub</span></div>
+    <p class="muted">Definições mecânicas do Rules Glossary das Basic Rules 2024 e Regras da Casa.</p>
+    <div class="badges"><span class="badge">156 itens</span><span class="badge">155 oficiais + 1 Regra da Casa</span><span class="badge">D&D 2024 / 5.5e + Regras da Casa</span></div>
   </header>
 
-  <div class="nota"><strong>Escopo atual:</strong> este catálogo preserva as 155 entradas da seção <em>Rules Definitions</em> do D&D Beyond Basic Rules 2024 e acrescenta regras da casa do Hub sem alterar o conjunto oficial armazenado.</div>
-  <div class="nota"><strong>Organização:</strong> as marcações de família do glossário foram preservadas como filtros: Ação, Área de Efeito, Atitude, Condição e Perigo. As demais entradas aparecem como Regra Geral. Os textos em português são paráfrases editoriais; o nome original em inglês permanece visível para conferência. Regras da casa exibem sua própria origem no rodapé do item.</div>
+  <div class="nota"><strong>Escopo atual:</strong> este catálogo preserva as 155 entradas da seção <em>Rules Definitions</em> do D&D Beyond Basic Rules 2024 e acrescenta Regras da Casa sem alterar o conjunto oficial armazenado.</div>
+  <div class="nota"><strong>Organização:</strong> as marcações de família do glossário foram preservadas como filtros: Regra Geral, Ação, Área de Efeito, Atitude, Condição e Perigo. Regras da Casa possuem família própria. Os textos em português são paráfrases editoriais; o nome original em inglês permanece visível para conferência.</div>
+  <div id="precedencia" class="nota"><strong>Precedência:</strong> carregando regra de precedência...</div>
 
   <div id="status" class="nota">Carregando catálogo...</div>
-  <div class="controles"><input id="busca" type="search" placeholder="Buscar regra, termo original ou descrição..."><select id="filtro"><option value="">Todas as famílias</option></select></div>
+  <div class="controles"><input id="busca" type="search" placeholder="Buscar regra, termo original ou descrição..."><select id="filtro"><option value="">Todas</option></select></div>
   <div id="resultado" class="muted"></div>
   <main id="lista"></main>
 
@@ -50,13 +51,13 @@ function render(){
 }
 (async()=>{
   try{
-    const urls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=20260819-1517`);
+    const urls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=20260819-1530`);
     const [rs,hubResponse]=await Promise.all([
       Promise.all(urls.map(u=>fetch(u,{cache:'no-store'}))),
-      fetch('dados/regras-hub.json?v=20260819-1517',{cache:'no-store'})
+      fetch('dados/regras-hub.json?v=20260819-1530',{cache:'no-store'})
     ]);
     const bad=rs.find(r=>!r.ok);if(bad)throw new Error(`HTTP ${bad.status}`);
-    if(!hubResponse.ok)throw new Error(`HTTP ${hubResponse.status} ao carregar regras do Hub`);
+    if(!hubResponse.ok)throw new Error(`HTTP ${hubResponse.status} ao carregar Regras da Casa`);
     const text=(await Promise.all(rs.map(r=>r.text()))).join('');
     DATA=JSON.parse(text);
     const HUB=await hubResponse.json();
@@ -77,8 +78,10 @@ function render(){
     }
 
     if(ALL.length!==156)throw new Error(`catálogo incompleto: ${ALL.length}/156`);
-    document.getElementById('filtro').innerHTML='<option value="">Todas as famílias</option>'+DATA.familias.map(f=>`<option>${esc(f)}</option>`).join('');
-    document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 155 definições oficiais + 1 regra da casa carregadas.';
+    const familias=['Regra Geral','Regra da Casa',...DATA.familias.filter(f=>f!=='Regra Geral'&&f!=='Regra da Casa')];
+    document.getElementById('filtro').innerHTML='<option value="">Todas</option>'+familias.map(f=>`<option>${esc(f)}</option>`).join('');
+    document.getElementById('precedencia').innerHTML=`<strong>Precedência:</strong> ${esc(HUB.precedencia||'Regras da Casa prevalecem sobre Regras Gerais, salvo indicação em contrário.')}`;
+    document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 155 definições oficiais + 1 Regra da Casa carregadas.';
     render();
   }catch(e){
     document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;
