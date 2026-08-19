@@ -3,16 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personagens</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Personagens - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    html, body { background: #ffffff; color: #000000; }
+    body { max-width: 920px; margin: 0 auto; padding: 24px; line-height: 1.5; }
+    a, a:visited, a:hover, a:active { color: #000000; }
+    .resumo { opacity: .76; }
+    .modulos { list-style: none; padding: 0; counter-reset: modulo; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+    .modulos li { counter-increment: modulo; border: 1px solid #8885; border-radius: 10px; overflow: hidden; background: #ffffff; color: #000000; }
+    .modulos a { display: flex; justify-content: space-between; gap: 12px; padding: 13px 14px; text-decoration: none; background: #ffffff; color: #000000; }
+    .modulos a:hover { background: #f5f5f5; }
+    .nome::before { content: counter(modulo) ". "; }
+    .contagem { opacity: .62; font-size: .86rem; white-space: nowrap; }
+    @media (max-width: 600px) { body { padding: 16px; } }
+  </style>
 </head>
 <body>
+  <p><a href="index.html?v=20260819-1505">← Início</a></p>
   <h1>Personagens</h1>
+  <p class="resumo">Gerencie e crie personagens do Hub.</p>
 
-  <ul>
-    <li><a href="lista-personagens.html">Lista de Personagens</a></li>
-    <li><a href="criacao-personagem.html">Criação de Personagem</a></li>
-  </ul>
-
-  <p><a href="index.html">Voltar</a></p>
+  <ol class="modulos">
+    <li><a href="lista-personagens.html?v=20260819-1505"><span class="nome">Lista de Personagens</span><span class="contagem">ver personagens</span></a></li>
+    <li><a href="criacao-personagem.html?v=20260819-1505"><span class="nome">Criação de Personagem</span><span class="contagem">criar personagem</span></a></li>
+  </ol>
 </body>
 </html>
