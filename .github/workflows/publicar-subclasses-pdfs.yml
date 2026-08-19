@@ -1,0 +1,254 @@
+name: Publicar subclasses dos PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publicar-subclasses-pdfs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Consolidar e publicar 119 subclasses
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, html, json, re
+          from pathlib import Path
+
+          groups = json.loads(base64.b64decode("W3sibm9tZSI6IlN1YmNsYXNzZXMgYsOhc2ljYXMgMjAyNCIsImZvbnRlX2lkIjoicGhiLTIwMjQiLCJmb250ZSI6IlBsYXllcidzIEhhbmRib29rICgyMDI0KSIsImFubyI6MjAyNCwibmF0dXJlemEiOiJvZmljaWFsIiwic3RhdHVzIjoidmlnZW50ZV9tYWlzX3JlY2VudGUiLCJlZGljYW8iOiI1LjVlIC8gcmVncmFzIDIwMjQiLCJwZGYiOiJwZGYyNF9tZXJnZWQucGRmIiwicGFnaW5hcyI6WzQ4LDE3NV0sImNvbnRldWRvIjp7IkJhcmJhcmlhbiI6WyJQYXRoIG9mIHRoZSBCZXJzZXJrZXIiLCJQYXRoIG9mIHRoZSBXaWxkIEhlYXJ0IiwiUGF0aCBvZiB0aGUgV29ybGQgVHJlZSIsIlBhdGggb2YgdGhlIFplYWxvdCJdLCJCYXJkIjpbIkNvbGxlZ2Ugb2YgRGFuY2UiLCJDb2xsZWdlIG9mIEdsYW1vdXIiLCJDb2xsZWdlIG9mIExvcmUiLCJDb2xsZWdlIG9mIFZhbG9yIl0sIkNsZXJpYyI6WyJMaWZlIERvbWFpbiIsIkxpZ2h0IERvbWFpbiIsIlRyaWNrZXJ5IERvbWFpbiIsIldhciBEb21haW4iXSwiRHJ1aWQiOlsiQ2lyY2xlIG9mIHRoZSBMYW5kIiwiQ2lyY2xlIG9mIHRoZSBNb29uIiwiQ2lyY2xlIG9mIHRoZSBTZWEiLCJDaXJjbGUgb2YgdGhlIFN0YXJzIl0sIkZpZ2h0ZXIiOlsiQmF0dGxlIE1hc3RlciIsIkNoYW1waW9uIiwiRWxkcml0Y2ggS25pZ2h0IiwiUHNpIFdhcnJpb3IiXSwiTW9uayI6WyJXYXJyaW9yIG9mIE1lcmN5IiwiV2FycmlvciBvZiBTaGFkb3ciLCJXYXJyaW9yIG9mIHRoZSBFbGVtZW50cyIsIldhcnJpb3Igb2YgdGhlIE9wZW4gSGFuZCJdLCJQYWxhZGluIjpbIk9hdGggb2YgRGV2b3Rpb24iLCJPYXRoIG9mIEdsb3J5IiwiT2F0aCBvZiB0aGUgQW5jaWVudHMiLCJPYXRoIG9mIFZlbmdlYW5jZSJdLCJSYW5nZXIiOlsiQmVhc3QgTWFzdGVyIiwiRmV5IFdhbmRlcmVyIiwiR2xvb20gU3RhbGtlciIsIkh1bnRlciJdLCJSb2d1ZSI6WyJBcmNhbmUgVHJpY2tzdGVyIiwiQXNzYXNzaW4iLCJTb3Vsa25pZmUiLCJUaGllZiJdLCJTb3JjZXJlciI6WyJBYmVycmFudCBTb3JjZXJ5IiwiQ2xvY2t3b3JrIFNvcmNlcnkiLCJEcmFjb25pYyBTb3JjZXJ5IiwiV2lsZCBNYWdpYyBTb3JjZXJ5Il0sIldhcmxvY2siOlsiQXJjaGZleSBQYXRyb24iLCJDZWxlc3RpYWwgUGF0cm9uIiwiRmllbmQgUGF0cm9uIiwiR3JlYXQgT2xkIE9uZSBQYXRyb24iXSwiV2l6YXJkIjpbIkFianVyZXIiLCJEaXZpbmVyIiwiRXZva2VyIiwiSWxsdXNpb25pc3QiXX0sImRlc2NyaWNhbyI6IlN1YmNsYXNzZSBkZSB7Y2xhc3NlfSBkYSByZXZpc8OjbyBkZSAyMDI0LiBFc3RhIHZlcnPDo28gw6kgYSByZWZlcsOqbmNpYSBhdGl2YSBkbyBjYXTDoWxvZ28gcXVhbmRvIGjDoSB1bWEgdmVyc8OjbyBhbnRlcmlvciBlcXVpdmFsZW50ZS4ifSx7Im5vbWUiOiJTdWJjbGFzc2VzIGRlIEFydGlmaWNlciAyMDI1IiwiZm9udGVfaWQiOiJlYmVycm9uLWZvcmdlLTIwMjUiLCJmb250ZSI6IkViZXJyb246IEZvcmdlIG9mIHRoZSBBcnRpZmljZXIiLCJhbm8iOjIwMjUsIm5hdHVyZXphIjoib2ZpY2lhbCIsInN0YXR1cyI6InZpZ2VudGVfbWFpc19yZWNlbnRlIiwiZWRpY2FvIjoiNS41ZSAvIHJldmlzw6NvIDIwMjUiLCJwZGYiOiJwZGYyNF9tZXJnZWQtMS5wZGYiLCJwYWdpbmFzIjpbMTIsMjBdLCJjb250ZXVkbyI6eyJBcnRpZmljZXIiOlsiQWxjaGVtaXN0IiwiQXJtb3JlciIsIkFydGlsbGVyaXN0IiwiQmF0dGxlIFNtaXRoIiwiQ2FydG9ncmFwaGVyIl19LCJkZXNjcmljYW8iOiJFc3BlY2lhbGl6YcOnw6NvIGRlIHtjbGFzc2V9IGRhIHJldmlzw6NvIGRlIDIwMjUgcHVibGljYWRhIGVtIEViZXJyb246IEZvcmdlIG9mIHRoZSBBcnRpZmljZXIsIHF1ZSBwcmV2YWxlY2Ugc29icmUgdmVyc8O1ZXMgYW50ZXJpb3JlcyBlcXVpdmFsZW50ZXMuIn0seyJub21lIjoiU3ViY2xhc3NlcyBkYSBGcm9udGVpcmEgT2NpZGVudGFsIiwiZm9udGVfaWQiOiJxdWlja3N0b25lLTIwMjQiLCJmb250ZSI6IkZyb250aWVycyBvZiBFYmVycm9uOiBRdWlja3N0b25lIiwiYW5vIjoyMDI0LCJuYXR1cmV6YSI6InRlcmNlaXJvcyIsInN0YXR1cyI6ImNvbXBsZW1lbnRhciIsImVkaWNhbyI6IjVlIC8gMjAyNCIsInBkZiI6InBkZjI0X21lcmdlZC0xLnBkZiIsInBhZ2luYXMiOlsxNDcsMTU1XSwiY29udGV1ZG8iOnsiQmFyYmFyaWFuIjpbIlBhdGggb2YgdGhlIERlbW9uc2hhcmQiXSwiQmFyZCI6WyJDb2xsZWdlIG9mIFdhbmRzIl0sIkNsZXJpYyI6WyJDb21tZXJjZSBEb21haW4iXSwiUmFuZ2VyIjpbIkJsb29kaG91bmQiXSwiU29yY2VyZXIiOlsiTmVtZXNpcyBTb3JjZXJ5Il0sIldhcmxvY2siOlsiU3RvbmUgU292ZXJlaWduIFBhdHJvbiJdfSwiZGVzY3JpY2FvIjoiT3DDp8OjbyBkZSB7Y2xhc3NlfSBhcHJlc2VudGFkYSBlbSBGcm9udGllcnMgb2YgRWJlcnJvbjogUXVpY2tzdG9uZSBlIG1hbnRpZGEgY29tbyB2YXJpYW50ZSBwcsOzcHJpYSBkYSBGcm9udGVpcmEgT2NpZGVudGFsIGRlIEViZXJyb24uIn0seyJub21lIjoiU3ViY2xhc3NlcyBkZSBIZXJvZXMgb2YgRmFlcsO7biIsImZvbnRlX2lkIjoiZnItaGVyb2VzLTIwMjUiLCJmb250ZSI6IkZvcmdvdHRlbiBSZWFsbXM6IEhlcm9lcyBvZiBGYWVyw7tuIiwiYW5vIjoyMDI1LCJuYXR1cmV6YSI6Im9maWNpYWwiLCJzdGF0dXMiOiJtYW50ZXIiLCJlZGljYW8iOiI1LjVlIC8gcmVncmFzIDIwMjQiLCJwZGYiOiJwZGYyNF9tZXJnZWQtMS5wZGYiLCJwYWdpbmFzIjpbMTYsMjZdLCJjb250ZXVkbyI6eyJCYXJkIjpbIkNvbGxlZ2Ugb2YgdGhlIE1vb24iXSwiQ2xlcmljIjpbIktub3dsZWRnZSBEb21haW4iXSwiRmlnaHRlciI6WyJCYW5uZXJldCJdLCJQYWxhZGluIjpbIk9hdGggb2YgdGhlIE5vYmxlIEdlbmllcyJdLCJSYW5nZXIiOlsiV2ludGVyIFdhbGtlciJdLCJSb2d1ZSI6WyJTY2lvbiBvZiB0aGUgVGhyZWUiXSwiU29yY2VyZXIiOlsiU3BlbGxmaXJlIFNvcmNlcnkiXSwiV2l6YXJkIjpbIkJsYWRlc2luZ2VyIl19LCJkZXNjcmljYW8iOiJTdWJjbGFzc2UgZGUge2NsYXNzZX0gcHVibGljYWRhIGVtIEZvcmdvdHRlbiBSZWFsbXM6IEhlcm9lcyBvZiBGYWVyw7tuLCBwcmVzZXJ2YWRhIGNvbW8gb3DDp8OjbyBwcsOzcHJpYSBkb3MgUmVpbm9zIEVzcXVlY2lkb3MuIn0seyJub21lIjoiU3ViY2xhc3NlcyBleGNsdXNpdmFzIGRlIFRhc2hhIG7Do28gcmVpbXByZXNzYXMgZW0gMjAyNCIsImZvbnRlX2lkIjoidGFzaGEtMjAyMCIsImZvbnRlIjoiVGFzaGHigJlzIENhdWxkcm9uIG9mIEV2ZXJ5dGhpbmciLCJhbm8iOjIwMjAsIm5hdHVyZXphIjoib2ZpY2lhbCIsInN0YXR1cyI6ImxlZ2Fkb19jb21fY29udGV1ZG9fdW5pY28iLCJlZGljYW8iOiI1ZSAvIDIwMjAiLCJwZGYiOiJwZGYyNF9tZXJnZWQucGRmIiwicGFnaW5hcyI6WzI0LDc4XSwiY29udGV1ZG8iOnsiQmFyYmFyaWFuIjpbIlBhdGggb2YgdGhlIEJlYXN0IiwiUGF0aCBvZiBXaWxkIE1hZ2ljIl0sIkJhcmQiOlsiQ29sbGVnZSBvZiBDcmVhdGlvbiIsIkNvbGxlZ2Ugb2YgRWxvcXVlbmNlIl0sIkNsZXJpYyI6WyJPcmRlciBEb21haW4iLCJQZWFjZSBEb21haW4iLCJUd2lsaWdodCBEb21haW4iXSwiRHJ1aWQiOlsiQ2lyY2xlIG9mIFNwb3JlcyIsIkNpcmNsZSBvZiBXaWxkZmlyZSJdLCJGaWdodGVyIjpbIlJ1bmUgS25pZ2h0Il0sIk1vbmsiOlsiV2F5IG9mIHRoZSBBc3RyYWwgU2VsZiJdLCJQYWxhZGluIjpbIk9hdGggb2YgdGhlIFdhdGNoZXJzIl0sIlJhbmdlciI6WyJTd2FybWtlZXBlciJdLCJSb2d1ZSI6WyJQaGFudG9tIl0sIldhcmxvY2siOlsiVGhlIEZhdGhvbWxlc3MiLCJUaGUgR2VuaWUiXSwiV2l6YXJkIjpbIkJsYWRlc2luZ2luZyIsIk9yZGVyIG9mIFNjcmliZXMiXX0sImRlc2NyaWNhbyI6IlN1YmNsYXNzZSBkZSB7Y2xhc3NlfSBkZSBUYXNoYeKAmXMgQ2F1bGRyb24gb2YgRXZlcnl0aGluZyBtYW50aWRhIG5vIGNhdMOhbG9nbyBwb3JxdWUgbsOjbyBmb2kgc3Vic3RpdHXDrWRhIHBvciB1bWEgcmVpbXByZXNzw6NvIGVxdWl2YWxlbnRlIG5vIFBsYXllcuKAmXMgSGFuZGJvb2sgZGUgMjAyNC4ifSx7Im5vbWUiOiJTdWJjbGFzc2VzIGV4Y2x1c2l2YXMgZGUgWGFuYXRoYXIgbsOjbyByZWltcHJlc3NhcyBlbSAyMDI0IiwiZm9udGVfaWQiOiJ4YW5hdGhhci0yMDE3IiwiZm9udGUiOiJYYW5hdGhhcuKAmXMgR3VpZGUgdG8gRXZlcnl0aGluZyIsImFubyI6MjAxNywibmF0dXJlemEiOiJvZmljaWFsIiwic3RhdHVzIjoibGVnYWRvX2NvbV9jb250ZXVkb191bmljbyIsImVkaWNhbyI6IjVlIC8gMjAxNyIsInBkZiI6InBkZjI0X21lcmdlZC5wZGYiLCJwYWdpbmFzIjpbOCw1OV0sImNvbnRldWRvIjp7IkJhcmJhcmlhbiI6WyJQYXRoIG9mIHRoZSBBbmNlc3RyYWwgR3VhcmRpYW4iLCJQYXRoIG9mIHRoZSBTdG9ybSBIZXJhbGQiXSwiQmFyZCI6WyJDb2xsZWdlIG9mIFN3b3JkcyIsIkNvbGxlZ2Ugb2YgV2hpc3BlcnMiXSwiQ2xlcmljIjpbIkZvcmdlIERvbWFpbiIsIkdyYXZlIERvbWFpbiJdLCJEcnVpZCI6WyJDaXJjbGUgb2YgRHJlYW1zIiwiQ2lyY2xlIG9mIHRoZSBTaGVwaGVyZCJdLCJGaWdodGVyIjpbIkFyY2FuZSBBcmNoZXIiLCJDYXZhbGllciIsIlNhbXVyYWkiXSwiTW9uayI6WyJXYXkgb2YgdGhlIERydW5rZW4gTWFzdGVyIiwiV2F5IG9mIHRoZSBLZW5zZWkiLCJXYXkgb2YgdGhlIFN1biBTb3VsIl0sIlBhbGFkaW4iOlsiT2F0aCBvZiBDb25xdWVzdCIsIk9hdGggb2YgUmVkZW1wdGlvbiJdLCJSYW5nZXIiOlsiSG9yaXpvbiBXYWxrZXIiLCJNb25zdGVyIFNsYXllciJdLCJSb2d1ZSI6WyJJbnF1aXNpdGl2ZSIsIk1hc3Rlcm1pbmQiLCJTY291dCIsIlN3YXNoYnVja2xlciJdLCJTb3JjZXJlciI6WyJEaXZpbmUgU291bCIsIlNoYWRvdyBNYWdpYyIsIlN0b3JtIFNvcmNlcnkiXSwiV2FybG9jayI6WyJUaGUgSGV4YmxhZGUiXSwiV2l6YXJkIjpbIldhciBNYWdpYyJdfSwiZGVzY3JpY2FvIjoiU3ViY2xhc3NlIGRlIHtjbGFzc2V9IGRlIFhhbmF0aGFy4oCZcyBHdWlkZSB0byBFdmVyeXRoaW5nIG1hbnRpZGEgbm8gY2F0w6Fsb2dvIHBvcnF1ZSBuw6NvIGZvaSBzdWJzdGl0dcOtZGEgcG9yIHVtYSByZWltcHJlc3PDo28gZXF1aXZhbGVudGUgbm8gUGxheWVy4oCZcyBIYW5kYm9vayBkZSAyMDI0LiJ9LHsibm9tZSI6IlN1YmNsYXNzZXMgZGUgTOKAmUFyc8OobmUiLCJmb250ZV9pZCI6ImxhcnNlbmUtbGVkZ2VyLTIwMjQiLCJmb250ZSI6IkzigJlBcnPDqG5l4oCZcyBMZWRnZXIgb2YgVHJlYXN1cmUgYW5kIFRyaW5rZXRzIiwiYW5vIjoyMDI0LCJuYXR1cmV6YSI6InRlcmNlaXJvcyIsInN0YXR1cyI6ImNvbXBsZW1lbnRhciIsImVkaWNhbyI6IjVlIC8gdGVyY2Vpcm9zIiwicGRmIjoicGRmMjRfbWVyZ2VkLnBkZiIsInBhZ2luYXMiOlsyODUsMzAyXSwiY29udGV1ZG8iOnsiQmFyYmFyaWFuIjpbIlBhdGggb2YgdGhlIEJyZXdtYXN0ZXIiXSwiQmFyZCI6WyJDb2xsZWdlIG9mIE1peG9sb2d5Il0sIkNsZXJpYyI6WyJGZXN0aXZpdHkgRG9tYWluIl0sIkZpZ2h0ZXIiOlsiVGF2ZXJuIEJyYXdsZXIiXSwiTW9uayI6WyJXYXkgb2YgdGhlIEFydGlzYW4iXSwiUm9ndWUiOlsiQ2hhcmxhdGFuIl0sIlRhbWVyIjpbIlN3YXJtc2xpbmdlciJdfSwiZGVzY3JpY2FvIjoiT3DDp8OjbyBkZSB7Y2xhc3NlfSBkZSBM4oCZQXJzw6huZeKAmXMgTGVkZ2VyIG9mIFRyZWFzdXJlIGFuZCBUcmlua2V0cywgcHJlc2VydmFkYSBjb21vIGNvbnRlw7pkbyBkZSB0ZXJjZWlyb3MgbWVjYW5pY2FtZW50ZSBkaXN0aW50by4ifV0=").decode("utf-8"))
+          records = []
+          for group in groups:
+              for classe, nomes in group["conteudo"].items():
+                  for nome in nomes:
+                      records.append({
+                          "nome": nome,
+                          "classe": classe,
+                          "grupo": group["nome"],
+                          "fonte_id": group["fonte_id"],
+                          "fonte": group["fonte"],
+                          "ano": group["ano"],
+                          "natureza": group["natureza"],
+                          "status": group["status"],
+                          "edicao": group["edicao"],
+                          "origem_pdf": group["pdf"],
+                          "paginas_pdf_fonte": group["paginas"],
+                          "descricao": group["descricao"].format(classe=classe),
+                      })
+
+          if len(records) != 119:
+              raise SystemExit(f"Esperadas 119 subclasses; encontradas {len(records)}")
+          identities = [(r["nome"], r["classe"]) for r in records]
+          if len(set(identities)) != 119:
+              raise SystemExit("Há identidades duplicadas no catálogo consolidado")
+
+          page_path = Path("subclasses.html")
+          page = page_path.read_text(encoding="utf-8")
+
+          blocks = re.findall(
+              r'<details class="subclasse" data-classe="[^"]+">.*?</details>',
+              page,
+              flags=re.S,
+          )
+          existing = {}
+          for block in blocks:
+              match = re.search(
+                  r'<summary><strong>\s*(.*?)\s*<span class="tag">',
+                  block,
+                  flags=re.S,
+              )
+              if match:
+                  name = html.unescape(re.sub(r"<[^>]+>", "", match.group(1))).strip()
+                  existing[name] = block
+
+          def tag_for(record):
+              if record["fonte_id"] == "phb-2024":
+                  return "5.5e"
+              if record["ano"]:
+                  return str(record["ano"])
+              return "5e"
+
+          def generated_block(record):
+              name = html.escape(record["nome"])
+              classe = html.escape(record["classe"])
+              edicao = html.escape(record["edicao"])
+              fonte = html.escape(record["fonte"])
+              status = html.escape(record["status"].replace("_", " "))
+              descricao = html.escape(record["descricao"])
+              pdf = html.escape(record["origem_pdf"])
+              pags = record["paginas_pdf_fonte"]
+              paginas = f"{pags[0]}–{pags[1]}"
+              natureza = "Oficial" if record["natureza"] == "oficial" else "Terceiros"
+              tag = html.escape(tag_for(record))
+              return f'''    <details class="subclasse" data-classe="{classe}">
+              <summary><strong>{name} <span class="tag">{tag}</span></strong><span class="classe">{classe}</span></summary>
+              <div class="corpo">
+                <div class="ficha">
+                  <div><strong>Nome:</strong> {name}</div><div><strong>Tipo:</strong> Subclasses</div>
+                  <div><strong>Classe:</strong> {classe}</div><div><strong>Edição:</strong> {edicao}</div>
+                  <div><strong>Livro/Fonte:</strong> {fonte}</div><div><strong>Status:</strong> {status}</div>
+                  <div><strong>Natureza:</strong> {natureza}</div><div><strong>PDF de origem:</strong> {pdf}</div>
+                </div>
+                <p class="descricao">{descricao}</p>
+                <section class="mecanicas">
+                  <h3>Referência mecânica</h3>
+                  <p>A subclasse foi identificada e consolidada a partir da fonte indicada. Para conteúdo não coberto por licença aberta, o Hub preserva o catálogo, a síntese editorial e a rastreabilidade sem reproduzir integralmente o texto protegido da obra.</p>
+                </section>
+                <p class="fonte"><strong>Fonte:</strong> {fonte}, seção de subclasses, pp. {paginas}. Origem: {pdf}.</p>
+              </div>
+            </details>'''
+
+          ordered_blocks = []
+          open_names = set(existing)
+          for record in records:
+              if record["nome"] in existing:
+                  block = existing[record["nome"]]
+                  if "pdf-rastreio" not in block:
+                      rastreio = (
+                          '\n        <p class="meta pdf-rastreio"><strong>Rastreabilidade nos PDFs:</strong> '
+                          + html.escape(record["fonte"])
+                          + ", "
+                          + html.escape(record["origem_pdf"])
+                          + f', seção de subclasses, pp. {record["paginas_pdf_fonte"][0]}–{record["paginas_pdf_fonte"][1]}.</p>'
+                      )
+                      block = re.sub(
+                          r'(\s*</div>\s*</details>)$',
+                          rastreio + r'\1',
+                          block,
+                          flags=re.S,
+                      )
+                  ordered_blocks.append(block)
+              else:
+                  ordered_blocks.append(generated_block(record))
+
+          page = re.sub(
+              r'<p class="resumo">.*?</p>',
+              '<p class="resumo">119 subclasses identificadas em pdf24_merged.pdf e pdf24_merged-1.pdf, deduplicadas por identidade e revisão. Versões mais recentes equivalentes têm precedência.</p>',
+              page,
+              count=1,
+              flags=re.S,
+          )
+          notes = '''</header>
+
+          <div class="nota"><strong>Critério editorial:</strong> o módulo consolida todas as subclasses identificadas nos dois PDFs fornecidos ao projeto. Quando uma subclasse foi reimpressa ou revisada, prevalece a versão mais recente equivalente; opções antigas sem substituição e variantes de terceiros permanecem catalogadas.</div>
+          <div class="nota"><strong>Completude e direitos:</strong> os cards cujo texto mecânico já era publicável sob licença aberta preservam o detalhamento existente. Para fontes protegidas, o Hub publica identificação, classe, edição, fonte, síntese editorial e rastreabilidade, sem republicar integralmente o texto protegido.</div>
+
+          <div class="controles">'''
+          page = re.sub(
+              r'</header>\s*(?:<div class="nota">.*?</div>\s*)+<div class="controles">',
+              notes,
+              page,
+              count=1,
+              flags=re.S,
+          )
+          page = page.replace(
+              'placeholder="Buscar subclasse, classe, feature ou magia..."',
+              'placeholder="Buscar subclasse, classe ou fonte..."',
+          )
+          classes = ["Artificer","Barbarian","Bard","Cleric","Druid","Fighter","Monk","Paladin","Ranger","Rogue","Sorcerer","Tamer","Warlock","Wizard"]
+          options = '\n'.join(['      <option value="">Todas as classes</option>'] + [f'      <option>{html.escape(c)}</option>' for c in classes])
+          page = re.sub(
+              r'<select id="filtro">.*?</select>',
+              '<select id="filtro">\n' + options + '\n    </select>',
+              page,
+              count=1,
+              flags=re.S,
+          )
+
+          catalog_html = '<main id="lista">\n\n' + '\n\n'.join(ordered_blocks) + '\n\n  </main>'
+          page = re.sub(
+              r'<main id="lista">.*?</main>',
+              catalog_html,
+              page,
+              count=1,
+              flags=re.S,
+          )
+
+          page = re.sub(
+              r'(<footer class="licenca">\s*<hr>\s*<p>.*?</p>)\s*<p>.*?</p>',
+              r'''\1
+              <p>Os 119 registros deste catálogo foram consolidados a partir dos dois PDFs do projeto. A atribuição acima continua aplicável aos cards detalhados derivados do SRD 5.2.1; os demais cards usam sínteses editoriais e referências de fonte.</p>''',
+              page,
+              count=1,
+              flags=re.S,
+          )
+
+          final_blocks = re.findall(r'<details class="subclasse" data-classe="[^"]+">', page)
+          if len(final_blocks) != 119:
+              raise SystemExit(f"HTML inválido: esperados 119 cards; encontrados {len(final_blocks)}")
+
+          for record in records:
+              record["nivel_publicacao"] = (
+                  "mecanicas_abertas_preservadas"
+                  if record["nome"] in open_names
+                  else "catalogo_estruturado_com_sintese"
+              )
+
+          manifest = {
+              "schema": "hub-rpg/subclasses/v1",
+              "status": "publicado",
+              "gerado_em": "2026-08-19",
+              "origem_pdfs": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"],
+              "total": len(records),
+              "regra_precedencia": "versões posteriores equivalentes prevalecem; conteúdo único anterior e variantes distintas permanecem",
+              "grupos": [
+                  {
+                      "nome": g["nome"],
+                      "fonte_id": g["fonte_id"],
+                      "fonte": g["fonte"],
+                      "origem_pdf": g["pdf"],
+                      "paginas_pdf_fonte": g["paginas"],
+                      "quantidade": sum(len(v) for v in g["conteudo"].values()),
+                  }
+                  for g in groups
+              ],
+              "controle": {
+                  "identidades_unicas": len(set(identities)),
+                  "cards_html": len(final_blocks),
+                  "mecanicas_abertas_preservadas": sum(1 for r in records if r["nome"] in open_names),
+                  "catalogo_estruturado_com_sintese": sum(1 for r in records if r["nome"] not in open_names),
+              },
+              "subclasses": records,
+          }
+
+          Path("dados").mkdir(exist_ok=True)
+          Path("dados/subclasses-pdfs.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          page_path.write_text(page, encoding="utf-8")
+          print(json.dumps(manifest["controle"], ensure_ascii=False))
+          PY
+
+      - name: Validar publicação
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          data=json.loads(Path('dados/subclasses-pdfs.json').read_text(encoding='utf-8'))
+          html=Path('subclasses.html').read_text(encoding='utf-8')
+          assert data['total'] == 119
+          assert len(data['subclasses']) == 119
+          assert len(re.findall(r'<details class="subclasse"', html)) == 119
+          assert 'Artificer' in html and 'Tamer' in html
+          print('Validação concluída: 119 subclasses publicáveis no módulo.')
+          PY
+
+      - name: Publicar no site
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add subclasses.html dados/subclasses-pdfs.json
+          git commit -m 'Publica 119 subclasses consolidadas dos dois PDFs'
+          git pull --rebase origin main
+          git push
