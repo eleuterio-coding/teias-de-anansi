@@ -50,6 +50,10 @@ button:active {
   color: #000000 !important;
 }
 
+.hub-module-meta-hidden {
+  display: none !important;
+}
+
 /*
  * Biblioteca: os módulos abrem direto no conteúdo mecânico.
  * Remove do topo resumos, badges, notas editoriais, corpus, precedência,
