@@ -9,44 +9,51 @@
   <title>Talentos - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1080px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    body { max-width: 1080px; margin: 0 auto; padding: 24px; line-height: 1.6; }
     a { color: inherit; }
     .resumo, .meta { opacity: .78; }
     .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
     .controles { display: grid; grid-template-columns: minmax(240px,1fr) minmax(180px,260px) minmax(180px,300px); gap: 10px; margin: 18px 0 10px; }
     input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
-    .talento { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
-    .talento summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .talento { margin: 0; border: 0; border-bottom: 1px solid #8884; padding: 0; }
+    .talento:first-child { border-top: 1px solid #8884; }
+    .talento summary { cursor: pointer; padding: 18px 8px; list-style-position: outside; }
     .talento summary:hover { background: #8881; }
-    .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
-    .corpo { padding: 0 16px 16px; }
-    .bloco { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px 18px; padding: 10px 0; }
-    .bloco p { margin: 0; }
-    .mecanica { padding: 12px 14px; border-left: 3px solid #8888; background: #8881; border-radius: 4px 8px 8px 4px; }
-    .meta { border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    .status-atual { font-weight: 600; }
+    .summary-line { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .summary-line strong { font-size: 1.08rem; }
+    .categoria-resumo { font-size: .86rem; opacity: .62; white-space: nowrap; }
+    .corpo { padding: 2px 8px 24px 28px; }
+    .nome-feat { margin: 0 0 2px; font-size: 1.45rem; line-height: 1.25; }
+    .tipo-feat { margin: 0 0 4px; font-style: italic; opacity: .88; }
+    .prerequisito { margin: 0 0 18px; font-style: italic; opacity: .78; }
+    .intro { margin: 18px 0; }
+    .beneficio { margin: 14px 0; }
+    .beneficio-titulo { font-weight: 700; font-style: italic; }
+    .repetivel { margin: 16px 0 0; }
+    .repetivel strong { font-style: italic; }
+    .meta { border-top: 1px solid #8883; margin-top: 22px; padding-top: 10px; font-size: .84rem; display: flex; flex-wrap: wrap; gap: 7px 16px; }
     .erro { padding: 14px; border: 1px solid #b44; border-radius: 10px; }
     @media (max-width: 820px) {
       body { padding: 16px; }
-      .controles, .bloco { grid-template-columns: 1fr; }
-      .talento summary { display: block; }
-      .categoria { display: block; margin-top: 5px; }
+      .controles { grid-template-columns: 1fr; }
+      .summary-line { display: block; }
+      .categoria-resumo { display: block; margin-top: 4px; }
+      .corpo { padding-left: 18px; }
     }
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1100">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1123">← Bibliotecas</a></p>
   <header>
     <h1>Talentos</h1>
-    <p class="resumo">Catálogo consolidado dos talentos localizados em <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, com precedência das revisões 2024/5.5e e Dragonmarks integrados ao módulo Talentos.</p>
+    <p class="resumo">Catálogo consolidado dos talentos localizados em <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, estruturado no padrão editorial dos talentos de D&D: nome, categoria, pré-requisito quando aplicável, introdução, benefícios e regra de repetição.</p>
   </header>
 
-  <div class="nota"><strong>Critério de consolidação:</strong> versões oficiais posteriores prevalecem sobre versões anteriores equivalentes. Talentos antigos permanecem apenas quando ainda são únicos; conteúdo de terceiros é identificado como variante. O <em>Lesser Dragonmark</em> de <em>Quickstone</em> não foi duplicado porque o modelo de Dragonmarks foi substituído por <em>Eberron: Forge of the Artificer</em> (2025). Material demonstrativo/não final de Xyleff não foi canonizado.</div>
-  <div class="nota"><strong>Conteúdo:</strong> cada entrada preserva categoria, pré-requisito, repetibilidade, resumo mecânico, livro, edição, natureza, status e cenário quando aplicável. As descrições são consolidações mecânicas em português; nomes próprios de talentos são mantidos no original quando não há localização adotada no Hub.</div>
+  <div class="nota"><strong>Organização:</strong> todos os talentos usam a mesma hierarquia visual. A categoria aparece imediatamente abaixo do nome; pré-requisitos aparecem somente quando existem; os efeitos ficam no bloco de benefícios; e <em>Repetível</em> aparece ao final apenas nos talentos que podem ser escolhidos mais de uma vez.</div>
 
   <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar talento, efeito, fonte ou pré-requisito...">
+    <input id="busca" type="search" placeholder="Buscar talento, benefício, fonte ou pré-requisito...">
     <select id="filtroCategoria">
       <option value="">Todas as categorias</option>
       <option value="Origem">Origem</option>
@@ -74,8 +81,27 @@ const semAcento = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]
 function expandirGrupo(g) {
   return (g.itens || []).map(i => ({
     nome:i[0], original:i[0], categoria:i[1], prerequisito:i[2], repetivel:i[3], resumo:i[4], setting:i[5] || '',
-    fonte:g.fonte, ano:g.ano, ruleset:g.ruleset, natureza:g.natureza, status:g.status
+    fonte:g.fonte, ano:g.ano, ruleset:g.ruleset, natureza:g.natureza, status:g.status,
+    beneficios:Array.isArray(i[6]) ? i[6] : null
   }));
+}
+
+function nomeCategoria(categoria) {
+  const nomes = {
+    'Origem':'Talento de Origem',
+    'Geral':'Talento Geral',
+    'Estilo de Luta':'Talento de Estilo de Luta',
+    'Dragonmark':'Talento de Dragonmark',
+    'Dádiva Épica':'Talento de Dádiva Épica'
+  };
+  return nomes[categoria] || `Talento — ${categoria}`;
+}
+
+function beneficiosDoTalento(t) {
+  if (Array.isArray(t.beneficios) && t.beneficios.length) {
+    return t.beneficios.map(b => ({ titulo:b[0] || 'Benefício', texto:b[1] || '' }));
+  }
+  return [{ titulo:'Benefício', texto:t.resumo }];
 }
 
 function preencherFontes() {
@@ -86,45 +112,53 @@ function preencherFontes() {
 function render() {
   const termo = semAcento(busca.value.trim());
   const filtrados = TALENTOS.filter(t => {
-    const texto = [t.nome,t.original,t.categoria,t.prerequisito,t.repetivel,t.resumo,t.fonte,t.ruleset,t.natureza,t.status,t.setting].join(' ');
+    const beneficios = beneficiosDoTalento(t).flatMap(b => [b.titulo,b.texto]);
+    const texto = [t.nome,t.original,t.categoria,t.prerequisito,t.repetivel,t.resumo,...beneficios,t.fonte,t.ruleset,t.natureza,t.status,t.setting].join(' ');
     return (!termo || semAcento(texto).includes(termo)) &&
       (!filtroCategoria.value || t.categoria === filtroCategoria.value) &&
       (!filtroFonte.value || t.fonte === filtroFonte.value);
   });
+
   resultado.textContent = `${filtrados.length} de ${TALENTOS.length} talentos`;
-  lista.innerHTML = filtrados.length ? filtrados.map(t => `
-    <details class="talento">
-      <summary><strong>${esc(t.nome)}</strong><span class="categoria">${esc(t.categoria)}</span></summary>
-      <div class="corpo">
-        <div class="bloco">
-          <p><strong>Categoria:</strong> ${esc(t.categoria)}</p>
-          <p><strong>Pré-requisito:</strong> ${esc(t.prerequisito)}</p>
-          <p><strong>Repetível:</strong> ${esc(t.repetivel)}</p>
-        </div>
-        <h3>Resumo mecânico</h3>
-        <p class="mecanica">${esc(t.resumo)}</p>
-        <div class="meta">
-          <span><strong>Tipo:</strong> Talento</span>
-          <span><strong>Livro:</strong> ${esc(t.fonte)}</span>
-          <span><strong>Edição:</strong> ${esc(t.ruleset)}</span>
-          <span><strong>Natureza:</strong> ${esc(t.natureza)}</span>
-          <span class="status-atual"><strong>Status:</strong> ${esc(t.status)}</span>
-          ${t.setting ? `<span><strong>Cenário:</strong> ${esc(t.setting)}</span>` : ''}
-        </div>
-      </div>
-    </details>`).join('') : '<div class="nota">Nenhum talento corresponde aos filtros atuais.</div>';
+  lista.innerHTML = filtrados.length ? filtrados.map(t => {
+    const beneficios = beneficiosDoTalento(t);
+    const temPrerequisito = t.prerequisito && semAcento(t.prerequisito) !== 'nenhum';
+    const eRepetivel = /^sim/i.test(String(t.repetivel || '').trim());
+    return `
+      <details class="talento">
+        <summary>
+          <span class="summary-line"><strong>${esc(t.nome)}</strong><span class="categoria-resumo">${esc(nomeCategoria(t.categoria))}</span></span>
+        </summary>
+        <article class="corpo">
+          <h2 class="nome-feat">${esc(t.nome)}</h2>
+          <p class="tipo-feat">${esc(nomeCategoria(t.categoria))}</p>
+          ${temPrerequisito ? `<p class="prerequisito">Pré-requisito: ${esc(t.prerequisito)}</p>` : ''}
+          <p class="intro">Você recebe os seguintes benefícios.</p>
+          ${beneficios.map(b => `<p class="beneficio"><span class="beneficio-titulo">${esc(b.titulo)}.</span> ${esc(b.texto)}</p>`).join('')}
+          ${eRepetivel ? `<p class="repetivel"><strong>Repetível.</strong> ${esc(t.repetivel.replace(/^Sim\s*[—-]?\s*/i,'') || 'Você pode escolher este talento mais de uma vez.')}</p>` : ''}
+          <div class="meta">
+            <span><strong>Tipo:</strong> Talento</span>
+            <span><strong>Livro:</strong> ${esc(t.fonte)}</span>
+            <span><strong>Edição:</strong> ${esc(t.ruleset)}</span>
+            <span><strong>Natureza:</strong> ${esc(t.natureza)}</span>
+            <span><strong>Status:</strong> ${esc(t.status)}</span>
+            ${t.setting ? `<span><strong>Cenário:</strong> ${esc(t.setting)}</span>` : ''}
+          </div>
+        </article>
+      </details>`;
+  }).join('') : '<div class="nota">Nenhum talento corresponde aos filtros atuais.</div>';
 }
 
 async function iniciar() {
   try {
     const urls = [
-      'dados/talentos-phb-2024.json?v=20260819-1100',
-      'dados/talentos-forge-2025.json?v=20260819-1100',
-      'dados/talentos-heroes-2025.json?v=20260819-1100',
-      'dados/talentos-quickstone-2024.json?v=20260819-1100',
-      'dados/talentos-tasha-2020.json?v=20260819-1100',
-      'dados/talentos-xanathar-2017.json?v=20260819-1100',
-      'dados/talentos-eberron-rising-2019.json?v=20260819-1100'
+      'dados/talentos-phb-2024.json?v=20260819-1123',
+      'dados/talentos-forge-2025.json?v=20260819-1123',
+      'dados/talentos-heroes-2025.json?v=20260819-1123',
+      'dados/talentos-quickstone-2024.json?v=20260819-1123',
+      'dados/talentos-tasha-2020.json?v=20260819-1123',
+      'dados/talentos-xanathar-2017.json?v=20260819-1123',
+      'dados/talentos-eberron-rising-2019.json?v=20260819-1123'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url,{cache:'no-store'})));
     const falha = respostas.find(r => !r.ok);
