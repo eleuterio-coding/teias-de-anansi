@@ -1,0 +1,22 @@
+{
+  "sobreposicoes": [
+    {
+      "original": "Attunement",
+      "descricao": "Alguns itens mágicos das regras 2024 exigem Sintonização antes de liberar suas propriedades, e uma criatura normalmente pode manter Sintonização com no máximo três itens ao mesmo tempo. No Hub, a Sintonização não é utilizada. Ignore requisitos de Sintonização e o limite de três itens. Em seu lugar, aplique Espaços de Itens Mágicos aos itens corporais; itens que não ocupam um Espaço Corporal seguem suas próprias regras de uso."
+    }
+  ],
+  "itens": [
+    {
+      "nome": "Espaços de Itens Mágicos",
+      "original": "Magic Items on the Body (D&D 3.5e)",
+      "familia": "Regra Geral",
+      "descricao": "No Hub, itens mágicos corporais usam Espaços de Itens Mágicos em lugar da Sintonização. Uma criatura de anatomia humanoide pode obter os benefícios de um item mágico em cada um dos seguintes espaços: Cabeça, Olhos, Pescoço, Torso, Corpo, Cintura, Ombros, Braços, Mãos e Pés; Anéis comporta até dois itens, totalizando até doze itens corporais ativos. Itens adicionais destinados ao mesmo espaço podem ser vestidos ou carregados, mas não concedem propriedades mágicas enquanto o espaço estiver ocupado. Itens em pares ocupam um único espaço e exigem o par completo, salvo regra em contrário. Armas, escudos, varinhas, cajados, poções, pergaminhos e outros itens não corporais não ocupam Espaço Corporal, salvo indicação específica. Para anatomias diferentes, o Mestre determina os espaços disponíveis; membros extras não concedem espaços adicionais automaticamente. A regra específica do item prevalece.",
+      "inserir_depois_de": "Attunement",
+      "fonte": {
+        "livro": "Regra da Casa — baseada em D&D 3.5e",
+        "edicao": "Hub / D&D 3.5e",
+        "url": ""
+      }
+    }
+  ]
+}
