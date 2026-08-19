@@ -11,29 +11,18 @@
   const current=(location.pathname.split('/').pop()||'').toLowerCase();
   if(!MODULES.has(current))return;
 
-  const HIDE='hub-module-meta-hidden';
-  const META_LABELS=[
-    /^crit[eé]rio(?:\s+editorial|\s+de\s+publica[cç][aã]o|\s+do\s+cat[aá]logo)?\s*:/i,
-    /^escopo(?:\s+atual|\s+tem[aá]tico)?\s*:/i,
-    /^organiza[cç][aã]o\s*:/i,
-    /^preced[eê]ncia(?:\s+aplicada)?\s*:/i,
-    /^corpus\s*:/i,
-    /^publicad[oa](?:\s+e\s+(?:verificad[oa]|consolidad[oa]))?\s*:/i,
-    /^completude(?:\s+e\s+direitos)?\s*:/i,
-    /^auditoria(?:\s+dos?|\s+das?)?\b/i,
-    /^material\s+demonstrativo\s*:/i,
-    /^extra[cç][aã]o\s+dos?\s+pdfs?\b/i,
-    /^taxonomia\s*:/i
-  ];
-
-  const cleanText=el=>String(el?.textContent||'').replace(/\s+/g,' ').trim();
-  const isMetaText=el=>META_LABELS.some(re=>re.test(cleanText(el)));
-  const hide=el=>{if(el&&el.nodeType===1&&!el.classList.contains(HIDE))el.classList.add(HIDE)};
+  const hide=el=>{
+    if(!el||el.nodeType!==1)return;
+    el.hidden=true;
+    el.setAttribute('aria-hidden','true');
+    el.style.setProperty('display','none','important');
+  };
 
   function scan(){
     const body=document.body;
     if(!body)return;
 
+    /* Cabeçalhos: deixa apenas o título do módulo. */
     body.querySelectorAll([
       ':scope > header > p',
       ':scope > header > .badge',
@@ -45,6 +34,11 @@
       ':scope > .top > div:not(:first-child) > .badges'
     ].join(',')).forEach(hide);
 
+    /*
+     * Todo bloco editorial/operacional de nível de módulo é removido da UI,
+     * independentemente do texto interno. O conteúdo mecânico dos itens,
+     * filtros e metadados próprios de cada item permanecem intactos.
+     */
     body.querySelectorAll([
       ':scope > .nota',
       ':scope > .note',
@@ -57,29 +51,21 @@
       ':scope > #status',
       ':scope > #precedencia',
       ':scope > #diagnostico'
-    ].join(',')).forEach(el=>{
-      if(el.id==='status'||el.id==='precedencia'||el.id==='diagnostico'||isMetaText(el)||el.matches('.audit,.auditoria'))hide(el);
+    ].join(',')).forEach(hide);
+
+    /* Seções top-level explicitamente editoriais/auditoria. */
+    body.querySelectorAll(':scope > section, :scope > details, :scope > article').forEach(el=>{
+      const label=String(el.querySelector(':scope > h2,:scope > h3,:scope > summary,:scope > strong')?.textContent||'')
+        .replace(/\s+/g,' ').trim().toLowerCase();
+      if(/^(auditoria|crit[eé]rio|escopo|organiza[cç][aã]o|preced[eê]ncia|corpus|publicad|completude|taxonomia|material demonstrativo)/i.test(label)) hide(el);
     });
-
-    for(const el of body.children){
-      if(['SCRIPT','STYLE','LINK'].includes(el.tagName))continue;
-      if(el.matches('main,.layout,.controles,.controls,.tools,#lista,#resultado'))continue;
-
-      if(isMetaText(el)){
-        const containsPrimary=!!el.querySelector('main,.layout,.controles,.controls,.tools,#lista');
-        if(!containsPrimary)hide(el);
-      }
-
-      if(el.matches('section,details,article,div')){
-        const label=el.querySelector(':scope > h2,:scope > h3,:scope > summary,:scope > strong');
-        if(label&&isMetaText(label))hide(el);
-      }
-    }
   }
 
   scan();
-  new MutationObserver(scan).observe(document.body,{childList:true,subtree:true});
+  const observer=new MutationObserver(scan);
+  observer.observe(document.documentElement,{childList:true,subtree:true});
   setTimeout(scan,0);
-  setTimeout(scan,250);
-  setTimeout(scan,1000);
+  setTimeout(scan,100);
+  setTimeout(scan,500);
+  setTimeout(scan,1500);
 })();
