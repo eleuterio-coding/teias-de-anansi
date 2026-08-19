@@ -28,6 +28,27 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Generate semantic reference index
+        shell: bash
+        run: |
+          python scripts/gerar_referencias_hub.py \
+            --root . \
+            --output dados/referencias-hub-index.json \
+            --stubs dados/referencias-hub-stubs.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('dados/referencias-hub-index.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          if data.get('total_entidades', 0) < 100:
+              raise RuntimeError(f"Índice semântico anormalmente pequeno: {data.get('total_entidades')}")
+          nomes = {str(x.get('nome', '')).casefold() for x in data.get('entidades', [])}
+          for obrigatorio in ('sangrando', 'pontos de vida'):
+              if obrigatorio not in nomes:
+                  raise RuntimeError(f'Referência obrigatória ausente: {obrigatorio}')
+          print(f"Índice semântico validado: {data['total_entidades']} entidades")
+          PY
+
       - name: Force white background and black text across the site
         shell: bash
         run: |
@@ -43,6 +64,24 @@ jobs:
                       raise RuntimeError(f'Elemento </head> não encontrado: {path}')
                   html = html.replace('</head>', f'  {tag}\n</head>', 1)
                   path.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Inject global semantic references
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          marker = 'data-hub-referencias="1"'
+          tag = '<script data-hub-referencias="1" src="scripts/referencias-hub.js?v=20260819-refs1"></script>\n'
+          for path in Path('.').glob('*.html'):
+              html = path.read_text(encoding='utf-8')
+              if marker in html:
+                  continue
+              if '</body>' not in html:
+                  raise RuntimeError(f'Elemento </body> não encontrado: {path}')
+              html = html.replace('</body>', tag + '</body>', 1)
+              path.write_text(html, encoding='utf-8')
           PY
 
       - name: Inject Expanded Concentration seals into Spells
