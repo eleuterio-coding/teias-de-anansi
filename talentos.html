@@ -9,11 +9,11 @@
   <title>Talentos - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    body { max-width: 1080px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
     .resumo, .meta { opacity: .78; }
     .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
-    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(220px,320px); gap: 10px; margin: 18px 0 10px; }
+    .controles { display: grid; grid-template-columns: minmax(240px,1fr) minmax(180px,260px) minmax(180px,300px); gap: 10px; margin: 18px 0 10px; }
     input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
     .talento { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
@@ -21,205 +21,129 @@
     .talento summary:hover { background: #8881; }
     .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
     .corpo { padding: 0 16px 16px; }
-    .nome-original { opacity: .72; margin-top: -2px; }
-    .bloco { border: 1px solid #8884; border-radius: 8px; padding: 10px 12px; margin: 12px 0; }
-    .bloco p { margin: 5px 0; }
-    .mecanicas { padding-left: 20px; margin-bottom: 0; }
-    .mecanicas li { margin: 8px 0; }
-    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    @media (max-width: 750px) {
+    .bloco { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px 18px; padding: 10px 0; }
+    .bloco p { margin: 0; }
+    .mecanica { padding: 12px 14px; border-left: 3px solid #8888; background: #8881; border-radius: 4px 8px 8px 4px; }
+    .meta { border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .status-atual { font-weight: 600; }
+    .erro { padding: 14px; border: 1px solid #b44; border-radius: 10px; }
+    @media (max-width: 820px) {
       body { padding: 16px; }
-      .controles { grid-template-columns: 1fr; }
+      .controles, .bloco { grid-template-columns: 1fr; }
       .talento summary { display: block; }
       .categoria { display: block; margin-top: 5px; }
     }
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260818-1532">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1100">← Bibliotecas</a></p>
   <header>
     <h1>Talentos</h1>
-    <p class="resumo">17 talentos oficiais com bloco mecânico completo, publicados a partir do conteúdo aberto do SRD 5.2 e com precedência D&D 2024 / 5.5e.</p>
+    <p class="resumo">Catálogo consolidado dos talentos localizados em <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, com precedência das revisões 2024/5.5e e Dragonmarks integrados ao módulo Talentos.</p>
   </header>
 
-  <div class="nota"><strong>Critério de publicação:</strong> entram somente talentos cuja regra integral pode ser conferida em fonte oficial aberta. Quando existe versão 2024 equivalente, ela substitui a versão 2014. Assim, o Grappler do SRD 5.1 não é duplicado. Talentos apenas visíveis em catálogos fechados, incluindo Dragonmarks sem texto integral aberto no SRD, não são republicados aqui.</div>
-  <div class="nota"><strong>Fonte aberta:</strong> System Reference Document 5.2, Wizards of the Coast LLC. O SRD 5.2 é disponibilizado sob CC BY 4.0. Referência oficial: <a href="https://www.dndbeyond.com/srd" target="_blank" rel="noopener noreferrer">D&D Beyond SRD</a>. Licença: <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY 4.0</a>.</div>
+  <div class="nota"><strong>Critério de consolidação:</strong> versões oficiais posteriores prevalecem sobre versões anteriores equivalentes. Talentos antigos permanecem apenas quando ainda são únicos; conteúdo de terceiros é identificado como variante. O <em>Lesser Dragonmark</em> de <em>Quickstone</em> não foi duplicado porque o modelo de Dragonmarks foi substituído por <em>Eberron: Forge of the Artificer</em> (2025). Material demonstrativo/não final de Xyleff não foi canonizado.</div>
+  <div class="nota"><strong>Conteúdo:</strong> cada entrada preserva categoria, pré-requisito, repetibilidade, resumo mecânico, livro, edição, natureza, status e cenário quando aplicável. As descrições são consolidações mecânicas em português; nomes próprios de talentos são mantidos no original quando não há localização adotada no Hub.</div>
 
   <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar talento, mecânica ou pré-requisito...">
-    <select id="filtro">
+    <input id="busca" type="search" placeholder="Buscar talento, efeito, fonte ou pré-requisito...">
+    <select id="filtroCategoria">
       <option value="">Todas as categorias</option>
       <option value="Origem">Origem</option>
       <option value="Geral">Geral</option>
       <option value="Estilo de Luta">Estilo de Luta</option>
+      <option value="Dragonmark">Dragonmark</option>
       <option value="Dádiva Épica">Dádiva Épica</option>
     </select>
+    <select id="filtroFonte"><option value="">Todas as fontes</option></select>
   </div>
-  <p class="resultado" id="resultado"></p>
+  <p class="resultado" id="resultado">Carregando talentos...</p>
   <main id="lista"></main>
 
 <script>
-const TALENTOS = [
-  {
-    nome:'Alerta', original:'Alert', categoria:'Origem', prerequisito:'Nenhum', repetivel:'Não',
-    mecanicas:[
-      ['Proficiência em Iniciativa','Ao rolar Iniciativa, adicione seu Bônus de Proficiência à rolagem.'],
-      ['Troca de Iniciativa','Imediatamente depois de rolar Iniciativa, você pode trocar seu valor de Iniciativa com o de um aliado voluntário no mesmo combate. A troca não pode ser feita se você ou o aliado estiver Incapacitado.']
-    ]
-  },
-  {
-    nome:'Iniciado em Magia', original:'Magic Initiate', categoria:'Origem', prerequisito:'Nenhum', repetivel:'Sim — escolha uma lista de magia diferente a cada vez',
-    mecanicas:[
-      ['Lista de magia','Escolha a lista de magias de Clérigo, Druida ou Mago.'],
-      ['Dois truques','Aprenda dois truques à sua escolha da lista selecionada. Escolha Inteligência, Sabedoria ou Carisma como atributo de conjuração das magias obtidas por este talento.'],
-      ['Magia de 1º nível','Escolha uma magia de 1º nível da mesma lista. Ela fica sempre preparada. Você pode conjurá-la uma vez sem gastar espaço de magia e recupera esse uso ao terminar um Descanso Longo. Também pode conjurá-la usando espaços de magia que possua.'],
-      ['Troca de magia','Sempre que ganhar um novo nível, você pode substituir uma das magias escolhidas para este talento por outra magia do mesmo nível pertencente à lista selecionada.']
-    ]
-  },
-  {
-    nome:'Atacante Selvagem', original:'Savage Attacker', categoria:'Origem', prerequisito:'Nenhum', repetivel:'Não',
-    mecanicas:[
-      ['Ataque mais danoso','Uma vez por turno, quando você acerta um alvo com uma arma, role duas vezes os dados de dano da arma e escolha qual dos dois resultados será usado contra o alvo.']
-    ]
-  },
-  {
-    nome:'Habilidoso', original:'Skilled', categoria:'Origem', prerequisito:'Nenhum', repetivel:'Sim',
-    mecanicas:[
-      ['Proficiências','Ganhe proficiência em qualquer combinação de três perícias ou ferramentas à sua escolha.']
-    ]
-  },
-  {
-    nome:'Melhoria no Valor de Atributo', original:'Ability Score Improvement', categoria:'Geral', prerequisito:'Nível 4+', repetivel:'Sim',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 2, ou aumente dois atributos à sua escolha em 1 cada. Este talento não pode elevar um atributo acima de 20.']
-    ]
-  },
-  {
-    nome:'Agarrador', original:'Grappler', categoria:'Geral', prerequisito:'Nível 4+; Força 13+ ou Destreza 13+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente Força ou Destreza em 1, até o máximo de 20.'],
-      ['Golpear e agarrar','Quando acertar uma criatura com um Ataque Desarmado como parte da ação Atacar em seu turno, você pode aplicar simultaneamente as opções de Dano e Agarrar desse Ataque Desarmado. Este benefício pode ser usado apenas uma vez por turno.'],
-      ['Vantagem ofensiva','Você tem Vantagem nas jogadas de ataque contra uma criatura Agarrada por você.'],
-      ['Lutador veloz','Você não paga o custo extra de movimento para deslocar uma criatura Agarrada por você quando ela é do seu tamanho ou menor.']
-    ]
-  },
-  {
-    nome:'Arquearia', original:'Archery', categoria:'Estilo de Luta', prerequisito:'Característica Estilo de Luta', repetivel:'Não',
-    mecanicas:[
-      ['Precisão à distância','Você recebe +2 nas jogadas de ataque feitas com armas à distância.']
-    ]
-  },
-  {
-    nome:'Defesa', original:'Defense', categoria:'Estilo de Luta', prerequisito:'Característica Estilo de Luta', repetivel:'Não',
-    mecanicas:[
-      ['Classe de Armadura','Enquanto estiver usando armadura leve, média ou pesada, você recebe +1 na Classe de Armadura.']
-    ]
-  },
-  {
-    nome:'Combate com Arma Grande', original:'Great Weapon Fighting', categoria:'Estilo de Luta', prerequisito:'Característica Estilo de Luta', repetivel:'Não',
-    mecanicas:[
-      ['Dados de dano','Quando rolar o dano de um ataque feito com uma arma corpo a corpo empunhada com duas mãos, trate qualquer resultado 1 ou 2 em um dado de dano como 3. A arma precisa ter a propriedade Duas Mãos ou Versátil para receber este benefício.']
-    ]
-  },
-  {
-    nome:'Combate com Duas Armas', original:'Two-Weapon Fighting', categoria:'Estilo de Luta', prerequisito:'Característica Estilo de Luta', repetivel:'Não',
-    mecanicas:[
-      ['Ataque extra com arma leve','Quando fizer o ataque extra concedido pelo uso de uma arma com a propriedade Leve, você pode adicionar seu modificador de atributo ao dano desse ataque se ele ainda não estiver sendo adicionado.']
-    ]
-  },
-  {
-    nome:'Dádiva da Proeza em Combate', original:'Boon of Combat Prowess', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 1, até o máximo de 30.'],
-      ['Mira incomparável','Quando errar uma jogada de ataque, você pode transformar o resultado em um acerto. Depois de usar este benefício, ele só pode ser usado novamente a partir do início do seu próximo turno.']
-    ]
-  },
-  {
-    nome:'Dádiva da Viagem Dimensional', original:'Boon of Dimensional Travel', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 1, até o máximo de 30.'],
-      ['Passos dimensionais','Imediatamente depois de realizar a ação Atacar ou a ação Magia, você pode se teleportar até 30 pés para um espaço desocupado que consiga ver.']
-    ]
-  },
-  {
-    nome:'Dádiva do Destino', original:'Boon of Fate', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 1, até o máximo de 30.'],
-      ['Alterar o destino','Quando você ou outra criatura a até 60 pés obtiver sucesso ou falha em um Teste de d20, role 2d4 e aplique o total como bônus ou penalidade à rolagem de d20. Depois do uso, o benefício só fica disponível novamente quando você rolar Iniciativa ou terminar um Descanso Curto ou Longo.']
-    ]
-  },
-  {
-    nome:'Dádiva da Ofensiva Irresistível', original:'Boon of Irresistible Offense', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente Força ou Destreza em 1, até o máximo de 30.'],
-      ['Superar defesas','O dano de Concussão, Perfurante e Cortante causado por você ignora Resistência.'],
-      ['Golpe esmagador','Quando o d20 de uma jogada de ataque mostrar 20, você pode causar ao alvo dano extra igual ao valor do atributo aumentado por este talento. O dano extra é do mesmo tipo do dano do ataque.']
-    ]
-  },
-  {
-    nome:'Dádiva da Recuperação de Magia', original:'Boon of Spell Recall', categoria:'Dádiva Épica', prerequisito:'Nível 19+; característica Conjuração', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente Inteligência, Sabedoria ou Carisma em 1, até o máximo de 30.'],
-      ['Conjuração sem custo','Sempre que conjurar uma magia usando um espaço de 1º a 4º nível, role 1d4. Se o resultado for igual ao nível do espaço usado, esse espaço de magia não é gasto.']
-    ]
-  },
-  {
-    nome:'Dádiva do Espírito Noturno', original:'Boon of the Night Spirit', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 1, até o máximo de 30.'],
-      ['Fundir-se às sombras','Enquanto estiver em Luz Fraca ou Escuridão, você pode usar uma Ação Bônus para receber a condição Invisível. A condição termina imediatamente depois que você realiza uma ação, Ação Bônus ou Reação.'],
-      ['Forma sombria','Enquanto estiver em Luz Fraca ou Escuridão, você tem Resistência a todos os tipos de dano, exceto Psíquico e Radiante.']
-    ]
-  },
-  {
-    nome:'Dádiva da Visão Verdadeira', original:'Boon of Truesight', categoria:'Dádiva Épica', prerequisito:'Nível 19+', repetivel:'Não',
-    mecanicas:[
-      ['Aumento de atributo','Aumente um atributo à sua escolha em 1, até o máximo de 30.'],
-      ['Visão Verdadeira','Você possui Visão Verdadeira com alcance de 60 pés.']
-    ]
-  }
-];
-
-const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const semAcento = s => String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+let TALENTOS = [];
 const busca = document.getElementById('busca');
-const filtro = document.getElementById('filtro');
+const filtroCategoria = document.getElementById('filtroCategoria');
+const filtroFonte = document.getElementById('filtroFonte');
 const resultado = document.getElementById('resultado');
 const lista = document.getElementById('lista');
+
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const semAcento = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+
+function expandirGrupo(g) {
+  return (g.itens || []).map(i => ({
+    nome:i[0], original:i[0], categoria:i[1], prerequisito:i[2], repetivel:i[3], resumo:i[4], setting:i[5] || '',
+    fonte:g.fonte, ano:g.ano, ruleset:g.ruleset, natureza:g.natureza, status:g.status
+  }));
+}
+
+function preencherFontes() {
+  const fontes = [...new Set(TALENTOS.map(t => t.fonte))].sort((a,b) => a.localeCompare(b,'pt-BR'));
+  filtroFonte.innerHTML = '<option value="">Todas as fontes</option>' + fontes.map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join('');
+}
 
 function render() {
   const termo = semAcento(busca.value.trim());
   const filtrados = TALENTOS.filter(t => {
-    const texto = [t.nome,t.original,t.categoria,t.prerequisito,t.repetivel,...t.mecanicas.flat()].join(' ');
-    return (!termo || semAcento(texto).includes(termo)) && (!filtro.value || t.categoria === filtro.value);
+    const texto = [t.nome,t.original,t.categoria,t.prerequisito,t.repetivel,t.resumo,t.fonte,t.ruleset,t.natureza,t.status,t.setting].join(' ');
+    return (!termo || semAcento(texto).includes(termo)) &&
+      (!filtroCategoria.value || t.categoria === filtroCategoria.value) &&
+      (!filtroFonte.value || t.fonte === filtroFonte.value);
   });
   resultado.textContent = `${filtrados.length} de ${TALENTOS.length} talentos`;
   lista.innerHTML = filtrados.length ? filtrados.map(t => `
     <details class="talento">
       <summary><strong>${esc(t.nome)}</strong><span class="categoria">${esc(t.categoria)}</span></summary>
       <div class="corpo">
-        <p class="nome-original"><strong>Nome original:</strong> ${esc(t.original)}</p>
         <div class="bloco">
           <p><strong>Categoria:</strong> ${esc(t.categoria)}</p>
           <p><strong>Pré-requisito:</strong> ${esc(t.prerequisito)}</p>
           <p><strong>Repetível:</strong> ${esc(t.repetivel)}</p>
         </div>
-        <h3>Mecânicas completas</h3>
-        <ul class="mecanicas">${t.mecanicas.map(m => `<li><strong>${esc(m[0])}:</strong> ${esc(m[1])}</li>`).join('')}</ul>
+        <h3>Resumo mecânico</h3>
+        <p class="mecanica">${esc(t.resumo)}</p>
         <div class="meta">
           <span><strong>Tipo:</strong> Talento</span>
-          <span><strong>Livro:</strong> System Reference Document 5.2</span>
-          <span><strong>Edição:</strong> D&D 2024 / 5.5e</span>
-          <span><strong>Licença da fonte:</strong> CC BY 4.0</span>
-          <span><strong>Status:</strong> Publicável — fonte oficial aberta</span>
+          <span><strong>Livro:</strong> ${esc(t.fonte)}</span>
+          <span><strong>Edição:</strong> ${esc(t.ruleset)}</span>
+          <span><strong>Natureza:</strong> ${esc(t.natureza)}</span>
+          <span class="status-atual"><strong>Status:</strong> ${esc(t.status)}</span>
+          ${t.setting ? `<span><strong>Cenário:</strong> ${esc(t.setting)}</span>` : ''}
         </div>
       </div>
     </details>`).join('') : '<div class="nota">Nenhum talento corresponde aos filtros atuais.</div>';
 }
 
+async function iniciar() {
+  try {
+    const urls = [
+      'dados/talentos-phb-2024.json?v=20260819-1100',
+      'dados/talentos-forge-2025.json?v=20260819-1100',
+      'dados/talentos-heroes-2025.json?v=20260819-1100',
+      'dados/talentos-quickstone-2024.json?v=20260819-1100',
+      'dados/talentos-tasha-2020.json?v=20260819-1100',
+      'dados/talentos-xanathar-2017.json?v=20260819-1100',
+      'dados/talentos-eberron-rising-2019.json?v=20260819-1100'
+    ];
+    const respostas = await Promise.all(urls.map(url => fetch(url,{cache:'no-store'})));
+    const falha = respostas.find(r => !r.ok);
+    if (falha) throw new Error(`HTTP ${falha.status}`);
+    const grupos = await Promise.all(respostas.map(r => r.json()));
+    TALENTOS = grupos.flatMap(expandirGrupo).sort((a,b) => a.nome.localeCompare(b.nome,'pt-BR'));
+    preencherFontes();
+    render();
+  } catch (erro) {
+    resultado.textContent = 'Falha ao carregar o catálogo.';
+    lista.innerHTML = '<p class="erro">Não foi possível carregar os talentos. Atualize a página para tentar novamente.</p>';
+    console.error(erro);
+  }
+}
+
 busca.addEventListener('input', render);
-filtro.addEventListener('change', render);
-render();
+filtroCategoria.addEventListener('change', render);
+filtroFonte.addEventListener('change', render);
+iniciar();
 </script>
 </body>
 </html>
