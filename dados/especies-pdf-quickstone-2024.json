@@ -1,0 +1,103 @@
+{
+  "fonte": {
+    "id": "quickstone-2024",
+    "titulo": "Frontiers of Eberron: Quickstone",
+    "ano": 2024,
+    "natureza": "Terceiros",
+    "setting": "Eberron",
+    "ruleset": "5e",
+    "revisao_core": 2014,
+    "pdf": "pdf24_merged.pdf",
+    "paginas": "157-170"
+  },
+  "items": [
+    {
+      "nome": "Gargoyle",
+      "tipo": "Elemental",
+      "tamanhos": ["Medium"],
+      "velocidade": 30,
+      "descricao": "Gárgulas jogáveis com corpo pétreo, natureza elemental e capacidade de se passar por estátuas.",
+      "tracos": [
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Elemental Nature","texto":"Resistência a dano de Poison; Vantagem em salvaguardas para evitar ou encerrar Poisoned; não precisa comer, beber ou respirar; é imune a doenças; não precisa dormir e magia não pode fazê-lo dormir; não pode ser Petrified contra a própria vontade."},
+        {"nome":"False Appearance","texto":"Enquanto permanece imóvel, é indistinguível de uma estátua comum."},
+        {"nome":"Sentry's Rest","texto":"Pode concluir um Descanso Longo em 6 horas permanecendo inativo e imóvel, mas continua consciente."},
+        {"nome":"Stoneskin","texto":"Sem armadura, a CA base é 13 + modificador de Destreza; escudo funciona normalmente."}
+      ]
+    },
+    {
+      "nome": "Gnoll",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium"],
+      "velocidade": 30,
+      "descricao": "Gnolls de Eberron combinam sentidos de caçador, mordida natural e explosões de agressividade móvel.",
+      "tracos": [
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Bite","texto":"Ataque Desarmado com mordida causa 1d4 + Força de dano Perfurante."},
+        {"nome":"Hunter's Senses","texto":"Ganha proficiência em uma perícia à escolha entre Perception, Stealth e Survival."},
+        {"nome":"Rampage","texto":"Quando usa Bite ou reduz uma criatura a 0 Pontos de Vida com um ataque, pode usar uma Ação Bônus para mover até metade do Deslocamento e fazer um ataque com arma ou Bite."}
+      ]
+    },
+    {
+      "nome": "Harpy",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium"],
+      "velocidade": 30,
+      "descricao": "Harpias de Eberron possuem voo natural, aptidão performática e magia vocal ligada à sedução e ao controle.",
+      "tracos": [
+        {"nome":"Flight","texto":"Deslocamento de voo igual ao Deslocamento; não funciona enquanto veste armadura média ou pesada."},
+        {"nome":"Natural Performer","texto":"Ganha proficiência em Performance."},
+        {"nome":"Siren's Song","texto":"Conhece o truque Friends e pode conjurá-lo usando apenas componente Verbal. Inteligência, Sabedoria ou Carisma é a habilidade de conjuração, escolhida ao selecionar a espécie."},
+        {"nome":"Shadow's Magic","texto":"Adiciona Charm Person, Suggestion, Enemies Abound, Charm Monster e Dominate Person às listas de magias das classes que forneçam Spellcasting ou Pact Magic; ao conjurá-las, pode dispensar componentes que não sejam Verbais."}
+      ]
+    },
+    {
+      "nome": "Medusa",
+      "tipo": "Monstrosity",
+      "tamanhos": ["Medium"],
+      "velocidade": 30,
+      "descricao": "Medusas de Eberron combinam olhar sobrenatural, afinidade com petrificação e uma seleção própria de magias sombrias.",
+      "tracos": [
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Menacing","texto":"Ganha proficiência em Intimidation."},
+        {"nome":"Serpentine Speech","texto":"Pode se comunicar por uma linguagem de sinais serpentina própria da espécie."},
+        {"nome":"Gray Gaze","texto":"Conhece o truque Gray Gaze e o conjura sem componentes. Inteligência, Sabedoria ou Carisma é a habilidade de conjuração, escolhida ao selecionar a espécie. Uma criatura reduzida a 0 Pontos de Vida por esse truque pode ser petrificada, conforme a regra da fonte."},
+        {"nome":"Medusa's Gift","texto":"Pode intensificar Gray Gaze para tentar deixar o alvo Restrained por até 1 minuto, com novas salvaguardas de Constituição conforme a habilidade e exigindo concentração; usos por Descanso Longo iguais ao Bônus de Proficiência."},
+        {"nome":"Shadow's Magic","texto":"Adiciona Ensnaring Strike, Hold Person, Hypnotic Pattern, Stoneskin e Hold Monster às listas de magias das classes que forneçam Spellcasting ou Pact Magic; essas magias podem ser conjuradas sem componentes Materiais."}
+      ]
+    },
+    {
+      "nome": "Tiefling — Eberron",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "subtipo": "variante_de_especie",
+      "variante_de": "Tiefling",
+      "descricao": "Variante de Tiefling para Eberron que conserva a estrutura do Tiefling de 2024 e substitui os Legados Infernais por legados ligados aos planos de Eberron.",
+      "tracos": [
+        {"nome":"Dolurrhi Legacy","texto":"Resistência a dano Psíquico e Vicious Mockery; no 3º nível, Dissonant Whispers; no 5º nível, Blur."},
+        {"nome":"Fernian Legacy","texto":"Resistência a dano de Fire e Control Flames; no 3º nível, Burning Hands; no 5º nível, Heat Metal."},
+        {"nome":"Kythrian Legacy","texto":"Ao fim de cada Descanso Longo, escolha resistência a Acid, Cold, Fire ou Lightning; conhece Shocking Grasp; no 3º nível, Chromatic Orb; no 5º nível, Shatter."},
+        {"nome":"Mabaran Legacy","texto":"Resistência a dano Necrótico e Chill Touch; no 3º nível, Inflict Wounds; no 5º nível, Blindness/Deafness."},
+        {"nome":"Risian Legacy","texto":"Resistência a dano de Cold e Ray of Frost; no 3º nível, Armor of Agathys; no 5º nível, Hold Person."},
+        {"nome":"Sakah Legacy","texto":"Vantagem em salvaguardas de Sabedoria contra magia e Mage Hand; no 3º nível, Disguise Self; no 5º nível, Detect Thoughts."},
+        {"nome":"Shavaran Legacy","texto":"Proficiência com armaduras leves, médias e escudos, além de Blade Ward; no 3º nível, Heroism; no 5º nível, Spiritual Weapon."}
+      ]
+    },
+    {
+      "nome": "Worg",
+      "tipo": "Monstrosity",
+      "tamanhos": ["Medium"],
+      "velocidade": 40,
+      "descricao": "Worgs jogáveis são quadrúpedes inteligentes com mandíbulas poderosas, sentidos aguçados e aptidão para agir como montarias.",
+      "tracos": [
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Keen Senses","texto":"Ganha proficiência em Perception e Vantagem em testes baseados em audição ou olfato."},
+        {"nome":"Bite","texto":"Ataque Desarmado com mordida causa 1d8 + Força de dano Perfurante."},
+        {"nome":"Pack Tactics","texto":"Pode realizar a ação Help como Ação Bônus."},
+        {"nome":"Natural Armor","texto":"Sem armadura, a CA base é 12 + modificador de Destreza."},
+        {"nome":"Quadruped","texto":"Não pode manipular itens com as patas como mãos, embora possa realizar componentes somáticos; tem Desvantagem em tarefas de manipulação fina, pode servir de montaria para criaturas Medium ou menores e recebe os benefícios de capacidade de carga previstos para sua constituição quadrúpede. Armaduras próprias seguem as regras de barding."}
+      ]
+    }
+  ]
+}
