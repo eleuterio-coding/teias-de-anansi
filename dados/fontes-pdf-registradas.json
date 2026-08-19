@@ -9,7 +9,7 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -17,9 +17,11 @@
         "ferramentas.html",
         "dados/antecedentes-pdf-phb-2024.json",
         "dados/antecedentes-pdf-heroes-2025.json",
-        "antecedentes.html"
+        "antecedentes.html",
+        "dados/bugigangas-pdfs.json",
+        "bugigangas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas e Antecedentes; no módulo Antecedentes contribui com opções do Player's Handbook 2024 e Forgotten Realms: Heroes of Faerûn 2025, com deduplicação contra registros já ativos."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes e Bugigangas; em Bugigangas fornece a tabela d100 do Player's Handbook 2024, com precedência 2024/5.5e aplicada na consolidação."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -27,7 +29,7 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -36,9 +38,11 @@
         "ferramentas.html",
         "dados/antecedentes-pdf-forge-2025.json",
         "dados/antecedentes-pdf-quickstone-2024.json",
-        "antecedentes.html"
+        "antecedentes.html",
+        "dados/bugigangas-pdfs.json",
+        "bugigangas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas e Antecedentes; no módulo Antecedentes contribui com Eberron: Forge of the Artificer 2025 e Frontiers of Eberron: Quickstone 2024."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes e Bugigangas; em Bugigangas fornece Mournland Trinkets de Eberron: Rising from the Last War, com uma duplicata exata consolidada contra a tabela 2024."
     }
   ],
   "controle": {
