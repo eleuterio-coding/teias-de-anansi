@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Ferramentas - Biblioteca - Teias de Anansi</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}*{box-sizing:border-box}body{max-width:1240px;margin:auto;padding:22px;line-height:1.5}a{color:inherit}.muted{opacity:.72}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.layout{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:16px;align-items:start}.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}.tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:470px}.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.76}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.ativ{width:100%;border-collapse:collapse;margin-top:8px}.ativ th,.ativ td{text-align:left;padding:7px 8px;border-bottom:1px solid #8883}.ativ th:last-child,.ativ td:last-child{text-align:center;width:72px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}@media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:340px}}
+</style>
+</head>
+<body>
+<p><a href="bibliotecas.html?v=20260819-1029">← Bibliotecas</a></p>
+<header>
+<h1>Ferramentas</h1>
+<p class="muted">Catálogo consolidado das ferramentas localizadas em <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>.</p>
+<span class="badge">25 ferramentas</span><span class="badge">17 ferramentas de artesão</span><span class="badge">8 outras ferramentas</span><span class="badge">2 PDFs</span>
+</header>
+<div class="nota"><strong>Critério editorial:</strong> as descrições mecânicas detalhadas vêm da seção de ferramentas de <em>Xanathar's Guide to Everything</em> presente em <strong>pdf24_merged.pdf</strong>. O segundo PDF acrescenta usos e relações em Eberron/Artificer, mas não introduz uma nova categoria primária de ferramenta localizada na auditoria. Referências de fabricação do DMG 2024 foram preservadas quando aparecem no primeiro PDF. Proficiências de veículos não entram aqui: pertencem ao módulo <strong>Montarias e Veículos</strong>.</div>
+<div id="status" class="nota">Carregando catálogo publicado...</div>
+<div class="layout">
+<aside class="painel"><div class="tools"><input id="q" type="search" placeholder="Buscar ferramenta, perícia ou uso..."><select id="tipo"><option value="">Todos os tipos</option></select><div id="count" class="count"></div></div><div id="lista" class="lista"></div></aside>
+<section id="detalhe" class="painel detalhe"><div class="vazio">Selecione uma ferramenta para abrir os detalhes.</div></section>
+</div>
+<script>
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+let ALL=[],CURRENT='';
+function renderDetail(nome){CURRENT=nome;renderList();const x=ALL.find(i=>i.nome===nome);if(!x)return;const acts=(x.atividades||[]).map(a=>`<tr><td>${esc(a[0])}</td><td>${esc(a[1])}</td></tr>`).join('');document.getElementById('detalhe').innerHTML=`<h2>${esc(x.nome)}</h2><div class="meta"><span><b>Tipo:</b> ${esc(x.subtipo)}</span><span><b>Fonte-base:</b> Xanathar's Guide to Everything (2017)</span><span><b>PDF:</b> pdf24_merged.pdf</span></div><div class="box"><p>${esc(x.descricao)}</p><p><b>Componentes:</b> ${esc(x.componentes)}</p><p><b>Perícias relacionadas:</b> ${esc(x.pericias||'—')}</p><p><b>Uso especial:</b> ${esc(x.especial||'—')}</p></div>${acts?`<div class="box"><h3>Atividades e CDs sugeridas</h3><table class="ativ"><thead><tr><th>Atividade</th><th>CD</th></tr></thead><tbody>${acts}</tbody></table></div>`:''}${x.ref2024?`<div class="box"><h3>Referência 2024</h3><p>${esc(x.ref2024)}</p></div>`:''}${x.ref2?`<div class="box"><h3>Ocorrências no segundo PDF</h3><p>${esc(x.ref2)}</p><p class="muted">Fonte documental: pdf24_merged-1.pdf.</p></div>`:''}`}
+function renderList(){const q=norm(document.getElementById('q').value),t=document.getElementById('tipo').value;const rows=ALL.filter(x=>(!t||x.subtipo===t)&&(!q||norm([x.nome,x.subtipo,x.descricao,x.componentes,x.pericias,x.especial,x.ref2,x.ref2024].join(' ')).includes(q)));document.getElementById('count').textContent=`${rows.length} de ${ALL.length} ferramentas`;document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.nome?'on':''}" data-name="${esc(x.nome)}"><strong>${esc(x.nome)}</strong><small>${esc(x.subtipo)}</small></button>`).join('')||'<div class="vazio">Nenhuma ferramenta encontrada.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.name))}
+(async()=>{try{const r=await fetch('dados/ferramentas-pdfs.json?v=20260819-1029',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();ALL=(d.ferramentas||[]).sort((a,b)=>a.nome.localeCompare(b.nome,'en'));if(ALL.length!==25)throw new Error(`catálogo incompleto: ${ALL.length}/25`);const tipos=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('tipo').innerHTML='<option value="">Todos os tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 25 ferramentas carregadas dos dois PDFs, com separação por tipo e registros de referência 2024/Eberron quando encontrados.';renderList();if(ALL[0])renderDetail(ALL[0].nome)}catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`}})();document.getElementById('q').addEventListener('input',renderList);document.getElementById('tipo').addEventListener('change',renderList);
+</script>
+</body>
+</html>
