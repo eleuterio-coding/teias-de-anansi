@@ -1,0 +1,95 @@
+:root {
+  color-scheme: light !important;
+}
+
+html,
+body {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+body,
+main,
+section,
+article,
+header,
+footer,
+nav,
+aside,
+div,
+p,
+span,
+strong,
+b,
+em,
+i,
+small,
+label,
+legend,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+dt,
+dd,
+th,
+td,
+summary,
+details {
+  color: #000000;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #000000 !important;
+}
+
+input,
+select,
+textarea,
+button,
+option {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #555555 !important;
+  opacity: 1;
+}
+
+fieldset,
+table,
+.card,
+.item,
+.nota,
+.badge,
+.modulos li,
+.modulos a {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light !important;
+  }
+
+  html,
+  body,
+  input,
+  select,
+  textarea,
+  button,
+  option {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
