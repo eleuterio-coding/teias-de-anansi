@@ -1,94 +1,131 @@
 {
-  "modulo": "Maestrias de Arma",
+  "schema": "hub-rpg/maestrias-de-arma/v2",
   "gerado_em": "2026-08-19",
-  "criterio": "Catálogo centrado na arma/foco: cada item recebe suas propriedades e a Maestria de Arma correspondente. A versão 2024 prevalece quando houver sobreposição.",
-  "maestrias_oficiais": [
-    {
-      "nome": "Cleave",
-      "descricao": "Ao acertar uma criatura com um ataque corpo a corpo usando a arma, permite um ataque corpo a corpo adicional contra outra criatura a até 5 pés do primeiro alvo e dentro do alcance da arma. O dano do segundo acerto não recebe o modificador de atributo, salvo se ele for negativo. Uma vez por turno."
-    },
-    {
-      "nome": "Graze",
-      "descricao": "Quando a jogada de ataque com a arma erra, causa ao alvo dano do mesmo tipo da arma igual ao modificador de atributo usado na jogada de ataque. Esse dano só aumenta se o modificador de atributo aumentar."
-    },
-    {
-      "nome": "Nick",
-      "descricao": "O ataque extra concedido pela propriedade Leve pode ser realizado como parte da ação Atacar, em vez de consumir uma Ação Bônus. Esse ataque extra só pode ser feito uma vez por turno."
-    },
-    {
-      "nome": "Push",
-      "descricao": "Ao acertar com a arma, permite empurrar uma criatura Grande ou menor até 10 pés diretamente para longe do atacante."
-    },
-    {
-      "nome": "Sap",
-      "descricao": "Ao acertar com a arma, o alvo sofre Desvantagem na próxima jogada de ataque que fizer antes do início do próximo turno do atacante."
-    },
-    {
-      "nome": "Slow",
-      "descricao": "Ao acertar e causar dano com a arma, permite reduzir a Velocidade do alvo em 10 pés até o início do próximo turno do atacante. Múltiplos acertos com essa propriedade não ampliam a redução além de 10 pés."
-    },
-    {
-      "nome": "Topple",
-      "descricao": "Ao acertar com a arma, permite forçar o alvo a fazer uma salvaguarda de Constituição com CD 8 + modificador de atributo usado no ataque + Bônus de Proficiência. Em falha, o alvo fica Caído."
-    },
-    {
-      "nome": "Vex",
-      "descricao": "Ao acertar e causar dano com a arma, concede Vantagem na próxima jogada de ataque contra o mesmo alvo antes do fim do próximo turno do atacante."
-    }
-  ],
+  "modulo": "Maestrias de Arma",
+  "politica_ruleset": "5e = regras de 2014; 5.5e = revisão iniciada em 2024. O ano da fonte é registrado separadamente do ruleset.",
+  "controle": {
+    "validado": true,
+    "quantidade": 8,
+    "quantidade_5e_2014": 0,
+    "quantidade_5_5e": 8,
+    "filtro": "somente conteúdo oficial com licença aberta, descrição mecânica completa e publicação integral permitida",
+    "excluidos": "armas individuais, focos opcionais, playtests, material demonstrativo e conteúdo apenas visível sem licença aberta"
+  },
+  "licenca": {
+    "nome": "Creative Commons Attribution 4.0 International",
+    "identificador": "CC-BY-4.0",
+    "atribuicao": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License, available at https://creativecommons.org/licenses/by/4.0/legalcode."
+  },
+  "fonte": {
+    "publicacao_id": "srd-5.2.1",
+    "titulo": "System Reference Document 5.2.1",
+    "editora": "Wizards of the Coast LLC",
+    "ano": 2025,
+    "data_publicacao": "2025-05-01",
+    "natureza": "SRD",
+    "ruleset": "5.5e",
+    "revisao_core": 2024,
+    "pagina_inicio": 90,
+    "pagina_fim": 90,
+    "url_original": "https://www.dndbeyond.com/srd"
+  },
+  "regra_geral": "Cada arma possui uma propriedade de maestria. Essa propriedade só pode ser usada por um personagem que tenha um recurso, como Maestria de Arma, que libere a propriedade para ele.",
   "itens": [
-    {"nome":"Clava","nome_original":"Club","categoria":"Arma simples corpo a corpo","campos":["Leve","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Adaga","nome_original":"Dagger","categoria":"Arma simples corpo a corpo","campos":["Acuidade","Leve","Arremesso (20/60)","Nick"],"maestria":"Nick","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Clava Grande","nome_original":"Greatclub","categoria":"Arma simples corpo a corpo","campos":["Duas Mãos","Push"],"maestria":"Push","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Machado de Mão","nome_original":"Handaxe","categoria":"Arma simples corpo a corpo","campos":["Leve","Arremesso (20/60)","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Azagaia","nome_original":"Javelin","categoria":"Arma simples corpo a corpo","campos":["Arremesso (30/120)","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Martelo Leve","nome_original":"Light Hammer","categoria":"Arma simples corpo a corpo","campos":["Leve","Arremesso (20/60)","Nick"],"maestria":"Nick","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Maça","nome_original":"Mace","categoria":"Arma simples corpo a corpo","campos":["Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Bordão","nome_original":"Quarterstaff","categoria":"Arma simples corpo a corpo","campos":["Versátil (1d8)","Topple"],"maestria":"Topple","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Foice","nome_original":"Sickle","categoria":"Arma simples corpo a corpo","campos":["Leve","Nick"],"maestria":"Nick","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Lança","nome_original":"Spear","categoria":"Arma simples corpo a corpo","campos":["Arremesso (20/60)","Versátil (1d8)","Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-
-    {"nome":"Dardo","nome_original":"Dart","categoria":"Arma simples à distância","campos":["Acuidade","Arremesso (20/60)","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Besta Leve","nome_original":"Light Crossbow","categoria":"Arma simples à distância","campos":["Munição (80/320; virote)","Carregamento","Duas Mãos","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Arco Curto","nome_original":"Shortbow","categoria":"Arma simples à distância","campos":["Munição (80/320; flecha)","Duas Mãos","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Funda","nome_original":"Sling","categoria":"Arma simples à distância","campos":["Munição (30/120; projétil)","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-
-    {"nome":"Machado de Batalha","nome_original":"Battleaxe","categoria":"Arma marcial corpo a corpo","campos":["Versátil (1d10)","Topple"],"maestria":"Topple","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Mangual","nome_original":"Flail","categoria":"Arma marcial corpo a corpo","campos":["Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Glaive","nome_original":"Glaive","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Alcance","Duas Mãos","Graze"],"maestria":"Graze","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Machado Grande","nome_original":"Greataxe","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Duas Mãos","Cleave"],"maestria":"Cleave","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Espada Grande","nome_original":"Greatsword","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Duas Mãos","Graze"],"maestria":"Graze","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Alabarda","nome_original":"Halberd","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Alcance","Duas Mãos","Cleave"],"maestria":"Cleave","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Lança de Cavalaria","nome_original":"Lance","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Alcance","Duas Mãos (exceto montado)","Topple"],"maestria":"Topple","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Espada Longa","nome_original":"Longsword","categoria":"Arma marcial corpo a corpo","campos":["Versátil (1d10)","Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Malho","nome_original":"Maul","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Duas Mãos","Topple"],"maestria":"Topple","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Estrela-da-Manhã","nome_original":"Morningstar","categoria":"Arma marcial corpo a corpo","campos":["Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Pique","nome_original":"Pike","categoria":"Arma marcial corpo a corpo","campos":["Pesada","Alcance","Duas Mãos","Push"],"maestria":"Push","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Rapieira","nome_original":"Rapier","categoria":"Arma marcial corpo a corpo","campos":["Acuidade","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Cimitarra","nome_original":"Scimitar","categoria":"Arma marcial corpo a corpo","campos":["Acuidade","Leve","Nick"],"maestria":"Nick","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Espada Curta","nome_original":"Shortsword","categoria":"Arma marcial corpo a corpo","campos":["Acuidade","Leve","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Tridente","nome_original":"Trident","categoria":"Arma marcial corpo a corpo","campos":["Arremesso (20/60)","Versátil (1d10)","Topple"],"maestria":"Topple","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Martelo de Guerra","nome_original":"Warhammer","categoria":"Arma marcial corpo a corpo","campos":["Versátil (1d10)","Push"],"maestria":"Push","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Picareta de Guerra","nome_original":"War Pick","categoria":"Arma marcial corpo a corpo","campos":["Versátil (1d10)","Sap"],"maestria":"Sap","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Chicote","nome_original":"Whip","categoria":"Arma marcial corpo a corpo","campos":["Acuidade","Alcance","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-
-    {"nome":"Zarabatana","nome_original":"Blowgun","categoria":"Arma marcial à distância","campos":["Munição (25/100; agulha)","Carregamento","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Besta de Mão","nome_original":"Hand Crossbow","categoria":"Arma marcial à distância","campos":["Munição (30/120; virote)","Leve","Carregamento","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Besta Pesada","nome_original":"Heavy Crossbow","categoria":"Arma marcial à distância","campos":["Munição (100/400; virote)","Pesada","Carregamento","Duas Mãos","Push"],"maestria":"Push","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Arco Longo","nome_original":"Longbow","categoria":"Arma marcial à distância","campos":["Munição (150/600; flecha)","Pesada","Duas Mãos","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Mosquete","nome_original":"Musket","categoria":"Arma marcial à distância","campos":["Munição (40/120; bala)","Carregamento","Duas Mãos","Slow"],"maestria":"Slow","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-    {"nome":"Pistola","nome_original":"Pistol","categoria":"Arma marcial à distância","campos":["Munição (30/90; bala)","Carregamento","Vex"],"maestria":"Vex","fonte":"Player's Handbook (2024)","arquivo":"pdf24_merged.pdf","status":"vigente_mais_recente"},
-
-    {"nome":"Varinha","nome_original":"Wand","categoria":"Foco arcano — regra opcional","campos":["Vex"],"maestria":"Vex","fonte":"Frontiers of Eberron: Quickstone (2024)","arquivo":"pdf24_merged-1.pdf","status":"complemento_opcional","observacao":"Exige o recurso Weapon Mastery e a escolha desse tipo específico de foco. A maestria só se aplica ao conjurar um truque que exija uma jogada de ataque."},
-    {"nome":"Bastão","nome_original":"Rod","categoria":"Foco arcano — regra opcional","campos":["Slow"],"maestria":"Slow","fonte":"Frontiers of Eberron: Quickstone (2024)","arquivo":"pdf24_merged-1.pdf","status":"complemento_opcional","observacao":"Exige o recurso Weapon Mastery e a escolha desse tipo específico de foco. A maestria só se aplica ao conjurar um truque que exija uma jogada de ataque."},
-    {"nome":"Cajado","nome_original":"Staff","categoria":"Foco arcano — regra opcional","campos":["Push"],"maestria":"Push","fonte":"Frontiers of Eberron: Quickstone (2024)","arquivo":"pdf24_merged-1.pdf","status":"complemento_opcional","observacao":"Exige o recurso Weapon Mastery e a escolha desse tipo específico de foco. A maestria só se aplica ao conjurar um truque que exija uma jogada de ataque."},
-    {"nome":"Orbe ou Cristal","nome_original":"Orb or Crystal","categoria":"Foco arcano — regra opcional","campos":["Sap"],"maestria":"Sap","fonte":"Frontiers of Eberron: Quickstone (2024)","arquivo":"pdf24_merged-1.pdf","status":"complemento_opcional","observacao":"Exige o recurso Weapon Mastery e a escolha desse tipo específico de foco. A maestria só se aplica ao conjurar um truque que exija uma jogada de ataque."}
-  ],
-  "conteudo_nao_canonizado": {
-    "fonte": "Xyleff Sualky's Guide to Unthinkable Things — material demonstrativo",
-    "arquivo": "pdf24_merged-1.pdf",
-    "status": "nao_canonizar",
-    "motivo": "O índice de curadoria do próprio projeto marca esse conjunto como demonstração não final e determina que ele não substitua as maestrias oficiais.",
-    "maestrias_encontradas": ["Cleave","Graze","Nick","Push","Disarm","Sap","Bleed","Slow","Topple","Form","Vex","Deflect","Parry","Critic","Distance"]
-  }
+    {
+      "id": "maestrias-de-arma:srd521:cleave",
+      "nome": "Cleave",
+      "nome_original": "Cleave",
+      "slug": "cleave",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com uma jogada de ataque corpo a corpo usando esta arma, pode fazer uma jogada de ataque corpo a corpo com a arma contra uma segunda criatura a até 5 pés da primeira e também dentro do seu alcance. Em um acerto, a segunda criatura sofre o dano da arma, mas você não adiciona seu modificador de atributo a esse dano, a menos que o modificador seja negativo. Você pode fazer esse ataque extra apenas uma vez por turno."},
+      "mecanica": {"gatilho": "acertar uma criatura com ataque corpo a corpo usando a arma", "efeito": "ataque adicional contra uma segunda criatura adjacente ao primeiro alvo e dentro do alcance", "limite": "uma vez por turno"},
+      "armas_srd": ["Greataxe", "Halberd"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:graze",
+      "nome": "Graze",
+      "nome_original": "Graze",
+      "slug": "graze",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se sua jogada de ataque com esta arma errar uma criatura, você pode causar a essa criatura dano igual ao modificador de atributo usado para fazer a jogada de ataque. O dano é do mesmo tipo causado pela arma e só pode ser aumentado aumentando o modificador de atributo."},
+      "mecanica": {"gatilho": "errar uma jogada de ataque com a arma", "efeito": "causar dano igual ao modificador de atributo usado no ataque", "tipo_dano": "o mesmo da arma"},
+      "armas_srd": ["Glaive", "Greatsword"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:nick",
+      "nome": "Nick",
+      "nome_original": "Nick",
+      "slug": "nick",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Quando você faz o ataque extra da propriedade Leve, pode realizá-lo como parte da ação Atacar em vez de como uma Ação Bônus. Você pode fazer esse ataque extra apenas uma vez por turno."},
+      "mecanica": {"gatilho": "fazer o ataque extra da propriedade Leve", "efeito": "o ataque extra passa a fazer parte da ação Atacar", "limite": "uma vez por turno"},
+      "armas_srd": ["Dagger", "Light Hammer", "Sickle", "Scimitar"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:push",
+      "nome": "Push",
+      "nome_original": "Push",
+      "slug": "push",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, pode empurrá-la até 10 pés em linha reta para longe de você, desde que ela seja Grande ou menor."},
+      "mecanica": {"gatilho": "acertar uma criatura com a arma", "efeito": "empurrar o alvo até 10 pés diretamente para longe", "limite_alvo": "Grande ou menor"},
+      "armas_srd": ["Greatclub", "Pike", "Warhammer", "Heavy Crossbow"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:sap",
+      "nome": "Sap",
+      "nome_original": "Sap",
+      "slug": "sap",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, essa criatura tem Desvantagem na próxima jogada de ataque que fizer antes do início do seu próximo turno."},
+      "mecanica": {"gatilho": "acertar uma criatura com a arma", "efeito": "Desvantagem na próxima jogada de ataque do alvo", "duracao": "até o início do seu próximo turno"},
+      "armas_srd": ["Mace", "Spear", "Flail", "Longsword", "Morningstar", "War Pick"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:slow",
+      "nome": "Slow",
+      "nome_original": "Slow",
+      "slug": "slow",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, pode reduzir a Velocidade da criatura em 10 pés até o início do seu próximo turno. Se a criatura for atingida mais de uma vez por armas que tenham esta propriedade, a redução de Velocidade não excede 10 pés."},
+      "mecanica": {"gatilho": "acertar e causar dano com a arma", "efeito": "reduzir a Velocidade em 10 pés", "duracao": "até o início do seu próximo turno", "limite_acumulacao": "a redução total não excede 10 pés"},
+      "armas_srd": ["Club", "Javelin", "Light Crossbow", "Sling", "Whip", "Longbow", "Musket"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:topple",
+      "nome": "Topple",
+      "nome_original": "Topple",
+      "slug": "topple",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma, pode forçá-la a fazer uma salvaguarda de Constituição com CD igual a 8 + o modificador de atributo usado para fazer a jogada de ataque + seu Bônus de Proficiência. Em uma falha, a criatura fica Caída (Prone)."},
+      "mecanica": {"gatilho": "acertar uma criatura com a arma", "salvaguarda": "Constituição", "cd": "8 + modificador de atributo usado no ataque + Bônus de Proficiência", "efeito_falha": "Caído (Prone)"},
+      "armas_srd": ["Quarterstaff", "Battleaxe", "Lance", "Maul", "Trident"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    },
+    {
+      "id": "maestrias-de-arma:srd521:vex",
+      "nome": "Vex",
+      "nome_original": "Vex",
+      "slug": "vex",
+      "classificacao": {"modulo": "Maestrias de Arma", "subtipo": "propriedade_de_maestria", "status": "atual", "natureza": "SRD"},
+      "conteudo": {"descricao": "Se você acertar uma criatura com esta arma e causar dano a ela, tem Vantagem na sua próxima jogada de ataque contra essa criatura antes do fim do seu próximo turno."},
+      "mecanica": {"gatilho": "acertar e causar dano com a arma", "efeito": "Vantagem na próxima jogada de ataque contra o mesmo alvo", "duracao": "antes do fim do seu próximo turno"},
+      "armas_srd": ["Handaxe", "Dart", "Shortbow", "Rapier", "Shortsword", "Blowgun", "Hand Crossbow", "Pistol"],
+      "fonte": {"publicacao_id": "srd-5.2.1", "pagina": 90, "ruleset": "5.5e", "revisao_core": 2024},
+      "controle": {"completo": true, "status_completude": "publicado"}
+    }
+  ]
 }
