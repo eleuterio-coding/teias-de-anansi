@@ -50,14 +50,15 @@ button:active {
   color: #000000 !important;
 }
 
-.hub-module-meta-hidden {
+.hub-module-meta-hidden,
+[aria-hidden="true"][hidden] {
   display: none !important;
 }
 
 /*
- * Biblioteca: os módulos abrem direto no conteúdo mecânico.
- * Remove do topo resumos, badges, notas editoriais, corpus, precedência,
- * publicação/verificação e demais avisos introdutórios.
+ * Nos 18 módulos da Biblioteca, o topo exibe somente navegação, título,
+ * controles e conteúdo mecânico. Metadados editoriais/operacionais de
+ * nível de módulo ficam fora da interface pública.
  */
 body:has(a[href^="bibliotecas.html"]) > header > p,
 body:has(a[href^="bibliotecas.html"]) > header > .badge,
@@ -67,7 +68,19 @@ body:has(a[href^="bibliotecas.html"]) > .top > .badges,
 body:has(a[href^="bibliotecas.html"]) > .top > div:first-child > p,
 body:has(a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badge,
 body:has(a[href^="bibliotecas.html"]) > .top > div:not(:first-child) > .badges,
-body:has(a[href^="bibliotecas.html"]) > :is(.nota, .note, .aviso, .warning, .warn, #status, #precedencia):has(~ :is(.controles, .controls, .tools, .layout, .grid, main, #lista)) {
+body:has(a[href^="bibliotecas.html"]) > :is(
+  .nota,
+  .note,
+  .aviso,
+  .warning,
+  .warn,
+  .status,
+  .audit,
+  .auditoria,
+  #status,
+  #precedencia,
+  #diagnostico
+) {
   display: none !important;
 }
 
