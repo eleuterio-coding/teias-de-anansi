@@ -1,20 +1,21 @@
 {
+  "precedencia": "Regras da Casa prevalecem sobre Regras Gerais sempre que houver conflito, salvo quando uma regra declarar explicitamente o contrário.",
   "sobreposicoes": [
     {
       "original": "Attunement",
-      "descricao": "Alguns itens mágicos das regras 2024 exigem Sintonização antes de liberar suas propriedades, e uma criatura normalmente pode manter Sintonização com no máximo três itens ao mesmo tempo. No Hub, a Sintonização não é utilizada. Ignore requisitos de Sintonização e o limite de três itens. Em seu lugar, aplique Espaços de Itens Mágicos aos itens corporais; itens que não ocupam um Espaço Corporal seguem suas próprias regras de uso."
+      "descricao": "Alguns itens mágicos exigem Sintonização antes de liberar suas propriedades, e uma criatura normalmente pode manter Sintonização com no máximo três itens ao mesmo tempo. Esta regra é substituída por Espaços de Itens Mágicos. Ignore requisitos de Sintonização e o limite de três itens; itens mágicos corporais seguem a regra Espaços de Itens Mágicos, enquanto itens que não ocupam um Espaço de Item Mágico seguem suas próprias regras de uso."
     }
   ],
   "itens": [
     {
       "nome": "Espaços de Itens Mágicos",
       "original": "Magic Items on the Body (D&D 3.5e)",
-      "familia": "Regra Geral",
-      "descricao": "No Hub, itens mágicos corporais usam Espaços de Itens Mágicos em lugar da Sintonização. Uma criatura de anatomia humanoide pode obter os benefícios de um item mágico em cada um dos seguintes espaços: Cabeça, Olhos, Pescoço, Torso, Corpo, Cintura, Ombros, Braços, Mãos e Pés; Anéis comporta até dois itens, totalizando até doze itens corporais ativos. Itens adicionais destinados ao mesmo espaço podem ser vestidos ou carregados, mas não concedem propriedades mágicas enquanto o espaço estiver ocupado. Itens em pares ocupam um único espaço e exigem o par completo, salvo regra em contrário. Armas, escudos, varinhas, cajados, poções, pergaminhos e outros itens não corporais não ocupam Espaço Corporal, salvo indicação específica. Para anatomias diferentes, o Mestre determina os espaços disponíveis; membros extras não concedem espaços adicionais automaticamente. A regra específica do item prevalece.",
+      "familia": "Regra da Casa",
+      "descricao": "Alguns itens mágicos são feitos para ser vestidos em uma parte específica do corpo. Para obter as propriedades de um desses itens, uma criatura deve usá-lo no Espaço de Item Mágico apropriado. Uma criatura de anatomia humanoide possui os seguintes espaços: Cabeça, Olhos, Pescoço, Torso, Corpo, Cintura, Ombros, Braços, Mãos e Pés, além de dois espaços de Anel. Uma criatura pode obter os benefícios de apenas um item em cada espaço, exceto Anéis, que permite até dois itens, totalizando até doze itens mágicos corporais ativos. Vestir um segundo item destinado a um espaço já ocupado não concede as propriedades mágicas desse item. Um item formado por um par, como botas, luvas ou braceletes, ocupa um único espaço e exige que o par completo seja usado, salvo se o item disser o contrário. Armas, escudos, varinhas, cajados, poções, pergaminhos e outros itens que não sejam vestidos não ocupam Espaços de Itens Mágicos, salvo se sua descrição disser o contrário. Se uma criatura não possuir a parte do corpo necessária, ela não pode usar um item destinado àquele espaço. Para anatomias não humanoides, o Mestre determina quais espaços estão disponíveis. Membros adicionais não concedem espaços adicionais, salvo se uma regra disser o contrário. Se a descrição de um item contradisser esta regra, a descrição do item prevalece.",
       "inserir_depois_de": "Attunement",
       "fonte": {
         "livro": "Regra da Casa — baseada em D&D 3.5e",
-        "edicao": "Hub / D&D 3.5e",
+        "edicao": "Regra da Casa / D&D 3.5e",
         "url": ""
       }
     }
