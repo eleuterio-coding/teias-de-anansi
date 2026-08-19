@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Bugigangas - Biblioteca - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .resumo, .meta { opacity: .78; }
+    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(240px,360px); gap: 10px; margin: 18px 0 10px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .bugiganga { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .bugiganga summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .bugiganga summary:hover { background: #8881; }
+    .nome { display: flex; gap: 10px; align-items: baseline; }
+    .dado { font-variant-numeric: tabular-nums; min-width: 2.4em; opacity: .7; }
+    .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
+    .corpo { padding: 0 16px 16px; }
+    .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .origem-extra { margin: 10px 0 0; padding: 9px 11px; border-left: 3px solid #8888; opacity: .82; }
+    .erro { padding: 16px; border: 1px solid #b55; border-radius: 10px; }
+    @media (max-width: 750px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr; }
+      .bugiganga summary { display: block; }
+      .categoria { display: block; margin-top: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html?v=20260819-1043">← Bibliotecas</a></p>
+  <header>
+    <h1>Bugigangas</h1>
+    <p class="resumo">109 bugigangas únicas extraídas dos dois PDFs registrados do Hub, com proveniência e precedência de edição preservadas.</p>
+  </header>
+
+  <div class="nota"><strong>Organização:</strong> cada registro mantém o resultado da tabela, a origem, o livro, a edição e o PDF de onde foi extraído. Foram auditadas 110 linhas de tabelas; uma duplicata textual exata — <em>olho de vidro</em> — aparece tanto no Player’s Handbook quanto na tabela da Terra das Lamentações e foi consolidada em um único registro, com precedência da versão 2024 e a segunda origem preservada.</div>
+  <div class="nota"><strong>Escopo:</strong> entram bugigangas persistentes das tabelas de <em>Trinkets</em>. Soul Trinkets temporários do Phantom não viram registros independentes. Os itens de <em>L’Arsene’s Ledger of Treasure and Trinkets</em> permanecem fora daqui porque o próprio livro os classifica como itens mágicos.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar bugiganga, livro ou tabela...">
+    <select id="filtro">
+      <option value="">Todas as fontes</option>
+      <option value="phb2024">Player's Handbook (2024)</option>
+      <option value="erlw2019">Eberron: Rising from the Last War (2019)</option>
+    </select>
+  </div>
+  <p class="resultado" id="resultado">Carregando catálogo...</p>
+  <main id="lista"></main>
+
+<script>
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let DATA = null;
+
+function textoBusca(item) {
+  const fonte = DATA.fontes[item.fonte] || {};
+  return [item.descricao, item.rolagem, fonte.livro, fonte.edicao, fonte.pdf, fonte.tabela, ...(item.origens_adicionais || [])]
+    .join(' ').toLocaleLowerCase('pt-BR');
+}
+
+function render() {
+  if (!DATA) return;
+  const q = document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR');
+  const filtro = document.getElementById('filtro').value;
+  const itens = DATA.itens.filter(item => (!filtro || item.fonte === filtro) && (!q || textoBusca(item).includes(q)));
+
+  document.getElementById('resultado').textContent = `${itens.length} de ${DATA.controle.registros_publicados} registros exibidos`;
+  document.getElementById('lista').innerHTML = itens.map(item => {
+    const fonte = DATA.fontes[item.fonte];
+    const extras = (item.origens_adicionais || []).map(x => `<p class="origem-extra"><strong>Origem adicional consolidada:</strong> ${esc(x)}</p>`).join('');
+    return `<details class="bugiganga">
+      <summary>
+        <span class="nome"><span class="dado">${esc(item.rolagem)}</span><strong>${esc(item.descricao)}</strong></span>
+        <span class="categoria">${esc(fonte.tabela)}</span>
+      </summary>
+      <div class="corpo">
+        ${extras}
+        <div class="meta">
+          <span><strong>Livro:</strong> ${esc(fonte.livro)}</span>
+          <span><strong>Edição:</strong> ${esc(fonte.edicao)}</span>
+          <span><strong>PDF:</strong> ${esc(fonte.pdf)}</span>
+          <span><strong>Tabela:</strong> ${esc(fonte.tabela)}</span>
+          <span><strong>Resultado:</strong> ${esc(item.rolagem)}</span>
+        </div>
+      </div>
+    </details>`;
+  }).join('');
+}
+
+fetch('dados/bugigangas-pdfs.json?v=20260819-1043', {cache:'no-store'})
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+  .then(data => { DATA = data; render(); })
+  .catch(err => {
+    document.getElementById('resultado').textContent = 'Falha ao carregar o catálogo.';
+    document.getElementById('lista').innerHTML = `<p class="erro">Não foi possível carregar os dados de Bugigangas: ${esc(err.message)}</p>`;
+  });
+
+document.getElementById('busca').addEventListener('input', render);
+document.getElementById('filtro').addEventListener('change', render);
+</script>
+</body>
+</html>
