@@ -1,6 +1,7 @@
 {
   "schema": "hub-rpg/fontes-pdf/v1",
   "registrado_em": "2026-08-18",
+  "atualizado_em": "2026-08-19",
   "fontes": [
     {
       "id": "fonte:pdf24_merged",
@@ -8,14 +9,17 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
         "dados/ferramentas-pdfs.json",
-        "ferramentas.html"
+        "ferramentas.html",
+        "dados/antecedentes-pdf-phb-2024.json",
+        "dados/antecedentes-pdf-heroes-2025.json",
+        "antecedentes.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros e Ferramentas; contém a seção detalhada de ferramentas usada como base do catálogo e referências de fabricação de 2024."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas e Antecedentes; no módulo Antecedentes contribui com opções do Player's Handbook 2024 e Forgotten Realms: Heroes of Faerûn 2025, com deduplicação contra registros já ativos."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -23,15 +27,18 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
         "dados/monstros-pdfs-auditoria.json",
         "dados/ferramentas-pdfs.json",
-        "ferramentas.html"
+        "ferramentas.html",
+        "dados/antecedentes-pdf-forge-2025.json",
+        "dados/antecedentes-pdf-quickstone-2024.json",
+        "antecedentes.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros e Ferramentas; no catálogo de Ferramentas acrescenta ocorrências e relações em Eberron/Artificer, sem nova categoria primária localizada."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas e Antecedentes; no módulo Antecedentes contribui com Eberron: Forge of the Artificer 2025 e Frontiers of Eberron: Quickstone 2024."
     }
   ],
   "controle": {
