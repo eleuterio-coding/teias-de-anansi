@@ -1,0 +1,2240 @@
+{
+  "schema": "hub-rpg/subclasses/v1",
+  "status": "publicado",
+  "gerado_em": "2026-08-19",
+  "origem_pdfs": [
+    "pdf24_merged.pdf",
+    "pdf24_merged-1.pdf"
+  ],
+  "total": 119,
+  "regra_precedencia": "versões posteriores equivalentes prevalecem; conteúdo único anterior e variantes distintas permanecem",
+  "grupos": [
+    {
+      "nome": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "quantidade": 48
+    },
+    {
+      "nome": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "quantidade": 5
+    },
+    {
+      "nome": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "quantidade": 6
+    },
+    {
+      "nome": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "quantidade": 8
+    },
+    {
+      "nome": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "quantidade": 18
+    },
+    {
+      "nome": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "quantidade": 27
+    },
+    {
+      "nome": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "quantidade": 7
+    }
+  ],
+  "controle": {
+    "identidades_unicas": 119,
+    "cards_html": 119,
+    "mecanicas_abertas_preservadas": 12,
+    "catalogo_estruturado_com_sintese": 107
+  },
+  "subclasses": [
+    {
+      "nome": "Path of the Berserker",
+      "classe": "Barbarian",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Barbarian da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Path of the Wild Heart",
+      "classe": "Barbarian",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Barbarian da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the World Tree",
+      "classe": "Barbarian",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Barbarian da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Zealot",
+      "classe": "Barbarian",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Barbarian da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Dance",
+      "classe": "Bard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Bard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Glamour",
+      "classe": "Bard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Bard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Lore",
+      "classe": "Bard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Bard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "College of Valor",
+      "classe": "Bard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Bard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Life Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Cleric da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Light Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Cleric da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Trickery Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Cleric da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "War Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Cleric da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of the Land",
+      "classe": "Druid",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Druid da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Circle of the Moon",
+      "classe": "Druid",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Druid da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of the Sea",
+      "classe": "Druid",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Druid da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of the Stars",
+      "classe": "Druid",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Druid da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Battle Master",
+      "classe": "Fighter",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Fighter da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Champion",
+      "classe": "Fighter",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Fighter da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Eldritch Knight",
+      "classe": "Fighter",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Fighter da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Psi Warrior",
+      "classe": "Fighter",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Fighter da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Warrior of Mercy",
+      "classe": "Monk",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Monk da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Warrior of Shadow",
+      "classe": "Monk",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Monk da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Warrior of the Elements",
+      "classe": "Monk",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Monk da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Warrior of the Open Hand",
+      "classe": "Monk",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Monk da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Oath of Devotion",
+      "classe": "Paladin",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Paladin da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Oath of Glory",
+      "classe": "Paladin",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Paladin da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of the Ancients",
+      "classe": "Paladin",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Paladin da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of Vengeance",
+      "classe": "Paladin",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Paladin da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Beast Master",
+      "classe": "Ranger",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Ranger da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Fey Wanderer",
+      "classe": "Ranger",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Ranger da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Gloom Stalker",
+      "classe": "Ranger",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Ranger da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Hunter",
+      "classe": "Ranger",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Ranger da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Arcane Trickster",
+      "classe": "Rogue",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Rogue da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Assassin",
+      "classe": "Rogue",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Rogue da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Soulknife",
+      "classe": "Rogue",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Rogue da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Thief",
+      "classe": "Rogue",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Rogue da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Aberrant Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Sorcerer da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Clockwork Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Sorcerer da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Draconic Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Sorcerer da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Wild Magic Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Sorcerer da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Archfey Patron",
+      "classe": "Warlock",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Warlock da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Celestial Patron",
+      "classe": "Warlock",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Warlock da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Fiend Patron",
+      "classe": "Warlock",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Warlock da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Great Old One Patron",
+      "classe": "Warlock",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Warlock da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Abjurer",
+      "classe": "Wizard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Wizard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Diviner",
+      "classe": "Wizard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Wizard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Evoker",
+      "classe": "Wizard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Wizard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "mecanicas_abertas_preservadas"
+    },
+    {
+      "nome": "Illusionist",
+      "classe": "Wizard",
+      "grupo": "Subclasses básicas 2024",
+      "fonte_id": "phb-2024",
+      "fonte": "Player's Handbook (2024)",
+      "ano": 2024,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        48,
+        175
+      ],
+      "descricao": "Subclasse de Wizard da revisão de 2024. Esta versão é a referência ativa do catálogo quando há uma versão anterior equivalente.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Alchemist",
+      "classe": "Artificer",
+      "grupo": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / revisão 2025",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "descricao": "Especialização de Artificer da revisão de 2025 publicada em Eberron: Forge of the Artificer, que prevalece sobre versões anteriores equivalentes.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Armorer",
+      "classe": "Artificer",
+      "grupo": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / revisão 2025",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "descricao": "Especialização de Artificer da revisão de 2025 publicada em Eberron: Forge of the Artificer, que prevalece sobre versões anteriores equivalentes.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Artillerist",
+      "classe": "Artificer",
+      "grupo": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / revisão 2025",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "descricao": "Especialização de Artificer da revisão de 2025 publicada em Eberron: Forge of the Artificer, que prevalece sobre versões anteriores equivalentes.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Battle Smith",
+      "classe": "Artificer",
+      "grupo": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / revisão 2025",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "descricao": "Especialização de Artificer da revisão de 2025 publicada em Eberron: Forge of the Artificer, que prevalece sobre versões anteriores equivalentes.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Cartographer",
+      "classe": "Artificer",
+      "grupo": "Subclasses de Artificer 2025",
+      "fonte_id": "eberron-forge-2025",
+      "fonte": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "vigente_mais_recente",
+      "edicao": "5.5e / revisão 2025",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        12,
+        20
+      ],
+      "descricao": "Especialização de Artificer da revisão de 2025 publicada em Eberron: Forge of the Artificer, que prevalece sobre versões anteriores equivalentes.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Demonshard",
+      "classe": "Barbarian",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Barbarian apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Wands",
+      "classe": "Bard",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Bard apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Commerce Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Cleric apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Bloodhound",
+      "classe": "Ranger",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Ranger apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Nemesis Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Sorcerer apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Stone Sovereign Patron",
+      "classe": "Warlock",
+      "grupo": "Subclasses da Fronteira Ocidental",
+      "fonte_id": "quickstone-2024",
+      "fonte": "Frontiers of Eberron: Quickstone",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        147,
+        155
+      ],
+      "descricao": "Opção de Warlock apresentada em Frontiers of Eberron: Quickstone e mantida como variante própria da Fronteira Ocidental de Eberron.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of the Moon",
+      "classe": "Bard",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Bard publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Knowledge Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Cleric publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Banneret",
+      "classe": "Fighter",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Fighter publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of the Noble Genies",
+      "classe": "Paladin",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Paladin publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Winter Walker",
+      "classe": "Ranger",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Ranger publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Scion of the Three",
+      "classe": "Rogue",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Rogue publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Spellfire Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Sorcerer publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Bladesinger",
+      "classe": "Wizard",
+      "grupo": "Subclasses de Heroes of Faerûn",
+      "fonte_id": "fr-heroes-2025",
+      "fonte": "Forgotten Realms: Heroes of Faerûn",
+      "ano": 2025,
+      "natureza": "oficial",
+      "status": "manter",
+      "edicao": "5.5e / regras 2024",
+      "origem_pdf": "pdf24_merged-1.pdf",
+      "paginas_pdf_fonte": [
+        16,
+        26
+      ],
+      "descricao": "Subclasse de Wizard publicada em Forgotten Realms: Heroes of Faerûn, preservada como opção própria dos Reinos Esquecidos.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Beast",
+      "classe": "Barbarian",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of Wild Magic",
+      "classe": "Barbarian",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Creation",
+      "classe": "Bard",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Eloquence",
+      "classe": "Bard",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Order Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Peace Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Twilight Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of Spores",
+      "classe": "Druid",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of Wildfire",
+      "classe": "Druid",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Rune Knight",
+      "classe": "Fighter",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Fighter de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Way of the Astral Self",
+      "classe": "Monk",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Monk de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of the Watchers",
+      "classe": "Paladin",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Paladin de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Swarmkeeper",
+      "classe": "Ranger",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Ranger de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Phantom",
+      "classe": "Rogue",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Rogue de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "The Fathomless",
+      "classe": "Warlock",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "The Genie",
+      "classe": "Warlock",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Bladesinging",
+      "classe": "Wizard",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Order of Scribes",
+      "classe": "Wizard",
+      "grupo": "Subclasses exclusivas de Tasha não reimpressas em 2024",
+      "fonte_id": "tasha-2020",
+      "fonte": "Tasha’s Cauldron of Everything",
+      "ano": 2020,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2020",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        24,
+        78
+      ],
+      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Ancestral Guardian",
+      "classe": "Barbarian",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Storm Herald",
+      "classe": "Barbarian",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Swords",
+      "classe": "Bard",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Whispers",
+      "classe": "Bard",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Forge Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Grave Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of Dreams",
+      "classe": "Druid",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Circle of the Shepherd",
+      "classe": "Druid",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Arcane Archer",
+      "classe": "Fighter",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Cavalier",
+      "classe": "Fighter",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Samurai",
+      "classe": "Fighter",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Way of the Drunken Master",
+      "classe": "Monk",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Way of the Kensei",
+      "classe": "Monk",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Way of the Sun Soul",
+      "classe": "Monk",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of Conquest",
+      "classe": "Paladin",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Oath of Redemption",
+      "classe": "Paladin",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Horizon Walker",
+      "classe": "Ranger",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Monster Slayer",
+      "classe": "Ranger",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Inquisitive",
+      "classe": "Rogue",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Mastermind",
+      "classe": "Rogue",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Scout",
+      "classe": "Rogue",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Swashbuckler",
+      "classe": "Rogue",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Divine Soul",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Shadow Magic",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Storm Sorcery",
+      "classe": "Sorcerer",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "The Hexblade",
+      "classe": "Warlock",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Warlock de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "War Magic",
+      "classe": "Wizard",
+      "grupo": "Subclasses exclusivas de Xanathar não reimpressas em 2024",
+      "fonte_id": "xanathar-2017",
+      "fonte": "Xanathar’s Guide to Everything",
+      "ano": 2017,
+      "natureza": "oficial",
+      "status": "legado_com_conteudo_unico",
+      "edicao": "5e / 2017",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        8,
+        59
+      ],
+      "descricao": "Subclasse de Wizard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Path of the Brewmaster",
+      "classe": "Barbarian",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Barbarian de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "College of Mixology",
+      "classe": "Bard",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Bard de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Festivity Domain",
+      "classe": "Cleric",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Cleric de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Tavern Brawler",
+      "classe": "Fighter",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Fighter de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Way of the Artisan",
+      "classe": "Monk",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Monk de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Charlatan",
+      "classe": "Rogue",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Rogue de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    },
+    {
+      "nome": "Swarmslinger",
+      "classe": "Tamer",
+      "grupo": "Subclasses de L’Arsène",
+      "fonte_id": "larsene-ledger-2024",
+      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
+      "ano": 2024,
+      "natureza": "terceiros",
+      "status": "complementar",
+      "edicao": "5e / terceiros",
+      "origem_pdf": "pdf24_merged.pdf",
+      "paginas_pdf_fonte": [
+        285,
+        302
+      ],
+      "descricao": "Opção de Tamer de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
+      "nivel_publicacao": "catalogo_estruturado_com_sintese"
+    }
+  ]
+}
