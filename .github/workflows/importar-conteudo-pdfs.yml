@@ -122,3 +122,5 @@ jobs:
           git commit -m 'Materializa monstros dos dois PDFs e integra Artificer às classes padrão'
           git pull --rebase origin main
           git push
+
+# reexecução após completar as cinco partes do pacote de monstros extras
