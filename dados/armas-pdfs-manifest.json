@@ -6,17 +6,17 @@
   "politica": {
     "precedencia": "A regra oficial 5.5e/2024 permanece soberana. Versões 5e e suplementares só substituem versões anteriores equivalentes dentro da mesma linha editorial quando são claramente revisões posteriores.",
     "xyleff": "Conteúdo de Xyleff é demonstrativo e permanece isolado como não canônico; nunca substitui uma arma oficial.",
-    "taxonomia": "Armas mágicas localizadas nos PDFs são excluídas deste módulo e permanecem em Itens Mágicos. Ataques de blocos de monstros e explosivos também não são cadastrados como armas de equipamento."
+    "taxonomia": "Armas mágicas localizadas nos PDFs são excluídas deste módulo e permanecem em Itens Mágicos. Ataques de blocos de monstros e explosivos também não são cadastrados como armas de equipamento.",
+    "escopo_tematico": "O catálogo exclui armas modernas e futuristas incompatíveis com fantasia medieval. Armas de pólvora antiga/renascentista, como musket, pistol e blunderbuss, podem permanecer por serem compatíveis com cenários de fantasia histórica ou fantástica."
   },
   "controle": {
-    "quantidade": 115,
-    "pdf24_merged": 24,
+    "quantidade": 107,
+    "pdf24_merged": 16,
     "pdf24_merged_1": 91,
-    "oficiais": 9,
+    "oficiais": 1,
     "suplementares": 19,
     "demonstrativos": 87,
     "por_fonte": {
-      "Dungeon Master's Guide (2024)": 8,
       "L'Arsène's Ledger of Treasure and Trinkets": 16,
       "Heliana's Guide to Monster Hunting": 3,
       "Eberron: Rising from the Last War": 1,
@@ -27,18 +27,17 @@
       "Versões de armas suplementares de Heliana que foram republicadas/revisadas em L'Arsène's Ledger ficam consolidadas sob L'Arsène; os três Tommybows permanecem porque não têm sucessor equivalente na tabela revisada.",
       "Armas mágicas encontradas em pdf24_merged.pdf foram excluídas por taxonomia.",
       "Ataques nomeados dentro de stat blocks de monstros foram excluídos por não serem entradas de equipamento.",
-      "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas."
+      "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas.",
+      "Automatic Rifle, Hunting Rifle, Revolver, Semiautomatic Pistol, Shotgun, Antimatter Rifle, Laser Pistol e Laser Rifle do Dungeon Master's Guide 2024 foram removidos por incompatibilidade com o escopo de fantasia medieval do Hub."
     ]
   },
   "fontes": {
-    "dmg-2024-pdf24": {"titulo":"Dungeon Master's Guide (2024)","ano":2024,"arquivo_pdf":"pdf24_merged.pdf","ruleset":"5.5e","natureza":"oficial","secao":"Firearms","observacao":"Armas de fogo modernas e futuristas opcionais. A tabela não apresenta preço individual."},
     "larsene-ledger-pdf24": {"titulo":"L'Arsène's Ledger of Treasure and Trinkets","arquivo_pdf":"pdf24_merged.pdf","ruleset":"5e","natureza":"suplementar","secao":"Chapter 2: Equipment — New Weapons","observacao":"Tabela revisada de novas armas; prevalece sobre versões anteriores equivalentes de Heliana dentro da mesma linha suplementar."},
     "helianas-guide-pdf24-1": {"titulo":"Heliana's Guide to Monster Hunting","arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5e","natureza":"suplementar","secao":"Crafting / New Weapons — Tommybows","observacao":"Somente os Tommybows permanecem como registros ativos desta fonte após a consolidação com L'Arsène's Ledger."},
     "erlw-pdf24-1": {"titulo":"Eberron: Rising from the Last War","ano":2019,"arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5e","natureza":"oficial","secao":"Character Creation — Double-Bladed Scimitar"},
     "xyleff-weapons-pdf24-1": {"titulo":"Weapons, armors and Masteries","arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5.5e","natureza":"demonstrativo","autoria":"Felix Klaus; design por Angevine","secao":"Weapon List","observacao":"Material demonstrativo ligado ao Xyleff Sualky Guidebook. Os próprios autores informam que os preços foram definidos para balancear regras de materiais e durabilidade. Não canonizar."}
   },
   "arquivos": [
-    {"fonte":"dmg-2024-pdf24","arquivo":"dados/armas-fontes/dmg-2024.json","quantidade":8},
     {"fonte":"larsene-ledger-pdf24","arquivo":"dados/armas-fontes/larsene-ledger.json","quantidade":16},
     {"fonte":"helianas-guide-pdf24-1","arquivo":"dados/armas-fontes/helianas-guide.json","quantidade":3},
     {"fonte":"erlw-pdf24-1","arquivo":"dados/armas-fontes/erlw.json","quantidade":1},
