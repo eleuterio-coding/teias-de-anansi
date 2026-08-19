@@ -9,7 +9,7 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos"],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -23,9 +23,10 @@
         "dados/idiomas-core-standard.json",
         "dados/idiomas-core-rare.json",
         "dados/idiomas-forgotten-realms.json",
-        "idiomas.html"
+        "idiomas.html",
+        "montarias-veiculos.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas e Idiomas; em Idiomas contribui especialmente com opções do Player's Handbook 2024 e Forgotten Realms: Heroes of Faerûn 2025, consolidadas contra as entradas já ativas e com descrições revisadas."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas e Montarias e Veículos. No catálogo de Montarias e Veículos contribui com o catálogo-base de 2024 e opções adicionais, incluindo o Apparatus of Kwalish; equivalentes genéricos antigos são suprimidos quando existe versão soberana mais recente."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -33,7 +34,7 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas"],
+      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos"],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -48,9 +49,10 @@
         "dados/idiomas-eberron.json",
         "dados/idiomas-core-standard.json",
         "dados/idiomas-core-rare.json",
-        "idiomas.html"
+        "idiomas.html",
+        "montarias-veiculos.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas e Idiomas; em Idiomas contribui com Eberron: Rising from the Last War e Frontiers of Eberron: Quickstone, preservando procedência, status e relações linguísticas sem duplicar entradas já soberanas em 2024."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas e Montarias e Veículos. No catálogo de Montarias e Veículos contribui com opções de Eberron, Quickstone e Forgotten Realms, incluindo veículos das Moonshae Isles, Windskiff, Gyrocopter Wonder, Nimblewright Steed, Thunder Coach e Argonth, preservando conteúdo regional único e evitando duplicatas narrativas."
     }
   ],
   "controle": {
