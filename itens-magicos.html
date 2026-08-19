@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Itens Mágicos - Biblioteca - Teias de Anansi</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { max-width: 1120px; margin: 0 auto; padding: 24px; line-height: 1.55; }
+    a { color: inherit; }
+    .resumo, .meta { opacity: .78; }
+    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .controles { display: grid; grid-template-columns: minmax(240px, 1fr) repeat(3, minmax(150px, 220px)); gap: 10px; margin: 18px 0 10px; }
+    input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
+    .resultado { margin: 8px 0 16px; opacity: .75; }
+    .item { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
+    .item summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    .item summary:hover { background: #8881; }
+    .categoria { font-size: .86rem; opacity: .68; text-align: right; }
+    .corpo { padding: 0 16px 16px; }
+    .stat { margin: 0 0 12px; font-style: italic; font-weight: 600; }
+    .descricao { white-space: pre-wrap; overflow-wrap: anywhere; }
+    .meta { border-top: 1px solid #8883; margin-top: 14px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    .legado { display: inline-block; margin-left: 8px; font-size: .75rem; padding: 2px 7px; border: 1px solid #8887; border-radius: 999px; opacity: .75; vertical-align: middle; }
+    .atribuicao { margin-top: 26px; padding-top: 14px; border-top: 1px solid #8884; font-size: .88rem; opacity: .76; }
+    .erro { padding: 16px; border: 1px solid #b55; border-radius: 10px; }
+    @media (max-width: 850px) {
+      body { padding: 16px; }
+      .controles { grid-template-columns: 1fr 1fr; }
+      .controles input { grid-column: 1 / -1; }
+    }
+    @media (max-width: 560px) {
+      .controles { grid-template-columns: 1fr; }
+      .controles input { grid-column: auto; }
+      .item summary { display: block; }
+      .categoria { display: block; margin-top: 5px; text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <p><a href="bibliotecas.html?v=20260819-1158">← Bibliotecas</a></p>
+  <header>
+    <h1>Itens Mágicos</h1>
+    <p class="resumo">Catálogo ativo de itens mágicos de D&amp;D 5e/5.5e com conteúdo integral legalmente reutilizável.</p>
+  </header>
+
+  <div class="nota"><strong>Critério editorial:</strong> entram somente registros com bloco mecânico e descrição completos em fonte aberta/licenciada. A revisão 5.5e/2024 prevalece sobre a versão 5e/2014 quando existe equivalente. O texto dos itens é preservado no idioma original do SRD para manter fidelidade integral à fonte.</div>
+  <div class="nota"><strong>Precedência aplicada:</strong> 258 registros vêm do SRD 5.2.1. O único registro legado ativo do SRD 5.1 é <em>Restorative Ointment</em>, mantido porque não possui equivalente no SRD 5.2.1. Nomes 2014 substituídos ou renomeados não aparecem como duplicatas no catálogo ativo.</div>
+
+  <div class="controles">
+    <input id="busca" type="search" placeholder="Buscar item, efeito, tipo ou bloco mecânico...">
+    <select id="edicao">
+      <option value="">Todas as edições</option>
+      <option value="srd521">5.5e — SRD 5.2.1</option>
+      <option value="srd51">5e — SRD 5.1 (legado ativo)</option>
+    </select>
+    <select id="tipo"><option value="">Todos os tipos</option></select>
+    <select id="raridade"><option value="">Todas as raridades</option></select>
+  </div>
+
+  <p class="resultado" id="resultado">Carregando catálogo...</p>
+  <main id="lista"></main>
+  <footer class="atribuicao" id="atribuicao"></footer>
+
+<script>
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let DATA = null;
+
+function tipoDo(bloco) {
+  return String(bloco || '').split(',')[0].replace(/\s*\(.*/, '').trim();
+}
+function raridadeDo(bloco) {
+  const b = String(bloco || '').toLowerCase();
+  if (b.includes('rarity varies')) return 'Rarity Varies';
+  if (b.includes('very rare')) return 'Very Rare';
+  if (b.includes('legendary')) return 'Legendary';
+  if (b.includes('artifact')) return 'Artifact';
+  if (b.includes('uncommon')) return 'Uncommon';
+  if (/(^|[^a-z])rare([^a-z]|$)/.test(b)) return 'Rare';
+  if (b.includes('common')) return 'Common';
+  return 'Other';
+}
+function paginaTexto(item) {
+  return item.pagina_inicio === item.pagina_fim
+    ? String(item.pagina_inicio)
+    : `${item.pagina_inicio}–${item.pagina_fim}`;
+}
+function popularFiltros() {
+  const tipos = [...new Set(DATA.items.map(x => tipoDo(x.bloco)))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'en'));
+  const ordem = ['Common','Uncommon','Rare','Very Rare','Legendary','Artifact','Rarity Varies','Other'];
+  document.getElementById('tipo').insertAdjacentHTML('beforeend', tipos.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
+  document.getElementById('raridade').insertAdjacentHTML('beforeend', ordem.filter(r => DATA.items.some(x => raridadeDo(x.bloco) === r)).map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''));
+}
+function textoBusca(item) {
+  const fonte = DATA.fontes[item.fonte] || {};
+  return [item.nome, item.bloco, item.descricao, fonte.titulo, fonte.ruleset]
+    .join(' ').toLocaleLowerCase('pt-BR');
+}
+function render() {
+  if (!DATA) return;
+  const q = document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR');
+  const edicao = document.getElementById('edicao').value;
+  const tipo = document.getElementById('tipo').value;
+  const raridade = document.getElementById('raridade').value;
+
+  const itens = DATA.items.filter(item =>
+    (!q || textoBusca(item).includes(q)) &&
+    (!edicao || item.fonte === edicao) &&
+    (!tipo || tipoDo(item.bloco) === tipo) &&
+    (!raridade || raridadeDo(item.bloco) === raridade)
+  );
+
+  document.getElementById('resultado').textContent = `${itens.length} de ${DATA.controle.quantidade} registros exibidos`;
+  document.getElementById('lista').innerHTML = itens.map(item => {
+    const fonte = DATA.fontes[item.fonte];
+    const legado = item.fonte === 'srd51' ? '<span class="legado">5e legado ativo</span>' : '';
+    return `<details class="item">
+      <summary>
+        <span><strong>${esc(item.nome)}</strong>${legado}</span>
+        <span class="categoria">${esc(item.bloco)}</span>
+      </summary>
+      <div class="corpo">
+        <p class="stat">${esc(item.bloco)}</p>
+        <div class="descricao">${esc(item.descricao)}</div>
+        <div class="meta">
+          <span><strong>Tipo:</strong> ${esc(tipoDo(item.bloco))}</span>
+          <span><strong>Raridade:</strong> ${esc(raridadeDo(item.bloco))}</span>
+          <span><strong>Sintonia:</strong> ${/requires attunement/i.test(item.bloco) ? 'Sim' : 'Não'}</span>
+          <span><strong>Livro:</strong> ${esc(fonte.titulo)}</span>
+          <span><strong>Edição:</strong> ${esc(fonte.ruleset)}</span>
+          <span><strong>Página(s):</strong> ${esc(paginaTexto(item))}</span>
+          <span><strong>Licença:</strong> ${esc(fonte.licenca)}</span>
+        </div>
+      </div>
+    </details>`;
+  }).join('');
+}
+async function carregarDados() {
+  const mr = await fetch('dados/itens-magicos/manifest.json?v=20260819-1158', {cache:'no-store'});
+  if (!mr.ok) throw new Error(`HTTP ${mr.status} ao carregar o manifesto`);
+  const manifest = await mr.json();
+  const partes = await Promise.all(manifest.chunks.map(async caminho => {
+    const r = await fetch(`${caminho}?v=20260819-1158`, {cache:'no-store'});
+    if (!r.ok) throw new Error(`HTTP ${r.status} em ${caminho}`);
+    return r.json();
+  }));
+  return {...manifest, items: partes.flat()};
+}
+carregarDados()
+  .then(data => {
+    DATA = data;
+    popularFiltros();
+    document.getElementById('atribuicao').textContent = data.atribuicao;
+    render();
+  })
+  .catch(err => {
+    document.getElementById('resultado').textContent = 'Falha ao carregar o catálogo.';
+    document.getElementById('lista').innerHTML = `<p class="erro">Não foi possível carregar os dados de Itens Mágicos: ${esc(err.message)}</p>`;
+  });
+
+['busca','edicao','tipo','raridade'].forEach(id => {
+  document.getElementById(id).addEventListener(id === 'busca' ? 'input' : 'change', render);
+});
+</script>
+</body>
+</html>
