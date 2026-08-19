@@ -28,7 +28,7 @@
         "dados/armaduras-pdfs.json",
         "armaduras.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras fornece o catálogo-base de 2024 e metadados complementares de fabricação; armaduras mágicas localizadas permanecem destinadas ao módulo Itens Mágicos."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras foram localizadas também ocorrências de armaduras e escudos mágicos; elas foram excluídas deste catálogo por taxonomia e permanecem destinadas ao módulo Itens Mágicos."
     },
     {
       "id": "fonte:pdf24_merged-1",
@@ -56,7 +56,7 @@
         "dados/armaduras-pdfs.json",
         "armaduras.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras contribui com 21 registros de um catálogo demonstrativo, mantidos em bloco separado com status não canonizar; o material oficial de 2024 permanece soberano."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos e Armaduras. Em Armaduras contém a tabela demonstrativa de Xyleff, mantida em bloco separado com status não canonizar, além de uma tabela de crafting que reproduz os modelos mundanos padrão usados para conferência dos valores; a regra oficial de 2024 permanece soberana."
     }
   ],
   "controle": {
