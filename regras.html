@@ -79,7 +79,7 @@ function render(){
 
     if(ALL.length!==156)throw new Error(`catálogo incompleto: ${ALL.length}/156`);
     const familias=['Regra Geral','Regra da Casa',...DATA.familias.filter(f=>f!=='Regra Geral'&&f!=='Regra da Casa')];
-    document.getElementById('filtro').innerHTML='<option value="">Todas</option>'+familias.map(f=>`<option>${esc(f)}</option>`).join('');
+    document.getElementById('filtro').innerHTML='<option value="">Todas</option>'+familias.map(f=>`<option value="${esc(f)}">${esc(f==='Regra da Casa'?'Regras da Casa':f)}</option>`).join('');
     document.getElementById('precedencia').innerHTML=`<strong>Precedência:</strong> ${esc(HUB.precedencia||'Regras da Casa prevalecem sobre Regras Gerais, salvo indicação em contrário.')}`;
     document.getElementById('status').innerHTML='<strong>Publicado e verificado:</strong> 155 definições oficiais + 1 Regra da Casa carregadas.';
     render();
