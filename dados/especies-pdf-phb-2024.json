@@ -1,0 +1,29 @@
+{
+  "fonte": {
+    "id": "phb-2024",
+    "titulo": "Player's Handbook",
+    "ano": 2024,
+    "natureza": "Oficial",
+    "setting": "Geral",
+    "ruleset": "5.5e",
+    "revisao_core": 2024,
+    "pdf": "pdf24_merged-1.pdf",
+    "paginas": "186-197"
+  },
+  "items": [
+    {
+      "nome": "Aasimar",
+      "tipo": "Humanoid",
+      "tamanhos": ["Medium", "Small"],
+      "velocidade": 30,
+      "descricao": "Mortais marcados por uma centelha dos Planos Superiores, capazes de manifestar resistência celestial, cura e uma revelação sobrenatural.",
+      "tracos": [
+        {"nome":"Celestial Resistance","texto":"Resistência a dano Necrótico e Radiante."},
+        {"nome":"Darkvision","texto":"Visão no escuro com alcance de 60 pés."},
+        {"nome":"Healing Hands","texto":"Com uma ação Mágica, toca uma criatura e rola um número de d4 igual ao Bônus de Proficiência; o alvo recupera Pontos de Vida iguais ao total. Recarrega após Descanso Longo."},
+        {"nome":"Light Bearer","texto":"Conhece o truque Light; Carisma é a habilidade de conjuração para ele."},
+        {"nome":"Celestial Revelation","texto":"A partir do nível 3 de personagem, pode se transformar com uma Ação Bônus por 1 minuto, uma vez por Descanso Longo, escolhendo a opção a cada transformação. Uma vez em cada turno durante a transformação, ao causar dano com ataque ou magia, causa dano adicional igual ao Bônus de Proficiência: Necrótico com Necrotic Shroud ou Radiante com Heavenly Wings e Inner Radiance. Heavenly Wings concede deslocamento de voo igual ao deslocamento. Inner Radiance emite luz plena em 10 pés e penumbra por mais 10 pés e, ao fim de cada turno do Aasimar, cada criatura a até 10 pés sofre dano Radiante igual ao Bônus de Proficiência. Necrotic Shroud manifesta olhos escurecidos e asas espectrais incapazes de voo."}
+      ]
+    }
+  ]
+}
