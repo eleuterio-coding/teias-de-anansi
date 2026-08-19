@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Idiomas - Biblioteca - Teias de Anansi</title>
   <style>
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -19,6 +22,7 @@
     .corpo { padding: 0 16px 16px; }
     .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
     .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
+    .erro { padding: 14px; border: 1px solid #b44; border-radius: 10px; }
     @media (max-width: 750px) {
       body { padding: 16px; }
       .controles { grid-template-columns: 1fr; }
@@ -28,13 +32,13 @@
   </style>
 </head>
 <body>
-  <p><a href="bibliotecas.html">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20260819-1043">← Bibliotecas</a></p>
   <header>
     <h1>Idiomas</h1>
-    <p class="resumo">44 idiomas oficiais ativos no recorte mecânico do Hub, com precedência 2024/5.5e aplicada.</p>
+    <p class="resumo">67 idiomas ativos no catálogo. A publicação incorpora os idiomas localizados em pdf24_merged.pdf e pdf24_merged-1.pdf, com descrições revisadas e precedência 2024/5.5e preservada.</p>
   </header>
 
-  <div class="nota"><strong>Critério:</strong> entram idiomas oficiais de personagem/campanha publicados pela Wizards em D&D 5e/5.5e. Versões 2024 substituem equivalentes anteriores; idiomas expandidos de 5e permanecem quando não existe substituto 2024. Idiomas exclusivos de statblocks de criaturas não entram neste catálogo. Primordial conta como um idioma; Aquan, Auran, Ignan e Terran são seus dialetos.</div>
+  <div class="nota"><strong>Critério:</strong> o catálogo mantém os idiomas já ativos do Hub e incorpora os idiomas de personagem, regionais, raros, exóticos e opcionais documentados nos dois PDFs. Quando um idioma já existia na base 2024, a entrada foi consolidada em vez de duplicada. Conteúdos de terceiros presentes nos PDFs permanecem identificados na fonte/status. Primordial continua sendo um único idioma; Aquan, Auran, Ignan e Terran são tratados como seus dialetos.</div>
 
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar idioma, fonte ou origem...">
@@ -42,6 +46,7 @@
       <option value="">Todas as categorias</option>
       <option value="Core — Standard">Core — Standard</option>
       <option value="Core — Rare">Core — Rare</option>
+      <option value="Expanded — Forgotten Realms">Expanded — Forgotten Realms</option>
       <option value="Expanded — Eberron">Expanded — Eberron</option>
       <option value="Expanded — Ravnica">Expanded — Ravnica</option>
       <option value="Expanded — Theros">Expanded — Theros</option>
@@ -51,65 +56,11 @@
       <option value="Expanded — Dragonlance">Expanded — Dragonlance</option>
     </select>
   </div>
-  <p class="resultado" id="resultado"></p>
+  <p class="resultado" id="resultado">Carregando idiomas...</p>
   <main id="lista"></main>
 
 <script>
-const IDIOMAS = [
-  {nome:'Common', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Sigil', descricao:'Idioma comum do jogo e idioma conhecido por todos os personagens jogadores nas regras de 2024.', status:'Ativo — regra soberana 2024'},
-  {nome:'Common Sign Language', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Sigil', descricao:'Língua de sinais comum adicionada ao conjunto padrão de idiomas nas regras de 2024.', status:'Ativo — 2024'},
-  {nome:'Draconic', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Dragons', descricao:'Idioma dracônico; em 2024 integra a lista de idiomas padrão.', status:'Ativo — 2024'},
-  {nome:'Dwarvish', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Dwarves', descricao:'Idioma associado originalmente aos anões e difundido pelos mundos de D&D.', status:'Ativo — 2024'},
-  {nome:'Elvish', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Elves', descricao:'Idioma associado originalmente aos elfos e difundido pelos mundos de D&D.', status:'Ativo — 2024'},
-  {nome:'Giant', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Giants', descricao:'Idioma associado aos gigantes e criaturas de tradições gigantes.', status:'Ativo — 2024'},
-  {nome:'Gnomish', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Gnomes', descricao:'Idioma associado originalmente aos gnomos.', status:'Ativo — 2024'},
-  {nome:'Goblin', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Goblinoids', descricao:'Idioma de origem goblinoide.', status:'Ativo — 2024'},
-  {nome:'Halfling', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Halflings', descricao:'Idioma associado originalmente aos halflings.', status:'Ativo — 2024'},
-  {nome:'Orc', categoria:'Core — Standard', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Orcs', descricao:'Idioma associado originalmente aos orcs.', status:'Ativo — 2024'},
-
-  {nome:'Abyssal', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Demons of the Abyss', descricao:'Idioma raro associado aos demônios do Abismo.', status:'Ativo — 2024'},
-  {nome:'Celestial', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Celestials', descricao:'Idioma raro associado aos celestiais.', status:'Ativo — 2024'},
-  {nome:'Deep Speech', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Aberrations', descricao:'Idioma raro associado a aberrações e influências alienígenas.', status:'Ativo — 2024'},
-  {nome:'Druidic', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Druidic circles', descricao:'Idioma secreto dos círculos druídicos, classificado como idioma raro em 2024.', status:'Ativo — 2024'},
-  {nome:'Infernal', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Devils of the Nine Hells', descricao:'Idioma raro associado aos diabos dos Nove Infernos.', status:'Ativo — 2024'},
-  {nome:'Primordial', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Elementals', descricao:'Idioma raro dos elementais. Inclui os dialetos Aquan, Auran, Ignan e Terran, que não são contados como idiomas independentes neste catálogo.', status:'Ativo — 2024'},
-  {nome:'Sylvan', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'The Feywild', descricao:'Idioma raro associado à Agrestia das Fadas e às criaturas feéricas.', status:'Ativo — 2024'},
-  {nome:'Thieves’ Cant', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'Criminal guilds', descricao:'Linguagem secreta de guildas e tradições criminosas, tratada como idioma raro em 2024.', status:'Ativo — 2024'},
-  {nome:'Undercommon', categoria:'Core — Rare', fonte:'Player’s Handbook / Basic Rules (2024)', origem:'The Underdark', descricao:'Idioma raro amplamente usado no Subterrâneo.', status:'Ativo — 2024'},
-
-  {nome:'Daelkyr', categoria:'Expanded — Eberron', fonte:'Eberron: Rising from the Last War', origem:'Eberron', descricao:'Idioma específico de Eberron associado aos daelkyr e suas influências.', status:'Ativo — 5e retido'},
-  {nome:'Quori', categoria:'Expanded — Eberron', fonte:'Eberron: Rising from the Last War', origem:'Eberron', descricao:'Idioma específico de Eberron associado aos quori.', status:'Ativo — 5e retido'},
-  {nome:'Riedran', categoria:'Expanded — Eberron', fonte:'Eberron: Rising from the Last War', origem:'Eberron', descricao:'Idioma regional de Eberron associado a Riedra.', status:'Ativo — 5e retido'},
-
-  {nome:'Kraul', categoria:'Expanded — Ravnica', fonte:'Guildmasters’ Guide to Ravnica', origem:'Ravnica', descricao:'Idioma específico do cenário de Ravnica associado aos kraul.', status:'Ativo — 5e retido'},
-  {nome:'Loxodon', categoria:'Expanded — Ravnica', fonte:'Guildmasters’ Guide to Ravnica', origem:'Ravnica', descricao:'Idioma específico de Ravnica associado aos loxodons.', status:'Ativo — 5e retido'},
-  {nome:'Minotaur', categoria:'Expanded — Ravnica', fonte:'Guildmasters’ Guide to Ravnica', origem:'Ravnica', descricao:'Idioma específico de cenário associado aos minotauros em Ravnica.', status:'Ativo — 5e retido'},
-  {nome:'Vedalken', categoria:'Expanded — Ravnica', fonte:'Guildmasters’ Guide to Ravnica', origem:'Ravnica', descricao:'Idioma específico de Ravnica associado aos vedalken.', status:'Ativo — 5e retido'},
-
-  {nome:'Leonin', categoria:'Expanded — Theros', fonte:'Mythic Odysseys of Theros', origem:'Theros', descricao:'Idioma específico de Theros associado aos leonin.', status:'Ativo — 5e retido'},
-
-  {nome:'Marquesian', categoria:'Expanded — Wildemount', fonte:'Explorer’s Guide to Wildemount', origem:'Exandria / Wildemount', descricao:'Idioma regional de Exandria presente em Wildemount e ligado historicamente a Marquet.', status:'Ativo — 5e retido'},
-  {nome:'Naush', categoria:'Expanded — Wildemount', fonte:'Explorer’s Guide to Wildemount', origem:'Exandria / Wildemount', descricao:'Idioma regional de Wildemount associado às tradições Ki’Nau.', status:'Ativo — 5e retido'},
-  {nome:'Zemnian', categoria:'Expanded — Wildemount', fonte:'Explorer’s Guide to Wildemount', origem:'Exandria / Wildemount', descricao:'Idioma regional de Wildemount associado às terras e tradições zemnianas.', status:'Ativo — 5e retido'},
-
-  {nome:'Gith', categoria:'Expanded — Planar', fonte:'Mordenkainen-era 5e / D&D Beyond', origem:'Gith', descricao:'Idioma associado aos povos gith e mantido como opção expandida de 5e.', status:'Ativo — 5e retido'},
-
-  {nome:'Hadozee', categoria:'Expanded — Spelljammer', fonte:'Spelljammer: Adventures in Space', origem:'Wildspace', descricao:'Idioma associado aos hadozee nas opções de Spelljammer.', status:'Ativo — 5e retido'},
-  {nome:'Thri-kreen', categoria:'Expanded — Spelljammer', fonte:'Spelljammer: Adventures in Space', origem:'Wildspace', descricao:'Idioma associado aos thri-kreen nas opções de Spelljammer.', status:'Ativo — 5e retido'},
-
-  {nome:'Abanasinian', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn presente no catálogo de Dragonlance.', status:'Ativo — 5e retido'},
-  {nome:'Ergot', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma de Krynn associado a Ergoth.', status:'Ativo — 5e retido'},
-  {nome:'Istarian', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma de Krynn associado a Istar e suas tradições.', status:'Ativo — 5e retido'},
-  {nome:'Kenderspeak', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma associado aos kender no cenário de Dragonlance.', status:'Ativo — 5e retido'},
-  {nome:'Kharolian', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn.', status:'Ativo — 5e retido'},
-  {nome:'Khur', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn associado a Khur.', status:'Ativo — 5e retido'},
-  {nome:'Kothian', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn.', status:'Ativo — 5e retido'},
-  {nome:'Nerakese', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn associado a Neraka.', status:'Ativo — 5e retido'},
-  {nome:'Nordmaarian', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional de Krynn associado a Nordmaar.', status:'Ativo — 5e retido'},
-  {nome:'Ogre', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma associado aos ogros no contexto de Krynn.', status:'Ativo — 5e retido'},
-  {nome:'Solamnic', categoria:'Expanded — Dragonlance', fonte:'Dragonlance: Shadow of the Dragon Queen', origem:'Krynn', descricao:'Idioma regional e cultural associado a Solamnia.', status:'Ativo — 5e retido'}
-];
-
+let IDIOMAS = [];
 const busca = document.getElementById('busca');
 const filtro = document.getElementById('filtro');
 const lista = document.getElementById('lista');
@@ -136,9 +87,31 @@ function render() {
     </details>`).join('');
 }
 
+async function iniciar() {
+  try {
+    const urls = [
+      'dados/idiomas-core-standard.json?v=20260819-1043',
+      'dados/idiomas-core-rare.json?v=20260819-1043',
+      'dados/idiomas-forgotten-realms.json?v=20260819-1043',
+      'dados/idiomas-eberron.json?v=20260819-1043',
+      'dados/idiomas-outros.json?v=20260819-1043'
+    ];
+    const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'no-store'})));
+    const falha = respostas.find(r => !r.ok);
+    if (falha) throw new Error(`HTTP ${falha.status}`);
+    const grupos = await Promise.all(respostas.map(r => r.json()));
+    IDIOMAS = grupos.flat().sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    render();
+  } catch (erro) {
+    resultado.textContent = 'Falha ao carregar o catálogo.';
+    lista.innerHTML = `<p class="erro">Não foi possível carregar os idiomas. Atualize a página para tentar novamente.</p>`;
+    console.error(erro);
+  }
+}
+
 busca.addEventListener('input', render);
 filtro.addEventListener('change', render);
-render();
+iniciar();
 </script>
 </body>
 </html>
