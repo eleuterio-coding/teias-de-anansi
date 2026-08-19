@@ -1,7 +1,7 @@
 {
   "schema": "hub-rpg/importacao-pdfs/v1",
   "gerado_em": "2026-08-18",
-  "republicado_em": "2026-08-19T10:03:00-03:00",
+  "republicado_em": "2026-08-19T10:43:00-03:00",
   "status": "publicado_verificado",
   "regra_abertura": "ignorada por solicitação explícita do usuário",
   "regra_completude": "mantida",
@@ -79,13 +79,23 @@
   "ferramentas_publicadas_dos_pdfs": 25,
   "ferramentas_arquivo": "dados/ferramentas-pdfs.json",
   "ferramentas_exclusoes_taxonomicas": ["Land Vehicles", "Water Vehicles", "Air Vehicles"],
+  "bugigangas_linhas_auditadas": 110,
+  "bugigangas_publicadas": 109,
+  "bugigangas_arquivo": "dados/bugigangas-pdfs.json",
+  "bugigangas_pagina": "bugigangas.html",
+  "bugigangas_deduplicacoes": 1,
+  "bugigangas_exclusoes_taxonomicas": [
+    "Soul Trinkets temporários do Phantom",
+    "Magic items de L'Arsene's Ledger of Treasure and Trinkets"
+  ],
   "verificacao": {
     "classes": "13 classes padrão no módulo, incluindo Artificer 2025; Sidekicks removidos",
     "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
     "ferramentas": "25 categorias primárias publicadas; pdf24_merged.pdf fornece as descrições detalhadas e pdf24_merged-1.pdf acrescenta relações de Eberron/Artificer; veículos direcionados ao módulo próprio",
+    "bugigangas": "110 linhas de tabelas auditadas; 109 registros únicos publicados; Player's Handbook 2024 fornece 100 entradas e Mournland Trinkets fornece 9 entradas adicionais após consolidação de uma duplicata exata",
     "publicacao": "concluida"
   },
-  "revisado_em": "2026-08-19T10:29:00-03:00",
+  "revisado_em": "2026-08-19T10:43:00-03:00",
   "registros_estruturados_carregados": 395,
   "monstros_extras_carregados": 92,
   "registros_pdf_publicados": 487,
