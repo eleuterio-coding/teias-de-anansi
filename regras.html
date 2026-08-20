@@ -10,9 +10,6 @@
   <style>
     :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}
     *{box-sizing:border-box}body{max-width:1120px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.7}
-    header p{max-width:900px}.painel{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:10px;margin:18px 0}
-    .painel div{border:1px solid var(--b);border-radius:10px;padding:12px 14px}.painel strong{display:block;font-size:1.35rem}
-    .nota,.licenca{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}
     .controles{display:grid;grid-template-columns:minmax(260px,1fr) 230px 230px;gap:10px;margin:18px 0}
     input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
     .item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item>summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
@@ -20,30 +17,17 @@
     .badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem;white-space:nowrap}
     .corpo{padding:0 16px 16px}.source-strip{display:flex;gap:8px 16px;flex-wrap:wrap;font-size:.82rem;opacity:.72;margin:0 0 12px}
     .secao-regra{margin:16px 0}.secao-regra h3{font-size:1rem;margin:0 0 5px}.secao-regra p{margin:0}
-    .refs{border-top:1px solid #8883;margin-top:16px;padding-top:12px}.refs p{margin:6px 0}.see-text{font-size:.88rem;opacity:.72}
     .house-override{border:1px solid #8888;border-left:4px solid currentColor;border-radius:8px;padding:11px 13px;margin:16px 0}.house-override p{margin:6px 0 0}
     .copyright-note{padding:10px 12px;border-left:3px solid #8888}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.8;display:flex;gap:8px 18px;flex-wrap:wrap}
     .erro{padding:16px;border:1px solid #b55;border-radius:10px}.hub-ref-target{outline:2px solid currentColor;outline-offset:4px}
-    .licenca{font-size:.88rem}.licenca p{margin:5px 0}
-    @media(max-width:800px){body{padding:16px}.controles,.painel{grid-template-columns:1fr}.item>summary{display:block}.badge{margin-top:7px}}
+    @media(max-width:800px){body{padding:16px}.controles{grid-template-columns:1fr}.item>summary{display:block}.badge{margin-top:7px}}
   </style>
 </head>
 <body>
-<p><a href="bibliotecas.html?v=20260820-srd521-regras4">← Bibliotecas</a></p>
+<p><a href="bibliotecas.html?v=20260820-srd521-regras5">← Bibliotecas</a></p>
 <header>
   <h1>Regras</h1>
-  <p>Glossário organizado com o <strong>SRD 5.2.1</strong> como base aberta e o <strong>D&amp;D Beyond — Rules Glossary 2024</strong> como referência oficial. A tradução em português brasileiro é editorial da Biblioteca; a redação original pode ser consultada pelos links oficiais de referência.</p>
 </header>
-
-<section class="painel" aria-label="Cobertura das regras">
-  <div><strong id="cont-srd">—</strong><span>entradas do SRD 5.2.1</span></div>
-  <div><strong id="cont-ddb">—</strong><span>termos complementares do D&amp;D Beyond</span></div>
-  <div><strong id="cont-house">—</strong><span>Regras da Casa preservadas</span></div>
-</section>
-
-<div class="nota">
-  <strong>Referências:</strong> “Veja também — SRD 5.2.1” reproduz as relações explícitas do documento aberto. “Referências adicionais do Hub” mantém a curadoria semântica da Biblioteca separada das referências oficiais.
-</div>
 
 <div class="controles">
   <input id="busca" type="search" placeholder="Buscar regra ou termo...">
@@ -58,11 +42,6 @@
 <p id="resultado" class="muted">Carregando...</p>
 <main id="lista"></main>
 
-<section class="licenca">
-  <strong>Atribuição SRD 5.2.1 — CC-BY-4.0</strong>
-  <p>This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at <a href="https://www.dndbeyond.com/srd" target="_blank" rel="noopener noreferrer">D&amp;D Beyond SRD</a>. The SRD 5.2.1 is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" rel="noopener noreferrer">Creative Commons Attribution 4.0 International License</a>.</p>
-</section>
-
-<script data-hub-referencias="1" data-hub-regras-srd="1" src="scripts/regras-srd-view-v4.js?v=20260820-srd521-regras4"></script>
+<script data-hub-referencias="1" data-hub-regras-srd="1" src="scripts/regras-srd-view-v5.js?v=20260820-srd521-regras5"></script>
 </body>
 </html>
