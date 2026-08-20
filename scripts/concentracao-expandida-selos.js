@@ -1,16 +1,4 @@
 (() => {
-  if (document.title.startsWith('Magias')) {
-    document.querySelector('header .muted')?.remove();
-    document.querySelectorAll('body > .nota').forEach(node => {
-      const text = node.textContent.trim();
-      if (text.startsWith('Critério editorial:') || text.startsWith('Corpus:')) node.remove();
-    });
-    const style = document.createElement('style');
-    style.dataset.magiasEditorialCleanup = '1';
-    style.textContent = '#badge-count,#badge-55,#badge-5,#badge-open,#status,#licenca{display:none!important}';
-    document.head.appendChild(style);
-  }
-
   const LABELS = {
     CM: 'CM — Concentração Maior',
     CI: 'CI — Concentração de Invocação',
