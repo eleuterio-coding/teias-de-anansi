@@ -1,0 +1,21 @@
+name: Auditar localização PT-BR
+
+on:
+  pull_request:
+    paths:
+      - '**.html'
+      - 'dados/**'
+      - 'scripts/auditar_localizacao_ptbr.py'
+      - '.github/workflows/auditar-localizacao-ptbr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Auditar localização integral
+        run: python scripts/auditar_localizacao_ptbr.py
