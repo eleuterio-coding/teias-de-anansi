@@ -1,0 +1,113 @@
+name: Limpeza editorial única dos módulos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cleanup-module-intros-once.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cleanup:
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Aplicar limpeza editorial em cinco módulos'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Remover blocos editoriais solicitados
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+
+          def edit(path, operations):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              original = text
+              for label, pattern, repl, expected_min in operations:
+                  text, n = re.subn(pattern, repl, text, flags=re.S|re.I)
+                  if n < expected_min:
+                      raise RuntimeError(f'{path}: bloco não encontrado: {label}')
+              p.write_text(text, encoding='utf-8')
+              if text == original:
+                  raise RuntimeError(f'{path}: nenhuma alteração aplicada')
+
+          edit('classes.html', [
+              ('resumo Classes', r'<p class="muted">As 12 classes-base de D&amp;D 5\.5e e o Artífice 2025, apresentados em português brasileiro\.</p>', '', 1),
+              ('localização Classes', r'<div class="nota"><strong>Localização PT-BR:</strong>.*?</div>', '', 1),
+          ])
+
+          edit('subclasses.html', [
+              ('resumo Subclasses', r'<p class="resumo">119 subclasses identificadas em pdf24_merged\.pdf e pdf24_merged-1\.pdf, deduplicadas por identidade e revisão\. Versões mais recentes equivalentes têm precedência\.</p>', '', 1),
+              ('critério Subclasses', r'<div class="nota"><strong>Critério editorial:</strong>.*?</div>', '', 1),
+              ('completude Subclasses', r'<div class="nota"><strong>Completude e direitos:</strong>.*?</div>', '', 1),
+              ('atribuição e consolidação Subclasses', r'<footer class="licenca">.*?</footer>', '', 1),
+          ])
+
+          edit('especies.html', [
+              ('resumo Espécies', r'<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.</p>', '', 1),
+              ('badges Espécies', r'<div><span class="badge">D&amp;D 5e \+ 5\.5e</span><span class="badge">PDFs consolidados</span><span class="badge">SRD 5\.1 / 5\.2\.1</span><span class="badge">build 1149</span></div>', '', 1),
+              ('critério Espécies', r'<div class="nota"><strong>Critério de publicação:</strong>.*?</div>', '', 1),
+              ('atualização dinâmica resumo Espécies', r"\s*document\.getElementById\('resumo'\)\.textContent=`\$\{DATA\.length\} opções no módulo: 49 espécies/variantes consolidadas dos PDFs \+ 2 legadas 5e pré-existentes\.`;", '', 1),
+              ('erro dinâmico resumo Espécies', r"\s*document\.getElementById\('resumo'\)\.textContent='Falha ao carregar o catálogo consolidado\.';", '', 1),
+          ])
+
+          edit('talentos.html', [
+              ('resumo Talentos', r'<p class="resumo">Talentos de D&amp;D 5e/5\.5e localizados editorialmente para português brasileiro\.</p>', '', 1),
+              ('localização Talentos', r'<div class="nota"><strong>Localização PT-BR:</strong>.*?</div>', '', 1),
+          ])
+
+          edit('antecedentes.html', [
+              ('resumo Antecedentes', r'<p class="resumo">58 antecedentes e variantes de D&amp;D 5e/5\.5e consolidados no catálogo e localizados para português brasileiro\.</p>', '', 1),
+              ('precedência Antecedentes', r'<div class="nota"><strong>Precedência:</strong>.*?</div>', '', 1),
+              ('escopo Antecedentes', r'<div class="nota"><strong>Escopo:</strong>.*?</div>', '', 1),
+              ('completude Antecedentes', r'<div class="nota"><strong>Completude:</strong>.*?</div>', '', 1),
+          ])
+
+          forbidden = {
+              'classes.html': ['As 12 classes-base de D&D 5.5e', 'Localização PT-BR:'],
+              'subclasses.html': ['119 subclasses identificadas em', 'Critério editorial:', 'Completude e direitos:', 'Atribuição CC exigida pelo SRD:', 'Os 119 registros deste catálogo'],
+              'especies.html': ['51 opções no módulo:', 'D&D 5e + 5.5e', 'PDFs consolidados', 'SRD 5.1 / 5.2.1', 'build 1149', 'Critério de publicação:'],
+              'talentos.html': ['Talentos de D&D 5e/5.5e localizados editorialmente', 'Localização PT-BR:'],
+              'antecedentes.html': ['58 antecedentes e variantes de D&D 5e/5.5e', 'Precedência:', 'Escopo:', 'Completude:'],
+          }
+          for path, terms in forbidden.items():
+              text = Path(path).read_text(encoding='utf-8')
+              text_plain = text.replace('&amp;', '&')
+              remain = [term for term in terms if term in text_plain]
+              if remain:
+                  raise RuntimeError(f'{path}: textos residuais: {remain}')
+
+          print('Cinco módulos limpos e validados.')
+          PY
+
+      - name: Validar escopo
+        shell: bash
+        run: |
+          git diff --check
+          changed="$(git diff --name-only | sort)"
+          expected="$(printf '%s\n' antecedentes.html classes.html especies.html subclasses.html talentos.html | sort)"
+          test "$changed" = "$expected" || { echo "Escopo inesperado:"; echo "$changed"; exit 1; }
+
+      - name: Commitar limpeza
+        shell: bash
+        run: |
+          git config user.name "eleuterio-coding"
+          git config user.email "rafael.eleuterio@gmail.com"
+          git add -- antecedentes.html classes.html especies.html subclasses.html talentos.html
+          git commit -m "Retira textos editoriais de cinco módulos"
+          git push origin HEAD:main
+
+      - name: Publicar GitHub Pages com o commit final
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: gh workflow run deploy-pages.yml --ref main
