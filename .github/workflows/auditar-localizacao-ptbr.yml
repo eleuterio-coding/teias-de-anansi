@@ -5,6 +5,7 @@ on:
     paths:
       - '**.html'
       - 'dados/**'
+      - 'scripts/*.js'
       - 'scripts/auditar_localizacao_ptbr.py'
       - '.github/workflows/auditar-localizacao-ptbr.yml'
   workflow_dispatch:
@@ -17,5 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Validar sintaxe JavaScript
+        run: |
+          for f in scripts/localizar-*.js scripts/limpar-metadados-modulos.js; do
+            echo "Verificando $f"
+            node --check "$f"
+          done
       - name: Auditar localização integral
         run: python scripts/auditar_localizacao_ptbr.py
