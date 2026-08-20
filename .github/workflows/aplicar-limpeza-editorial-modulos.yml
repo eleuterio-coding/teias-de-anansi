@@ -1,16 +1,16 @@
 name: Aplicar limpeza editorial dos módulos
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/aplicar-limpeza-editorial-modulos.yml'
+  workflow_run:
+    workflows: ['Deploy to GitHub Pages']
+    types: [completed]
 
 permissions:
   contents: write
 
 jobs:
   aplicar:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -111,7 +111,6 @@ jobs:
       - name: Validar e publicar no main
         shell: bash
         run: |
-          grep -q '20260820-clean3' scripts/limpar-metadados-modulos.js || true
           for f in monstros.html armaduras.html armas.html equipamentos-aventura.html ferramentas.html montarias-veiculos.html comercio-e-despesas.html bugigangas.html itens-magicos.html magias.html idiomas.html; do
             grep -q 'data-hub-limpa-meta-source="2"' "$f" || { echo "Falha: $f"; exit 1; }
           done
@@ -120,6 +119,9 @@ jobs:
           git add scripts/limpar-metadados-modulos.js \
             monstros.html armaduras.html armas.html equipamentos-aventura.html ferramentas.html \
             montarias-veiculos.html comercio-e-despesas.html bugigangas.html itens-magicos.html magias.html idiomas.html
-          git diff --cached --quiet && { echo 'Nenhuma alteração produzida.'; exit 1; }
+          if git diff --cached --quiet; then
+            echo 'Limpeza já aplicada em todos os 11 módulos.'
+            exit 0
+          fi
           git commit -m 'Remove blocos editoriais dos 11 módulos'
           git push origin HEAD:main
