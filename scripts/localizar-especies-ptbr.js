@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const V='20260820-ptbr1';
+const V='20260820-ptbr2';
 const UNIT=[['120 ft','36 m'],['60 ft','18 m'],['40 ft','12 m'],['35 ft','10,5 m'],['30 ft','9 m'],['20 ft','6 m'],['15 ft','4,5 m'],['10 ft','3 m'],['5 ft','1,5 m'],['120 pés','36 m'],['60 pés','18 m'],['40 pés','12 m'],['35 pés','10,5 m'],['30 pés','9 m'],['20 pés','6 m'],['15 pés','4,5 m'],['10 pés','3 m'],['5 pés','1,5 m']];
 const LEGACY={
  'especies:srd51:half-elf':{name:'Meio-Elfo',traits:{'Darkvision':['Visão no Escuro','Graças à sua herança élfica, você possui Visão no Escuro com alcance de 18 m.'],'Fey Ancestry':['Ancestralidade Feérica','Você tem Vantagem nos testes de resistência contra ser Enfeitiçado, e magia não pode fazê-lo dormir.'],'Skill Versatility':['Versatilidade em Perícias','Você ganha proficiência em duas perícias à sua escolha.']},extras:['Atributos: Carisma +2 e +1 em outros dois atributos à sua escolha.','Idade: meio-elfos atingem a maturidade por volta dos 20 anos e frequentemente vivem mais de 180 anos.','Idiomas: Comum, Élfico e um idioma adicional à sua escolha.']},
@@ -25,9 +25,13 @@ function localizeCard(card,loc){
  const legacyBlock=body.querySelector('.bloco h3');
  if(legacy&&legacyBlock&&legacyBlock.textContent.trim()==='Dados de legado'){const sec=legacyBlock.parentElement;sec.querySelectorAll('p').forEach((p,i)=>{if(legacy.extras[i])p.textContent=legacy.extras[i]})}
  const walker=document.createTreeWalker(body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const n of nodes){if(n.parentElement?.closest('.meta'))continue;n.nodeValue=textLoc(n.nodeValue,loc)}
- body.querySelectorAll('.meta span').forEach(x=>{const raw=x.textContent;if(raw.startsWith('Ruleset:'))x.innerHTML=x.innerHTML.replace('Ruleset:','Regras:')});
+ body.querySelectorAll('.meta span').forEach(x=>{if(x.textContent.startsWith('Ruleset:'))x.innerHTML=x.innerHTML.replace('Ruleset:','Regras:')});
 }
-fetch(`dados/localizacao-ptbr-especies.json?v=${V}`,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}).then(loc=>{
+Promise.all([
+ fetch(`dados/localizacao-ptbr-especies.json?v=${V}`,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`Base PT-BR HTTP ${r.status}`);return r.json()}),
+ fetch(`dados/localizacao-ptbr-especies-adicionais.json?v=${V}`,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(`Adendo PT-BR HTTP ${r.status}`);return r.json()})
+]).then(([base,add])=>{
+ const loc={...base,species:{...(base.species||{}),...(add.species||{})},trait_names:{...(base.trait_names||{}),...(add.trait_names||{})}};
  const scan=()=>{document.querySelectorAll('details.especie').forEach(c=>localizeCard(c,loc));document.querySelectorAll('#tamanho option').forEach(o=>{if(o.value==='Small')o.textContent='Pequeno';if(o.value==='Medium')o.textContent='Médio'});document.documentElement.dataset.especiesPtbr='ativo'};
  scan();const ob=new MutationObserver(scan);ob.observe(document.getElementById('lista')||document.body,{childList:true,subtree:true});
 }).catch(e=>{console.error('[Hub] Falha de localização de Espécies:',e);const r=document.getElementById('resultado');if(r)r.textContent='Falha de integridade da localização PT-BR.'});
