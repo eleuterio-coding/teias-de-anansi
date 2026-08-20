@@ -1,0 +1,10 @@
+{
+  "schema":"hub-rpg.localizacao-especies.ptbr.addendum.v1",
+  "species":{
+    "Aasimar":"Aasimar","Aarakocra":"Aarakocra","Air Genasi":"Genasi do Ar","Bugbear":"Bugbear","Centaur":"Centauro","Deep Gnome":"Gnomo Profundo","Duergar":"Duergar","Earth Genasi":"Genasi da Terra","Eladrin":"Eladrin","Fairy":"Fada","Firbolg":"Firbolg","Fire Genasi":"Genasi do Fogo","Githyanki":"Githyanki","Githzerai":"Githzerai","Goblin":"Goblin","Harengon":"Harengon","Hobgoblin":"Hobgoblin","Kenku":"Kenku","Kobold":"Kobold","Lizardfolk":"Povo-Lagarto","Minotaur":"Minotauro","Satyr":"Sátiro","Sea Elf":"Elfo do Mar","Shadar-kai":"Shadar-kai","Tabaxi":"Tabaxi","Tiefling — Eberron":"Tiefling — Eberron","Tortle":"Tortle","Triton":"Tritão","Water Genasi":"Genasi da Água","Yuan-ti":"Yuan-ti"
+  },
+  "trait_names":{
+    "Celestial Resistance":"Resistência Celestial","Darkvision":"Visão no Escuro","Healing Hands":"Mãos Curativas","Light Bearer":"Portador da Luz","Celestial Revelation":"Revelação Celestial",
+    "Blessing of the Raven Queen":"Bênção da Rainha Corvo","Cat's Claws":"Garras Felinas","Cat's Talent":"Talento Felino","Child of the Sea":"Filho do Mar","Claws":"Garras","Climb":"Escalada","Control Air and Water":"Controlar Ar e Água","Draconic Cry":"Grito Dracônico","Emissary of the Sea":"Emissário do Mar","Expert Duplication":"Duplicação Especializada","Feline Agility":"Agilidade Felina","Fortune from the Many":"Fortuna dos Muitos","Friend of the Sea":"Amigo do Mar","Goring Rush":"Investida Perfurante","Guardian of the Depths":"Guardião das Profundezas","Hammering Horns":"Chifres Impactantes","Hold Breath":"Prender a Respiração","Horns":"Chifres","Hungry Jaws":"Mandíbulas Famintas","Kenku Recall":"Recordação Kenku","Kobold Legacy":"Legado Kobold","Labyrinthine Recall":"Memória Labiríntica","Magic Resistance":"Resistência à Magia","Mimicry":"Mimetismo","Mirthful Leaps":"Saltos Alegres","Nature's Intuition":"Intuição da Natureza","Necrotic Resistance":"Resistência Necrótica","Poison Resilience":"Resiliência a Veneno","Ram":"Chifrada","Reveler":"Folião","Serpentine Spellcasting":"Conjuração Serpentina","Shell Defense":"Defesa de Casco"
+  }
+}
