@@ -27,6 +27,7 @@
       if(/^(auditoria|crit[eé]rio|escopo|organiza[cç][aã]o|preced[eê]ncia|corpus|publicad|completude|taxonomia|material demonstrativo|localiza[cç][aã]o pt-br|pol[ií]tica de publica[cç][aã]o|fontes abertas)/i.test(label))hide(el)
     });
     if(TARGETS.has(current)){
+      if(current==='montarias-veiculos.html')hide(body.querySelector(':scope > section.painel[aria-label="Resumo do catálogo"]'));
       const candidates=body.querySelectorAll([
         ':scope > p',
         ':scope > section:not(.layout):not(.panel):not(.painel)',
