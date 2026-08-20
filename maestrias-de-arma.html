@@ -15,10 +15,10 @@
     .controles{display:grid;grid-template-columns:minmax(260px,1fr) 220px 220px;gap:10px;margin:18px 0}
     input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
     .item,.painel{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary,.painel summary{cursor:pointer;padding:14px 16px}.item summary{display:flex;justify-content:space-between;gap:12px;align-items:center}.item summary:hover,.painel summary:hover{background:var(--soft)}
-    .corpo{padding:0 16px 16px}.mecanica,.audit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin:14px 0}
-    .campo,.audit-card{border:1px solid #8884;border-radius:8px;padding:9px 10px}.campo b,.campo span{display:block}.campo span{margin-top:2px}
+    .corpo{padding:0 16px 16px}.mecanica{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px;margin:14px 0}
+    .campo{border:1px solid #8884;border-radius:8px;padding:9px 10px}.campo b,.campo span{display:block}.campo span{margin-top:2px}
     .sec{border-top:1px solid #8883;margin-top:14px;padding-top:12px}.meta{font-size:.9rem;opacity:.8}.origem-demo{border-style:dashed}.vazio{opacity:.7}
-    .variant{border-left:3px solid #8887;padding-left:12px;margin:10px 0}.resultado{margin:8px 0 14px;opacity:.75}.licenca{font-size:.9rem;opacity:.82}
+    .variant{border-left:3px solid #8887;padding-left:12px;margin:10px 0}.resultado{margin:8px 0 14px;opacity:.75}
     @media(max-width:760px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}.badge{margin-top:6px}}
   </style>
 </head>
@@ -35,18 +35,6 @@
   </div>
   <div id="resultado" class="resultado"></div>
   <main id="lista"></main>
-
-  <details class="painel">
-    <summary><strong>Aplicações opcionais que não criam nova maestria</strong></summary>
-    <div class="corpo" id="opcionais"></div>
-  </details>
-
-  <details class="painel" open>
-    <summary><strong>Auditoria dos dois PDFs</strong></summary>
-    <div class="corpo"><div class="audit-grid" id="auditoria"></div></div>
-  </details>
-
-  <section class="nota licenca" id="fontes"></section>
 
 <script>
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -94,17 +82,6 @@ function render(){
       </div>
     </details>`).join('') || '<p class="nota">Nenhuma maestria corresponde aos filtros.</p>';
 }
-function renderOpcionais(){
-  const rows=DATA.aplicacoes_opcionais||[];
-  document.getElementById('opcionais').innerHTML=rows.map(x=>`<div class="campo"><b>${esc(x.nome)} → ${esc(x.maestria)}</b><span>${esc(x.condicao)}</span></div>`).join('');
-}
-function renderAuditoria(){
-  document.getElementById('auditoria').innerHTML=(DATA.auditoria_pdf||[]).map(x=>`<article class="audit-card"><strong>${esc(x.arquivo)}</strong><p>${esc(x.resultado)}</p></article>`).join('');
-}
-function renderFontes(){
-  const f=DATA.fontes||[];
-  document.getElementById('fontes').innerHTML='<strong>Fontes e direitos:</strong> '+f.map(x=>`${esc(x.titulo)}${x.licenca?` (${esc(x.licenca)})`:''}${x.status?` — ${esc(x.status)}`:''}`).join(' · ')+'. As regras próprias do material demonstrativo são resumidas em paráfrase; não são apresentadas como conteúdo oficial.';
-}
 (async()=>{
   try{
     const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1224',{cache:'no-store'});
@@ -112,7 +89,7 @@ function renderFontes(){
     DATA=await r.json();ALL=DATA.itens||[];
     if(ALL.length!==15) throw new Error(`catálogo incompleto: ${ALL.length}/15`);
     document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');
-    renderOpcionais();renderAuditoria();renderFontes();render();
+    render();
   }catch(e){
     document.getElementById('resultado').textContent=`Falha ao carregar: ${e.message}`;
   }
