@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 
-const VERSION='20260820-srd521-regras3';
+const VERSION='20260820-srd521-regras4';
 const DDB_GLOSSARY='https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary';
 const SRD_PDF='https://media.dndbeyond.com/compendium-images/srd/5.2/SRD_CC_v5.2.1.pdf';
 const SRD_SOURCES=[
@@ -25,7 +25,7 @@ const originalFromHeading=h=>String(h||'').replace(/\s+\[(Action|Area of Effect|
 const tagFromHeading=h=>((String(h||'').match(/\[(Action|Area of Effect|Attitude|Condition|Hazard)\]\s*$/i)||[])[1]||'').trim();
 const familyPT=t=>({'Action':'Ação','Area of Effect':'Área de Efeito','Attitude':'Atitude','Condition':'Condição','Hazard':'Perigo'})[t]||'Regra Geral';
 
-let LEGACY=[],HOUSE=[],PATCHES=[],CURATED=null,INDEX=null,SRD=[],SUPPLEMENTAL=[],SRD_SOURCE='';
+let PT_RULES=[],HOUSE=[],PATCHES=[],CURATED=null,INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
 
 function rawText(md){
   const holder=document.createElement('div');
@@ -50,7 +50,8 @@ function extractEntries(markdown,knownOriginals){
 
 function seeAlso(entry,allOriginals){
   const plain=rawText(entry.markdown),chunks=[];
-  const rx=/See also\b([\s\S]*?)(?=\n\n|$)/gi; let m;
+  const rx=/See also\b([\s\S]*?)(?=\n\n|$)/gi;
+  let m;
   while((m=rx.exec(plain)))chunks.push(m[0]);
   const joined=chunks.join(' '),refs=[];
   for(const original of allOriginals){
@@ -61,9 +62,8 @@ function seeAlso(entry,allOriginals){
   return {texto:chunks.join(' '),refs};
 }
 
-function ptRule(original){return LEGACY.find(x=>norm(x.original)===norm(original))||null}
+function ptRule(original){return PT_RULES.find(x=>norm(x.original)===norm(original))||null}
 function ddbAnchor(heading){return String(heading||'').replace(/[^A-Za-z0-9]/g,'')}
-function htmlSourceText(md){return `<pre class="srd-raw">${esc(rawText(md))}</pre>`}
 
 function buildIndexMaps(){
   const byOriginal=new Map(),byId=new Map();
@@ -93,7 +93,8 @@ function hrefFor(row){
 }
 
 function parseCurated(spec,maps){
-  const s=String(spec||'').trim(); if(!s)return null;
+  const s=String(spec||'').trim();
+  if(!s)return null;
   if(!s.includes('::'))return maps.byOriginal.get(`Regras|${norm(s)}`)||fallbackRuleRow(s);
   const i=s.indexOf('::'),module=s.slice(0,i),value=s.slice(i+2);
   if(value.startsWith('#')){
@@ -108,10 +109,12 @@ function semanticRefs(original,officialRefsList,maps){
   const specs=CURATED?.regras?.[original]||[],officialSet=new Set(officialRefsList.map(norm));
   const out=[],seen=new Set();
   for(const spec of specs){
-    const row=parseCurated(spec,maps); if(!row)continue;
+    const row=parseCurated(spec,maps);
+    if(!row)continue;
     if(row.modulo==='Regras'&&officialSet.has(norm(row.original)))continue;
     const key=row.id||`${row.modulo}|${norm(row.original)}`;
-    if(seen.has(key))continue; seen.add(key); out.push(row);
+    if(seen.has(key))continue;
+    seen.add(key);out.push(row);
   }
   return out;
 }
@@ -150,7 +153,6 @@ function renderOfficial(entry,maps,allOriginals){
       ${translatedBody(rule)}
       ${patch?`<aside class="house-override"><strong>Precedência da Regra da Casa</strong><p>${esc(patch.descricao)}</p></aside>`:''}
       ${renderRefs(entry,maps,allOriginals)}
-      <details class="srd-original"><summary>Texto original licenciado — SRD 5.2.1</summary>${htmlSourceText(entry.markdown)}</details>
       <div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span><span><a href="${SRD_PDF}" target="_blank" rel="noopener noreferrer">SRD 5.2.1 oficial</a></span></div>
     </div>
   </details>`;
@@ -164,10 +166,10 @@ function renderSupplemental(rule,maps){
   const semanticLinks=semantic.map(row=>`<a href="${esc(hrefFor(row))}">${esc(row.nome)} <small>(${esc(row.modulo)})</small></a>`).join(' · ');
   return `<details class="item ddb-only" id="${esc(cardId)}" data-hub-original="${esc(rule.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}>
     <summary><span><strong>${esc(rule.nome)}</strong><small class="original">${esc(rule.original)}</small></span><span class="badge">${esc(rule.familia||'Regra Geral')}</span></summary>
-    <div class="corpo"><div class="source-strip"><span>D&D Beyond Basic Rules 2024</span><span>Fora do Rules Glossary do SRD 5.2.1</span></div>
-      <p class="copyright-note">O texto anterior desta regra permanece armazenado na Biblioteca, mas não é exibido aqui. Consulte a fonte oficial para a redação integral.</p>
+    <div class="corpo"><div class="source-strip"><span>D&D Beyond Basic Rules 2024</span><span>Referência oficial complementar</span></div>
+      <p class="copyright-note">Consulte a fonte oficial para a redação integral desta regra.</p>
       <div class="refs"><p><strong>Referências adicionais do Hub:</strong> ${semanticLinks||'<span class="muted">nenhuma adicional</span>'}</p></div>
-      <div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">Abrir no D&D Beyond</a></span></div>
+      <div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span></div>
     </div>
   </details>`;
 }
@@ -187,7 +189,7 @@ function allCards(){
   const maps=buildIndexMaps(),originals=SRD.map(x=>x.original);
   return [
     ...SRD.map(x=>({kind:'srd',original:x.original,name:ptRule(x.original)?.nome||x.original,family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps,originals)})),
-    ...SUPPLEMENTAL.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
+    ...DDB_ONLY.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
     ...HOUSE.map(x=>({kind:'house',original:x.original,name:x.nome,family:'Regra da Casa',html:renderHouse(x,maps)}))
   ];
 }
@@ -195,7 +197,7 @@ function allCards(){
 function render(){
   const q=norm(document.getElementById('busca').value),source=document.getElementById('fonte').value,family=document.getElementById('familia').value;
   const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family}`).includes(q))&&(!source||c.kind===source)&&(!family||c.family===family));
-  document.getElementById('resultado').textContent=`${cards.length} de ${SRD.length+SUPPLEMENTAL.length+HOUSE.length} itens`;
+  document.getElementById('resultado').textContent=`${cards.length} de ${SRD.length+DDB_ONLY.length+HOUSE.length} itens`;
   document.getElementById('lista').innerHTML=cards.map(c=>c.html).join('')||'<p class="nota">Nenhuma regra corresponde aos filtros.</p>';
   focusRequested();
 }
@@ -233,7 +235,7 @@ async function fetchSrd(){
 }
 
 async function load(){
-  const partUrls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=${VERSION}`);
+  const partUrls=[1,2,3,4].map(n=>`dados/regras-atuais-ptbr.part${n}.txt?v=${VERSION}`);
   const [partTexts,hub,extra,curated,markdown,index]=await Promise.all([
     Promise.all(partUrls.map(u=>fetchRequired(u,'text'))),
     fetchRequired(`dados/regras-hub.json?v=${VERSION}`),
@@ -243,24 +245,24 @@ async function load(){
     fetchOptionalJson(`dados/referencias-hub-index.json?v=${VERSION}`)
   ]);
   const data=JSON.parse(partTexts.join(''));
-  CURATED=curated; INDEX=index||{entidades:[]};
-  LEGACY=[...(data.itens||[])]; PATCHES=[...(hub.sobreposicoes||[])]; HOUSE=[...(hub.itens||[]),...(extra.itens||[])];
-  const known=new Set(LEGACY.map(x=>norm(x.original)));
+  CURATED=curated;INDEX=index||{entidades:[]};
+  PT_RULES=[...(data.itens||[])];PATCHES=[...(hub.sobreposicoes||[])];HOUSE=[...(hub.itens||[]),...(extra.itens||[])];
+  const known=new Set(PT_RULES.map(x=>norm(x.original)));
   SRD=extractEntries(markdown,known);
   const srdSet=new Set(SRD.map(x=>norm(x.original)));
-  SUPPLEMENTAL=LEGACY.filter(x=>!srdSet.has(norm(x.original)));
-  if(LEGACY.length!==155)throw new Error(`Regras oficiais legadas inesperadas: ${LEGACY.length}/155`);
+  DDB_ONLY=PT_RULES.filter(x=>!srdSet.has(norm(x.original)));
+  if(PT_RULES.length!==155)throw new Error(`Regras atuais inesperadas: ${PT_RULES.length}/155`);
   if(HOUSE.length!==4)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/4`);
   if(SRD.length<130)throw new Error(`Extração SRD incompleta: ${SRD.length}`);
   document.getElementById('cont-srd').textContent=SRD.length;
-  document.getElementById('cont-ddb').textContent=SUPPLEMENTAL.length;
+  document.getElementById('cont-ddb').textContent=DDB_ONLY.length;
   document.getElementById('cont-house').textContent=HOUSE.length;
-  const families=[...new Set([...SRD.map(x=>x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral')),...SUPPLEMENTAL.map(x=>x.familia||'Regra Geral'),'Regra da Casa'])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const families=[...new Set([...SRD.map(x=>x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral')),...DDB_ONLY.map(x=>x.familia||'Regra Geral'),'Regra da Casa'])].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   document.getElementById('familia').innerHTML='<option value="">Todas as famílias</option>'+families.map(f=>`<option>${esc(f)}</option>`).join('');
   render();
   document.documentElement.dataset.regrasFonte='srd-5.2.1';
   document.documentElement.dataset.regrasSrd=String(SRD.length);
-  document.documentElement.dataset.regrasDdbComplementares=String(SUPPLEMENTAL.length);
+  document.documentElement.dataset.regrasDdbComplementares=String(DDB_ONLY.length);
   document.documentElement.dataset.regrasCasa=String(HOUSE.length);
   document.documentElement.dataset.regrasIndice=INDEX?.entidades?.length?'disponivel':'fallback-local';
   document.documentElement.dataset.regrasSrdOrigem=SRD_SOURCE;
