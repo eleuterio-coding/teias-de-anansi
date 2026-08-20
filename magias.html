@@ -105,5 +105,5 @@ function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)
 }catch(e){console.error(e);document.getElementById('status').innerHTML=`<strong>Falha ao consolidar o catálogo:</strong> ${esc(e.message)}. O lote anterior não foi usado como substituto silencioso.`}})();
 ['q','nivel','escola','classe','fonte','ruleset','especial'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
-<script src="scripts/concentracao-expandida-selos.js?v=f6a611a381a5" data-concentracao-expandida-selos="1"></script>
+<script src="scripts/concentracao-expandida-selos.js?v=2e52d5787cbd" data-concentracao-expandida-selos="1"></script>
 </body></html>
