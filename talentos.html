@@ -1,1 +1,49 @@
-<!DOCTYPE html><html lang="pt-BR" data-clean-module="talentos"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><title>Talentos - Biblioteca - Teias de Anansi</title></head><body><p style="font-family:system-ui;padding:24px">Carregando Talentos...</p><script src="scripts/module-clean-loader.js?v=20260820-clean-modules2"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Talentos - Biblioteca - Teias de Anansi</title>
+<style>
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{max-width:1120px;margin:0 auto;padding:24px;line-height:1.55}a{color:inherit}.meta{opacity:.78}
+.controles{display:grid;grid-template-columns:minmax(220px,1fr) minmax(180px,250px) minmax(190px,300px);gap:10px;margin:18px 0 10px}
+input,select{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
+.resultado{margin:8px 0 16px;opacity:.75}.talento{margin:12px 0;border:1px solid #8885;border-radius:10px;overflow:hidden}.talento>summary{cursor:pointer;padding:15px 16px;display:flex;justify-content:space-between;gap:16px;align-items:baseline}.talento>summary:hover{background:#8881}.categoria{font-size:.86rem;opacity:.68;white-space:nowrap}.corpo{padding:0 16px 18px}.ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px 18px;padding:12px 0;border-top:1px solid #8883;border-bottom:1px solid #8883;margin-bottom:14px}.ficha div{min-width:0}.descricao{margin:12px 0 16px}.mecanicas h3{margin:18px 0 5px}.mecanicas p{margin:5px 0}.fonte{margin-top:18px;padding-top:11px;border-top:1px solid #8883;font-size:.9rem;opacity:.82}.tag{display:inline-block;border:1px solid #8885;border-radius:999px;padding:2px 8px;font-size:.78rem;margin-left:8px;opacity:.82}.erro,.vazio{padding:14px 16px;border:1px dashed #8888;border-radius:10px;margin:14px 0}
+@media(max-width:750px){body{padding:16px}.controles{grid-template-columns:1fr}.talento>summary{display:block}.categoria{display:block;margin-top:5px}}
+</style>
+</head>
+<body>
+<p><a href="bibliotecas.html?v=20260820-talentos-subclasses1">← Bibliotecas</a></p>
+<header><h1>Talentos</h1></header>
+<div class="controles">
+<input id="busca" type="search" placeholder="Buscar talento, benefício, fonte ou pré-requisito...">
+<select id="filtroCategoria"><option value="">Todas as categorias</option><option value="Origem">Origem</option><option value="Geral">Geral</option><option value="Estilo de Luta">Estilo de Luta</option><option value="Dragonmark">Marca do Dragão</option><option value="Dádiva Épica">Dádiva Épica</option></select>
+<select id="filtroFonte"><option value="">Todas as fontes</option></select>
+</div>
+<p class="resultado" id="resultado">Carregando talentos...</p>
+<main id="lista"></main>
+<script>
+let TALENTOS=[],LOC={nomes:{},termos:{}};
+const busca=document.getElementById('busca'),filtroCategoria=document.getElementById('filtroCategoria'),filtroFonte=document.getElementById('filtroFonte'),resultado=document.getElementById('resultado'),lista=document.getElementById('lista');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const semAcento=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+function rx(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+function localizarTexto(v){let s=String(v??'');const pares=Object.entries(LOC.termos||{}).sort((a,b)=>b[0].length-a[0].length);for(const[k,val]of pares)s=s.replace(new RegExp(`\\b${rx(k)}\\b`,'gi'),val);return s}
+const BENEFICIOS_DETALHADOS={'Alert':[['Proficiência em Iniciativa','Quando você rolar Iniciativa, pode adicionar seu Bônus de Proficiência à rolagem.'],['Troca de Iniciativa','Imediatamente depois de rolar Iniciativa, você pode trocar sua Iniciativa com a de um aliado voluntário no mesmo combate. Você não pode fazer essa troca se você ou o aliado estiver Incapacitado.']], 'Magic Initiate':[['Dois Truques','Você aprende dois truques à sua escolha da lista de magias de Clérigo, Druida ou Mago. Inteligência, Sabedoria ou Carisma é seu atributo de conjuração para as magias deste talento; escolha quando selecionar o talento.'],['Magia de 1º Nível','Escolha uma magia de 1º nível da mesma lista selecionada para os truques. Você sempre tem essa magia preparada. Pode conjurá-la uma vez sem gastar Espaço de Magia e recupera esse uso ao terminar um Descanso Longo. Você também pode conjurá-la usando Espaços de Magia que possua.'],['Troca de Magia','Sempre que ganhar um novo nível, você pode substituir uma das magias escolhidas para este talento por outra magia do mesmo nível pertencente à lista selecionada.']]};
+function expandirGrupo(g){return(g.itens||[]).map(i=>{const original=i[0],nome=LOC.nomes?.[original]||original;return{nome,original,categoria:i[1],prerequisito:localizarTexto(i[2]),repetivel:i[3],resumo:localizarTexto(i[4]),setting:i[5]||'',fonte:g.fonte,ano:g.ano,ruleset:g.ruleset,natureza:g.natureza,status:g.status,beneficios:Array.isArray(i[6])?i[6]:null}})}
+function nomeCategoria(c){return({'Origem':'Talento de Origem','Geral':'Talento Geral','Estilo de Luta':'Talento de Estilo de Luta','Dragonmark':'Talento de Marca do Dragão','Dádiva Épica':'Talento de Dádiva Épica'})[c]||`Talento — ${c}`}
+function tituloBeneficio(v){const titulo=localizarTexto(v||'').trim();return /^benef[ií]cios?\s*[:.\-–—]?\s*$/i.test(titulo)?'':titulo}
+function textoBeneficio(v){return localizarTexto(v||'').replace(/^\s*benef[ií]cios?\s*[:.\-–—]\s*/i,'').trim()}
+function beneficiosDoTalento(t){if(BENEFICIOS_DETALHADOS[t.original])return BENEFICIOS_DETALHADOS[t.original].map(b=>({titulo:tituloBeneficio(b[0]),texto:textoBeneficio(b[1])}));if(Array.isArray(t.beneficios)&&t.beneficios.length)return t.beneficios.map(b=>({titulo:tituloBeneficio(b[0]),texto:textoBeneficio(b[1])}));return[{titulo:'Benefícios',texto:textoBeneficio(t.resumo)}]}
+function preencherFontes(){const fs=[...new Set(TALENTOS.map(t=>t.fonte))].sort((a,b)=>a.localeCompare(b,'pt-BR'));filtroFonte.innerHTML='<option value="">Todas as fontes</option>'+fs.map(f=>`<option value="${esc(f)}">${esc(f)}</option>`).join('')}
+function renderCard(t){const prereq=t.prerequisito&&semAcento(t.prerequisito)!=='nenhum'?t.prerequisito:'—';const beneficios=beneficiosDoTalento(t).map(b=>`<h3>${esc(b.titulo||'Benefícios')}</h3><p>${esc(b.texto)}</p>`).join('');const repetivel=/^sim/i.test(String(t.repetivel||''))?'<h3>Repetível</h3><p>Você pode escolher este talento mais de uma vez, respeitando as escolhas e restrições descritas no talento.</p>':'';return`<details class="talento" data-entity data-name="${esc(t.nome)}" data-hub-original="${esc(t.original)}"><summary><strong>${esc(t.nome)} <span class="tag">${esc(t.ruleset)}</span></strong><span class="categoria">${esc(nomeCategoria(t.categoria))}</span></summary><div class="corpo"><div class="ficha"><div><strong>Nome:</strong> ${esc(t.nome)}</div><div><strong>Tipo:</strong> Talento</div><div><strong>Categoria:</strong> ${esc(nomeCategoria(t.categoria))}</div><div><strong>Pré-requisito:</strong> ${esc(prereq)}</div><div><strong>Livro/Fonte:</strong> ${esc(t.fonte)}</div><div><strong>Edição:</strong> ${esc(t.ruleset)}</div>${t.setting?`<div><strong>Cenário:</strong> ${esc(t.setting)}</div>`:''}<div><strong>Status:</strong> ${esc(t.status||'Ativo')}</div></div><p class="descricao">Você recebe os seguintes benefícios.</p><section class="mecanicas">${beneficios}${repetivel}</section><p class="fonte"><strong>Fonte:</strong> ${esc(t.fonte)}${t.ano?` (${esc(t.ano)})`:''}.</p></div></details>`}
+function render(){const termo=semAcento(busca.value.trim()),filtrados=TALENTOS.filter(t=>{const bs=beneficiosDoTalento(t).flatMap(b=>[b.titulo,b.texto]),txt=[t.nome,t.original,t.categoria,t.prerequisito,t.resumo,...bs,t.fonte,t.setting].join(' ');return(!termo||semAcento(txt).includes(termo))&&(!filtroCategoria.value||t.categoria===filtroCategoria.value)&&(!filtroFonte.value||t.fonte===filtroFonte.value)});resultado.textContent=`${filtrados.length} de ${TALENTOS.length} talentos exibidos.`;lista.innerHTML=filtrados.length?filtrados.map(renderCard).join(''):'<div class="vazio">Nenhum talento corresponde aos filtros atuais.</div>'}
+async function iniciar(){try{const arquivos=['dados/talentos-phb-2024.json','dados/talentos-forge-2025.json','dados/talentos-heroes-2025.json','dados/talentos-quickstone-2024.json','dados/talentos-tasha-2020.json','dados/talentos-xanathar-2017.json','dados/talentos-eberron-rising-2019.json'];const respostas=await Promise.all(['dados/localizacao-ptbr-talentos.json',...arquivos].map(u=>fetch(`${u}?v=20260820-talentos-subclasses1`,{cache:'no-store'})));const falha=respostas.find(r=>!r.ok);if(falha)throw new Error(`HTTP ${falha.status}`);LOC=await respostas[0].json();const grupos=await Promise.all(respostas.slice(1).map(r=>r.json()));TALENTOS=grupos.flatMap(expandirGrupo).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));preencherFontes();render()}catch(e){resultado.textContent='Falha ao carregar o catálogo.';lista.innerHTML='<p class="erro">Não foi possível carregar os talentos.</p>';console.error(e)}}
+busca.addEventListener('input',render);filtroCategoria.addEventListener('change',render);filtroFonte.addEventListener('change',render);iniciar();
+</script>
+</body>
+</html>
