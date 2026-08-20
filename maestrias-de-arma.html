@@ -26,14 +26,8 @@
   <p><a href="bibliotecas.html?v=20260819-1224">← Bibliotecas</a></p>
   <header>
     <h1>Maestrias de Arma</h1>
-    <p class="muted">Catálogo consolidado a partir de <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, mantendo uma entrada por propriedade de maestria única.</p>
-    <div class="badges"><span class="badge">15 maestrias únicas</span><span class="badge">8 oficiais</span><span class="badge">7 demonstrativas</span><span class="badge">2 PDFs auditados</span></div>
   </header>
 
-  <div class="nota"><strong>Organização:</strong> as 8 propriedades oficiais continuam soberanas. Quando o material de terceiros usa o mesmo nome com uma regra modificada, essa versão aparece como <em>variante encontrada</em> dentro da maestria oficial, sem criar duplicata nem substituir a regra canônica.</div>
-  <div class="nota"><strong>Material demonstrativo:</strong> <em>Weapons, Masteries, and Properties</em> declara explicitamente ser uma amostra não final. Como a própria fonte restringe a reprodução das partes originais que não derivam do SRD, as 7 maestrias próprias são apresentadas aqui por <strong>resumo mecânico em paráfrase</strong> e marcadas como <strong>demonstrativas / não canônicas</strong>.</div>
-
-  <div id="status" class="nota">Carregando catálogo...</div>
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar maestria, efeito, arma ou fonte...">
     <select id="origem"><option value="">Todas as origens</option><option value="oficial_aberta">Oficial aberta</option><option value="terceiros_demo">Demonstrativa</option></select>
@@ -117,12 +111,11 @@ function renderFontes(){
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     DATA=await r.json();ALL=DATA.itens||[];
     if(ALL.length!==15) throw new Error(`catálogo incompleto: ${ALL.length}/15`);
-    const oficiais=ALL.filter(x=>x.classificacao?.origem==='oficial_aberta').length;
-    const demos=ALL.filter(x=>x.classificacao?.origem==='terceiros_demo').length;
-    document.getElementById('status').innerHTML=`<strong>Publicado e verificado:</strong> ${ALL.length} maestrias únicas — ${oficiais} oficiais e ${demos} demonstrativas próprias. Variantes de mesmo nome permanecem anexadas às entradas oficiais.`;
     document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');
     renderOpcionais();renderAuditoria();renderFontes();render();
-  }catch(e){document.getElementById('status').innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`;}
+  }catch(e){
+    document.getElementById('resultado').textContent=`Falha ao carregar: ${e.message}`;
+  }
 })();
 ['busca','origem','filtro'].forEach(id=>document.getElementById(id).addEventListener(id==='busca'?'input':'change',render));
 </script>
