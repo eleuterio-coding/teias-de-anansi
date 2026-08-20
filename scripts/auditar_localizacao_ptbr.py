@@ -42,7 +42,9 @@ for slug,nome in classes.items():
   if not str(f.get('nome','')).strip() or not str(f.get('descricao','')).strip(): erro(f'Característica incompleta: {p.name}::{fid}')
 
 # Espécies: todos os pacotes adicionais precisam ter nome e traço explicitamente localizados.
-loc_esp=load(Path('dados/localizacao-ptbr-especies.json'));esp_names=loc_esp.get('species',{});esp_traits={**loc_esp.get('trait_names',{}),**{k:v.get('name') for k,v in loc_esp.get('traits',{}).items()}}
+loc_esp=load(Path('dados/localizacao-ptbr-especies.json'));loc_esp_add=load(Path('dados/localizacao-ptbr-especies-adicionais.json'))
+esp_names={**loc_esp.get('species',{}),**loc_esp_add.get('species',{})}
+esp_traits={**loc_esp.get('trait_names',{}),**loc_esp_add.get('trait_names',{}),**{k:v.get('name') for k,v in loc_esp.get('traits',{}).items()}}
 for p in [ROOT/'dados/especies-pdf-phb-2024.json',ROOT/'dados/especies-pdf-forge-2025.json',ROOT/'dados/especies-pdf-quickstone-2024.json',ROOT/'dados/especies-pdf-motm-2022.json']:
  if not p.exists(): continue
  data=json.loads(p.read_text(encoding='utf-8'))
