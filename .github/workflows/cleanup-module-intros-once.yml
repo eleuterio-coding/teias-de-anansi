@@ -1,11 +1,12 @@
 name: Limpeza editorial única dos módulos
-# trigger-2
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/cleanup-module-intros-once.yml'
+  pull_request_target:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -14,10 +15,10 @@ permissions:
 
 jobs:
   cleanup:
-    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Aplicar limpeza editorial em cinco módulos'
+    if: github.event_name == 'workflow_dispatch' || github.event.head_commit.message == 'Aplicar limpeza editorial em cinco módulos' || (github.event_name == 'pull_request_target' && github.event.pull_request.title == 'Executar limpeza editorial dos módulos')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main
         uses: actions/checkout@v6
         with:
           ref: main
@@ -86,7 +87,6 @@ jobs:
               remain = [term for term in terms if term in text_plain]
               if remain:
                   raise RuntimeError(f'{path}: textos residuais: {remain}')
-
           print('Cinco módulos limpos e validados.')
           PY
 
@@ -98,7 +98,7 @@ jobs:
           expected="$(printf '%s\n' antecedentes.html classes.html especies.html subclasses.html talentos.html | sort)"
           test "$changed" = "$expected" || { echo "Escopo inesperado:"; echo "$changed"; exit 1; }
 
-      - name: Commitar limpeza
+      - name: Commitar limpeza no main
         shell: bash
         run: |
           git config user.name "eleuterio-coding"
