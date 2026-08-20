@@ -49,7 +49,7 @@ const DAMAGE_PT={acid:'Ácido',bludgeoning:'Contundente',cold:'Frio',fire:'Fogo'
 const CONDITION_PT={blinded:'Cego',charmed:'Enfeitiçado',deafened:'Surdo',exhaustion:'Exaustão',frightened:'Amedrontado',grappled:'Agarrado',incapacitated:'Incapacitado',invisible:'Invisível',paralyzed:'Paralisado',petrified:'Petrificado',poisoned:'Envenenado',prone:'Caído',restrained:'Contido',stunned:'Atordoado',unconscious:'Inconsciente'};
 const NAME_PT={Fireball:'Bola de Fogo','Magic Missile':'Mísseis Mágicos','Cure Wounds':'Curar Ferimentos'};
 const AREA_PT={C:'Cone',L:'Linha',R:'Raio',S:'Esfera',Q:'Cubo',W:'Muralha',MT:'Múltiplos alvos',ST:'Alvo único',Y:'Cilindro'};
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().toLowerCase();
 const slug=v=>norm(v).replace(/ /g,'-')||'magia';
 let DATA={fontes:{}},ALL=[],CURRENT='';
