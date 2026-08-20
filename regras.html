@@ -1,19 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Regras - Biblioteca - Teias de Anansi</title>
-  <style>:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}*{box-sizing:border-box}body{max-width:1120px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.74}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem}.controles{display:grid;grid-template-columns:1fr 240px;gap:10px;margin:18px 0}.controles input,.controles select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}.item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}.item summary:hover{background:var(--soft)}.corpo{padding:0 16px 16px}.secao-regra{margin:16px 0}.secao-regra h3{font-size:1rem;margin:0 0 5px}.secao-regra p{margin:0}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.78;display:flex;gap:8px 18px;flex-wrap:wrap}.erro{padding:16px;border:1px solid #b55;border-radius:10px}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.item summary{display:block}.item summary .badge{margin-top:6px}}</style>
-</head><body>
-<p><a href="bibliotecas.html?v=20260820-ptbr">← Bibliotecas</a></p><header><h1>Regras</h1></header>
-<div class="controles"><input id="busca" type="search" placeholder="Buscar regra, termo ou descrição..."><select id="filtro"><option value="">Todas</option></select></div><div id="resultado" class="muted"></div><main id="lista"></main>
-<script>
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-const textoBusca=x=>[x.nome,x.original,x.familia,x.descricao,...(x.secoes||[]).flatMap(s=>[s.titulo,s.texto])].join(' ');let DATA=null,ALL=[];
-function render(){const q=norm(document.getElementById('busca').value.trim()),f=document.getElementById('filtro').value,rows=ALL.filter(x=>(!f||x.familia===f)&&(!q||norm(textoBusca(x)).includes(q)));document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} itens`;document.getElementById('lista').innerHTML=rows.map(x=>{const fonte=x.fonte||DATA.fonte,link=fonte.url?`<span><a href="${esc(fonte.url)}" target="_blank" rel="noopener noreferrer">${esc(fonte.rotulo||'Abrir fonte oficial')}</a></span>`:'',secoes=(x.secoes||[]).map(s=>`<section class="secao-regra"><h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p></section>`).join('');return`<details class="item" data-hub-original="${esc(x.original||x.nome)}"><summary><strong>${esc(x.nome)}</strong><span class="badge">${esc(x.familia)}</span></summary><div class="corpo"><p>${esc(x.descricao)}</p>${secoes}<div class="meta"><span><b>Tipo:</b> Regras</span><span><b>Fonte:</b> ${esc(fonte.livro)}</span><span><b>Edição:</b> ${esc(fonte.edicao)}</span>${link}</div></div></details>`}).join('')||'<p class="nota">Nenhuma regra corresponde aos filtros.</p>'}
-(async()=>{try{const urls=[1,2,3,4].map(n=>`dados/regras-dndbeyond-2024.part${n}.txt?v=20260819-1530`),[rs,hubResponse,extraResponse]=await Promise.all([Promise.all(urls.map(u=>fetch(u,{cache:'no-store'}))),fetch('dados/regras-hub.json?v=20260819-1648',{cache:'no-store'}),fetch('dados/regras-casa-adicionais.json?v=20260819-1648',{cache:'no-store'})]);const bad=rs.find(r=>!r.ok);if(bad)throw new Error(`HTTP ${bad.status}`);if(!hubResponse.ok)throw new Error(`HTTP ${hubResponse.status} ao carregar Regras da Casa`);if(!extraResponse.ok)throw new Error(`HTTP ${extraResponse.status} ao carregar Regras da Casa adicionais`);DATA=JSON.parse((await Promise.all(rs.map(r=>r.text()))).join(''));const HUB=await hubResponse.json(),EXTRA=await extraResponse.json();ALL=[...(DATA.itens||[])];for(const patch of HUB.sobreposicoes||[]){const item=ALL.find(x=>x.original===patch.original);if(!item)throw new Error(`regra para sobreposição não encontrada: ${patch.original}`);Object.assign(item,patch)}for(const extraOriginal of [...(HUB.itens||[]),...(EXTRA.itens||[])]){const extra={...extraOriginal},depois=extra.inserir_depois_de;delete extra.inserir_depois_de;const idx=depois?ALL.findIndex(x=>x.original===depois):-1;if(idx>=0)ALL.splice(idx+1,0,extra);else ALL.push(extra)}if(ALL.length!==159)throw new Error(`catálogo incompleto: ${ALL.length}/159`);const familias=['Regra Geral','Regra da Casa',...DATA.familias.filter(f=>f!=='Regra Geral'&&f!=='Regra da Casa')],rotulos={'Regra Geral':'Regras Gerais','Regra da Casa':'Regras da Casa','Ação':'Ações','Área de Efeito':'Áreas de Efeito','Atitude':'Atitudes','Condição':'Condições','Perigo':'Perigos'};document.getElementById('filtro').innerHTML='<option value="">Todas</option>'+familias.map(f=>`<option value="${esc(f)}">${esc(rotulos[f]||f)}</option>`).join('');render()}catch(e){document.getElementById('lista').innerHTML=`<p class="erro"><strong>Falha ao carregar:</strong> ${esc(e.message)}</p>`}})();
-document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
-</script>
-<script data-hub-referencias="1" data-hub-referencias-curadas="1" src="scripts/referencias-regras-curadas.js?v=20260820-regras-publicado1"></script>
-</body></html>
+  <style>
+    :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}
+    *{box-sizing:border-box}body{max-width:1120px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.7}
+    header p{max-width:900px}.painel{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:10px;margin:18px 0}
+    .painel div{border:1px solid var(--b);border-radius:10px;padding:12px 14px}.painel strong{display:block;font-size:1.35rem}
+    .nota,.licenca{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}
+    .controles{display:grid;grid-template-columns:minmax(260px,1fr) 230px 230px;gap:10px;margin:18px 0}
+    input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit}
+    .item{border:1px solid var(--b);border-radius:11px;margin:10px 0;overflow:hidden}.item>summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .item>summary:hover{background:var(--soft)}.item>summary>span:first-child{display:flex;flex-direction:column}.original{font-weight:400;opacity:.64;margin-top:2px}
+    .badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 9px;font-size:.82rem;white-space:nowrap}
+    .corpo{padding:0 16px 16px}.source-strip{display:flex;gap:8px 16px;flex-wrap:wrap;font-size:.82rem;opacity:.72;margin:0 0 12px}
+    .secao-regra{margin:16px 0}.secao-regra h3{font-size:1rem;margin:0 0 5px}.secao-regra p{margin:0}
+    .refs{border-top:1px solid #8883;margin-top:16px;padding-top:12px}.refs p{margin:6px 0}.see-text{font-size:.88rem;opacity:.72}
+    .house-override{border:1px solid #8888;border-left:4px solid currentColor;border-radius:8px;padding:11px 13px;margin:16px 0}.house-override p{margin:6px 0 0}
+    .srd-original{margin:16px 0;border:1px solid #8885;border-radius:8px;padding:10px 12px}.srd-original>summary{cursor:pointer;font-weight:650}
+    .srd-raw{white-space:pre-wrap;font:0.9rem/1.5 Georgia,"Times New Roman",serif;margin:12px 0 0;max-height:520px;overflow:auto}
+    .copyright-note{padding:10px 12px;border-left:3px solid #8888}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;opacity:.8;display:flex;gap:8px 18px;flex-wrap:wrap}
+    .erro{padding:16px;border:1px solid #b55;border-radius:10px}.hub-ref-target{outline:2px solid currentColor;outline-offset:4px}
+    .licenca{font-size:.88rem}.licenca p{margin:5px 0}.legado{font-size:.88rem;opacity:.76}
+    @media(max-width:800px){body{padding:16px}.controles,.painel{grid-template-columns:1fr}.item>summary{display:block}.badge{margin-top:7px}}
+  </style>
+</head>
+<body>
+<p><a href="bibliotecas.html?v=20260820-srd521-regras2">← Bibliotecas</a></p>
+<header>
+  <h1>Regras</h1>
+  <p>Glossário reconstruído com o <strong>SRD 5.2.1</strong> como base aberta e o <strong>D&amp;D Beyond — Rules Glossary 2024</strong> como referência oficial de organização. A tradução em português brasileiro é editorial da Biblioteca; o texto original licenciado do SRD permanece disponível em cada entrada.</p>
+</header>
+
+<section class="painel" aria-label="Cobertura das regras">
+  <div><strong id="cont-srd">—</strong><span>entradas do SRD 5.2.1</span></div>
+  <div><strong id="cont-ddb">—</strong><span>termos complementares do D&amp;D Beyond</span></div>
+  <div><strong id="cont-house">—</strong><span>Regras da Casa preservadas</span></div>
+</section>
+
+<div class="nota">
+  <strong>Referências:</strong> “Veja também — SRD 5.2.1” reproduz as relações explícitas do documento aberto. “Referências adicionais do Hub” mantém a curadoria semântica da Biblioteca separada das referências oficiais.
+</div>
+<p class="legado"><strong>Versão anterior:</strong> os dados das regras oficiais que alimentavam a visualização anterior continuam armazenados no repositório, mas essa visualização foi retirada. As Regras da Casa não foram removidas nem reescritas.</p>
+
+<div class="controles">
+  <input id="busca" type="search" placeholder="Buscar regra ou termo...">
+  <select id="fonte">
+    <option value="">Todas as fontes</option>
+    <option value="srd">SRD 5.2.1</option>
+    <option value="ddb">D&amp;D Beyond complementar</option>
+    <option value="house">Regras da Casa</option>
+  </select>
+  <select id="familia"><option value="">Todas as famílias</option></select>
+</div>
+<p id="resultado" class="muted">Carregando...</p>
+<main id="lista"></main>
+
+<section class="licenca">
+  <strong>Atribuição SRD 5.2.1 — CC-BY-4.0</strong>
+  <p>This work includes material from the System Reference Document 5.2.1 (“SRD 5.2.1”) by Wizards of the Coast LLC, available at <a href="https://www.dndbeyond.com/srd" target="_blank" rel="noopener noreferrer">D&amp;D Beyond SRD</a>. The SRD 5.2.1 is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" rel="noopener noreferrer">Creative Commons Attribution 4.0 International License</a>.</p>
+</section>
+
+<script data-hub-referencias="1" data-hub-regras-srd="1" src="scripts/regras-srd-view.js?v=20260820-srd521-regras2"></script>
+</body>
+</html>
