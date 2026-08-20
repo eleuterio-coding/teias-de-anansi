@@ -162,7 +162,7 @@ jobs:
               raise RuntimeError('Script global de limpeza de metadados não encontrado.')
 
           marker = 'data-hub-limpa-meta="1"'
-          tag = '<script data-hub-limpa-meta="1" src="scripts/limpar-metadados-modulos.js?v=20260819-1846"></script>\n'
+          tag = '<script data-hub-limpa-meta="1" src="scripts/limpar-metadados-modulos.js?v=20260820-clean4"></script>\n'
 
           for filename in module_pages:
               path = Path(filename)
