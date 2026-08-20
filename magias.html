@@ -11,7 +11,7 @@
 .layout{display:grid;grid-template-columns:minmax(310px,390px) minmax(0,1fr);gap:16px;align-items:start}.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}
 .tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}
 .filtros{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:560px}
-.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.82}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1rem;margin-top:2px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.licenca{font-size:.9rem;opacity:.82}.warn{border-style:solid}.origem{font-size:.85rem;opacity:.78}
+.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.82}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1rem;margin-top:2px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.warn{border-style:solid}.origem{font-size:.85rem;opacity:.78}
 @media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:360px}.filtros{grid-template-columns:1fr}}
 </style>
 </head>
@@ -19,12 +19,7 @@
 <p><a href="bibliotecas.html?v=20260819-1300">← Bibliotecas</a></p>
 <header>
 <h1>Magias</h1>
-<p class="muted">Catálogo consolidado dos PDFs do Hub, com somente a versão mais recente de cada magia.</p>
-<span class="badge" id="badge-count">carregando…</span><span class="badge" id="badge-55">5.5e</span><span class="badge" id="badge-5">5e legado único</span><span class="badge" id="badge-open">SRD aberto</span>
 </header>
-<div class="nota"><strong>Critério editorial:</strong> entre definições oficiais homônimas encontradas no corpus, prevalece a publicação mais recente. Uma magia antiga só permanece quando não existe revisão posterior equivalente. Reimpressões de terceiros não substituem uma definição oficial homônima.</div>
-<div class="nota"><strong>Corpus:</strong> <code>pdf24_merged.pdf</code> e <code>pdf24_merged-1.pdf</code>. Fontes consolidadas: Player’s Handbook 2024, Heroes of Faerûn 2025, Forge of the Artificer 2025, Tasha 2020, Xanathar 2017, Frontiers of Eberron: Quickstone e L’Arsène’s Ledger.</div>
-<div id="status" class="nota">Carregando e deduplicando catálogo…</div>
 <div class="layout">
 <aside class="painel"><div class="tools">
 <input id="q" type="search" placeholder="Buscar magia, escola, classe, efeito ou fonte…">
@@ -34,7 +29,6 @@
 <div id="count" class="count"></div></div><div id="lista" class="lista"></div></aside>
 <section id="detalhe" class="painel detalhe"><div class="vazio">Selecione uma magia para abrir os detalhes.</div></section>
 </div>
-<section class="nota licenca" id="licenca"></section>
 <script>
 const RAW='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data/';
 const REMOTE={
@@ -97,12 +91,8 @@ function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
  ALL.sort((a,b)=>(a.nivel-b.nivel)||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
- const n55=ALL.filter(x=>x.ruleset==='5.5e').length,n5=ALL.filter(x=>x.ruleset==='5e').length,nOpen=ALL.filter(x=>x.texto_integral_publicavel).length,protectedN=ALL.filter(x=>x.completude==='metadados_protegidos').length;
- document.getElementById('badge-count').textContent=`${ALL.length} magias`;document.getElementById('badge-55').textContent=`5.5e: ${n55}`;document.getElementById('badge-5').textContent=`5e únicas: ${n5}`;document.getElementById('badge-open').textContent=`texto aberto SRD: ${nOpen}`;
- document.getElementById('status').innerHTML=`<strong>Publicado e consolidado:</strong> ${ALL.length} magias únicas. ${discarded} registros anteriores/reimpressões homônimas foram removidos pela regra de versão. ${protectedN} entradas de L’Arsène permanecem em modo de metadados por restrição expressa da própria obra.`;
- document.getElementById('licenca').innerHTML='<strong>Política de publicação:</strong> textos identificados como SRD 5.2.1 são exibidos como conteúdo aberto sob CC-BY-4.0. Para livros comerciais não abertos, o Hub exibe parâmetros factuais e resumo mecânico/editorial próprio, sem reproduzir a prosa protegida. As fontes de dados estruturados servem apenas para normalização técnica do conteúdo já identificado nos dois PDFs do corpus.';
  populateFilters();renderList();if(ALL[0])renderDetail(ALL[0].id);
-}catch(e){console.error(e);document.getElementById('status').innerHTML=`<strong>Falha ao consolidar o catálogo:</strong> ${esc(e.message)}. O lote anterior não foi usado como substituto silencioso.`}})();
+}catch(e){console.error(e)}})();
 ['q','nivel','escola','classe','fonte','ruleset','especial'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
 <script src="scripts/concentracao-expandida-selos.js?v=2e52d5787cbd" data-concentracao-expandida-selos="1"></script>
