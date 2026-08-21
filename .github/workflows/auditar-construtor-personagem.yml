@@ -38,26 +38,27 @@ jobs:
           node --check scripts/character-builder/rules.js
           node --check scripts/character-builder/spells.js
           node --check scripts/character-builder/ui.js
-      - name: Auditar contrato da interface 2024
+      - name: Auditar contrato da interface
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           html=Path('criacao-personagem.html').read_text(encoding='utf-8')
+          list_html=Path('lista-personagens.html').read_text(encoding='utf-8')
           js='\n'.join(Path(p).read_text(encoding='utf-8') for p in [
               'scripts/character-builder/state.js','scripts/character-builder/catalogs.js',
               'scripts/character-builder/rules.js','scripts/character-builder/spells.js','scripts/character-builder/ui.js'])
           ids=set(re.findall(r'id="([^"]+)"',html))
-          required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','provenance'}
+          required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','base-bonus-forca','base-bonus-destreza','base-bonus-constituicao','base-bonus-inteligencia','base-bonus-sabedoria','base-bonus-carisma'}
           missing=required-ids
           if missing: raise RuntimeError('IDs obrigatórios ausentes: '+', '.join(sorted(missing)))
-          if 'ruleset' in ids: raise RuntimeError('Seletor de regras não pode existir: o construtor é exclusivamente 2024.')
-          forbidden=['id="hp-mode"','hpMode','hpRolls','RAW14','5e / revisão 2014']
+          if 'ruleset' in ids: raise RuntimeError('Seletor de regras não pode existir na interface.')
+          forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica']
           for token in forbidden:
-              if token in html or token in js: raise RuntimeError('Conteúdo legado proibido no construtor 2024: '+token)
-          required_tokens=["hub-rpg:characters:v3","ruleset:'5.5e'","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con"]
+              if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","plusOnes","bg-p111"]
           for token in required_tokens:
               if token not in js: raise RuntimeError('Contrato mecânico ausente: '+token)
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
-          print('Construtor v3 validado: regras 2024 fixas, PV máximo e seleção de magias por classe/nível presentes.')
+          print('Construtor v4 validado: bônus triplos editáveis, indicadores de atributo e interface limpa presentes.')
           PY
