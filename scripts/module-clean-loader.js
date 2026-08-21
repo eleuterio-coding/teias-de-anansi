@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260821-raca1';
+  const VERSION='20260821-antecedentes-ficha1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -34,7 +34,9 @@
       [/<p class="resumo">58 antecedentes e variantes de D&amp;D 5e\/5\.5e consolidados no catálogo e localizados para português brasileiro\.<\/p>/gi,''],
       [/<div class="nota"><strong>Precedência:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Escopo:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,'']
+      [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,''],
+      [/let ITENS=\[\],LOC_TAL=\{nomes:\{\}\};/,"let ITENS=[],LOC_TAL={nomes:{}};window.HubAntecedentes={getItens:()=>ITENS,talentoTexto:t=>talentoTexto(t),ferramentaTexto:d=>ferramentaTexto(d),itemTexto:i=>itemTexto(i)};"],
+      [/<\/body>\s*<\/html>\s*$/i,'<script src="scripts/antecedentes-ficha.js?v=20260821-antecedentes-ficha1"></script></body></html>']
     ]}
   };
   async function load(){
