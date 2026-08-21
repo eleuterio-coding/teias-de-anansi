@@ -45,5 +45,48 @@ function render(){const termo=semAcento(busca.value.trim()),filtrados=TALENTOS.f
 async function iniciar(){try{const arquivos=['dados/talentos-phb-2024.json','dados/talentos-forge-2025.json','dados/talentos-heroes-2025.json','dados/talentos-quickstone-2024.json','dados/talentos-tasha-2020.json','dados/talentos-xanathar-2017.json','dados/talentos-eberron-rising-2019.json'];const respostas=await Promise.all(['dados/localizacao-ptbr-talentos.json',...arquivos].map(u=>fetch(`${u}?v=20260820-talentos-subclasses1`,{cache:'no-store'})));const falha=respostas.find(r=>!r.ok);if(falha)throw new Error(`HTTP ${falha.status}`);LOC=await respostas[0].json();const grupos=await Promise.all(respostas.slice(1).map(r=>r.json()));TALENTOS=grupos.flatMap(expandirGrupo).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));preencherFontes();render()}catch(e){resultado.textContent='Falha ao carregar o catálogo.';lista.innerHTML='<p class="erro">Não foi possível carregar os talentos.</p>';console.error(e)}}
 busca.addEventListener('input',render);filtroCategoria.addEventListener('change',render);filtroFonte.addEventListener('change',render);iniciar();
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body>
 </html>

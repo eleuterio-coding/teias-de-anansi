@@ -40,5 +40,48 @@ function abrirRef(){const ref=new URLSearchParams(location.search).get('ref');if
 (async()=>{try{const locUrls=EXPECTED.map(s=>`dados/classes-ptbr/${LOCFILES[s]}.json?v=${V}`),res=await Promise.all([json('dados/localizacao-ptbr-global.json?v='+V),...locUrls.map(json),json(`${RAW}/5e-SRD-Classes.json`),json(`${RAW}/5e-SRD-Levels.json`),json(`${RAW}/5e-SRD-Features.json`)]);G=res[0];for(let i=0;i<EXPECTED.length;i++)LOC[EXPECTED[i]]=res[1+i];const classes=res[1+EXPECTED.length],levels=res[2+EXPECTED.length],features=res[3+EXPECTED.length],fmap=new Map(arr(features).map(f=>[f.index,f]));DATA=arr(classes).filter(c=>EXPECTED.includes(c.index)).map(c=>normalize(c,levels,fmap)).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));render()}catch(e){document.getElementById('resultado').textContent='Falha ao carregar as classes';document.getElementById('lista').innerHTML=`<div class="erro">Não foi possível carregar o módulo. ${esc(e.message)}</div>`;console.error(e)}})();
 document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body>
 </html>

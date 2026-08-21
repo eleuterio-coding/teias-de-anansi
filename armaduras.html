@@ -18,5 +18,48 @@ function renderDetail(id){CURRENT=id;renderList();const x=ALL.find(i=>i.id===id)
 function renderList(){const q=norm(document.getElementById('q').value),cat=document.getElementById('categoria').value,orig=document.getElementById('origem').value;const rows=ALL.filter(x=>(!cat||x.categoria===cat)&&(!orig||(orig==='oficial'&&x.canonico)||(orig==='demo'&&!x.canonico))&&(!q||norm([x.nome,x.categoria,x.ca,x.custo,x.peso,x.furtividade,x.fonte,x.dano,x.propriedade,x.maestria,x.regra_especial].join(' ')).includes(q)));document.getElementById('count').textContent=`${rows.length} de ${ALL.length} registros`;document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.id?'on':''}" data-id="${esc(x.id)}"><strong>${esc(x.nome)}</strong><small>${esc(x.categoria)} · ${esc(origemLabel(x))} · CA ${esc(x.ca)}</small></button>`).join('')||'<div class="vazio">Nenhuma armadura encontrada.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.id))}
 (async()=>{try{const r=await fetch('dados/armaduras-pdfs.json?v=20260819-1118',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);DATA=await r.json();ALL=DATA.armaduras||[];if(ALL.length!==34)throw new Error(`catálogo incompleto: ${ALL.length}/34`);const cats=[...new Set(ALL.map(x=>x.categoria))];document.getElementById('categoria').innerHTML='<option value="">Todas as categorias</option>'+cats.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0])renderDetail(ALL[0].id)}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();['q','categoria','origem'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body>
 </html>

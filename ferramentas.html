@@ -25,5 +25,48 @@ function renderDetail(nome){CURRENT=nome;renderList();const x=ALL.find(i=>i.nome
 function renderList(){const q=norm(document.getElementById('q').value),t=document.getElementById('tipo').value;const rows=ALL.filter(x=>(!t||x.subtipo===t)&&(!q||norm([x.nome,x.subtipo,x.descricao,x.componentes,x.pericias,x.especial,x.ref2,x.ref2024].join(' ')).includes(q)));document.getElementById('count').textContent=`${rows.length} de ${ALL.length} ferramentas`;document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.nome?'on':''}" data-name="${esc(x.nome)}"><strong>${esc(x.nome)}</strong><small>${esc(x.subtipo)}</small></button>`).join('')||'<div class="vazio">Nenhuma ferramenta encontrada.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.name))}
 (async()=>{try{const r=await fetch('dados/ferramentas-pdfs.json?v=20260819-1029',{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();ALL=(d.ferramentas||[]).sort((a,b)=>a.nome.localeCompare(b.nome,'en'));if(ALL.length!==25)throw new Error(`catálogo incompleto: ${ALL.length}/25`);const tipos=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('tipo').innerHTML='<option value="">Todos os tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0])renderDetail(ALL[0].nome)}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();document.getElementById('q').addEventListener('input',renderList);document.getElementById('tipo').addEventListener('change',renderList);
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body>
 </html>

@@ -34,5 +34,48 @@ function renderDetail(x){if(!x)return;let h=`<h2>${esc(x.nome)}</h2>${baseMeta(x
 Promise.all([fetch("dados/equipamentos-aventura-pdfs.json?v=20260819-1135",{cache:"no-store"}).then(r=>r.json()),fetch("dados/equipamentos-aventura-core-pdfs.json?v=20260819-1135",{cache:"no-store"}).then(r=>r.json())]).then(([base,core])=>{BASE=base;ALL=[...expandBase(base),...expandCore(core)].sort((a,b)=>a.nome.localeCompare(b.nome,"en"));ALL.forEach((x,i)=>x._id=i);buildFilter();selected=ALL[0];renderList();renderDetail(selected)}).catch(e=>{const status=document.getElementById("status");status.hidden=false;status.textContent=`Falha ao carregar catálogo: ${e.message}`});
 document.getElementById("busca").addEventListener("input",renderList);document.getElementById("filtro").addEventListener("change",renderList);
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body>
 </html>

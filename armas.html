@@ -42,4 +42,47 @@ function renderList(){const q=norm(document.getElementById('q').value),rs=docume
 function populate(id,values,labelFn=v=>v){const el=document.getElementById(id),base=el.options[0].outerHTML;el.innerHTML=base+values.map(v=>`<option value="${esc(v)}">${esc(labelFn(v))}</option>`).join('')}
 (async()=>{try{const [cr,pmr,mr]=await Promise.all([fetch('dados/armas-srd.json?v=20260819-1300',{cache:'no-store'}),fetch('dados/armas-pdfs-manifest.json?v=20260819-1300',{cache:'no-store'}),fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1224',{cache:'no-store'})]);if(!cr.ok||!pmr.ok)throw new Error(`Falha nas bases principais (${cr.status}/${pmr.status})`);CORE=await cr.json();PDFMAN=await pmr.json();const descriptors=PDFMAN.arquivos||[],responses=await Promise.all(descriptors.map(d=>fetch(d.arquivo+'?v=20260819-1300',{cache:'no-store'})));responses.forEach((r,i)=>{if(!r.ok)throw new Error(`HTTP ${r.status}: ${descriptors[i].arquivo}`)});const datasets=await Promise.all(responses.map(r=>r.json())),pdfItems=[];datasets.forEach((d,i)=>{const sid=descriptors[i].fonte;SOURCE_RULES[sid]={...(SOURCE_RULES[sid]||{}),...(d.regras_compartilhadas||{})};DEMO_MASTERY={...DEMO_MASTERY,...(d.maestrias_demonstrativas||{})};(d.itens||[]).forEach(x=>pdfItems.push(x))});SOURCES={...(CORE.fontes||{}),...(PDFMAN.fontes||{})};if(mr.ok){const md=await mr.json();(md.itens||[]).forEach(x=>MASTERY[x.nome]=x.conteudo?.descricao||'')};ALL=[...(CORE.itens||[]),...pdfItems];if((CORE.itens||[]).length!==39)throw new Error(`base SRD incompleta: ${(CORE.itens||[]).length}/39`);if(pdfItems.length!==107)throw new Error(`extração PDF incompleta: ${pdfItems.length}/107`);if(ALL.length!==146)throw new Error(`catálogo incompleto: ${ALL.length}/146`);populate('ruleset',[...new Set(ALL.map(x=>x.ruleset).filter(Boolean))]);populate('categoria',[...new Set(ALL.map(x=>x.categoria).filter(Boolean))].sort());populate('natureza',[...new Set(ALL.map(natureOf))].sort(),v=>v==='demonstrativo'?'Demonstrativo · não canonizar':v);populate('fonte',[...new Set(ALL.map(x=>x.fonte).filter(Boolean))].sort((a,b)=>String(SOURCES[a]?.titulo||a).localeCompare(String(SOURCES[b]?.titulo||b))),v=>SOURCES[v]?.titulo||v);populate('maestria',[...new Set(ALL.map(x=>x.maestria).filter(Boolean))].sort());populate('statusf',[...new Set(ALL.map(x=>x.status).filter(Boolean))].sort());renderList();if(ALL[0])renderDetail(ALL[0].id)}catch(e){const status=document.getElementById('status');status.hidden=false;status.className='nota';status.innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`}})();['q','ruleset','categoria','natureza','fonte','maestria','statusf'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body></html>
