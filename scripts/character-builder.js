@@ -292,7 +292,8 @@
     if(d.background&&c.choices.background.abilityMode==='2+1'&&(!c.choices.background.plus2||!c.choices.background.plus1||c.choices.background.plus2===c.choices.background.plus1))p.push('Defina os aumentos +2/+1 do antecedente.');
     if(d.background?.toolChoice&&!c.choices.background.toolChoice.trim())p.push(`Defina: ${d.background.toolChoice}.`);
     if(d.klass){const need=(d.klass.proficiencyChoices||[]).reduce((n,g)=>n+g.choose,0);if(c.choices.class.proficiencies.length<need)p.push(`Escolha ${need} perícia(s) da classe.`)}
-    for(const [kind,label] of [['species','raça'],['background','antecedente'],['class','classe']])if(c.refs[kind]&&!byId(kind==='background'?'backgrounds':kind,c.refs[kind]))p.push(`A referência salva de ${label} não existe mais no catálogo atual; nenhuma regra foi migrada automaticamente.`);
+    const catalogKey={species:'species',background:'backgrounds',class:'classes'};
+    for(const [kind,label] of [['species','raça'],['background','antecedente'],['class','classe']])if(c.refs[kind]&&!byId(catalogKey[kind],c.refs[kind]))p.push(`A referência salva de ${label} não existe mais no catálogo atual; nenhuma regra foi migrada automaticamente.`);
     return p;
   }
 
