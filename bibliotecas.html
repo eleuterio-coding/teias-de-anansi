@@ -40,7 +40,7 @@
     <li><a href="antecedentes.html?v=20260819-1900"><span class="nome" data-numero="5">Antecedentes</span><span class="contagem">58 itens</span></a></li>
     <li><a href="talentos.html?v=20260820-1047"><span class="nome" data-numero="6">Talentos</span><span class="contagem">172 itens</span></a></li>
     <li><a href="maestrias-de-arma.html?v=20260819-1900"><span class="nome" data-numero="7">Maestrias de Arma</span><span class="contagem">15 itens</span></a></li>
-    <li><a href="monstros.html?v=20260819-1900"><span class="nome" data-numero="8">Monstros</span><span class="contagem">SRD + 2 PDFs</span></a></li>
+    <li><a href="monstros.html?v=20260821-1434"><span class="nome" data-numero="8">Monstros</span><span id="monstros-total" class="contagem">calculando total...</span></a></li>
     <li><a href="armaduras.html?v=20260819-1900"><span class="nome" data-numero="9">Armaduras</span><span class="contagem">34 registros</span></a></li>
     <li><a href="armas.html?v=20260821-0951"><span class="nome" data-numero="10">Armas</span><span class="contagem">146 itens</span></a></li>
     <li><a href="equipamentos-aventura.html?v=20260819-1900"><span class="nome" data-numero="11">Equipamentos de Aventura</span><span class="contagem">185 itens</span></a></li>
@@ -52,5 +52,31 @@
     <li><a href="magias.html?v=20260819-1900"><span class="nome" data-numero="17">Magias</span><span class="contagem">catálogo consolidado</span></a></li>
     <li><a href="idiomas.html?v=20260819-1900"><span class="nome" data-numero="18">Idiomas</span><span class="contagem">67 itens</span></a></li>
   </ol>
+
+  <script>
+    (() => {
+      const alvo = document.getElementById('monstros-total');
+      const SRD = 'https://apisearch.thedmstoolkit.com/api/2024/monsters';
+      const fontes = ['efa','fraif','xdmg','mpmm','tce','erlw','xge'];
+      const norm = v => String(v ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const complete5 = m => !!(m && m.name && (m._copy || (m.size && m.type && m.ac && m.hp && m.speed && m.str != null && m.dex != null && m.con != null && m.int != null && m.wis != null && m.cha != null)));
+
+      Promise.all([
+        fetch(`${SRD}?fields=name,slug,source`, {cache:'no-store'}).then(r => { if (!r.ok) throw new Error('SRD'); return r.json(); }),
+        fetch('dados/monstros-pdf-extras.json?v=20260821-1434').then(r => { if (!r.ok) throw new Error('extras'); return r.json(); }),
+        ...fontes.map(id => fetch(`dados/monstros-fontes/${id}.json?v=20260821-1434`).then(r => { if (!r.ok) throw new Error(id); return r.json(); }))
+      ]).then(([srd, extras, ...sets]) => {
+        const srows = Array.isArray(srd.data) ? srd.data : [];
+        if (srows.length !== 345) throw new Error('SRD incompleto');
+        const nomes = new Set();
+        srows.forEach(m => { if (m?.name) nomes.add(norm(m.name)); });
+        sets.forEach(d => (d.monster || []).forEach(m => { if (complete5(m)) nomes.add(norm(m.name)); }));
+        (extras.items || []).forEach(m => { if (m?.name) nomes.add(norm(m.name)); });
+        alvo.textContent = `${nomes.size} monstros`;
+      }).catch(() => {
+        alvo.textContent = 'total indisponível';
+      });
+    })();
+  </script>
 </body>
 </html>
