@@ -43,11 +43,13 @@ function renderRoleplay(){
 }
 
 function renderProficiencies(){
+ ensureSheetState();
  const box=$('creation-proficiencies');if(!box)return;const d=derive(),p=state.c.sheet.profile;
  box.innerHTML=row('Armas, armaduras e outras',arr(d.klass?.proficiencies).join(', '))+row('Salvaguardas',arr(d.klass?.savingThrows).join(', '))+row('Perícias treinadas',arr(d.skills).join(', '))+row('Ferramentas',arr(d.tools).join(', '))+row('Idiomas',p.languages);
 }
 
 function renderInventory(){
+ ensureSheetState();
  const box=$('creation-inventory');if(!box)return;const inv=state.c.sheet.inventory;
  box.innerHTML=row('Moedas',coins(inv))+textBlock('Inventário adicional',inv.notes)+textBlock('Itens mágicos',inv.magicItems)+textBlock('Outras posses',inv.otherHoldings)+textBlock('Magias de outras fontes',state.c.sheet.extraSpells);
 }
@@ -55,17 +57,16 @@ function renderInventory(){
 function renderAll(){ensureSheetState();renderProfile();renderRoleplay();renderProficiencies();renderInventory()}
 
 function bind(){
- const p=state.c.sheet.profile,rp=state.c.sheet.roleplay,inv=state.c.sheet.inventory;
  const profileFields={
   'profile-player':'player','profile-experience':'experience','profile-age':'age','profile-gender':'gender','profile-height':'height','profile-weight':'weight','profile-hair':'hair','profile-eyes':'eyes','profile-skin':'skin','profile-alignment':'alignment','profile-faith':'faith','profile-languages':'languages'
  };
- for(const[id,key]of Object.entries(profileFields))$(id)?.addEventListener('input',e=>{p[key]=e.target.value;renderProfile();if(key==='languages')renderProficiencies()});
- for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw'}))$(id)?.addEventListener('input',e=>{rp[key]=e.target.value;renderRoleplay()});
- for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{inv[coin]=Math.max(0,num(e.target.value));e.target.value=inv[coin];renderInventory()});
- $('inventory-notes')?.addEventListener('input',e=>{inv.notes=e.target.value;renderInventory()});
- $('magic-items')?.addEventListener('input',e=>{inv.magicItems=e.target.value;renderInventory()});
- $('other-holdings')?.addEventListener('input',e=>{inv.otherHoldings=e.target.value;renderInventory()});
- $('extra-spells')?.addEventListener('input',e=>{state.c.sheet.extraSpells=e.target.value;renderInventory()});
+ for(const[id,key]of Object.entries(profileFields))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.profile[key]=e.target.value;renderProfile();if(key==='languages')renderProficiencies()});
+ for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw'}))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.roleplay[key]=e.target.value;renderRoleplay()});
+ for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{ensureSheetState();state.c.sheet.inventory[coin]=Math.max(0,num(e.target.value));e.target.value=state.c.sheet.inventory[coin];renderInventory()});
+ $('inventory-notes')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.notes=e.target.value;renderInventory()});
+ $('magic-items')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.magicItems=e.target.value;renderInventory()});
+ $('other-holdings')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.otherHoldings=e.target.value;renderInventory()});
+ $('extra-spells')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.extraSpells=e.target.value;renderInventory()});
  $('builder')?.addEventListener('change',e=>{if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#sp-size,#sp-line,#bg-tool,#armor,#shield,#weapon,[id^="base-"]'))queueMicrotask(renderProficiencies)});
  $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
 }
