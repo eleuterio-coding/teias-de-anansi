@@ -8,6 +8,7 @@ on:
       - 'personagens.html'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
+      - 'dados/magias-personagem-2024.json'
   push:
     branches: [main]
     paths:
@@ -16,6 +17,7 @@ on:
       - 'personagens.html'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
+      - 'dados/magias-personagem-2024.json'
 
 permissions:
   contents: read
@@ -35,7 +37,7 @@ jobs:
           node --check scripts/character-builder/catalogs.js
           node --check scripts/character-builder/rules.js
           node --check scripts/character-builder/ui.js
-      - name: Auditar contrato da interface
+      - name: Auditar contrato da interface 2024
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -45,11 +47,16 @@ jobs:
               'scripts/character-builder/state.js','scripts/character-builder/catalogs.js',
               'scripts/character-builder/rules.js','scripts/character-builder/ui.js'])
           ids=set(re.findall(r'id="([^"]+)"',html))
-          required={'builder','ruleset','classe','nivel','especie','antecedente','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','provenance'}
+          required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','provenance'}
           missing=required-ids
           if missing: raise RuntimeError('IDs obrigatórios ausentes: '+', '.join(sorted(missing)))
-          for token in ["hub-rpg:characters:v2","ruleset==='5.5e'","subclassLevel","trainedArmor","spellProgress"]:
+          if 'ruleset' in ids: raise RuntimeError('Seletor de regras não pode existir: o construtor é exclusivamente 2024.')
+          forbidden=['id="hp-mode"','hpMode','hpRolls','RAW14','5e / revisão 2014']
+          for token in forbidden:
+              if token in html or token in js: raise RuntimeError('Conteúdo legado proibido no construtor 2024: '+token)
+          required_tokens=["hub-rpg:characters:v3","ruleset:'5.5e'","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con"]
+          for token in required_tokens:
               if token not in js: raise RuntimeError('Contrato mecânico ausente: '+token)
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
-          print('Construtor v2 validado: sintaxe, interface, compatibilidade e cálculos centrais presentes.')
+          print('Construtor v3 validado: regras 2024 fixas, PV máximo e seleção de magias por classe/nível presentes.')
           PY
