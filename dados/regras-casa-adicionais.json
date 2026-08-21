@@ -55,7 +55,7 @@
           "texto": "A classificação da lista oficial é normativa. Para 5.5e/2024, use os dados da versão 2024 da magia para determinar se ela exige concentração e qual classificação se aplica; versões 2014 permanecem registradas separadamente e não determinam automaticamente a classificação da versão 2024."
         }
       ],
-      "inserir_depois_de": "Magic Items on the Body (D&D 3.5e)",
+      "inserir_depois_de": "Magic Items Slots (D&D 3.5e - House Rule)",
       "fonte": {
         "livro": "Regra da Casa — Hub de RPG",
         "edicao": "D&D 5.5e / 2024 — Regra da Casa",
@@ -63,8 +63,8 @@
       }
     },
     {
-      "nome": "Antecedentes — Regras Mecânicas",
-      "original": "Backgrounds — Mechanical House Rules",
+      "nome": "Antecedentes: Regras Mecânicas",
+      "original": "Backgrounds: Mechanical Rule (House Rule)",
       "familia": "Regra da Casa",
       "descricao": "Regras da Casa para flexibilizar a construção mecânica dos antecedentes sem vincular o personagem a combinações fixas de atributos e talento de origem.",
       "secoes": [
@@ -89,8 +89,8 @@
       }
     },
     {
-      "nome": "Antecedentes e Organizações — Regras Narrativas",
-      "original": "Backgrounds and Organizations — Narrative House Rules",
+      "nome": "Antecedentes e Organizações: Regras Narrativas",
+      "original": "Backgrounds and Organizations: Narrative Rules  (House Rule)",
       "familia": "Regra da Casa",
       "descricao": "Regras narrativas para tornar antecedentes, facções e organizações elementos ativos da identidade do personagem e da campanha.",
       "secoes": [
@@ -135,7 +135,7 @@
           "texto": "Narrador e jogador constroem juntos conexões entre personagem, antecedente, organizações, mundo e campanha."
         }
       ],
-      "inserir_depois_de": "Backgrounds — Mechanical House Rules",
+      "inserir_depois_de": "Backgrounds: Mechanical Rule (House Rule)",
       "fonte": {
         "livro": "Regra da Casa — Hub de RPG",
         "edicao": "D&D 5.5e / 2024 — Regra da Casa",
