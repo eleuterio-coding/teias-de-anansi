@@ -38,17 +38,7 @@
   <p><a href="bibliotecas.html">← Bibliotecas</a></p>
   <header>
     <h1>Montarias e Veículos</h1>
-    <p class="resumo">Catálogo consolidado e deduplicado a partir de <strong>pdf24_merged.pdf</strong> e <strong>pdf24_merged-1.pdf</strong>, preservando a organização do módulo em montarias/animais, veículos, estações de tripulação e melhorias.</p>
   </header>
-
-  <section class="painel" aria-label="Resumo do catálogo">
-    <div><strong id="total">0</strong><span>registros</span></div>
-    <div><strong id="qMontarias">0</strong><span>montarias / animais</span></div>
-    <div><strong id="qVeiculos">0</strong><span>veículos</span></div>
-    <div><strong id="qSub">0</strong><span>estações / melhorias</span></div>
-  </section>
-
-  <div class="nota"><strong>Critério editorial:</strong> entram como registros próprios as entradas de tabelas de transporte, criaturas explicitamente apresentadas como montarias e veículos com mecânica reutilizável. Menções narrativas incidentais não criam duplicatas. Conteúdo oficial mais recente substitui equivalentes genéricos antigos; opções regionais ou de cenário com mecânica própria são mantidas.</div>
 
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar montaria, veículo, estação, fonte...">
@@ -75,18 +65,6 @@
   </section>
 
   <main id="lista"></main>
-
-  <details class="auditoria">
-    <summary><strong>Auditoria e deduplicação</strong></summary>
-    <ul>
-      <li>Montarias e veículos genéricos antigos equivalentes às entradas de 2024 não são repetidos.</li>
-      <li>Carroças, carruagens e vagões citados apenas em encontros de Quickstone apontam para os veículos genéricos, salvo quando possuem mecânica própria, como o Thunder Coach.</li>
-      <li>O Airship genérico de Eberron 2019 não ganhou um segundo card: o catálogo já possui o Airship de 2024 e aeronaves de Eberron atualizadas em 2025. Lyrandar Galleon, Lightning Rail, Magebred Coach e Skycoach permanecem por serem mecanicamente distintos.</li>
-      <li>Helm e Elemental Core permanecem como dependências citadas nos veículos/estações, em vez de cards autônomos sem bloco independente completo no recorte usado pelo módulo.</li>
-      <li>Participantes narrativos da Race of Eight Winds sem bloco próprio de transporte não foram transformados em novas entradas.</li>
-      <li>Soarsled não foi incluído: a ocorrência localizada está no arquivo autônomo Exploring Eberron, e não foi confirmada nos dois PDFs solicitados.</li>
-    </ul>
-  </details>
 
 <script>
 const R=(nome,original,tipo,fonte,status,descricao,...dados)=>({nome,original,tipo,fonte,status,descricao,dados});
@@ -174,10 +152,6 @@ const esc=s=>String(s??"").replace(/[&<>\"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const normal=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 const lista=document.getElementById("lista"), busca=document.getElementById("busca"), filtroTipo=document.getElementById("filtroTipo"), filtroFonte=document.getElementById("filtroFonte"), resultado=document.getElementById("resultado");
 [...new Set(REGISTROS.map(r=>r.fonte))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(f=>{const o=document.createElement("option");o.value=f;o.textContent=f;filtroFonte.appendChild(o)});
-document.getElementById("total").textContent=REGISTROS.length;
-document.getElementById("qMontarias").textContent=REGISTROS.filter(r=>r.tipo==="Montaria / animal de transporte").length;
-document.getElementById("qVeiculos").textContent=REGISTROS.filter(r=>r.tipo==="Veículo").length;
-document.getElementById("qSub").textContent=REGISTROS.filter(r=>r.tipo==="Estação de tripulação"||r.tipo==="Melhoria de veículo").length;
 function render(){
   const q=normal(busca.value), tipo=filtroTipo.value, fonte=filtroFonte.value;
   const itens=REGISTROS.filter(r=>(!tipo||r.tipo===tipo)&&(!fonte||r.fonte===fonte)&&(!q||normal([r.nome,r.original,r.tipo,r.fonte,r.status,r.descricao,...r.dados].join(" ")).includes(q)));
