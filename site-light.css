@@ -1,12 +1,19 @@
 :root {
-  color-scheme: light !important;
+  color-scheme: only light !important;
 }
 
 html,
 body,
 body * {
-  background-color: #ffffff !important;
+  background: #ffffff !important;
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+body *::before,
+body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 a,
@@ -16,7 +23,8 @@ a:hover,
 a:active,
 a:focus {
   color: #000000 !important;
-  background-color: #ffffff !important;
+  -webkit-text-fill-color: #000000 !important;
+  background: #ffffff !important;
 }
 
 input,
@@ -27,12 +35,14 @@ option,
 optgroup {
   background: #ffffff !important;
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #555555 !important;
-  opacity: 1;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68;
 }
 
 input:focus,
@@ -41,13 +51,19 @@ textarea:focus,
 button:focus,
 button:hover,
 button:active {
-  background-color: #ffffff !important;
+  background: #ffffff !important;
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+svg text {
+  fill: #000000 !important;
 }
 
 ::selection {
-  background: #ffffff !important;
-  color: #000000 !important;
+  background: #000000 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
 }
 
 .hub-module-meta-hidden,
@@ -56,7 +72,7 @@ button:active {
 }
 
 /*
- * Nos 18 módulos da Biblioteca, o topo exibe somente navegação, título,
+ * Nos módulos da Biblioteca, o topo exibe somente navegação, título,
  * controles e conteúdo mecânico. Metadados editoriais/operacionais de
  * nível de módulo ficam fora da interface pública.
  */
@@ -86,7 +102,7 @@ body:has(a[href^="bibliotecas.html"]) > :is(
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: light !important;
+    color-scheme: only light !important;
   }
 
   html,
@@ -98,7 +114,8 @@ body:has(a[href^="bibliotecas.html"]) > :is(
   button,
   option,
   optgroup {
-    background-color: #ffffff !important;
+    background: #ffffff !important;
     color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
   }
 }
