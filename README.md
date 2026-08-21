@@ -1,2 +1,1 @@
-# teias-de-anansi
-Local onde histórias ganham vida.
+Teias de Anansi — Hub de RPG em desenvolvimento.
