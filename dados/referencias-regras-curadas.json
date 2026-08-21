@@ -41,7 +41,7 @@
     "Attack": ["Action", "Attack Roll", "Weapon Attack", "Unarmed Strike"],
     "Attack Roll": ["D20 Test", "Weapon Attack", "Unarmed Strike", "Spell Attack"],
     "Attitude": ["Friendly", "Hostile", "Indifferent", "Influence"],
-    "Attunement": ["Magic Items on the Body (D&D 3.5e)"],
+    "Attunement": ["Magic Items Slots (D&D 3.5e - House Rule)"],
     "Blinded": ["Condition", "Ability Check", "Attack Roll", "Advantage", "Disadvantage"],
     "Blindsight": ["Blinded", "Invisible", "Cover"],
     "Bloodied": ["Hit Points"],
@@ -139,7 +139,7 @@
     "Petrified": ["Condition", "Incapacitated", "Speed", "Advantage", "Saving Throw", "Resistance", "Immunity", "Poisoned"],
     "Player Character": [],
     "Poisoned": ["Condition", "Disadvantage", "Attack Roll", "Ability Check"],
-    "Possession": ["Magic Items on the Body (D&D 3.5e)"],
+    "Possession": ["Magic Items Slots (D&D 3.5e - House Rule)"],
     "Proficiency": ["D20 Test", "Skill", "Saving Throw", "Weapon"],
     "Prone": ["Condition", "Crawling", "Speed", "Disadvantage", "Advantage", "Attack Roll"],
     "Reach": [],
@@ -152,7 +152,7 @@
     "Save": ["Saving Throw"],
     "Saving Throw": ["D20 Test"],
     "Search": ["Action", "Ability Check", "Skill"],
-    "Shape-Shifting": ["Condition", "Spell", "Curses", "Dead", "Magic Items on the Body (D&D 3.5e)"],
+    "Shape-Shifting": ["Condition", "Spell", "Curses", "Dead", "Magic Items Slots (D&D 3.5e - House Rule)"],
     "Short Rest": ["Hit Points", "Hit Point Dice", "Initiative", "Spell", "Cantrip", "Damage"],
     "Simultaneous Effects": [],
     "Size": ["Occupied Space", "Hit Points"],
@@ -183,9 +183,9 @@
     "Vulnerability": ["Damage Types", "Damage"],
     "Weapon": ["Weapon Attack"],
     "Weapon Attack": ["Attack Roll", "Weapon"],
-    "Magic Items on the Body (D&D 3.5e)": ["Attunement", "Shape-Shifting", "Size", "Illusions", "Possession"],
+    "Magic Items Slots (D&D 3.5e - House Rule)": ["Attunement", "Shape-Shifting", "Size", "Illusions", "Possession"],
     "Expanded Concentration (House Rule)": ["Concentration", "Damage", "Difficulty Class"],
-    "Backgrounds — Mechanical House Rules": [],
-    "Backgrounds and Organizations — Narrative House Rules": []
+    "Backgrounds: Mechanical Rule (House Rule)": [],
+    "Backgrounds and Organizations: Narrative Rules  (House Rule)": []
   }
 }
