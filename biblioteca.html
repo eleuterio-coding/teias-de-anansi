@@ -18,12 +18,14 @@
   <script>
     const params = new URLSearchParams(location.search);
     const modulo = params.get('modulo');
-    const v = '20260819-1900';
+    const v = '20260821-1045';
     const destinos = {
       'Regras': `regras.html?v=${v}`,
       'Classes': `classes.html?v=${v}`,
       'Subclasses': `subclasses.html?v=${v}`,
-      'Espécies': `especies.html?v=${v}`,
+      'Raça': `raca.html?v=${v}`,
+      'Raças': `raca.html?v=${v}`,
+      'Espécies': `raca.html?v=${v}`,
       'Antecedentes': `antecedentes.html?v=${v}`,
       'Talentos': `talentos.html?v=${v}`,
       'Maestrias de Arma': `maestrias-de-arma.html?v=${v}`,
@@ -48,6 +50,6 @@
       location.replace(`bibliotecas.html?v=${v}`);
     }
   </script>
-  <noscript><a href="bibliotecas.html?v=20260819-1900">Abrir Bibliotecas</a></noscript>
+  <noscript><a href="bibliotecas.html?v=20260821-1045">Abrir Bibliotecas</a></noscript>
 </body>
 </html>

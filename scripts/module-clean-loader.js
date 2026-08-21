@@ -1,7 +1,18 @@
 (()=>{
   'use strict';
-  const VERSION='20260820-clean-modules1';
+  const VERSION='20260821-raca1';
   const key=document.documentElement.dataset.cleanModule;
+  const raceRules=[
+    [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
+    [/<div><span class="badge">D&amp;D 5e \+ 5\.5e<\/span><span class="badge">PDFs consolidados<\/span><span class="badge">SRD 5\.1 \/ 5\.2\.1<\/span><span class="badge">build 1149<\/span><\/div>/gi,''],
+    [/<div class="nota"><strong>Critério de publicação:<\/strong>[\s\S]*?<\/div>/gi,''],
+    [/\s*document\.getElementById\('resumo'\)\.textContent=`\$\{DATA\.length\} opções no módulo: 49 espécies\/variantes consolidadas dos PDFs \+ 2 legadas 5e pré-existentes\.`;/g,''],
+    [/\s*document\.getElementById\('resumo'\)\.textContent='Falha ao carregar o catálogo consolidado\.';/g,''],
+    [/Espécies/g,'Raça'],
+    [/espécies/g,'raças'],
+    [/Espécie/g,'Raça'],
+    [/espécie/g,'raça']
+  ];
   const cfg={
     classes:{source:'dados/_module-source/classes.html',rules:[
       [/<p class="muted">As 12 classes-base de D&amp;D 5\.5e e o Artífice 2025, apresentados em português brasileiro\.<\/p>/gi,''],
@@ -13,13 +24,8 @@
       [/<div class="nota"><strong>Completude e direitos:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<footer class="licenca">[\s\S]*?<\/footer>/gi,'']
     ]},
-    especies:{source:'dados/_module-source/especies.html',rules:[
-      [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
-      [/<div><span class="badge">D&amp;D 5e \+ 5\.5e<\/span><span class="badge">PDFs consolidados<\/span><span class="badge">SRD 5\.1 \/ 5\.2\.1<\/span><span class="badge">build 1149<\/span><\/div>/gi,''],
-      [/<div class="nota"><strong>Critério de publicação:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/\s*document\.getElementById\('resumo'\)\.textContent=`\$\{DATA\.length\} opções no módulo: 49 espécies\/variantes consolidadas dos PDFs \+ 2 legadas 5e pré-existentes\.`;/g,''],
-      [/\s*document\.getElementById\('resumo'\)\.textContent='Falha ao carregar o catálogo consolidado\.';/g,'']
-    ]},
+    raca:{source:'dados/_module-source/especies.html',rules:raceRules},
+    especies:{source:'dados/_module-source/especies.html',rules:raceRules},
     talentos:{source:'dados/_module-source/talentos.html',rules:[
       [/<p class="resumo">Talentos de D&amp;D 5e\/5\.5e localizados editorialmente para português brasileiro\.<\/p>/gi,''],
       [/<div class="nota"><strong>Localização PT-BR:<\/strong>[\s\S]*?<\/div>/gi,'']
