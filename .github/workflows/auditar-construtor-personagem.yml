@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
       - 'lista-personagens.html'
       - 'personagens.html'
+      - 'scripts/character-sheet.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-personagem-2024.json'
@@ -13,8 +15,10 @@ on:
     branches: [main]
     paths:
       - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
       - 'lista-personagens.html'
       - 'personagens.html'
+      - 'scripts/character-sheet.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-personagem-2024.json'
@@ -32,6 +36,7 @@ jobs:
           node-version: '22'
       - name: Validar JavaScript
         run: |
+          node --check scripts/character-sheet.js
           node --check scripts/character-builder.js
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/catalogs.js
@@ -44,10 +49,12 @@ jobs:
           from pathlib import Path
           import re
           html=Path('criacao-personagem.html').read_text(encoding='utf-8')
+          sheet_html=Path('ficha-personagem.html').read_text(encoding='utf-8')
           list_html=Path('lista-personagens.html').read_text(encoding='utf-8')
           js='\n'.join(Path(p).read_text(encoding='utf-8') for p in [
               'scripts/character-builder/state.js','scripts/character-builder/catalogs.js',
               'scripts/character-builder/rules.js','scripts/character-builder/spells.js','scripts/character-builder/ui.js'])
+          sheet_js=Path('scripts/character-sheet.js').read_text(encoding='utf-8')
           ids=set(re.findall(r'id="([^"]+)"',html))
           required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','base-bonus-forca','base-bonus-destreza','base-bonus-constituicao','base-bonus-inteligencia','base-bonus-sabedoria','base-bonus-carisma'}
           missing=required-ids
@@ -60,5 +67,13 @@ jobs:
           for token in required_tokens:
               if token not in js: raise RuntimeError('Contrato mecânico ausente: '+token)
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
-          print('Construtor v4 validado: +1/+1/+1 definido pelo antecedente, exibido sem edição, indicadores de atributo e interface limpa presentes.')
+
+          sheet_ids=set(re.findall(r'id="([^"]+)"',sheet_html))
+          sheet_required={'sheet','pc-name','core-metrics','abilities','saves','skills','combat-summary','current-hp','conditions','species-features','class-features','background-data','proficiencies','starting-equipment','spell-overview','spell-slots','cantrip-list','leveled-spells','save-sheet'}
+          sheet_missing=sheet_required-sheet_ids
+          if sheet_missing: raise RuntimeError('IDs obrigatórios da ficha ausentes: '+', '.join(sorted(sheet_missing)))
+          if 'ficha-personagem.html' not in list_html: raise RuntimeError('Lista de personagens não oferece acesso à ficha digital.')
+          for token in ['ensureSheetState','spellSlotsUsed','currentHp','conditions','renderFeatures','renderSpells','saveCharacter']:
+              if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
+          print('Construtor e ficha digital validados: cálculos existentes preservados, estado de sessão e módulos da ficha presentes.')
           PY
