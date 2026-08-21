@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'scripts/gerar_magias_catalogo.py'
+      - 'scripts/gerar_magias_catalogo_corrigido.py'
       - 'scripts/unificar_consumidores_magias.py'
       - 'dados/magias-suplementos-locais.json'
       - '.github/workflows/gerar-magias-catalogo.yml'
@@ -30,7 +31,7 @@ jobs:
           python-version: '3.12'
 
       - name: Gerar catálogo consolidado único
-        run: python scripts/gerar_magias_catalogo.py
+        run: python scripts/gerar_magias_catalogo_corrigido.py
 
       - name: Unificar Biblioteca e Criação de Personagem
         run: python scripts/unificar_consumidores_magias.py
