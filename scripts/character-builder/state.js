@@ -11,7 +11,7 @@ export const state={catalogs:{classes:[],species:[],backgrounds:[],subclasses:[]
 export const $=id=>document.getElementById(id),arr=v=>Array.isArray(v)?v:[],num=v=>Number.isFinite(Number(v))?Number(v):0,uniq=a=>[...new Set(a.filter(Boolean))];
 export const fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 export const slug=s=>fold(s).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-export const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+export const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const mod=s=>Math.floor((num(s)-10)/2),signed=n=>`${n>=0?'+':''}${n}`,pb=l=>2+Math.floor((Math.max(1,num(l))-1)/4);
 export async function json(u){const r=await fetch(`${u}${u.includes('?')?'&':'?'}v=${V}`,{cache:'no-store'});if(!r.ok)throw new Error(`${u}: HTTP ${r.status}`);return r.json()}
 export function uid(){return globalThis.crypto?.randomUUID?.()||`pc-${Date.now()}-${Math.random().toString(16).slice(2)}`}
