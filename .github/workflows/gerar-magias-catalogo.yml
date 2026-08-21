@@ -18,6 +18,7 @@ concurrency:
 jobs:
   gerar:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,17 +31,46 @@ jobs:
       - name: Gerar catálogo
         run: python scripts/gerar_magias_catalogo.py
 
-      - name: Validar JSON
-        run: python -m json.tool dados/magias-catalogo.json > /dev/null
+      - name: Gerar catálogo 2024 para personagens
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
 
-      - name: Publicar catálogo gerado
+          src = Path('dados/magias-catalogo.json')
+          data = json.loads(src.read_text(encoding='utf-8'))
+          items = [
+              x for x in data.get('itens', [])
+              if x.get('ruleset') == '5.5e' and x.get('revisao_core') == 2024 and x.get('classes_base')
+          ]
+          payload = {
+              'schema': 'hub-rpg/magias-personagem-2024/v1',
+              'gerado_em': data.get('gerado_em'),
+              'ruleset': '5.5e',
+              'revisao_core': 2024,
+              'politica': 'Catálogo derivado para construção de personagem: somente magias compatíveis com as regras de 2024 e vinculadas a pelo menos uma classe.',
+              'quantidade': len(items),
+              'itens': items,
+          }
+          Path('dados/magias-personagem-2024.json').write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8'
+          )
+          print(f"Catálogo de personagem 2024: {len(items)} magias.")
+          PY
+
+      - name: Validar JSON
+        run: |
+          python -m json.tool dados/magias-catalogo.json > /dev/null
+          python -m json.tool dados/magias-personagem-2024.json > /dev/null
+
+      - name: Publicar catálogos gerados
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add dados/magias-catalogo.json
+          git add dados/magias-catalogo.json dados/magias-personagem-2024.json
           if git diff --cached --quiet; then
-            echo 'Sem alterações no catálogo.'
+            echo 'Sem alterações nos catálogos.'
           else
-            git commit -m 'Atualiza catálogo consolidado de magias'
+            git commit -m 'Atualiza catálogos consolidados de magias'
             git push
           fi
