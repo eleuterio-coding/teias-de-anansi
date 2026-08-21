@@ -53,12 +53,12 @@ jobs:
           missing=required-ids
           if missing: raise RuntimeError('IDs obrigatórios ausentes: '+', '.join(sorted(missing)))
           if 'ruleset' in ids: raise RuntimeError('Seletor de regras não pode existir na interface.')
-          forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica']
+          forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","plusOnes","bg-p111"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))"]
           for token in required_tokens:
               if token not in js: raise RuntimeError('Contrato mecânico ausente: '+token)
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
-          print('Construtor v4 validado: bônus triplos editáveis, indicadores de atributo e interface limpa presentes.')
+          print('Construtor v4 validado: +1/+1/+1 definido pelo antecedente, exibido sem edição, indicadores de atributo e interface limpa presentes.')
           PY
