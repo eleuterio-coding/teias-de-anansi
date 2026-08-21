@@ -1,0 +1,55 @@
+name: Auditar construtor de personagem
+
+on:
+  pull_request:
+    paths:
+      - 'criacao-personagem.html'
+      - 'lista-personagens.html'
+      - 'personagens.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/**'
+  push:
+    branches: [main]
+    paths:
+      - 'criacao-personagem.html'
+      - 'lista-personagens.html'
+      - 'personagens.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/**'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder.js
+          node --check scripts/character-builder/state.js
+          node --check scripts/character-builder/catalogs.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/ui.js
+      - name: Auditar contrato da interface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('criacao-personagem.html').read_text(encoding='utf-8')
+          js='\n'.join(Path(p).read_text(encoding='utf-8') for p in [
+              'scripts/character-builder/state.js','scripts/character-builder/catalogs.js',
+              'scripts/character-builder/rules.js','scripts/character-builder/ui.js'])
+          ids=set(re.findall(r'id="([^"]+)"',html))
+          required={'builder','ruleset','classe','nivel','especie','antecedente','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','provenance'}
+          missing=required-ids
+          if missing: raise RuntimeError('IDs obrigatórios ausentes: '+', '.join(sorted(missing)))
+          for token in ["hub-rpg:characters:v2","ruleset==='5.5e'","subclassLevel","trainedArmor","spellProgress"]:
+              if token not in js: raise RuntimeError('Contrato mecânico ausente: '+token)
+          if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
+          print('Construtor v2 validado: sintaxe, interface, compatibilidade e cálculos centrais presentes.')
+          PY
