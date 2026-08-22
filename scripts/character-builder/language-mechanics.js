@@ -14,6 +14,11 @@ const CANON={
  druidic:'Druídico',druidico:'Druídico',infernal:'Infernal',primordial:'Primordial',sylvan:'Silvestre',silvestre:'Silvestre',
  "thieves' cant":'Cant dos Ladrões','thieves’ cant':'Cant dos Ladrões','cant dos ladroes':'Cant dos Ladrões',undercommon:'Subcomum',subcomum:'Subcomum'
 };
+const STRUCTURED_CLASS_LANGUAGE_FEATURES={
+ druid:new Set(['druidic','druidico']),
+ rogue:new Set(["thieves' cant",'thieves’ cant','cant dos ladroes']),
+ ranger:new Set(['deft explorer','explorador habil'])
+};
 
 function canonical(v){const raw=String(v||'').trim();return CANON[fold(raw)]||raw}
 function countWord(v){const f=fold(v);return NUMBER_WORDS[f]||num(v)}
@@ -30,27 +35,36 @@ function selectedFeatObjects(){
 }
 
 function grantsFromText(sourceKey,label,text){
- const raw=String(text||''),f=fold(raw),fixed=[],grants=[];
+ const f=fold(text),fixed=[],grants=[];
  if(/\byou know druidic\b/.test(f)||/\bconhece druidico\b/.test(f))fixed.push('Druídico');
  if(/thieves['’]? cant/.test(f)||/cant dos ladroes/.test(f))fixed.push('Cant dos Ladrões');
  if(/serpentine speech/.test(f)||/linguagem de sinais serpentina/.test(f))fixed.push('Linguagem de Sinais Serpentina');
  if(fixed.length)grants.push({key:`${sourceKey}:fixed`,label,fixed:uniq(fixed),choose:0,pool:[]});
  const patterns=[
-  /you know (one|two|three|\d+) other languages? of your choice/,
+  /(?:you know |and )(one|two|three|\d+) other languages? of your choice/,
   /you know (one|two|three|\d+) languages? of your choice/,
-  /conhece (um|uma|dois|duas|tres|três|\d+) outros? idiomas? (?:de|à|a) sua escolha/,
-  /conhece (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|à|a) sua escolha/,
-  /(?:ganha|recebe) (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|à|a) sua escolha/
+  /(?:conhece |e )(um|uma|dois|duas|tres|três|\d+) outros? idiomas? (?:de|a) sua escolha/,
+  /conhece (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|a) sua escolha/,
+  /(?:ganha|recebe) (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|a) sua escolha/
  ];
  for(const re of patterns){const m=f.match(re);if(m){grants.push({key:`${sourceKey}:choice`,label,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});break}}
  return grants
 }
 
+function classLanguageDefinitions(klass,level){
+ if(!klass)return[];const defs=[];
+ if(klass.slug==='druid'&&level>=1)defs.push({key:'class:druid:druidic',label:`${klass.name} — Druídico`,fixed:['Druídico'],choose:0,pool:[]});
+ if(klass.slug==='rogue'&&level>=1)defs.push({key:'class:rogue:thieves-cant',label:`${klass.name} — Cant dos Ladrões`,fixed:['Cant dos Ladrões'],choose:1,pool:ALL_LANGUAGES});
+ if(klass.slug==='ranger'&&level>=2)defs.push({key:'class:ranger:deft-explorer',label:`${klass.name} — Explorador Hábil`,fixed:[],choose:2,pool:ALL_LANGUAGES});
+ return defs
+}
+function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
+
 export function languageGrantDefinitions(){
  ensureState();
- const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices?.class?.level)||1)),defs=[{key:'core:languages',label:'Criação de Personagem',fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES}];
+ const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices?.class?.level)||1)),defs=[{key:'core:languages',label:'Criação de Personagem',fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES},...classLanguageDefinitions(klass,level)];
  const sources=[];
- for(const f of arr(klass?.features).filter(x=>num(x.level)<=level))sources.push([`class:${klass.slug}:${keyPart(f.name)}`,`${klass.name} — ${f.name}`,f.text||f.description||'']);
+ for(const f of arr(klass?.features).filter(x=>num(x.level)<=level&&!structuredClassFeature(klass,x)))sources.push([`class:${klass.slug}:${keyPart(f.name)}`,`${klass.name} — ${f.name}`,f.text||f.description||'']);
  const lineage=species?.lineages?.find(x=>x.name===state.c.choices?.species?.lineage)||null;
  for(const t of[...arr(species?.traits),...arr(lineage?.traits)])sources.push([`species:${species?.id||species?.name}:${keyPart(t.name)}`,`${species?.name||'Raça'} — ${t.name}`,t.text||t.description||'']);
  if(bg?.feature)sources.push([`background:${bg.id}:feature`,`${bg.name} — característica`,bg.feature.text||bg.feature.description||'']);
