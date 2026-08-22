@@ -8,6 +8,7 @@ on:
       - 'lista-personagens.html'
       - 'personagens.html'
       - 'scripts/character-sheet.js'
+      - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-personagem-2024.json'
@@ -20,6 +21,7 @@ on:
       - 'lista-personagens.html'
       - 'personagens.html'
       - 'scripts/character-sheet.js'
+      - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-personagem-2024.json'
@@ -39,6 +41,7 @@ jobs:
       - name: Validar JavaScript
         run: |
           node --check scripts/character-sheet.js
+          node --check scripts/character-sheet-feat-ui.js
           node --check scripts/character-builder.js
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/catalogs.js
@@ -70,6 +73,7 @@ jobs:
           js='\n'.join(Path(p).read_text(encoding='utf-8') for p in source_files)
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           sheet_js=Path('scripts/character-sheet.js').read_text(encoding='utf-8')
+          sheet_feat_js=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
           spell_selection=Path('scripts/character-builder/spell-selection-ui.js').read_text(encoding='utf-8')
           spell_quota=Path('scripts/character-builder/spell-quota-ui.js').read_text(encoding='utf-8')
           class_skill=Path('scripts/character-builder/class-skill-ui.js').read_text(encoding='utf-8')
@@ -120,7 +124,10 @@ jobs:
           sheet_missing=sheet_required-sheet_ids
           if sheet_missing: raise RuntimeError('IDs obrigatórios da ficha ausentes: '+', '.join(sorted(sheet_missing)))
           if 'ficha-personagem.html' not in list_html: raise RuntimeError('Lista de personagens não oferece acesso à ficha digital.')
+          if 'character-sheet-feat-ui.js' not in sheet_html: raise RuntimeError('Ficha digital não carrega a integração mecânica dos talentos.')
           for token in ['ensureSheetState','spellSlotsUsed','currentHp','conditions','renderFeatures','renderSpells','saveCharacter']:
               if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
-          print(f'Construtor validado: {len(core)} talentos de Origem/Geral auditados, escolhas mecânicas ativas e contador restante de perícias da classe presente.')
+          for token in ['saveProficiencies','expertiseSkills','featSpellcasting','featResources','unarmedDamage']:
+              if token not in sheet_feat_js: raise RuntimeError('Integração de talentos ausente na ficha digital: '+token)
+          print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados, escolhas mecânicas ativas e contador restante de perícias da classe presente.')
           PY
