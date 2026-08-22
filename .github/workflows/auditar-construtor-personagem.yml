@@ -44,6 +44,7 @@ jobs:
           node --check scripts/character-builder/spells.js
           node --check scripts/character-builder/ui.js
           node --check scripts/character-builder/profile-ui.js
+          node --check scripts/character-builder/species-trait-ui.js
       - name: Auditar contrato da interface
         run: |
           python - <<'PY'
@@ -55,7 +56,9 @@ jobs:
           js='\n'.join(Path(p).read_text(encoding='utf-8') for p in [
               'scripts/character-builder/state.js','scripts/character-builder/catalogs.js',
               'scripts/character-builder/rules.js','scripts/character-builder/spells.js',
-              'scripts/character-builder/ui.js','scripts/character-builder/profile-ui.js'])
+              'scripts/character-builder/ui.js','scripts/character-builder/profile-ui.js',
+              'scripts/character-builder/species-trait-ui.js'])
+          loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           sheet_js=Path('scripts/character-sheet.js').read_text(encoding='utf-8')
           ids=set(re.findall(r'id="([^"]+)"',html))
           required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','base-bonus-forca','base-bonus-destreza','base-bonus-constituicao','base-bonus-inteligencia','base-bonus-sabedoria','base-bonus-carisma'}
@@ -66,9 +69,9 @@ jobs:
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi"]
           for token in required_tokens:
-              if token not in js and token not in Path('scripts/character-builder.js').read_text(encoding='utf-8'):
+              if token not in js and token not in loader:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
 
@@ -79,5 +82,5 @@ jobs:
           if 'ficha-personagem.html' not in list_html: raise RuntimeError('Lista de personagens não oferece acesso à ficha digital.')
           for token in ['ensureSheetState','spellSlotsUsed','currentHp','conditions','renderFeatures','renderSpells','saveCharacter']:
               if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
-          print('Construtor e ficha digital validados: criação completa, cálculos existentes preservados, estado de sessão e módulos da ficha presentes.')
+          print('Construtor e ficha digital validados: escolhas e efeitos mecânicos dos traços raciais, criação completa e estado de sessão presentes.')
           PY
