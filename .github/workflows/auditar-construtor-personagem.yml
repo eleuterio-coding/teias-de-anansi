@@ -63,6 +63,8 @@ jobs:
               'scripts/character-builder/spell-quota-ui.js'])
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           sheet_js=Path('scripts/character-sheet.js').read_text(encoding='utf-8')
+          spell_selection=Path('scripts/character-builder/spell-selection-ui.js').read_text(encoding='utf-8')
+          spell_quota=Path('scripts/character-builder/spell-quota-ui.js').read_text(encoding='utf-8')
           ids=set(re.findall(r'id="([^"]+)"',html))
           required={'builder','classe','nivel','especie','antecedente','magias-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','base-bonus-forca','base-bonus-destreza','base-bonus-constituicao','base-bonus-inteligencia','base-bonus-sabedoria','base-bonus-carisma'}
           creation_required={'profile-player','profile-experience','profile-age','profile-gender','profile-height','profile-weight','profile-hair','profile-eyes','profile-skin','profile-alignment','profile-faith','profile-languages','personality','ideal','bond','flaw','coin-cp','coin-sp','coin-ep','coin-gp','coin-pp','inventory-notes','magic-items','other-holdings','extra-spells','creation-profile','creation-roleplay','creation-proficiencies','creation-inventory'}
@@ -72,10 +74,16 @@ jobs:
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState"]
           for token in required_tokens:
               if token not in js and token not in loader:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
+          if "dispatchEvent(new Event('input'))" in spell_selection:
+              raise RuntimeError('Seleção de magia não pode disparar renderização global via campo de nome.')
+          if 'spellOptions(' in spell_selection:
+              raise RuntimeError('Seleção incremental não deve reconstruir opções completas de magia a cada clique.')
+          if 'canSelectLeveledSpell' in spell_quota:
+              raise RuntimeError('Contadores de magia não devem recalcular a elegibilidade individual de todo o catálogo.')
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
 
           sheet_ids=set(re.findall(r'id="([^"]+)"',sheet_html))
@@ -85,5 +93,5 @@ jobs:
           if 'ficha-personagem.html' not in list_html: raise RuntimeError('Lista de personagens não oferece acesso à ficha digital.')
           for token in ['ensureSheetState','spellSlotsUsed','currentHp','conditions','renderFeatures','renderSpells','saveCharacter']:
               if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
-          print('Construtor e ficha digital validados: seleção incremental de magias, traços raciais mecânicos, criação completa e estado de sessão presentes.')
+          print('Construtor e ficha digital validados: seleção de magias usa atualização localizada e cálculo único de cotas, sem renderização global por clique.')
           PY
