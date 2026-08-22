@@ -1,4 +1,5 @@
 import{state,AB,ABKEY,SKILL_AB,arr,num,uniq,fold,mod,pb}from'./state.js';
+import{activeFeatInstances,featMechanicalOutcome,sanitizeFeatChoices}from'./feat-mechanics.js';
 
 export const item=(k,id)=>state.catalogs[k].find(x=>x.id===id)||null;
 export const compatible=k=>state.catalogs[k].filter(x=>!x.ruleset||x.ruleset==='5.5e');
@@ -46,42 +47,20 @@ function explicitSkillOptions(values){return values.map(asSkill).filter(Boolean)
 function defsForTrait(t){
  const text=fold(t?.text),name=fold(t?.originalName||t?.name),base=traitKey(t),defs=[];
  const add=(suffix,type,label,extra={})=>defs.push({key:`${base}:${suffix}`,traitId:base,traitName:t.name,type,label,note:t.text,...extra});
-
- if(name==='skillful'||name==='habilidoso'||/proficiencia em uma pericia a sua escolha/.test(text))
-  add('skill','skill','Perícia',{choose:1,options:'all'});
-
- if((name==='keen senses'||name==='sentidos agucados')&&(/intuicao.*percepcao.*sobrevivencia/.test(text)||/insight.*perception.*survival/.test(text)))
-  add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Intuição','Percepção','Sobrevivência'])});
-
- if(name==='changeling instincts')
-  add('skills','skill','Perícias',{choose:2,options:explicitSkillOptions(['Deception','Insight','Intimidation','Performance','Persuasion'])});
-
- if(name==='bestial instincts')
-  add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Acrobatics','Athletics','Intimidation','Survival'])});
-
- if(name==="hunter's senses"&&/perception.*stealth.*survival/.test(text))
-  add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Perception','Stealth','Survival'])});
-
+ if(name==='skillful'||name==='habilidoso'||/proficiencia em uma pericia a sua escolha/.test(text))add('skill','skill','Perícia',{choose:1,options:'all'});
+ if((name==='keen senses'||name==='sentidos agucados')&&(/intuicao.*percepcao.*sobrevivencia/.test(text)||/insight.*perception.*survival/.test(text)))add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Intuição','Percepção','Sobrevivência'])});
+ if(name==='changeling instincts')add('skills','skill','Perícias',{choose:2,options:explicitSkillOptions(['Deception','Insight','Intimidation','Performance','Persuasion'])});
+ if(name==='bestial instincts')add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Acrobatics','Athletics','Intimidation','Survival'])});
+ if(name==="hunter's senses"&&/perception.*stealth.*survival/.test(text))add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Perception','Stealth','Survival'])});
  if(name==='specialized design'||/proficiencia em uma pericia e em uma ferramenta a escolha/.test(text)){
-  add('skill','skill','Perícia',{choose:1,options:'all'});
-  add('tool','tool','Ferramenta',{choose:1})
+  add('skill','skill','Perícia',{choose:1,options:'all'});add('tool','tool','Ferramenta',{choose:1})
  }
-
- if(name==='skill versatility'||/proficiencia em uma pericia ou ferramenta a escolha/.test(text))
-  add('skill-or-tool','skill_or_tool','Perícia ou ferramenta',{choose:1});
-
- if(name==='severed from dreams'||/ganha proficiencia em uma pericia a escolha ate terminar o proximo descanso longo/.test(text))
-  add('skill','skill','Perícia atual',{choose:1,options:'all',temporary:true});
-
- if(/talento de origem.*sua escolha/.test(text))
-  add('origin-feat','feat','Talento de Origem',{category:'Origem'});
-
+ if(name==='skill versatility'||/proficiencia em uma pericia ou ferramenta a escolha/.test(text))add('skill-or-tool','skill_or_tool','Perícia ou ferramenta',{choose:1});
+ if(name==='severed from dreams'||/ganha proficiencia em uma pericia a escolha ate terminar o proximo descanso longo/.test(text))add('skill','skill','Perícia atual',{choose:1,options:'all',temporary:true});
+ if(/talento de origem.*sua escolha/.test(text))add('origin-feat','feat','Talento de Origem',{category:'Origem'});
  const spellAbility=/inteligencia.*sabedoria.*carisma.*(atributo|habilidade).*conjuracao/.test(text)||/(atributo|habilidade).*conjuracao.*inteligencia.*sabedoria.*carisma/.test(text);
  if(spellAbility)add('spell-ability','ability','Atributo de conjuração',{options:['Inteligência','Sabedoria','Carisma']});
-
- if(name==='shifting'&&/beasthide.*longtooth.*swiftstride.*wildhunt/.test(text))
-  add('shifting-benefit','option','Benefício de Shifting',{options:['Beasthide','Longtooth','Swiftstride','Wildhunt']});
-
+ if(name==='shifting'&&/beasthide.*longtooth.*swiftstride.*wildhunt/.test(text))add('shifting-benefit','option','Benefício de Shifting',{options:['Beasthide','Longtooth','Swiftstride','Wildhunt']});
  return uniqDefs(defs)
 }
 function uniqDefs(defs){const seen=new Set;return defs.filter(d=>!seen.has(d.key)&&(seen.add(d.key),true))}
@@ -109,9 +88,8 @@ export function sanitizeSpeciesTraitChoices(){
   }else if(def.type==='tool'){
    if(typeof v==='string'&&v.trim())clean[def.key]=v.trim()
   }else if(def.type==='skill_or_tool'&&v&&typeof v==='object'){
-   if(v.type==='skill'){
-    const skill=asSkill(v.value);if(skill)clean[def.key]={type:'skill',value:skill}
-   }else if(v.type==='tool'&&String(v.value||'').trim())clean[def.key]={type:'tool',value:String(v.value).trim()}
+   if(v.type==='skill'){const skill=asSkill(v.value);if(skill)clean[def.key]={type:'skill',value:skill}}
+   else if(v.type==='tool'&&String(v.value||'').trim())clean[def.key]={type:'tool',value:String(v.value).trim()}
   }
  }
  c.choices.species.traitChoices=clean
@@ -121,15 +99,11 @@ function speciesChoiceOutcome(species,lineage){
  const defs=speciesTraitChoiceDefs(species,lineage),values=state.c.choices.species?.traitChoices||{},skills=[],tools=[],featIds=[],labels={},abilities=[];
  for(const def of defs){
   const v=values[def.key];if(v==null)continue;
-  if(def.type==='skill'){
-   const chosen=def.choose>1?arr(v):[v];skills.push(...chosen);labels[def.key]=chosen.join(', ')
-  }else if(def.type==='tool'){tools.push(v);labels[def.key]=v}
-  else if(def.type==='skill_or_tool'){
-   if(v.type==='skill')skills.push(v.value);else if(v.type==='tool')tools.push(v.value);
-   labels[def.key]=v.value
-  }else if(def.type==='feat'){
-   const f=item('feats',v);if(f){featIds.push(v);labels[def.key]=f.name}
-  }else if(def.type==='ability'){abilities.push(v);labels[def.key]=v}
+  if(def.type==='skill'){const chosen=def.choose>1?arr(v):[v];skills.push(...chosen);labels[def.key]=chosen.join(', ')}
+  else if(def.type==='tool'){tools.push(v);labels[def.key]=v}
+  else if(def.type==='skill_or_tool'){if(v.type==='skill')skills.push(v.value);else if(v.type==='tool')tools.push(v.value);labels[def.key]=v.value}
+  else if(def.type==='feat'){const f=item('feats',v);if(f){featIds.push(v);labels[def.key]=f.name}}
+  else if(def.type==='ability'){abilities.push(v);labels[def.key]=v}
   else if(def.type==='option')labels[def.key]=v
  }
  return{defs,values,skills:uniq(skills),tools:uniq(tools),featIds:uniq(featIds),labels,spellAbility:abilities[0]||null}
@@ -144,24 +118,22 @@ function traitPassiveEffects(traits,level){
   if(n==='wood elf: movement speed increase'||/deslocamento aumenta para 10,5 m/.test(text))speedOverride=Math.max(speedOverride||0,35);
   if(n==='natural performer'||/^ganha proficiencia em performance/.test(text))fixedSkills.push('Atuação');
   if(n==='menacing'||/^ganha proficiencia em intimidation/.test(text))fixedSkills.push('Intimidação');
-  const armor=text.match(/ca base e (1[0-9]) \+ modificador de destreza/);if(armor)naturalArmorBase=Math.max(naturalArmorBase||0,num(armor[1]));
+  const armor=text.match(/ca base e (1[0-9]) \+ modificador de destreza/);if(armor)naturalArmorBase=Math.max(naturalArmorBase||0,num(armor[1]))
  }
  return{hp,acBonus,speedOverride,naturalArmorBase,fixedSkills:uniq(fixedSkills)}
 }
 
-function featNames(klass,bg,level,speciesFeatIds=[]){
- const n=[];
- if(bg?.feat?.name)n.push(bg.feat.name);
- arr(klass?.featSlots).filter(l=>l<=level).forEach((l,i)=>{const f=item('feats',state.c.choices.feats[`slot-${l}-${i}`]);if(f)n.push(f.name)});
- for(const id of speciesFeatIds){const f=item('feats',id);if(f)n.push(f.name)}
- return uniq(n)
+function classArmorTraining(k,a){if(!a)return true;const p=fold([...arr(k?.proficiencies),...arr(k?.proficienciesRaw)].join(' '));if(a.categoria==='Leve')return/light armor|armadura leve|all armor|todas as armaduras/.test(p);if(a.categoria==='Média')return/medium armor|armadura media|all armor|todas as armaduras/.test(p);if(a.categoria==='Pesada')return/heavy armor|armadura pesada|all armor|todas as armaduras/.test(p);return true}
+export function trainedArmor(k,a){if(classArmorTraining(k,a))return true;if(!a)return true;return featMechanicalOutcome().armorTraining.includes(a.categoria)}
+function classShieldTraining(k){return/shield|escudo/.test(fold([...arr(k?.proficiencies),...arr(k?.proficienciesRaw)].join(' ')))}
+export const shieldTraining=k=>classShieldTraining(k)||featMechanicalOutcome().shieldTraining;
+function weaponProf(k,w,featMech=null){
+ if(!w||!k)return false;const p=fold([...arr(k.proficiencies),...arr(k.proficienciesRaw)].join(' ')),c=fold(w.categoria),fm=featMech||featMechanicalOutcome();
+ if(c.includes('simples')&&/simple weapon|arma simples/.test(p))return true;
+ if(c.includes('marcial')&&(/martial weapon|arma marcial/.test(p)||fm.weaponTraining.includes('Marcial')))return true;
+ return p.includes(fold(w.nome))||p.includes(fold(w.nome_original))
 }
-function featEffect(n,level,pbonus){const f=n.map(fold);return{initiative:f.some(x=>x==='alert'||x==='alerta')?pbonus:0,hp:f.some(x=>['tough','durao','duravel'].includes(x))?2*level:0}}
-function armorAC(a,dex,naturalBase=null){if(!a)return naturalBase?naturalBase+dex:10+dex;const s=String(a.ca||''),base=num((s.match(/\d+/)||['10'])[0]);if(/modificador de Destreza|Dexterity/i.test(s))return base+(a.categoria==='Média'?Math.min(2,dex):dex);return base}
-
-export function trainedArmor(k,a){if(!a)return true;const p=fold([...arr(k?.proficiencies),...arr(k?.proficienciesRaw)].join(' '));if(a.categoria==='Leve')return/light armor|armadura leve|all armor|todas as armaduras/.test(p);if(a.categoria==='Média')return/medium armor|armadura media|all armor|todas as armaduras/.test(p);if(a.categoria==='Pesada')return/heavy armor|armadura pesada|all armor|todas as armaduras/.test(p);return true}
-export const shieldTraining=k=>/shield|escudo/.test(fold([...arr(k?.proficiencies),...arr(k?.proficienciesRaw)].join(' ')));
-function weaponProf(k,w){if(!w||!k)return false;const p=fold([...arr(k.proficiencies),...arr(k.proficienciesRaw)].join(' ')),c=fold(w.categoria);if(c.includes('simples')&&/simple weapon|arma simples/.test(p))return true;if(c.includes('marcial')&&/martial weapon|arma marcial/.test(p))return true;return p.includes(fold(w.nome))||p.includes(fold(w.nome_original))}
+function armorAC(a,dex,naturalBase=null,mediumDexCap=2){if(!a)return naturalBase?naturalBase+dex:10+dex;const s=String(a.ca||''),base=num((s.match(/\d+/)||['10'])[0]);if(/modificador de Destreza|Dexterity/i.test(s))return base+(a.categoria==='Média'?Math.min(mediumDexCap,dex):dex);return base}
 
 export function spellProgress(k,l){
  const r=arr(k?.levels).find(x=>num(x.level)===l),s=r?.spellcasting||r?.class_specific?.spellcasting||{},slots=[];let maxLevel=0;
@@ -186,24 +158,23 @@ function classSpellMatch(k,s){const names=[k?.name,k?.slug==='artificer'?'Artíf
 export function spellOptions(k,l){const baseProgress=spellProgress(k,l),quota=spellSelectionQuota(k,l),progress={...baseProgress,actualPrepared:baseProgress.prepared,prepared:quota.total,selectionTotal:quota.total,selectionByLevel:quota.byLevel,selectionCreditsByLevel:quota.byLevel,selectionLabel:quota.label,selectionMode:quota.mode};if(!k?.spellAbility||(!progress.maxLevel&&!progress.arcanumLevels.length))return{progress,cantrips:[],leveled:[],arcanum:{}};const all=state.catalogs.spells.filter(s=>classSpellMatch(k,s)),cantrips=all.filter(s=>s.level===0),leveled=all.filter(s=>s.level>0&&s.level<=progress.maxLevel),arcanum=Object.fromEntries(progress.arcanumLevels.map(level=>[level,all.filter(s=>s.level===level)]));return{progress,cantrips,leveled,arcanum}}
 export function canSelectLeveledSpell(k,l,ids,candidateId){const current=arr(ids);if(current.includes(candidateId))return true;const opts=spellOptions(k,l),candidate=opts.leveled.find(spell=>spell.id===candidateId);if(!candidate)return false;return spellCreditState(k,l,[...current,candidateId]).valid}
 
-function hpTotal(k,l,con,fe,extraHp=0){if(!k)return null;const perLevel=Math.max(1,k.hitDie+con);return Math.max(l,perLevel*l+fe.hp+extraHp)}
+function hpTotal(k,l,con,featHp=0,extraHp=0){if(!k)return null;const perLevel=Math.max(1,k.hitDie+con);return Math.max(l,perLevel*l+featHp+extraHp)}
 export function subclassLevel(k){return k?3:99}
 
 function decoratedTraits(traits,outcome){
- const byTrait={};
- for(const def of outcome.defs){const label=outcome.labels[def.key];if(label)(byTrait[def.traitId]||(byTrait[def.traitId]=[])).push(`${def.label}: ${label}`)}
+ const byTrait={};for(const def of outcome.defs){const label=outcome.labels[def.key];if(label)(byTrait[def.traitId]||(byTrait[def.traitId]=[])).push(`${def.label}: ${label}`)}
  return traits.map(t=>{const extra=byTrait[traitKey(t)];return extra?.length?{...t,text:`${t.text}\nEscolhas: ${extra.join(' · ')}`}:{...t}})
 }
 
 export function derive(){
- sanitizeSpeciesTraitChoices();
- const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices.class.level)||1)),pbonus=pb(level),lineage=species?.lineages?.find(x=>x.name===state.c.choices.species.lineage)||null,bb=bgBonus(bg),sb=spBonus(species,lineage),scores={};
- for(const a of AB)scores[a]=Math.min(20,num(state.c.baseAbilities[a])+bb[a]+sb[a]);
- const traits=activeSpeciesTraits(species,lineage),speciesChoices=speciesChoiceOutcome(species,lineage),passive=traitPassiveEffects(traits,level),skills=uniq([...(bg?.skills||[]),...arr(state.c.choices.class.skills),...passive.fixedSkills,...speciesChoices.skills]),tools=uniq([...(bg?.tools||[]),state.c.choices.background.toolChoice,...speciesChoices.tools].filter(Boolean)),feats=featNames(klass,bg,level,speciesChoices.featIds),fe=featEffect(feats,level,pbonus),armor=item('armors',state.c.choices.equipment.armor),weapon=item('weapons',state.c.choices.equipment.weapon),dex=mod(scores.Destreza),str=mod(scores.Força),wis=mod(scores.Sabedoria),con=mod(scores.Constituição);
- let speed=passive.speedOverride||species?.speed||30;if(armor?.forca_minima&&scores.Força<num(armor.forca_minima))speed-=10;
- const wAbility=weapon?(/distância/.test(weapon.categoria)?'Destreza':arr(weapon.propriedades).some(x=>/finesse/i.test(x))?(dex>=str?'Destreza':'Força'):'Força'):null,wmod=wAbility?mod(scores[wAbility]):0,wprof=weaponProf(klass,weapon),spell=spellProgress(klass,level),spellMod=klass?.spellAbility?mod(scores[klass.spellAbility]):null,shieldBonus=state.c.choices.equipment.shield&&shieldTraining(klass)?2:0,spellSel=state.c.choices.spells||{cantrips:[],leveled:[],arcanum:{}};
+ sanitizeSpeciesTraitChoices();sanitizeFeatChoices();
+ const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices.class.level)||1)),pbonus=pb(level),lineage=species?.lineages?.find(x=>x.name===state.c.choices.species.lineage)||null,bb=bgBonus(bg),sb=spBonus(species,lineage),traits=activeSpeciesTraits(species,lineage),speciesChoices=speciesChoiceOutcome(species,lineage),passiveSpecies=traitPassiveEffects(traits,level),baseSkills=uniq([...(bg?.skills||[]),...arr(state.c.choices.class.skills),...passiveSpecies.fixedSkills,...speciesChoices.skills]),baseSaves=uniq(arr(klass?.savingThrows)),featMech=featMechanicalOutcome(baseSkills,baseSaves),scores={};
+ for(const a of AB)scores[a]=Math.min(20,num(state.c.baseAbilities[a])+bb[a]+sb[a]+num(featMech.abilityBonuses[a]));
+ const skills=uniq([...baseSkills,...featMech.skills]),expertiseSkills=uniq(arr(featMech.expertise).filter(s=>skills.includes(s))),tools=uniq([...(bg?.tools||[]),state.c.choices.background.toolChoice,...speciesChoices.tools,...featMech.tools].filter(Boolean)),saveProficiencies=uniq([...baseSaves,...featMech.saveProficiencies]),feats=uniq(activeFeatInstances().map(x=>x.feat.name)),armor=item('armors',state.c.choices.equipment.armor),weapon=item('weapons',state.c.choices.equipment.weapon),dex=mod(scores.Destreza),str=mod(scores.Força),wis=mod(scores.Sabedoria),con=mod(scores.Constituição);
+ let speed=(passiveSpecies.speedOverride||species?.speed||30)+num(featMech.speedBonus);if(armor?.forca_minima&&scores.Força<num(armor.forca_minima))speed-=10;
+ const wAbility=weapon?(/distância/.test(weapon.categoria)?'Destreza':arr(weapon.propriedades).some(x=>/finesse/i.test(x))?(dex>=str?'Destreza':'Força'):'Força'):null,wmod=wAbility?mod(scores[wAbility]):0,wprof=weaponProf(klass,weapon,featMech),spell=spellProgress(klass,level),spellMod=klass?.spellAbility?mod(scores[klass.spellAbility]):null,shieldBonus=state.c.choices.equipment.shield&&(classShieldTraining(klass)||featMech.shieldTraining)?2:0,spellSel=state.c.choices.spells||{cantrips:[],leveled:[],arcanum:{}};
  const speciesSpellMod=speciesChoices.spellAbility?mod(scores[speciesChoices.spellAbility]):null;
- return{klass,species,bg,sub,level,pbonus,lineage,bb,sb,scores,skills,tools,feats,speciesFeatIds:speciesChoices.featIds,speciesTraitChoices:speciesChoices,armor,weapon,ac:armorAC(armor,dex,passive.naturalArmorBase)+shieldBonus+passive.acBonus,speed,wAbility,wprof,attack:weapon?wmod+(wprof?pbonus:0):null,hp:hpTotal(klass,level,con,fe,passive.hp),spell,spellDC:spellMod==null?null:8+pbonus+spellMod,spellAttack:spellMod==null?null:pbonus+spellMod,speciesSpellAbility:speciesChoices.spellAbility,speciesSpellDC:speciesSpellMod==null?null:8+pbonus+speciesSpellMod,speciesSpellAttack:speciesSpellMod==null?null:pbonus+speciesSpellMod,selectedSpells:{cantrips:arr(spellSel.cantrips).map(id=>item('spells',id)).filter(Boolean),leveled:arr(spellSel.leveled).map(id=>item('spells',id)).filter(Boolean),arcanum:Object.fromEntries(Object.entries(spellSel.arcanum||{}).map(([l,id])=>[l,item('spells',id)]).filter(([,x])=>x))},initiative:dex+fe.initiative,passive:10+wis+(skills.includes('Percepção')?pbonus:0),speciesTraits:decoratedTraits(traits,speciesChoices),classFeatures:arr(klass?.features).filter(f=>f.level<=level)}
+ return{klass,species,bg,sub,level,pbonus,lineage,bb,sb,scores,skills,expertiseSkills,tools,saveProficiencies,feats,speciesFeatIds:speciesChoices.featIds,speciesTraitChoices:speciesChoices,featMechanics:featMech,featSpells:featMech.spells,featSpellcasting:featMech.spellcasting,featResources:featMech.resources,extraProficiencies:featMech.extraProficiencies,unarmedDamage:featMech.unarmedDamage,armor,weapon,ac:armorAC(armor,dex,passiveSpecies.naturalArmorBase,featMech.mediumDexCap)+shieldBonus+passiveSpecies.acBonus+featMech.acBonus,speed,wAbility,wprof,attack:weapon?wmod+(wprof?pbonus:0):null,hp:hpTotal(klass,level,con,featMech.hp,passiveSpecies.hp),spell,spellDC:spellMod==null?null:8+pbonus+spellMod,spellAttack:spellMod==null?null:pbonus+spellMod,speciesSpellAbility:speciesChoices.spellAbility,speciesSpellDC:speciesSpellMod==null?null:8+pbonus+speciesSpellMod,speciesSpellAttack:speciesSpellMod==null?null:pbonus+speciesSpellMod,selectedSpells:{cantrips:arr(spellSel.cantrips).map(id=>item('spells',id)).filter(Boolean),leveled:arr(spellSel.leveled).map(id=>item('spells',id)).filter(Boolean),arcanum:Object.fromEntries(Object.entries(spellSel.arcanum||{}).map(([l,id])=>[l,item('spells',id)]).filter(([,x])=>x))},initiative:dex+featMech.initiative,passive:10+wis+(skills.includes('Percepção')?pbonus:0)+(expertiseSkills.includes('Percepção')?pbonus:0),speciesTraits:decoratedTraits(traits,speciesChoices),classFeatures:arr(klass?.features).filter(f=>f.level<=level)}
 }
 
 export function sanitizeSelections(){
@@ -215,5 +186,5 @@ export function sanitizeSelections(){
  const acceptedIds=new Set(accepted);c.choices.spells.leveled=eligible.filter(id=>acceptedIds.has(id)).slice(0,opts.progress.selectionTotal);
  const arc={};for(const l of opts.progress.arcanumLevels){const id=c.choices.spells.arcanum?.[l];if(id&&opts.arcanum[l]?.some(x=>x.id===id))arc[l]=id}c.choices.spells.arcanum=arc;
  for(const[ref,k]of[['class','classes'],['species','species'],['background','backgrounds'],['subclass','subclasses']]){const x=item(k,c.refs[ref]);if(x&&x.ruleset&&x.ruleset!=='5.5e')c.refs[ref]=null}
- sanitizeSpeciesTraitChoices()
+ sanitizeSpeciesTraitChoices();sanitizeFeatChoices()
 }
