@@ -47,10 +47,10 @@ function defsForTrait(t){
  const text=fold(t?.text),name=fold(t?.originalName||t?.name),base=traitKey(t),defs=[];
  const add=(suffix,type,label,extra={})=>defs.push({key:`${base}:${suffix}`,traitId:base,traitName:t.name,type,label,note:t.text,...extra});
 
- if(name==='skillful'||name==='habilidoso'||/proficiência em uma perícia à sua escolha/.test(text)||/proficiencia em uma pericia a sua escolha/.test(text))
+ if(name==='skillful'||name==='habilidoso'||/proficiencia em uma pericia a sua escolha/.test(text))
   add('skill','skill','Perícia',{choose:1,options:'all'});
 
- if((name==='keen senses'||name==='sentidos aguçados')&&(/intuicao.*percepcao.*sobrevivencia/.test(text)||/insight.*perception.*survival/.test(text)))
+ if((name==='keen senses'||name==='sentidos agucados')&&(/intuicao.*percepcao.*sobrevivencia/.test(text)||/insight.*perception.*survival/.test(text)))
   add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Intuição','Percepção','Sobrevivência'])});
 
  if(name==='changeling instincts')
@@ -62,15 +62,15 @@ function defsForTrait(t){
  if(name==="hunter's senses"&&/perception.*stealth.*survival/.test(text))
   add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Perception','Stealth','Survival'])});
 
- if(name==='specialized design'||/proficiência em uma perícia e em uma ferramenta à escolha/.test(text)||/proficiencia em uma pericia e em uma ferramenta a escolha/.test(text)){
+ if(name==='specialized design'||/proficiencia em uma pericia e em uma ferramenta a escolha/.test(text)){
   add('skill','skill','Perícia',{choose:1,options:'all'});
   add('tool','tool','Ferramenta',{choose:1})
  }
 
- if(name==='skill versatility'||/proficiência em uma perícia ou ferramenta à escolha/.test(text)||/proficiencia em uma pericia ou ferramenta a escolha/.test(text))
+ if(name==='skill versatility'||/proficiencia em uma pericia ou ferramenta a escolha/.test(text))
   add('skill-or-tool','skill_or_tool','Perícia ou ferramenta',{choose:1});
 
- if(name==='severed from dreams'||/ganha proficiência em uma perícia à escolha até terminar o próximo descanso longo/.test(text)||/ganha proficiencia em uma pericia a escolha ate terminar o proximo descanso longo/.test(text))
+ if(name==='severed from dreams'||/ganha proficiencia em uma pericia a escolha ate terminar o proximo descanso longo/.test(text))
   add('skill','skill','Perícia atual',{choose:1,options:'all',temporary:true});
 
  if(/talento de origem.*sua escolha/.test(text))
