@@ -1,0 +1,81 @@
+name: Auditar idiomas do personagem
+
+on:
+  pull_request:
+    paths:
+      - 'criacao-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/language-ui.js'
+      - 'scripts/character-builder/profile-ui.js'
+      - 'scripts/character-builder/catalogs.js'
+      - 'scripts/character-builder/rules.js'
+      - 'dados/especies-*.json'
+      - 'dados/antecedentes-*.json'
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/talentos-phb-2024.json'
+      - 'dados/artificer-2025.json'
+  push:
+    branches: [main]
+    paths:
+      - 'criacao-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/language-ui.js'
+      - 'scripts/character-builder/profile-ui.js'
+      - 'scripts/character-builder/catalogs.js'
+      - 'scripts/character-builder/rules.js'
+      - 'dados/especies-*.json'
+      - 'dados/antecedentes-*.json'
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/talentos-phb-2024.json'
+      - 'dados/artificer-2025.json'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript de idiomas
+        run: |
+          node --check scripts/character-builder/language-mechanics.js
+          node --check scripts/character-builder/language-ui.js
+          node --check scripts/character-builder/profile-ui.js
+          node --check scripts/character-builder.js
+      - name: Auditar contrato de idiomas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          mechanics=Path('scripts/character-builder/language-mechanics.js').read_text(encoding='utf-8')
+          ui=Path('scripts/character-builder/language-ui.js').read_text(encoding='utf-8')
+          profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
+          loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          required=[
+              "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES",
+              "klass.slug==='druid'&&level>=1",
+              "fixed:['Druídico']",
+              "klass.slug==='rogue'&&level>=1",
+              "fixed:['Cant dos Ladrões'],choose:1,pool:ALL_LANGUAGES",
+              "klass.slug==='ranger'&&level>=2",
+              "choose:2,pool:ALL_LANGUAGES",
+              'languageGrantDefinitions','sanitizeLanguageChoices','languageOutcome',
+              'selectedFeatObjects','species','background','subclass'
+          ]
+          for token in required:
+              if token not in mechanics: raise RuntimeError('Contrato de idiomas ausente: '+token)
+          if "'Comum'" in mechanics.split('export const STANDARD_LANGUAGES=',1)[1].split(';',1)[0]:
+              raise RuntimeError('Comum não deve consumir uma das duas escolhas básicas.')
+          for token in ['initLanguageUi','hub:languages-changed','language-choice','Idiomas adicionais / observações']:
+              if token not in ui: raise RuntimeError('Interface de idiomas incompleta: '+token)
+          if 'languageOutcome' not in profile or "row('Idiomas',languages())" not in profile:
+              raise RuntimeError('Prévia da ficha não aplica os idiomas efetivos.')
+          if 'initLanguageUi' not in loader:
+              raise RuntimeError('Loader não inicializa o módulo de idiomas.')
+          print('Idiomas validados: Comum + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
+          PY

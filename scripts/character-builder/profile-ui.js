@@ -1,5 +1,6 @@
 import{state,$,arr,num,esc}from'./state.js';
 import{derive}from'./rules.js';
+import{languageOutcome}from'./language-mechanics.js';
 
 function ensureSheetState(){
  const c=state.c;
@@ -17,6 +18,7 @@ function setValue(id,value){const el=$(id);if(el)el.value=value??''}
 function row(label,value){return`<div class="value-row"><span>${esc(label)}</span><strong>${esc(value||'—')}</strong></div>`}
 function textBlock(label,value){return`<div class="preview-block"><strong>${esc(label)}</strong><p>${esc(value||'—')}</p></div>`}
 function coins(inv){return[['PC',inv.cp],['PP',inv.sp],['PE',inv.ep],['PO',inv.gp],['PL',inv.pp]].filter(([,v])=>num(v)>0).map(([k,v])=>`${num(v)} ${k}`).join(' · ')||'—'}
+function languages(){return languageOutcome().all.join(', ')||'—'}
 
 function hydrate(){
  ensureSheetState();
@@ -33,7 +35,7 @@ function hydrate(){
 function renderProfile(){
  ensureSheetState();
  const p=state.c.sheet.profile,box=$('creation-profile');if(!box)return;
- box.innerHTML=row('Jogador',p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',p.gender)+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',p.languages);
+ box.innerHTML=row('Jogador',p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',p.gender)+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',languages());
 }
 
 function renderRoleplay(){
@@ -44,8 +46,8 @@ function renderRoleplay(){
 
 function renderProficiencies(){
  ensureSheetState();
- const box=$('creation-proficiencies');if(!box)return;const d=derive(),p=state.c.sheet.profile;
- box.innerHTML=row('Armas, armaduras e outras',arr(d.klass?.proficiencies).join(', '))+row('Salvaguardas',arr(d.klass?.savingThrows).join(', '))+row('Perícias treinadas',arr(d.skills).join(', '))+row('Ferramentas',arr(d.tools).join(', '))+row('Idiomas',p.languages);
+ const box=$('creation-proficiencies');if(!box)return;const d=derive();
+ box.innerHTML=row('Armas, armaduras e outras',arr(d.klass?.proficiencies).join(', '))+row('Salvaguardas',arr(d.klass?.savingThrows).join(', '))+row('Perícias treinadas',arr(d.skills).join(', '))+row('Ferramentas',arr(d.tools).join(', '))+row('Idiomas',languages());
 }
 
 function renderInventory(){
@@ -68,6 +70,7 @@ function bind(){
  $('other-holdings')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.otherHoldings=e.target.value;renderInventory()});
  $('extra-spells')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.extraSpells=e.target.value;renderInventory()});
  $('builder')?.addEventListener('change',e=>{if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#sp-size,#sp-line,#bg-tool,#armor,#shield,#weapon,[id^="base-"]'))queueMicrotask(renderProficiencies)});
+ document.addEventListener('hub:languages-changed',()=>{renderProfile();renderProficiencies()});
  $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
 }
 
