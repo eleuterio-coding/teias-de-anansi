@@ -1,0 +1,61 @@
+name: Auditar Bardo
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'dados/classes-base-2024.json'
+      - '.github/workflows/auditar-bardo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'dados/classes-base-2024.json'
+      - '.github/workflows/auditar-bardo.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: node --check scripts/character-builder/class-skill-ui.js
+      - name: Auditar seleção de perícias do Bardo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          rows=json.loads(Path('dados/classes-base-2024.json').read_text(encoding='utf-8'))
+          bard=next((x for x in rows if x.get('index')=='bard'),None)
+          if not bard:
+              raise RuntimeError('Bardo ausente da base local de classes.')
+          groups=bard.get('proficiency_choices') or []
+          skills=[]
+          choose=0
+          for group in groups:
+              refs=[o.get('item',{}).get('name','') for o in group.get('from',{}).get('options',[])]
+              skill_refs=[name for name in refs if name.startswith('Skill: ')]
+              if skill_refs:
+                  skills.extend(skill_refs)
+                  choose+=int(group.get('choose') or 0)
+          if choose!=3:
+              raise RuntimeError(f'Bardo deve escolher exatamente 3 perícias; encontrado {choose}.')
+          if len(set(skills))!=18:
+              raise RuntimeError(f'Bardo deve poder escolher entre as 18 perícias; encontradas {len(set(skills))}.')
+
+          source=Path('scripts/character-builder/class-skill-ui.js').read_text(encoding='utf-8')
+          required=['normalizeSkillChoices','klass.slug===\'bard\'','choose:3','ALL_SKILLS','ensureSkillMarkup']
+          missing=[token for token in required if token not in source]
+          if missing:
+              raise RuntimeError('Proteção específica do Bardo ausente: '+', '.join(missing))
+          if "filter(option=>ALL_SKILLS.includes(option))" not in source:
+              raise RuntimeError('Escolhas que não são perícias podem voltar a contaminar o seletor de perícias.')
+          print('Bardo validado: 3 escolhas entre 18 perícias e campo com reconstrução de segurança.')
+          PY
