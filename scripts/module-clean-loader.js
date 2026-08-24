@@ -22,7 +22,8 @@
       [/<p class="resumo">119 subclasses identificadas em pdf24_merged\.pdf e pdf24_merged-1\.pdf, deduplicadas por identidade e revisão\. Versões mais recentes equivalentes têm precedência\.<\/p>/gi,''],
       [/<div class="nota"><strong>Critério editorial:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Completude e direitos:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/<footer class="licenca">[\s\S]*?<\/footer>/gi,'']
+      [/<footer class="licenca">[\s\S]*?<\/footer>/gi,''],
+      [/(<header>[\s\S]*?<h1>Subclasses<\/h1>[\s\S]*?<\/header>)/i,'$1<div class="nota"><strong>Compatibilidade 5e/5.5e:</strong> a versão 5.5e/2024 de uma subclasse prevalece quando existe equivalente revisado. Subclasses 5e sem substituta permanecem disponíveis como legado compatível e usam o nível em que a classe 2024 concede sua subclasse. Variantes de terceiros permanecem identificadas pela própria fonte e não são tratadas como material oficial.</div>']
     ]},
     raca:{source:'dados/_module-source/especies.html',rules:raceRules},
     especies:{source:'dados/_module-source/especies.html',rules:raceRules},
