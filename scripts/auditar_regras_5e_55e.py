@@ -59,9 +59,10 @@ class_detail=(ROOT/'classes-v3.html').read_text(encoding='utf-8')
 require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail and 'Talento — Regra da Casa' in class_detail,'Classes ainda expõem os ASIs regulares substituídos como progressão ativa')
 
 mastery=load('dados/maestrias-de-arma-pdfs.json')
-canonical={x.get('nome') for x in mastery.get('itens',[]) if x.get('controle',{}).get('canonico')}
+canonical={x.get('nome') for x in mastery.get('itens',[]) if x.get('classificacao',{}).get('origem')=='oficial_aberta' and x.get('classificacao',{}).get('status')=='atual'}
 required_masteries={'Cleave','Graze','Nick','Push','Sap','Slow','Topple','Vex'}
 require(required_masteries.issubset(canonical),f'Maestrias 2024 ausentes: {sorted(required_masteries-canonical)}')
+require(mastery.get('controle',{}).get('oficiais_canonicas')==8,'Quantidade de maestrias oficiais 2024 divergente')
 
 weapon_page=(ROOT/'armas.html').read_text(encoding='utf-8')
 armor_page=(ROOT/'armaduras.html').read_text(encoding='utf-8')
