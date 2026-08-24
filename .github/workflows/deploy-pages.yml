@@ -29,6 +29,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Audit D&D 5e and 5.5e compatibility
+        shell: bash
+        run: python scripts/auditar_regras_5e_55e.py
+
       - name: Prepare active Rules catalog for semantic indexing
         shell: bash
         run: |
@@ -175,14 +179,35 @@ jobs:
                   html = html.replace('</body>', tag + '</body>', 1)
                   path.write_text(html, encoding='utf-8')
 
-          missing = [
-              filename for filename in module_pages
-              if marker not in Path(filename).read_text(encoding='utf-8')
-          ]
+          missing = [filename for filename in module_pages if marker not in Path(filename).read_text(encoding='utf-8')]
           if missing:
               raise RuntimeError('Limpador de metadados ausente em: ' + ', '.join(missing))
 
           print(f'Limpador de metadados editoriais/operacionais ativo em {len(module_pages)}/18 módulos.')
+          PY
+
+      - name: Inject 5e and 5.5e policy into Library modules
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          pages=[
+              'regras.html','classes.html','classes-v3.html','subclasses.html','raca.html','antecedentes.html','talentos.html',
+              'maestrias-de-arma.html','monstros.html','armaduras.html','armas.html','equipamentos-aventura.html','ferramentas.html',
+              'montarias-veiculos.html','comercio-e-despesas.html','bugigangas.html','itens-magicos.html','magias.html','idiomas.html'
+          ]
+          script=Path('scripts/politica-regras-biblioteca.js')
+          if not script.exists(): raise RuntimeError('Política global 5e/5.5e ausente.')
+          marker='data-hub-rules-policy-loader="1"'
+          tag='<script data-hub-rules-policy-loader="1" src="scripts/politica-regras-biblioteca.js?v=20260823-rules-audit1"></script>\n'
+          for filename in pages:
+              path=Path(filename)
+              if not path.exists(): raise RuntimeError(f'Página da Biblioteca ausente: {filename}')
+              html=path.read_text(encoding='utf-8')
+              if marker not in html:
+                  if '</body>' not in html: raise RuntimeError(f'Elemento </body> não encontrado: {filename}')
+                  path.write_text(html.replace('</body>',tag+'</body>',1),encoding='utf-8')
+          print(f'Política 5e/5.5e preparada em {len(pages)} páginas da Biblioteca/suporte.')
           PY
 
       - name: Inject global semantic references in every page
