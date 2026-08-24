@@ -1,6 +1,6 @@
 import * as base from './rules-base.js?v=20260823-rules-audit1';
 import{state,AB,arr,num,fold}from'./state.js';
-import{isCompatible55}from'./compatibility.js';
+import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
 export * from './rules-base.js?v=20260823-rules-audit1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
