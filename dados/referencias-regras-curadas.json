@@ -1,10 +1,10 @@
 {
   "schema": "hub-rpg.referencias-regras-curadas.v1",
   "modulo_origem": "Regras",
-  "data_auditoria": "2026-08-20",
+  "data_auditoria": "2026-08-24",
   "criterio": "Relações direcionais curadas; dependência, modificação, exceção ou utilidade mecânica concreta. Coocorrência lexical e uso universal não bastam.",
   "precedencia": "2024/5.5e > 2014/5e; Regras da Casa > Regras Gerais em conflito, conforme a Biblioteca.",
-  "total_regras": 159,
+  "total_regras": 160,
   "total_referencias": 390,
   "modulos_analisados": [
     "Regras",
@@ -186,6 +186,7 @@
     "Magic Items Slots (D&D 3.5e - House Rule)": ["Attunement", "Shape-Shifting", "Size", "Illusions", "Possession"],
     "Expanded Concentration (House Rule)": ["Concentration", "Damage", "Difficulty Class"],
     "Backgrounds: Mechanical Rule (House Rule)": [],
-    "Backgrounds and Organizations: Narrative Rules  (House Rule)": []
+    "Backgrounds and Organizations: Narrative Rules  (House Rule)": [],
+    "Universal Feat and Ability Progression (House Rule)": []
   }
 }
