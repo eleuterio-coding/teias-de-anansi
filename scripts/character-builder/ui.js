@@ -1,7 +1,7 @@
 import{state,$,AB,SKILL_AB,arr,num,esc,slug,mod,signed,blank,read,write,loadCharacter,json,snapshot}from'./state.js';
-import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./catalogs.js';
+import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./catalogs.js?v=20260823-character-builder26';
 import{loadSpells}from'./spells.js';
-import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,sanitizeSelections}from'./rules.js';
+import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,sanitizeSelections}from'./rules.js?v=20260823-character-builder26';
 let spellQuery='';
 function fill(el,items,placeholder,val){el.innerHTML=`<option value="">${esc(placeholder)}</option>`+items.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(x=>`<option value="${esc(x.id)}" ${x.id===val?'selected':''}>${esc(x.name)}</option>`).join('')}
 function renderBase(){state.c.name=state.c.name||'';$('nome').value=state.c.name;$('nivel').value=state.c.choices.class.level;fill($('classe'),compatible('classes'),'Selecione a classe',state.c.refs.class);fill($('especie'),compatible('species'),'Selecione a raça',state.c.refs.species);fill($('antecedente'),compatible('backgrounds'),'Selecione o antecedente',state.c.refs.background);for(const a of AB)$(`base-${slug(a)}`).value=state.c.baseAbilities[a]}
