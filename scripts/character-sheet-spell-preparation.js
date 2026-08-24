@@ -1,8 +1,7 @@
-import{state,$,arr,num,esc,read,write,fold}from'./character-builder/state.js';
+import{state,$,arr,num,esc,read,write}from'./character-builder/state.js';
 import{derive,spellOptions}from'./character-builder/rules.js';
 
 let initialized=false,rendering=false;
-const DAILY_ANY=new Set(['cleric','druid','wizard','artificer']);
 const LONG_REST_ONE=new Set(['paladin','ranger']);
 const LEVEL_ONE=new Set(['bard','sorcerer','warlock']);
 const PT={wizard:'Mago',cleric:'Clérigo',druid:'Druida',artificer:'Artífice',paladin:'Paladino',ranger:'Patrulheiro',bard:'Bardo',sorcerer:'Feiticeiro',warlock:'Bruxo'};
@@ -50,7 +49,7 @@ function labelExistingList(d,p){
 function spellMeta(s){return`${s.level}º círculo${s.school?` · ${s.school}`:''}${s.concentration?' · Concentração':''}${s.ritual?' · Ritual':''}`}
 function dailyHtml(d,p,data){
  const{st,pool,limit}=data,chosen=new Set(st.prepared),levels=[...new Set(pool.map(s=>num(s.level)).filter(Boolean))].sort((a,b)=>a-b),count=chosen.size;
- return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p>${p.extra?`<p class="mini"><strong>${esc(p.extra)}</strong></p>`:''}<div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${count}/${limit}</strong></div><div><span>Origem das escolhas</span><strong>${esc(p.sourceLabel)}</strong></div></div>${count<limit?`<p class="spell-prep-warning">Faltam ${limit-count} magia(s) para completar a preparação do dia.</p>`:''}<div class="spell-prep-current"><strong style="width:100%">Disponíveis para conjurar hoje</strong>${st.prepared.length?st.prepared.map(id=>`<span class="pill">${esc(spellName(id,pool))}</span>`).join(''):'<span class="muted">Nenhuma magia de nível 1+ preparada.</span>'}</div>${levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-checks">${pool.filter(s=>num(s.level)===level).map(s=>`<label class="spell-prep-check"><input type="checkbox" data-prepared-spell="${esc(s.id)}" ${chosen.has(s.id)?'checked':''} ${!chosen.has(s.id)&&count>=limit?'disabled':''}>${esc(s.name)}<small>${esc(spellMeta(s))}</small></label>`).join('')}</div></div>`).join('')}${d.klass.slug==='wizard'?'<p class="mini">Magias com a tag Ritual no grimório continuam identificadas aqui; a preparação diária é controlada separadamente.</p>':''}`
+ return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p>${p.extra?`<p class="mini"><strong>${esc(p.extra)}</strong></p>`:''}<div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${count}/${limit}</strong></div><div><span>Origem das escolhas</span><strong>${esc(p.sourceLabel)}</strong></div></div>${count<limit?`<p class="spell-prep-warning">Faltam ${limit-count} magia(s) para completar a preparação do dia.</p>`:''}<div class="spell-prep-current"><strong style="width:100%">Disponíveis para conjurar hoje</strong>${st.prepared.length?st.prepared.map(id=>`<span class="pill">${esc(spellName(id,pool))}</span>`).join(''):'<span class="muted">Nenhuma magia de nível 1+ preparada.</span>'}</div>${levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-checks">${pool.filter(s=>num(s.level)===level).map(s=>`<label class="spell-prep-check"><input type="checkbox" data-prepared-spell="${esc(s.id)}" ${chosen.has(s.id)?'checked':''} ${!chosen.has(s.id)&&count>=limit?'disabled':''}>${esc(s.name)}<small>${esc(spellMeta(s))}</small></label>`).join('')}</div></div>`).join('')}${d.klass.slug==='wizard'?'<p class="mini"><strong>Rituais do Mago:</strong> uma magia com a tag Ritual que esteja no grimório pode ser conjurada como ritual mesmo que não esteja entre as magias preparadas hoje.</p>':''}`
 }
 function fixedHtml(d,p){
  const spells=arr(d.selectedSpells?.leveled),levels=[...new Set(spells.map(s=>num(s.level)).filter(Boolean))].sort((a,b)=>a-b);
@@ -60,16 +59,16 @@ function ensurePanel(){
  const section=$('spell-section');if(!section)return null;let panel=$('spell-preparation-panel');if(panel)return panel;panel=document.createElement('section');panel.id='spell-preparation-panel';panel.className='spell-prep-panel';const overview=$('spell-overview');overview?.insertAdjacentElement('afterend',panel);panel.addEventListener('change',onChange);return panel
 }
 function onChange(e){
- const input=e.target.closest('input[data-prepared-spell]');if(!input||!state.c)return;const d=derive(),p=profile(d);if(p.kind!=='daily')return;const data=sanitizePrepared(d,p),st=data.st,current=arr(st.prepared),id=input.dataset.preparedSpell;
+ const input=e.target.closest('input[data-prepared-spell]');if(!input||!state.c||!state.catalogs.spells.length)return;const d=derive(),p=profile(d);if(p.kind!=='daily')return;const data=sanitizePrepared(d,p),st=data.st,current=arr(st.prepared),id=input.dataset.preparedSpell;
  if(input.checked){if(current.length>=data.limit){input.checked=false;return}st.prepared=[...new Set([...current,id])]}else st.prepared=current.filter(x=>x!==id);persist();render()
 }
 function render(){
- if(rendering||!state.c)return;const d=derive();if(!d.klass?.spellAbility)return;rendering=true;try{ensureStyles();const panel=ensurePanel(),p=profile(d);if(!panel)return;labelExistingList(d,p);panel.innerHTML=p.kind==='daily'?dailyHtml(d,p,sanitizePrepared(d,p)):fixedHtml(d,p)}finally{rendering=false}
+ if(rendering||!state.c||!state.catalogs.spells.length)return;const d=derive();if(!d.klass?.spellAbility)return;rendering=true;try{ensureStyles();const panel=ensurePanel(),p=profile(d);if(!panel)return;labelExistingList(d,p);panel.innerHTML=p.kind==='daily'?dailyHtml(d,p,sanitizePrepared(d,p)):fixedHtml(d,p)}finally{rendering=false}
 }
 function queue(){queueMicrotask(render)}
 function bind(){
- for(const event of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready'])document.addEventListener(event,queue);
- const spells=$('spell-section');if(spells)new MutationObserver(mutations=>{if(rendering)return;if(mutations.some(m=>m.target.id==='leveled-spells'||m.target.id==='spell-overview'))queue()}).observe(spells,{childList:true,subtree:true})
+ document.addEventListener('hub-rpg:sheet-spells-ready',queue);
+ const spells=$('spell-section');if(spells)new MutationObserver(mutations=>{if(rendering||!state.catalogs.spells.length)return;if(mutations.some(m=>m.target.id==='leveled-spells'||m.target.id==='spell-overview'))queue()}).observe(spells,{childList:true,subtree:true})
 }
-export function initCharacterSheetSpellPreparation(){if(initialized)return;initialized=true;bind();if(state.c)queue()}
+export function initCharacterSheetSpellPreparation(){if(initialized)return;initialized=true;bind();if(state.c&&state.catalogs.spells.length)queue()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initCharacterSheetSpellPreparation,{once:true});else initCharacterSheetSpellPreparation();
