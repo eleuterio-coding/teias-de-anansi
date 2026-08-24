@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 
-const VERSION='20260820-srd521-regras7';
+const VERSION='20260824-rules-2014-2024-1';
 const DDB_GLOSSARY='https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary';
 const SRD_SOURCES=[
   'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/1b4b99dcb786cdd1a2fb26f8acec1551191f1ca4/rules-glossary.md',
@@ -9,7 +9,7 @@ const SRD_SOURCES=[
   'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master/rules-glossary.md'
 ];
 
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 const slug=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\[[^\]]+\]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase();
 const originalFromHeading=h=>String(h||'').replace(/\s+\[(Action|Area of Effect|Attitude|Condition|Hazard)\]\s*$/i,'').trim();
@@ -152,7 +152,7 @@ async function load(){
   const srdSet=new Set(SRD.map(x=>norm(x.original)));
   DDB_ONLY=PT_RULES.filter(x=>!srdSet.has(norm(x.original)));
   if(PT_RULES.length!==155)throw new Error(`Regras atuais inesperadas: ${PT_RULES.length}/155`);
-  if(HOUSE.length!==4)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/4`);
+  if(HOUSE.length!==5)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/5`);
   if(SRD.length<130)throw new Error(`Extração SRD incompleta: ${SRD.length}`);
   render();
   document.documentElement.dataset.regrasFonte='srd-5.2.1';
