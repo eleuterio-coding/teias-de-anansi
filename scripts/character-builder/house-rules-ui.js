@@ -22,6 +22,7 @@ function usedFeatIds(excludeSlot=null,excludeBackground=false){
  return used
 }
 function deleteFeatMechanics(slot){if(state.c?.choices?.featMechanics)delete state.c.choices.featMechanics[`class:${slot}`]}
+function deleteSpeciesFeatMechanics(key){if(state.c?.choices?.featMechanics)delete state.c.choices.featMechanics[`species:${key}`]}
 
 function contextAt(level,{excludeSlot=null,excludeAbility=null}={}){
  const saved=clone(state.c.choices);
@@ -61,13 +62,24 @@ function allowedForEntry(feat,entry,d){
 }
 
 function sanitizeOriginFeat(){
- const ch=state.c.choices.background||(state.c.choices.background={}),feat=featById(ch.originFeat);if(!feat||feat.category!=='Origem'){ch.originFeat=null;applyHouseRules();return}
- const species=speciesFeatIds();if(!feat.repeatable&&species.has(feat.id)){ch.originFeat=null;applyHouseRules()}
+ const ch=state.c.choices.background||(state.c.choices.background={}),feat=featById(ch.originFeat);
+ // Origem só pode ser corrigida por uma inconsistência da própria Origem.
+ // Etapas posteriores nunca apagam ou substituem esta escolha.
+ if(ch.originFeat&&(!feat||feat.category!=='Origem')){ch.originFeat=null;applyHouseRules()}
+}
+function sanitizeSpeciesAgainstOrigin(){
+ const originId=state.c.choices.background?.originFeat,origin=featById(originId);if(!origin||origin.repeatable)return;
+ const choices=state.c.choices.species?.traitChoices||{};
+ for(const[key,value]of Object.entries(choices)){
+  if(value!==originId)continue;
+  delete choices[key];deleteSpeciesFeatMechanics(key)
+ }
 }
 function sanitizeProgression(){
  const klass=selected().klass;if(!klass)return;
  const validAll=new Set(progression().map(e=>e.slot)),choices=state.c.choices.feats||(state.c.choices.feats={});
  for(const key of Object.keys(choices))if(key.startsWith('slot-')&&!validAll.has(key)){delete choices[key];deleteFeatMechanics(key)}
+ // Precedência: Origem > Raça > Progressão. Se houver conflito, a etapa posterior cede.
  const used=speciesFeatIds(),bgFeat=state.c.choices.background?.originFeat;if(featById(bgFeat))used.add(bgFeat);for(const entry of activeProgression()){
   const id=choices[entry.slot],feat=featById(id);if(!feat)continue;
   const context=contextAt(entry.level,{excludeSlot:entry.slot}),duplicate=!feat.repeatable&&used.has(id);
@@ -103,7 +115,7 @@ function renderProgression(){
 
 function renderBackground(){
  const box=$('antecedente-escolhas'),{bg}=selected();if(!box)return;if(!bg){box.innerHTML='';return}
- const ch=state.c.choices.background,originFeats=state.catalogs.feats.filter(f=>f.category==='Origem').sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')),speciesUsed=speciesFeatIds(),abilityOpts=current=>AB.map(a=>`<option value="${esc(a)}" ${a===current?'selected':''}>${esc(a)}</option>`).join(''),originOpts=`<option value="">Escolha o Talento de Origem</option>${originFeats.map(f=>`<option value="${esc(f.id)}" ${f.id===ch.originFeat?'selected':''} ${!f.repeatable&&speciesUsed.has(f.id)&&f.id!==ch.originFeat?'disabled':''}>${esc(f.name)}</option>`).join('')}`;
+ const ch=state.c.choices.background,originFeats=state.catalogs.feats.filter(f=>f.category==='Origem').sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')),abilityOpts=current=>AB.map(a=>`<option value="${esc(a)}" ${a===current?'selected':''}>${esc(a)}</option>`).join(''),originOpts=`<option value="">Escolha o Talento de Origem</option>${originFeats.map(f=>`<option value="${esc(f.id)}" ${f.id===ch.originFeat?'selected':''}>${esc(f.name)}</option>`).join('')}`;
  box.innerHTML=`<fieldset><legend>Antecedente · Regra da Casa</legend><p class="section-note">O antecedente concede +2 em um atributo, +1 em outro atributo diferente e um Talento de Origem livre.</p><div class="choice-grid"><label>+2<select id="bg-p2-house">${abilityOpts(ch.plus2)}</select></label><label>+1<select id="bg-p1-house">${abilityOpts(ch.plus1)}</select></label><label class="full">Talento de Origem<select id="bg-origin-feat">${originOpts}</select></label>${bg.toolChoice?`<label>${esc(bg.toolChoice)}<input id="bg-tool-house" value="${esc(ch.toolChoice||'')}"></label>`:''}</div></fieldset>`;
  $('bg-p2-house')?.addEventListener('change',e=>{ch.plus2=e.target.value;if(ch.plus1===ch.plus2)ch.plus1=AB.find(a=>a!==ch.plus2)||null;refresh()});
  $('bg-p1-house')?.addEventListener('change',e=>{ch.plus1=e.target.value;if(ch.plus1===ch.plus2)ch.plus1=AB.find(a=>a!==ch.plus2)||null;refresh()});
@@ -142,10 +154,17 @@ function refreshSheet(){applyHouseRules();$('nome')?.dispatchEvent(new Event('in
 
 function refresh(){
  if(rendering||!state.c)return;rendering=true;
- try{applyHouseRules();stripHousePending();sanitizeOriginFeat();sanitizeProgression();sanitizeAbilityProgression();applyHouseRules();renderBackground();renderStartingEquipment();renderProgression();refreshSheet()}finally{rendering=false}
+ try{
+  applyHouseRules();stripHousePending();
+  sanitizeOriginFeat();
+  sanitizeSpeciesAgainstOrigin();
+  sanitizeProgression();
+  sanitizeAbilityProgression();
+  applyHouseRules();renderBackground();renderStartingEquipment();renderProgression();refreshSheet()
+ }finally{rendering=false}
 }
 function bind(){
- $('builder')?.addEventListener('change',e=>{if(e.target.matches('#classe,#nivel,#especie,#antecedente,#subclasse,[id^="base-"]'))queueMicrotask(refresh)});
+ $('builder')?.addEventListener('change',e=>{if(e.target.matches('#classe,#nivel,#especie,#antecedente,#subclasse,[id^="base-"]')||e.target.closest('#especie-escolhas'))queueMicrotask(refresh)});
  $('new-character')?.addEventListener('click',()=>queueMicrotask(refresh));
  const featBox=$('talentos-escolhas');if(featBox)new MutationObserver(()=>scheduleDecorations()).observe(featBox,{childList:true,subtree:true});
 }
