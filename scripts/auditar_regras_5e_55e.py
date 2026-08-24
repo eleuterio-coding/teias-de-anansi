@@ -107,8 +107,12 @@ require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
         'Texto de carregamento removido voltou ao criador')
-require('character-builder26' in creation and 'character-builder26' in builder,
+require('character-builder27' in creation and 'character-builder27' in builder,
         'Criador não está usando a revisão de cache esperada')
+require('organizeElvenVariants' in catalogs and "name:'Eladrin',replaceBaseTraits:true" in catalogs,
+        'Eladrin não está organizado como subtipo mecânico de Elfo')
+require('withLineagePackage' in rules,
+        'Linhagens substitutivas podem estar acumulando indevidamente os traços da espécie-base')
 
 # Espécies e subclasses legadas devem manter metadados reais de 5e.
 motm = load('dados/especies-pdf-motm-2022.json')
