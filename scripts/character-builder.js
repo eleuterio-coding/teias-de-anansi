@@ -35,21 +35,34 @@ function updateCounts(state){
   if(state.catalogs.backgrounds.length)parts.push(`${state.catalogs.backgrounds.length} antecedentes`);
   count.textContent=parts.join(' · ')
 }
+function localClassFallback(rows,stateMod){
+  const names={barbarian:'Bárbaro',bard:'Bardo',cleric:'Clérigo',druid:'Druida',fighter:'Guerreiro',monk:'Monge',paladin:'Paladino',ranger:'Patrulheiro',rogue:'Ladino',sorcerer:'Feiticeiro',warlock:'Bruxo',wizard:'Mago'};
+  const skills={'animal handling':'Adestrar Animais',acrobatics:'Acrobacia',arcana:'Arcanismo',athletics:'Atletismo',deception:'Enganação',history:'História',insight:'Intuição',intimidation:'Intimidação',investigation:'Investigação',medicine:'Medicina',nature:'Natureza',perception:'Percepção',performance:'Atuação',persuasion:'Persuasão',religion:'Religião','sleight of hand':'Prestidigitação',stealth:'Furtividade',survival:'Sobrevivência'};
+  const ability={STR:'Força',DEX:'Destreza',CON:'Constituição',INT:'Inteligência',WIS:'Sabedoria',CHA:'Carisma'};
+  const skillName=v=>skills[String(v||'').replace(/^Skill:\s*/i,'').toLowerCase()]||String(v||'').replace(/^Skill:\s*/i,'');
+  return(rows||[]).map(c=>({
+    id:`classes:srd521:${c.index}`,slug:c.index,name:names[c.index]||c.name,ruleset:'5.5e',revision:2024,status:'atual',source:'Base local SRD 5.2.1',hitDie:Number(c.hit_die)||8,
+    savingThrows:(c.saving_throws||[]).map(x=>ability[x.name]||x.name),
+    proficiencies:(c.proficiencies||[]).map(x=>x.name),proficienciesRaw:(c.proficiencies||[]).map(x=>x.name),
+    skillChoices:(c.proficiency_choices||[]).map(ch=>({choose:Number(ch.choose)||1,options:[...new Set((ch?.from?.options||[]).flatMap(o=>o?.item?.name?[skillName(o.item.name)]:[]))]})).filter(x=>x.options.length),
+    features:[],levels:[],featSlots:[],spellAbility:ability[c.spellcasting?.spellcasting_ability?.name]||''
+  }))
+}
+function restoreMenus(payload){
+  if(!payload?.state)return;const{state,loaded}=payload;
+  for(const key of['classes','species','backgrounds'])if((loaded[key]||[]).length>(state.catalogs[key]||[]).length)state.catalogs[key]=loaded[key];
+  fillMenu('classe',state.catalogs.classes,'Selecione a classe',state.c.refs.class);
+  fillMenu('especie',state.catalogs.species,'Selecione a raça',state.c.refs.species);
+  fillMenu('antecedente',state.catalogs.backgrounds,'Selecione o antecedente',state.c.refs.background);
+  updateCounts(state);showBuilder()
+}
 
 async function preloadMainMenus(){
   try{
-    const[stateMod,catalogMod]=await Promise.all([
-      import('./character-builder/state.js'),
-      import('./character-builder/catalogs.js')
-    ]);
-    const{state,loadCharacter,json}=stateMod;
-    if(!state.c)state.c=loadCharacter();
-    const[g,loc]=await Promise.all([
-      json('dados/localizacao-ptbr-global.json').catch(()=>({})),
-      json('dados/localizacao-ptbr-especies.json').catch(()=>({species:{},lineages:{},traits:{}}))
-    ]);
-    state.G=g;state.LOCSP=loc;showBuilder();
-
+    const[stateMod,catalogMod]=await Promise.all([import('./character-builder/state.js'),import('./character-builder/catalogs.js')]);
+    const{state,loadCharacter,json}=stateMod;if(!state.c)state.c=loadCharacter();
+    const[g,loc]=await Promise.all([json('dados/localizacao-ptbr-global.json').catch(()=>({})),json('dados/localizacao-ptbr-especies.json').catch(()=>({species:{},lineages:{},traits:{}}))]);
+    state.G=g;state.LOCSP=loc;showBuilder();const loaded={classes:[],species:[],backgrounds:[]};
     const jobs=[
       {label:'Classes',key:'classes',id:'classe',placeholder:'Selecione a classe',load:()=>catalogMod.loadClasses()},
       {label:'Raças',key:'species',id:'especie',placeholder:'Selecione a raça',load:()=>catalogMod.loadSpecies()},
@@ -57,51 +70,39 @@ async function preloadMainMenus(){
     ];
     await Promise.all(jobs.map(async job=>{
       try{
-        const items=await job.load();
-        if(items?.length)state.catalogs[job.key]=items;
-        fillMenu(job.id,state.catalogs[job.key],job.placeholder,job.key==='classes'?state.c.refs.class:job.key==='species'?state.c.refs.species:state.c.refs.background);
-        updateCounts(state);showBuilder()
-      }catch(error){
-        fillMenu(job.id,state.catalogs[job.key],job.placeholder,null);warn(`${job.label} não puderam ser carregados.`,error);showBuilder()
-      }
+        let items=await job.load();
+        if(job.key==='classes'&&(!items||items.filter(x=>x.slug!=='artificer').length<12)){
+          const base=await json('dados/classes-base-2024.json').catch(()=>[]),fallback=localClassFallback(base,stateMod),extras=(items||[]).filter(x=>x.slug==='artificer'||!fallback.some(f=>f.slug===x.slug));
+          if(fallback.length===12){items=[...fallback,...extras];state.warnings.push('Progressão detalhada das classes-base depende da fonte SRD externa; o catálogo local foi usado para manter as escolhas disponíveis.')}
+        }
+        loaded[job.key]=items||[];if(items?.length)state.catalogs[job.key]=items;
+        fillMenu(job.id,state.catalogs[job.key],job.placeholder,job.key==='classes'?state.c.refs.class:job.key==='species'?state.c.refs.species:state.c.refs.background);updateCounts(state);showBuilder()
+      }catch(error){fillMenu(job.id,state.catalogs[job.key],job.placeholder,null);warn(`${job.label} não puderam ser carregados.`,error);showBuilder()}
     }));
-    return state
+    return{state,loaded}
   }catch(error){warn('Falha no carregador independente dos menus principais.',error);showBuilder();return null}
 }
 
 async function start(){
-  const menuPromise=preloadMainMenus();
-  let core;
+  const menuPromise=preloadMainMenus();let core;
   try{
-    core=await import('./character-builder/ui.js?v=20260823-character-builder24');
+    core=await import('./character-builder/ui.js?v=20260823-character-builder25');
     if(typeof core.init!=='function')throw new Error('O módulo principal não exporta init().');
-    const corePromise=core.init();
-    showBuilder();
-    await corePromise;
-    showBuilder()
-  }catch(error){
-    warn('Falha ao iniciar o núcleo da Criação de Personagem.',error);
-    await menuPromise;showBuilder();return
-  }
-  await menuPromise;showBuilder();
+    const corePromise=core.init();showBuilder();await corePromise;showBuilder()
+  }catch(error){warn('Falha ao iniciar o núcleo da Criação de Personagem.',error);const payload=await menuPromise;restoreMenus(payload);return}
+  const payload=await menuPromise;restoreMenus(payload);
 
   const extensions=[
-    ['./character-builder/spell-selection-ui.js?v=20260823-character-builder24','initSpellSelectionUi'],
-    ['./character-builder/spell-quota-ui.js?v=20260823-character-builder24','initSpellQuotaUi'],
-    ['./character-builder/profile-ui.js?v=20260823-character-builder24','initCharacterProfileUi'],
-    ['./character-builder/species-trait-ui.js?v=20260823-character-builder24','initSpeciesTraitUi'],
-    ['./character-builder/class-skill-ui.js?v=20260823-character-builder24','initClassSkillUi'],
-    ['./character-builder/feat-ui.js?v=20260823-character-builder24','initFeatUi'],
-    ['./character-builder/house-rules-ui.js?v=20260823-character-builder24','initHouseRulesUi'],
-    ['./character-builder/language-ui.js?v=20260823-character-builder24','initLanguageUi']
+    ['./character-builder/spell-selection-ui.js?v=20260823-character-builder25','initSpellSelectionUi'],
+    ['./character-builder/spell-quota-ui.js?v=20260823-character-builder25','initSpellQuotaUi'],
+    ['./character-builder/profile-ui.js?v=20260823-character-builder25','initCharacterProfileUi'],
+    ['./character-builder/species-trait-ui.js?v=20260823-character-builder25','initSpeciesTraitUi'],
+    ['./character-builder/class-skill-ui.js?v=20260823-character-builder25','initClassSkillUi'],
+    ['./character-builder/feat-ui.js?v=20260823-character-builder25','initFeatUi'],
+    ['./character-builder/house-rules-ui.js?v=20260823-character-builder25','initHouseRulesUi'],
+    ['./character-builder/language-ui.js?v=20260823-character-builder25','initLanguageUi']
   ];
-  for(const[path,name]of extensions){
-    try{
-      const mod=await import(path);
-      if(typeof mod[name]==='function')mod[name]();
-      else warn(`Extensão sem inicializador: ${name}.`)
-    }catch(error){warn(`Extensão opcional não carregada: ${name}.`,error)}
-  }
+  for(const[path,name]of extensions){try{const mod=await import(path);if(typeof mod[name]==='function')mod[name]();else warn(`Extensão sem inicializador: ${name}.`)}catch(error){warn(`Extensão opcional não carregada: ${name}.`,error)}}
   showBuilder()
 }
 
