@@ -23,8 +23,9 @@ function parseCostCp(value){
 }
 function ensureState(){
  const c=state.c;if(!c)return null;c.choices=c.choices||{};
- const old=c.choices.purchases||{};c.choices.purchases={quantities:{...(old.quantities||{})},...(old||{})};c.choices.purchases.quantities={...(old.quantities||{})};
- c.sheet=c.sheet||{};c.sheet.inventory={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:'',...(c.sheet.inventory||{})};return c.choices.purchases
+ let purchases=c.choices.purchases;if(!purchases||typeof purchases!=='object'||Array.isArray(purchases)){purchases={};c.choices.purchases=purchases}
+ if(!purchases.quantities||typeof purchases.quantities!=='object'||Array.isArray(purchases.quantities))purchases.quantities={};
+ c.sheet=c.sheet||{};c.sheet.inventory={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:'',...(c.sheet.inventory||{})};return purchases
 }
 function packageOption(){const{bg}=selected(),id=state.c?.choices?.background?.equipment;return arr(bg?.equipmentOptions).find(o=>String(o.id)===String(id))||null}
 function packageCoinsCp(){return arr(packageOption()?.itens).reduce((sum,item)=>{const name=fold(item?.nome||'');if(['po','gp','gold pieces','pecas de ouro'].includes(name))return sum+Math.round(num(item?.quantidade)*100);if(['pp','pl','platinum pieces','pecas de platina'].includes(name))return sum+Math.round(num(item?.quantidade)*1000);if(['sp','pr','silver pieces','pecas de prata'].includes(name))return sum+Math.round(num(item?.quantidade)*10);if(['cp','pc','copper pieces','pecas de cobre'].includes(name))return sum+Math.round(num(item?.quantidade));if(['ep','pe','electrum pieces','pecas de electro'].includes(name))return sum+Math.round(num(item?.quantidade)*50);return sum},0)}
