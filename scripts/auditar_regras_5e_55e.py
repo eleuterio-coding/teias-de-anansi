@@ -31,8 +31,9 @@ require('talentos-tasha-2020.json' in state and 'talentos-xanathar-2017.json' in
 require('abilityBonuses:current?arr(r.aumentos_atributo):[]' in catalogs,'Espécie 5e pode estar aplicando ASI antigo em personagem 5.5e')
 require('legado_com_conteudo_unico' in catalogs,'Subclasses legadas únicas não estão preservadas')
 require("fixed:['Comum'],choose:2" in languages,'Idiomas iniciais 5.5e devem ser Comum + 2 padrão')
-require('manual-feat-ui.js?v=20260823-rules-audit1' in builder,'Aviso de talentos não automatizados não está integrado')
-require('type="importmap"' in creation and 'rules-audit1' in creation,'Criador não força a árvore auditada de módulos')
+require('type="importmap"' not in creation,'Criador não deve depender de importmap para carregar os dropdowns')
+require('Carregando catálogos e regras...' not in creation,'Texto de carregamento removido voltou ao criador')
+require('character-builder21' in creation and 'character-builder21' in builder,'Criador restaurado não está usando a revisão de cache esperada')
 
 motm=load('dados/especies-pdf-motm-2022.json')
 require(motm['fonte']['ruleset']=='5e','MotM deve permanecer identificado como 5e')
