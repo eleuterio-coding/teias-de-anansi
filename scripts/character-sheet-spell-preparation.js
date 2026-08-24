@@ -46,6 +46,12 @@ function labelExistingList(d,p){
  else if(p.kind==='daily')h.textContent='Seleção inicial da criação';
  else h.textContent='Magias preparadas da classe'
 }
+function syncOverview(d,p,data=null){
+ const metrics=[...document.querySelectorAll('#spell-overview .metric')];if(!metrics.length)return;const last=metrics[metrics.length-1],label=last.querySelector('span'),value=last.querySelector('strong');if(!label||!value)return;
+ if(d.klass.slug==='wizard'){label.textContent='Grimório';value.textContent=`${arr(d.selectedSpells?.leveled).length} magias`;return}
+ if(p.kind==='daily'){label.textContent='Preparadas hoje';const prep=data||sanitizePrepared(d,p);value.textContent=`${prep.st.prepared.length}/${prep.limit}`;return}
+ label.textContent='Magias preparadas';value.textContent=String(arr(d.selectedSpells?.leveled).length)
+}
 function spellMeta(s){return`${s.level}º círculo${s.school?` · ${s.school}`:''}${s.concentration?' · Concentração':''}${s.ritual?' · Ritual':''}`}
 function dailyHtml(d,p,data){
  const{st,pool,limit}=data,chosen=new Set(st.prepared),levels=[...new Set(pool.map(s=>num(s.level)).filter(Boolean))].sort((a,b)=>a-b),count=chosen.size;
@@ -63,7 +69,7 @@ function onChange(e){
  if(input.checked){if(current.length>=data.limit){input.checked=false;return}st.prepared=[...new Set([...current,id])]}else st.prepared=current.filter(x=>x!==id);persist();render()
 }
 function render(){
- if(rendering||!state.c||!state.catalogs.spells.length)return;const d=derive();if(!d.klass?.spellAbility)return;rendering=true;try{ensureStyles();const panel=ensurePanel(),p=profile(d);if(!panel)return;labelExistingList(d,p);panel.innerHTML=p.kind==='daily'?dailyHtml(d,p,sanitizePrepared(d,p)):fixedHtml(d,p)}finally{rendering=false}
+ if(rendering||!state.c||!state.catalogs.spells.length)return;const d=derive();if(!d.klass?.spellAbility)return;rendering=true;try{ensureStyles();const panel=ensurePanel(),p=profile(d);if(!panel)return;labelExistingList(d,p);if(p.kind==='daily'){const data=sanitizePrepared(d,p);syncOverview(d,p,data);panel.innerHTML=dailyHtml(d,p,data)}else{syncOverview(d,p);panel.innerHTML=fixedHtml(d,p)}}finally{rendering=false}
 }
 function queue(){queueMicrotask(render)}
 function bind(){
