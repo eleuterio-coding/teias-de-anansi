@@ -1,0 +1,74 @@
+name: Auditar escolhas raciais e pacote B
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/species-selection-refinement-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/species-selection-refinement-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/species-selection-refinement-ui.js
+          node --check scripts/character-builder/package-b-purchase-ui.js
+          node --check scripts/character-builder/wealth-purchase-ui.js
+          node --check scripts/character-builder.js
+      - name: Testar opções de tamanho e identificação de seletores genéricos
+        run: |
+          node --input-type=module <<'JS'
+          import{speciesSizeOptions,genericLineageTraitNames}from'./scripts/character-builder/species-selection-refinement-ui.js';
+          const tiefling={name:'Tiefling',sizes:['Choose a size when you select this species.'],lineageLabel:'Legado Tiefling'};
+          const sizes=speciesSizeOptions(tiefling);
+          if(JSON.stringify(sizes)!==JSON.stringify(['Small','Medium']))throw new Error(`Tiefling deve oferecer Pequeno/Médio: ${JSON.stringify(sizes)}`);
+          const flexible=speciesSizeOptions({name:'Teste',sizes:['Large','Small','Medium']});
+          if(JSON.stringify(flexible)!==JSON.stringify(['Small','Medium','Large']))throw new Error(`Tamanhos flexíveis não foram normalizados: ${JSON.stringify(flexible)}`);
+          const tieflingGeneric=genericLineageTraitNames(tiefling,{name:'Infernal',replaceTraitNames:['Fiendish Legacy']});
+          if(!tieflingGeneric.has('fiendish legacy')||!tieflingGeneric.has('legado infero'))throw new Error('Legado genérico do Tiefling não será ocultado após a escolha.');
+          const elfGeneric=genericLineageTraitNames({name:'Elfo',lineageLabel:'Linhagem Élfica'},{name:'Drow'});
+          if(!elfGeneric.has('elven lineage')||!elfGeneric.has('linhagem elfica'))throw new Error('Situação equivalente de linhagem élfica não foi reconhecida.');
+          const giantGeneric=genericLineageTraitNames({name:'Golias',lineageLabel:'Ancestralidade Gigante'},{name:"Fire's Burn"});
+          if(!giantGeneric.has('giant ancestry'))throw new Error('Ancestralidade Gigante não foi reconhecida como escolha equivalente.');
+          console.log('Escolhas raciais refinadas validadas.');
+          JS
+      - name: Verificar integração do pacote B e da interface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          builder=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          package=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
+          wealth=Path('scripts/character-builder/wealth-purchase-ui.js').read_text(encoding='utf-8')
+          race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
+          assert 'species-selection-refinement-ui.js' in builder
+          assert 'package-b-purchase-ui.js' in builder
+          assert "initWealthPurchaseUi" in package
+          assert "new URLSearchParams(location.search).has('id')" not in package, 'Pacote B não pode ser bloqueado ao reabrir personagem.'
+          assert 'function moneyPackage()' in wealth
+          assert 'return level()>=2||moneyPackage()' in wealth
+          assert 'Pacote B escolhido' in wealth
+          assert 'data-selected-lineage-summary' in race
+          assert 'Opção escolhida para esta raça.' in race
+          assert 'Raça: escolha o tamanho' in race
+          assert 'supabase' not in (builder+package+wealth+race).lower()
+          print('Integração do Pacote B, tamanhos e linhagens validada.')
+          PY
