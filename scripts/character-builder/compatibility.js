@@ -17,7 +17,7 @@ export function preferCurrent(items,keyFn=x=>norm(x?.name||x?.nome||'')){
  for(const item of items||[]){
   const key=keyFn(item);if(!key)continue;
   const prev=best.get(key);
-  if(!prev||sourceRank(item)>sourceRank(prev)||(sourceRank(item)===sourceRank(prev)&&(revisionOf(item)||0)>(revisionOf(prev)||0))best.set(key,item)
+  if(!prev||sourceRank(item)>sourceRank(prev)||(sourceRank(item)===sourceRank(prev)&&(revisionOf(item)||0)>(revisionOf(prev)||0)))best.set(key,item)
  }
  return[...best.values()]
 }
