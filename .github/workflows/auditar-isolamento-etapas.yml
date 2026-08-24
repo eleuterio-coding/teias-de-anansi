@@ -71,6 +71,7 @@ jobs:
           house=Path('scripts/character-builder/house-rules-ui.js').read_text(encoding='utf-8')
           species=Path('scripts/character-builder/species-trait-ui.js').read_text(encoding='utf-8')
           feats=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
+          creation=Path('criacao-personagem.html').read_text(encoding='utf-8')
 
           def require(ok,msg):
               if not ok: raise RuntimeError(msg)
@@ -119,11 +120,17 @@ jobs:
           require('renderBackground()' not in attr_refresh,
                   'Alteração de Atributos ainda reprocessa Origem.')
 
+          spell_render=body(ui,'renderSpellChoices','renderEquipment')
+          require('id="class-spells-card" class="card full" hidden' in creation,
+                  'Bloco Magias deve iniciar oculto antes da escolha de classe.')
+          require("card=$('class-spells-card')" in spell_render and 'const caster=!!klass?.spellAbility' in spell_render and 'card.hidden=!caster' in spell_render,
+                  'Bloco Magias não está condicionado explicitamente a uma classe conjuradora.')
+
           mechanical=body(feats,'featMechanicalOutcome','featEligibleSpells')
           require('sanitizeFeatChoices()' not in mechanical,
                   'Derivação de talentos ainda muta o estado durante a Revisão.')
 
           all_src='\n'.join([ui,rules,house,species,feats]).lower()
           require('supabase' not in all_src,'Supabase não pode ser introduzido no construtor.')
-          print('Isolamento validado: cada etapa só invalida outra quando uma dependência mecânica explícita exige.')
+          print('Isolamento validado: etapas preservadas e Magias só aparece para classe conjuradora.')
           PY
