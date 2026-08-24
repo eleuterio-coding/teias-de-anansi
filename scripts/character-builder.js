@@ -1,16 +1,7 @@
-import{init}from'./character-builder/ui.js?v=20260823-character-builder21';
-import{initSpellQuotaUi}from'./character-builder/spell-quota-ui.js?v=20260823-character-builder21';
-import{initSpellSelectionUi}from'./character-builder/spell-selection-ui.js?v=20260823-character-builder21';
-import{initCharacterProfileUi}from'./character-builder/profile-ui.js?v=20260823-character-builder21';
-import{initSpeciesTraitUi}from'./character-builder/species-trait-ui.js?v=20260823-character-builder21';
-import{initClassSkillUi}from'./character-builder/class-skill-ui.js?v=20260823-character-builder21';
-import{initFeatUi}from'./character-builder/feat-ui.js?v=20260823-character-builder21';
-import{initHouseRulesUi}from'./character-builder/house-rules-ui.js?v=20260823-character-builder21';
-import{initLanguageUi}from'./character-builder/language-ui.js?v=20260823-character-builder21';
-
 document.body?.classList.add('controles');
 const loading=document.getElementById('loading');
 const builder=document.getElementById('builder');
+const warnings=document.getElementById('load-warnings');
 if(loading){loading.textContent='';loading.hidden=true}
 if(builder)builder.hidden=false;
 
@@ -22,25 +13,45 @@ window.MutationObserver=class HubBuilderMutationObserver extends NativeMutationO
   }
 };
 
-const startup=init();
-if(loading){loading.textContent='';loading.hidden=true}
-if(builder)builder.hidden=false;
+function warn(label,error){
+  console.error(`[character-builder] ${label}`,error);
+  if(!warnings)return;
+  warnings.hidden=false;
+  const row=document.createElement('div');
+  row.innerHTML=`<strong>${label}</strong>${error?`<br>${String(error.message||error)}`:''}`;
+  warnings.appendChild(row)
+}
 
-startup.then(()=>{
-  if(loading){loading.textContent='';loading.hidden=true}
-  if(builder)builder.hidden=false;
-  initSpellSelectionUi();
-  initSpellQuotaUi();
-  initCharacterProfileUi();
-  initSpeciesTraitUi();
-  initClassSkillUi();
-  initFeatUi();
-  initHouseRulesUi();
-  initLanguageUi();
-}).catch(e=>{
-  if(loading){loading.textContent='';loading.hidden=true}
-  if(builder)builder.hidden=false;
-  const el=document.getElementById('load-warnings');
-  if(el){el.hidden=false;el.innerHTML=`<strong>Falha ao iniciar o criador.</strong><br>${String(e.message||e)}`}
-  console.error('[character-builder]',e)
-});
+async function start(){
+  let core;
+  try{
+    core=await import('./character-builder/ui.js?v=20260823-character-builder22');
+    if(typeof core.init!=='function')throw new Error('O módulo principal não exporta init().');
+    await core.init()
+  }catch(error){
+    warn('Falha ao iniciar o núcleo da Criação de Personagem.',error);
+    return
+  }
+
+  const extensions=[
+    ['./character-builder/spell-selection-ui.js?v=20260823-character-builder22','initSpellSelectionUi'],
+    ['./character-builder/spell-quota-ui.js?v=20260823-character-builder22','initSpellQuotaUi'],
+    ['./character-builder/profile-ui.js?v=20260823-character-builder22','initCharacterProfileUi'],
+    ['./character-builder/species-trait-ui.js?v=20260823-character-builder22','initSpeciesTraitUi'],
+    ['./character-builder/class-skill-ui.js?v=20260823-character-builder22','initClassSkillUi'],
+    ['./character-builder/feat-ui.js?v=20260823-character-builder22','initFeatUi'],
+    ['./character-builder/house-rules-ui.js?v=20260823-character-builder22','initHouseRulesUi'],
+    ['./character-builder/language-ui.js?v=20260823-character-builder22','initLanguageUi']
+  ];
+  for(const[path,name]of extensions){
+    try{
+      const mod=await import(path);
+      if(typeof mod[name]==='function')mod[name]();
+      else warn(`Extensão sem inicializador: ${name}.`)
+    }catch(error){
+      warn(`Extensão opcional não carregada: ${name}.`,error)
+    }
+  }
+}
+
+start();
