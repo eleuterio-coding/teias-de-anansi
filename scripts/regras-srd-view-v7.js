@@ -9,7 +9,7 @@ const SRD_SOURCES=[
   'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master/rules-glossary.md'
 ];
 
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
 const slug=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\[[^\]]+\]/g,'').replace(/[^A-Za-z0-9]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase();
 const originalFromHeading=h=>String(h||'').replace(/\s+\[(Action|Area of Effect|Attitude|Condition|Hazard)\]\s*$/i,'').trim();
