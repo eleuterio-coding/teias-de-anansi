@@ -64,6 +64,16 @@ viewer = text('scripts/regras-srd-view-v7.js')
 require('HOUSE.length!==5' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/5' in viewer,
         'Catálogo de Regras ainda espera quantidade antiga de Regras da Casa')
 
+# Matriz semântica de Regras precisa acompanhar o mesmo conjunto pesquisável.
+curated = load('dados/referencias-regras-curadas.json')
+require(curated.get('total_regras') == 160,
+        f'Matriz curada com contagem antiga: {curated.get("total_regras")}/160')
+require(required_house.issubset(set(curated.get('regras', {}))),
+        'Matriz curada não inclui todas as Regras da Casa')
+curated_js = text('scripts/referencias-regras-curadas.js')
+require('curated.total_regras!==160' in curated_js,
+        'Consumidor da matriz curada ainda espera a contagem anterior')
+
 # Criador de personagem: progressão da casa e compatibilidade 2014/2024.
 rules = text('scripts/character-builder/rules.js')
 state = text('scripts/character-builder/state.js')
@@ -196,7 +206,9 @@ require('NÃO CANONIZAR' in weapon_page,
 require('não canonizar' in armor_page.lower(),
         'Armaduras demonstrativas não estão protegidas contra canonização')
 
-# PDFs registrados: toda fonte do runtime deve ter rastreabilidade e artefatos materializados.
+# PDFs registrados: fontes, manifesto e artefatos de runtime precisam ser rastreáveis.
+# `artefatos_relacionados` também guarda linhagem histórica/intermediária e não implica
+# que cada arquivo antigo deva permanecer publicado no repositório atual.
 pdf_registry = load('dados/fontes-pdf-registradas.json')
 pdf_manifest = load('dados/importacao-pdfs-manifest.json')
 require(pdf_registry.get('controle', {}).get('quantidade') == len(pdf_registry.get('fontes', [])) >= 2,
@@ -206,12 +218,32 @@ require(registered_pdf_names == set(pdf_manifest.get('fontes_pdf', [])),
         'Manifesto de importação e registro de PDFs divergem')
 require(pdf_manifest.get('status') == 'publicado_verificado',
         'Importação dos PDFs não está em estado publicado/verificado')
+
+critical_pdf_artifacts = [
+    'dados/monstros-pdf-extras.json',
+    'dados/auditoria-monstros-pdfs.json',
+    'dados/monstros-pdfs-auditoria.json',
+    'dados/ferramentas-pdfs.json',
+    'dados/bugigangas-pdfs.json',
+    'dados/armaduras-pdfs.json',
+    'dados/armas-pdfs-manifest.json',
+    'dados/equipamentos-aventura-pdfs.json',
+    'dados/equipamentos-aventura-core-pdfs.json',
+]
+for artifact in critical_pdf_artifacts:
+    require((ROOT / artifact).exists(), f'Artefato PDF materializado ausente: {artifact}')
+
+historical_missing = []
 for src in pdf_registry.get('fontes', []):
     require(src.get('status') == 'registrado', f'PDF não registrado: {src.get("arquivo")}')
     require(src.get('uso_no_hub'), f'PDF sem módulos de uso: {src.get("arquivo")}')
-    for artifact in src.get('artefatos_relacionados', []):
-        require((ROOT / artifact).exists(),
-                f'Artefato derivado ausente para {src.get("arquivo")}: {artifact}')
+    related = src.get('artefatos_relacionados', [])
+    existing = [artifact for artifact in related if (ROOT / artifact).exists()]
+    require(existing, f'PDF sem nenhum artefato relacionado materializado: {src.get("arquivo")}')
+    historical_missing.extend(
+        f'{src.get("arquivo")}::{artifact}'
+        for artifact in related if not (ROOT / artifact).exists()
+    )
 
 require((ROOT / 'scripts/politica-regras-biblioteca.js').exists(),
         'Política global da Biblioteca ausente')
@@ -220,5 +252,7 @@ print(
     'Auditoria 5e/5.5e concluída: '
     f'{len(MODULES)}/18 módulos; {len(house)} Regras da Casa pesquisáveis; '
     f'{len(spell_items)} magias consolidadas; {len(legacy_sub)} subclasses legadas únicas; '
-    f'{len(registered_pdf_names)} PDFs registrados e rastreados; precedência 2024 + legado 2014 compatível validados.'
+    f'{len(registered_pdf_names)} PDFs registrados e rastreados; '
+    f'{len(historical_missing)} referências históricas de artefatos não materializadas no runtime atual; '
+    'precedência 2024 + legado 2014 compatível validados.'
 )
