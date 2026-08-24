@@ -47,6 +47,11 @@ function tieflingLineageFromLegacy(row){
  const ability=String(row.atributo_conjuracao||'');
  return{name:row.nome,aliases:uniq([row.nome_original].filter(Boolean)),replaceTraitNames:['Fiendish Legacy','Legado Ínfero'],source:row.fonte,ruleset:'5e',revision:2014,status:row.status,compatibleWith:['5.5e'],spellAbilityFixed:/^carisma\b/i.test(ability)?'Carisma':null,spellAbilityOptions:/inteligencia|inteligência/i.test(ability)&&/sabedoria/i.test(ability)&&/carisma/i.test(ability)?['Inteligência','Sabedoria','Carisma']:[],traits:[{name:row.nome_original||row.nome,originalName:row.nome_original||row.nome,text:legacyTieflingText(row)}]}
 }
+function migrateOldTieflingChoice(tiefling,tieflingData){
+ const choices=state.c?.choices?.species;if(!choices?.tieflingVariant||state.c?.refs?.species!==tiefling?.id)return;
+ const row=arr(tieflingData?.mecanicas).find(x=>x.id===choices.tieflingVariant);if(row&&arr(tiefling.lineages).some(x=>fold(x.name)===fold(row.nome)))choices.lineage=row.nome;
+ delete choices.tieflingVariant
+}
 function addTieflingVariants(rows,tieflingData){
  const tiefling=findByNames(rows,['tiefling']);if(!tiefling)return rows;
  normalizeLineageNames(tiefling,'Legado Tiefling',['Legado Ínfero','Fiendish Legacy']);
@@ -60,6 +65,7 @@ function addTieflingVariants(rows,tieflingData){
  }
  const legacy=arr(tieflingData?.mecanicas).filter(x=>/legado_compativel_conteudo_unico/i.test(x.status||''));
  for(const row of legacy){if(!arr(tiefling.lineages).some(x=>fold(x.name)===fold(row.nome)))tiefling.lineages.push(tieflingLineageFromLegacy(row))}
+ migrateOldTieflingChoice(tiefling,tieflingData);
  return rows
 }
 function addKoboldLegacy(rows){
