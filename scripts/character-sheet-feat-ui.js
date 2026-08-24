@@ -15,6 +15,7 @@ function renderProficiencies(d){
  if($('skill-profs'))$('skill-profs').innerHTML=d.skills.length?d.skills.map(s=>pill(arr(d.expertiseSkills).includes(s)?`${s} · Especialização`:s)).join(''):'—';
  if($('save-profs'))$('save-profs').innerHTML=arr(d.saveProficiencies).length?d.saveProficiencies.map(pill).join(''):'—'
 }
+function renderBackgroundOriginFeat(d){const box=$('background-data');if(!box)return;for(const row of box.querySelectorAll('.row')){const label=row.querySelector('span');if(fold(label?.textContent).includes('talento de origem')){const value=row.querySelector('strong');if(value)value.textContent=d.bg?.feat?.name||'—';break}}}
 function renderFeatCards(d){
  const box=$('feat-data');if(!box)return;const instances=arr(d.featMechanics?.instances),labels=d.featMechanics?.labels||{};
  if(!instances.length){box.innerHTML='<p class="muted">Nenhum talento registrado.</p>';return}
@@ -30,6 +31,6 @@ function renderResources(d){
  const combat=$('combat-summary');if(!combat)return;combat.querySelector('[data-feat-resources-sheet]')?.remove();const resources=arr(d.featResources);if(!resources.length&&!d.unarmedDamage)return;
  const wrap=document.createElement('div');wrap.dataset.featResourcesSheet='';wrap.style.marginTop='10px';wrap.innerHTML=`${resources.map(r=>`<div class="row"><span>${esc(r.label)}</span><strong>${esc(r.max)}</strong></div>`).join('')}${d.unarmedDamage?`<div class="row"><span>Ataque Desarmado</span><strong>${esc(d.unarmedDamage)}</strong></div>`:''}`;combat.appendChild(wrap)
 }
-function apply(){if(!state.c)return;syncChosenOriginFeat();const d=derive();renderSaves(d);renderSkills(d);renderProficiencies(d);renderFeatCards(d);renderStartingEquipment(d);renderFeatSpells(d);renderResources(d)}
+function apply(){if(!state.c)return;syncChosenOriginFeat();const d=derive();renderSaves(d);renderSkills(d);renderProficiencies(d);renderBackgroundOriginFeat(d);renderFeatCards(d);renderStartingEquipment(d);renderFeatSpells(d);renderResources(d)}
 function start(attempt=0){const sheet=$('sheet');if(state.c&&sheet&&!sheet.hidden){apply();return}if(attempt<300)requestAnimationFrame(()=>start(attempt+1))}
 start();
