@@ -31,6 +31,35 @@ jobs:
           node --check scripts/character-builder/house-rules-ui.js
           node --check scripts/character-builder/species-trait-ui.js
           node --check scripts/character-builder/feat-mechanics.js
+      - name: Testar preservação real de Origem
+        run: |
+          node --input-type=module <<'JS'
+          import{state,blank}from'./scripts/character-builder/state.js';
+          import{applyHouseRules,initializeHouseBackgroundChoices}from'./scripts/character-builder/rules.js';
+          state.c=blank();
+          Object.assign(state.catalogs,{
+            classes:[],subclasses:[],spells:[],armors:[],weapons:[],
+            species:[{id:'r1',abilityBonuses:[]},{id:'r2',abilityBonuses:[]}],
+            backgrounds:[
+              {id:'b1',abilities:['Força'],feat:{name:'Alert'},equipmentOptions:[]},
+              {id:'b2',abilities:['Destreza'],feat:{name:'Lucky'},equipmentOptions:[]}
+            ],
+            feats:[
+              {id:'f-alert',name:'Alert',category:'Origem'},
+              {id:'f-lucky',name:'Lucky',category:'Origem'}
+            ]
+          });
+          state.c.refs.background='b1';state.c.refs.species='r1';
+          state.c.choices.background={abilityMode:'2+1',plus2:'Carisma',plus1:'Sabedoria',originFeat:'f-lucky',equipment:'A',toolChoice:'kit'};
+          const expected=JSON.stringify(state.c.choices.background);
+          applyHouseRules();
+          if(JSON.stringify(state.c.choices.background)!==expected)throw new Error('Aplicar/derivar regras alterou Origem sem dependência.');
+          state.c.refs.species='r2';applyHouseRules();
+          if(JSON.stringify(state.c.choices.background)!==expected)throw new Error('Trocar Raça alterou Antecedente · Regra da Casa.');
+          state.c.refs.background='b2';initializeHouseBackgroundChoices();
+          if(state.c.choices.background.plus2!=='Carisma'||state.c.choices.background.plus1!=='Sabedoria'||state.c.choices.background.originFeat!=='f-lucky')throw new Error('Troca de Antecedente apagou escolhas ainda válidas da Regra da Casa.');
+          console.log('Preservação dinâmica de Origem validada.');
+          JS
       - name: Auditar isolamento por dependência de regra
         run: |
           python - <<'PY'
