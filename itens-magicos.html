@@ -6,57 +6,18 @@
 <style>:root{color-scheme:light;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#f5f5f5}*{box-sizing:border-box}html,body{background:#fff;color:#000}body{max-width:1120px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.resumo,.meta{opacity:.78}.nota,.aviso,.erro,.vazio{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.controles{display:grid;grid-template-columns:minmax(240px,1fr) repeat(3,minmax(150px,220px));gap:10px;margin:18px 0 10px}input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:#fff;color:#000}.resultado{margin:8px 0 16px;opacity:.75}.item{margin:10px 0;border:1px solid var(--b);border-radius:10px;overflow:hidden}.item summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:16px;align-items:baseline}.item summary:hover{background:var(--soft)}.categoria{font-size:.86rem;opacity:.68;text-align:right}.corpo{padding:0 16px 16px}.stat{font-style:italic;font-weight:600}.descricao{white-space:pre-wrap;overflow-wrap:anywhere}.meta{border-top:1px solid #8883;margin-top:14px;padding-top:10px;font-size:.9rem;display:flex;flex-wrap:wrap;gap:8px 18px}.legado{display:inline-block;margin-left:8px;font-size:.75rem;padding:2px 7px;border:1px solid #8887;border-radius:999px;opacity:.75}.atribuicao{margin-top:26px;padding-top:14px;border-top:1px solid #8884;font-size:.88rem;opacity:.76}@media(max-width:850px){body{padding:16px}.controles{grid-template-columns:1fr 1fr}.controles input{grid-column:1/-1}}@media(max-width:560px){.controles{grid-template-columns:1fr}.controles input{grid-column:auto}.item summary{display:block}.categoria{display:block;margin-top:5px;text-align:left}}</style>
 </head><body>
 <p><a href="bibliotecas.html">← Bibliotecas</a></p><header><h1>Itens Mágicos</h1></header>
+<div class="nota"><strong>Regra da Casa — Espaços de Itens Mágicos:</strong> requisitos de Sintonização e o limite padrão de três itens sintonizados não são usados no Hub. Itens mágicos vestidos ocupam o Espaço de Item Mágico corporal apropriado; itens sem espaço seguem suas próprias regras de uso e ativação.</div>
 <div class="controles"><input id="busca" type="search" placeholder="Buscar item, efeito, tipo, magia ou propriedade..."><select id="edicao"><option value="">Todas as edições</option><option value="srd521">5.5e — SRD 5.2.1</option><option value="srd51">5e — SRD 5.1 (legado ativo)</option></select><select id="tipo"><option value="">Todos os tipos</option></select><select id="raridade"><option value="">Todas as raridades</option></select></div><p class="resultado" id="resultado">Carregando catálogo...</p><div id="avisos"></div><main id="lista"></main>
 <script>
-const VERSION='20260819-ptbr1',esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let DATA=null,ITEMS_BY_ID=new Map(),LOAD_WARNINGS=[];const RARIDADES=['Comum','Incomum','Rara','Muito rara','Lendária','Artefato','Raridade variável','Outra'];
+const VERSION='20260823-rules-audit1',esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let DATA=null,ITEMS_BY_ID=new Map(),LOAD_WARNINGS=[];const RARIDADES=['Comum','Incomum','Rara','Muito rara','Lendária','Artefato','Raridade variável','Outra'];
 function tipoDo(b){const t=String(b||'').trim(),m=t.match(/^([^,(]+)/);return(m?m[1]:t).trim()}function raridadeDo(bloco){const b=String(bloco||'').toLocaleLowerCase('pt-BR');if(b.includes('raridade variável'))return'Raridade variável';if(b.includes('artefato'))return'Artefato';if(b.includes('lendár'))return'Lendária';if(b.includes('muito rar'))return'Muito rara';if(/\bincomum\b/.test(b))return'Incomum';if(/\brar[ao]\b|\brara\b/.test(b))return'Rara';if(/\bcomum\b/.test(b))return'Comum';return'Outra'}function sintoniaDo(b){return/requer\s+sintoniza[cç][aã]o/i.test(String(b||''))}function paginaTexto(i){if(i.pagina_inicio==null&&i.pagina_fim==null)return'—';if(i.pagina_fim==null||i.pagina_inicio===i.pagina_fim)return String(i.pagina_inicio);return`${i.pagina_inicio}–${i.pagina_fim}`}
 function popularFiltros(){const ts=document.getElementById('tipo'),rs=document.getElementById('raridade'),tipos=[...new Set(DATA.items.map(x=>tipoDo(x.bloco)))].filter(Boolean).sort((a,b)=>a.localeCompare(b,'pt-BR'));ts.innerHTML='<option value="">Todos os tipos</option>'+tipos.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');rs.innerHTML='<option value="">Todas as raridades</option>'+RARIDADES.filter(r=>DATA.items.some(x=>raridadeDo(x.bloco)===r)).map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}
-function textoBusca(i){const f=DATA.fontes?.[i.fonte]||{};return[i.nome,i.nome_original,i.bloco,i.descricao,f.titulo,f.ruleset].join(' ').toLocaleLowerCase('pt-BR')}function corpoHtml(i){const f=DATA.fontes?.[i.fonte]||{};return`<p class="stat">${esc(i.bloco)}</p><div class="descricao">${esc(i.descricao)}</div><div class="meta"><span><strong>Tipo:</strong> ${esc(tipoDo(i.bloco))}</span><span><strong>Raridade:</strong> ${esc(raridadeDo(i.bloco))}</span><span><strong>Sintonização:</strong> ${sintoniaDo(i.bloco)?'Sim':'Não'}</span><span><strong>Fonte:</strong> ${esc(f.titulo||'—')}</span><span><strong>Regras:</strong> ${esc(f.ruleset||'—')}</span><span><strong>Página(s):</strong> ${esc(paginaTexto(i))}</span><span><strong>Licença:</strong> ${esc(f.licenca||'—')}</span></div>`}function preencherCorpo(d){if(!d||d.dataset.loaded==='1')return;const i=ITEMS_BY_ID.get(d.dataset.itemId);if(!i)return;d.querySelector('.corpo').innerHTML=corpoHtml(i);d.dataset.loaded='1'}function abrirReferencia(){const ref=new URLSearchParams(location.search).get('ref');if(!ref)return;const el=document.querySelector(`[data-hub-entity-id="${CSS.escape(ref)}"]`);if(!el)return;el.open=true;preencherCorpo(el);setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),60)}
+function textoBusca(i){const f=DATA.fontes?.[i.fonte]||{};return[i.nome,i.nome_original,i.bloco,i.descricao,f.titulo,f.ruleset].join(' ').toLocaleLowerCase('pt-BR')}
+function regraHubDoItem(i){const corporal=/armadura|robe|bota|sandália|sapato|luva|manopla|elmo|chapéu|coroa|diadema|anel|capa|manto|amuleto|colar|medalhão|cinto|cinturão|camisa|túnica|veste|óculos|lente|máscara|braçadeira|bracelete/i.test(`${i.bloco} ${i.nome}`);return corporal?'Usa o Espaço de Item Mágico corporal apropriado; apenas um item fornece benefícios por espaço, exceto Anéis (dois).':'Não ocupa Espaço de Item Mágico por padrão; segue as próprias regras de uso e ativação.'}
+function corpoHtml(i){const f=DATA.fontes?.[i.fonte]||{},sourceAttunement=sintoniaDo(i.bloco);return`<p class="stat">${esc(i.bloco)}</p><div class="descricao">${esc(i.descricao)}</div><div class="nota"><strong>Aplicação no Hub:</strong> ${esc(regraHubDoItem(i))}${sourceAttunement?' A exigência de Sintonização impressa na fonte é substituída pela Regra da Casa.':''}</div><div class="meta"><span><strong>Tipo:</strong> ${esc(tipoDo(i.bloco))}</span><span><strong>Raridade:</strong> ${esc(raridadeDo(i.bloco))}</span><span><strong>Sintonização na fonte:</strong> ${sourceAttunement?'Sim':'Não'}</span><span><strong>Sintonização no Hub:</strong> Não usada</span><span><strong>Fonte:</strong> ${esc(f.titulo||'—')}</span><span><strong>Regras:</strong> ${esc(f.ruleset||'—')}</span><span><strong>Página(s):</strong> ${esc(paginaTexto(i))}</span><span><strong>Licença:</strong> ${esc(f.licenca||'—')}</span></div>`}
+function preencherCorpo(d){if(!d||d.dataset.loaded==='1')return;const i=ITEMS_BY_ID.get(d.dataset.itemId);if(!i)return;d.querySelector('.corpo').innerHTML=corpoHtml(i);d.dataset.loaded='1'}function abrirReferencia(){const ref=new URLSearchParams(location.search).get('ref');if(!ref)return;const el=document.querySelector(`[data-hub-entity-id="${CSS.escape(ref)}"]`);if(!el)return;el.open=true;preencherCorpo(el);setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),60)}
 function render(){if(!DATA)return;const q=document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR'),ed=document.getElementById('edicao').value,tp=document.getElementById('tipo').value,rr=document.getElementById('raridade').value,itens=DATA.items.filter(i=>(!q||textoBusca(i).includes(q))&&(!ed||i.fonte===ed)&&(!tp||tipoDo(i.bloco)===tp)&&(!rr||raridadeDo(i.bloco)===rr));document.getElementById('resultado').textContent=`${itens.length} de ${DATA.items.length} itens`;const l=document.getElementById('lista');if(!itens.length){l.innerHTML='<p class="vazio">Nenhum item corresponde aos filtros atuais.</p>';return}l.innerHTML=itens.map(i=>`<details class="item" data-item-id="${esc(i.id)}" data-hub-entity-id="${esc(i.id)}" id="ref-${esc(i.id)}"><summary><span><strong>${esc(i.nome)}</strong>${i.fonte==='srd51'?'<span class="legado">5e legado ativo</span>':''}</span><span class="categoria">${esc(i.bloco)}</span></summary><div class="corpo"></div></details>`).join('');l.querySelectorAll('details.item').forEach(el=>el.addEventListener('toggle',()=>{if(el.open)preencherCorpo(el)}));abrirReferencia()}
 async function fetchJson(u,c){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}${c?` em ${c}`:''}`);return r.json()}async function chunk(path){const u=new URL(path,document.baseURI);u.searchParams.set('v',VERSION);const d=await fetchJson(u,path);if(!Array.isArray(d))throw new Error(`Formato inválido em ${path}`);return d}async function carregar(){const u=new URL('dados/itens-magicos/manifest.json',document.baseURI);u.searchParams.set('v',VERSION);const m=await fetchJson(u,'manifest.json'),rs=await Promise.allSettled((m.chunks||[]).map(chunk)),partes=[];LOAD_WARNINGS=[];rs.forEach((r,i)=>r.status==='fulfilled'?partes.push(...r.value):LOAD_WARNINGS.push(`${m.chunks[i]}: ${r.reason?.message||r.reason}`));if(!partes.length)throw new Error('Nenhum bloco de dados pôde ser carregado');const vistos=new Set(),validos=[];for(const i of partes){if(!i||['id','nome','bloco','descricao','fonte'].some(k=>!String(i[k]??'').trim())||vistos.has(i.id))continue;vistos.add(i.id);validos.push(i)}validos.sort((a,b)=>String(a.nome).localeCompare(String(b.nome),'pt-BR'));return{...m,items:validos}}
 carregar().then(d=>{DATA=d;ITEMS_BY_ID=new Map(d.items.map(i=>[i.id,i]));popularFiltros();if(LOAD_WARNINGS.length)document.getElementById('avisos').innerHTML=`<div class="aviso"><strong>Aviso de carregamento:</strong> ${esc(LOAD_WARNINGS.join(' • '))}</div>`;render()}).catch(e=>{document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<p class="erro">${esc(e.message)}</p>`});for(const id of ['busca','edicao','tipo','raridade'])document.getElementById(id).addEventListener(id==='busca'?'input':'change',render);
 </script>
-<style id="hub-force-light-theme">
-:root { color-scheme: only light !important; }
-html,
-html body,
-html body * {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-html body *::before,
-html body *::after {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-html body a,
-html body a:link,
-html body a:visited,
-html body a:hover,
-html body a:active,
-html body a:focus {
-  background: #ffffff !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-html body input,
-html body select,
-html body textarea,
-html body button,
-html body option,
-html body optgroup {
-  background: #ffffff !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-html body input::placeholder,
-html body textarea::placeholder {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-  opacity: .68 !important;
-}
-html body svg text { fill: #000000 !important; }
-</style>
 </body></html>
