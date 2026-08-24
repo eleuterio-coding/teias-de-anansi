@@ -27,17 +27,19 @@ jobs:
           node --check scripts/character-builder/ability-score-rules.js
           node --check scripts/character-builder/ability-score-ui.js
           node --check scripts/character-builder.js
-      - name: Testar orçamento de 72 pontos e modificadores
+      - name: Testar orçamento, modificadores e total derivado
         run: |
           node --input-type=module <<'JS'
           import{
             BASE_ABILITY_POINT_BUDGET,BASE_ABILITY_MIN,BASE_ABILITY_MAX,
-            baseAbilityModifier,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange
+            baseAbilityModifier,abilityDisplayState,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange
           }from'./scripts/character-builder/ability-score-rules.js';
           const AB=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
           if(BASE_ABILITY_POINT_BUDGET!==72)throw new Error('Orçamento deve ser 72.');
           if(BASE_ABILITY_MIN!==10||BASE_ABILITY_MAX!==18)throw new Error('Faixa base deve ser 10–18.');
           if(baseAbilityModifier(10)!==0||baseAbilityModifier(16)!==3||baseAbilityModifier(18)!==4)throw new Error('Cálculo de modificador dos atributos falhou.');
+          const display=abilityDisplayState(16,18);
+          if(display.base!==16||display.final!==18||display.bonus!==2||display.modifier!==4)throw new Error('Total final deve somar bônus existentes antes de calcular o modificador.');
           let scores=Object.fromEntries(AB.map(a=>[a,10]));
           let v=baseAbilityValidation(scores,AB);
           if(v.total!==60||v.remaining!==12)throw new Error('Personagem novo deve começar com 60 usados e 12 restantes.');
@@ -51,7 +53,7 @@ jobs:
           if(scores.Constituição!==10)throw new Error('Sem pontos restantes, outro atributo não pode subir.');
           const normalized=normalizeBaseAbilities({Força:30,Destreza:1,Constituição:12,Inteligência:13,Sabedoria:14,Carisma:15},AB);
           if(normalized.Força!==18||normalized.Destreza!==10)throw new Error('Normalização da faixa 10–18 falhou.');
-          console.log('Distribuição de 72 pontos e modificadores validados.');
+          console.log('Distribuição, modificadores e total derivado validados.');
           JS
       - name: Verificar integração e isolamento
         run: |
@@ -61,15 +63,17 @@ jobs:
           ui=Path('scripts/character-builder/ability-score-ui.js').read_text(encoding='utf-8')
           rules=Path('scripts/character-builder/ability-score-rules.js').read_text(encoding='utf-8')
           assert 'ability-score-ui.js' in loader, 'Extensão de atributos não carregada.'
-          assert 'ability-budget2' in loader, 'Cache da extensão de atributos não foi atualizado.'
+          assert 'ability-budget3' in loader, 'Cache da extensão de atributos não foi atualizado.'
           assert "addEventListener('change',onAbilityChange,true)" in ui, 'A validação deve interceptar o campo antes do handler legado.'
           assert 'state.c.baseAbilities=result.scores' in ui, 'A alteração não está sendo persistida no estado.'
-          assert 'base-ability-modifier' in ui and 'Modificador ${signedModifier' in ui, 'Modificador não está sendo exibido junto ao atributo.'
+          assert "import{derive}from'./rules.js" in ui, 'A Etapa 4 deve ler o valor final calculado pelo motor de regras.'
+          assert 'Total ${display.final} · Modificador ${signed(display.modifier)}' in ui, 'Total final e modificador não estão sendo exibidos juntos.'
+          assert 'Bônus acumulados ${signed(display.bonus)}' in ui, 'Bônus acumulados não estão visíveis ao lado do atributo.'
           assert 'choices.background' not in ui and 'refs.species' not in ui and 'refs.class' not in ui, 'Etapa Atributos não pode reescrever etapas anteriores.'
           assert 'BASE_ABILITY_POINT_BUDGET=72' in rules
           assert 'BASE_ABILITY_MIN=10' in rules
           assert 'BASE_ABILITY_MAX=18' in rules
-          assert 'baseAbilityModifier' in rules
+          assert 'abilityDisplayState' in rules
           assert 'supabase' not in (loader+ui+rules).lower()
-          print('Integração da Etapa 4 validada com modificadores e sem efeitos colaterais entre etapas.')
+          print('Integração da Etapa 4 validada com total final, bônus acumulados e isolamento entre etapas.')
           PY

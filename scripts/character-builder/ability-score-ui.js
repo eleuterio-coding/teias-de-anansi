@@ -1,12 +1,14 @@
 import{state,$,AB,slug}from'./state.js';
-import{BASE_ABILITY_POINT_BUDGET,BASE_ABILITY_MIN,BASE_ABILITY_MAX,baseAbilityModifier,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange}from'./ability-score-rules.js?v=20260824-ability-budget2';
+import{derive}from'./rules.js?v=20260824-ability-total1';
+import{BASE_ABILITY_POINT_BUDGET,BASE_ABILITY_MIN,BASE_ABILITY_MAX,baseAbilityModifier,abilityDisplayState,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange}from'./ability-score-rules.js?v=20260824-ability-budget3';
 
 let syncingPending=false;
 
 function abilityForInput(input){return AB.find(ability=>input?.id===`base-${slug(ability)}`)||null}
 function normalizedState(){state.c.baseAbilities=normalizeBaseAbilities(state.c.baseAbilities,AB);return state.c.baseAbilities}
 function budgetState(){return baseAbilityValidation(state.c.baseAbilities,AB)}
-function signedModifier(value){const modifier=baseAbilityModifier(value);return`${modifier>=0?'+':''}${modifier}`}
+function signed(value){return`${value>=0?'+':''}${value}`}
+function finalScores(){try{return derive()?.scores||state.c.baseAbilities}catch{return state.c.baseAbilities}}
 function ensureStyles(){if($('ability-budget-style'))return;const style=document.createElement('style');style.id='ability-budget-style';style.textContent='.ability-budget{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid #8885;border-radius:10px;padding:12px;margin:0 0 12px;background:#f7f7f7}.ability-budget>div{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.ability-budget>div span{font-size:.82rem;color:#666}.ability-budget>div strong{font-size:1.05rem}.ability-budget p{grid-column:1/-1;margin:0}.ability-budget.is-complete{border-color:#2a8a4c88;background:#f6fff8}.ability-budget.is-warning{border-color:#b7841688;background:#fffaf0}.base-ability-modifier{display:block;margin-top:5px;font-size:.8rem;color:#666;font-weight:600}@media(max-width:760px){.ability-budget{grid-template-columns:1fr}.ability-budget p{grid-column:auto}}';document.head.appendChild(style)}
 
 function ensureBudgetUi(){
@@ -14,7 +16,7 @@ function ensureBudgetUi(){
  let box=$('ability-budget');
  if(!box){
   box=document.createElement('div');box.id='ability-budget';box.className='ability-budget';box.setAttribute('role','status');box.setAttribute('aria-live','polite');
-  box.innerHTML=`<div><span>Orçamento</span><strong>${BASE_ABILITY_POINT_BUDGET} pontos</strong></div><div><span>Distribuídos</span><strong id="ability-points-used">60</strong></div><div><span>Restantes</span><strong id="ability-points-remaining">12</strong></div><p id="ability-budget-message" class="mini">Cada atributo base deve ficar entre ${BASE_ABILITY_MIN} e ${BASE_ABILITY_MAX}.</p>`;
+  box.innerHTML=`<div><span>Orçamento</span><strong>${BASE_ABILITY_POINT_BUDGET} pontos</strong></div><div><span>Distribuídos</span><strong id="ability-points-used">60</strong></div><div><span>Restantes</span><strong id="ability-points-remaining">12</strong></div><p id="ability-budget-message" class="mini">Cada atributo base deve ficar entre ${BASE_ABILITY_MIN} e ${BASE_ABILITY_MAX}. Os bônus de outras fontes são somados ao total final sem consumir estes 72 pontos.</p>`;
   grid.before(box)
  }
  for(const ability of AB){
@@ -25,7 +27,12 @@ function ensureBudgetUi(){
 }
 
 function renderModifiers(){
- for(const ability of AB){const modifier=$(`base-mod-${slug(ability)}`);if(modifier)modifier.textContent=`Modificador ${signedModifier(state.c.baseAbilities[ability])}`}
+ const scores=finalScores();
+ for(const ability of AB){
+  const line=$(`base-mod-${slug(ability)}`);if(!line)continue;
+  const display=abilityDisplayState(state.c.baseAbilities[ability],scores?.[ability]);
+  line.textContent=`Total ${display.final} · Modificador ${signed(display.modifier)}${display.bonus?` · Bônus acumulados ${signed(display.bonus)}`:''}`
+ }
 }
 
 function renderBudget(){
@@ -34,8 +41,8 @@ function renderBudget(){
  const msg=$('ability-budget-message');box.classList.toggle('is-complete',remaining===0&&v.rangeValid);box.classList.toggle('is-warning',remaining<0||!v.rangeValid);
  if(!v.rangeValid)msg.textContent=`Cada atributo base deve ser um número inteiro entre ${BASE_ABILITY_MIN} e ${BASE_ABILITY_MAX}.`;
  else if(remaining<0)msg.textContent=`Limite excedido em ${Math.abs(remaining)} ponto(s). Reduza a distribuição até ${BASE_ABILITY_POINT_BUDGET}.`;
- else if(remaining===0)msg.textContent='Todos os 72 pontos foram distribuídos.';
- else msg.textContent=`Ainda podem ser gastos ${remaining} ponto(s). Cada atributo base deve ficar entre ${BASE_ABILITY_MIN} e ${BASE_ABILITY_MAX}.`
+ else if(remaining===0)msg.textContent='Todos os 72 pontos-base foram distribuídos. Bônus de Origem, Raça, Progressão, Talentos e outras fontes são somados separadamente ao total final.';
+ else msg.textContent=`Ainda podem ser gastos ${remaining} ponto(s). Cada atributo base deve ficar entre ${BASE_ABILITY_MIN} e ${BASE_ABILITY_MAX}; bônus de outras fontes não consomem o orçamento.`
 }
 
 function refreshSheet(){const name=$('nome');if(name)name.dispatchEvent(new Event('input'))}
