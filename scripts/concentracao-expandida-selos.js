@@ -4,7 +4,8 @@
     CI: 'CI — Concentração de Invocação',
     CZ: 'CZ — Concentração de Zona',
     CL: 'CL — Concentração Leve',
-    SC: 'Sem Concentração'
+    SC: 'Sem Concentração',
+    NC: 'Pendente de classificação'
   };
 
   const normalizeCE = value => String(value || '')
@@ -61,23 +62,9 @@
     if (CZ.has(name)) return 'CZ';
     if (CL.has(name)) return 'CL';
 
-    const misc = new Set(raw?.miscTags || []);
-    if (misc.has('SMN') || /^(summon|conjure|animate)\b/.test(name) || /\bsummon\b/.test(name)) return 'CI';
-
-    const areaTags = raw?.areaTags || [];
-    const rangeType = raw?.range?.type || '';
-    const areaShape = areaTags.some(tag => ['C','L','R','S','Q','W','Y'].includes(tag)) ||
-      ['cone','cube','line','radius','sphere','hemisphere','cylinder','emanation'].includes(rangeType);
-    const zoneName = /\b(wall|cloud|fog|storm|aura|zone|field|barrier|darkness|silence|sleet|spike growth|moonbeam|earthquake|whirlwind|hunger of hadar|insect plague|entangle|maelstrom|dawn|bonfire|sphere)\b/;
-    if (areaShape || zoneName.test(name)) return 'CZ';
-
-    const strongConditions = new Set(['paralyzed','restrained','stunned','frightened','charmed','petrified']);
-    if ((raw?.conditionInflict || []).some(c => strongConditions.has(c))) return 'CM';
-
-    const majorName = /\b(banish|dominate|hold|confus|fear|maze|polymorph|telekinesis|flesh to stone|irresistible dance|slow|crown of madness|hideous laughter|control water|reverse gravity)\b/;
-    if (majorName.test(name)) return 'CM';
-
-    return 'CL';
+    // A lista oficial é normativa. Magias novas/revisadas não são classificadas
+    // por semelhança de nome, área ou condição: aguardam validação explícita.
+    return 'NC';
   }
 
   function applySeal(record, raw) {
@@ -113,7 +100,12 @@
         const small = button.querySelector('small');
         if (small && !small.dataset.ceSeal) {
           small.dataset.ceSeal = '1';
-          small.append(` · CE: ${record.limite_coexistencia === 'SC' ? 'Sem Concentração' : record.limite_coexistencia}`);
+          const seal = record.limite_coexistencia === 'SC'
+            ? 'Sem Concentração'
+            : record.limite_coexistencia === 'NC'
+              ? 'Pendente de classificação'
+              : record.limite_coexistencia;
+          small.append(` · CE: ${seal}`);
         }
       });
     };
@@ -134,6 +126,8 @@
         badge.textContent = `CE · ${record.limite_coexistencia_nome}`;
         if (normalizeCE(record.nome_original) === normalizeCE('Bestow Curse') && record.limite_coexistencia === 'CL') {
           badge.title = 'A categoria aplica-se apenas às conjurações que efetivamente exigem concentração.';
+        } else if (record.limite_coexistencia === 'NC') {
+          badge.title = 'A magia exige concentração, mas ainda precisa de validação explícita na lista oficial da Regra da Casa.';
         }
         meta.insertBefore(badge, meta.children[4] || null);
       }
