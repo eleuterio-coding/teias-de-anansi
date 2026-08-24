@@ -55,6 +55,9 @@ jobs:
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/feat-mechanics.js
           node --check scripts/character-builder/feat-ui.js
+          node --check scripts/character-builder/house-rules-ui.js
+          node --check scripts/character-builder/language-ui.js
+          node --check scripts/character-builder/wizard-ui.js
       - name: Auditar contrato da interface
         run: |
           python - <<'PY'
@@ -69,7 +72,9 @@ jobs:
               'scripts/character-builder/ui.js','scripts/character-builder/profile-ui.js',
               'scripts/character-builder/species-trait-ui.js','scripts/character-builder/spell-selection-ui.js',
               'scripts/character-builder/spell-quota-ui.js','scripts/character-builder/class-skill-ui.js',
-              'scripts/character-builder/feat-mechanics.js','scripts/character-builder/feat-ui.js']
+              'scripts/character-builder/feat-mechanics.js','scripts/character-builder/feat-ui.js',
+              'scripts/character-builder/house-rules-ui.js','scripts/character-builder/language-ui.js',
+              'scripts/character-builder/wizard-ui.js']
           js='\n'.join(Path(p).read_text(encoding='utf-8') for p in source_files)
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           sheet_js=Path('scripts/character-sheet.js').read_text(encoding='utf-8')
@@ -80,16 +85,21 @@ jobs:
           feat_rules=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
           ids=set(re.findall(r'id="([^"]+)"',html))
           required={'builder','classe','nivel','especie','antecedente','magias-escolhas','talentos-escolhas','sheet-ac','sheet-hp','save-values','skill-values','combat','spellcasting','base-bonus-forca','base-bonus-destreza','base-bonus-constituicao','base-bonus-inteligencia','base-bonus-sabedoria','base-bonus-carisma'}
-          creation_required={'profile-player','profile-experience','profile-age','profile-gender','profile-height','profile-weight','profile-hair','profile-eyes','profile-skin','profile-alignment','profile-faith','profile-languages','personality','ideal','bond','flaw','coin-cp','coin-sp','coin-ep','coin-gp','coin-pp','inventory-notes','magic-items','other-holdings','extra-spells','creation-profile','creation-roleplay','creation-proficiencies','creation-inventory'}
+          creation_required={'profile-player','profile-experience','profile-age','profile-gender','profile-height','profile-weight','profile-hair','profile-eyes','profile-skin','profile-alignment','profile-faith','profile-languages','profile-notes','personality','ideal','bond','flaw','coin-cp','coin-sp','coin-ep','coin-gp','coin-pp','inventory-notes','magic-items','other-holdings','extra-spells','language-choices','starting-equipment-choice','creation-profile','creation-roleplay','creation-proficiencies','creation-inventory','wizard-nav','wizard-title','wizard-progress','wizard-prev','wizard-next'}
           missing=(required|creation_required)-ids
           if missing: raise RuntimeError('IDs obrigatórios ausentes: '+', '.join(sorted(missing)))
+          expected_steps={'classe','origem','raca','atributos','progressao','equipamento','revisao'}
+          panels=set(re.findall(r'data-wizard-panel="([^"]+)"',html))
+          nav_steps=set(re.findall(r'data-wizard-step="([^"]+)"',html))
+          if panels!=expected_steps: raise RuntimeError('Painéis do fluxo em etapas incorretos: '+', '.join(sorted(panels)))
+          if nav_steps!=expected_steps: raise RuntimeError('Navegação do fluxo em etapas incorreta: '+', '.join(sorted(nav_steps)))
           if 'ruleset' in ids: raise RuntimeError('Seletor de regras não pode existir na interface.')
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed","initWizardUi","starting-equipment-choice","profile-notes"]
           for token in required_tokens:
-              if token not in js and token not in loader:
+              if token not in js and token not in loader and token not in html:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
           if "dispatchEvent(new Event('input'))" in spell_selection:
               raise RuntimeError('Seleção de magia não pode disparar renderização global via campo de nome.')
@@ -129,5 +139,5 @@ jobs:
               if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
           for token in ['saveProficiencies','expertiseSkills','featSpellcasting','featResources','unarmedDamage']:
               if token not in sheet_feat_js: raise RuntimeError('Integração de talentos ausente na ficha digital: '+token)
-          print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados, escolhas mecânicas ativas e contador restante de perícias da classe presente.')
+          print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados, fluxo em 7 etapas ativo e escolhas mecânicas preservadas.')
           PY

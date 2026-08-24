@@ -6,7 +6,7 @@ function ensureSheetState(){
  const c=state.c;
  c.sheet=c.sheet||{};
  c.sheet.profile={player:'',experience:'',age:'',gender:'',height:'',weight:'',hair:'',eyes:'',skin:'',alignment:'',faith:'',languages:'',...(c.sheet.profile||{})};
- c.sheet.roleplay={personality:'',ideal:'',bond:'',flaw:'',...(c.sheet.roleplay||{})};
+ c.sheet.roleplay={personality:'',ideal:'',bond:'',flaw:'',notes:'',...(c.sheet.roleplay||{})};
  c.sheet.runtime={currentHp:null,tempHp:0,inspiration:false,conditions:[],exhaustion:0,deathSuccess:0,deathFail:0,spellSlotsUsed:{},...(c.sheet.runtime||{})};
  c.sheet.runtime.conditions=arr(c.sheet.runtime.conditions);
  c.sheet.runtime.spellSlotsUsed={...(c.sheet.runtime.spellSlotsUsed||{})};
@@ -27,7 +27,7 @@ function hydrate(){
   'profile-player':'player','profile-experience':'experience','profile-age':'age','profile-gender':'gender','profile-height':'height','profile-weight':'weight','profile-hair':'hair','profile-eyes':'eyes','profile-skin':'skin','profile-alignment':'alignment','profile-faith':'faith','profile-languages':'languages'
  };
  for(const[id,key]of Object.entries(profileFields))setValue(id,p[key]);
- for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw'}))setValue(id,rp[key]);
+ for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw','profile-notes':'notes'}))setValue(id,rp[key]);
  for(const coin of['cp','sp','ep','gp','pp'])setValue(`coin-${coin}`,num(inv[coin]));
  setValue('inventory-notes',inv.notes);setValue('magic-items',inv.magicItems);setValue('other-holdings',inv.otherHoldings);setValue('extra-spells',state.c.sheet.extraSpells);
 }
@@ -41,7 +41,7 @@ function renderProfile(){
 function renderRoleplay(){
  ensureSheetState();
  const rp=state.c.sheet.roleplay,box=$('creation-roleplay');if(!box)return;
- box.innerHTML=textBlock('Traços de personalidade',rp.personality)+textBlock('Ideal',rp.ideal)+textBlock('Vínculo',rp.bond)+textBlock('Defeito',rp.flaw);
+ box.innerHTML=textBlock('Traços de personalidade',rp.personality)+textBlock('Ideal',rp.ideal)+textBlock('Vínculo',rp.bond)+textBlock('Defeito',rp.flaw)+textBlock('Notas',rp.notes);
 }
 
 function renderProficiencies(){
@@ -63,13 +63,13 @@ function bind(){
   'profile-player':'player','profile-experience':'experience','profile-age':'age','profile-gender':'gender','profile-height':'height','profile-weight':'weight','profile-hair':'hair','profile-eyes':'eyes','profile-skin':'skin','profile-alignment':'alignment','profile-faith':'faith','profile-languages':'languages'
  };
  for(const[id,key]of Object.entries(profileFields))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.profile[key]=e.target.value;renderProfile();if(key==='languages')renderProficiencies()});
- for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw'}))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.roleplay[key]=e.target.value;renderRoleplay()});
+ for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw','profile-notes':'notes'}))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.roleplay[key]=e.target.value;renderRoleplay()});
  for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{ensureSheetState();state.c.sheet.inventory[coin]=Math.max(0,num(e.target.value));e.target.value=state.c.sheet.inventory[coin];renderInventory()});
  $('inventory-notes')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.notes=e.target.value;renderInventory()});
  $('magic-items')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.magicItems=e.target.value;renderInventory()});
  $('other-holdings')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.otherHoldings=e.target.value;renderInventory()});
  $('extra-spells')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.extraSpells=e.target.value;renderInventory()});
- $('builder')?.addEventListener('change',e=>{if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#sp-size,#sp-line,#bg-tool,#armor,#shield,#weapon,[id^="base-"]'))queueMicrotask(renderProficiencies)});
+ $('builder')?.addEventListener('change',e=>{if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#sp-size,#sp-line,#bg-tool,#bg-tool-house,#armor,#shield,#weapon,[id^="base-"]'))queueMicrotask(renderProficiencies)});
  document.addEventListener('hub:languages-changed',()=>{renderProfile();renderProficiencies()});
  $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
 }

@@ -108,7 +108,7 @@ require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
         'Texto de carregamento removido voltou ao criador')
-require('character-builder28' in creation and 'character-builder28' in builder,
+require('character-builder29' in creation and 'character-builder29' in builder,
         'Criador não está usando a revisão de cache esperada')
 require('organizeRaceVariants' in catalogs and 'race-variants.js' in catalogs,
         'Catálogo racial não usa a normalização compartilhada de variantes')
