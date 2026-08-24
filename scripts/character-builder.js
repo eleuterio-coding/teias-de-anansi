@@ -21,7 +21,7 @@ function warn(label,error){
   row.innerHTML=`<strong>${label}</strong>${error?`<br>${String(error.message||error)}`:''}`;
   warnings.appendChild(row)
 }
-function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]))}
 function fillMenu(id,items,placeholder,value){
   const el=document.getElementById(id);if(!el)return;
   const rows=(items||[]).slice().sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'pt-BR'));
@@ -31,8 +31,8 @@ function fillMenu(id,items,placeholder,value){
 async function preloadMainMenus(){
   try{
     const[stateMod,catalogMod]=await Promise.all([
-      import('./character-builder/state.js?v=20260823-character-builder22'),
-      import('./character-builder/catalogs.js?v=20260823-character-builder22')
+      import('./character-builder/state.js'),
+      import('./character-builder/catalogs.js')
     ]);
     const{state,loadCharacter,json}=stateMod;
     if(!state.c)state.c=loadCharacter();
@@ -61,7 +61,7 @@ async function start(){
   const menuPromise=preloadMainMenus();
   let core;
   try{
-    core=await import('./character-builder/ui.js?v=20260823-character-builder22');
+    core=await import('./character-builder/ui.js?v=20260823-character-builder23');
     if(typeof core.init!=='function')throw new Error('O módulo principal não exporta init().');
     await core.init()
   }catch(error){
@@ -72,14 +72,14 @@ async function start(){
   await menuPromise;
 
   const extensions=[
-    ['./character-builder/spell-selection-ui.js?v=20260823-character-builder22','initSpellSelectionUi'],
-    ['./character-builder/spell-quota-ui.js?v=20260823-character-builder22','initSpellQuotaUi'],
-    ['./character-builder/profile-ui.js?v=20260823-character-builder22','initCharacterProfileUi'],
-    ['./character-builder/species-trait-ui.js?v=20260823-character-builder22','initSpeciesTraitUi'],
-    ['./character-builder/class-skill-ui.js?v=20260823-character-builder22','initClassSkillUi'],
-    ['./character-builder/feat-ui.js?v=20260823-character-builder22','initFeatUi'],
-    ['./character-builder/house-rules-ui.js?v=20260823-character-builder22','initHouseRulesUi'],
-    ['./character-builder/language-ui.js?v=20260823-character-builder22','initLanguageUi']
+    ['./character-builder/spell-selection-ui.js?v=20260823-character-builder23','initSpellSelectionUi'],
+    ['./character-builder/spell-quota-ui.js?v=20260823-character-builder23','initSpellQuotaUi'],
+    ['./character-builder/profile-ui.js?v=20260823-character-builder23','initCharacterProfileUi'],
+    ['./character-builder/species-trait-ui.js?v=20260823-character-builder23','initSpeciesTraitUi'],
+    ['./character-builder/class-skill-ui.js?v=20260823-character-builder23','initClassSkillUi'],
+    ['./character-builder/feat-ui.js?v=20260823-character-builder23','initFeatUi'],
+    ['./character-builder/house-rules-ui.js?v=20260823-character-builder23','initHouseRulesUi'],
+    ['./character-builder/language-ui.js?v=20260823-character-builder23','initLanguageUi']
   ];
   for(const[path,name]of extensions){
     try{
