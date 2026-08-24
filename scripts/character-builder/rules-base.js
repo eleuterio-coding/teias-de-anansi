@@ -47,6 +47,7 @@ function explicitSkillOptions(values){return values.map(asSkill).filter(Boolean)
 function defsForTrait(t){
  const text=fold(t?.text),name=fold(t?.originalName||t?.name),base=traitKey(t),defs=[];
  const add=(suffix,type,label,extra={})=>defs.push({key:`${base}:${suffix}`,traitId:base,traitName:t.name,type,label,note:t.text,...extra});
+ for(const raw of arr(t?.choiceDefs)){const{suffix='choice',type='option',label='Escolha',...extra}=raw||{};add(suffix,type,label,extra)}
  if(name==='skillful'||name==='habilidoso'||/proficiencia em uma pericia a sua escolha/.test(text))add('skill','skill','Perícia',{choose:1,options:'all'});
  if((name==='keen senses'||name==='sentidos agucados')&&(/intuicao.*percepcao.*sobrevivencia/.test(text)||/insight.*perception.*survival/.test(text)))add('skill','skill','Perícia',{choose:1,options:explicitSkillOptions(['Intuição','Percepção','Sobrevivência'])});
  if(name==='changeling instincts')add('skills','skill','Perícias',{choose:2,options:explicitSkillOptions(['Deception','Insight','Intimidation','Performance','Persuasion'])});
@@ -71,6 +72,7 @@ export function speciesTraitChoiceDefs(speciesArg=null,lineageArg=null){
 }
 
 function choiceOptions(def){return def.options==='all'?ALL_SKILLS:arr(def.options)}
+function spellMatchesDef(spell,def){if(!spell||num(spell.level)!==num(def.spellLevel))return false;const wanted=arr(def.spellClasses).map(fold);return!wanted.length||arr(spell.classes).some(c=>wanted.includes(fold(c)))}
 export function sanitizeSpeciesTraitChoices(){
  const c=state.c;if(!c?.choices)return;
  c.choices.species=c.choices.species||{size:null,lineage:null};
@@ -85,6 +87,8 @@ export function sanitizeSpeciesTraitChoices(){
    const f=item('feats',v);if(f&&f.category===def.category)clean[def.key]=v
   }else if(def.type==='ability'||def.type==='option'){
    if(arr(def.options).includes(v))clean[def.key]=v
+  }else if(def.type==='spell'){
+   const s=item('spells',v);if(spellMatchesDef(s,def))clean[def.key]=v
   }else if(def.type==='tool'){
    if(typeof v==='string'&&v.trim())clean[def.key]=v.trim()
   }else if(def.type==='skill_or_tool'&&v&&typeof v==='object'){
@@ -96,17 +100,18 @@ export function sanitizeSpeciesTraitChoices(){
 }
 
 function speciesChoiceOutcome(species,lineage){
- const defs=speciesTraitChoiceDefs(species,lineage),values=state.c.choices.species?.traitChoices||{},skills=[],tools=[],featIds=[],labels={},abilities=[];
+ const defs=speciesTraitChoiceDefs(species,lineage),values=state.c.choices.species?.traitChoices||{},skills=[],tools=[],featIds=[],spells=[],labels={},abilities=[];
  for(const def of defs){
   const v=values[def.key];if(v==null)continue;
   if(def.type==='skill'){const chosen=def.choose>1?arr(v):[v];skills.push(...chosen);labels[def.key]=chosen.join(', ')}
   else if(def.type==='tool'){tools.push(v);labels[def.key]=v}
   else if(def.type==='skill_or_tool'){if(v.type==='skill')skills.push(v.value);else if(v.type==='tool')tools.push(v.value);labels[def.key]=v.value}
   else if(def.type==='feat'){const f=item('feats',v);if(f){featIds.push(v);labels[def.key]=f.name}}
+  else if(def.type==='spell'){const s=item('spells',v);if(s){spells.push(s);labels[def.key]=s.name}}
   else if(def.type==='ability'){abilities.push(v);labels[def.key]=v}
   else if(def.type==='option')labels[def.key]=v
  }
- return{defs,values,skills:uniq(skills),tools:uniq(tools),featIds:uniq(featIds),labels,spellAbility:abilities[0]||null}
+ return{defs,values,skills:uniq(skills),tools:uniq(tools),featIds:uniq(featIds),spells:uniq(spells),labels,spellAbility:abilities[0]||null}
 }
 
 function traitPassiveEffects(traits,level){
@@ -174,7 +179,7 @@ export function derive(){
  let speed=(passiveSpecies.speedOverride||species?.speed||30)+num(featMech.speedBonus);if(armor?.forca_minima&&scores.Força<num(armor.forca_minima))speed-=10;
  const wAbility=weapon?(/distância/.test(weapon.categoria)?'Destreza':arr(weapon.propriedades).some(x=>/finesse/i.test(x))?(dex>=str?'Destreza':'Força'):'Força'):null,wmod=wAbility?mod(scores[wAbility]):0,wprof=weaponProf(klass,weapon,featMech),spell=spellProgress(klass,level),spellMod=klass?.spellAbility?mod(scores[klass.spellAbility]):null,shieldBonus=state.c.choices.equipment.shield&&(classShieldTraining(klass)||featMech.shieldTraining)?2:0,spellSel=state.c.choices.spells||{cantrips:[],leveled:[],arcanum:{}};
  const speciesSpellMod=speciesChoices.spellAbility?mod(scores[speciesChoices.spellAbility]):null;
- return{klass,species,bg,sub,level,pbonus,lineage,bb,sb,scores,skills,expertiseSkills,tools,saveProficiencies,feats,speciesFeatIds:speciesChoices.featIds,speciesTraitChoices:speciesChoices,featMechanics:featMech,featSpells:featMech.spells,featSpellcasting:featMech.spellcasting,featResources:featMech.resources,extraProficiencies:featMech.extraProficiencies,unarmedDamage:featMech.unarmedDamage,armor,weapon,ac:armorAC(armor,dex,passiveSpecies.naturalArmorBase,featMech.mediumDexCap)+shieldBonus+passiveSpecies.acBonus+featMech.acBonus,speed,wAbility,wprof,attack:weapon?wmod+(wprof?pbonus:0):null,hp:hpTotal(klass,level,con,featMech.hp,passiveSpecies.hp),spell,spellDC:spellMod==null?null:8+pbonus+spellMod,spellAttack:spellMod==null?null:pbonus+spellMod,speciesSpellAbility:speciesChoices.spellAbility,speciesSpellDC:speciesSpellMod==null?null:8+pbonus+speciesSpellMod,speciesSpellAttack:speciesSpellMod==null?null:pbonus+speciesSpellMod,selectedSpells:{cantrips:arr(spellSel.cantrips).map(id=>item('spells',id)).filter(Boolean),leveled:arr(spellSel.leveled).map(id=>item('spells',id)).filter(Boolean),arcanum:Object.fromEntries(Object.entries(spellSel.arcanum||{}).map(([l,id])=>[l,item('spells',id)]).filter(([,x])=>x))},initiative:dex+featMech.initiative,passive:10+wis+(skills.includes('Percepção')?pbonus:0)+(expertiseSkills.includes('Percepção')?pbonus:0),speciesTraits:decoratedTraits(traits,speciesChoices),classFeatures:arr(klass?.features).filter(f=>f.level<=level)}
+ return{klass,species,bg,sub,level,pbonus,lineage,bb,sb,scores,skills,expertiseSkills,tools,saveProficiencies,feats,speciesFeatIds:speciesChoices.featIds,speciesTraitChoices:speciesChoices,speciesSpells:speciesChoices.spells,featMechanics:featMech,featSpells:featMech.spells,featSpellcasting:featMech.spellcasting,featResources:featMech.resources,extraProficiencies:featMech.extraProficiencies,unarmedDamage:featMech.unarmedDamage,armor,weapon,ac:armorAC(armor,dex,passiveSpecies.naturalArmorBase,featMech.mediumDexCap)+shieldBonus+passiveSpecies.acBonus+featMech.acBonus,speed,wAbility,wprof,attack:weapon?wmod+(wprof?pbonus:0):null,hp:hpTotal(klass,level,con,featMech.hp,passiveSpecies.hp),spell,spellDC:spellMod==null?null:8+pbonus+spellMod,spellAttack:spellMod==null?null:pbonus+spellMod,speciesSpellAbility:speciesChoices.spellAbility,speciesSpellDC:speciesSpellMod==null?null:8+pbonus+speciesSpellMod,speciesSpellAttack:speciesSpellMod==null?null:pbonus+speciesSpellMod,selectedSpells:{cantrips:arr(spellSel.cantrips).map(id=>item('spells',id)).filter(Boolean),leveled:arr(spellSel.leveled).map(id=>item('spells',id)).filter(Boolean),arcanum:Object.fromEntries(Object.entries(spellSel.arcanum||{}).map(([l,id])=>[l,item('spells',id)]).filter(([,x])=>x))},initiative:dex+featMech.initiative,passive:10+wis+(skills.includes('Percepção')?pbonus:0)+(expertiseSkills.includes('Percepção')?pbonus:0),speciesTraits:decoratedTraits(traits,speciesChoices),classFeatures:arr(klass?.features).filter(f=>f.level<=level)}
 }
 
 export function sanitizeSelections(){
