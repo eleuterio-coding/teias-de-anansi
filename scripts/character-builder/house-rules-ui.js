@@ -104,12 +104,22 @@ function renderProgression(){
 function renderBackground(){
  const box=$('antecedente-escolhas'),{bg}=selected();if(!box)return;if(!bg){box.innerHTML='';return}
  const ch=state.c.choices.background,originFeats=state.catalogs.feats.filter(f=>f.category==='Origem').sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')),speciesUsed=speciesFeatIds(),abilityOpts=current=>AB.map(a=>`<option value="${esc(a)}" ${a===current?'selected':''}>${esc(a)}</option>`).join(''),originOpts=`<option value="">Escolha o Talento de Origem</option>${originFeats.map(f=>`<option value="${esc(f.id)}" ${f.id===ch.originFeat?'selected':''} ${!f.repeatable&&speciesUsed.has(f.id)&&f.id!==ch.originFeat?'disabled':''}>${esc(f.name)}</option>`).join('')}`;
- box.innerHTML=`<fieldset><legend>Antecedente · Regra da Casa</legend><p class="section-note">O antecedente concede +2 em um atributo, +1 em outro atributo diferente e um Talento de Origem livre.</p><div class="choice-grid"><label>+2<select id="bg-p2-house">${abilityOpts(ch.plus2)}</select></label><label>+1<select id="bg-p1-house">${abilityOpts(ch.plus1)}</select></label><label class="full">Talento de Origem<select id="bg-origin-feat">${originOpts}</select></label>${bg.toolChoice?`<label>${esc(bg.toolChoice)}<input id="bg-tool-house" value="${esc(ch.toolChoice||'')}"></label>`:''}${bg.equipmentOptions.length?`<label>Equipamento<select id="bg-eq-house">${bg.equipmentOptions.map(o=>`<option value="${esc(o.id)}" ${o.id===ch.equipment?'selected':''}>Pacote ${esc(o.id)}</option>`).join('')}</select></label>`:''}</div></fieldset>`;
+ box.innerHTML=`<fieldset><legend>Antecedente · Regra da Casa</legend><p class="section-note">O antecedente concede +2 em um atributo, +1 em outro atributo diferente e um Talento de Origem livre.</p><div class="choice-grid"><label>+2<select id="bg-p2-house">${abilityOpts(ch.plus2)}</select></label><label>+1<select id="bg-p1-house">${abilityOpts(ch.plus1)}</select></label><label class="full">Talento de Origem<select id="bg-origin-feat">${originOpts}</select></label>${bg.toolChoice?`<label>${esc(bg.toolChoice)}<input id="bg-tool-house" value="${esc(ch.toolChoice||'')}"></label>`:''}</div></fieldset>`;
  $('bg-p2-house')?.addEventListener('change',e=>{ch.plus2=e.target.value;if(ch.plus1===ch.plus2)ch.plus1=AB.find(a=>a!==ch.plus2)||null;refresh()});
  $('bg-p1-house')?.addEventListener('change',e=>{ch.plus1=e.target.value;if(ch.plus1===ch.plus2)ch.plus1=AB.find(a=>a!==ch.plus2)||null;refresh()});
  $('bg-origin-feat')?.addEventListener('change',e=>{ch.originFeat=e.target.value||null;refresh()});
- $('bg-tool-house')?.addEventListener('input',e=>{ch.toolChoice=e.target.value;refreshSheet()});
- $('bg-eq-house')?.addEventListener('change',e=>{ch.equipment=e.target.value;refreshSheet()})
+ $('bg-tool-house')?.addEventListener('input',e=>{ch.toolChoice=e.target.value;refreshSheet()})
+}
+function equipmentItems(option){return arr(option?.itens).map(item=>`${item.quantidade??1}× ${item.nome}${item.observacao?` (${item.observacao})`:''}`).join(', ')}
+function renderStartingEquipment(){
+ const box=$('starting-equipment-choice'),{bg}=selected();if(!box)return;if(!bg){box.innerHTML='<p class="muted">Escolha um antecedente na etapa Origem para definir o equipamento inicial.</p>';return}
+ const ch=state.c.choices.background;
+ if(bg.equipmentOptions.length){
+  let current=bg.equipmentOptions.find(o=>o.id===ch.equipment);if(!current){current=bg.equipmentOptions[0];ch.equipment=current?.id||''}
+  box.innerHTML=`<label>Pacote de equipamento<select id="bg-eq-house">${bg.equipmentOptions.map(o=>`<option value="${esc(o.id)}" ${o.id===ch.equipment?'selected':''}>Pacote ${esc(o.id)}</option>`).join('')}</select></label><div class="starting-equipment-summary"><strong>Conteúdo do pacote</strong><p>${esc(equipmentItems(current)||'Sem itens detalhados no catálogo.')}</p></div>`;
+  $('bg-eq-house')?.addEventListener('change',e=>{ch.equipment=e.target.value;renderStartingEquipment();refreshSheet()});return
+ }
+ box.innerHTML=bg.equipmentText?`<div class="starting-equipment-summary"><strong>Equipamento do antecedente</strong><p>${esc(bg.equipmentText)}</p></div>`:'<p class="muted">Este antecedente não possui um pacote de equipamento inicial estruturado no catálogo.</p>'
 }
 
 function housePendingMessages(){
@@ -132,7 +142,7 @@ function refreshSheet(){applyHouseRules();$('nome')?.dispatchEvent(new Event('in
 
 function refresh(){
  if(rendering||!state.c)return;rendering=true;
- try{applyHouseRules();stripHousePending();sanitizeOriginFeat();sanitizeProgression();sanitizeAbilityProgression();applyHouseRules();renderBackground();renderProgression();refreshSheet()}finally{rendering=false}
+ try{applyHouseRules();stripHousePending();sanitizeOriginFeat();sanitizeProgression();sanitizeAbilityProgression();applyHouseRules();renderBackground();renderStartingEquipment();renderProgression();refreshSheet()}finally{rendering=false}
 }
 function bind(){
  $('builder')?.addEventListener('change',e=>{if(e.target.matches('#classe,#nivel,#especie,#antecedente,#subclasse,[id^="base-"]'))queueMicrotask(refresh)});
