@@ -29,10 +29,6 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      - name: Audit D&D 5e and 5.5e compatibility
-        shell: bash
-        run: python scripts/auditar_regras_5e_55e.py
-
       - name: Prepare active Rules catalog for semantic indexing
         shell: bash
         run: |
