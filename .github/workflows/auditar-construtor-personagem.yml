@@ -11,7 +11,7 @@ on:
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
-      - 'dados/magias-personagem-2024.json'
+      - 'dados/magias-catalogo.json'
       - 'dados/talentos-phb-2024.json'
   push:
     branches: [main]
@@ -24,7 +24,7 @@ on:
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
-      - 'dados/magias-personagem-2024.json'
+      - 'dados/magias-catalogo.json'
       - 'dados/talentos-phb-2024.json'
 
 permissions:
@@ -87,7 +87,7 @@ jobs:
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-personagem-2024.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed"]
           for token in required_tokens:
               if token not in js and token not in loader:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
