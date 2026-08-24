@@ -1,7 +1,7 @@
-import * as base from './rules-base.js?v=20260823-rules-audit1';
+import * as base from './rules-base.js?v=20260824-race-variants1';
 import{state,AB,arr,num,fold,uniq,mod}from'./state.js';
 import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
-export * from './rules-base.js?v=20260823-rules-audit1';
+export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
 export const HOUSE_ABILITY_LEVELS=[4,8,12,16,20];
@@ -43,7 +43,15 @@ export function applyHouseRules(){if(!state.c||!state.catalogs)return;prepareCla
 export function compatible(k){return(state.catalogs[k]||[]).filter(isCompatible55)}
 export function selected(){applyHouseRules();return base.selected()}
 function currentLineagePackage(){const species=(state.catalogs.species||[]).find(x=>x.id===state.c?.refs?.species)||null,lineage=species?.lineages?.find(x=>x.name===state.c?.choices?.species?.lineage)||null;return{species,lineage}}
-function withLineagePackage(fn){const{species,lineage}=currentLineagePackage();if(!species||!lineage?.replaceBaseTraits)return fn();const originalSpeciesTraits=species.traits,originalLineageTraits=lineage.traits,originalSpeed=species.speed,originalSizes=species.sizes;species.traits=arr(lineage.traits);lineage.traits=[];if(num(lineage.speed))species.speed=num(lineage.speed);if(arr(lineage.sizes).length)species.sizes=[...lineage.sizes];try{return fn()}finally{species.traits=originalSpeciesTraits;lineage.traits=originalLineageTraits;species.speed=originalSpeed;species.sizes=originalSizes}}
+function withLineagePackage(fn){
+ const{species,lineage}=currentLineagePackage();if(!species||!lineage)return fn();
+ const replaceAll=!!lineage.replaceBaseTraits,replaceNames=new Set(arr(lineage.replaceTraitNames).map(fold));if(!replaceAll&&!replaceNames.size)return fn();
+ const originalSpeciesTraits=species.traits,originalLineageTraits=lineage.traits,originalSpeed=species.speed,originalSizes=species.sizes;
+ if(replaceAll){species.traits=arr(lineage.traits);lineage.traits=[]}
+ else species.traits=arr(species.traits).filter(t=>!replaceNames.has(fold(t?.originalName||t?.name||''))&&!replaceNames.has(fold(t?.name||'')));
+ if(num(lineage.speed))species.speed=num(lineage.speed);if(arr(lineage.sizes).length)species.sizes=[...lineage.sizes];
+ try{return fn()}finally{species.traits=originalSpeciesTraits;lineage.traits=originalLineageTraits;species.speed=originalSpeed;species.sizes=originalSizes}
+}
 function withLegacyCompatibility(fn){const changed=[];for(const key of['species','backgrounds','subclasses','feats'])for(const x of state.catalogs[key]||[])if(x.ruleset==='5e'&&isCompatible55(x)){changed.push(x);x.ruleset='5.5e'}try{return fn()}finally{for(const x of changed)x.ruleset='5e'}}
 export function speciesTraitChoiceDefs(speciesArg=null,lineageArg=null){applyHouseRules();return withLineagePackage(()=>base.speciesTraitChoiceDefs(speciesArg,lineageArg))}
 export function sanitizeSpeciesTraitChoices(){applyHouseRules();return withLineagePackage(()=>base.sanitizeSpeciesTraitChoices())}
@@ -51,7 +59,11 @@ export function sanitizeSelections(){applyHouseRules();const result=withLineageP
 
 function isReplacedClassFeat(feature){if(!STANDARD_CLASS_FEAT_LEVELS.has(num(feature?.level)))return false;const name=fold(feature?.name||'');return/ability score improvement|melhoria.*atribut|aumento.*atribut/.test(name)}
 function sourceForInstance(inst,klass){if(inst.key==='background')return'Talento de Origem · Antecedente';if(!inst.key?.startsWith('class:'))return inst.source;const slot=inst.key.slice(6),entry=arr(klass?._houseFeatProgression).find(x=>x.slot===slot);if(!entry)return inst.source;return entry.kind==='house'?`Regra da Casa · nível ${entry.level}`:`Classe · nível ${entry.level} · talento adicional`}
-function applyLineagePackageEffects(d){const fixed=arr(d.lineage?.fixedSkills);if(!fixed.length)return d;d.skills=uniq([...arr(d.skills),...fixed]);d.expertiseSkills=uniq(arr(d.expertiseSkills).filter(x=>d.skills.includes(x)));d.passive=10+mod(d.scores.Sabedoria)+(d.skills.includes('Percepção')?d.pbonus:0)+(d.expertiseSkills.includes('Percepção')?d.pbonus:0);return d}
+function applyLineagePackageEffects(d){
+ const fixed=arr(d.lineage?.fixedSkills);if(fixed.length){d.skills=uniq([...arr(d.skills),...fixed]);d.expertiseSkills=uniq(arr(d.expertiseSkills).filter(x=>d.skills.includes(x)));d.passive=10+mod(d.scores.Sabedoria)+(d.skills.includes('Percepção')?d.pbonus:0)+(d.expertiseSkills.includes('Percepção')?d.pbonus:0)}
+ const ability=d.lineage?.spellAbilityFixed;if(ability&&!d.speciesSpellAbility&&d.scores?.[ability]!=null){const m=mod(d.scores[ability]);d.speciesSpellAbility=ability;d.speciesSpellDC=8+d.pbonus+m;d.speciesSpellAttack=d.pbonus+m}
+ return d
+}
 
 export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
 
