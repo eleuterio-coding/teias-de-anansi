@@ -1,0 +1,100 @@
+name: Auditar isolamento das etapas
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'criacao-personagem.html'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'criacao-personagem.html'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript alterado
+        run: |
+          node --check scripts/character-builder/ui.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/house-rules-ui.js
+          node --check scripts/character-builder/species-trait-ui.js
+          node --check scripts/character-builder/feat-mechanics.js
+      - name: Auditar isolamento por dependência de regra
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          ui=Path('scripts/character-builder/ui.js').read_text(encoding='utf-8')
+          rules=Path('scripts/character-builder/rules.js').read_text(encoding='utf-8')
+          house=Path('scripts/character-builder/house-rules-ui.js').read_text(encoding='utf-8')
+          species=Path('scripts/character-builder/species-trait-ui.js').read_text(encoding='utf-8')
+          feats=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
+
+          def require(ok,msg):
+              if not ok: raise RuntimeError(msg)
+          def body(src,name,next_name):
+              start=src.index(f'function {name}')
+              end=src.index(f'function {next_name}',start)
+              return src[start:end]
+
+          review=body(ui,'renderSheet','renderAll')
+          save=body(ui,'save','bind')
+          require('sanitizeSelections(' not in review,'Revisão não pode reescrever escolhas.')
+          require('sanitizeSelections(' not in save,'Salvar não pode reescrever escolhas.')
+
+          species_handler=re.search(r"\$\('especie'\)\.addEventListener\('change',e=>\{([^\n]+)\}\);",ui)
+          require(species_handler is not None,'Handler de Raça não localizado.')
+          race_body=species_handler.group(1)
+          require('choices.background' not in race_body and 'renderBgChoices' not in race_body and 'renderAll()' not in race_body,
+                  'Mudança de Raça está alterando/recriando Origem.')
+          background_handler=re.search(r"\$\('antecedente'\)\.addEventListener\('change',e=>\{([^\n]+)\}\);",ui)
+          require(background_handler is not None,'Handler de Antecedente não localizado.')
+          origin_body=background_handler.group(1)
+          require('choices.background={' not in origin_body,
+                  'Mudança de Antecedente ainda substitui todo o estado da Origem.')
+
+          prepare=body(rules,'prepareBackgroundCatalogs','initializeHouseBackgroundChoices')
+          for token in ['ch.plus2=','ch.plus1=','ch.originFeat=','ch.plusOnes=']:
+              require(token not in prepare,'Derivação do Antecedente está inicializando escolha do usuário: '+token)
+          require('initializeHouseBackgroundChoices' in rules,'Inicialização explícita da Origem ausente.')
+
+          require('`house-${entry.level}`' in rules and '`class-extra-${entry.level}-${entry.order||0}`' in rules,
+                  'Slots de Progressão ainda dependem do índice global da classe.')
+          require('_houseFeatProgression' in feats and 'entry.slot' in feats,
+                  'Mecânica de talentos não lê os slots estáveis da Progressão.')
+
+          require("dispatchEvent(new Event('change'" not in species,
+                  'Escolha racial ainda dispara mudança falsa de Nível.')
+          require('hub:species-choices-changed' in species,
+                  'Evento específico de alteração racial ausente.')
+
+          require("$('builder')?.addEventListener('change'" not in house,
+                  'Regra da Casa ainda usa listener global entre etapas.')
+          race_refresh=body(house,'refreshSpeciesContext','refreshAbilityContext')
+          require('renderBackground()' not in race_refresh and 'initializeHouseBackgroundChoices' not in race_refresh,
+                  'Alteração racial ainda reprocessa Antecedente · Regra da Casa.')
+          attr_refresh=body(house,'refreshAbilityContext','refreshAllInitial')
+          require('renderBackground()' not in attr_refresh,
+                  'Alteração de Atributos ainda reprocessa Origem.')
+
+          mechanical=body(feats,'featMechanicalOutcome','featEligibleSpells')
+          require('sanitizeFeatChoices()' not in mechanical,
+                  'Derivação de talentos ainda muta o estado durante a Revisão.')
+
+          all_src='\n'.join([ui,rules,house,species,feats]).lower()
+          require('supabase' not in all_src,'Supabase não pode ser introduzido no construtor.')
+          print('Isolamento validado: cada etapa só invalida outra quando uma dependência mecânica explícita exige.')
+          PY
