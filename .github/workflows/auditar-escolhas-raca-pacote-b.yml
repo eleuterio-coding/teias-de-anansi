@@ -62,13 +62,18 @@ jobs:
           assert 'species-selection-refinement-ui.js' in builder
           assert 'package-b-purchase-ui.js' in builder
           assert "initWealthPurchaseUi" in package
+          assert "wealth-by-level2" in package, 'O navegador deve carregar a versão corrigida do módulo de compras.'
           assert "new URLSearchParams(location.search).has('id')" not in package, 'Pacote B não pode ser bloqueado ao reabrir personagem.'
           assert 'function moneyPackage()' in wealth
           assert 'return level()>=2||moneyPackage()' in wealth
           assert 'Pacote B escolhido' in wealth
+          assert 'let purchases=c.choices.purchases' in wealth
+          assert 'return purchases' in wealth
+          assert "c.choices.purchases={quantities:" not in wealth, 'ensureState não pode recriar purchases em cada leitura.'
+          assert "c.choices.purchases.quantities={..." not in wealth, 'ensureState não pode substituir quantities durante um evento de compra.'
           assert 'data-selected-lineage-summary' in race
           assert 'Opção escolhida para esta raça.' in race
           assert 'Raça: escolha o tamanho' in race
           assert 'supabase' not in (builder+package+wealth+race).lower()
-          print('Integração do Pacote B, tamanhos e linhagens validada.')
+          print('Integração do Pacote B, persistência de seleção/quantidade, tamanhos e linhagens validada.')
           PY
