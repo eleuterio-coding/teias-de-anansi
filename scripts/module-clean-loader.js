@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260823-rules-audit1';
+  const VERSION='20260824-race-variants1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
