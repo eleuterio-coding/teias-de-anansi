@@ -1,0 +1,43 @@
+name: Auditar regras 5e e 5.5e
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dados/**'
+      - 'scripts/**'
+      - '*.html'
+      - '.github/workflows/auditar-regras-5e-55e.yml'
+  pull_request:
+    paths:
+      - 'dados/**'
+      - 'scripts/**'
+      - '*.html'
+      - '.github/workflows/auditar-regras-5e-55e.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar política global
+        run: python scripts/auditar_regras_5e_55e.py
+      - name: Validar JavaScript do criador
+        run: |
+          node --check scripts/character-builder.js
+          node --check scripts/character-builder/state.js
+          node --check scripts/character-builder/compatibility.js
+          node --check scripts/character-builder/catalogs.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/rules-base.js
+          node --check scripts/character-builder/language-mechanics.js
+          node --check scripts/character-builder/house-rules-ui.js
