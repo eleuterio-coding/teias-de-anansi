@@ -6,9 +6,10 @@ let syncingPending=false;
 function abilityForInput(input){return AB.find(ability=>input?.id===`base-${slug(ability)}`)||null}
 function normalizedState(){state.c.baseAbilities=normalizeBaseAbilities(state.c.baseAbilities,AB);return state.c.baseAbilities}
 function budgetState(){return baseAbilityValidation(state.c.baseAbilities,AB)}
+function ensureStyles(){if($('ability-budget-style'))return;const style=document.createElement('style');style.id='ability-budget-style';style.textContent='.ability-budget{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;border:1px solid #8885;border-radius:10px;padding:12px;margin:0 0 12px;background:#f7f7f7}.ability-budget>div{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.ability-budget>div span{font-size:.82rem;color:#666}.ability-budget>div strong{font-size:1.05rem}.ability-budget p{grid-column:1/-1;margin:0}.ability-budget.is-complete{border-color:#2a8a4c88;background:#f6fff8}.ability-budget.is-warning{border-color:#b7841688;background:#fffaf0}@media(max-width:760px){.ability-budget{grid-template-columns:1fr}.ability-budget p{grid-column:auto}}';document.head.appendChild(style)}
 
 function ensureBudgetUi(){
- const grid=document.querySelector('[data-wizard-panel="atributos"] .base-grid');if(!grid)return null;
+ const grid=document.querySelector('[data-wizard-panel="atributos"] .base-grid');if(!grid)return null;ensureStyles();
  let box=$('ability-budget');
  if(!box){
   box=document.createElement('div');box.id='ability-budget';box.className='ability-budget';box.setAttribute('role','status');box.setAttribute('aria-live','polite');
