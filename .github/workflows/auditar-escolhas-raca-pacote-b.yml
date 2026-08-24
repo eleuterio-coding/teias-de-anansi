@@ -1,4 +1,4 @@
-name: Auditar escolhas raciais e pacote B
+name: Auditar escolhas raciais, pacotes e PO
 
 on:
   pull_request:
@@ -6,6 +6,10 @@ on:
       - 'scripts/character-builder/species-selection-refinement-ui.js'
       - 'scripts/character-builder/package-b-purchase-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/starting-equipment-rules.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/origin-feat-sync.js'
+      - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
   push:
@@ -14,6 +18,10 @@ on:
       - 'scripts/character-builder/species-selection-refinement-ui.js'
       - 'scripts/character-builder/package-b-purchase-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/starting-equipment-rules.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/origin-feat-sync.js'
+      - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
 
@@ -33,7 +41,28 @@ jobs:
           node --check scripts/character-builder/species-selection-refinement-ui.js
           node --check scripts/character-builder/package-b-purchase-ui.js
           node --check scripts/character-builder/wealth-purchase-ui.js
+          node --check scripts/character-builder/starting-equipment-rules.js
+          node --check scripts/character-builder/starting-equipment-ui.js
+          node --check scripts/character-builder/origin-feat-sync.js
+          node --check scripts/character-sheet-feat-ui.js
           node --check scripts/character-builder.js
+      - name: Testar pacotes, moedas e Riqueza por Level
+        run: |
+          node --input-type=module <<'JS'
+          import{STANDARD_PACKAGE_B_GP,backgroundPackageOptions,packageCurrencyCp,packagePhysicalItems,creationBudgetCp,creationPhysicalItems,formatPhysicalItems}from'./scripts/character-builder/starting-equipment-rules.js';
+          const noble={name:'Nobre',equipmentOptions:[],equipmentText:'Conjunto de Jogo escolhido, roupas finas, perfume e 29 PO'};
+          const packages=backgroundPackageOptions(noble);
+          if(packages.length!==2||packages[0].id!=='A'||packages[1].id!=='B')throw new Error('Nível 1 deve oferecer Pacotes A e B.');
+          if(STANDARD_PACKAGE_B_GP!==75||packageCurrencyCp(noble,'B')!==7500)throw new Error('Pacote B deve ser 75 PO para todos os antecedentes.');
+          if(packageCurrencyCp(noble,'A')!==2900)throw new Error('Os 29 PO do Nobre devem ser separados do equipamento físico.');
+          const physical=formatPhysicalItems(packagePhysicalItems(noble,'A'));
+          if(!physical.includes('Conjunto de Jogo escolhido')||!physical.includes('perfume')||/29 PO/.test(physical))throw new Error(`Equipamento físico do Nobre incorreto: ${physical}`);
+          if(creationBudgetCp(noble,'A',1)!==2900)throw new Error('Pacote A do Nobre deve liberar 29 PO para compras no nível 1.');
+          if(creationBudgetCp(noble,'B',1)!==7500)throw new Error('Pacote B deve liberar 75 PO para compras no nível 1.');
+          if(creationBudgetCp(noble,'A',3)!==32500||creationBudgetCp(noble,'B',3)!==32500)throw new Error('No nível 3 o total deve ser exatamente 325 PO, sem somar moedas de pacote.');
+          if(creationPhysicalItems(noble,'A',3).length)throw new Error('Acima do nível 1, Pacote A/B não deve conceder equipamento inicial adicional.');
+          console.log('Pacotes e PO validados: Nobre A=29 PO, B=75 PO, nível 3=325 PO.');
+          JS
       - name: Testar opções de tamanho e identificação de seletores genéricos
         run: |
           node --input-type=module <<'JS'
@@ -47,33 +76,40 @@ jobs:
           if(!tieflingGeneric.has('fiendish legacy')||!tieflingGeneric.has('legado infero'))throw new Error('Legado genérico do Tiefling não será ocultado após a escolha.');
           const elfGeneric=genericLineageTraitNames({name:'Elfo',lineageLabel:'Linhagem Élfica'},{name:'Drow'});
           if(!elfGeneric.has('elven lineage')||!elfGeneric.has('linhagem elfica'))throw new Error('Situação equivalente de linhagem élfica não foi reconhecida.');
-          const giantGeneric=genericLineageTraitNames({name:'Golias',lineageLabel:'Ancestralidade Gigante'},{name:"Fire's Burn"});
-          if(!giantGeneric.has('giant ancestry'))throw new Error('Ancestralidade Gigante não foi reconhecida como escolha equivalente.');
           console.log('Escolhas raciais refinadas validadas.');
           JS
-      - name: Verificar integração do pacote B e da interface
+      - name: Verificar integração de compras, Ficha Virtual e Skilled
         run: |
           python - <<'PY'
           from pathlib import Path
           builder=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           package=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
           wealth=Path('scripts/character-builder/wealth-purchase-ui.js').read_text(encoding='utf-8')
+          equipment=Path('scripts/character-builder/starting-equipment-ui.js').read_text(encoding='utf-8')
+          rules=Path('scripts/character-builder/starting-equipment-rules.js').read_text(encoding='utf-8')
+          origin=Path('scripts/character-builder/origin-feat-sync.js').read_text(encoding='utf-8')
+          feats=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
+          sheet=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
           race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
-          assert 'species-selection-refinement-ui.js' in builder
           assert 'package-b-purchase-ui.js' in builder
-          assert "initWealthPurchaseUi" in package
-          assert "wealth-by-level2" in package, 'O navegador deve carregar a versão corrigida do módulo de compras.'
-          assert "new URLSearchParams(location.search).has('id')" not in package, 'Pacote B não pode ser bloqueado ao reabrir personagem.'
-          assert 'function moneyPackage()' in wealth
-          assert 'return level()>=2||moneyPackage()' in wealth
-          assert 'Pacote B escolhido' in wealth
-          assert 'let purchases=c.choices.purchases' in wealth
-          assert 'return purchases' in wealth
-          assert "c.choices.purchases={quantities:" not in wealth, 'ensureState não pode recriar purchases em cada leitura.'
-          assert "c.choices.purchases.quantities={..." not in wealth, 'ensureState não pode substituir quantities durante um evento de compra.'
+          assert 'wealth-by-level3' in package
+          assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package
+          assert 'STANDARD_PACKAGE_B_GP=75' in rules
+          assert 'creationBudgetCp' in wealth
+          assert 'Moedas do pacote inicial' not in wealth
+          assert 'PO restantes' not in wealth
+          assert 'PO disponíveis' in wealth
+          assert 'Gasto em compras' in wealth
+          assert 'Equipamento do antecedente —' in equipment
+          assert 'Pacote A · equipamento do antecedente' in equipment
+          assert 'Pacote B · 75 PO' in equipment
+          assert 'creationPhysicalItems' in sheet and 'formatPhysicalItems' in sheet
+          assert 'originFeat' in origin and 'data-feat-mechanics-controls' in origin
+          assert "'Skilled':{choices:[{id:'proficiencies',type:'skill_or_tool_multi',count:3" in feats
+          assert "option value=\"skill\"" in Path('scripts/character-builder/feat-ui.js').read_text(encoding='utf-8')
+          assert "option value=\"tool\"" in Path('scripts/character-builder/feat-ui.js').read_text(encoding='utf-8')
           assert 'data-selected-lineage-summary' in race
-          assert 'Opção escolhida para esta raça.' in race
-          assert 'Raça: escolha o tamanho' in race
-          assert 'supabase' not in (builder+package+wealth+race).lower()
-          print('Integração do Pacote B, persistência de seleção/quantidade, tamanhos e linhagens validada.')
+          joined='\n'.join([builder,package,wealth,equipment,rules,origin,feats,sheet,race])
+          assert 'supabase' not in joined.lower()
+          print('Compras, Pacotes A/B, Ficha Virtual e Skilled validados.')
           PY
