@@ -20,4 +20,47 @@ function render(){if(!DATA)return;const q=document.getElementById('busca').value
 async function fetchJson(u,c){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}${c?` em ${c}`:''}`);return r.json()}async function chunk(path){const u=new URL(path,document.baseURI);u.searchParams.set('v',VERSION);const d=await fetchJson(u,path);if(!Array.isArray(d))throw new Error(`Formato inválido em ${path}`);return d}async function carregar(){const u=new URL('dados/itens-magicos/manifest.json',document.baseURI);u.searchParams.set('v',VERSION);const m=await fetchJson(u,'manifest.json'),rs=await Promise.allSettled((m.chunks||[]).map(chunk)),partes=[];LOAD_WARNINGS=[];rs.forEach((r,i)=>r.status==='fulfilled'?partes.push(...r.value):LOAD_WARNINGS.push(`${m.chunks[i]}: ${r.reason?.message||r.reason}`));if(!partes.length)throw new Error('Nenhum bloco de dados pôde ser carregado');const vistos=new Set(),validos=[];for(const i of partes){if(!i||['id','nome','bloco','descricao','fonte'].some(k=>!String(i[k]??'').trim())||vistos.has(i.id))continue;vistos.add(i.id);validos.push(i)}validos.sort((a,b)=>String(a.nome).localeCompare(String(b.nome),'pt-BR'));return{...m,items:validos}}
 carregar().then(d=>{DATA=d;ITEMS_BY_ID=new Map(d.items.map(i=>[i.id,i]));popularFiltros();if(LOAD_WARNINGS.length)document.getElementById('avisos').innerHTML=`<div class="aviso"><strong>Aviso de carregamento:</strong> ${esc(LOAD_WARNINGS.join(' • '))}</div>`;render()}).catch(e=>{document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<p class="erro">${esc(e.message)}</p>`});for(const id of ['busca','edicao','tipo','raridade'])document.getElementById(id).addEventListener(id==='busca'?'input':'change',render);
 </script>
+<style id="hub-force-light-theme">
+:root { color-scheme: only light !important; }
+html,
+html body,
+html body * {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body *::before,
+html body *::after {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body a,
+html body a:link,
+html body a:visited,
+html body a:hover,
+html body a:active,
+html body a:focus {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input,
+html body select,
+html body textarea,
+html body button,
+html body option,
+html body optgroup {
+  background: #ffffff !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+html body input::placeholder,
+html body textarea::placeholder {
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+  opacity: .68 !important;
+}
+html body svg text { fill: #000000 !important; }
+</style>
 </body></html>
