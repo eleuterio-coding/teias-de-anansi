@@ -1,0 +1,73 @@
+name: Auditar Biblioteca de Regras da Casa
+
+on:
+  pull_request:
+    paths:
+      - 'regras.html'
+      - 'dados/regras-casa-adicionais.json'
+      - 'scripts/regras-srd-view-v7.js'
+      - '.github/workflows/auditar-biblioteca-regras-casa.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'regras.html'
+      - 'dados/regras-casa-adicionais.json'
+      - 'scripts/regras-srd-view-v7.js'
+      - '.github/workflows/auditar-biblioteca-regras-casa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validar apresentação normalizada das regras
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          html = Path('regras.html').read_text(encoding='utf-8')
+          viewer = Path('scripts/regras-srd-view-v7.js').read_text(encoding='utf-8')
+          data = json.loads(Path('dados/regras-casa-adicionais.json').read_text(encoding='utf-8'))
+          items = data.get('itens', [])
+          by_original = {row.get('original'): row for row in items}
+
+          required = {
+              'Universal Feat and Ability Progression (House Rule)': 'Progressão Universal de Talentos e Atributos',
+              'Base Ability Score Distribution (House Rule)': 'Distribuição de Atributos Base',
+              'Wealth by Level (House Rule)': 'Riqueza por Nível',
+          }
+          for original, name in required.items():
+              row = by_original.get(original)
+              if not row:
+                  raise AssertionError(f'Regra ausente do catálogo normal: {original}')
+              if row.get('nome') != name:
+                  raise AssertionError(f'Nome incorreto para {original}: {row.get("nome")!r}')
+              if row.get('familia') != 'Regra da Casa':
+                  raise AssertionError(f'{name} não está marcada como Regra da Casa')
+
+          forbidden = [
+              'id="regra-casa-progressao-universal"',
+              'id="regra-casa-atributos-base"',
+              'id="regra-casa-wealth-by-level"',
+              'id="politica-compatibilidade-5e-55e"',
+              '<strong>Compatibilidade 5e / 5.5e no Hub</strong>',
+              'Em personagem 5.5e, a versão 2024 de uma opção substitui sua versão 5e equivalente.',
+          ]
+          for token in forbidden:
+              if token in html:
+                  raise AssertionError(f'Bloco especial removido voltou ao HTML: {token}')
+
+          if 'HOUSE.length!==7' not in viewer or '${HOUSE.length}/7' not in viewer:
+              raise AssertionError('Visualizador não espera as sete Regras da Casa pesquisáveis.')
+          if 'renderHouse' not in viewer or "kind:'house'" not in viewer:
+              raise AssertionError('Regras da Casa não estão usando o mesmo renderizador do catálogo.')
+
+          print('Biblioteca de Regras da Casa normalizada: 3 regras no catálogo comum, nomes corretos e bloco de compatibilidade removido.')
+          PY
