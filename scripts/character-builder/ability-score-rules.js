@@ -14,6 +14,11 @@ export function baseAbilityModifier(value){
  return Math.floor((clampBaseAbility(value)-10)/2)
 }
 
+export function abilityDisplayState(baseValue,finalValue=baseValue){
+ const base=clampBaseAbility(baseValue),final=finite(finalValue)?integer(finalValue):base,bonus=final-base;
+ return{base,final,bonus,modifier:Math.floor((final-10)/2)}
+}
+
 export function normalizeBaseAbilities(scores,abilities){
  return Object.fromEntries(abilities.map(ability=>[ability,clampBaseAbility(scores?.[ability])]))
 }
