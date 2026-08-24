@@ -1,8 +1,10 @@
 import{state,$,AB,SKILL_AB,arr,esc,mod,signed,fold}from'./character-builder/state.js';
 import{derive}from'./character-builder/rules.js';
+import{creationPhysicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260824-starting-equipment1';
 
 function pill(v){return`<span class="pill">${esc(v)}</span>`}
 function uniqText(values){const out=[],seen=new Set;for(const value of values.filter(Boolean)){const key=fold(value);if(!seen.has(key)){seen.add(key);out.push(value)}}return out}
+function syncChosenOriginFeat(){const bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background);if(!bg)return;const id=state.c?.choices?.background?.originFeat,feat=id?state.catalogs.feats.find(x=>x.id===id):null;bg.feat=feat?{name:feat.name,description:feat.description||'',source:feat.source||bg.source||''}:null}
 function renderSaves(d){const box=$('saves');if(!box)return;box.innerHTML=AB.map(a=>{const trained=arr(d.saveProficiencies).includes(a),value=mod(d.scores[a])+(trained?d.pbonus:0);return`<div class="row"><span>${trained?'● ':''}${esc(a)}</span><strong>${signed(value)}</strong></div>`}).join('')}
 function renderSkills(d){const box=$('skills');if(!box)return;box.innerHTML=Object.entries(SKILL_AB).map(([skill,ability])=>{const trained=d.skills.includes(skill),expert=arr(d.expertiseSkills).includes(skill),value=mod(d.scores[ability])+(trained?d.pbonus:0)+(expert?d.pbonus:0);return`<div class="row"><span>${trained?'● ':''}${expert?'★ ':''}${esc(skill)} <small>${esc(ability)}</small></span><strong>${signed(value)}</strong></div>`}).join('')}
 function renderProficiencies(d){
@@ -18,6 +20,7 @@ function renderFeatCards(d){
  if(!instances.length){box.innerHTML='<p class="muted">Nenhum talento registrado.</p>';return}
  box.innerHTML=instances.map(inst=>{const choices=arr(labels[inst.key]),extra=choices.length?`<p><strong>Escolhas:</strong> ${esc(choices.join(' · '))}</p>`:'';return`<details class="feature"><summary>${esc(inst.feat.name)} <span class="source">${esc(inst.source)}</span></summary><p>${esc(inst.feat.description||'')}</p>${extra}</details>`}).join('')
 }
+function renderStartingEquipment(d){const box=$('starting-equipment');if(!box)return;if(!d.bg){box.textContent='—';return}const items=creationPhysicalItems(d.bg,state.c?.choices?.background?.equipment,state.c?.choices?.class?.level),text=formatPhysicalItems(items);box.textContent=`${d.bg.name}: ${text}`}
 function spellCard(spell){return`<article class="spell"><div><strong>${esc(spell.name)}</strong></div><small>${spell.level===0?'Truque':`${spell.level}º círculo`}${spell.school?` · ${esc(spell.school)}`:''}${spell.concentration?' · Concentração':''}${spell.ritual?' · Ritual':''}</small>${spell.description?`<p>${esc(spell.description)}</p>`:''}</article>`}
 function renderFeatSpells(d){
  const section=$('spell-section');if(!section)return;section.querySelector('[data-feat-spells-sheet]')?.remove();const groups=arr(d.featSpellcasting);if(!groups.length)return;
@@ -27,6 +30,6 @@ function renderResources(d){
  const combat=$('combat-summary');if(!combat)return;combat.querySelector('[data-feat-resources-sheet]')?.remove();const resources=arr(d.featResources);if(!resources.length&&!d.unarmedDamage)return;
  const wrap=document.createElement('div');wrap.dataset.featResourcesSheet='';wrap.style.marginTop='10px';wrap.innerHTML=`${resources.map(r=>`<div class="row"><span>${esc(r.label)}</span><strong>${esc(r.max)}</strong></div>`).join('')}${d.unarmedDamage?`<div class="row"><span>Ataque Desarmado</span><strong>${esc(d.unarmedDamage)}</strong></div>`:''}`;combat.appendChild(wrap)
 }
-function apply(){if(!state.c)return;const d=derive();renderSaves(d);renderSkills(d);renderProficiencies(d);renderFeatCards(d);renderFeatSpells(d);renderResources(d)}
+function apply(){if(!state.c)return;syncChosenOriginFeat();const d=derive();renderSaves(d);renderSkills(d);renderProficiencies(d);renderFeatCards(d);renderStartingEquipment(d);renderFeatSpells(d);renderResources(d)}
 function start(attempt=0){const sheet=$('sheet');if(state.c&&sheet&&!sheet.hidden){apply();return}if(attempt<300)requestAnimationFrame(()=>start(attempt+1))}
 start();
