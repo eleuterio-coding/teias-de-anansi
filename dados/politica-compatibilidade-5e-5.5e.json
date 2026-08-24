@@ -1,0 +1,34 @@
+{
+  "schema": "hub-rpg/politica-compatibilidade/v1",
+  "ruleset_ativo": "5.5e",
+  "revisao_core_ativa": 2024,
+  "nomes": {"5e": "D&D 5e / regras 2014", "5.5e": "D&D 5.5e / regras 2024"},
+  "precedencia": [
+    "Regras da Casa do Hub prevalecem quando substituem explicitamente uma regra geral.",
+    "Quando uma opção de mesmo nome/identidade recebeu versão 5.5e/2024, a versão 2024 é a referência ativa para personagens 5.5e.",
+    "Conteúdo 5e sem substituto 5.5e permanece disponível como legado compatível, salvo incompatibilidade explícita.",
+    "Não converter metadados de uma opção 5e em 5.5e: a ficha preserva a edição real da fonte usada.",
+    "Regras específicas de uma opção prevalecem sobre regras gerais, exceto quando uma Regra da Casa declarar a substituição explicitamente."
+  ],
+  "categorias": {
+    "classes": {"politica": "usar a classe 5.5e quando existir; classes adicionais publicadas para a revisão 2024 permanecem atuais"},
+    "subclasses": {"politica": "usar a versão 2024 quando reimpressa; subclasses 5e não reimpressas permanecem compatíveis com a classe 2024 e entram no nível de subclasse da classe 2024"},
+    "especies": {"politica": "usar a versão 2024 quando existir; espécies 5e não reimpressas permanecem compatíveis; aumentos de atributo antigos da espécie são ignorados em personagem 5.5e"},
+    "antecedentes": {"politica": "antecedentes 5e únicos permanecem compatíveis; a Regra da Casa do Hub substitui a distribuição de atributos e o talento por +2/+1 livres e um Talento de Origem livre"},
+    "talentos": {"politica": "versão 2024 de mesmo nome prevalece; talentos 5e únicos permanecem compatíveis e obedecem aos pré-requisitos; Talento de Origem exige categoria Origem"},
+    "magias": {"politica": "versão mais recente de mesmo nome prevalece; magia 5e sem versão 2024 permanece disponível quando a lista da classe atual a admite"},
+    "armas_armaduras_equipamento": {"politica": "mecânicas 2024 prevalecem para itens equivalentes; materiais únicos permanecem identificados pela própria fonte; registros demonstrativos/não canônicos nunca são promovidos"},
+    "maestrias": {"politica": "as oito propriedades oficiais 2024 são a base canônica; variantes demonstrativas permanecem não canônicas"},
+    "itens_magicos": {"politica": "versão 2024 prevalece por identidade; legado único permanece; Sintonização é substituída no Hub por Espaços de Itens Mágicos conforme Regra da Casa"},
+    "monstros": {"politica": "estatística mais recente de mesma identidade prevalece; blocos antigos únicos podem permanecer como legado identificado, sem misturar números entre versões"},
+    "idiomas": {"politica": "personagem 5.5e conhece Comum e escolhe dois idiomas padrão; idiomas adicionais só são concedidos por característica específica, Regra da Casa ou decisão do Mestre"}
+  },
+  "regras_da_casa": {
+    "talentos_niveis": [1,3,6,9,12,15,18],
+    "aumento_atributo_niveis": [4,8,12,16,20],
+    "aumento_atributo_valor": 1,
+    "antecedente": {"modo": "+2/+1", "talento": "Origem livre"},
+    "sintonizacao": "substituída por Espaços de Itens Mágicos",
+    "concentracao": "Concentração Expandida conforme catálogo de Regras da Casa"
+  }
+}
