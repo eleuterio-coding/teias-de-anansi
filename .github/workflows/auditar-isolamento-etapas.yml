@@ -60,6 +60,25 @@ jobs:
           if(state.c.choices.background.plus2!=='Carisma'||state.c.choices.background.plus1!=='Sabedoria'||state.c.choices.background.originFeat!=='f-lucky')throw new Error('Troca de Antecedente apagou escolhas ainda válidas da Regra da Casa.');
           console.log('Preservação dinâmica de Origem validada.');
           JS
+      - name: Testar troca livre do Talento de Origem
+        run: |
+          node --input-type=module <<'JS'
+          import{state,blank}from'./scripts/character-builder/state.js';
+          import{setOriginFeatChoice}from'./scripts/character-builder/house-rules-ui.js';
+          state.c=blank();
+          Object.assign(state.catalogs,{classes:[],subclasses:[],spells:[],armors:[],weapons:[],species:[],backgrounds:[],feats:[
+            {id:'f-magic',name:'Magic Initiate',category:'Origem'},
+            {id:'f-alert',name:'Alert',category:'Origem'},
+            {id:'f-general',name:'Actor',category:'Geral'}
+          ]});
+          state.c.choices.background.originFeat='f-magic';
+          if(!setOriginFeatChoice('f-alert'))throw new Error('Troca entre Talentos de Origem válidos foi rejeitada.');
+          if(state.c.choices.background.originFeat!=='f-alert')throw new Error('Talento de Origem selecionado não persistiu no estado.');
+          if(setOriginFeatChoice('f-general'))throw new Error('Talento Geral foi aceito como Talento de Origem.');
+          if(state.c.choices.background.originFeat!=='f-alert')throw new Error('Tentativa inválida alterou o Talento de Origem atual.');
+          if(!setOriginFeatChoice(null)||state.c.choices.background.originFeat!==null)throw new Error('Não foi possível limpar o Talento de Origem.');
+          console.log('Troca livre do Talento de Origem validada.');
+          JS
       - name: Auditar isolamento por dependência de regra
         run: |
           python - <<'PY'
@@ -119,6 +138,11 @@ jobs:
           attr_refresh=body(house,'refreshAbilityContext','refreshAllInitial')
           require('renderBackground()' not in attr_refresh,
                   'Alteração de Atributos ainda reprocessa Origem.')
+          origin_feat_refresh=body(house,'refreshAfterOriginFeatEdit','refreshOriginSelection')
+          require('renderBackground()' not in origin_feat_refresh,
+                  'Trocar Talento de Origem não pode reconstruir o próprio seletor durante o evento.')
+          require('setOriginFeatChoice(next)' in house and 'stopImmediatePropagation()' in house,
+                  'Seletor de Talento de Origem não está protegido contra listeners concorrentes.')
 
           spell_render=body(ui,'renderSpellChoices','renderEquipment')
           require('id="class-spells-card" class="card full" hidden' in creation,
@@ -132,5 +156,5 @@ jobs:
 
           all_src='\n'.join([ui,rules,house,species,feats]).lower()
           require('supabase' not in all_src,'Supabase não pode ser introduzido no construtor.')
-          print('Isolamento validado: etapas preservadas e Magias só aparece para classe conjuradora.')
+          print('Isolamento validado: etapas preservadas, Talento de Origem editável e Magias só aparece para classe conjuradora.')
           PY
