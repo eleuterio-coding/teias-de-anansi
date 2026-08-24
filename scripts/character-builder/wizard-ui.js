@@ -1,4 +1,4 @@
-import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260824-wealth-by-level1';
+import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 const STEPS=[
  {id:'classe',title:'Classe e Nível',description:'Defina a classe, o nível atual, a subclasse quando disponível, as perícias da classe e as magias.'},
  {id:'origem',title:'Origem',description:'Escolha o antecedente e complete os detalhes, características físicas, características pessoais e notas do personagem.'},
@@ -41,5 +41,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initWealthPurchaseUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initWealthPurchaseCreationUi()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
