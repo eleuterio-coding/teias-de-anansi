@@ -1,0 +1,83 @@
+{
+  "schema": "hub-rpg/auditoria-regras-2014-2024/v1",
+  "data": "2026-08-24",
+  "escopo": "Hub de RPG — regras, bibliotecas, criador de personagem e dados derivados de PDFs",
+  "metodo": {
+    "descricao": "Confronto entre política global do Hub, Regras da Casa consolidadas, taxonomia/versionamento, catálogos materializados, manifestos de importação de PDFs e caminhos ativos do aplicativo.",
+    "pdfs": "Os PDFs extensos são auditados pelo conteúdo estruturado/materializado e pelos manifestos de proveniência, com conferência dirigida de regras sensíveis. Isto não é declarado como leitura manual página a página de cada compilado.",
+    "implementacao": "A política é protegida por scripts/auditar_regras_5e_55e.py e pelo workflow auditar-regras-5e-55e.yml."
+  },
+  "precedencia": [
+    "Regras da Casa prevalecem somente onde declaram substituição ou exceção explícita.",
+    "Quando uma opção 2024 substitui, revisa ou atualiza a mesma identidade mecânica de 2014, a versão 2024 é a opção ativa.",
+    "Conteúdo 2014 sem equivalente 2024 permanece disponível quando compatível e não contraditório.",
+    "Variantes e conteúdo aditivo não são apagados apenas por serem anteriores a 2024.",
+    "A edição e a revisão reais da fonte são preservadas; conteúdo 2014 não é renomeado como 2024.",
+    "Regras específicas prevalecem sobre regras gerais, salvo exceção expressa de Regra da Casa."
+  ],
+  "fontes_normativas_conferidas": [
+    "Regras da Casa 5.5eE — consolidado de 22/08/2026",
+    "Hub de RPG - Especificação e Taxonomia de Dados - DnD 5e e 5.5e — Baseline v1.0",
+    "Player's Handbook — revisão 2024",
+    "SRD 5.2.1 / Basic Rules 2024",
+    "SRD 5.1 / material legado 2014",
+    "00 - Compilado.pdf — usado como corpus documental por meio das extrações e manifestos do Hub",
+    "pdf24_merged.pdf e pdf24_merged-1.pdf — fontes PDF registradas no runtime do Hub"
+  ],
+  "fontes_pdf_runtime": {
+    "registro": "dados/fontes-pdf-registradas.json",
+    "manifesto": "dados/importacao-pdfs-manifest.json",
+    "quantidade_registrada": 2,
+    "status_exigido": "publicado_verificado"
+  },
+  "modulos_auditados": [
+    "Regras",
+    "Classes",
+    "Subclasses",
+    "Espécies",
+    "Antecedentes",
+    "Talentos",
+    "Maestrias de Arma",
+    "Monstros",
+    "Armaduras",
+    "Armas",
+    "Equipamentos de Aventura",
+    "Ferramentas",
+    "Montarias e Veículos",
+    "Comércio e Despesas",
+    "Bugigangas",
+    "Itens Mágicos",
+    "Magias",
+    "Idiomas"
+  ],
+  "regras_da_casa_ativas": [
+    "Magic Items Slots (D&D 3.5e - House Rule)",
+    "Expanded Concentration (House Rule)",
+    "Backgrounds: Mechanical Rule (House Rule)",
+    "Backgrounds and Organizations: Narrative Rules  (House Rule)",
+    "Universal Feat and Ability Progression (House Rule)"
+  ],
+  "correcoes_implementadas_nesta_auditoria": [
+    {
+      "id": "house-rule-universal-progression-searchable",
+      "descricao": "A Progressão Universal passa a existir no catálogo de dados das Regras da Casa e na busca da Biblioteca, em vez de permanecer apenas como resumo estático e lógica do criador."
+    },
+    {
+      "id": "expanded-concentration-explicit-classification",
+      "descricao": "Magias de concentração desconhecidas deixam de receber CM/CI/CZ/CL por heurística e passam a ficar pendentes até validação explícita, conforme a autoridade da lista oficial."
+    },
+    {
+      "id": "legacy-weapon-builder",
+      "descricao": "O criador de personagem passa a aceitar as armas 5e/2014 que sobreviveram ao catálogo consolidado por não possuírem equivalente 2024."
+    },
+    {
+      "id": "single-spell-loader",
+      "descricao": "O carregador secundário de magias do criador delega ao mesmo catálogo consolidado usado pelo fluxo principal, evitando um caminho 2024-only divergente."
+    },
+    {
+      "id": "ci-regression-guards",
+      "descricao": "A auditoria automatizada valida a coexistência 2014/2024, PDFs registrados, regras da casa pesquisáveis, magias 2024 sem concentração e JavaScript crítico."
+    }
+  ],
+  "estado": "implementado_em_branch_e_sujeito_a_ci"
+}
