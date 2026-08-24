@@ -56,7 +56,9 @@ function renderSizeChoice(){
   let grid=box.querySelector('.choice-grid');if(!grid){grid=document.createElement('div');grid.className='choice-grid';box.prepend(grid)}
   const label=document.createElement('label');label.dataset.refinedSizeChoice='';label.append('Tamanho');select=document.createElement('select');select.id='sp-size';label.appendChild(select);grid.prepend(label)
  }else{const label=select.closest('label');if(label)label.hidden=false}
- select.dataset.refinedSizeSelect='1';select.innerHTML='<option value="">Selecione</option>'+sizes.map(size=>`<option value="${size}" ${choice.size===size?'selected':''}>${sizeLabel(size)}</option>`).join('')
+ select.dataset.refinedSizeSelect='1';
+ const signature=`${sizes.join('|')}::${choice.size||''}`;
+ if(select.dataset.refinedSizeSignature!==signature){select.dataset.refinedSizeSignature=signature;select.innerHTML='<option value="">Selecione</option>'+sizes.map(size=>`<option value="${size}" ${choice.size===size?'selected':''}>${sizeLabel(size)}</option>`).join('')}
 }
 
 function sizePending(){const sizes=currentSizes(),choice=state.c?.choices?.species;if(sizes.length<=1||sizes.includes(choice?.size))return'';return`Raça: escolha o tamanho (${sizes.map(sizeLabel).join(' ou ')}).`}
