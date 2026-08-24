@@ -60,6 +60,20 @@ function applyPending(){
  const html=`<strong>Escolhas pendentes</strong><ul>${all.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
  if(p.className!=='status warning'||p.innerHTML!==html){p.className='status warning';p.innerHTML=html}
 }
+function applyElvenLineageLabel(){
+ const{species}=selected(),lineage=state.c.choices?.species?.lineage||'',isElf=['elf','elfo'].includes(fold(species?.name));
+ const select=$('sp-line');
+ if(select&&isElf){
+  const label=select.closest('label'),textNode=label?[...label.childNodes].find(n=>n.nodeType===Node.TEXT_NODE):null;
+  if(textNode)textNode.nodeValue='Linhagem Élfica: '
+ }
+ const subtitle=$('sheet-subtitle');
+ if(subtitle&&isElf&&lineage){
+  const token=`Linhagem Élfica: ${lineage}`;
+  const parts=subtitle.textContent.split(' · ').filter(x=>x&&!x.startsWith('Linhagem Élfica:'));
+  subtitle.textContent=[...parts,token].join(' · ')
+ }
+}
 
 function render(){
  if(applying)return;applying=true;
@@ -68,7 +82,7 @@ function render(){
   box.querySelector('[data-species-trait-controls]')?.remove();
   const defs=speciesTraitChoiceDefs();
   if(defs.length){const wrap=document.createElement('fieldset');wrap.dataset.speciesTraitControls='';wrap.innerHTML=`<legend>Escolhas dos traços raciais</legend>${defs.map(choiceBlock).join('')}`;box.appendChild(wrap)}
-  applyPending()
+  applyElvenLineageLabel();applyPending()
  }finally{applying=false}
 }
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;render()})}
