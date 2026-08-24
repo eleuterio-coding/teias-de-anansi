@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260821-raca1';
+  const VERSION='20260823-rules-audit1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -34,7 +34,9 @@
       [/<p class="resumo">58 antecedentes e variantes de D&amp;D 5e\/5\.5e consolidados no catálogo e localizados para português brasileiro\.<\/p>/gi,''],
       [/<div class="nota"><strong>Precedência:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Escopo:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,'']
+      [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,''],
+      [/<strong>Aumento:<\/strong> \+2 em um e \+1 em outro, ou \+1 nos três; máximo 20\./gi,'<strong>Aumento no Hub:</strong> +2 em um atributo e +1 em outro atributo diferente, à escolha; máximo 20.'],
+      [/(<header><h1>Antecedentes<\/h1><\/header>)/i,'$1<div class="nota"><strong>Regra da Casa:</strong> em personagens 5.5e do Hub, qualquer antecedente concede +2 em um atributo e +1 em outro atributo diferente, escolhidos livremente, além de um Talento de Origem livre. Os atributos e talentos impressos na fonte permanecem como referência da publicação, mas não limitam essas escolhas no Hub.</div>']
     ]}
   };
   async function load(){
