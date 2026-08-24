@@ -1,0 +1,88 @@
+name: Auditar variantes raciais
+
+on:
+  pull_request:
+    paths:
+      - 'dados/especies-pdf-*.json'
+      - 'dados/tiefling-variantes.json'
+      - 'dados/_module-source/especies.html'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/race-library.js'
+      - 'scripts/module-clean-loader.js'
+      - 'raca.html'
+      - 'bibliotecas.html'
+      - '.github/workflows/auditar-variantes-raciais.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dados/especies-pdf-*.json'
+      - 'dados/tiefling-variantes.json'
+      - 'dados/_module-source/especies.html'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/race-library.js'
+      - 'scripts/module-clean-loader.js'
+      - 'raca.html'
+      - 'bibliotecas.html'
+      - '.github/workflows/auditar-variantes-raciais.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript racial
+        run: |
+          node --check scripts/character-builder/race-variants.js
+          node --check scripts/character-builder/rules-base.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/catalogs.js
+          node --check scripts/character-builder/species-trait-ui.js
+          node --check scripts/character-builder/tiefling-ui.js
+          node --check scripts/race-library.js
+          node --check scripts/module-clean-loader.js
+      - name: Auditar hierarquia e variantes jogáveis
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {state} from './scripts/character-builder/state.js';
+          import {organizeRaceVariants} from './scripts/character-builder/race-variants.js';
+          const trait=(name,text='')=>({name,originalName:name,text});
+          const pkg=(name,traits=[])=>({id:`test:${name}`,name,ruleset:'5e',revision:2014,status:'legado_compativel',compatibleWith:['5.5e'],source:'Teste',sizes:['Medium'],speed:30,traits,abilityBonuses:[],lineages:[]});
+          const rows=[
+            {id:'elf',name:'Elfo',ruleset:'5.5e',traits:[trait('Elven Lineage')],lineages:[{name:'Linhagem Élfica: Drow',traits:[]},{name:'Linhagem Élfica: Alto Elfo',traits:[]},{name:'Linhagem Élfica: Elfo da Floresta',traits:[]}]},
+            {id:'dwarf',name:'Anão',ruleset:'5.5e',traits:[],lineages:[]},
+            {id:'gnome',name:'Gnomo',ruleset:'5.5e',traits:[],lineages:[{name:'Linhagem Gnômica: Gnomo da Floresta',traits:[]},{name:'Linhagem Gnômica: Gnomo das Rochas',traits:[]}]},
+            {id:'tiefling',name:'Tiefling',ruleset:'5.5e',traits:[trait('Fiendish Legacy')],lineages:[{name:'Legado Ínfero: Abissal',traits:[]},{name:'Legado Ínfero: Ctônico',traits:[]},{name:'Legado Ínfero: Infernal',traits:[]}]},
+            {id:'kobold',name:'Kobold',ruleset:'5e',traits:[trait('Kobold Legacy')],lineages:[]},
+            pkg('Eladrin',[trait('Keen Senses')]),pkg('Sea Elf',[trait('Keen Senses')]),pkg('Shadar-kai'),pkg('Duergar'),pkg('Deep Gnome'),
+            pkg('Tiefling — Eberron',['Dolurrhi','Fernian','Kythrian','Mabaran','Risian','Sakah','Shavaran'].map(x=>trait(`${x} Legacy`)))
+          ];
+          state.c={refs:{species:null},choices:{species:{size:null,lineage:null}}};
+          const tieflingData=JSON.parse(fs.readFileSync('dados/tiefling-variantes.json','utf8'));
+          const out=organizeRaceVariants(rows,tieflingData);
+          const by=n=>out.find(x=>x.name===n);
+          for(const removed of ['Eladrin','Sea Elf','Shadar-kai','Duergar','Deep Gnome','Tiefling — Eberron'])if(by(removed))throw new Error(`${removed} permaneceu como raça independente`);
+          const elf=by('Elfo'),dwarf=by('Anão'),gnome=by('Gnomo'),tiefling=by('Tiefling'),kobold=by('Kobold');
+          const names=x=>new Set((x.lineages||[]).map(l=>l.name));
+          for(const n of ['Drow','Alto Elfo','Elfo da Floresta','Eladrin','Elfo do Mar','Shadar-kai'])if(!names(elf).has(n))throw new Error(`Linhagem élfica ausente: ${n}`);
+          if(!names(dwarf).has('Duergar'))throw new Error('Duergar ausente do Anão');
+          for(const n of ['Gnomo da Floresta','Gnomo das Rochas','Gnomo das Profundezas'])if(!names(gnome).has(n))throw new Error(`Linhagem gnômica ausente: ${n}`);
+          for(const n of ['Abissal','Ctônico','Infernal','Dolurrhi','Fernian','Kythrian','Mabaran','Risian','Sakah','Shavaran'])if(!names(tiefling).has(n))throw new Error(`Legado Tiefling ausente: ${n}`);
+          const legacy=tieflingData.mecanicas.filter(x=>/legado_compativel_conteudo_unico/i.test(x.status||''));
+          for(const row of legacy)if(!names(tiefling).has(row.nome))throw new Error(`Variante Tiefling legada ausente: ${row.nome}`);
+          for(const n of ['Craftiness','Defiance','Draconic Sorcery'])if(!names(kobold).has(n))throw new Error(`Legado Kobold ausente: ${n}`);
+          const craft=kobold.lineages.find(x=>x.name==='Craftiness');if(craft.traits[0].choiceDefs?.[0]?.options?.length!==5)throw new Error('Craftiness sem escolha mecânica correta');
+          const sorc=kobold.lineages.find(x=>x.name==='Draconic Sorcery');if(!sorc.traits[0].choiceDefs?.some(x=>x.type==='spell'))throw new Error('Draconic Sorcery sem escolha de truque');
+          if(elf.lineageLabel!=='Linhagem Élfica'||dwarf.lineageLabel!=='Linhagem Anã'||gnome.lineageLabel!=='Linhagem Gnômica'||tiefling.lineageLabel!=='Legado Tiefling'||kobold.lineageLabel!=='Legado Kobold')throw new Error('Rótulos semânticos incompletos');
+          const source=fs.readFileSync('dados/_module-source/especies.html','utf8'),library=fs.readFileSync('scripts/race-library.js','utf8');
+          if(!source.includes('scripts/race-library.js')||!library.includes('loadSpecies'))throw new Error('Biblioteca de Raças não usa o catálogo do construtor');
+          console.log(`Variantes raciais validadas: ${elf.lineages.length} élficas, ${gnome.lineages.length} gnômicas, ${tiefling.lineages.length} Tiefling e ${kobold.lineages.length} Kobold.`);
+          NODE
