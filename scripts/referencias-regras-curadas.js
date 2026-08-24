@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const VERSION='20260820-regras-curadas1';
+const VERSION='20260824-regras-curadas2';
 const INDEX_URL=`dados/referencias-hub-index.json?v=${VERSION}`;
 const CURATED_URL=`dados/referencias-regras-curadas.json?v=${VERSION}`;
 const ENTITY_SELECTOR='details.item[data-hub-original]';
@@ -162,7 +162,7 @@ async function init(){
     if(!cr.ok)throw new Error(`Matriz curada HTTP ${cr.status}`);
     index=await ir.json();curated=await cr.json();
     ambiguousTerms=new Set((index.ambiguos||[]).map(x=>norm(x?.termo)).filter(Boolean));
-    if(curated.schema!=='hub-rpg.referencias-regras-curadas.v1'||curated.total_regras!==159||curated.total_referencias!==390)throw new Error('Metadados da auditoria curada divergentes.');
+    if(curated.schema!=='hub-rpg.referencias-regras-curadas.v1'||curated.total_regras!==160||curated.total_referencias!==390)throw new Error('Metadados da auditoria curada divergentes.');
     byId=new Map((index.entidades||[]).filter(r=>r?.id).map(r=>[r.id,r]));
     byOriginal=new Map();
     for(const row of index.entidades||[]){
