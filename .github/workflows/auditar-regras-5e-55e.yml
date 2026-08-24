@@ -31,7 +31,7 @@ jobs:
           node-version: '22'
       - name: Validar política global
         run: python scripts/auditar_regras_5e_55e.py
-      - name: Validar JavaScript do criador
+      - name: Validar JavaScript auditado
         run: |
           node --check scripts/character-builder.js
           node --check scripts/character-builder/state.js
@@ -41,3 +41,6 @@ jobs:
           node --check scripts/character-builder/rules-base.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/house-rules-ui.js
+          node --check scripts/character-builder/manual-feat-ui.js
+          node --check scripts/politica-regras-biblioteca.js
+          node --check scripts/module-clean-loader.js
