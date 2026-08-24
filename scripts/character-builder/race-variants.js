@@ -3,6 +3,7 @@ import{state,arr,num,fold,uniq}from'./state.js';
 const findByNames=(rows,names)=>rows.find(x=>names.includes(fold(x?.name)));
 const traitName=t=>fold(t?.originalName||t?.name||'');
 const cloneTraits=v=>arr(v).map(x=>({...x,choiceDefs:arr(x.choiceDefs).map(d=>({...d}))}));
+// Legados planares de Eberron normalizados do pacote Tiefling — Eberron: Dolurrhi, Fernian, Kythrian, Mabaran, Risian, Sakah e Shavaran.
 
 function migrateSpecies(variant,base,lineageName){
  if(!variant||!base||state.c?.refs?.species!==variant.id)return;
