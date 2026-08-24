@@ -79,5 +79,10 @@
       "descricao": "A auditoria automatizada valida a coexistência 2014/2024, PDFs registrados, regras da casa pesquisáveis, magias 2024 sem concentração e JavaScript crítico."
     }
   ],
-  "estado": "implementado_em_branch_e_sujeito_a_ci"
+  "integracao": {
+    "pull_request": 63,
+    "commit_merge": "d22a125d8b0aea6d727bdbe92602ea34598199cd",
+    "checks_pr": "4/4 success"
+  },
+  "estado": "implementado_em_main"
 }
