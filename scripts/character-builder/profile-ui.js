@@ -1,6 +1,7 @@
 import{state,$,arr,num,esc}from'./state.js';
 import{derive}from'./rules.js';
 import{languageOutcome}from'./language-mechanics.js';
+import'./wizard-ui.js?v=20260824-character-builder29';
 
 function ensureSheetState(){
  const c=state.c;
