@@ -97,7 +97,7 @@ jobs:
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","ch.plusOnes=bg.abilities.slice(0,3)","for(const a of bg.abilities.slice(0,3))","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed","initWizardUi","starting-equipment-choice","profile-notes"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","initializeHouseBackgroundChoices","stableFeatSlot","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed","initWizardUi","starting-equipment-choice","profile-notes"]
           for token in required_tokens:
               if token not in js and token not in loader and token not in html:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
@@ -121,7 +121,7 @@ jobs:
               elif isinstance(row,dict):
                   name=row.get('nome') or row.get('name');category=row.get('categoria') or row.get('category')
                   if name and category in {'Origem','Geral'}: core.add(name)
-          audited=set(re.findall(r"^ '([^']+)':",feat_rules,re.M))
+          audited=set(re.findall(r"(?:^|,)\s*'([^']+)':",feat_rules,re.M))
           feat_missing=sorted(core-audited)
           feat_extra=sorted(audited-core)
           if feat_missing: raise RuntimeError('Talentos sem regra mecânica auditada: '+', '.join(feat_missing))
