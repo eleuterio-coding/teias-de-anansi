@@ -1,10 +1,11 @@
+import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260824-wealth-by-level1';
 const STEPS=[
  {id:'classe',title:'Classe e Nível',description:'Defina a classe, o nível atual, a subclasse quando disponível, as perícias da classe e as magias.'},
  {id:'origem',title:'Origem',description:'Escolha o antecedente e complete os detalhes, características físicas, características pessoais e notas do personagem.'},
  {id:'raca',title:'Raça',description:'Escolha a raça e, quando existir, a variante, linhagem ou legado apropriado.'},
  {id:'atributos',title:'Valores de Atributos',description:'Distribua os valores-base. Os bônus de Origem, Raça, talentos e Regras da Casa são aplicados separadamente.'},
  {id:'progressao',title:'Progressão',description:'Escolha os talentos universais, aumentos de atributo da Regra da Casa e outros benefícios de progressão disponíveis.'},
- {id:'equipamento',title:'Equipamento',description:'Defina o equipamento inicial e ativo, inventário adicional, itens mágicos, outras posses e moedas.'},
+ {id:'equipamento',title:'Equipamento',description:'Defina o equipamento inicial e ativo, faça as compras obrigatórias de criação quando aplicável, organize o inventário e confira as moedas restantes.'},
  {id:'revisao',title:'Revisão',description:'Confira a ficha consolidada, resolva pendências e salve o personagem.'}
 ];
 let current=0,initialized=false;
@@ -40,5 +41,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false})}
+export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initWealthPurchaseUi()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
