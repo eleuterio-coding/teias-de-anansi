@@ -7,17 +7,16 @@ const values=()=>state.c.choices.species.traitChoices||(state.c.choices.species.
 
 function selectedFeatNames(){
  const{bg}=selected(),names=new Set;
+ // A Raça é posterior à Origem e anterior à Progressão. Portanto, apenas
+ // talentos de etapas anteriores podem bloquear uma escolha racial.
  if(bg?.feat?.name)names.add(fold(bg.feat.name));
- for(const id of Object.values(state.c.choices.feats||{})){
-  const f=state.catalogs.feats.find(x=>x.id===id);if(f)names.add(fold(f.name))
- }
  return names
 }
 function originFeatOptions(current){
  const taken=selectedFeatNames();
  return compatible('feats').filter(f=>f.category==='Origem').sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(f=>{
   const blocked=!f.repeatable&&taken.has(fold(f.name))&&f.id!==current;
-  return`<option value="${esc(f.id)}" ${f.id===current?'selected':''} ${blocked?'disabled':''}>${esc(f.name)}${blocked?' · já obtido':''}</option>`
+  return`<option value="${esc(f.id)}" ${f.id===current?'selected':''} ${blocked?'disabled':''}>${esc(f.name)}${blocked?' · já obtido em etapa anterior':''}</option>`
  }).join('')
 }
 function selectOptions(options,current,placeholder='Selecione'){
