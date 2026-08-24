@@ -1,4 +1,4 @@
-import{state,$,SKILL_AB,arr,esc,fold}from'./state.js';
+import{state,$,SKILL_AB,arr,esc,fold,num}from'./state.js';
 import{compatible,selected,speciesTraitChoiceDefs,sanitizeSpeciesTraitChoices}from'./rules.js';
 
 let applying=false,scheduled=false;
@@ -23,6 +23,10 @@ function originFeatOptions(current){
 function selectOptions(options,current,placeholder='Selecione'){
  return`<option value="">${esc(placeholder)}</option>${options.map(x=>`<option value="${esc(x)}" ${x===current?'selected':''}>${esc(x)}</option>`).join('')}`
 }
+function spellOptions(def,current){
+ const wanted=arr(def.spellClasses).map(fold),level=num(def.spellLevel),options=state.catalogs.spells.filter(s=>num(s.level)===level&&(!wanted.length||arr(s.classes).some(c=>wanted.includes(fold(c))))).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+ return`<option value="">Selecione</option>${options.map(s=>`<option value="${esc(s.id)}" ${s.id===current?'selected':''}>${esc(s.name)}</option>`).join('')}`
+}
 function choiceBlock(def){
  const store=values(),v=store[def.key],note=def.temporary?' <span class="mini">(pode mudar após Descanso Longo)</span>':'';
  if(def.type==='skill'&&def.choose>1){
@@ -34,6 +38,7 @@ function choiceBlock(def){
   return`<label class="trait-choice"><strong>${esc(def.traitName)}</strong> — ${esc(def.label)}${note}<select data-species-choice="${esc(def.key)}" data-choice-type="skill">${selectOptions(options,v)}</select></label>`
  }
  if(def.type==='feat')return`<label class="trait-choice"><strong>${esc(def.traitName)}</strong> — ${esc(def.label)}<select data-species-choice="${esc(def.key)}" data-choice-type="feat"><option value="">Selecione</option>${originFeatOptions(v)}</select></label>`;
+ if(def.type==='spell')return`<label class="trait-choice"><strong>${esc(def.traitName)}</strong> — ${esc(def.label)}<select data-species-choice="${esc(def.key)}" data-choice-type="spell">${spellOptions(def,v)}</select></label>`;
  if(def.type==='ability'||def.type==='option')return`<label class="trait-choice"><strong>${esc(def.traitName)}</strong> — ${esc(def.label)}<select data-species-choice="${esc(def.key)}" data-choice-type="${def.type}">${selectOptions(arr(def.options),v)}</select></label>`;
  if(def.type==='tool')return`<label class="trait-choice"><strong>${esc(def.traitName)}</strong> — ${esc(def.label)}<input data-species-choice="${esc(def.key)}" data-choice-type="tool" value="${esc(v||'')}" placeholder="Nome da ferramenta"></label>`;
  if(def.type==='skill_or_tool'){
@@ -60,19 +65,11 @@ function applyPending(){
  const html=`<strong>Escolhas pendentes</strong><ul>${all.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`;
  if(p.className!=='status warning'||p.innerHTML!==html){p.className='status warning';p.innerHTML=html}
 }
-function applyElvenLineageLabel(){
- const{species}=selected(),lineage=state.c.choices?.species?.lineage||'',isElf=['elf','elfo'].includes(fold(species?.name));
- const select=$('sp-line');
- if(select&&isElf){
-  const label=select.closest('label'),textNode=label?[...label.childNodes].find(n=>n.nodeType===Node.TEXT_NODE):null;
-  if(textNode)textNode.nodeValue='Linhagem Élfica: '
- }
+function applyLineageLabel(){
+ const{species}=selected(),lineage=state.c.choices?.species?.lineage||'',label=species?.lineageLabel||'Linhagem',select=$('sp-line');
+ if(select){const host=select.closest('label'),textNode=host?[...host.childNodes].find(n=>n.nodeType===Node.TEXT_NODE):null;if(textNode)textNode.nodeValue=`${label}: `}
  const subtitle=$('sheet-subtitle');
- if(subtitle&&isElf&&lineage){
-  const token=`Linhagem Élfica: ${lineage}`;
-  const parts=subtitle.textContent.split(' · ').filter(x=>x&&!x.startsWith('Linhagem Élfica:'));
-  subtitle.textContent=[...parts,token].join(' · ')
- }
+ if(subtitle&&lineage){const token=`${label}: ${lineage}`,known=['Linhagem Élfica:','Linhagem Anã:','Linhagem Gnômica:','Legado Tiefling:','Legado Kobold:','Ancestralidade Dracônica:','Ancestralidade Gigante:','Linhagem:'];const parts=subtitle.textContent.split(' · ').filter(x=>x&&!known.some(prefix=>x.startsWith(prefix)));subtitle.textContent=[...parts,token].join(' · ')}
 }
 
 function render(){
@@ -82,7 +79,7 @@ function render(){
   box.querySelector('[data-species-trait-controls]')?.remove();
   const defs=speciesTraitChoiceDefs();
   if(defs.length){const wrap=document.createElement('fieldset');wrap.dataset.speciesTraitControls='';wrap.innerHTML=`<legend>Escolhas dos traços raciais</legend>${defs.map(choiceBlock).join('')}`;box.appendChild(wrap)}
-  applyElvenLineageLabel();applyPending()
+  applyLineageLabel();applyPending()
  }finally{applying=false}
 }
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;render()})}
