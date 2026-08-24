@@ -53,6 +53,10 @@
         {
           "titulo": "Autoridade da Lista e Versionamento",
           "texto": "A classificação da lista oficial é normativa. Para 5.5e/2024, use os dados da versão 2024 da magia para determinar se ela exige concentração e qual classificação se aplica; versões 2014 permanecem registradas separadamente e não determinam automaticamente a classificação da versão 2024."
+        },
+        {
+          "titulo": "Validação de Magias Novas ou Revisadas",
+          "texto": "Uma magia nova ou revisada que exija concentração não recebe categoria por inferência automática. Ela deve ser validada contra sua versão e então cadastrada explicitamente como CM, CI, CZ ou CL. Até essa validação, permanece pendente de classificação e não integra automaticamente os Limites de Coexistência."
         }
       ],
       "inserir_depois_de": "Magic Items Slots (D&D 3.5e - House Rule)",
@@ -136,6 +140,44 @@
         }
       ],
       "inserir_depois_de": "Backgrounds: Mechanical Rule (House Rule)",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
+    },
+    {
+      "nome": "Progressão Universal de Talentos e Atributos",
+      "original": "Universal Feat and Ability Progression (House Rule)",
+      "familia": "Regra da Casa",
+      "descricao": "Progressão universal baseada no nível total do personagem que separa a aquisição de talentos dos aumentos de atributo e substitui os marcos regulares de classe destinados à escolha padrão entre esses benefícios.",
+      "secoes": [
+        {
+          "titulo": "Talentos",
+          "texto": "Todo personagem recebe 1 talento nos níveis totais 1, 3, 6, 9, 12, 15 e 18. Cada talento escolhido continua sujeito a seus pré-requisitos normais de nível, atributo, proficiência, categoria ou outros requisitos próprios."
+        },
+        {
+          "titulo": "Aumentos de Atributo",
+          "texto": "Todo personagem recebe +1 em um atributo à sua escolha nos níveis totais 4, 8, 12, 16 e 20, respeitando o limite máximo aplicável ao personagem e ao ruleset utilizado. O mesmo atributo pode ser escolhido em marcos diferentes."
+        },
+        {
+          "titulo": "Nível 12",
+          "texto": "No nível total 12, o personagem recebe simultaneamente 1 talento e +1 em um atributo."
+        },
+        {
+          "titulo": "Interação com a Progressão de Classe",
+          "texto": "Esta progressão substitui os marcos regulares de classe cuja função seja conceder a escolha padrão entre talento e aumento de atributo. Esses benefícios não são recebidos novamente nos níveis originais da classe. Benefícios diferentes ou explicitamente adicionais de classe, subclasse, espécie, antecedente, organização, item ou outra Regra da Casa permanecem separados."
+        },
+        {
+          "titulo": "Talento de Origem",
+          "texto": "O Talento de Origem concedido pelo antecedente é independente desta progressão e permanece como benefício separado."
+        },
+        {
+          "titulo": "Multiclasse",
+          "texto": "Use sempre o nível total do personagem, somando todos os níveis de classe. A classe em que o personagem alcança o marco não altera nem duplica o talento ou o aumento de atributo concedido."
+        }
+      ],
+      "inserir_depois_de": "Backgrounds and Organizations: Narrative Rules  (House Rule)",
       "fonte": {
         "livro": "Regra da Casa — Hub de RPG",
         "edicao": "D&D 5.5e / 2024 — Regra da Casa",
