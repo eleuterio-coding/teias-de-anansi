@@ -7,7 +7,7 @@ const STEPS=[
  {id:'equipamento',title:'Equipamento',description:'Defina o equipamento inicial e ativo, inventário adicional, itens mágicos, outras posses e moedas.'},
  {id:'revisao',title:'Revisão',description:'Confira a ficha consolidada, resolva pendências e salve o personagem.'}
 ];
-let current=0;
+let current=0,initialized=false;
 const byId=id=>document.getElementById(id);
 const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
@@ -40,4 +40,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false})}
+export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
