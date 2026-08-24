@@ -10,6 +10,10 @@ export function clampBaseAbility(value){
  return Math.max(BASE_ABILITY_MIN,Math.min(BASE_ABILITY_MAX,n));
 }
 
+export function baseAbilityModifier(value){
+ return Math.floor((clampBaseAbility(value)-10)/2)
+}
+
 export function normalizeBaseAbilities(scores,abilities){
  return Object.fromEntries(abilities.map(ability=>[ability,clampBaseAbility(scores?.[ability])]))
 }
