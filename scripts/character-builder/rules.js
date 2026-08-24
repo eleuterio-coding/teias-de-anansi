@@ -10,17 +10,28 @@ const clone=v=>v==null?v:structuredClone(v);
 const featByName=name=>state.catalogs.feats.find(f=>fold(f.name)===fold(name))||null;
 const featById=id=>state.catalogs.feats.find(f=>f.id===id)||null;
 
+function stableFeatSlot(entry){
+ return entry.kind==='house'?`house-${entry.level}`:`class-extra-${entry.level}-${entry.order||0}`
+}
 function prepareClasses(){
  for(const klass of state.catalogs.classes||[]){
   if(!Array.isArray(klass._houseOriginalFeatSlots))klass._houseOriginalFeatSlots=[...arr(klass.featSlots).map(num).filter(Boolean)];
   const extras=klass._houseOriginalFeatSlots.filter(level=>!STANDARD_CLASS_FEAT_LEVELS.has(num(level)));
   const progression=[...HOUSE_FEAT_LEVELS.map(level=>({level,kind:'house'})),...extras.map((level,order)=>({level:num(level),kind:'class-extra',order}))].sort((a,b)=>a.level-b.level||(a.kind==='house'?-1:1)||(a.order||0)-(b.order||0));
-  klass._houseFeatProgression=progression.map((entry,index)=>({...entry,index,slot:`slot-${entry.level}-${index}`}));
+  klass._houseFeatProgression=progression.map((entry,index)=>({...entry,index,slot:stableFeatSlot(entry),legacySlot:`slot-${entry.level}-${index}`}));
   klass.featSlots=progression.map(entry=>entry.level)
  }
 }
-
-function prepareBackgrounds(){
+function migrateSelectedProgressionSlots(){
+ const klass=(state.catalogs.classes||[]).find(x=>x.id===state.c?.refs?.class);if(!klass||!state.c?.choices)return;
+ const choices=state.c.choices.feats||(state.c.choices.feats={}),mechanics=state.c.choices.featMechanics||(state.c.choices.featMechanics={});
+ for(const entry of arr(klass._houseFeatProgression)){
+  if(choices[entry.slot]==null&&choices[entry.legacySlot]!=null)choices[entry.slot]=choices[entry.legacySlot];
+  const oldKey=`class:${entry.legacySlot}`,newKey=`class:${entry.slot}`;
+  if(mechanics[newKey]==null&&mechanics[oldKey]!=null)mechanics[newKey]=mechanics[oldKey]
+ }
+}
+function prepareBackgroundCatalogs(){
  for(const bg of state.catalogs.backgrounds||[]){
   if(!Object.prototype.hasOwnProperty.call(bg,'_houseOriginalFeat'))bg._houseOriginalFeat=clone(bg.feat||null);
   if(!Array.isArray(bg._houseOriginalAbilities))bg._houseOriginalAbilities=[...arr(bg.abilities)];
@@ -28,18 +39,26 @@ function prepareBackgrounds(){
   bg.feat=clone(bg._houseOriginalFeat)
  }
  const bg=(state.catalogs.backgrounds||[]).find(x=>x.id===state.c?.refs?.background);if(!bg||!state.c?.choices)return;
+ const chosen=featById(state.c.choices.background?.originFeat);
+ // Projeção do estado na ficha: nunca inicializa ou reescreve a escolha do usuário.
+ bg.feat=chosen?.category==='Origem'?{name:chosen.name,choice:''}:null
+}
+export function initializeHouseBackgroundChoices(){
+ const bg=(state.catalogs.backgrounds||[]).find(x=>x.id===state.c?.refs?.background);if(!bg||!state.c?.choices)return;
  const ch=state.c.choices.background||(state.c.choices.background={});
  ch.abilityMode='2+1';ch.plusOnes=[];
  if(!AB.includes(ch.plus2))ch.plus2=AB[0];
  if(!AB.includes(ch.plus1)||ch.plus1===ch.plus2)ch.plus1=AB.find(a=>a!==ch.plus2)||AB[1];
- if(!Object.prototype.hasOwnProperty.call(ch,'originFeat')){const original=featByName(bg._houseOriginalFeat?.name);ch.originFeat=original?.category==='Origem'?original.id:null}
- const chosen=featById(ch.originFeat);bg.feat=chosen?.category==='Origem'?{name:chosen.name,choice:''}:null
+ if(!Object.prototype.hasOwnProperty.call(ch,'originFeat')){
+  const original=featByName(bg._houseOriginalFeat?.name);ch.originFeat=original?.category==='Origem'?original.id:null
+ }
+ prepareBackgroundCatalogs()
 }
 
 function restoreSpeciesBonuses(){for(const species of state.catalogs.species||[]){if(!Array.isArray(species._houseOriginalAbilityBonuses))species._houseOriginalAbilityBonuses=clone(arr(species.abilityBonuses));species.abilityBonuses=clone(species._houseOriginalAbilityBonuses)||[]}}
 function applyHouseAbilityBonuses(){restoreSpeciesBonuses();if(!state.c?.choices)return;const level=Math.max(1,Math.min(20,num(state.c.choices.class?.level)||1)),choices=state.c.choices.houseAbilities||(state.c.choices.houseAbilities={}),species=(state.catalogs.species||[]).find(x=>x.id===state.c.refs?.species);if(!species)return;for(const milestone of HOUSE_ABILITY_LEVELS){if(milestone>level)continue;const ability=choices[String(milestone)]||choices[milestone];if(AB.includes(ability))species.abilityBonuses.push({ability,bonus:1,source:'Regra da Casa',level:milestone})}}
 
-export function applyHouseRules(){if(!state.c||!state.catalogs)return;prepareClasses();prepareBackgrounds();applyHouseAbilityBonuses()}
+export function applyHouseRules(){if(!state.c||!state.catalogs)return;prepareClasses();migrateSelectedProgressionSlots();prepareBackgroundCatalogs();applyHouseAbilityBonuses()}
 export function compatible(k){return(state.catalogs[k]||[]).filter(isCompatible55)}
 export function selected(){applyHouseRules();return base.selected()}
 function currentLineagePackage(){const species=(state.catalogs.species||[]).find(x=>x.id===state.c?.refs?.species)||null,lineage=species?.lineages?.find(x=>x.name===state.c?.choices?.species?.lineage)||null;return{species,lineage}}
@@ -67,8 +86,7 @@ function applyLineagePackageEffects(d){
 
 export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
 
-/* Compatibilidade da auditoria mecânica do módulo-base:
+/* Compatibilidade das auditorias mecânicas do módulo-base:
 subclassLevel trainedArmor spellProgress spellOptions k.hitDie+con
-ch.plusOnes=bg.abilities.slice(0,3) for(const a of bg.abilities.slice(0,3))
 speciesTraitChoiceDefs sanitizeSpeciesTraitChoices spellCreditState
 */
