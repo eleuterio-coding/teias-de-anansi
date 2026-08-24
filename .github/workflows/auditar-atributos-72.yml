@@ -1,0 +1,71 @@
+name: Auditar distribuição de atributos
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/ability-score-*.js'
+      - 'scripts/character-builder.js'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/ability-score-*.js'
+      - 'scripts/character-builder.js'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/ability-score-rules.js
+          node --check scripts/character-builder/ability-score-ui.js
+          node --check scripts/character-builder.js
+      - name: Testar orçamento de 72 pontos
+        run: |
+          node --input-type=module <<'JS'
+          import{
+            BASE_ABILITY_POINT_BUDGET,BASE_ABILITY_MIN,BASE_ABILITY_MAX,
+            normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange
+          }from'./scripts/character-builder/ability-score-rules.js';
+          const AB=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
+          if(BASE_ABILITY_POINT_BUDGET!==72)throw new Error('Orçamento deve ser 72.');
+          if(BASE_ABILITY_MIN!==10||BASE_ABILITY_MAX!==18)throw new Error('Faixa base deve ser 10–18.');
+          let scores=Object.fromEntries(AB.map(a=>[a,10]));
+          let v=baseAbilityValidation(scores,AB);
+          if(v.total!==60||v.remaining!==12)throw new Error('Personagem novo deve começar com 60 usados e 12 restantes.');
+          let r=applyBaseAbilityChange(scores,AB,'Força',18);scores=r.scores;
+          if(scores.Força!==18||r.remaining!==4)throw new Error('Aumento válido não consumiu pontos corretamente.');
+          r=applyBaseAbilityChange(scores,AB,'Destreza',18);scores=r.scores;
+          if(scores.Destreza!==14||r.remaining!==0)throw new Error('Sistema deve limitar automaticamente a tentativa de ultrapassar 72 pontos.');
+          r=applyBaseAbilityChange(scores,AB,'Constituição',5);scores=r.scores;
+          if(scores.Constituição!==10)throw new Error('Valor-base não pode ficar abaixo de 10.');
+          r=applyBaseAbilityChange(scores,AB,'Constituição',30);scores=r.scores;
+          if(scores.Constituição!==10)throw new Error('Sem pontos restantes, outro atributo não pode subir.');
+          const normalized=normalizeBaseAbilities({Força:30,Destreza:1,Constituição:12,Inteligência:13,Sabedoria:14,Carisma:15},AB);
+          if(normalized.Força!==18||normalized.Destreza!==10)throw new Error('Normalização da faixa 10–18 falhou.');
+          console.log('Distribuição de 72 pontos validada.');
+          JS
+      - name: Verificar integração e isolamento
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          ui=Path('scripts/character-builder/ability-score-ui.js').read_text(encoding='utf-8')
+          rules=Path('scripts/character-builder/ability-score-rules.js').read_text(encoding='utf-8')
+          assert 'ability-score-ui.js' in loader, 'Extensão de atributos não carregada.'
+          assert "addEventListener('change',onAbilityChange,true)" in ui, 'A validação deve interceptar o campo antes do handler legado.'
+          assert 'state.c.baseAbilities=result.scores' in ui, 'A alteração não está sendo persistida no estado.'
+          assert 'choices.background' not in ui and 'refs.species' not in ui and 'refs.class' not in ui, 'Etapa Atributos não pode reescrever etapas anteriores.'
+          assert 'BASE_ABILITY_POINT_BUDGET=72' in rules
+          assert 'BASE_ABILITY_MIN=10' in rules
+          assert 'BASE_ABILITY_MAX=18' in rules
+          assert 'supabase' not in (loader+ui+rules).lower()
+          print('Integração da Etapa 4 validada sem efeitos colaterais entre etapas.')
+          PY
