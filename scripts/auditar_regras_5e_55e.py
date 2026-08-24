@@ -78,6 +78,7 @@ require('curated.total_regras!==160' in curated_js,
 rules = text('scripts/character-builder/rules.js')
 state = text('scripts/character-builder/state.js')
 catalogs = text('scripts/character-builder/catalogs.js')
+race_variants = text('scripts/character-builder/race-variants.js')
 languages = text('scripts/character-builder/language-mechanics.js')
 builder = text('scripts/character-builder.js')
 creation = text('criacao-personagem.html')
@@ -107,11 +108,14 @@ require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
         'Texto de carregamento removido voltou ao criador')
-require('character-builder27' in creation and 'character-builder27' in builder,
+require('character-builder28' in creation and 'character-builder28' in builder,
         'Criador não está usando a revisão de cache esperada')
-require('organizeElvenVariants' in catalogs and "name:'Eladrin',replaceBaseTraits:true" in catalogs,
-        'Eladrin não está organizado como subtipo mecânico de Elfo')
-require('withLineagePackage' in rules,
+require('organizeRaceVariants' in catalogs and 'race-variants.js' in catalogs,
+        'Catálogo racial não usa a normalização compartilhada de variantes')
+for token in ['Eladrin', 'Elfo do Mar', 'Shadar-kai', 'Duergar', 'Gnomo das Profundezas',
+              'Legado Tiefling', 'Legado Kobold', 'Dolurrhi', 'Draconic Sorcery']:
+    require(token in race_variants, f'Variante racial obrigatória ausente do normalizador: {token}')
+require('withLineagePackage' in rules and 'replaceTraitNames' in rules,
         'Linhagens substitutivas podem estar acumulando indevidamente os traços da espécie-base')
 
 # Espécies e subclasses legadas devem manter metadados reais de 5e.
@@ -175,13 +179,16 @@ for name in no_concentration_2024:
     require(row.get('concentracao') is False,
             f'{name} 2024 não pode ocupar vaga da Concentração Expandida')
 
-# Talentos e espécies: visualização ativa prefere 2024 e preserva legado único.
+# Talentos e raças: visualização ativa prefere 2024 e preserva legado único.
 feat_page = text('dados/_module-source/talentos.html')
 require('function consolidar' in feat_page and 'talentos-tasha-2020.json' in feat_page,
         'Biblioteca de talentos não aplica precedência 5e/5.5e')
 race_page = text('dados/_module-source/especies.html')
-require('function consolidate' in race_page and 'legado_compativel' in race_page,
-        'Biblioteca de raças não aplica precedência 5e/5.5e')
+race_library = text('scripts/race-library.js')
+require('scripts/race-library.js' in race_page and 'loadSpecies' in race_library and 'loadSpecies' in catalogs,
+        'Biblioteca de raças não compartilha o catálogo normalizado do construtor')
+require('precedência 2024' in race_page and 'mesmo catálogo do construtor' in race_page,
+        'Biblioteca de raças não explicita a política de precedência e sincronização')
 class_detail = text('classes-v3.html')
 require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail and 'Talento — Regra da Casa' in class_detail,
         'Classes ainda expõem os ASIs regulares substituídos como progressão ativa')
