@@ -183,6 +183,82 @@
         "edicao": "D&D 5.5e / 2024 — Regra da Casa",
         "url": ""
       }
+    },
+    {
+      "nome": "Distribuição de Atributos Base",
+      "original": "Base Ability Score Distribution (House Rule)",
+      "familia": "Regra da Casa",
+      "descricao": "Regra da Casa para a distribuição dos valores-base de atributo durante a criação do personagem, usando um orçamento inicial de pontos e limites próprios.",
+      "secoes": [
+        {
+          "titulo": "Orçamento Base",
+          "texto": "A referência normal de cada atributo é 10, com orçamento-base de 72 pontos para distribuir entre Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma."
+        },
+        {
+          "titulo": "Limite Superior",
+          "texto": "O maior valor-base permitido para um atributo é 18. Bônus posteriores de outras fontes são aplicados depois da distribuição-base."
+        },
+        {
+          "titulo": "Redução para 8",
+          "texto": "Pode haver 1 único atributo com valor-base 8. Nesse caso, os 2 pontos retirados abaixo de 10 são acrescentados ao orçamento e o total disponível passa de 72 para 74 pontos."
+        },
+        {
+          "titulo": "Redução para 9",
+          "texto": "Alternativamente, pode haver até 2 atributos com valor-base 9. Um atributo em 9 aumenta o orçamento para 73 pontos; dois atributos em 9 aumentam para 74 pontos."
+        },
+        {
+          "titulo": "Restrições",
+          "texto": "Não é permitido combinar um atributo em 8 com outro atributo em 9, ter mais de um atributo em 8 ou ter mais de dois atributos em 9."
+        },
+        {
+          "titulo": "Bônus Posteriores",
+          "texto": "Bônus de Antecedente, Raça, Progressão, Talentos, classe ou outras fontes são aplicados separadamente e não consomem o orçamento de pontos da distribuição-base."
+        }
+      ],
+      "inserir_depois_de": "Universal Feat and Ability Progression (House Rule)",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
+    },
+    {
+      "nome": "Riqueza por Nível",
+      "original": "Wealth by Level (House Rule)",
+      "familia": "Regra da Casa",
+      "descricao": "Regra da Casa para definir recursos de criação de personagens iniciados acima do 1º nível e para permitir a compra dos equipamentos iniciais com os PO disponíveis.",
+      "secoes": [
+        {
+          "titulo": "Aplicação",
+          "texto": "Esta regra é usada somente ao criar um personagem diretamente no nível 2 ou superior. Ela não concede riqueza novamente quando um personagem já em jogo sobe de nível."
+        },
+        {
+          "titulo": "Nível 1",
+          "texto": "No nível 1, a escolha normal entre Pacote A e Pacote B permanece inalterada e Riqueza por Nível não é aplicada."
+        },
+        {
+          "titulo": "Nível 2 ou Superior",
+          "texto": "Do nível 2 em diante, o valor correspondente ao nível inicial é adicionado automaticamente às moedas disponíveis para a criação."
+        },
+        {
+          "titulo": "Compras",
+          "texto": "Nenhum item mágico é concedido automaticamente. Itens mágicos, armas, armaduras, equipamento de aventura, ferramentas, montarias e veículos devem ser comprados com os PO disponíveis. Cada compra é debitada do orçamento e o saldo restante é atualizado em tempo real."
+        },
+        {
+          "titulo": "Pacote B",
+          "texto": "Ao escolher um Pacote B composto por moedas, a etapa de compras é aberta também no nível 1. Do nível 2 em diante, a etapa de compras é sempre disponibilizada."
+        },
+        {
+          "titulo": "Valores por Nível",
+          "texto": "Nível 1: —. Nível 2: 225 PO. Nível 3: 325 PO. Nível 4: 500 PO. Nível 5: 1.150 PO. Nível 6: 1.450 PO. Nível 7: 1.900 PO. Nível 8: 2.500 PO. Nível 9: 3.500 PO. Nível 10: 4.850 PO. Nível 11: 11.800 PO. Nível 12: 13.200 PO. Nível 13: 14.900 PO. Nível 14: 17.050 PO. Nível 15: 19.650 PO. Nível 16: 22.850 PO. Nível 17: 75.200 PO. Nível 18: 79.450 PO. Nível 19: 84.600 PO. Nível 20: 90.800 PO."
+        }
+      ],
+      "inserir_depois_de": "Base Ability Score Distribution (House Rule)",
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
     }
   ]
 }
