@@ -6,7 +6,7 @@ import{initSpeciesTraitUi}from'./character-builder/species-trait-ui.js?v=2026082
 import{initClassSkillUi}from'./character-builder/class-skill-ui.js?v=20260823-class-skill-fix1';
 import{initFeatUi}from'./character-builder/feat-ui.js?v=20260822-character-builder18';
 import{initHouseRulesUi}from'./character-builder/house-rules-ui.js?v=20260822-house-progression1';
-import{initLanguageUi}from'./character-builder/language-ui.js?v=20260822-character-builder18';
+import{initLanguageUi}from'./character-builder/language-ui.js?v=20260823-language-note1';
 
 document.body?.classList.add('controles');
 const NativeMutationObserver=window.MutationObserver;
