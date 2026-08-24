@@ -53,7 +53,7 @@ function addTieflingVariants(rows,tieflingData){
  tiefling.lineageLabel='Legado Tiefling';
  const eberron=findByNames(rows,['tiefling — eberron','tiefling - eberron','tiefling eberron']);
  if(eberron){
-  const planar=arr(eberron.traits).filter(t=>/legacy$/i.test(t.originalName||t.name||'')).map(t=>({name:String(t.originalName||t.name).replace(/\s+Legacy$/i,''),replaceTraitNames:['Fiendish Legacy','Legado Ínfero'],source:eberron.source,ruleset:eberron.ruleset,revision:eberron.revision,status:eberron.status,compatibleWith:arr(eberron.compatibleWith),spellAbilityOptions:['Inteligência','Sabedoria','Carisma'],traits:[{...t}]}));
+  const planar=arr(eberron.traits).filter(t=>/legacy$/i.test(t.originalName||t.name||'')).map(t=>({name:String(t.originalName||t.name).replace(/\s+Legacy$/i,''),replaceTraitNames:['Fiendish Legacy','Legado Ínfero'],source:eberron.source,ruleset:eberron.ruleset,revision:eberron.revision,status:eberron.status,compatibleWith:arr(eberron.compatibleWith),spellAbilityOptions:['Inteligência','Sabedoria','Carisma'],traits:[{...t,choiceDefs:[...arr(t.choiceDefs),{suffix:'spell-ability',type:'ability',label:'Atributo de conjuração',options:['Inteligência','Sabedoria','Carisma']}]}]}));
   tiefling.lineages=[...arr(tiefling.lineages),...planar.filter(p=>!arr(tiefling.lineages).some(x=>fold(x.name)===fold(p.name)))];
   if(state.c?.refs?.species===eberron.id){state.c.refs.species=tiefling.id;state.c.choices.species=state.c.choices.species||{};state.c.choices.species.lineage=null}
   rows=rows.filter(x=>x!==eberron)
@@ -68,7 +68,7 @@ function addKoboldLegacy(rows){
  const generic=arr(kobold.traits).find(t=>traitName(t)==='kobold legacy');if(!generic)return;
  const replace=['Kobold Legacy'];
  const lineages=[
-  {name:'Craftiness',replaceTraitNames:replace,traits:[{name:'Craftiness',originalName:'Craftiness',text:'Ganha proficiência em uma perícia à escolha entre Arcanismo, Investigação, Medicina, Prestidigitação e Sobrevivência.',choiceDefs:[{suffix:'skill',type:'skill',label:'Perícia',choose:1,options:['Arcanismo','Investigação','Medicina','Prestidigitação','Sobrevivência']}]}]},
+  {name:'Craftiness',replaceTraitNames:replace,traits:[{name:'Craftiness',originalName:'Craftiness',text:'Escolha Arcanismo, Investigação, Medicina, Prestidigitação ou Sobrevivência; você ganha proficiência na perícia escolhida.',choiceDefs:[{suffix:'skill',type:'skill',label:'Perícia',choose:1,options:['Arcanismo','Investigação','Medicina','Prestidigitação','Sobrevivência']}]}]},
   {name:'Defiance',replaceTraitNames:replace,traits:[{name:'Defiance',originalName:'Defiance',text:'Tem Vantagem em salvaguardas para evitar ou encerrar a condição Amedrontado.'}]},
   {name:'Draconic Sorcery',replaceTraitNames:replace,spellAbilityOptions:['Inteligência','Sabedoria','Carisma'],traits:[{name:'Draconic Sorcery',originalName:'Draconic Sorcery',text:'Conhece um truque da lista de Feiticeiro. Inteligência, Sabedoria ou Carisma é o atributo de conjuração escolhido para esse truque.',choiceDefs:[{suffix:'cantrip',type:'spell',label:'Truque de Feiticeiro',choose:1,spellLevel:0,spellClasses:['Feiticeiro','Sorcerer']},{suffix:'spell-ability',type:'ability',label:'Atributo de conjuração',options:['Inteligência','Sabedoria','Carisma']}]}]}
  ];
