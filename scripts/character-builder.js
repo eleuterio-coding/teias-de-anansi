@@ -9,6 +9,11 @@ import{initHouseRulesUi}from'./character-builder/house-rules-ui.js?v=20260823-ch
 import{initLanguageUi}from'./character-builder/language-ui.js?v=20260823-character-builder21';
 
 document.body?.classList.add('controles');
+const loading=document.getElementById('loading');
+const builder=document.getElementById('builder');
+if(loading){loading.textContent='';loading.hidden=true}
+if(builder)builder.hidden=false;
+
 const NativeMutationObserver=window.MutationObserver;
 window.MutationObserver=class HubBuilderMutationObserver extends NativeMutationObserver{
   observe(target,options={}){
@@ -17,7 +22,13 @@ window.MutationObserver=class HubBuilderMutationObserver extends NativeMutationO
   }
 };
 
-init().then(()=>{
+const startup=init();
+if(loading){loading.textContent='';loading.hidden=true}
+if(builder)builder.hidden=false;
+
+startup.then(()=>{
+  if(loading){loading.textContent='';loading.hidden=true}
+  if(builder)builder.hidden=false;
   initSpellSelectionUi();
   initSpellQuotaUi();
   initCharacterProfileUi();
@@ -27,8 +38,9 @@ init().then(()=>{
   initHouseRulesUi();
   initLanguageUi();
 }).catch(e=>{
+  if(loading){loading.textContent='';loading.hidden=true}
+  if(builder)builder.hidden=false;
   const el=document.getElementById('load-warnings');
   if(el){el.hidden=false;el.innerHTML=`<strong>Falha ao iniciar o criador.</strong><br>${String(e.message||e)}`}
-  document.getElementById('builder')?.removeAttribute('hidden');
   console.error('[character-builder]',e)
 });
