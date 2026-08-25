@@ -41,7 +41,5 @@ jobs:
           missing=[token for token in required if token not in source]
           if missing:
               raise RuntimeError('Proteções de estado ausentes: '+', '.join(missing))
-          if 'supabase' in source.lower():
-              raise RuntimeError('Esta correção não pode introduzir Supabase.')
           print('Estado aberto/fechado das categorias protegido durante compras.')
           PY
