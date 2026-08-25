@@ -1,0 +1,70 @@
+name: Auditar progressão de magias dos conjuradores
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/spell-class-policy.js'
+      - 'scripts/character-builder/spell-progression-rules.js'
+      - 'scripts/character-builder/spell-current-list-ui.js'
+      - 'scripts/character-builder/spell-quota-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - 'dados/classes-ptbr/*.json'
+      - 'dados/artificer-2025.json'
+      - 'scripts/auditar-progressao-magias-conjuradores.mjs'
+      - '.github/workflows/auditar-progressao-magias-conjuradores.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/spell-class-policy.js'
+      - 'scripts/character-builder/spell-progression-rules.js'
+      - 'scripts/character-builder/spell-current-list-ui.js'
+      - 'scripts/character-builder/spell-quota-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - 'dados/classes-ptbr/*.json'
+      - 'dados/artificer-2025.json'
+      - 'scripts/auditar-progressao-magias-conjuradores.mjs'
+      - '.github/workflows/auditar-progressao-magias-conjuradores.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/spell-class-policy.js
+          node --check scripts/character-builder/spell-progression-rules.js
+          node --check scripts/character-builder/spell-current-list-ui.js
+          node --check scripts/character-builder/spell-quota-ui.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-sheet-spell-preparation.js
+          node --check scripts/auditar-progressao-magias-conjuradores.mjs
+      - name: Validar JSON das classes revisadas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for path in [
+              'dados/classes-ptbr/bardo.json',
+              'dados/classes-ptbr/clerigo.json',
+              'dados/classes-ptbr/druida.json',
+              'dados/classes-ptbr/feiticeiro.json',
+              'dados/classes-ptbr/bruxo.json',
+              'dados/classes-ptbr/mago.json',
+              'dados/classes-ptbr/paladino.json',
+              'dados/classes-ptbr/patrulheiro.json',
+              'dados/artificer-2025.json',
+          ]:
+              json.loads(Path(path).read_text(encoding='utf-8'))
+          print('JSON das classes conjuradoras válido.')
+          PY
+      - name: Auditar níveis 1 a 20 e regras de troca
+        run: node scripts/auditar-progressao-magias-conjuradores.mjs
