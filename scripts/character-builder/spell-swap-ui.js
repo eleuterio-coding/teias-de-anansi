@@ -1,6 +1,6 @@
 import{state,$,arr,num,esc}from'./state.js';
 import{selected}from'./rules.js';
-import{spellProgressionCandidates,spellProgressionState}from'./spell-progression-rules.js?v=20260825-spell-progression1';
+import{spellProgressionCandidates,spellProgressionState}from'./spell-progression-rules.js?v=20260825-spell-progression2';
 
 let initialized=false,queued=false;
 const spellById=id=>arr(state.catalogs.spells).find(spell=>spell.id===id)||null;
