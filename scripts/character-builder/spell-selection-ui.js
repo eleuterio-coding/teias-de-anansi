@@ -1,8 +1,8 @@
-import{state,$,arr,num,esc}from'./state.js';
-import{selected}from'./rules.js';
+import{state,$,arr,num,esc,signed}from'./state.js';
+import{selected,derive,spellSelectionQuota}from'./rules.js';
 import{spellProgressionCandidates,spellProgressionState,spellProgressionPending,resetSpellProgression}from'./spell-progression-rules.js?v=20260825-spell-progression1';
 
-let rendering=false,scheduled=false,editingLevel=null,search='',lastClassId=null;
+let rendering=false,scheduled=false,refreshQueued=false,editingLevel=null,search='',lastClassId=null;
 const spellById=id=>arr(state.catalogs.spells).find(spell=>spell.id===id)||null;
 const spellName=id=>spellById(id)?.name||'Magia indisponível';
 const spellCircle=id=>num(spellById(id)?.level);
@@ -11,15 +11,22 @@ const changeLabel=change=>change?.decision==='replace'&&change.out&&change.in?`$
 function selectedClass(){return selected().klass||null}
 function currentLevel(){return Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1))}
 function spellOption(spell,selectedId=''){return`<option value="${esc(spell.id)}" ${spell.id===selectedId?'selected':''}>${esc(spell.name)}${spell.level?` · ${spell.level}º círculo`:''}</option>`}
+function spellPills(spells){return spells.length?spells.map(spell=>`<span class="pill">${esc(spell.name)}</span>`).join(''):'—'}
+function renderSpellPreview(){
+ const box=$('spellcasting'),klass=selectedClass();if(!box)return;if(!klass?.spellAbility){box.innerHTML='<p class="muted">Esta classe não possui progressão de conjuração.</p>';return}
+ const d=derive(),quota=spellSelectionQuota(klass,d.level),selectedSpells=d.selectedSpells,levels=[...new Set(selectedSpells.leveled.map(spell=>spell.level))].sort((a,b)=>a-b),wizard=klass.slug==='wizard';
+ box.innerHTML=`<div class="value-row"><span>Atributo</span><strong>${esc(klass.spellAbility)}</strong></div><div class="value-row"><span>CD</span><strong>${d.spellDC}</strong></div><div class="value-row"><span>Ataque mágico</span><strong>${signed(d.spellAttack)}</strong></div><div class="value-row"><span>Truques</span><strong>${selectedSpells.cantrips.length}/${d.spell.cantrips}</strong></div><div>${spellPills(selectedSpells.cantrips)}</div><div class="value-row"><span>${esc(quota.label)}</span><strong>${selectedSpells.leveled.length}/${quota.total}</strong></div>${wizard?`<div class="value-row" data-wizard-prepared-limit="true"><span>Limite de preparação</span><strong>${d.spell.prepared}</strong></div>`:''}${levels.map(level=>`<p><strong>${level}º nível:</strong> ${spellPills(selectedSpells.leveled.filter(spell=>spell.level===level))}</p>`).join('')}<p class="mini">Espaços: ${d.spell.slots.map(slot=>`${slot.level}º: ${slot.count}`).join(' · ')||'—'}</p>${Object.keys(selectedSpells.arcanum).length?`<p><strong>Arcanos Místicos:</strong> ${Object.entries(selectedSpells.arcanum).map(([level,spell])=>`${level}º — ${esc(spell.name)}`).join(' · ')}</p>`:''}`
+}
 function refreshPending(){
  const box=$('pending'),klass=selectedClass();if(!box||!klass?.spellAbility)return;
  const generic=/^Escolha (?:\d+ truque\(s\) da classe|\d+ magia\(s\) preparada\(s\)\/conhecida\(s\)|o Arcano Místico de \d+º nível)\.$/i,ours=/^Nível \d+: (?:escolha|conclua) .+\.$/i;
  const current=[...box.querySelectorAll('li')].map(li=>li.textContent.trim()).filter(text=>text&&!generic.test(text)&&!ours.test(text)),own=spellProgressionPending(klass,currentLevel()),all=[...new Set([...current,...own])];
  box.className=`status ${all.length?'warning':'ok'}`;box.innerHTML=all.length?`<strong>Escolhas pendentes</strong><ul>${all.map(text=>`<li>${esc(text)}</li>`).join('')}</ul>`:'<strong>Ficha consistente.</strong> Todas as escolhas obrigatórias desta etapa foram preenchidas.'
 }
-function refreshCore(){const name=$('nome');if(name)name.dispatchEvent(new Event('input'));document.dispatchEvent(new CustomEvent('hub:spell-selection-changed'));refreshPending()}
+function refreshSpellUi(){refreshQueued=false;renderSpellPreview();refreshPending();document.dispatchEvent(new CustomEvent('hub:spell-selection-changed'))}
+function queueRefresh(){if(refreshQueued)return;refreshQueued=true;requestAnimationFrame(refreshSpellUi)}
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;render()})}
-function mutate(callback){const klass=selectedClass();if(!klass)return;const level=currentLevel(),stateNow=spellProgressionState(klass,level),step=stateNow.steps.find(row=>row.level===editingLevel)||stateNow.steps.find(row=>!row.complete)||stateNow.steps.filter(stepHasChoices).at(-1);if(!step)return;callback(stateNow.progression.steps[String(step.level)],step);spellProgressionState(klass,level);render();refreshCore()}
+function mutate(callback){const klass=selectedClass();if(!klass)return;const level=currentLevel(),stateNow=spellProgressionState(klass,level),step=stateNow.steps.find(row=>row.level===editingLevel)||stateNow.steps.find(row=>!row.complete)||stateNow.steps.filter(stepHasChoices).at(-1);if(!step)return;callback(stateNow.progression.steps[String(step.level)],step);spellProgressionState(klass,level);render();queueRefresh()}
 
 function levelSummary(step){
  const parts=[];
@@ -80,11 +87,11 @@ function onChange(event){
  else if(target.matches('[data-progression-arcanum]'))mutate(stored=>{stored.arcanum=target.value||null})
 }
 function bindContext(){
- $('classe')?.addEventListener('change',()=>queueMicrotask(()=>{const klass=selectedClass();if(klass?.id!==lastClassId){resetSpellProgression();lastClassId=klass?.id||null}editingLevel=null;search='';render()}));
- $('nivel')?.addEventListener('change',()=>queueMicrotask(()=>{editingLevel=null;search='';render()}));
- $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{lastClassId=selectedClass()?.id||null;editingLevel=null;search='';render()}))
+ $('classe')?.addEventListener('change',()=>queueMicrotask(()=>{const klass=selectedClass();if(klass?.id!==lastClassId){resetSpellProgression();lastClassId=klass?.id||null}editingLevel=null;search='';render();queueRefresh()}));
+ $('nivel')?.addEventListener('change',()=>queueMicrotask(()=>{editingLevel=null;search='';render();queueRefresh()}));
+ $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{lastClassId=selectedClass()?.id||null;editingLevel=null;search='';render();queueRefresh()}))
 }
 export function initSpellSelectionUi(){
  const box=$('magias-escolhas');if(!box)return;lastClassId=selectedClass()?.id||null;box.addEventListener('click',onClick,true);box.addEventListener('input',onInput,true);box.addEventListener('change',onChange,true);
- new MutationObserver(()=>{if(rendering)return;if(!box.querySelector('[data-spell-progression-ui]'))schedule()}).observe(box,{childList:true,subtree:true});bindContext();render()
+ new MutationObserver(()=>{if(rendering)return;if(!box.querySelector('[data-spell-progression-ui]'))schedule()}).observe(box,{childList:true,subtree:true});bindContext();render();queueRefresh()
 }
