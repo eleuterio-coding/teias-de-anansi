@@ -15,6 +15,16 @@ const byId=id=>document.getElementById(id);
 const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
+function ensureVisibleStepMenu(){
+ if(byId('wizard-nav-no-scroll-style'))return;
+ const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
+.wizard-nav{display:grid!important;overflow:visible!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;padding-bottom:0!important}
+.wizard-nav button{min-width:0!important;width:100%!important;flex:none!important;white-space:normal!important}
+@media(max-width:1120px){.wizard-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
+@media(max-width:760px){.wizard-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:420px){.wizard-nav{grid-template-columns:1fr!important}}
+`;document.head.appendChild(style)
+}
 function stepFromHash(){const raw=location.hash.replace(/^#etapa-/,'');const i=STEPS.findIndex(s=>s.id===raw);return i>=0?i:0}
 function updateReviewState(){const pending=byId('pending'),button=document.querySelector('[data-wizard-step="revisao"]');if(!button)return;const hasPending=!!pending?.querySelector('li');button.classList.toggle('has-warning',hasPending);button.title=hasPending?'Há escolhas pendentes na revisão.':''}
 function render({writeHash=true,scroll=true}={}){
@@ -43,5 +53,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){if(initialized)return;initialized=true;current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
