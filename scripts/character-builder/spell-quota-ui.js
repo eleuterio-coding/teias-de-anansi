@@ -1,5 +1,6 @@
 import{state,$,arr,num}from'./state.js';
 import{selected,item,spellProgress,spellSelectionQuota,spellCreditState}from'./rules.js';
+import{initSpellCurrentListUi}from'./spell-current-list-ui.js?v=20260825-spell-policy1';
 
 let choiceScheduled=false,sheetScheduled=false;
 function selectedByLevel(ids){const counts={};for(const id of arr(ids)){const spell=item('spells',id),level=num(spell?.level);if(level>0)counts[level]=num(counts[level])+1}return counts}
@@ -10,7 +11,7 @@ function remainingForLevel(credits,spellLevel){return arr(credits?.remaining).fi
 function decorateChoices(){
  const box=$('magias-escolhas'),{klass}=selected();if(!box||!klass?.spellAbility)return;
  const level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),progress=spellProgress(klass,level),quota=spellSelectionQuota(klass,level),sel=state.c?.choices?.spells||{cantrips:[],leveled:[],arcanum:{}},counts=selectedByLevel(sel.leveled),credits=spellCreditState(klass,level,sel.leveled);
- const fieldset=box.querySelector('fieldset');if(fieldset){const legend=fieldset.querySelector(':scope>legend');setText(legend,klass.slug==='wizard'?'Magias da classe — Grimório':klass.slug==='warlock'?'Magias da classe — Pact Magic':'Magias da classe')}
+ const fieldset=box.querySelector('fieldset');if(fieldset){const legend=fieldset.querySelector(':scope>legend');if(legend)setText(legend,klass.slug==='wizard'?'Magias da classe — Grimório':klass.slug==='warlock'?'Magias da classe — Pact Magic':'Magias da classe')}
  for(const details of box.querySelectorAll('details.spell-level')){
   const summary=details.querySelector(':scope>summary');if(!summary)continue;const text=summary.textContent||'';
   if(/^Truques/i.test(text)){const chosen=arr(sel.cantrips).length,need=num(progress.cantrips);setHtml(summary,`<strong>Truques</strong> — ${chosen}/${need}`);for(const input of details.querySelectorAll('input[data-kind="cantrip"]'))input.disabled=!input.checked&&chosen>=need;continue}
@@ -27,7 +28,7 @@ function decorateSheet(){
 function scheduleChoices(){if(choiceScheduled)return;choiceScheduled=true;queueMicrotask(()=>{choiceScheduled=false;decorateChoices()})}
 function scheduleSheet(){if(sheetScheduled)return;sheetScheduled=true;queueMicrotask(()=>{sheetScheduled=false;decorateSheet()})}
 export function initSpellQuotaUi(){
- const choices=$('magias-escolhas'),sheet=$('spellcasting');if(!choices&&!sheet)return;decorateChoices();decorateSheet();
+ initSpellCurrentListUi();const choices=$('magias-escolhas'),sheet=$('spellcasting');if(!choices&&!sheet)return;decorateChoices();decorateSheet();
  const choiceObserver=new MutationObserver(scheduleChoices),sheetObserver=new MutationObserver(scheduleSheet);if(choices)choiceObserver.observe(choices,{childList:true,subtree:true});if(sheet)sheetObserver.observe(sheet,{childList:true,subtree:true});
  document.addEventListener('hub:spell-selection-changed',()=>{decorateChoices();decorateSheet()});return{choiceObserver,sheetObserver}
 }
