@@ -1,0 +1,45 @@
+name: Auditar Estado das Categorias de Compras
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - '.github/workflows/auditar-estado-categorias-compras.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - '.github/workflows/auditar-estado-categorias-compras.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: node --check scripts/character-builder/package-b-purchase-ui.js
+      - name: Auditar preservação do estado aberto e fechado
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          source=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
+          required=[
+              'bindPurchaseCollapseGuard',
+              '#wealth-purchase-card .wealth-buy, #wealth-purchase-card .wealth-qty',
+              'details.wealth-area',
+              'openAreas',
+              'queueMicrotask',
+              'details.open=openAreas.has(areaName(details))',
+              "},true)"
+          ]
+          missing=[token for token in required if token not in source]
+          if missing:
+              raise RuntimeError('Proteções de estado ausentes: '+', '.join(missing))
+          print('Estado aberto/fechado das categorias protegido durante compras.')
+          PY
