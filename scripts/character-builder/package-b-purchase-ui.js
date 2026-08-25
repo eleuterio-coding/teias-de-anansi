@@ -4,22 +4,51 @@ import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260824-origin-feat-sync
 import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260825-skilled-existing1';
 
 let purchaseCollapseGuardBound=false;
+let rememberedOpenAreas=null;
+let purchaseListObserver=null;
+
 function areaName(details){return String(details?.querySelector('summary')?.textContent||'').split(' · ')[0].trim()}
+function purchaseList(){return document.getElementById('wealth-shop-list')}
+function readOpenAreas(box=purchaseList()){
+ if(!box)return null;
+ const areas=[...box.querySelectorAll('details.wealth-area')];
+ if(!areas.length)return null;
+ return new Set(areas.filter(details=>details.open).map(areaName).filter(Boolean))
+}
+function rememberOpenAreas(box=purchaseList()){
+ const current=readOpenAreas(box);if(current)rememberedOpenAreas=current
+}
+function restoreOpenAreas(box=purchaseList()){
+ if(!box||rememberedOpenAreas===null)return;
+ box.querySelectorAll('details.wealth-area').forEach(details=>{details.open=rememberedOpenAreas.has(areaName(details))})
+}
+function observePurchaseList(){
+ const box=purchaseList();if(!box)return false;
+ purchaseListObserver?.disconnect();
+ purchaseListObserver=new MutationObserver(()=>restoreOpenAreas(box));
+ purchaseListObserver.observe(box,{childList:true});
+ if(rememberedOpenAreas===null)rememberOpenAreas(box);
+ return true
+}
 function bindPurchaseCollapseGuard(){
  if(purchaseCollapseGuardBound)return;purchaseCollapseGuardBound=true;
+ observePurchaseList();
+ document.addEventListener('click',event=>{
+  const summary=event.target?.closest?.('#wealth-shop-list details.wealth-area > summary');if(!summary)return;
+  queueMicrotask(()=>rememberOpenAreas(summary.closest('#wealth-shop-list')))
+ },true);
  document.addEventListener('change',event=>{
   if(!event.target?.closest?.('#wealth-purchase-card .wealth-buy, #wealth-purchase-card .wealth-qty'))return;
-  const box=document.getElementById('wealth-shop-list');if(!box)return;
-  const areas=[...box.querySelectorAll('details.wealth-area')];if(!areas.length)return;
-  const openAreas=new Set(areas.filter(details=>details.open).map(areaName).filter(Boolean));
-  queueMicrotask(()=>{
-   const current=document.querySelectorAll('#wealth-shop-list details.wealth-area');
-   current.forEach(details=>{details.open=openAreas.has(areaName(details))});
-  });
+  rememberOpenAreas();
  },true)
 }
 
 // A Etapa 6 usa Pacote A/B no nível 1 e Riqueza por Level nos níveis seguintes.
 // O mesmo inicializador sincroniza o Talento de Origem e mantém suas escolhas mecânicas interativas.
-// O guard preserva o estado aberto/fechado do catálogo quando uma compra força sua renderização.
-export function initPackageBPurchaseUi(){bindPurchaseCollapseGuard();initOriginFeatSync();initSkilledFeatUi();initStartingEquipmentUi();return initWealthPurchaseUi()}
+// A proteção observa toda reconstrução do catálogo e reaplica continuamente o estado aberto/fechado escolhido pelo usuário.
+export function initPackageBPurchaseUi(){
+ initOriginFeatSync();initSkilledFeatUi();initStartingEquipmentUi();
+ const result=initWealthPurchaseUi();
+ Promise.resolve(result).then(()=>bindPurchaseCollapseGuard());
+ return result
+}
