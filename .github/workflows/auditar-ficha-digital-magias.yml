@@ -1,0 +1,89 @@
+name: Auditar ficha digital de magias
+
+on:
+  pull_request:
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet-spell-runtime.js'
+      - 'scripts/character-sheet-spell-runtime-rules.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - '.github/workflows/auditar-ficha-digital-magias.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet-spell-runtime.js'
+      - 'scripts/character-sheet-spell-runtime-rules.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - '.github/workflows/auditar-ficha-digital-magias.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-sheet-spell-runtime.js
+          node --check scripts/character-sheet-spell-runtime-rules.js
+          node --check scripts/character-sheet-spell-preparation.js
+      - name: Testar recursos e perfis de conjuração
+        run: |
+          node --input-type=module <<'NODE'
+          import{
+            casterProfile,normalizedSlotPools,pactPool,eligibleSlotPools,firstAvailableSlotLevel,
+            adjustSlotUse,remainingLabel,activeClassSpellIds,freeLongRestFeat
+          }from'./scripts/character-sheet-spell-runtime-rules.js';
+          const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+
+          for(const slug of['wizard','cleric','druid','artificer'])assert(casterProfile(slug).kind==='daily',`${slug} deve usar preparação diária.`);
+          for(const slug of['paladin','ranger'])assert(casterProfile(slug).kind==='fixed-long-rest',`${slug} deve manter lista preparada com alteração no Descanso Longo.`);
+          for(const slug of['bard','sorcerer'])assert(casterProfile(slug).kind==='fixed-level',`${slug} deve manter a lista da classe entre níveis.`);
+          assert(casterProfile('warlock').kind==='pact','Bruxo deve usar Pact Magic separado.');
+
+          const slots=[{level:1,count:2},{level:2,count:1}];
+          let used={};let pools=normalizedSlotPools(slots,used);
+          assert(pools[0].remaining===2&&remainingLabel(2,2)==='2/2 restantes','Estado inicial 1º círculo deve ser 2/2 restantes.');
+          used=adjustSlotUse(used,slots,1,1);pools=normalizedSlotPools(slots,used);
+          assert(pools[0].remaining===1,'Marcar uma conjuração deve reduzir 2/2 para 1/2.');
+          used=adjustSlotUse(used,slots,1,1);pools=normalizedSlotPools(slots,used);
+          assert(pools[0].remaining===0,'Segunda conjuração deve reduzir para 0/2.');
+          used=adjustSlotUse(used,slots,1,-1);pools=normalizedSlotPools(slots,used);
+          assert(pools[0].remaining===1,'Desmarcar uma conjuração deve devolver o espaço.');
+          assert(firstAvailableSlotLevel(1,slots,{1:2})===2,'Com 1º círculo esgotado, magia de 1º deve poder usar espaço superior.');
+          assert(eligibleSlotPools(1,slots,{1:2},'wizard').some(x=>x.level===2),'Conjuração em círculo superior deve continuar disponível.');
+
+          const pactSlots=[{level:5,count:3}],pact=pactPool(pactSlots,{5:1});
+          assert(pact.level===5&&pact.remaining===2,'Pact Magic deve usar seu único círculo e pool compartilhado.');
+          assert(eligibleSlotPools(1,pactSlots,{5:1},'warlock')[0].level===5,'Magia inferior do Bruxo deve consumir o espaço atual de Pact Magic.');
+
+          assert(activeClassSpellIds({slug:'wizard',selectedIds:['a','b','c'],preparedIds:['b'],preparationClassMatches:true}).join(',')==='b','Mago deve exibir para uso somente magias preparadas.');
+          assert(activeClassSpellIds({slug:'bard',selectedIds:['a','b'],preparedIds:[],preparationClassMatches:false}).length===2,'Bardo deve usar sua lista preparada da classe.');
+          assert(freeLongRestFeat('Magic Initiate')&&freeLongRestFeat('Fey-Touched')&&freeLongRestFeat('Shadow-Touched'),'Talentos com conjuração gratuita devem possuir recurso próprio.');
+          console.log('Perfis e recursos de conjuração validados.');
+          NODE
+      - name: Auditar integração da ficha
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          html=Path('ficha-personagem.html').read_text(encoding='utf-8')
+          runtime=Path('scripts/character-sheet-spell-runtime.js').read_text(encoding='utf-8')
+          prep=Path('scripts/character-sheet-spell-preparation.js').read_text(encoding='utf-8')
+          required_html=['spell-resource-title','spell-rest-actions','character-sheet-spell-runtime.js?v=20260825-spell-runtime1']
+          required_runtime=['data-new-cast','data-remove-cast','spellCastLog','arcanumUsed','freeSpellUses','Pact Magic','Arcanos Místicos','Conjuração gratuita','data-spell-rest="short"','data-spell-rest="long"']
+          missing=[x for x in required_html if x not in html]+[x for x in required_runtime if x not in runtime]
+          if missing: raise RuntimeError('Integração incompleta: '+', '.join(missing))
+          if 'hub-rpg:sheet-preparation-changed' not in prep or 'hub-rpg:sheet-preparation-changed' not in runtime:
+              raise RuntimeError('Preparação diária não atualiza o painel de uso das magias.')
+          if ' usados' in runtime.lower():
+              raise RuntimeError('O painel novo não deve exibir contador separado de “Usados”.')
+          if 'supabase' in (html+'\n'+runtime+'\n'+prep).lower():
+              raise RuntimeError('A implementação não pode introduzir Supabase.')
+          print('Integração da ficha digital de magias validada.')
+          PY
