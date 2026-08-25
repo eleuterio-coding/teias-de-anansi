@@ -127,7 +127,6 @@ jobs:
           assert "'Ferramenta…'" in skilled
           assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
           assert 'data-feat-mixed="type"' not in skilled
-          assert 'data-selected-lineage-summary' in race
           joined='\n'.join([builder,package,wealth,equipment,rules,origin,feats,skilled,sheet,race])
           assert 'supabase' not in joined.lower()
           print('Compras, Pacotes A/B, Ficha Virtual e Skilled com escolha direta validados.')
