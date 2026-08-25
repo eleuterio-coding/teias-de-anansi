@@ -1,0 +1,66 @@
+name: Auditar Skilled
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/skilled-feat-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-skilled.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/skilled-feat-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-skilled.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/skilled-feat-ui.js
+          node --check scripts/character-builder/package-b-purchase-ui.js
+          node --check scripts/character-builder.js
+      - name: Testar estado intermediário do Skilled
+        run: |
+          node --input-type=module <<'JS'
+          const mod=await import('./scripts/character-builder/skilled-feat-ui.js');
+          let rows=[];
+          rows=mod.setSkilledDraftRow(rows,0,'skill','');
+          if(rows[0]?.type!=='skill'||rows[0]?.value!=='')throw new Error('Escolher Perícia deve preservar o tipo antes de escolher a perícia.');
+          if(mod.skilledRowComplete(rows[0]))throw new Error('Escolha incompleta não pode contar como proficiência concluída.');
+          rows=mod.setSkilledDraftRow(rows,0,'skill','Arcanismo');
+          if(!mod.skilledRowComplete(rows[0]))throw new Error('Perícia válida deve concluir a escolha.');
+          rows=mod.setSkilledDraftRow(rows,1,'tool','');
+          if(rows[1]?.type!=='tool'||rows[1]?.value!=='')throw new Error('Escolher Ferramenta deve preservar o tipo antes do nome.');
+          rows=mod.setSkilledDraftRow(rows,1,'tool','Ferramentas de ladrão');
+          if(!mod.skilledRowComplete(rows[1]))throw new Error('Ferramenta preenchida deve concluir a escolha.');
+          rows=mod.setSkilledDraftRow(rows,2,'skill','Percepção');
+          if(rows.filter(mod.skilledRowComplete).length!==3)throw new Error('Skilled deve aceitar três escolhas completas em qualquer combinação.');
+          console.log('Skilled validado: estado intermediário preservado e 3 escolhas mistas concluídas.');
+          JS
+      - name: Verificar integração no construtor
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          skilled=Path('scripts/character-builder/skilled-feat-ui.js').read_text(encoding='utf-8')
+          package=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
+          builder=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          assert "addEventListener('change',onChange,true)" in skilled, 'A correção deve interceptar o change antes do handler antigo.'
+          assert "data-feat-mixed" in skilled and "data-mixed-kind" in skilled
+          assert 'initSkilledFeatUi' in package
+          assert 'skilled-feat-ui.js?v=20260825-skilled-fix1' in package
+          assert '20260825-package-b-purchase3' in builder
+          assert 'supabase' not in (skilled+package).lower()
+          print('Integração do Skilled no construtor validada.')
+          PY
