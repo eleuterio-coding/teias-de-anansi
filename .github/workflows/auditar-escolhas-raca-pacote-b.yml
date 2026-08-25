@@ -9,6 +9,7 @@ on:
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/starting-equipment-ui.js'
       - 'scripts/character-builder/origin-feat-sync.js'
+      - 'scripts/character-builder/skilled-feat-ui.js'
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
@@ -21,6 +22,7 @@ on:
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/starting-equipment-ui.js'
       - 'scripts/character-builder/origin-feat-sync.js'
+      - 'scripts/character-builder/skilled-feat-ui.js'
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
@@ -44,6 +46,7 @@ jobs:
           node --check scripts/character-builder/starting-equipment-rules.js
           node --check scripts/character-builder/starting-equipment-ui.js
           node --check scripts/character-builder/origin-feat-sync.js
+          node --check scripts/character-builder/skilled-feat-ui.js
           node --check scripts/character-sheet-feat-ui.js
           node --check scripts/character-builder.js
       - name: Testar pacotes, moedas e Riqueza por Level
@@ -62,6 +65,17 @@ jobs:
           if(creationBudgetCp(noble,'A',3)!==32500||creationBudgetCp(noble,'B',3)!==32500)throw new Error('No nível 3 o total deve ser exatamente 325 PO, sem somar moedas de pacote.');
           if(creationPhysicalItems(noble,'A',3).length)throw new Error('Acima do nível 1, Pacote A/B não deve conceder equipamento inicial adicional.');
           console.log('Pacotes e PO validados: Nobre A=29 PO, B=75 PO, nível 3=325 PO.');
+          JS
+      - name: Testar estado do Skilled
+        run: |
+          node --input-type=module <<'JS'
+          import{setSkilledDraftRow,skilledRowComplete}from'./scripts/character-builder/skilled-feat-ui.js';
+          let rows=[];
+          rows=setSkilledDraftRow(rows,0,'skill','Acrobacia');
+          if(!skilledRowComplete(rows[0])||rows[0].value!=='Acrobacia')throw new Error('Skilled deve aceitar uma perícia específica diretamente.');
+          rows=setSkilledDraftRow(rows,1,'tool','Ferramentas de Ladrão');
+          if(!skilledRowComplete(rows[1])||rows[1].value!=='Ferramentas de Ladrão')throw new Error('Skilled deve continuar aceitando uma ferramenta específica.');
+          console.log('Estado de escolhas do Skilled validado.');
           JS
       - name: Testar opções de tamanho e identificação de seletores genéricos
         run: |
@@ -89,11 +103,13 @@ jobs:
           rules=Path('scripts/character-builder/starting-equipment-rules.js').read_text(encoding='utf-8')
           origin=Path('scripts/character-builder/origin-feat-sync.js').read_text(encoding='utf-8')
           feats=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
+          skilled=Path('scripts/character-builder/skilled-feat-ui.js').read_text(encoding='utf-8')
           sheet=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
           race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
           assert 'package-b-purchase-ui.js' in builder
           assert 'wealth-by-level3' in package
-          assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package
+          assert 'skilled-direct2' in package
+          assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package and 'initSkilledFeatUi' in package
           assert 'STANDARD_PACKAGE_B_GP=75' in rules
           assert 'creationBudgetCp' in wealth
           assert 'Moedas do pacote inicial' not in wealth
@@ -106,10 +122,13 @@ jobs:
           assert 'creationPhysicalItems' in sheet and 'formatPhysicalItems' in sheet
           assert 'originFeat' in origin and 'data-feat-mechanics-controls' in origin
           assert "'Skilled':{choices:[{id:'proficiencies',type:'skill_or_tool_multi',count:3" in feats
-          assert "option value=\"skill\"" in Path('scripts/character-builder/feat-ui.js').read_text(encoding='utf-8')
-          assert "option value=\"tool\"" in Path('scripts/character-builder/feat-ui.js').read_text(encoding='utf-8')
+          assert 'Escolha uma perícia ou ferramenta' in skilled
+          assert '<optgroup label="Perícias">' in skilled
+          assert "'Ferramenta…'" in skilled
+          assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
+          assert 'data-feat-mixed="type"' not in skilled
           assert 'data-selected-lineage-summary' in race
-          joined='\n'.join([builder,package,wealth,equipment,rules,origin,feats,sheet,race])
+          joined='\n'.join([builder,package,wealth,equipment,rules,origin,feats,skilled,sheet,race])
           assert 'supabase' not in joined.lower()
-          print('Compras, Pacotes A/B, Ficha Virtual e Skilled validados.')
+          print('Compras, Pacotes A/B, Ficha Virtual e Skilled com escolha direta validados.')
           PY
