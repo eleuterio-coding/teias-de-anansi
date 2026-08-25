@@ -1,0 +1,76 @@
+name: Auditar Progressão de Magias
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/spell-progression-rules.js'
+      - 'scripts/character-builder/spell-selection-ui.js'
+      - 'scripts/character-builder/state.js'
+      - '.github/workflows/auditar-progressao-magias.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/spell-progression-rules.js'
+      - 'scripts/character-builder/spell-selection-ui.js'
+      - 'scripts/character-builder/state.js'
+      - '.github/workflows/auditar-progressao-magias.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/state.js
+          node --check scripts/character-builder/spell-progression-rules.js
+          node --check scripts/character-builder/spell-selection-ui.js
+      - name: Testar progressão nível por nível
+        run: |
+          cp scripts/character-builder/state.js /tmp/state.mjs
+          sed "s|'./state.js'|'./state.mjs'|" scripts/character-builder/spell-progression-rules.js > /tmp/spell-progression-rules.mjs
+          node --input-type=module <<'NODE'
+          import {state} from 'file:///tmp/state.mjs';
+          import {spellProgressionSteps,spellProgressionState,spellProgressionCandidates} from 'file:///tmp/spell-progression-rules.mjs';
+          const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+          const names={bard:'Bardo',cleric:'Clérigo',druid:'Druida',paladin:'Paladino',ranger:'Patrulheiro',sorcerer:'Feiticeiro',warlock:'Bruxo',wizard:'Mago'};
+          function row(level,prepared,maxLevel,cantrips=0){const s={spells_prepared:prepared,cantrips_known:cantrips};for(let i=1;i<=maxLevel;i++)s[`spell_slots_level_${i}`]=1;return{level,spellcasting:s}}
+          function klass(slug,prepared,maxLevels,cantrips=[]){return{id:`classe:${slug}`,slug,name:names[slug],spellAbility:'Carisma',levels:prepared.map((p,i)=>row(i+1,p,maxLevels[i]||0,cantrips[i]||0))}}
+          function reset(){state.c={choices:{spells:{cantrips:[],leveled:[],arcanum:{},progression:null}}}}
+          const spells=[];for(const [slug,name] of Object.entries(names))for(let level=0;level<=9;level++)for(let n=1;n<=8;n++)spells.push({id:`${slug}-${level}-${n}`,name:`${name} ${level}-${n}`,level,classes:[name]});
+          spells.push({id:'cleric-secret-5',name:'Segredo Clerical',level:5,classes:['Clérigo']});state.catalogs.spells=spells;
+
+          const bard=klass('bard',[4,5,6],[1,1,2]);let steps=spellProgressionSteps(bard,3);assert(steps.map(x=>x.leveledGain).join(',')==='4,1,1','Bardo 1–3 precisa ganhar 4, 1 e 1 magias.');assert(steps[2].maxSpellLevel===2,'Bardo 3 precisa liberar 2º círculo.');assert(steps[1].spellSwap&&steps[2].spellSwap,'Bardo precisa poder trocar 1 magia em cada level-up após o 1º.');
+          reset();let s=spellProgressionState(bard,3),p=s.progression;p.steps['1']={leveled:['bard-1-1','bard-1-2','bard-1-3','bard-1-4'],cantrips:[]};s=spellProgressionState(bard,3);assert(s.firstIncompleteLevel===2,'Nível 2 deve permanecer bloqueador após concluir o nível 1.');p.steps['2']={leveled:['bard-1-5'],cantrips:[],spellChange:null};s=spellProgressionState(bard,3);p.steps['3']={leveled:['bard-2-1'],cantrips:[],spellChange:{decision:'replace',out:'bard-1-1',in:'bard-2-2'}};s=spellProgressionState(bard,3);assert(s.complete,'Bardo 3 deveria concluir a progressão.');assert(s.leveled.length===6,'Bardo 3 deve terminar com 6 magias.');assert(s.leveled.filter(id=>id.startsWith('bard-2-')).length===2,'A troca do nível 3 deve permitir duas magias de 2º círculo no resultado final.');
+
+          const sorcerer=klass('sorcerer',[2,4,6],[1,1,2]);assert(spellProgressionSteps(sorcerer,3).map(x=>x.leveledGain).join(',')==='2,2,2','Feiticeiro 1–3 precisa ganhar 2, 2 e 2 magias.');
+          const wizard=klass('wizard',[4,5,6,7,9],[1,1,2,2,3]);steps=spellProgressionSteps(wizard,5);assert(steps.map(x=>x.leveledGain).join(',')==='6,2,2,2,2','Mago precisa registrar 6 magias no nível 1 e +2 por nível.');assert(steps.every(x=>!x.spellSwap),'Mago não pode receber troca de magia por level-up.');
+          const cleric=klass('cleric',[4,5,6],[1,1,2]);assert(spellProgressionSteps(cleric,3).every(x=>!x.spellSwap),'Clérigo não pode receber troca por level-up.');
+          const paladin=klass('paladin',[2,3,4,5,6],[1,1,1,1,2]);assert(spellProgressionSteps(paladin,5).every(x=>!x.spellSwap),'Paladino não pode receber troca por level-up.');
+          const warlock=klass('warlock',[2,3,4,5,6,7,8,9,10,10,11,11,12],[1,1,2,2,3,3,4,4,5,5,5,5,5],[2,2,2,3,3,3,3,3,3,4,4,4,4]);steps=spellProgressionSteps(warlock,13);assert(steps[9].spellSwap&&steps[11].spellSwap,'Bruxo deve manter a troca opcional mesmo em nível sem nova magia preparada.');assert(steps[10].arcanumLevel===6&&steps[12].arcanumLevel===7,'Arcanos Místicos devem entrar nos níveis 11 e 13.');assert(steps[11].arcanumSwap,'Bruxo 12 deve poder trocar um Arcano Místico do mesmo círculo.');
+
+          const bard10=klass('bard',[4,5,6,7,9,10,11,12,14,15],[1,1,2,2,3,3,4,4,5,5]);assert(!spellProgressionCandidates(bard10,9,{kind:'leveled'}).some(x=>x.id==='cleric-secret-5'),'Segredos Mágicos não pode antecipar o nível 10.');assert(spellProgressionCandidates(bard10,10,{kind:'leveled'}).some(x=>x.id==='cleric-secret-5'),'Bardo 10+ precisa aceitar Clérigo/Druida/Mago em Segredos Mágicos.');
+          console.log('Progressão sequencial validada para Bardo, Feiticeiro, Bruxo, Mago, Clérigo e Paladino.');
+          NODE
+      - name: Auditar persistência e ausência de Supabase
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          state=Path('scripts/character-builder/state.js').read_text(encoding='utf-8')
+          rules=Path('scripts/character-builder/spell-progression-rules.js').read_text(encoding='utf-8')
+          ui=Path('scripts/character-builder/spell-selection-ui.js').read_text(encoding='utf-8')
+          required_rules=['spellProgressionSteps','spellProgressionState','firstIncompleteLevel','locked:true','WARLOCK_ARCANUM','level>11','klass?.slug===\'wizard\'','level===1?6:2']
+          missing=[token for token in required_rules if token not in rules]
+          if missing: raise RuntimeError('Proteções da progressão ausentes: '+', '.join(missing))
+          if 'progression:oldSpells.progression?structuredClone' not in state: raise RuntimeError('Histórico de magias não está sendo preservado ao reabrir o personagem.')
+          if 'data-spell-progression-ui' not in ui or 'Progressão de magias nível por nível' not in ui: raise RuntimeError('Interface sequencial de magias ausente.')
+          combined='\n'.join([state,rules,ui]).lower()
+          if 'supabase' in combined: raise RuntimeError('A implementação não pode introduzir Supabase.')
+          print('Persistência local e restrição sem Supabase validadas.')
+          PY
