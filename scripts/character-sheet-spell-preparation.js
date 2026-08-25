@@ -42,8 +42,8 @@ function sanitizePrepared(d,p){
 function spellName(id,pool){return pool.find(s=>s.id===id)?.name||id}
 function labelExistingList(d,p){
  const grid=document.querySelector('#spell-section .spells-grid');if(!grid)return;const columns=[...grid.children],leveledCol=columns[1];const h=leveledCol?.querySelector(':scope > h3');if(!h)return;
- if(d.klass.slug==='wizard')h.textContent='Grimório';
- else if(p.kind==='daily')h.textContent='Seleção inicial da criação';
+ if(p.kind==='daily')h.textContent='Magias preparadas para conjurar';
+ else if(d.klass.slug==='warlock')h.textContent='Magias de Pact Magic';
  else h.textContent='Magias preparadas da classe'
 }
 function syncOverview(d,p,data=null){
@@ -66,7 +66,7 @@ function ensurePanel(){
 }
 function onChange(e){
  const input=e.target.closest('input[data-prepared-spell]');if(!input||!state.c||!state.catalogs.spells.length)return;const d=derive(),p=profile(d);if(p.kind!=='daily')return;const data=sanitizePrepared(d,p),st=data.st,current=arr(st.prepared),id=input.dataset.preparedSpell;
- if(input.checked){if(current.length>=data.limit){input.checked=false;return}st.prepared=[...new Set([...current,id])]}else st.prepared=current.filter(x=>x!==id);persist();render()
+ if(input.checked){if(current.length>=data.limit){input.checked=false;return}st.prepared=[...new Set([...current,id])]}else st.prepared=current.filter(x=>x!==id);persist();render();document.dispatchEvent(new CustomEvent('hub-rpg:sheet-preparation-changed'))
 }
 function render(){
  if(rendering||!state.c||!state.catalogs.spells.length)return;const d=derive();if(!d.klass?.spellAbility)return;rendering=true;try{ensureStyles();const panel=ensurePanel(),p=profile(d);if(!panel)return;labelExistingList(d,p);if(p.kind==='daily'){const data=sanitizePrepared(d,p);syncOverview(d,p,data);panel.innerHTML=dailyHtml(d,p,data)}else{syncOverview(d,p);panel.innerHTML=fixedHtml(d,p)}}finally{rendering=false}
