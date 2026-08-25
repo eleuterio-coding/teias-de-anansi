@@ -1,0 +1,80 @@
+name: Auditar opção de substituição de magias
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/spell-swap-ui.js'
+      - 'scripts/character-builder/spell-selection-visual.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-opcao-substituicao-magias.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/spell-swap-ui.js'
+      - 'scripts/character-builder/spell-selection-visual.js'
+      - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-opcao-substituicao-magias.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/spell-swap-ui.js
+          node --check scripts/character-builder/spell-selection-visual.js
+          node --check scripts/character-builder.js
+      - name: Testar sincronização visual da troca entre círculos
+        run: |
+          cp scripts/character-builder/spell-selection-visual.js /tmp/spell-selection-visual.mjs
+          node --input-type=module <<'NODE'
+          import{buildSpellVisualMap}from'file:///tmp/spell-selection-visual.mjs';
+          const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+          const progress={steps:[
+            {level:1,locked:false,stored:{leveled:['magia-a'],cantrips:[]},beforeLeveled:[],afterLeveled:['magia-a'],beforeCantrips:[],afterCantrips:[]},
+            {level:2,locked:false,stored:{leveled:['outra'],cantrips:[]},beforeLeveled:['magia-a'],afterLeveled:['magia-a','outra'],beforeCantrips:[],afterCantrips:[]},
+            {level:3,locked:false,stored:{leveled:['nova-normal'],cantrips:[],spellChange:{decision:'replace',out:'magia-a',in:'magia-b'}},beforeLeveled:['magia-a','outra'],afterLeveled:['outra','nova-normal','magia-b'],beforeCantrips:[],afterCantrips:[]}
+          ]};
+          const map=buildSpellVisualMap(progress,'leveled');
+          assert(!map.activeByLevel.get(1)?.has('magia-a'),'Magia A deve sair do checkbox do círculo/nível em que foi adquirida.');
+          assert(map.removedByLevel.get(1)?.get('magia-a')===3,'Magia A deve registrar que foi substituída no nível 3.');
+          assert(map.activeByLevel.get(3)?.has('magia-b'),'Magia B deve entrar marcada no nível da substituição.');
+          assert(map.swapInByLevel.get(3)?.has('magia-b'),'Magia B deve ser identificada como entrada por substituição.');
+          assert(map.activeByLevel.get(3)?.has('nova-normal'),'A nova magia normal do nível deve continuar marcada.');
+          console.log('Troca entre círculos validada: A sai, B entra e a escolha normal permanece.');
+          NODE
+      - name: Auditar presença e posição da opção de troca
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          ui=Path('scripts/character-builder/spell-swap-ui.js').read_text(encoding='utf-8')
+          loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          required=[
+            'Substituição de magia',
+            'Substituir 1 magia adquirida anteriormente',
+            'Magia que sai',
+            'Magia que entra',
+            'data-progression-toggle="spell"',
+            'data-progression-out="spell"',
+            'data-progression-in="spell"',
+            "insertAdjacentElement('afterend',section)",
+            'spellProgressionState',
+            'step.spellSwap'
+          ]
+          missing=[token for token in required if token not in ui]
+          if missing: raise RuntimeError('Controle de substituição incompleto: '+', '.join(missing))
+          if 'spell-swap-ui.js?v=20260825-spell-swap-visible1' not in loader or 'initSpellSwapUi' not in loader:
+              raise RuntimeError('O construtor não carrega a restauração da opção de substituição.')
+          if 'automaticamente' not in ui or 'marcada no círculo correspondente' not in ui:
+              raise RuntimeError('A interface não explica a sincronização automática dos checkboxes.')
+          if 'supabase' in (ui+'\n'+loader).lower():
+              raise RuntimeError('A implementação não pode introduzir Supabase.')
+          print('Opção explícita de substituição validada antes da lista de novas magias.')
+          PY
