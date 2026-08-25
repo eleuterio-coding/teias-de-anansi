@@ -1,0 +1,67 @@
+name: Auditar Sincronia de Substituição de Magias
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/spell-selection-ui.js'
+      - 'scripts/character-builder/spell-selection-visual.js'
+      - '.github/workflows/auditar-sincronia-substituicao-magias.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/spell-selection-ui.js'
+      - 'scripts/character-builder/spell-selection-visual.js'
+      - '.github/workflows/auditar-sincronia-substituicao-magias.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-builder/spell-selection-visual.js
+          node --check scripts/character-builder/spell-selection-ui.js
+      - name: Testar mapa visual de substituições
+        run: |
+          cp scripts/character-builder/spell-selection-visual.js /tmp/spell-selection-visual.mjs
+          node --input-type=module <<'NODE'
+          import {buildSpellVisualMap} from 'file:///tmp/spell-selection-visual.mjs';
+          const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+          const progress={steps:[
+            {level:1,locked:false,stored:{leveled:['arms-of-hadar'],cantrips:['old-cantrip']},beforeLeveled:[],afterLeveled:['arms-of-hadar'],beforeCantrips:[],afterCantrips:['old-cantrip']},
+            {level:2,locked:false,stored:{leveled:['hex'],cantrips:[]},beforeLeveled:['arms-of-hadar'],afterLeveled:['arms-of-hadar','hex'],beforeCantrips:['old-cantrip'],afterCantrips:['old-cantrip']},
+            {level:3,locked:false,stored:{leveled:['cloud-of-daggers'],cantrips:[],spellChange:{decision:'replace',out:'arms-of-hadar',in:'darkness'},cantripChange:{decision:'replace',out:'old-cantrip',in:'new-cantrip'}},beforeLeveled:['arms-of-hadar','hex'],afterLeveled:['hex','cloud-of-daggers','darkness'],beforeCantrips:['old-cantrip'],afterCantrips:['new-cantrip']}
+          ]};
+          const spells=buildSpellVisualMap(progress,'leveled');
+          assert(!spells.activeByLevel.get(1)?.has('arms-of-hadar'),'Arms of Hadar deve ficar visualmente desmarcada no nível em que foi adquirida.');
+          assert(spells.removedByLevel.get(1)?.get('arms-of-hadar')===3,'A remoção de Arms of Hadar deve apontar para o nível 3.');
+          assert(spells.activeByLevel.get(3)?.has('darkness'),'Darkness deve ficar visualmente marcada no nível da substituição.');
+          assert(spells.swapInByLevel.get(3)?.has('darkness'),'Darkness deve ser identificada como entrada por substituição.');
+          assert(spells.activeByLevel.get(3)?.has('cloud-of-daggers'),'A magia nova normal do nível deve continuar marcada.');
+          const cantrips=buildSpellVisualMap(progress,'cantrip');
+          assert(!cantrips.activeByLevel.get(1)?.has('old-cantrip'),'O truque removido também deve ficar visualmente desmarcado.');
+          assert(cantrips.activeByLevel.get(3)?.has('new-cantrip'),'O truque recebido por substituição deve ficar visualmente marcado.');
+          console.log('Sincronia visual de substituições validada.');
+          NODE
+      - name: Auditar integração da interface
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          ui=Path('scripts/character-builder/spell-selection-ui.js').read_text(encoding='utf-8')
+          visual=Path('scripts/character-builder/spell-selection-visual.js').read_text(encoding='utf-8')
+          required_ui=['buildSpellVisualMap','selecionada por substituição','substituída no nível','renderActive(klass,active,progress)']
+          missing=[x for x in required_ui if x not in ui]
+          if missing: raise RuntimeError('Integração visual ausente: '+', '.join(missing))
+          if 'activeByLevel' not in visual or 'removedByLevel' not in visual or 'swapInByLevel' not in visual:
+              raise RuntimeError('Mapa visual de substituição incompleto.')
+          if 'supabase' in (ui+'\n'+visual).lower():
+              raise RuntimeError('A implementação não pode introduzir Supabase.')
+          print('Integração da interface validada.')
+          PY
