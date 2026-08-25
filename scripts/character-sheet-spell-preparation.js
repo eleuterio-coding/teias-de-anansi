@@ -1,9 +1,8 @@
 import{state,$,arr,num,esc,read,write}from'./character-builder/state.js';
 import{derive,spellOptions}from'./character-builder/rules.js';
+import{spellClassPolicy,preparedChangeText}from'./character-builder/spell-class-policy.js?v=20260825-spell-policy1';
 
 let initialized=false,rendering=false;
-const LONG_REST_ONE=new Set(['paladin','ranger']);
-const LEVEL_ONE=new Set(['bard','sorcerer','warlock']);
 const PT={wizard:'Mago',cleric:'Clérigo',druid:'Druida',artificer:'Artífice',paladin:'Paladino',ranger:'Patrulheiro',bard:'Bardo',sorcerer:'Feiticeiro',warlock:'Bruxo'};
 
 function ensureStyles(){
@@ -21,12 +20,12 @@ function prepState(d){
  root.prepared=arr(root.prepared);return root
 }
 function profile(d){
- const slug=d.klass?.slug||'';
- if(slug==='wizard')return{kind:'daily',title:'Magias preparadas hoje',pool:'spellbook',timing:'Após um Descanso Longo, você pode trocar qualquer quantidade de magias preparadas por outras do seu grimório.',extra:d.level>=5?'Memorizar Magia (nível 5+) também permite trocar 1 magia preparada por outra do grimório após um Descanso Curto.':'',sourceLabel:'Grimório'};
- if(['cleric','druid','artificer'].includes(slug))return{kind:'daily',title:'Magias preparadas hoje',pool:'class',timing:'Após um Descanso Longo, você pode trocar qualquer quantidade de magias preparadas por outras magias elegíveis da classe.',extra:'',sourceLabel:'Lista da classe'};
- if(LONG_REST_ONE.has(slug))return{kind:'fixed',title:'Magias preparadas atualmente',timing:'Após um Descanso Longo, você pode substituir 1 magia desta lista por outra magia elegível da classe.',extra:'',sourceLabel:'Lista preparada'};
- if(LEVEL_ONE.has(slug))return{kind:'fixed',title:'Magias preparadas atualmente',timing:'Ao ganhar um nível nesta classe, você pode substituir 1 magia desta lista por outra magia elegível da classe.',extra:'',sourceLabel:'Lista preparada'};
- return{kind:'fixed',title:'Magias da classe',timing:'Consulte a característica de conjuração da classe para alterar esta lista.',extra:'',sourceLabel:'Lista da classe'}
+ const policy=spellClassPolicy(d.klass),slug=d.klass?.slug||'';
+ if(slug==='wizard')return{kind:'daily',title:'Magias preparadas hoje',pool:'spellbook',timing:preparedChangeText(d.klass),extra:d.level>=5?'Memorizar Magia (nível 5+) também permite trocar 1 magia preparada por outra do grimório após um Descanso Curto.':'',sourceLabel:'Grimório',changeLabel:'qualquer quantidade / Descanso Longo'};
+ if(policy.preparedChange==='long-rest-all')return{kind:'daily',title:'Magias preparadas hoje',pool:'class',timing:preparedChangeText(d.klass),extra:'',sourceLabel:'Lista da classe',changeLabel:'qualquer quantidade / Descanso Longo'};
+ if(policy.preparedChange==='long-rest-one')return{kind:'fixed',title:'Magias preparadas atualmente',timing:preparedChangeText(d.klass),extra:'',sourceLabel:'Lista preparada',changeLabel:'1 / Descanso Longo'};
+ if(policy.preparedChange==='level-up-one')return{kind:'fixed',title:slug==='warlock'?'Magias de Pact Magic':'Magias preparadas atualmente',timing:preparedChangeText(d.klass),extra:'',sourceLabel:'Lista preparada',changeLabel:'1 / novo nível'};
+ return{kind:'fixed',title:'Magias da classe',timing:preparedChangeText(d.klass),extra:'',sourceLabel:'Lista da classe',changeLabel:'Conforme a classe'}
 }
 function poolFor(d,p){
  if(p.pool==='spellbook')return arr(d.selectedSpells?.leveled);
@@ -42,7 +41,8 @@ function sanitizePrepared(d,p){
 function spellName(id,pool){return pool.find(s=>s.id===id)?.name||id}
 function labelExistingList(d,p){
  const grid=document.querySelector('#spell-section .spells-grid');if(!grid)return;const columns=[...grid.children],leveledCol=columns[1];const h=leveledCol?.querySelector(':scope > h3');if(!h)return;
- if(p.kind==='daily')h.textContent='Magias preparadas para conjurar';
+ if(d.klass.slug==='wizard')h.textContent='Grimório';
+ else if(p.kind==='daily')h.textContent='Magias preparadas para conjurar';
  else if(d.klass.slug==='warlock')h.textContent='Magias de Pact Magic';
  else h.textContent='Magias preparadas da classe'
 }
@@ -50,16 +50,16 @@ function syncOverview(d,p,data=null){
  const metrics=[...document.querySelectorAll('#spell-overview .metric')];if(!metrics.length)return;const last=metrics[metrics.length-1],label=last.querySelector('span'),value=last.querySelector('strong');if(!label||!value)return;
  if(d.klass.slug==='wizard'){label.textContent='Grimório';value.textContent=`${arr(d.selectedSpells?.leveled).length} magias`;return}
  if(p.kind==='daily'){label.textContent='Preparadas hoje';const prep=data||sanitizePrepared(d,p);value.textContent=`${prep.st.prepared.length}/${prep.limit}`;return}
- label.textContent='Magias preparadas';value.textContent=String(arr(d.selectedSpells?.leveled).length)
+ label.textContent=d.klass.slug==='warlock'?'Pact Magic':'Magias preparadas';value.textContent=String(arr(d.selectedSpells?.leveled).length)
 }
 function spellMeta(s){return`${s.level}º círculo${s.school?` · ${s.school}`:''}${s.concentration?' · Concentração':''}${s.ritual?' · Ritual':''}`}
 function dailyHtml(d,p,data){
  const{st,pool,limit}=data,chosen=new Set(st.prepared),levels=[...new Set(pool.map(s=>num(s.level)).filter(Boolean))].sort((a,b)=>a-b),count=chosen.size;
- return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p>${p.extra?`<p class="mini"><strong>${esc(p.extra)}</strong></p>`:''}<div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${count}/${limit}</strong></div><div><span>Origem das escolhas</span><strong>${esc(p.sourceLabel)}</strong></div></div>${count<limit?`<p class="spell-prep-warning">Faltam ${limit-count} magia(s) para completar a preparação do dia.</p>`:''}<div class="spell-prep-current"><strong style="width:100%">Disponíveis para conjurar hoje</strong>${st.prepared.length?st.prepared.map(id=>`<span class="pill">${esc(spellName(id,pool))}</span>`).join(''):'<span class="muted">Nenhuma magia de nível 1+ preparada.</span>'}</div>${levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-checks">${pool.filter(s=>num(s.level)===level).map(s=>`<label class="spell-prep-check"><input type="checkbox" data-prepared-spell="${esc(s.id)}" ${chosen.has(s.id)?'checked':''} ${!chosen.has(s.id)&&count>=limit?'disabled':''}>${esc(s.name)}<small>${esc(spellMeta(s))}</small></label>`).join('')}</div></div>`).join('')}${d.klass.slug==='wizard'?'<p class="mini"><strong>Rituais do Mago:</strong> uma magia com a tag Ritual que esteja no grimório pode ser conjurada como ritual mesmo que não esteja entre as magias preparadas hoje.</p>':''}`
+ return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p>${p.extra?`<p class="mini"><strong>${esc(p.extra)}</strong></p>`:''}<div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${count}/${limit}</strong></div><div><span>Alteração</span><strong>${esc(p.changeLabel)}</strong></div></div>${count<limit?`<p class="spell-prep-warning">Faltam ${limit-count} magia(s) para completar a preparação do dia.</p>`:''}<div class="spell-prep-current"><strong style="width:100%">Disponíveis para conjurar hoje</strong>${st.prepared.length?st.prepared.map(id=>`<span class="pill">${esc(spellName(id,pool))}</span>`).join(''):'<span class="muted">Nenhuma magia de nível 1+ preparada.</span>'}</div>${levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-checks">${pool.filter(s=>num(s.level)===level).map(s=>`<label class="spell-prep-check"><input type="checkbox" data-prepared-spell="${esc(s.id)}" ${chosen.has(s.id)?'checked':''} ${!chosen.has(s.id)&&count>=limit?'disabled':''}>${esc(s.name)}<small>${esc(spellMeta(s))}</small></label>`).join('')}</div></div>`).join('')}${d.klass.slug==='wizard'?'<p class="mini"><strong>Rituais do Mago:</strong> uma magia com a tag Ritual que esteja no grimório pode ser conjurada como ritual mesmo que não esteja entre as magias preparadas hoje.</p>':''}`
 }
 function fixedHtml(d,p){
  const spells=arr(d.selectedSpells?.leveled),levels=[...new Set(spells.map(s=>num(s.level)).filter(Boolean))].sort((a,b)=>a-b);
- return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p><div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${spells.length}</strong></div><div><span>Alteração</span><strong>${LONG_REST_ONE.has(d.klass.slug)?'1 / Descanso Longo':LEVEL_ONE.has(d.klass.slug)?'1 / novo nível':'Conforme a classe'}</strong></div></div>${levels.length?levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-current">${spells.filter(s=>num(s.level)===level).map(s=>`<span class="pill">${esc(s.name)}</span>`).join('')}</div></div>`).join(''):'<p class="muted">Nenhuma magia de nível 1+ registrada.</p>'}<div class="spell-prep-fixed"><p class="mini">Esta lista já representa as magias disponíveis para conjurar; não existe uma segunda seleção diária separada para esta classe.</p></div>`
+ return`<h3>${esc(p.title)}</h3><p class="mini">${esc(p.timing)}</p><div class="spell-prep-summary"><div><span>Classe</span><strong>${esc(PT[d.klass.slug]||d.klass.name)}</strong></div><div><span>Preparadas</span><strong>${spells.length}</strong></div><div><span>Alteração</span><strong>${esc(p.changeLabel)}</strong></div></div>${levels.length?levels.map(level=>`<div class="spell-prep-level"><strong>${level}º círculo</strong><div class="spell-prep-current">${spells.filter(s=>num(s.level)===level).map(s=>`<span class="pill">${esc(s.name)}</span>`).join('')}</div></div>`).join(''):'<p class="muted">Nenhuma magia de nível 1+ registrada.</p>'}<div class="spell-prep-fixed"><p class="mini">Esta lista já representa as magias disponíveis para conjurar; não existe uma segunda seleção diária separada para esta classe.</p></div>`
 }
 function ensurePanel(){
  const section=$('spell-section');if(!section)return null;let panel=$('spell-preparation-panel');if(panel)return panel;panel=document.createElement('section');panel.id='spell-preparation-panel';panel.className='spell-prep-panel';const overview=$('spell-overview');overview?.insertAdjacentElement('afterend',panel);panel.addEventListener('change',onChange);return panel
