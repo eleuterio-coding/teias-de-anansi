@@ -1,6 +1,8 @@
 import * as base from './rules-base.js?v=20260824-race-variants1';
 import{state,AB,arr,num,fold,uniq,mod}from'./state.js';
 import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
+import{spellClassPolicy,usesLeveledProgression,usesCurrentLeveledList,usesCantripProgression,usesCurrentCantripList}from'./spell-class-policy.js?v=20260825-spell-policy1';
+import{spellProgressionCandidates,spellProgressionState}from'./spell-progression-rules.js?v=20260825-spell-progression2';
 export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
@@ -74,7 +76,35 @@ function withLineagePackage(fn){
 function withLegacyCompatibility(fn){const changed=[];for(const key of['species','backgrounds','subclasses','feats'])for(const x of state.catalogs[key]||[])if(x.ruleset==='5e'&&isCompatible55(x)){changed.push(x);x.ruleset='5.5e'}try{return fn()}finally{for(const x of changed)x.ruleset='5e'}}
 export function speciesTraitChoiceDefs(speciesArg=null,lineageArg=null){applyHouseRules();return withLineagePackage(()=>base.speciesTraitChoiceDefs(speciesArg,lineageArg))}
 export function sanitizeSpeciesTraitChoices(){applyHouseRules();return withLineagePackage(()=>base.sanitizeSpeciesTraitChoices())}
-export function sanitizeSelections(){applyHouseRules();const result=withLineagePackage(()=>withLegacyCompatibility(()=>base.sanitizeSelections()));applyHouseRules();return result}
+
+function sanitizeCurrentSpellLists(klass,level,raw){
+ const spells=state.c.choices.spells||(state.c.choices.spells={cantrips:[],leveled:[],arcanum:{}}),progress=base.spellProgress(klass,level);
+ if(usesCurrentCantripList(klass)){
+  const allowed=new Set(spellProgressionCandidates(klass,level,{kind:'cantrip'}).map(s=>s.id));spells.cantrips=uniq(arr(raw?.cantrips)).filter(id=>allowed.has(id)).slice(0,progress.cantrips)
+ }
+ if(usesCurrentLeveledList(klass)){
+  const allowed=new Set(spellProgressionCandidates(klass,level,{kind:'leveled'}).map(s=>s.id));spells.leveled=uniq(arr(raw?.leveled)).filter(id=>allowed.has(id)).slice(0,progress.prepared)
+ }
+}
+export function sanitizeSelections(){
+ applyHouseRules();const klass=base.selected().klass,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),raw=clone(state.c?.choices?.spells||{});
+ const result=withLineagePackage(()=>withLegacyCompatibility(()=>base.sanitizeSelections()));
+ if(klass?.spellAbility){sanitizeCurrentSpellLists(klass,level,raw);if(usesLeveledProgression(klass)||usesCantripProgression(klass)||klass.slug==='warlock')spellProgressionState(klass,level)}
+ applyHouseRules();return result
+}
+
+export function spellSelectionQuota(k,l){
+ const policy=spellClassPolicy(k),progress=base.spellProgress(k,l);if(!k?.spellAbility)return{total:0,byLevel:{},label:'Magias',mode:'none'};
+ if(usesCurrentLeveledList(k)){const total=progress.prepared,byLevel=progress.maxLevel&&total?{[progress.maxLevel]:total}:{};return{total,byLevel,label:policy.label,mode:'current-list'}}
+ const q=base.spellSelectionQuota(k,l);return{...q,label:policy.label||q.label}
+}
+export function spellCreditState(k,l,ids){
+ const q=spellSelectionQuota(k,l),progress=base.spellProgress(k,l),hasProgression=state.c?.choices?.spells?.progression?.classId===k?.id;
+ if(usesCurrentLeveledList(k)||(hasProgression&&usesLeveledProgression(k))){const byLevel=progress.maxLevel&&q.total?{[progress.maxLevel]:q.total}:{};const levels=arr(ids).map(id=>base.item('spells',id)).filter(Boolean).map(s=>num(s.level));return base.allocateSpellCredits(byLevel,levels)}
+ return base.spellCreditState(k,l,ids)
+}
+export function spellOptions(k,l){const opts=base.spellOptions(k,l),q=spellSelectionQuota(k,l);opts.progress={...opts.progress,prepared:q.total,selectionTotal:q.total,selectionByLevel:q.byLevel,selectionCreditsByLevel:q.byLevel,selectionLabel:q.label,selectionMode:q.mode};return opts}
+export function canSelectLeveledSpell(k,l,ids,candidateId){const current=arr(ids);if(current.includes(candidateId))return true;const opts=spellOptions(k,l),candidate=opts.leveled.find(spell=>spell.id===candidateId);if(!candidate||current.length>=opts.progress.selectionTotal)return false;return spellCreditState(k,l,[...current,candidateId]).valid}
 
 function isReplacedClassFeat(feature){if(!STANDARD_CLASS_FEAT_LEVELS.has(num(feature?.level)))return false;const name=fold(feature?.name||'');return/ability score improvement|melhoria.*atribut|aumento.*atribut/.test(name)}
 function sourceForInstance(inst,klass){if(inst.key==='background')return'Talento de Origem · Antecedente';if(!inst.key?.startsWith('class:'))return inst.source;const slot=inst.key.slice(6),entry=arr(klass?._houseFeatProgression).find(x=>x.slot===slot);if(!entry)return inst.source;return entry.kind==='house'?`Regra da Casa · nível ${entry.level}`:`Classe · nível ${entry.level} · talento adicional`}
