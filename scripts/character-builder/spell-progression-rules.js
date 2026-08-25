@@ -90,6 +90,7 @@ export function spellProgressionState(klass,targetLevel){
  const target=Math.max(1,Math.min(20,num(targetLevel)||1)),progression=ensureSpellProgression(klass,target),defs=spellProgressionSteps(klass,target),snapshots=[];let cantrips=[],leveled=[],arcanum={},firstIncompleteLevel=null;
  for(const def of defs){
   const key=String(def.level),stored=normalizeStoredStep(progression.steps[key]),beforeCantrips=[...cantrips],beforeLeveled=[...leveled],beforeArcanum={...arcanum};
+  if(firstIncompleteLevel!=null){progression.steps[key]=stored;snapshots.push({...def,beforeCantrips,beforeLeveled,beforeArcanum,afterCantrips:[...cantrips],afterLeveled:[...leveled],afterArcanum:{...arcanum},stored,complete:false,locked:true});continue}
   stored.cantrips=stored.cantrips.filter(id=>validCandidateId(klass,def.level,id,'cantrip')&&!beforeCantrips.includes(id)).slice(0,def.cantripGain);
   stored.leveled=stored.leveled.filter(id=>validCandidateId(klass,def.level,id,'leveled')&&!beforeLeveled.includes(id)).slice(0,def.leveledGain);
   cantrips=uniq([...cantrips,...stored.cantrips]);leveled=uniq([...leveled,...stored.leveled]);
@@ -99,13 +100,13 @@ export function spellProgressionState(klass,targetLevel){
   if(def.arcanumLevel){if(stored.arcanum&&validCandidateId(klass,def.level,stored.arcanum,'arcanum',def.arcanumLevel)&&!Object.values(arcanum).includes(stored.arcanum))arcanum[def.arcanumLevel]=stored.arcanum;else stored.arcanum=null}
   if(def.arcanumSwap&&Object.keys(beforeArcanum).length){
    const change=stored.arcanumChange;if(change?.decision==='replace'){
-    const out=change.out,oldLevel=num(itemSpell(out)?.level),inId=change.in;if(!out||!inId||!Object.values(beforeArcanum).includes(out)||!oldLevel||!validCandidateId(klass,def.level,inId,'arcanum',oldLevel)){arcanumChangeValid=false}else{const slot=Object.keys(arcanum).find(l=>arcanum[l]===out);if(slot)arcanum[slot]=inId;stored.arcanumChange={decision:'replace',out,in:inId,level:oldLevel}}
+    const out=change.out,oldLevel=num(itemSpell(out)?.level),inId=change.in;if(!out||!inId||!Object.values(beforeArcanum).includes(out)||!oldLevel||!validCandidateId(klass,def.level,inId,'arcanum',oldLevel)||Object.values(arcanum).includes(inId)){arcanumChangeValid=false}else{const slot=Object.keys(arcanum).find(l=>arcanum[l]===out);if(slot)arcanum[slot]=inId;stored.arcanumChange={decision:'replace',out,in:inId,level:oldLevel}}
    }else stored.arcanumChange=change?.decision==='keep'?{decision:'keep',out:null,in:null,level:null}:null
   }else stored.arcanumChange=null;
   const complete=stored.cantrips.length===def.cantripGain&&stored.leveled.length===def.leveledGain&&(!def.arcanumLevel||!!stored.arcanum)&&cantripChangeValid&&spellChangeValid&&arcanumChangeValid;
-  if(firstIncompleteLevel==null&&!complete)firstIncompleteLevel=def.level;
+  if(!complete)firstIncompleteLevel=def.level;
   progression.steps[key]=stored;
-  snapshots.push({...def,beforeCantrips,beforeLeveled,beforeArcanum,afterCantrips:[...cantrips],afterLeveled:[...leveled],afterArcanum:{...arcanum},stored,complete,locked:firstIncompleteLevel!=null&&def.level>firstIncompleteLevel})
+  snapshots.push({...def,beforeCantrips,beforeLeveled,beforeArcanum,afterCantrips:[...cantrips],afterLeveled:[...leveled],afterArcanum:{...arcanum},stored,complete,locked:false})
  }
  const spells=state.c.choices.spells;spells.cantrips=[...cantrips];spells.leveled=[...leveled];spells.arcanum={...arcanum};spells.progression=progression;
  return{progression,steps:snapshots,cantrips:[...cantrips],leveled:[...leveled],arcanum:{...arcanum},firstIncompleteLevel,complete:firstIncompleteLevel==null}
@@ -113,5 +114,5 @@ export function spellProgressionState(klass,targetLevel){
 
 export function resetSpellProgression(){if(!state.c?.choices)return;state.c.choices.spells={cantrips:[],leveled:[],arcanum:{},progression:null}}
 export function spellProgressionPending(klass,targetLevel){
- const s=spellProgressionState(klass,targetLevel),out=[];for(const step of s.steps){if(step.stored.cantrips.length<step.cantripGain)out.push(`Nível ${step.level}: escolha ${step.cantripGain-step.stored.cantrips.length} truque(s).`);if(step.stored.leveled.length<step.leveledGain)out.push(`Nível ${step.level}: escolha ${step.leveledGain-step.stored.leveled.length} magia(s).`);if(step.arcanumLevel&&!step.stored.arcanum)out.push(`Nível ${step.level}: escolha o Arcano Místico de ${step.arcanumLevel}º círculo.`);if(!step.complete)break}return out
+ const s=spellProgressionState(klass,targetLevel),out=[];for(const step of s.steps){if(step.locked)break;if(step.stored.cantrips.length<step.cantripGain)out.push(`Nível ${step.level}: escolha ${step.cantripGain-step.stored.cantrips.length} truque(s).`);if(step.stored.leveled.length<step.leveledGain)out.push(`Nível ${step.level}: escolha ${step.leveledGain-step.stored.leveled.length} magia(s).`);if(step.arcanumLevel&&!step.stored.arcanum)out.push(`Nível ${step.level}: escolha o Arcano Místico de ${step.arcanumLevel}º círculo.`);if(step.stored.cantripChange?.decision==='replace'&&(!step.stored.cantripChange.out||!step.stored.cantripChange.in))out.push(`Nível ${step.level}: conclua a substituição de truque.`);if(step.stored.spellChange?.decision==='replace'&&(!step.stored.spellChange.out||!step.stored.spellChange.in))out.push(`Nível ${step.level}: conclua a substituição de magia.`);if(step.stored.arcanumChange?.decision==='replace'&&(!step.stored.arcanumChange.out||!step.stored.arcanumChange.in))out.push(`Nível ${step.level}: conclua a substituição de Arcano Místico.`);if(!step.complete)break}return out
 }
