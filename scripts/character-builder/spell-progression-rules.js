@@ -1,8 +1,7 @@
 import{state,arr,num,fold,uniq}from'./state.js';
+import{spellClassPolicy,usesLeveledProgression,usesCurrentLeveledList,usesCantripProgression,usesCurrentCantripList,levelUpSpellSwap,levelUpCantripSwap}from'./spell-class-policy.js?v=20260825-spell-policy1';
 
-export const SPELL_PROGRESSION_VERSION=1;
-const LEVEL_SWAP_CLASSES=new Set(['bard','sorcerer','warlock']);
-const CANTRIP_SWAP_CLASSES=new Set(['bard','sorcerer','warlock']);
+export const SPELL_PROGRESSION_VERSION=2;
 const CLASS_NAMES={
  bard:['Bardo','Bard'],cleric:['Clérigo','Cleric'],druid:['Druida','Druid'],paladin:['Paladino','Paladin'],ranger:['Patrulheiro','Ranger'],
  sorcerer:['Feiticeiro','Sorcerer'],warlock:['Bruxo','Warlock'],wizard:['Mago','Wizard'],artificer:['Artífice','Artificer']
@@ -10,7 +9,7 @@ const CLASS_NAMES={
 const WARLOCK_ARCANUM={11:6,13:7,15:8,17:9};
 
 function classLevelRow(klass,level){return arr(klass?.levels).find(row=>num(row.level)===num(level))||null}
-function classSpellData(klass,level){
+export function classSpellData(klass,level){
  const row=classLevelRow(klass,level),s=row?.spellcasting||row?.class_specific?.spellcasting||{},specific=row?.class_specific||{},slots=[];let maxLevel=0;
  for(let i=1;i<=9;i++){const count=num(s[`spell_slots_level_${i}`]);if(count){slots.push({level:i,count});maxLevel=Math.max(maxLevel,i)}}
  if(!maxLevel&&klass?.slug==='warlock')maxLevel=num(s.slot_level??specific.slot_level??specific.spell_slot_level);
@@ -39,9 +38,9 @@ export function spellProgressionCandidates(klass,classLevel,{kind='leveled',exac
 export function spellProgressionSteps(klass,targetLevel){
  const target=Math.max(1,Math.min(20,num(targetLevel)||1)),steps=[];let previousPrepared=0,previousCantrips=0;
  for(let level=1;level<=target;level++){
-  const p=classSpellData(klass,level),leveledGain=klass?.slug==='wizard'?(level===1?6:2):Math.max(0,p.prepared-previousPrepared),cantripGain=Math.max(0,p.cantrips-previousCantrips),arcanumLevel=klass?.slug==='warlock'?num(WARLOCK_ARCANUM[level]):0;
+  const p=classSpellData(klass,level),leveledGain=usesLeveledProgression(klass)?(klass?.slug==='wizard'?(level===1?6:2):Math.max(0,p.prepared-previousPrepared)):0,cantripGain=usesCantripProgression(klass)?Math.max(0,p.cantrips-previousCantrips):0,arcanumLevel=klass?.slug==='warlock'?num(WARLOCK_ARCANUM[level]):0;
   previousPrepared=p.prepared;previousCantrips=p.cantrips;
-  const spellSwap=level>1&&LEVEL_SWAP_CLASSES.has(klass?.slug),cantripSwap=level>1&&CANTRIP_SWAP_CLASSES.has(klass?.slug),arcanumSwap=klass?.slug==='warlock'&&level>11;
+  const spellSwap=level>1&&levelUpSpellSwap(klass),cantripSwap=level>1&&levelUpCantripSwap(klass),arcanumSwap=klass?.slug==='warlock'&&level>11;
   steps.push({level,maxSpellLevel:p.maxLevel,prepared:p.prepared,cantrips:p.cantrips,leveledGain,cantripGain,spellSwap,cantripSwap,arcanumLevel,arcanumSwap,hasSpellcasting:!!(p.maxLevel||p.cantrips||arcanumLevel)})
  }
  return steps
@@ -67,23 +66,37 @@ function applyChange({klass,level,before,current,change,kind='leveled'}){
 }
 
 function legacyAllocate(klass,targetLevel,progression,legacy){
- const defs=spellProgressionSteps(klass,targetLevel),levelSlots=[];
- for(const def of defs)for(let i=0;i<def.leveledGain;i++)levelSlots.push({level:def.level,cap:def.maxSpellLevel});
- const selected=uniq(arr(legacy?.leveled)).map((id,index)=>({id,index,level:num(itemSpell(id)?.level)})).filter(row=>row.level>0).sort((a,b)=>b.level-a.level||a.index-b.index),remaining=[...levelSlots].sort((a,b)=>a.cap-b.cap||a.level-b.level),assigned={};
+ const defs=spellProgressionSteps(klass,targetLevel),levelSlots=[],assigned={};
+ if(usesLeveledProgression(klass))for(const def of defs)for(let i=0;i<def.leveledGain;i++)levelSlots.push({level:def.level,cap:def.maxSpellLevel});
+ const selected=uniq(arr(legacy?.leveled)).map((id,index)=>({id,index,level:num(itemSpell(id)?.level)})).filter(row=>row.level>0).sort((a,b)=>b.level-a.level||a.index-b.index),remaining=[...levelSlots].sort((a,b)=>a.cap-b.cap||a.level-b.level);
  for(const row of selected){const i=remaining.findIndex(slot=>slot.cap>=row.level&&validCandidateId(klass,slot.level,row.id));if(i<0)continue;const slot=remaining.splice(i,1)[0];(assigned[slot.level]||(assigned[slot.level]=[])).push(row.id)}
- const cantripSlots=[];for(const def of defs)for(let i=0;i<def.cantripGain;i++)cantripSlots.push(def.level);
+ const cantripSlots=[];if(usesCantripProgression(klass))for(const def of defs)for(let i=0;i<def.cantripGain;i++)cantripSlots.push(def.level);
  uniq(arr(legacy?.cantrips)).forEach((id,index)=>{const level=cantripSlots[index];if(level&&validCandidateId(klass,level,id,'cantrip'))(assigned[`c${level}`]||(assigned[`c${level}`]=[])).push(id)});
  for(const def of defs){const step=blankStep();step.leveled=assigned[def.level]||[];step.cantrips=assigned[`c${def.level}`]||[];if(def.spellSwap)step.spellChange={decision:'keep',out:null,in:null};if(def.cantripSwap)step.cantripChange={decision:'keep',out:null,in:null};if(def.arcanumLevel){const id=legacy?.arcanum?.[def.arcanumLevel];if(id&&validCandidateId(klass,def.level,id,'arcanum',def.arcanumLevel))step.arcanum=id}if(def.arcanumSwap)step.arcanumChange={decision:'keep',out:null,in:null};progression.steps[String(def.level)]=step}
  return progression
 }
 export function ensureSpellProgression(klass,targetLevel){
  const spells=state.c?.choices?.spells||(state.c.choices.spells={cantrips:[],leveled:[],arcanum:{}}),target=Math.max(1,Math.min(20,num(targetLevel)||1));let p=spells.progression;
+ if(p&&p.classId===klass?.id&&num(p.version)===1){p.version=SPELL_PROGRESSION_VERSION;p.classSlug=klass?.slug||null}
  if(!p||p.version!==SPELL_PROGRESSION_VERSION||p.classId!==klass?.id){
   const legacy={cantrips:arr(spells.cantrips),leveled:arr(spells.leveled),arcanum:{...(spells.arcanum||{})}};p=freshProgression(klass,target);
   if(legacy.cantrips.length||legacy.leveled.length||Object.keys(legacy.arcanum).length)p=legacyAllocate(klass,target,p,legacy);
   spells.progression=p
  }
  p.targetLevel=target;p.classSlug=klass?.slug||null;p.steps=p.steps&&typeof p.steps==='object'?p.steps:{};return p
+}
+
+export function spellCurrentListState(klass,targetLevel){
+ const target=Math.max(1,Math.min(20,num(targetLevel)||1)),p=classSpellData(klass,target),spells=state.c?.choices?.spells||{},result={cantrips:null,leveled:null,complete:true};
+ if(usesCurrentCantripList(klass)){
+  const allowed=new Set(spellProgressionCandidates(klass,target,{kind:'cantrip'}).map(s=>s.id)),selected=uniq(arr(spells.cantrips)).filter(id=>allowed.has(id)).slice(0,p.cantrips);
+  result.cantrips={selected,required:p.cantrips,missing:Math.max(0,p.cantrips-selected.length),change:spellClassPolicy(klass).cantripChange};result.complete=result.complete&&!result.cantrips.missing
+ }
+ if(usesCurrentLeveledList(klass)){
+  const allowed=new Set(spellProgressionCandidates(klass,target,{kind:'leveled'}).map(s=>s.id)),selected=uniq(arr(spells.leveled)).filter(id=>allowed.has(id)).slice(0,p.prepared);
+  result.leveled={selected,required:p.prepared,missing:Math.max(0,p.prepared-selected.length),change:spellClassPolicy(klass).preparedChange};result.complete=result.complete&&!result.leveled.missing
+ }
+ return result
 }
 
 export function spellProgressionState(klass,targetLevel){
@@ -108,11 +121,15 @@ export function spellProgressionState(klass,targetLevel){
   progression.steps[key]=stored;
   snapshots.push({...def,beforeCantrips,beforeLeveled,beforeArcanum,afterCantrips:[...cantrips],afterLeveled:[...leveled],afterArcanum:{...arcanum},stored,complete,locked:false})
  }
- const spells=state.c.choices.spells;spells.cantrips=[...cantrips];spells.leveled=[...leveled];spells.arcanum={...arcanum};spells.progression=progression;
- return{progression,steps:snapshots,cantrips:[...cantrips],leveled:[...leveled],arcanum:{...arcanum},firstIncompleteLevel,complete:firstIncompleteLevel==null}
+ const spells=state.c.choices.spells;if(usesCantripProgression(klass))spells.cantrips=[...cantrips];if(usesLeveledProgression(klass))spells.leveled=[...leveled];spells.arcanum={...arcanum};spells.progression=progression;
+ const current=spellCurrentListState(klass,target),finalCantrips=usesCantripProgression(klass)?[...cantrips]:arr(spells.cantrips),finalLeveled=usesLeveledProgression(klass)?[...leveled]:arr(spells.leveled),historyComplete=firstIncompleteLevel==null;
+ return{progression,steps:snapshots,cantrips:finalCantrips,leveled:finalLeveled,arcanum:{...arcanum},current,firstIncompleteLevel,historyComplete,complete:historyComplete&&current.complete}
 }
 
 export function resetSpellProgression(){if(!state.c?.choices)return;state.c.choices.spells={cantrips:[],leveled:[],arcanum:{},progression:null}}
 export function spellProgressionPending(klass,targetLevel){
- const s=spellProgressionState(klass,targetLevel),out=[];for(const step of s.steps){if(step.locked)break;if(step.stored.cantrips.length<step.cantripGain)out.push(`Nível ${step.level}: escolha ${step.cantripGain-step.stored.cantrips.length} truque(s).`);if(step.stored.leveled.length<step.leveledGain)out.push(`Nível ${step.level}: escolha ${step.leveledGain-step.stored.leveled.length} magia(s).`);if(step.arcanumLevel&&!step.stored.arcanum)out.push(`Nível ${step.level}: escolha o Arcano Místico de ${step.arcanumLevel}º círculo.`);if(step.stored.cantripChange?.decision==='replace'&&(!step.stored.cantripChange.out||!step.stored.cantripChange.in))out.push(`Nível ${step.level}: conclua a substituição de truque.`);if(step.stored.spellChange?.decision==='replace'&&(!step.stored.spellChange.out||!step.stored.spellChange.in))out.push(`Nível ${step.level}: conclua a substituição de magia.`);if(step.stored.arcanumChange?.decision==='replace'&&(!step.stored.arcanumChange.out||!step.stored.arcanumChange.in))out.push(`Nível ${step.level}: conclua a substituição de Arcano Místico.`);if(!step.complete)break}return out
+ const s=spellProgressionState(klass,targetLevel),out=[];for(const step of s.steps){if(step.locked)break;if(step.stored.cantrips.length<step.cantripGain)out.push(`Nível ${step.level}: escolha ${step.cantripGain-step.stored.cantrips.length} truque(s).`);if(step.stored.leveled.length<step.leveledGain)out.push(`Nível ${step.level}: escolha ${step.leveledGain-step.stored.leveled.length} magia(s).`);if(step.arcanumLevel&&!step.stored.arcanum)out.push(`Nível ${step.level}: escolha o Arcano Místico de ${step.arcanumLevel}º círculo.`);if(step.stored.cantripChange?.decision==='replace'&&(!step.stored.cantripChange.out||!step.stored.cantripChange.in))out.push(`Nível ${step.level}: conclua a substituição de truque.`);if(step.stored.spellChange?.decision==='replace'&&(!step.stored.spellChange.out||!step.stored.spellChange.in))out.push(`Nível ${step.level}: conclua a substituição de magia.`);if(step.stored.arcanumChange?.decision==='replace'&&(!step.stored.arcanumChange.out||!step.stored.arcanumChange.in))out.push(`Nível ${step.level}: conclua a substituição de Arcano Místico.`);if(!step.complete)break}
+ if(s.current.cantrips?.missing)out.push(`Lista atual: escolha ${s.current.cantrips.missing} truque(s).`);
+ if(s.current.leveled?.missing)out.push(`Lista atual: escolha ${s.current.leveled.missing} magia(s) preparada(s).`);
+ return out
 }
