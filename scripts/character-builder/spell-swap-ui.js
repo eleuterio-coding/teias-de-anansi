@@ -2,7 +2,7 @@ import{state,$,arr,num,esc}from'./state.js';
 import{selected}from'./rules.js';
 import{spellProgressionCandidates,spellProgressionState}from'./spell-progression-rules.js?v=20260825-spell-progression1';
 
-let initialized=false,decorating=false,queued=false;
+let initialized=false,queued=false;
 const spellById=id=>arr(state.catalogs.spells).find(spell=>spell.id===id)||null;
 const spellName=id=>spellById(id)?.name||'Magia indisponível';
 function klass(){return selected().klass||null}
@@ -20,25 +20,31 @@ function swapMarkup(k,step){
 }
 function insertFirst(active,section){
  const search=active.querySelector('[data-progression-search]'),anchor=search?.closest('label');
- if(anchor)anchor.insertAdjacentElement('afterend',section);else active.prepend(section)
+ if(anchor){if(anchor.nextElementSibling!==section)anchor.insertAdjacentElement('afterend',section)}
+ else if(active.firstElementChild!==section)active.prepend(section)
 }
 function decorate(){
- if(decorating)return;decorating=true;
- try{
-  const root=$('magias-escolhas')?.querySelector('[data-spell-progression-ui]');if(!root)return;
-  const ctx=stepForActive(root);if(!ctx?.step)return;
-  const{step,active,k}=ctx,eligible=!!step.spellSwap&&step.beforeLeveled.length>0;
-  let section=active.querySelector('section:has([data-progression-toggle="spell"])');
-  if(!eligible){section?.remove();return}
-  if(section){section.dataset.prominentSpellSwap='';if(!section.querySelector('h4')){const title=document.createElement('h4');title.textContent='Substituição de magia';section.prepend(title)}const p=section.querySelector('.mini');if(p)p.textContent='Opcional. Escolha uma magia aprendida em um nível anterior e troque-a por outra magia válida para este nível. Ao concluir a troca, a magia antiga será desmarcada automaticamente e a nova será marcada no círculo correspondente.';insertFirst(active,section);return}
-  section=document.createElement('section');section.dataset.prominentSpellSwap='';section.innerHTML=swapMarkup(k,step);insertFirst(active,section)
- }finally{decorating=false}
+ const root=$('magias-escolhas')?.querySelector('[data-spell-progression-ui]');if(!root)return;
+ const ctx=stepForActive(root);if(!ctx?.step)return;
+ const{step,active,k}=ctx,eligible=!!step.spellSwap&&step.beforeLeveled.length>0;
+ let section=active.querySelector('section:has([data-progression-toggle="spell"])');
+ if(!eligible){section?.remove();return}
+ if(!section){section=document.createElement('section');section.dataset.prominentSpellSwap='';section.innerHTML=swapMarkup(k,step)}
+ else{
+  section.dataset.prominentSpellSwap='';
+  if(!section.querySelector('h4')){const title=document.createElement('h4');title.textContent='Substituição de magia';section.prepend(title)}
+  const p=section.querySelector('.mini');if(p&&p.textContent!=='Opcional. Escolha uma magia aprendida em um nível anterior e troque-a por outra magia válida para este nível. Ao concluir a troca, a magia antiga será desmarcada automaticamente e a nova será marcada no círculo correspondente.')p.textContent='Opcional. Escolha uma magia aprendida em um nível anterior e troque-a por outra magia válida para este nível. Ao concluir a troca, a magia antiga será desmarcada automaticamente e a nova será marcada no círculo correspondente.'
+ }
+ insertFirst(active,section)
 }
 function schedule(){if(queued)return;queued=true;queueMicrotask(()=>{queued=false;decorate()})}
+function relevantEvent(event){return !!event.target.closest('[data-spell-level],[data-progression-search],[data-progression-kind],[data-progression-toggle],[data-progression-out],[data-progression-in],[data-progression-arcanum]')}
 export function initSpellSwapUi(){
  if(initialized)return;initialized=true;const box=$('magias-escolhas');if(!box)return;
- new MutationObserver(schedule).observe(box,{childList:true,subtree:true});
- box.addEventListener('change',event=>{if(event.target.closest('[data-progression-toggle="spell"],[data-progression-out="spell"],[data-progression-in="spell"]'))queueMicrotask(schedule)},true);
+ // Sem MutationObserver: mover o próprio bloco não pode disparar uma nova renderização em ciclo.
+ box.addEventListener('click',event=>{if(relevantEvent(event))schedule()});
+ box.addEventListener('change',event=>{if(relevantEvent(event))schedule()});
+ box.addEventListener('input',event=>{if(relevantEvent(event))schedule()});
  document.addEventListener('hub:spell-selection-changed',schedule);
  $('classe')?.addEventListener('change',schedule);$('nivel')?.addEventListener('change',schedule);$('new-character')?.addEventListener('click',schedule);
  schedule()

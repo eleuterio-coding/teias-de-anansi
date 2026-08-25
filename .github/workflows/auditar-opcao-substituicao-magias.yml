@@ -50,7 +50,7 @@ jobs:
           assert(map.activeByLevel.get(3)?.has('nova-normal'),'A nova magia normal do nível deve continuar marcada.');
           console.log('Troca entre círculos validada: A sai, B entra e a escolha normal permanece.');
           NODE
-      - name: Auditar presença e posição da opção de troca
+      - name: Auditar presença, posição e estabilidade da opção de troca
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -66,15 +66,18 @@ jobs:
             'data-progression-in="spell"',
             "insertAdjacentElement('afterend',section)",
             'spellProgressionState',
-            'step.spellSwap'
+            'step.spellSwap',
+            'anchor.nextElementSibling!==section'
           ]
           missing=[token for token in required if token not in ui]
           if missing: raise RuntimeError('Controle de substituição incompleto: '+', '.join(missing))
+          if 'new MutationObserver' in ui:
+              raise RuntimeError('A UI de substituição não pode observar e mover o próprio DOM: isso pode gerar loop e travar a página.')
           if 'spell-swap-ui.js?v=20260825-spell-swap-visible1' not in loader or 'initSpellSwapUi' not in loader:
-              raise RuntimeError('O construtor não carrega a restauração da opção de substituição.')
+              raise RuntimeError('O construtor não carrega a opção explícita de substituição.')
           if 'automaticamente' not in ui or 'marcada no círculo correspondente' not in ui:
               raise RuntimeError('A interface não explica a sincronização automática dos checkboxes.')
           if 'supabase' in (ui+'\n'+loader).lower():
               raise RuntimeError('A implementação não pode introduzir Supabase.')
-          print('Opção explícita de substituição validada antes da lista de novas magias.')
+          print('Substituição validada sem MutationObserver recursivo.')
           PY
