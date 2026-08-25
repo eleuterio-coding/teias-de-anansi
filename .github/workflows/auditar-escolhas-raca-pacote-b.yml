@@ -69,13 +69,18 @@ jobs:
       - name: Testar estado do Skilled
         run: |
           node --input-type=module <<'JS'
-          import{setSkilledDraftRow,skilledRowComplete}from'./scripts/character-builder/skilled-feat-ui.js';
+          import{setSkilledDraftRow,skilledRowComplete,availableSkilledSkills,pruneUnavailableSkilledSkills}from'./scripts/character-builder/skilled-feat-ui.js';
           let rows=[];
           rows=setSkilledDraftRow(rows,0,'skill','Acrobacia');
           if(!skilledRowComplete(rows[0])||rows[0].value!=='Acrobacia')throw new Error('Skilled deve aceitar uma perícia específica diretamente.');
           rows=setSkilledDraftRow(rows,1,'tool','Ferramentas de Ladrão');
           if(!skilledRowComplete(rows[1])||rows[1].value!=='Ferramentas de Ladrão')throw new Error('Skilled deve continuar aceitando uma ferramenta específica.');
-          console.log('Estado de escolhas do Skilled validado.');
+          rows=setSkilledDraftRow(rows,2,'skill','Percepção');
+          const available=availableSkilledSkills(['História','Persuasão'],rows,0);
+          if(available.includes('História')||available.includes('Persuasão')||available.includes('Percepção'))throw new Error('Skilled não deve oferecer perícias já obtidas nem repetidas.');
+          const pruned=pruneUnavailableSkilledSkills(['Acrobacia'],rows);
+          if(!pruned.changed||pruned.rows[0]?.value)throw new Error('Skilled deve limpar perícia que passe a ser concedida por outra fonte.');
+          console.log('Estado de escolhas do Skilled validado com filtro de proficiências existentes.');
           JS
       - name: Testar opções de tamanho e identificação de seletores genéricos
         run: |
@@ -108,7 +113,7 @@ jobs:
           race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
           assert 'package-b-purchase-ui.js' in builder
           assert 'wealth-by-level3' in package
-          assert 'skilled-direct2' in package
+          assert 'skilled-existing1' in package
           assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package and 'initSkilledFeatUi' in package
           assert 'STANDARD_PACKAGE_B_GP=75' in rules
           assert 'creationBudgetCp' in wealth
@@ -125,9 +130,11 @@ jobs:
           assert 'Escolha uma perícia ou ferramenta' in skilled
           assert '<optgroup label="Perícias">' in skilled
           assert "'Ferramenta…'" in skilled
+          assert 'availableSkilledSkills' in skilled and 'pruneUnavailableSkilledSkills' in skilled
+          assert 'existingSkillsExcludingSkilled' in skilled
           assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
           assert "removeAttribute('data-feat-mixed')" in skilled
           joined='\n'.join([builder,package,wealth,equipment,rules,origin,feats,skilled,sheet,race])
           assert 'supabase' not in joined.lower()
-          print('Compras, Pacotes A/B, Ficha Virtual e Skilled com escolha direta validados.')
+          print('Compras, Pacotes A/B, Ficha Virtual e Skilled com filtro de proficiências validados.')
           PY
