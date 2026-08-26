@@ -1,6 +1,7 @@
 name: Auditar equipamentos e proficiência
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'scripts/character-builder/equipment-ownership.js'
