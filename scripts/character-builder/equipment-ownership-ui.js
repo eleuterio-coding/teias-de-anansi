@@ -16,16 +16,30 @@ function normalizeActive(){
 }
 function markup(){
  const ctx=ownedContext(),eq=state.c.choices.equipment;
- return`<div class="choice-grid"><label>Armadura equipada<select id="armor"><option value="">Sem armadura</option>${ctx.armors.map(row=>`<option value="${esc(row.refId)}" ${eq.armor===row.refId?'selected':''}>${esc(row.data.nome)} · CA ${esc(row.data.ca)}${row.qty>1?` · ${row.qty} disponíveis`:''}</option>`).join('')}</select></label><label class="checkline"><input id="shield" type="checkbox" ${eq.shield?'checked':''} ${ctx.shield?'':'disabled'}> Escudo equipado${ctx.shield?'':' · nenhum escudo utilizável no inventário'}</label><label>Arma principal<select id="weapon"><option value="">Nenhuma</option>${ctx.weapons.map(row=>`<option value="${esc(row.refId)}" ${eq.weapon===row.refId?'selected':''}>${esc(row.data.nome)} · ${esc(row.data.dano)}${row.qty>1?` · ${row.qty} disponíveis`:''}</option>`).join('')}</select></label></div>`
+ return`<div class="choice-grid" data-equipment-ownership-ui="1"><label>Armadura equipada<select id="armor"><option value="">Sem armadura</option>${ctx.armors.map(row=>`<option value="${esc(row.refId)}" ${eq.armor===row.refId?'selected':''}>${esc(row.data.nome)} · CA ${esc(row.data.ca)}${row.qty>1?` · ${row.qty} disponíveis`:''}</option>`).join('')}</select></label><label class="checkline"><input id="shield" type="checkbox" ${eq.shield?'checked':''} ${ctx.shield?'':'disabled'}> Escudo equipado${ctx.shield?'':' · nenhum escudo utilizável no inventário'}</label><label>Arma principal<select id="weapon"><option value="">Nenhuma</option>${ctx.weapons.map(row=>`<option value="${esc(row.refId)}" ${eq.weapon===row.refId?'selected':''}>${esc(row.data.nome)} · ${esc(row.data.dano)}${row.qty>1?` · ${row.qty} disponíveis`:''}</option>`).join('')}</select></label></div>`
 }
-function renderActive(){const box=$('equipamento-escolhas');if(!box||!state.c||rendering)return;rendering=true;try{normalizeActive();const html=markup();if(box.innerHTML!==html)box.innerHTML=html}finally{rendering=false}}
+function renderActive(){
+ const box=$('equipamento-escolhas');if(!box||!state.c||rendering)return;rendering=true;
+ try{
+  normalizeActive();const html=markup(),ownedMarkupPresent=!!box.querySelector('[data-equipment-ownership-ui="1"]');
+  if(ownedMarkupPresent&&box.dataset.equipmentOwnershipSignature===html)return;
+  box.dataset.equipmentOwnershipSignature=html;box.innerHTML=html
+ }finally{rendering=false}
+}
 function weaponCard(d,row){const weapon=row.data||state.catalogs.weapons.find(w=>w.id===row.refId),p=weaponAttackProfile(d,weapon);if(!weapon||!p)return'';return`<div class="preview-block"><strong>${esc(weapon.nome)}${row.qty>1?` ×${row.qty}`:''}</strong><div class="value-row"><span>Ataque</span><strong>${signed(p.attack)}${p.proficient?' ●':''}</strong></div><div class="value-row"><span>Dano</span><strong>${esc(weapon.dano)} ${p.damageModifier}</strong></div><div class="value-row"><span>Maestria</span><strong>${esc(weapon.maestria||'—')}</strong></div></div>`}
-function renderCombat(){const box=$('combat');if(!box||!state.c||combatRendering)return;combatRendering=true;try{const d=derive(),owned=ownedEquipment(),cards=owned.weapons.map(row=>weaponCard(d,row)).join(''),html=`<div class="value-row"><span>CA</span><strong>${d.ac}</strong></div>${d.armor?`<div class="value-row"><span>Armadura</span><strong>${esc(d.armor.nome)}</strong></div>`:''}${state.c.choices.equipment.shield?'<div class="value-row"><span>Escudo</span><strong>Equipado</strong></div>':''}${cards||'<p class="muted">Nenhuma arma no inventário.</p>'}`;if(box.innerHTML!==html)box.innerHTML=html}finally{combatRendering=false}}
+function renderCombat(){
+ const box=$('combat');if(!box||!state.c||combatRendering)return;combatRendering=true;
+ try{
+  const d=derive(),owned=ownedEquipment(),cards=owned.weapons.map(row=>weaponCard(d,row)).join(''),html=`<div data-equipment-combat-ui="1"><div class="value-row"><span>CA</span><strong>${d.ac}</strong></div>${d.armor?`<div class="value-row"><span>Armadura</span><strong>${esc(d.armor.nome)}</strong></div>`:''}${state.c.choices.equipment.shield?'<div class="value-row"><span>Escudo</span><strong>Equipado</strong></div>':''}${cards||'<p class="muted">Nenhuma arma no inventário.</p>'}</div>`,ownedMarkupPresent=!!box.querySelector('[data-equipment-combat-ui="1"]');
+  if(ownedMarkupPresent&&box.dataset.equipmentCombatSignature===html)return;
+  box.dataset.equipmentCombatSignature=html;box.innerHTML=html
+ }finally{combatRendering=false}
+}
 function refresh(){renderActive();renderCombat()}
 function bind(){
  const equipment=$('equipamento-escolhas');equipment?.addEventListener('change',event=>{const id=event.target?.id;if(!['armor','shield','weapon'].includes(id))return;event.stopImmediatePropagation();if(id==='armor')state.c.choices.equipment.armor=event.target.value||null;else if(id==='shield')state.c.choices.equipment.shield=event.target.checked;else state.c.choices.equipment.weapon=event.target.value||null;renderActive();renderCombat();document.dispatchEvent(new CustomEvent('hub:active-equipment-changed'))},true);
- if(equipment)new MutationObserver(()=>queueMicrotask(renderActive)).observe(equipment,{childList:true,subtree:false});
- const combat=$('combat');if(combat)new MutationObserver(()=>queueMicrotask(renderCombat)).observe(combat,{childList:true,subtree:false});
+ if(equipment)new MutationObserver(()=>{if(!rendering)queueMicrotask(renderActive)}).observe(equipment,{childList:true,subtree:false});
+ const combat=$('combat');if(combat)new MutationObserver(()=>{if(!combatRendering)queueMicrotask(renderCombat)}).observe(combat,{childList:true,subtree:false});
  for(const type of['hub:equipment-inventory-changed','hub:class-context-changed','hub:origin-context-changed','hub:starting-equipment-changed','hub:progression-context-changed','hub:species-choices-changed','hub:new-character'])document.addEventListener(type,()=>queueMicrotask(refresh))
 }
 export function initEquipmentOwnershipUi(){if(initialized)return;initialized=true;refresh();bind()}
