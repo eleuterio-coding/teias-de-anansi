@@ -1,0 +1,53 @@
+name: Auditar magias unificadas
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - '.github/workflows/auditar-magias-unificadas.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - '.github/workflows/auditar-magias-unificadas.yml'
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar sintaxe JavaScript
+        run: node --check scripts/character-sheet-unified-spells.js
+      - name: Validar contratos da ficha
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path('ficha-personagem.html').read_text(encoding='utf-8')
+          js = Path('scripts/character-sheet-unified-spells.js').read_text(encoding='utf-8')
+
+          checks = {
+              'módulo carregado pela ficha': 'character-sheet-unified-spells.js?v=20260826-unified-spells2' in html,
+              'cards expansíveis': '<details class="uspell"' in js,
+              'lista consolidada': 'function collect(d)' in js,
+              'magias da classe': 'function classSpells' in js,
+              'magias de talentos': 'function featSpells' in js,
+              'magias de raça e linhagem': 'function speciesFixedSpells' in js and 'function speciesChoiceSpells' in js,
+              'Iniciado em Magia automático': 'freeLongRestFeat' in js and 'featSpellcasting' in js,
+              'Gnomo da Floresta': 'minor illusion' in js and 'speak with animals' in js,
+              'metadados completos': all(token in js for token in ['castingTime','range','components','duration','attackSave']),
+              'fonte e atributo': 'Fontes e formas de conjuração' in js and 'abilityText' in js,
+              'descrição disponível': 'Descrição' in js and 'description' in js,
+              'busca na lista': 'uspell-search' in js,
+              'sem Supabase': 'supabase' not in (html + js).lower(),
+              'sem marcadores temporários': not any(Path('tests').glob('.placeholder*')),
+          }
+          failed = [name for name, ok in checks.items() if not ok]
+          for name, ok in checks.items():
+              print(('OK   ' if ok else 'FALHA'), name)
+          if failed:
+              raise SystemExit('Contratos ausentes: ' + ', '.join(failed))
+          PY
