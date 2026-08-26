@@ -1,12 +1,18 @@
 import{state,$,AB,SKILL_AB,arr,esc,mod,signed,fold}from'./character-builder/state.js';
 import{derive}from'./character-builder/rules.js';
+import{deriveSkillCheckMechanics}from'./character-builder/skill-check-mechanics.js?v=20260826-jack-of-all-trades1';
 import{creationPhysicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260824-starting-equipment1';
 
 function pill(v){return`<span class="pill">${esc(v)}</span>`}
 function uniqText(values){const out=[],seen=new Set;for(const value of values.filter(Boolean)){const key=fold(value);if(!seen.has(key)){seen.add(key);out.push(value)}}return out}
 function syncChosenOriginFeat(){const bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background);if(!bg)return;const id=state.c?.choices?.background?.originFeat,feat=id?state.catalogs.feats.find(x=>x.id===id):null;bg.feat=feat?{name:feat.name,description:feat.description||'',source:feat.source||bg.source||''}:null}
 function renderSaves(d){const box=$('saves');if(!box)return;box.innerHTML=AB.map(a=>{const trained=arr(d.saveProficiencies).includes(a),value=mod(d.scores[a])+(trained?d.pbonus:0);return`<div class="row"><span>${trained?'● ':''}${esc(a)}</span><strong>${signed(value)}</strong></div>`}).join('')}
-function renderSkills(d){const box=$('skills');if(!box)return;box.innerHTML=Object.entries(SKILL_AB).map(([skill,ability])=>{const trained=d.skills.includes(skill),expert=arr(d.expertiseSkills).includes(skill),value=mod(d.scores[ability])+(trained?d.pbonus:0)+(expert?d.pbonus:0);return`<div class="row"><span>${trained?'● ':''}${expert?'★ ':''}${esc(skill)} <small>${esc(ability)}</small></span><strong>${signed(value)}</strong></div>`}).join('')}
+function renderSkills(d){
+ const box=$('skills');if(!box)return;const mechanics=deriveSkillCheckMechanics(d),jack=mechanics.jackOfAllTrades;
+ box.innerHTML=Object.entries(SKILL_AB).map(([skill,ability])=>{const row=mechanics.checks[skill],mark=row.expertise?'● ★ ':row.proficient?'● ':row.jackOfAllTrades?'◐ ':'',source=row.jackOfAllTrades?` <small>½ PB (+${jack.bonus})</small>`:'';return`<div class="row"><span>${mark}${esc(skill)} <small>${esc(ability)}</small>${source}</span><strong>${signed(row.value)}</strong></div>`}).join('');
+ let note=box.parentElement?.querySelector('[data-jack-of-all-trades-sheet]');if(jack.active){if(!note){note=document.createElement('p');note.className='mini';note.dataset.jackOfAllTradesSheet='';box.after(note)}note.textContent=`◐ Pau para Toda Obra: +${jack.bonus} (metade do Bônus de Proficiência, arredondado para baixo) nas perícias sem proficiência.`}else note?.remove();
+ const metrics=$('core-metrics'),passive=metrics?[...metrics.querySelectorAll('.metric')].find(row=>fold(row.querySelector('span')?.textContent)==='percepcao passiva'):null,strong=passive?.querySelector('strong');if(strong)strong.textContent=String(mechanics.passivePerception)
+}
 function renderProficiencies(d){
  const extras=[...arr(d.extraProficiencies),...arr(d.featMechanics?.armorTraining).map(x=>`Armadura ${x}`),...(d.featMechanics?.shieldTraining?['Escudos']:[]),...arr(d.featMechanics?.weaponTraining).map(x=>`Armas ${x}s`)];
  const profs=uniqText([...arr(d.klass?.proficiencies),...extras]);
