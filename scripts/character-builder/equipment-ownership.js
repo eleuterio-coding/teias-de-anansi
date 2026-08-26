@@ -11,14 +11,14 @@ const proficiencyText=klass=>{
 };
 
 export function canUseWeapon(klass=currentClass(),weapon){
- if(!klass||!weapon)return false;
+ klass=klass||currentClass();if(!klass||!weapon)return false;
  const p=proficiencyText(klass),c=fold(weapon.categoria),fm=featMechanicalOutcome();
  if(c.includes('simples')&&/simple weapon|arma simples|armas simples/.test(p))return true;
  if(c.includes('marcial')&&(/martial weapon|arma marcial|armas marciais/.test(p)||arr(fm.weaponTraining).includes('Marcial')))return true;
  return[weapon.nome,weapon.nome_original].filter(Boolean).some(name=>p.includes(fold(name)))
 }
 export function canUseArmor(klass=currentClass(),armor){
- if(!klass||!armor||fold(armor.categoria)==='escudo')return false;
+ klass=klass||currentClass();if(!klass||!armor||fold(armor.categoria)==='escudo')return false;
  const p=proficiencyText(klass),cat=fold(armor.categoria),fm=featMechanicalOutcome();
  if(cat==='leve')return/light armor|armadura leve|armaduras leves|all armor|todas as armaduras/.test(p)||arr(fm.armorTraining).includes('Leve');
  if(cat==='media')return/medium armor|armadura media|armaduras medias|all armor|todas as armaduras/.test(p)||arr(fm.armorTraining).includes('Média');
@@ -26,12 +26,12 @@ export function canUseArmor(klass=currentClass(),armor){
  return true
 }
 export function canUseShield(klass=currentClass()){
- if(!klass)return false;
+ klass=klass||currentClass();if(!klass)return false;
  const p=proficiencyText(klass),fm=featMechanicalOutcome();
  return/shield|escudo/.test(p)||!!fm.shieldTraining
 }
 export function purchasePermission(item,klass=currentClass()){
- if(!item)return{ok:false,reason:'Item inválido.'};
+ klass=klass||currentClass();if(!item)return{ok:false,reason:'Item inválido.'};
  if(item.kind==='weapon')return canUseWeapon(klass,item.data||state.catalogs.weapons.find(w=>w.id===item.refId))?{ok:true}:{ok:false,reason:'Sem proficiência com esta arma.'};
  if(item.kind==='armor')return canUseArmor(klass,item.data||state.catalogs.armors.find(a=>a.id===item.refId))?{ok:true}:{ok:false,reason:'Sem proficiência com esta armadura.'};
  if(item.kind==='shield')return canUseShield(klass)?{ok:true}:{ok:false,reason:'Sem proficiência com escudos.'};
@@ -64,20 +64,19 @@ function aggregate(rows){
  return[...map.values()]
 }
 export function ownedEquipment({includeLegacyActive=true}={}){
- const rows=[],klass=currentClass(),bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),choice=state.c?.choices?.background?.equipment||'A';
+ const rows=[],bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),choice=state.c?.choices?.background?.equipment||'A';
  for(const item of packagePhysicalItems(bg,choice).filter(Boolean))rows.push(classifyNamedItem(item,'Pacote inicial'));
  const purchases=state.c?.choices?.purchases||{},snapshots=purchases.items||{};
  for(const[id,qty]of Object.entries(purchases.quantities||{})){const row=purchaseRow(id,qty,snapshots[id]);if(row)rows.push(row)}
- if(level>1){
-  for(let i=rows.length-1;i>=0;i--)if(rows[i].source==='Pacote inicial')rows.splice(i,1)
- }
+ if(level>1){for(let i=rows.length-1;i>=0;i--)if(rows[i].source==='Pacote inicial')rows.splice(i,1)}
+ let all=aggregate(rows);
  if(includeLegacyActive){
-  const weaponId=state.c?.choices?.equipment?.weapon,armorId=state.c?.choices?.equipment?.armor;
-  if(weaponId){const weapon=state.catalogs.weapons.find(w=>w.id===weaponId);if(weapon)rows.push({kind:'weapon',refId:weapon.id,name:weapon.nome,qty:1,source:'Equipamento ativo legado',data:weapon})}
-  if(armorId){const armor=state.catalogs.armors.find(a=>a.id===armorId);if(armor&&fold(armor.categoria)!=='escudo')rows.push({kind:'armor',refId:armor.id,name:armor.nome,qty:1,source:'Equipamento ativo legado',data:armor})}
-  if(state.c?.choices?.equipment?.shield){const shield=state.catalogs.armors.find(a=>fold(a.categoria)==='escudo');if(shield)rows.push({kind:'shield',refId:shield.id,name:shield.nome,qty:1,source:'Equipamento ativo legado',data:shield})}
+  const weaponId=state.c?.choices?.equipment?.weapon,armorId=state.c?.choices?.equipment?.armor,has=(kind,refId)=>all.some(row=>row.kind===kind&&row.refId===refId);
+  if(weaponId&&!has('weapon',weaponId)){const weapon=state.catalogs.weapons.find(w=>w.id===weaponId);if(weapon)all.push({kind:'weapon',refId:weapon.id,name:weapon.nome,qty:1,source:'Equipamento ativo legado',data:weapon})}
+  if(armorId&&!has('armor',armorId)){const armor=state.catalogs.armors.find(a=>a.id===armorId);if(armor&&fold(armor.categoria)!=='escudo')all.push({kind:'armor',refId:armor.id,name:armor.nome,qty:1,source:'Equipamento ativo legado',data:armor})}
+  if(state.c?.choices?.equipment?.shield){const shield=state.catalogs.armors.find(a=>fold(a.categoria)==='escudo');if(shield&&!has('shield',shield.id))all.push({kind:'shield',refId:shield.id,name:shield.nome,qty:1,source:'Equipamento ativo legado',data:shield})}
+  all=aggregate(all)
  }
- const all=aggregate(rows);
  return{all,weapons:all.filter(x=>x.kind==='weapon'),armors:all.filter(x=>x.kind==='armor'),shields:all.filter(x=>x.kind==='shield'),belongings:all.filter(x=>!['weapon','armor','shield'].includes(x.kind))}
 }
 export function ownedItemCount(rows){return arr(rows).reduce((sum,row)=>sum+Math.max(0,Math.floor(num(row.qty))),0)}
