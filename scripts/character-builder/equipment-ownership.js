@@ -5,17 +5,28 @@ import{featMechanicalOutcome}from'./feat-mechanics.js';
 const currentClass=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)||null;
 const currentSpecies=()=>state.catalogs.species.find(x=>x.id===state.c?.refs?.species)||null;
 const selectedLineage=species=>species?.lineages?.find(x=>x.name===state.c?.choices?.species?.lineage)||null;
-const proficiencyText=klass=>{
+function proficiencyEntries(klass){
  const species=currentSpecies(),lineage=selectedLineage(species),traits=[...arr(species?.traits),...arr(lineage?.traits)].map(t=>t?.text||'');
- return fold([...arr(klass?.proficiencies),...arr(klass?.proficienciesRaw),...traits].join(' '))
-};
+ return[...arr(klass?.proficienciesRaw),...arr(klass?.proficiencies),...traits].map(fold).filter(Boolean)
+}
+const proficiencyText=klass=>proficiencyEntries(klass).join(' ');
+const weaponProps=weapon=>arr(weapon?.propriedades).map(fold);
+function martialEntryAllows(entry,weapon){
+ const props=weaponProps(weapon),light=props.some(p=>p==='light'||p.startsWith('light ')),finesse=props.some(p=>p==='finesse'||p.startsWith('finesse '));
+ if(/^(martial weapons?|armas marciais)$/.test(entry))return true;
+ if(/^martial weapons? with the light property$/.test(entry))return light;
+ if(/^martial weapons? with the finesse or light property$/.test(entry))return finesse||light;
+ if(/^armas marciais.*propriedade.*leve$/.test(entry)&&!/acuidade|finesse/.test(entry))return light;
+ if(/^armas marciais.*(?:acuidade|finesse).*leve/.test(entry)||/^armas marciais.*leve.*(?:acuidade|finesse)/.test(entry))return finesse||light;
+ return false
+}
 
 export function canUseWeapon(klass=currentClass(),weapon){
  klass=klass||currentClass();if(!klass||!weapon)return false;
- const p=proficiencyText(klass),c=fold(weapon.categoria),fm=featMechanicalOutcome();
- if(c.includes('simples')&&/simple weapon|arma simples|armas simples/.test(p))return true;
- if(c.includes('marcial')&&(/martial weapon|arma marcial|armas marciais/.test(p)||arr(fm.weaponTraining).includes('Marcial')))return true;
- return[weapon.nome,weapon.nome_original].filter(Boolean).some(name=>p.includes(fold(name)))
+ const entries=proficiencyEntries(klass),c=fold(weapon.categoria),fm=featMechanicalOutcome();
+ if(c.includes('simples')&&entries.some(e=>/^(simple weapons?|armas simples)$/.test(e)))return true;
+ if(c.includes('marcial')&&(arr(fm.weaponTraining).includes('Marcial')||entries.some(e=>martialEntryAllows(e,weapon))))return true;
+ const names=[weapon.nome,weapon.nome_original].filter(Boolean).map(fold);return names.some(name=>entries.some(entry=>entry===name||entry===`weapon: ${name}`||entry===`arma: ${name}`))
 }
 export function canUseArmor(klass=currentClass(),armor){
  klass=klass||currentClass();if(!klass||!armor||fold(armor.categoria)==='escudo')return false;
