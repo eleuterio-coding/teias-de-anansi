@@ -1,0 +1,93 @@
+name: Auditar equipamentos e proficiência
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/profile-ui.js'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'ficha-personagem.html'
+      - '.github/workflows/auditar-equipamentos-proficiencia.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/profile-ui.js'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'ficha-personagem.html'
+      - '.github/workflows/auditar-equipamentos-proficiencia.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          node --check scripts/character-builder/equipment-ownership.js
+          node --check scripts/character-builder/equipment-ownership-ui.js
+          node --check scripts/character-builder/wealth-purchase-ui.js
+          node --check scripts/character-builder/starting-equipment-ui.js
+          node --check scripts/character-builder/profile-ui.js
+          node --check scripts/character-builder.js
+          node --check scripts/character-sheet-equipment-ownership.js
+      - name: Auditar contratos de inventário e proficiência
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          files={p:Path(p).read_text(encoding='utf-8') for p in [
+              'scripts/character-builder/equipment-ownership.js',
+              'scripts/character-builder/equipment-ownership-ui.js',
+              'scripts/character-builder/wealth-purchase-ui.js',
+              'scripts/character-builder/starting-equipment-ui.js',
+              'scripts/character-builder/profile-ui.js',
+              'scripts/character-builder.js',
+              'scripts/character-sheet-equipment-ownership.js',
+              'ficha-personagem.html',
+          ]}
+          ownership=files['scripts/character-builder/equipment-ownership.js']
+          purchase=files['scripts/character-builder/wealth-purchase-ui.js']
+          starting=files['scripts/character-builder/starting-equipment-ui.js']
+          review=files['scripts/character-builder/profile-ui.js']
+          builder_equipment=files['scripts/character-builder/equipment-ownership-ui.js']
+          sheet=files['scripts/character-sheet-equipment-ownership.js']
+          loader=files['scripts/character-builder.js']
+          html=files['ficha-personagem.html']
+
+          required={
+            'proibição de arma sem proficiência': 'purchasePermission(item)' in purchase and "kind:'weapon'" in purchase,
+            'proibição de armadura sem proficiência': "kind:isShield?'shield':'armor'" in purchase,
+            'remoção de compra inválida': 'delete purchases.quantities[id]' in purchase,
+            'evento de inventário': 'hub:equipment-inventory-changed' in purchase,
+            'área Pertences no equipamento inicial': "section('Pertences',owned.belongings)" in starting,
+            'contagem de Pertences na revisão': "ownedRow('Pertences',owned.belongings)" in review,
+            'todas as armas no combate do construtor': 'owned.weapons.map(row=>weaponCard' in builder_equipment,
+            'todas as armas na ficha digital': 'owned.weapons.map(row=>weaponCard' in sheet,
+            'equipamento ativo limitado ao inventário': 'normalizeActive()' in builder_equipment,
+            'módulo carregado no construtor': 'equipment-ownership-ui.js' in loader,
+            'módulo carregado na ficha': 'character-sheet-equipment-ownership.js' in html,
+            'fallback legado sem duplicação': "!has('weapon',weaponId)" in ownership and "!has('armor',armorId)" in ownership,
+          }
+          failed=[label for label,ok in required.items() if not ok]
+          if failed:
+              raise RuntimeError('Contratos ausentes: '+', '.join(failed))
+          joined='\n'.join(files.values()).lower()
+          if 'supabase' in joined:
+              raise RuntimeError('Supabase não pode ser introduzido neste fluxo.')
+          print('Inventário, proficiência, Pertences e listagem múltipla de armas validados.')
+          PY
