@@ -1,6 +1,7 @@
 import{state,$,arr,num,esc}from'./state.js';
 import{derive}from'./rules.js';
 import{languageOutcome}from'./language-mechanics.js';
+import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260826-equipment-ownership1';
 
 function ensureSheetState(){
  const c=state.c;
@@ -19,6 +20,7 @@ function row(label,value){return`<div class="value-row"><span>${esc(label)}</spa
 function textBlock(label,value){return`<div class="preview-block"><strong>${esc(label)}</strong><p>${esc(value||'—')}</p></div>`}
 function coins(inv){return[['PC',inv.cp],['PP',inv.sp],['PE',inv.ep],['PO',inv.gp],['PL',inv.pp]].filter(([,v])=>num(v)>0).map(([k,v])=>`${num(v)} ${k}`).join(' · ')||'—'}
 function languages(){return languageOutcome().all.join(', ')||'—'}
+function ownedRow(label,rows){return row(`${label} · ${ownedItemCount(rows)}`,formatOwnedRows(rows))}
 
 function hydrate(){
  ensureSheetState();
@@ -52,8 +54,8 @@ function renderProficiencies(){
 
 function renderInventory(){
  ensureSheetState();
- const box=$('creation-inventory');if(!box)return;const inv=state.c.sheet.inventory;
- box.innerHTML=row('Moedas',coins(inv))+textBlock('Inventário adicional',inv.notes)+textBlock('Itens mágicos',inv.magicItems)+textBlock('Outras posses',inv.otherHoldings)+textBlock('Magias de outras fontes',state.c.sheet.extraSpells);
+ const box=$('creation-inventory');if(!box)return;const inv=state.c.sheet.inventory,owned=ownedEquipment();
+ box.innerHTML=ownedRow('Armas',owned.weapons)+ownedRow('Armaduras',owned.armors)+ownedRow('Escudos',owned.shields)+ownedRow('Pertences',owned.belongings)+row('Moedas',coins(inv))+textBlock('Inventário adicional',inv.notes)+textBlock('Itens mágicos',inv.magicItems)+textBlock('Outras posses',inv.otherHoldings)+textBlock('Magias de outras fontes',state.c.sheet.extraSpells);
 }
 
 function renderAll(){ensureSheetState();renderProfile();renderRoleplay();renderProficiencies();renderInventory()}
@@ -71,6 +73,8 @@ function bind(){
  $('extra-spells')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.extraSpells=e.target.value;renderInventory()});
  $('builder')?.addEventListener('change',e=>{if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#sp-size,#sp-line,#bg-tool,#bg-tool-house,#armor,#shield,#weapon,[id^="base-"]'))queueMicrotask(renderProficiencies)});
  document.addEventListener('hub:languages-changed',()=>{renderProfile();renderProficiencies()});
+ document.addEventListener('hub:equipment-inventory-changed',()=>queueMicrotask(renderInventory));
+ document.addEventListener('hub:starting-equipment-changed',()=>queueMicrotask(renderInventory));
  $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
 }
 
