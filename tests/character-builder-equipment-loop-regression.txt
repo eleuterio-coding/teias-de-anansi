@@ -1,0 +1,4 @@
+data-equipment-ownership-ui
+data-equipment-combat-ui
+equipmentOwnershipSignature
+equipmentCombatSignature
