@@ -13,11 +13,14 @@ on:
       - 'scripts/character-builder/barbarian-subclass-ui.js'
       - 'scripts/character-builder/artificer-subclass-mechanics.js'
       - 'scripts/character-builder/artificer-subclass-ui.js'
+      - 'scripts/character-builder/bard-subclass-mechanics.js'
+      - 'scripts/character-builder/bard-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-subclasses-mecanicas.mjs'
+      - 'tests/auditar-bardo-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -32,11 +35,14 @@ on:
       - 'scripts/character-builder/barbarian-subclass-ui.js'
       - 'scripts/character-builder/artificer-subclass-mechanics.js'
       - 'scripts/character-builder/artificer-subclass-ui.js'
+      - 'scripts/character-builder/bard-subclass-mechanics.js'
+      - 'scripts/character-builder/bard-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-subclasses-mecanicas.mjs'
+      - 'tests/auditar-bardo-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -52,7 +58,9 @@ jobs:
         with:
           node-version: '20'
       - name: Validar catálogo e mecânicas
-        run: node tests/auditar-subclasses-mecanicas.mjs
+        run: |
+          node tests/auditar-subclasses-mecanicas.mjs
+          node tests/auditar-bardo-subclasses.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
@@ -61,6 +69,8 @@ jobs:
           node --check scripts/character-builder/barbarian-subclass-ui.js
           node --check scripts/character-builder/artificer-subclass-mechanics.js
           node --check scripts/character-builder/artificer-subclass-ui.js
+          node --check scripts/character-builder/bard-subclass-mechanics.js
+          node --check scripts/character-builder/bard-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/language-ui.js

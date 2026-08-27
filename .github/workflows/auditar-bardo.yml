@@ -4,13 +4,27 @@ on:
   pull_request:
     paths:
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/bard-subclass-mechanics.js'
+      - 'scripts/character-builder/bard-subclass-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-builder/language-mechanics.js'
       - 'dados/classes-base-2024.json'
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/subclasses-mecanicas-*.json'
+      - 'tests/auditar-bardo-subclasses.mjs'
       - '.github/workflows/auditar-bardo.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/bard-subclass-mechanics.js'
+      - 'scripts/character-builder/bard-subclass-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-builder/language-mechanics.js'
       - 'dados/classes-base-2024.json'
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/subclasses-mecanicas-*.json'
+      - 'tests/auditar-bardo-subclasses.mjs'
       - '.github/workflows/auditar-bardo.yml'
 
 permissions:
@@ -25,7 +39,13 @@ jobs:
         with:
           node-version: '22'
       - name: Validar JavaScript
-        run: node --check scripts/character-builder/class-skill-ui.js
+        run: |
+          node --check scripts/character-builder/class-skill-ui.js
+          node --check scripts/character-builder/bard-subclass-mechanics.js
+          node --check scripts/character-builder/bard-subclass-ui.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/language-mechanics.js
+          node --check tests/auditar-bardo-subclasses.mjs
       - name: Auditar seleção de perícias do Bardo
         run: |
           python - <<'PY'
@@ -51,7 +71,7 @@ jobs:
               raise RuntimeError(f'Bardo deve poder escolher entre as 18 perícias; encontradas {len(set(skills))}.')
 
           source=Path('scripts/character-builder/class-skill-ui.js').read_text(encoding='utf-8')
-          required=['normalizeSkillChoices','klass.slug===\'bard\'','choose:3','ALL_SKILLS','ensureSkillMarkup']
+          required=['normalizeSkillChoices','klass.slug===\'bard\'','choose:3','ALL_SKILLS','ensureSkillMarkup','initBardSubclassUi']
           missing=[token for token in required if token not in source]
           if missing:
               raise RuntimeError('Proteção específica do Bardo ausente: '+', '.join(missing))
@@ -59,3 +79,5 @@ jobs:
               raise RuntimeError('Escolhas que não são perícias podem voltar a contaminar o seletor de perícias.')
           print('Bardo validado: 3 escolhas entre 18 perícias e campo com reconstrução de segurança.')
           PY
+      - name: Auditar subclasses do Bardo
+        run: node tests/auditar-bardo-subclasses.mjs
