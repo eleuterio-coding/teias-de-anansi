@@ -17,6 +17,8 @@ on:
       - 'scripts/character-builder/bard-subclass-ui.js'
       - 'scripts/character-builder/druid-subclass-mechanics.js'
       - 'scripts/character-builder/druid-subclass-ui.js'
+      - 'scripts/character-builder/fighter-subclass-mechanics.js'
+      - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -25,6 +27,7 @@ on:
       - 'tests/auditar-bardo-subclasses.mjs'
       - 'tests/auditar-druida-subclasses.mjs'
       - 'tests/auditar-druida-integracao.mjs'
+      - 'tests/auditar-guerreiro-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -43,6 +46,8 @@ on:
       - 'scripts/character-builder/bard-subclass-ui.js'
       - 'scripts/character-builder/druid-subclass-mechanics.js'
       - 'scripts/character-builder/druid-subclass-ui.js'
+      - 'scripts/character-builder/fighter-subclass-mechanics.js'
+      - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -51,6 +56,7 @@ on:
       - 'tests/auditar-bardo-subclasses.mjs'
       - 'tests/auditar-druida-subclasses.mjs'
       - 'tests/auditar-druida-integracao.mjs'
+      - 'tests/auditar-guerreiro-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -71,6 +77,7 @@ jobs:
           node tests/auditar-bardo-subclasses.mjs
           node tests/auditar-druida-subclasses.mjs
           node tests/auditar-druida-integracao.mjs
+          node tests/auditar-guerreiro-subclasses.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
@@ -83,6 +90,8 @@ jobs:
           node --check scripts/character-builder/bard-subclass-ui.js
           node --check scripts/character-builder/druid-subclass-mechanics.js
           node --check scripts/character-builder/druid-subclass-ui.js
+          node --check scripts/character-builder/fighter-subclass-mechanics.js
+          node --check scripts/character-builder/fighter-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/language-ui.js
