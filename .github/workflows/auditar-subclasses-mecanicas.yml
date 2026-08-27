@@ -26,6 +26,9 @@ on:
       - 'scripts/character-builder/paladin-subclass-mechanics.js'
       - 'scripts/character-builder/paladin-subclass-details.js'
       - 'scripts/character-builder/paladin-subclass-ui.js'
+      - 'scripts/character-builder/ranger-subclass-mechanics.js'
+      - 'scripts/character-builder/ranger-subclass-details.js'
+      - 'scripts/character-builder/ranger-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -39,6 +42,8 @@ on:
       - 'tests/auditar-monge-integracao.mjs'
       - 'tests/auditar-paladino-subclasses.mjs'
       - 'tests/auditar-paladino-integracao.mjs'
+      - 'tests/auditar-patrulheiro-subclasses.mjs'
+      - 'tests/auditar-patrulheiro-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -66,6 +71,9 @@ on:
       - 'scripts/character-builder/paladin-subclass-mechanics.js'
       - 'scripts/character-builder/paladin-subclass-details.js'
       - 'scripts/character-builder/paladin-subclass-ui.js'
+      - 'scripts/character-builder/ranger-subclass-mechanics.js'
+      - 'scripts/character-builder/ranger-subclass-details.js'
+      - 'scripts/character-builder/ranger-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -79,6 +87,8 @@ on:
       - 'tests/auditar-monge-integracao.mjs'
       - 'tests/auditar-paladino-subclasses.mjs'
       - 'tests/auditar-paladino-integracao.mjs'
+      - 'tests/auditar-patrulheiro-subclasses.mjs'
+      - 'tests/auditar-patrulheiro-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -104,6 +114,8 @@ jobs:
           node tests/auditar-monge-integracao.mjs
           node tests/auditar-paladino-subclasses.mjs
           node tests/auditar-paladino-integracao.mjs
+          node tests/auditar-patrulheiro-subclasses.mjs
+          node tests/auditar-patrulheiro-integracao.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
@@ -125,6 +137,9 @@ jobs:
           node --check scripts/character-builder/paladin-subclass-mechanics.js
           node --check scripts/character-builder/paladin-subclass-details.js
           node --check scripts/character-builder/paladin-subclass-ui.js
+          node --check scripts/character-builder/ranger-subclass-mechanics.js
+          node --check scripts/character-builder/ranger-subclass-details.js
+          node --check scripts/character-builder/ranger-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/language-ui.js
