@@ -4,6 +4,7 @@ import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
 import{applyBarbarianSubclassMechanics}from'./barbarian-subclass-mechanics.js?v=20260827-barbarian-subclasses1';
 import{applyArtificerSubclassMechanics}from'./artificer-subclass-mechanics.js?v=20260827-artificer-subclasses1';
 import{applyBardSubclassMechanics}from'./bard-subclass-mechanics.js?v=20260827-bard-subclasses1';
+import{applyDruidSubclassMechanics}from'./druid-subclass-mechanics.js?v=20260827-druid-subclasses1';
 export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
@@ -43,7 +44,6 @@ function prepareBackgroundCatalogs(){
  }
  const bg=(state.catalogs.backgrounds||[]).find(x=>x.id===state.c?.refs?.background);if(!bg||!state.c?.choices)return;
  const chosen=featById(state.c.choices.background?.originFeat);
- // Projeção do estado na ficha: nunca inicializa ou reescreve a escolha do usuário.
  bg.feat=chosen?.category==='Origem'?{name:chosen.name,choice:''}:null
 }
 export function initializeHouseBackgroundChoices(){
@@ -95,7 +95,7 @@ function applyLineagePackageEffects(d){
  return d
 }
 
-export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);applyBardSubclassMechanics(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
+export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);applyBardSubclassMechanics(d);applyDruidSubclassMechanics(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
 
 /* Compatibilidade das auditorias mecânicas do módulo-base:
 subclassLevel trainedArmor spellProgress spellOptions k.hitDie+con
