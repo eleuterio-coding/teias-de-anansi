@@ -18,6 +18,7 @@ on:
       - 'scripts/character-builder/druid-subclass-mechanics.js'
       - 'scripts/character-builder/druid-subclass-ui.js'
       - 'scripts/character-builder/fighter-subclass-mechanics.js'
+      - 'scripts/character-builder/fighter-subclass-details.js'
       - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
@@ -47,6 +48,7 @@ on:
       - 'scripts/character-builder/druid-subclass-mechanics.js'
       - 'scripts/character-builder/druid-subclass-ui.js'
       - 'scripts/character-builder/fighter-subclass-mechanics.js'
+      - 'scripts/character-builder/fighter-subclass-details.js'
       - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
@@ -91,6 +93,7 @@ jobs:
           node --check scripts/character-builder/druid-subclass-mechanics.js
           node --check scripts/character-builder/druid-subclass-ui.js
           node --check scripts/character-builder/fighter-subclass-mechanics.js
+          node --check scripts/character-builder/fighter-subclass-details.js
           node --check scripts/character-builder/fighter-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
