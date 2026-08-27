@@ -1,4 +1,4 @@
-import{state,$,arr,num,esc,fold}from'./state.js';
+import{state,$,arr,num,esc,fold,SKILL_AB,mod,signed}from'./state.js';
 import{selected,derive}from'./rules.js';
 import{activeFeatInstances}from'./feat-mechanics.js';
 
@@ -61,8 +61,12 @@ function repairExpertiseSelectors(){
   const html=selectOptions(eligible,current,'Selecione uma perícia proficiente');if(select.innerHTML!==html)select.innerHTML=html;if(current&&eligible.includes(current))select.value=current
  }
 }
+function decorateExpertiseSkillValues(){
+ const box=$('skill-values');if(!box)return;const d=derive();
+ for(const row of box.querySelectorAll('.value-row')){const label=row.querySelector('span'),value=row.querySelector('strong');if(!label||!value)continue;const skill=Object.keys(SKILL_AB).find(name=>label.textContent.startsWith(name));if(!skill)continue;const proficient=d.skills.includes(skill),expert=d.expertiseSkills.includes(skill),ability=SKILL_AB[skill],total=mod(d.scores[ability])+(proficient?d.pbonus:0)+(expert?d.pbonus:0);label.textContent=`${skill}${proficient?' ●':''}${expert?' ◆':''}`;value.textContent=signed(total)}
+}
 function refreshSheet(){const name=$('nome');if(name)name.dispatchEvent(new Event('input'))}
-function run(){if(applying)return;applying=true;try{repairExpertiseSelectors();renderCompanions()}finally{applying=false}}
+function run(){if(applying)return;applying=true;try{repairExpertiseSelectors();renderCompanions();decorateExpertiseSkillValues()}finally{applying=false}}
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;run()})}
 
 export function initExpertiseCompanionUi(){
