@@ -1,45 +1,181 @@
 :root {
-  color-scheme: light !important;
+  color-scheme: only light !important;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  --hub-library-border: #d5d5d5;
+  --hub-library-border-soft: #e7e7e7;
+  --hub-library-surface: #ffffff;
+  --hub-library-hover: #f5f5f5;
+  --hub-library-muted: #4a4a4a;
 }
+
+* { box-sizing: border-box; }
 
 html,
 body {
   background: #ffffff !important;
+  background-color: #ffffff !important;
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+body {
+  width: min(1120px, calc(100% - 48px)) !important;
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding: 24px 0 40px !important;
+  line-height: 1.55 !important;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
 body * {
   color: #000000 !important;
-  background-color: transparent !important;
+  -webkit-text-fill-color: #000000 !important;
 }
 
 body *::before,
 body *::after {
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+
+header { margin: 0 0 18px !important; }
+h1 { margin: 8px 0 18px !important; font-size: clamp(1.8rem, 4vw, 2.35rem) !important; line-height: 1.12 !important; }
+h2 { line-height: 1.2 !important; }
+
+body > p:first-child,
+body > nav:first-child {
+  margin-top: 0 !important;
 }
 
 a,
+a:link,
 a:visited,
 a:hover,
-a:active {
+a:active,
+a:focus {
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
 }
+
+a:hover { text-decoration-thickness: 2px; }
 
 input,
 select,
 textarea,
 button,
-option {
+option,
+optgroup {
   background: #ffffff !important;
+  background-color: #ffffff !important;
   color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
   color-scheme: light !important;
+  border-color: #bdbdbd !important;
 }
+
+input,
+select,
+textarea {
+  border: 1px solid #bdbdbd !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+}
+
+button { border-color: #bdbdbd !important; }
+input::placeholder,
+textarea::placeholder { color: #555555 !important; -webkit-text-fill-color: #555555 !important; opacity: 1 !important; }
 
 .muted,
 .resumo,
 .contagem,
 .original,
-.meta {
+.meta,
+.count,
+.classe,
+.source-strip,
+.fonte,
+.licenca,
+small {
+  color: var(--hub-library-muted) !important;
+  -webkit-text-fill-color: var(--hub-library-muted) !important;
   opacity: 1 !important;
+}
+
+/* Estrutura visual comum de cartões e painéis */
+details,
+.item,
+.subclasse,
+.card,
+.painel,
+.box,
+.stat,
+.nota,
+.modulos li {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-color: var(--hub-library-border) !important;
+}
+
+details,
+.item,
+.subclasse,
+.card,
+.painel {
+  border-radius: 10px !important;
+}
+
+summary:hover,
+.item:hover,
+.item.on,
+.modulos a:hover {
+  background: var(--hub-library-hover) !important;
+  background-color: var(--hub-library-hover) !important;
+}
+
+/* Filtros e áreas de busca seguem a mesma grade */
+.controles,
+.tools {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+}
+
+.controles {
+  gap: 10px !important;
+  margin: 18px 0 12px !important;
+}
+
+/* Tabelas */
+table { width: 100% !important; border-collapse: collapse !important; background: #ffffff !important; }
+th, td { color: #000000 !important; border-color: var(--hub-library-border-soft) !important; }
+th { background: #f7f7f7 !important; font-weight: 700 !important; }
+
+/* Chips e badges: monocromáticos, sem depender do tema do sistema */
+.badge,
+.tag {
+  background: #ffffff !important;
   color: #000000 !important;
+  border-color: #bdbdbd !important;
+}
+
+/* Elementos SVG usados em alguns módulos */
+svg text { fill: #000000 !important; }
+
+/* Estados de foco acessíveis */
+:focus-visible {
+  outline: 2px solid #000000 !important;
+  outline-offset: 2px !important;
+}
+
+@media (max-width: 750px) {
+  body {
+    width: min(100% - 28px, 1120px) !important;
+    padding: 16px 0 28px !important;
+  }
 }
