@@ -1,0 +1,47 @@
+name: Auditar mecânicas de subclasses
+
+on:
+  pull_request:
+    paths:
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/subclasses-mecanicas-*.json'
+      - 'dados/_module-source/subclasses.html'
+      - 'scripts/subclass-mechanics-catalog.js'
+      - 'scripts/module-clean-loader.js'
+      - 'scripts/character-builder/subclass-mechanics-data.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'tests/auditar-subclasses-mecanicas.mjs'
+      - '.github/workflows/auditar-subclasses-mecanicas.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'dados/subclasses-pdfs.json'
+      - 'dados/subclasses-mecanicas-*.json'
+      - 'dados/_module-source/subclasses.html'
+      - 'scripts/subclass-mechanics-catalog.js'
+      - 'scripts/module-clean-loader.js'
+      - 'scripts/character-builder/subclass-mechanics-data.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'tests/auditar-subclasses-mecanicas.mjs'
+      - '.github/workflows/auditar-subclasses-mecanicas.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Cobertura 119/119
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validar catálogo e mecânicas
+        run: node tests/auditar-subclasses-mecanicas.mjs
+      - name: Validar sintaxe dos módulos JavaScript
+        run: |
+          node --check scripts/subclass-mechanics-catalog.js
+          node --check scripts/character-builder/subclass-mechanics-data.js
+          node --check scripts/character-builder/class-skill-ui.js
+          node --check scripts/module-clean-loader.js
