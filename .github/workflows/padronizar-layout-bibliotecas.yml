@@ -1,0 +1,87 @@
+name: Padronizar layout das Bibliotecas
+
+on:
+  push:
+    branches:
+      - fix/library-unified-layout-20260827
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/library-unified-layout-20260827
+          fetch-depth: 0
+
+      - name: Inserir stylesheet compartilhado nos módulos
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          files = [
+              'bibliotecas.html',
+              'regras.html', 'classes.html', 'subclasses.html', 'raca.html',
+              'antecedentes.html', 'talentos.html', 'maestrias-de-arma.html',
+              'monstros.html', 'armaduras.html', 'armas.html',
+              'equipamentos-aventura.html', 'ferramentas.html',
+              'montarias-veiculos.html', 'comercio-e-despesas.html',
+              'bugigangas.html', 'itens-magicos.html', 'magias.html', 'idiomas.html'
+          ]
+          marker = 'biblioteca-light.css?v=20260827-library-layout1'
+          link = f'<link rel="stylesheet" href="{marker}">'
+          changed = []
+          for name in files:
+              path = Path(name)
+              if not path.exists():
+                  raise SystemExit(f'Módulo ausente: {name}')
+              text = path.read_text(encoding='utf-8')
+              if marker in text:
+                  continue
+              if '</head>' not in text:
+                  raise SystemExit(f'Sem </head>: {name}')
+              text = text.replace('</head>', f'  {link}\n</head>', 1)
+              path.write_text(text, encoding='utf-8')
+              changed.append(name)
+          print(f'Atualizados {len(changed)} módulos: {changed}')
+          PY
+
+      - name: Validar cobertura e tema
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files = [
+              'bibliotecas.html',
+              'regras.html', 'classes.html', 'subclasses.html', 'raca.html',
+              'antecedentes.html', 'talentos.html', 'maestrias-de-arma.html',
+              'monstros.html', 'armaduras.html', 'armas.html',
+              'equipamentos-aventura.html', 'ferramentas.html',
+              'montarias-veiculos.html', 'comercio-e-despesas.html',
+              'bugigangas.html', 'itens-magicos.html', 'magias.html', 'idiomas.html'
+          ]
+          marker = 'biblioteca-light.css?v=20260827-library-layout1'
+          missing = [f for f in files if marker not in Path(f).read_text(encoding='utf-8')]
+          if missing:
+              raise SystemExit(f'Stylesheet ausente: {missing}')
+          css = Path('biblioteca-light.css').read_text(encoding='utf-8')
+          required = ['background: #ffffff !important', 'color: #000000 !important', 'max-width: 1120px !important']
+          absent = [x for x in required if x not in css]
+          if absent:
+              raise SystemExit(f'Contrato visual incompleto: {absent}')
+          print(f'Layout unificado validado em {len(files)} páginas.')
+          PY
+
+      - name: Commit da migração
+        run: |
+          if git diff --quiet; then
+            echo "Nada a atualizar."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add biblioteca-light.css bibliotecas.html regras.html classes.html subclasses.html raca.html antecedentes.html talentos.html maestrias-de-arma.html monstros.html armaduras.html armas.html equipamentos-aventura.html ferramentas.html montarias-veiculos.html comercio-e-despesas.html bugigangas.html itens-magicos.html magias.html idiomas.html
+          git commit -m "Aplica layout unificado aos módulos da Biblioteca"
+          git push origin HEAD:fix/library-unified-layout-20260827
