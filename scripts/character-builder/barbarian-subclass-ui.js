@@ -24,7 +24,7 @@ function mechanicsHtml(out){
 }
 function featureHtml(features){return arr(features).map(f=>`<details class="feature"><summary>${esc(f.name)} — nível ${f.level}</summary><p>${esc(f.text)}</p></details>`).join('')}
 function renderReview(d,out){
- const box=$('subclass-card');if(!box||!d.sub)return;const html=`<strong>${esc(d.sub.name)}</strong><p>${esc(d.sub.description||'')}</p>${out?`<p class="mini"><strong>Mecânicas aplicadas:</strong> Fúrias ${out.rages} · Dano de Fúria +${out.rageDamage}</p><div class="preview-block">${mechanicsHtml(out)}</div>${featureHtml(out.features)}`:''}`;if(box.innerHTML!==html)box.innerHTML=html
+ const box=$('subclass-card');if(!box||!d.sub||d.klass?.slug!=='barbarian')return;const html=`<strong>${esc(d.sub.name)}</strong><p>${esc(d.sub.description||'')}</p>${out?`<p class="mini"><strong>Mecânicas aplicadas:</strong> Fúrias ${out.rages} · Dano de Fúria +${out.rageDamage}</p><div class="preview-block">${mechanicsHtml(out)}</div>${featureHtml(out.features)}`:''}`;if(box.innerHTML!==html)box.innerHTML=html
 }
 function decoratePending(out){
  const box=$('pending');if(!box)return;box.querySelector('[data-barbarian-subclass-pending]')?.remove();if(!out?.pending?.length)return;
@@ -37,8 +37,8 @@ function decorateCombat(out){
  const wrap=document.createElement('div');wrap.dataset.barbarianSubclassCombat='1';wrap.innerHTML=out.attacks.map(x=>`<div class="value-row"><span>${esc(x.name)} · ataque${x.scope?` <small class="muted">· ${esc(x.scope)}</small>`:''}</span><strong>${x.attackBonus>=0?'+':''}${x.attackBonus}</strong></div><div class="value-row"><span>Dano${x.extra?` <small class="muted">· ${esc(x.extra)}</small>`:''}</span><strong>${esc(x.damage)}</strong></div>`).join('');box.appendChild(wrap)
 }
 function render(){
- queued=false;const card=ensureCard();if(!card)return;const d=derive(),out=d.subclassMechanics;
- if(d.klass?.slug!=='barbarian'||!d.sub||d.level<3||!out){card.hidden=true;renderReview(d,null);decoratePending(null);decorateCombat(null);return}
+ queued=false;const card=ensureCard();if(!card)return;const d=derive(),out=d.klass?.slug==='barbarian'?d.subclassMechanics:null;
+ if(d.klass?.slug!=='barbarian'||!d.sub||d.level<3||!out){card.hidden=true;decoratePending(null);decorateCombat(null);return}
  card.hidden=false;const defs=barbarianSubclassChoiceDefs(d),controls=defs.map(def=>`<label>${esc(def.label)}${def.required?' *':''}<select data-barbarian-subclass-choice="${esc(def.id)}">${optionList(def,out.choices?.[def.id]||'')}</select><span class="mini">${esc(def.frequency)}${def.note?` · ${esc(def.note)}`:''}</span></label>`).join('');
  const pending=out.pending?.length?`<div class="status warning"><strong>Escolhas obrigatórias pendentes:</strong> ${out.pending.map(x=>esc(x.label)).join(' · ')}</div>`:'';
  card.innerHTML=`<h3>Mecânicas da subclasse — ${esc(d.sub.name)}</h3><p class="mini">As opções marcadas como “atual/preferida” representam escolhas que a própria regra permite trocar durante o jogo; não são travas permanentes do personagem.</p>${pending}${controls?`<fieldset><legend>Escolhas da subclasse</legend><div class="choice-grid">${controls}</div></fieldset>`:''}<div class="preview-block"><strong>Efeitos mecânicos calculados</strong>${mechanicsHtml(out)}</div><details open><summary><strong>Características ativas até o nível ${d.level}</strong></summary>${featureHtml(out.features)}</details>`;
