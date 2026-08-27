@@ -1,6 +1,7 @@
 import * as base from './rules-base.js?v=20260824-race-variants1';
 import{state,AB,arr,num,fold,uniq,mod}from'./state.js';
 import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
+import{applyBarbarianSubclassMechanics}from'./barbarian-subclass-mechanics.js?v=20260827-barbarian-subclasses1';
 export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
@@ -84,7 +85,7 @@ function applyLineagePackageEffects(d){
  return d
 }
 
-export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
+export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));applyBarbarianSubclassMechanics(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
 
 /* Compatibilidade das auditorias mecânicas do módulo-base:
 subclassLevel trainedArmor spellProgress spellOptions k.hitDie+con

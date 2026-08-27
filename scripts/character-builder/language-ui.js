@@ -30,4 +30,4 @@ function render(){
  document.dispatchEvent(new CustomEvent('hub:languages-changed',{detail:out}))
 }
 function queueRender(){if(queued)return;queued=true;queueMicrotask(render)}
-export function initLanguageUi(){ensureHost();render();$('builder')?.addEventListener('change',e=>{if(e.target.closest('#language-choices'))return;if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#especie-escolhas,#talentos-escolhas'))queueRender()});$('new-character')?.addEventListener('click',()=>queueMicrotask(queueRender))}
+export function initLanguageUi(){ensureHost();render();$('builder')?.addEventListener('change',e=>{if(e.target.closest('#language-choices'))return;if(e.target.closest('#classe,#nivel,#especie,#antecedente,#subclasse,#especie-escolhas,#talentos-escolhas'))queueRender()});document.addEventListener('hub:subclass-mechanics-changed',queueRender);$('new-character')?.addEventListener('click',()=>queueMicrotask(queueRender))}

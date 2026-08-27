@@ -22,7 +22,7 @@ export function initSubclassMechanicsData(){
   let applied=0;
   for(const sub of arr(state.catalogs.subclasses)){
    const row=map.get(fold(sub.name));if(!row)continue;
-   sub.description=row.resumo||sub.description||'';sub.features=row.features;sub.progression=arr(row.progressao);sub.mechanics={sourceId:row.fonte_id,source:row.fonte,summary:row.resumo,progression:arr(row.progressao)};applied++
+   sub.description=row.resumo||sub.description||'';sub.features=row.features;sub.progression=arr(row.progressao);sub.mechanics={name:row.nome,sourceId:row.fonte_id,source:row.fonte,summary:row.resumo,progression:arr(row.progressao)};applied++
   }
   state.subclassMechanics={total,applied};
   document.dispatchEvent(new CustomEvent('hub:subclass-mechanics-ready',{detail:{total,applied}}));
