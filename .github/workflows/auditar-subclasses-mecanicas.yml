@@ -21,6 +21,7 @@ on:
       - 'scripts/character-builder/fighter-subclass-details.js'
       - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/monk-subclass-mechanics.js'
+      - 'scripts/character-builder/monk-subclass-details.js'
       - 'scripts/character-builder/monk-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
@@ -32,6 +33,7 @@ on:
       - 'tests/auditar-druida-integracao.mjs'
       - 'tests/auditar-guerreiro-subclasses.mjs'
       - 'tests/auditar-monge-subclasses.mjs'
+      - 'tests/auditar-monge-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -54,6 +56,7 @@ on:
       - 'scripts/character-builder/fighter-subclass-details.js'
       - 'scripts/character-builder/fighter-subclass-ui.js'
       - 'scripts/character-builder/monk-subclass-mechanics.js'
+      - 'scripts/character-builder/monk-subclass-details.js'
       - 'scripts/character-builder/monk-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
@@ -65,6 +68,7 @@ on:
       - 'tests/auditar-druida-integracao.mjs'
       - 'tests/auditar-guerreiro-subclasses.mjs'
       - 'tests/auditar-monge-subclasses.mjs'
+      - 'tests/auditar-monge-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -87,6 +91,7 @@ jobs:
           node tests/auditar-druida-integracao.mjs
           node tests/auditar-guerreiro-subclasses.mjs
           node tests/auditar-monge-subclasses.mjs
+          node tests/auditar-monge-integracao.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
@@ -103,6 +108,7 @@ jobs:
           node --check scripts/character-builder/fighter-subclass-details.js
           node --check scripts/character-builder/fighter-subclass-ui.js
           node --check scripts/character-builder/monk-subclass-mechanics.js
+          node --check scripts/character-builder/monk-subclass-details.js
           node --check scripts/character-builder/monk-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
