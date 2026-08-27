@@ -63,7 +63,7 @@ function repairExpertiseSelectors(){
 }
 function decorateExpertiseSkillValues(){
  const box=$('skill-values');if(!box)return;const d=derive();
- for(const row of box.querySelectorAll('.value-row')){const label=row.querySelector('span'),value=row.querySelector('strong');if(!label||!value)continue;const skill=Object.keys(SKILL_AB).find(name=>label.textContent.startsWith(name));if(!skill)continue;const proficient=d.skills.includes(skill),expert=d.expertiseSkills.includes(skill),ability=SKILL_AB[skill],total=mod(d.scores[ability])+(proficient?d.pbonus:0)+(expert?d.pbonus:0);const labelText=`${skill}${proficient?' ●':''}${expert?' ◆':''}`,valueText=signed(total);if(label.textContent!==labelText)label.textContent=labelText;if(value.textContent!==valueText)value.textContent=valueText}
+ for(const row of box.querySelectorAll('.value-row')){const label=row.querySelector('span'),value=row.querySelector('strong');if(!label||!value)continue;const skill=Object.keys(SKILL_AB).find(name=>label.textContent.startsWith(name));if(!skill)continue;const proficient=d.skills.includes(skill),expert=d.expertiseSkills.includes(skill),ability=SKILL_AB[skill],total=mod(d.scores[ability])+(proficient?d.pbonus:0)+(expert?d.pbonus:0)+num(d.subclassSkillBonuses?.[skill]);const labelText=`${skill}${proficient?' ●':''}${expert?' ◆':''}`,valueText=signed(total);if(label.textContent!==labelText)label.textContent=labelText;if(value.textContent!==valueText)value.textContent=valueText}
 }
 function run(){if(applying)return;applying=true;try{repairExpertiseSelectors();renderCompanions();decorateExpertiseSkillValues()}finally{applying=false}}
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;run()})}
