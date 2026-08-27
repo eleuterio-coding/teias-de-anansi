@@ -3,6 +3,7 @@ import{state,AB,arr,num,fold,uniq,mod}from'./state.js';
 import{isCompatible55}from'./compatibility.js?v=20260823-character-builder26';
 import{applyBarbarianSubclassMechanics}from'./barbarian-subclass-mechanics.js?v=20260827-barbarian-subclasses1';
 import{applyArtificerSubclassMechanics}from'./artificer-subclass-mechanics.js?v=20260827-artificer-subclasses1';
+import{applyBardSubclassMechanics}from'./bard-subclass-mechanics.js?v=20260827-bard-subclasses1';
 export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];
@@ -63,7 +64,14 @@ function applyHouseAbilityBonuses(){restoreSpeciesBonuses();if(!state.c?.choices
 export function applyHouseRules(){if(!state.c||!state.catalogs)return;prepareClasses();migrateSelectedProgressionSlots();prepareBackgroundCatalogs();applyHouseAbilityBonuses()}
 export function compatible(k){return(state.catalogs[k]||[]).filter(isCompatible55)}
 export function selected(){applyHouseRules();return base.selected()}
-export function trainedArmor(k,a){if(base.trainedArmor(k,a))return true;if(k?.slug!=='artificer'||fold(a?.categoria)!=='pesada')return false;const sub=(state.catalogs.subclasses||[]).find(x=>x.id===state.c?.refs?.subclass),name=fold(sub?.mechanics?.name||sub?.name);return name==='armorer'||name==='armeiro'}
+function selectedSubclassName(){const sub=(state.catalogs.subclasses||[]).find(x=>x.id===state.c?.refs?.subclass);return fold(sub?.mechanics?.name||sub?.name)}
+export function trainedArmor(k,a){
+ if(base.trainedArmor(k,a))return true;if(!a)return true;const category=fold(a.categoria),name=selectedSubclassName();
+ if(k?.slug==='artificer'&&category==='pesada')return name==='armorer'||name==='armeiro';
+ if(k?.slug==='bard'&&category==='media')return['college of valor','colegio do valor','college of swords','colegio das espadas'].includes(name);
+ return false
+}
+export function shieldTraining(k){if(base.shieldTraining(k))return true;if(k?.slug!=='bard')return false;const name=selectedSubclassName();return name==='college of valor'||name==='colegio do valor'}
 function currentLineagePackage(){const species=(state.catalogs.species||[]).find(x=>x.id===state.c?.refs?.species)||null,lineage=species?.lineages?.find(x=>x.name===state.c?.choices?.species?.lineage)||null;return{species,lineage}}
 function withLineagePackage(fn){
  const{species,lineage}=currentLineagePackage();if(!species||!lineage)return fn();
@@ -87,7 +95,7 @@ function applyLineagePackageEffects(d){
  return d
 }
 
-export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
+export function derive(){applyHouseRules();const d=applyLineagePackageEffects(withLineagePackage(()=>base.derive()));applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);applyBardSubclassMechanics(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}return d}
 
 /* Compatibilidade das auditorias mecânicas do módulo-base:
 subclassLevel trainedArmor spellProgress spellOptions k.hitDie+con
