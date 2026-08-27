@@ -23,6 +23,12 @@ on:
       - 'itens-magicos.html'
       - 'magias.html'
       - 'idiomas.html'
+      - 'scripts/module-clean-loader.js'
+      - 'dados/_module-source/classes.html'
+      - 'dados/_module-source/subclasses.html'
+      - 'dados/_module-source/especies.html'
+      - 'dados/_module-source/antecedentes.html'
+      - 'dados/_module-source/talentos.html'
       - 'tests/auditar-layout-bibliotecas.mjs'
   push:
     branches: [main]
@@ -47,6 +53,12 @@ on:
       - 'itens-magicos.html'
       - 'magias.html'
       - 'idiomas.html'
+      - 'scripts/module-clean-loader.js'
+      - 'dados/_module-source/classes.html'
+      - 'dados/_module-source/subclasses.html'
+      - 'dados/_module-source/especies.html'
+      - 'dados/_module-source/antecedentes.html'
+      - 'dados/_module-source/talentos.html'
       - 'tests/auditar-layout-bibliotecas.mjs'
 
 jobs:
