@@ -12,6 +12,8 @@ on:
       - 'scripts/character-builder/barbarian-subclass-mechanics.js'
       - 'scripts/character-builder/barbarian-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/language-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-subclasses-mecanicas.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
@@ -27,6 +29,8 @@ on:
       - 'scripts/character-builder/barbarian-subclass-mechanics.js'
       - 'scripts/character-builder/barbarian-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/language-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-subclasses-mecanicas.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
@@ -52,5 +56,7 @@ jobs:
           node --check scripts/character-builder/barbarian-subclass-mechanics.js
           node --check scripts/character-builder/barbarian-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
+          node --check scripts/character-builder/language-mechanics.js
+          node --check scripts/character-builder/language-ui.js
           node --check scripts/character-builder/rules.js
           node --check scripts/module-clean-loader.js
