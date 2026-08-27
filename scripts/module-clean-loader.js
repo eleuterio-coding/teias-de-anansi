@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260824-race-variants1';
+  const VERSION='20260827-subclass-mechanics1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -22,8 +22,7 @@
       [/<p class="resumo">119 subclasses identificadas em pdf24_merged\.pdf e pdf24_merged-1\.pdf, deduplicadas por identidade e revisão\. Versões mais recentes equivalentes têm precedência\.<\/p>/gi,''],
       [/<div class="nota"><strong>Critério editorial:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Completude e direitos:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/<footer class="licenca">[\s\S]*?<\/footer>/gi,''],
-      [/(<header>[\s\S]*?<h1>Subclasses<\/h1>[\s\S]*?<\/header>)/i,'$1<div class="nota"><strong>Compatibilidade 5e/5.5e:</strong> a versão 5.5e/2024 de uma subclasse prevalece quando existe equivalente revisado. Subclasses 5e sem substituta permanecem disponíveis como legado compatível e usam o nível em que a classe 2024 concede sua subclasse. Variantes de terceiros permanecem identificadas pela própria fonte e não são tratadas como material oficial.</div>']
+      [/<footer class="licenca">[\s\S]*?<\/footer>/gi,'']
     ]},
     raca:{source:'dados/_module-source/especies.html',rules:raceRules},
     especies:{source:'dados/_module-source/especies.html',rules:raceRules},
@@ -47,6 +46,7 @@
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     let html=await r.text();
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
+    if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script></body>`);
     document.open();
     document.write(html);
     document.close();
