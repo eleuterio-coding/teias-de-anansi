@@ -20,15 +20,15 @@ function spellIds(){
  visit(c.featMechanics||{});return ids
 }
 function hasSpell(name){const wanted=fold(name);for(const id of spellIds()){const s=state.catalogs.spells.find(x=>x.id===id);if(s&&(fold(s.name)===wanted||fold(s.originalName)===wanted))return true}return false}
-function subclassIs(sub,name){return !!sub&&fold(sub.name)===fold(name)}
+function subclassIs(sub,...names){return !!sub&&names.some(name=>fold(sub.name)===fold(name))}
 function activeCompanionGrants(){
  const{klass,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),grants=[];
  const add=g=>{if(!grants.some(x=>x.key===g.key))grants.push(g)};
  if(klass?.slug==='druid'&&level>=2)add({key:'druid-wild-companion',kind:'familiar',label:'Companheiro Selvagem',source:'Druida · nível 2',fixedType:'Fada',note:'Forma atual/preferida. O familiar do Companheiro Selvagem é uma Fada e desaparece ao concluir um Descanso Longo.'});
- if(klass?.slug==='ranger'&&level>=3&&subclassIs(sub,'Beast Master'))add({key:'ranger-primal-companion',kind:'primal',label:'Companheiro Primal',source:'Patrulheiro · Mestre das Feras',note:'Escolha o bloco atual do companheiro e descreva o animal apropriado à forma.'});
+ if(klass?.slug==='ranger'&&level>=3&&subclassIs(sub,'Beast Master','Mestre das Feras'))add({key:'ranger-primal-companion',kind:'primal',label:'Companheiro Primal',source:'Patrulheiro · Mestre das Feras',note:'Escolha o bloco atual do companheiro e descreva o animal apropriado à forma.'});
  if(klass?.slug==='paladin'&&level>=5)add({key:'paladin-faithful-steed',kind:'steed',label:'Corcel Fiel',source:'Paladino · nível 5',note:'Encontrar Corcel usa o bloco Corcel Extraplanar; aparência e tipo são escolhidos ao conjurar.'});
- if(klass?.slug==='artificer'&&level>=3&&subclassIs(sub,'Battle Smith'))add({key:'artificer-steel-defender',kind:'steel',label:'Defensor de Aço',source:'Artífice · Battle Smith',note:'Aparência e número de pernas não alteram as estatísticas do Defensor de Aço.'});
- if(klass?.slug==='druid'&&level>=3&&subclassIs(sub,'Circle of Wildfire'))add({key:'druid-wildfire-spirit',kind:'wildfire',label:'Espírito de Fogo Selvagem',source:'Druida · Círculo do Fogo Selvagem',note:'O espírito usa o bloco próprio da subclasse; registre sua aparência atual/preferida.'});
+ if(klass?.slug==='artificer'&&level>=3&&subclassIs(sub,'Battle Smith','Ferreiro de Batalha'))add({key:'artificer-steel-defender',kind:'steel',label:'Defensor de Aço',source:'Artífice · Battle Smith',note:'Aparência e número de pernas não alteram as estatísticas do Defensor de Aço.'});
+ if(klass?.slug==='druid'&&level>=3&&subclassIs(sub,'Circle of Wildfire','Círculo do Fogo Selvagem'))add({key:'druid-wildfire-spirit',kind:'wildfire',label:'Espírito de Fogo Selvagem',source:'Druida · Círculo do Fogo Selvagem',note:'O espírito usa o bloco próprio da subclasse; registre sua aparência atual/preferida.'});
  if(hasSpell('Find Familiar')&&!grants.some(g=>g.kind==='familiar'))add({key:'spell-find-familiar',kind:'familiar',label:'Familiar',source:'Magia · Encontrar Familiar',note:'A forma pode ser alterada quando Encontrar Familiar é conjurada novamente.'});
  if(hasSpell('Find Steed')&&!grants.some(g=>g.kind==='steed'))add({key:'spell-find-steed',kind:'steed',label:'Corcel',source:'Magia · Encontrar Corcel',note:'O corcel usa o bloco Corcel Extraplanar; aparência e tipo são escolhidos ao conjurar.'});
  return grants
@@ -41,15 +41,15 @@ function grantFields(grant,data){
  return`<div class="choice-grid">${textField(grant,'appearance','Aparência',data.appearance,'Descreva o espírito')}${textField(grant,'name','Nome',data.name,'Nome do espírito')}</div>`
 }
 function renderCompanions(){
- const box=$('classe-escolhas');if(!box)return;const grants=activeCompanionGrants(),store=companionStore(),existing=box.querySelector('[data-companion-controls]');
+ const grid=document.querySelector('[data-wizard-panel="classe"] .step-grid');if(!grid)return;const grants=activeCompanionGrants(),store=companionStore(),existing=grid.querySelector('[data-companion-card]');
  if(!grants.length){existing?.remove();return}
  const body=grants.map(g=>{const d=store[g.key]||{};return`<div class="feature"><strong>${esc(g.label)}</strong> <span class="mini">· ${esc(g.source)}</span><p class="mini">${esc(g.note)}</p>${grantFields(g,d)}</div>`}).join('');
- const signature=JSON.stringify(grants.map(g=>[g.key,store[g.key]||{}]));
+ const signature=JSON.stringify(grants.map(g=>[g.key,g.kind,g.fixedType||'',g.kind==='familiar'?(store[g.key]?.form||''):'']));
  if(existing?.dataset.signature===signature)return;
- const fieldset=existing||document.createElement('fieldset');fieldset.dataset.companionControls='';fieldset.dataset.signature=signature;fieldset.innerHTML=`<legend>Companheiros e familiares</legend><p class="section-note">Registre a forma atual ou preferida permitida pelo recurso. Escolhas que podem mudar ao conjurar novamente não ficam permanentemente travadas.</p>${body}`;if(!existing)box.appendChild(fieldset)
+ const card=existing||document.createElement('section');card.className='card full';card.dataset.companionCard='';card.dataset.signature=signature;card.innerHTML=`<h3>Companheiros e familiares</h3><p class="section-note">Registre a forma atual ou preferida permitida pelo recurso. Escolhas que podem mudar ao conjurar novamente não ficam permanentemente travadas.</p>${body}`;if(!existing)grid.appendChild(card)
 }
 function setCompanion(key,field,value){const store=companionStore(),row=store[key]||(store[key]={});row[field]=value||''}
-function onCompanionChange(e){const t=e.target.closest('[data-companion-key][data-companion-field]');if(!t)return;setCompanion(t.dataset.companionKey,t.dataset.companionField,t.value);refreshSheet();schedule()}
+function onCompanionChange(e){const t=e.target.closest?.('[data-companion-key][data-companion-field]');if(!t)return;setCompanion(t.dataset.companionKey,t.dataset.companionField,t.value);if(t.dataset.companionField==='form')schedule()}
 
 function expertiseInstances(){return activeFeatInstances().filter(inst=>['skill expert','especialista em pericia','expertise'].includes(fold(inst.feat?.name)))}
 function repairExpertiseSelectors(){
@@ -63,15 +63,14 @@ function repairExpertiseSelectors(){
 }
 function decorateExpertiseSkillValues(){
  const box=$('skill-values');if(!box)return;const d=derive();
- for(const row of box.querySelectorAll('.value-row')){const label=row.querySelector('span'),value=row.querySelector('strong');if(!label||!value)continue;const skill=Object.keys(SKILL_AB).find(name=>label.textContent.startsWith(name));if(!skill)continue;const proficient=d.skills.includes(skill),expert=d.expertiseSkills.includes(skill),ability=SKILL_AB[skill],total=mod(d.scores[ability])+(proficient?d.pbonus:0)+(expert?d.pbonus:0);label.textContent=`${skill}${proficient?' ●':''}${expert?' ◆':''}`;value.textContent=signed(total)}
+ for(const row of box.querySelectorAll('.value-row')){const label=row.querySelector('span'),value=row.querySelector('strong');if(!label||!value)continue;const skill=Object.keys(SKILL_AB).find(name=>label.textContent.startsWith(name));if(!skill)continue;const proficient=d.skills.includes(skill),expert=d.expertiseSkills.includes(skill),ability=SKILL_AB[skill],total=mod(d.scores[ability])+(proficient?d.pbonus:0)+(expert?d.pbonus:0);const labelText=`${skill}${proficient?' ●':''}${expert?' ◆':''}`,valueText=signed(total);if(label.textContent!==labelText)label.textContent=labelText;if(value.textContent!==valueText)value.textContent=valueText}
 }
-function refreshSheet(){const name=$('nome');if(name)name.dispatchEvent(new Event('input'))}
 function run(){if(applying)return;applying=true;try{repairExpertiseSelectors();renderCompanions();decorateExpertiseSkillValues()}finally{applying=false}}
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;run()})}
 
 export function initExpertiseCompanionUi(){
- run();$('classe-escolhas')?.addEventListener('change',onCompanionChange,true);$('classe-escolhas')?.addEventListener('input',onCompanionChange,true);
+ run();document.addEventListener('change',onCompanionChange,true);document.addEventListener('input',onCompanionChange,true);
  for(const id of['classe','nivel','subclasse'])$(id)?.addEventListener('change',schedule);
- for(const id of['talentos-escolhas','classe-escolhas','magias-escolhas']){const el=$(id);if(el)new MutationObserver(schedule).observe(el,{childList:true,subtree:true})}
- document.addEventListener('hub:class-skills-changed',schedule);document.addEventListener('change',schedule);$('new-character')?.addEventListener('click',schedule)
+ for(const id of['talentos-escolhas','classe-escolhas','magias-escolhas','skill-values']){const el=$(id);if(el)new MutationObserver(schedule).observe(el,{childList:true,subtree:true})}
+ document.addEventListener('hub:class-skills-changed',schedule);document.addEventListener('hub:spell-selection-changed',schedule);document.addEventListener('change',schedule);$('new-character')?.addEventListener('click',schedule)
 }
