@@ -12,19 +12,38 @@ const SPELLS={
  'Battle Smith':{3:['Heroism','Shield'],5:['Shining Smite','Warding Bond'],9:['Aura of Vitality','Conjure Barrage'],13:['Aura of Purity','Fire Shield'],17:['Banishing Smite','Mass Cure Wounds']},
  Cartographer:{3:['Faerie Fire','Guiding Bolt','Healing Word'],5:['Locate Object','Mind Spike'],9:['Call Lightning','Clairvoyance'],13:['Banishment','Locate Creature'],17:['Scrying','Teleportation Circle']}
 };
-const FIXED_TOOLS={Alchemist:['Suprimentos de Alquimista','Kit de Herbalismo'],Armorer:['Ferramentas de Ferreiro'],Artillerist:['Ferramentas de Entalhador'],'Battle Smith':['Ferramentas de Ferreiro'],Cartographer:['Suprimentos de Calígrafo','Ferramentas de Cartógrafo']};
+const FIXED_TOOLS={Alchemist:["Alchemist's Supplies",'Herbalism Kit'],Armorer:["Smith's Tools"],Artillerist:["Woodcarver's Tools"],'Battle Smith':["Smith's Tools"],Cartographer:["Calligrapher's Supplies","Cartographer's Tools"]};
+const BASE_TOOLS=["Thieves' Tools","Tinker's Tools"];
+const TOOL_PT={
+ "Alchemist's Supplies":'Suprimentos de Alquimista',"Brewer's Supplies":'Suprimentos de Cervejeiro',"Calligrapher's Supplies":'Suprimentos de Calígrafo',"Carpenter's Tools":'Ferramentas de Carpinteiro',"Cartographer's Tools":'Ferramentas de Cartógrafo',"Cobbler's Tools":'Ferramentas de Sapateiro',"Cook's Utensils":'Utensílios de Cozinheiro',"Glassblower's Tools":'Ferramentas de Soprador de Vidro',"Jeweler's Tools":'Ferramentas de Joalheiro',"Leatherworker's Tools":'Ferramentas de Coureiro',"Mason's Tools":'Ferramentas de Pedreiro',"Painter's Supplies":'Suprimentos de Pintor',"Potter's Tools":'Ferramentas de Oleiro',"Smith's Tools":'Ferramentas de Ferreiro',"Tinker's Tools":'Ferramentas de Reparador',"Weaver's Tools":'Ferramentas de Tecelão',"Woodcarver's Tools":'Ferramentas de Entalhador','Herbalism Kit':'Kit de Herbalismo',"Thieves' Tools":'Ferramentas de Ladrão'
+};
+const TOOL_ALIAS=new Map();for(const[name,pt]of Object.entries(TOOL_PT)){TOOL_ALIAS.set(fold(name),name);TOOL_ALIAS.set(fold(pt),name)}
 const ELIXIRS=['Cura','Rapidez','Resiliência','Ousadia','Voo','Transformação'];
 const MODELS=['Dreadnaught','Guardian','Infiltrator'];
 const CANNONS=['Lança-Chamas','Balista de Força','Protetor'];
+const toolName=x=>String(x?.name||x?.nome||'').trim();
+const toolSubtype=x=>String(x?.subtype||x?.subtipo||'').trim();
+const toolKey=v=>fold(String(v||'').replace(/[’‘]/g,"'")).trim();
+function toolCatalogName(value){const raw=String(value||'').trim();if(!raw)return'';const alias=TOOL_ALIAS.get(toolKey(raw));if(alias)return alias;const found=arr(state.catalogs?.tools).find(x=>toolKey(toolName(x))===toolKey(raw));return found?toolName(found):raw}
+export function artificerToolLabel(value){const name=toolCatalogName(value);return TOOL_PT[name]||name}
+export function artificerBaseArtisanToolOptions(){return uniq(arr(state.catalogs?.tools).filter(x=>{const t=fold(toolSubtype(x));return t==='ferramenta de artesao'||t.includes('artisan')}).map(toolName)).sort((a,b)=>artificerToolLabel(a).localeCompare(artificerToolLabel(b),'pt-BR'))}
+function artificerChoiceStore(){state.c.choices=state.c.choices||{};return state.c.choices.artificer||(state.c.choices.artificer={})}
+export function artificerBaseArtisanTool(){const raw=artificerChoiceStore().baseArtisanTool||'',name=toolCatalogName(raw),options=artificerBaseArtisanToolOptions();if(!name)return null;if(!options.length)return name;return options.includes(name)?name:null}
+export function setArtificerBaseArtisanTool(value){const store=artificerChoiceStore(),name=toolCatalogName(value),options=artificerBaseArtisanToolOptions();if(name&&options.includes(name))store.baseArtisanTool=name;else delete store.baseArtisanTool}
+function baseToolProficiencies(){return uniq([...BASE_TOOLS,...[artificerBaseArtisanTool()].filter(Boolean)])}
 function choiceStore(d){const key=keyPart(canonical(d));state.c.choices=state.c.choices||{};state.c.choices.subclassMechanics=state.c.choices.subclassMechanics||{};return state.c.choices.subclassMechanics[key]||(state.c.choices.subclassMechanics[key]={})}
 function isArtificer(d){return d?.klass?.slug==='artificer'&&d?.sub&&KNOWN.has(fold(canonical(d)))}
 function spellNames(name,level){const table=SPELLS[name]||{},out=[];for(const[at,names]of Object.entries(table))if(num(at)<=level)out.push(...names);return out}
 function resolveSpells(names){return names.map(name=>state.catalogs?.spells?.find(s=>fold(s.name)===fold(name)||fold(s.originalName)===fold(name))).filter(Boolean)}
 function elixirCount(level){return level>=15?5:level>=9?4:level>=5?3:2}
-function toolReplacementDefs(name,level){if(level<3)return[];const max=['Alchemist','Cartographer'].includes(name)?2:1;return Array.from({length:max},(_,i)=>choiceDef(`toolReplacement${i+1}`,3,`Ferramenta substituta${max>1?` ${i+1}`:''}` ,[],'quando houver proficiência duplicada',false,'Preencha somente se uma ferramenta concedida pela subclasse já for proficiente; escolha outro tipo de Ferramenta de Artesão.','text'))}
+function priorToolKeys(d){return new Set([...arr(d?.tools),...baseToolProficiencies()].map(toolCatalogName).map(toolKey).filter(Boolean))}
+function toolReplacementDefs(name,level,d){
+ if(level<3)return[];const fixed=arr(FIXED_TOOLS[name]),prior=priorToolKeys(d),allFixed=new Set(fixed.map(toolKey)),store=state.c.choices?.subclassMechanics?.[keyPart(name)]||{},duplicates=fixed.map((grant,index)=>({grant,index,id:`toolReplacement${index+1}`})).filter(x=>prior.has(toolKey(x.grant))),artisan=artificerBaseArtisanToolOptions();
+ return duplicates.map(row=>{const own=toolCatalogName(store[row.id]||''),blocked=new Set([...prior,...allFixed]);for(const other of duplicates)if(other.id!==row.id&&store[other.id])blocked.add(toolKey(toolCatalogName(store[other.id])));const options=artisan.filter(x=>!blocked.has(toolKey(x))||toolKey(x)===toolKey(own));return choiceDef(row.id,3,`Substituição por proficiência duplicada — ${artificerToolLabel(row.grant)}`,options,'ao receber Tools of the Trade',true,`Você já possui proficiência em ${artificerToolLabel(row.grant)}. Escolha outra Ferramenta de Artesão da Biblioteca; ferramentas em que já possui proficiência ficam indisponíveis.`,'select')})
+}
 
 export function artificerSubclassChoiceDefs(d){
- if(!isArtificer(d))return[];const l=num(d.level),name=canonical(d),defs=[...toolReplacementDefs(name,l)];
+ if(!isArtificer(d))return[];const l=num(d.level),name=canonical(d),defs=[...toolReplacementDefs(name,l,d)];
  const add=(id,level,label,options,frequency,required=false,note='',kind='select')=>{if(l>=level)defs.push(choiceDef(id,level,label,options,frequency,required,note,kind))};
  if(name==='Alchemist')add('elixirEffect',3,'Efeito atual/preferido do Elixir Experimental',ELIXIRS,'a cada elixir',false,'O efeito pode mudar entre elixires; esta seleção registra a opção atual ou preferida.');
  else if(name==='Armorer')add('armorModel',3,'Modelo da Armadura Arcana',MODELS,'após Descanso Curto ou Longo',true,'O modelo permanece até você alterá-lo após outro descanso.');
@@ -32,15 +51,15 @@ export function artificerSubclassChoiceDefs(d){
  return defs
 }
 export function sanitizeArtificerSubclassChoices(d){
- if(!isArtificer(d))return{values:{},pending:[]};const store=choiceStore(d),defs=artificerSubclassChoiceDefs(d),allowed=new Map(defs.map(x=>[x.id,x])),clean={};
- for(const[id,value]of Object.entries(store)){const def=allowed.get(id);if(!def)continue;if(def.kind==='text'){if(String(value||'').trim())clean[id]=String(value).trim()}else if(def.options.includes(value))clean[id]=value}
+ if(!isArtificer(d))return{values:{},pending:[]};const store=choiceStore(d),defs=artificerSubclassChoiceDefs(d),allowed=new Map(defs.map(x=>[x.id,x])),clean={},claimedTools=new Set();
+ for(const[id,value]of Object.entries(store)){const def=allowed.get(id);if(!def)continue;if(id.startsWith('toolReplacement')){const canonicalValue=toolCatalogName(value),key=toolKey(canonicalValue);if(def.options.includes(canonicalValue)&&!claimedTools.has(key)){clean[id]=canonicalValue;claimedTools.add(key)}}else if(def.kind==='text'){if(String(value||'').trim())clean[id]=String(value).trim()}else if(def.options.includes(value))clean[id]=value}
  state.c.choices.subclassMechanics[keyPart(canonical(d))]=clean;return{values:clean,pending:defs.filter(x=>x.required&&!clean[x.id])}
 }
-export function setArtificerSubclassChoice(d,id,value){if(!isArtificer(d))return;const def=artificerSubclassChoiceDefs(d).find(x=>x.id===id),store=choiceStore(d);if(!def)return;if(def.kind==='text'){if(String(value||'').trim())store[id]=String(value).trim();else delete store[id]}else if(def.options.includes(value))store[id]=value;else delete store[id]}
+export function setArtificerSubclassChoice(d,id,value){if(!isArtificer(d))return;const def=artificerSubclassChoiceDefs(d).find(x=>x.id===id),store=choiceStore(d);if(!def)return;if(id.startsWith('toolReplacement')){const canonicalValue=toolCatalogName(value);if(def.options.includes(canonicalValue))store[id]=canonicalValue;else delete store[id]}else if(def.kind==='text'){if(String(value||'').trim())store[id]=String(value).trim();else delete store[id]}else if(def.options.includes(value))store[id]=value;else delete store[id]}
 
 export function artificerSubclassOutcome(d){
- if(!isArtificer(d))return null;const l=num(d.level),pb=num(d.pbonus),int=mod(d.scores?.Inteligência),intUses=Math.max(1,int),name=canonical(d),{values,pending}=sanitizeArtificerSubclassChoices(d),features=arr(d.sub?.features).filter(f=>num(f.level)<=l),summary=[],resources=[],defenses=[],attacks=[],movementModes={},tools=[...arr(FIXED_TOOLS[name])],armorTraining=[],weaponTraining=[],companions=[];
- for(const key of['toolReplacement1','toolReplacement2'])if(values[key])tools.push(values[key]);
+ if(!isArtificer(d))return null;const l=num(d.level),pb=num(d.pbonus),int=mod(d.scores?.Inteligência),intUses=Math.max(1,int),name=canonical(d),{values,pending}=sanitizeArtificerSubclassChoices(d),features=arr(d.sub?.features).filter(f=>num(f.level)<=l),summary=[],resources=[],defenses=[],attacks=[],movementModes={},tools=arr(FIXED_TOOLS[name]).map(artificerToolLabel),armorTraining=[],weaponTraining=[],companions=[];
+ for(const key of['toolReplacement1','toolReplacement2'])if(values[key])tools.push(artificerToolLabel(values[key]));
  const alwaysPreparedSpellNames=spellNames(name,l),alwaysPreparedSpells=resolveSpells(alwaysPreparedSpellNames),missingSpells=alwaysPreparedSpellNames.filter(n=>!alwaysPreparedSpells.some(s=>fold(s.name)===fold(n)||fold(s.originalName)===fold(n)));
  const add=(n,value,scope='')=>summary.push({name:n,value,scope}),resource=(n,uses,recovery,detail='')=>resources.push({name:n,uses,recovery,detail}),defense=(n,value,scope='')=>defenses.push({name:n,value,scope}),attack=(n,damage,extra='',attackBonus=d.spellAttack)=>attacks.push({name:n,attackBonus,damage,extra});
  if(name==='Alchemist'){
@@ -73,6 +92,7 @@ function isMartialRanged(w){const c=fold(w?.categoria||'');return c.includes('ma
 function isMartial(w){return fold(w?.categoria||'').includes('marcial')}
 function isMagicWeapon(w){return !!(w?.magico||w?.magic||w?.magical||w?.magicBonus||w?.bonus_magico||/magic|magica|mágica/i.test(`${w?.tipo||''} ${w?.fonte||''}`))}
 export function applyArtificerSubclassMechanics(d){
+ if(d?.klass?.slug==='artificer'){const baseTools=baseToolProficiencies();d.tools=uniq([...arr(d.tools),...baseTools]);d.artificerBaseTools=baseTools}
  const out=artificerSubclassOutcome(d);if(!out)return d;d.subclassMechanics=out;d.tools=uniq([...arr(d.tools),...out.tools]);d.subclassTools=out.tools;d.subclassArmorTraining=out.armorTraining;d.subclassWeaponTraining=out.weaponTraining;d.subclassAttacks=out.attacks;d.subclassResources=out.resources;d.subclassDefenses=out.defenses;d.subclassMovementModes=out.movementModes;d.subclassAlwaysPreparedSpells=out.alwaysPreparedSpells;d.subclassAlwaysPreparedSpellNames=out.alwaysPreparedSpellNames;d.preparedSpellsAll=uniq([...arr(d.selectedSpells?.leveled),...out.alwaysPreparedSpells]);d.subclassCompanions=out.companions;
  if(out.name==='Armorer'){
   if(d.armor?.forca_minima&&d.scores?.Força<num(d.armor.forca_minima))d.speed+=10;
