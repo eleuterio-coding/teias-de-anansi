@@ -9,7 +9,7 @@ assert.equal(names.length,9,`Esperadas 9 subclasses de Patrulheiro; encontradas 
 const mechanics=new Map;for(const file of FILES)for(const row of json(file).subclasses||[])mechanics.set(fold(row.nome),row);for(const name of names)assert.ok(mechanics.has(fold(name)),`Sem pacote mecânico para ${name}.`);
 const source=fs.readFileSync('scripts/character-builder/ranger-subclass-mechanics.js','utf8'),ui=fs.readFileSync('scripts/character-builder/ranger-subclass-ui.js','utf8'),rules=fs.readFileSync('scripts/character-builder/rules.js','utf8'),classUi=fs.readFileSync('scripts/character-builder/class-skill-ui.js','utf8');
 for(const name of names)assert.ok(source.includes(`'${name}'`),`Subclasse sem implementação explícita: ${name}`);
-for(const token of['rangerSubclassChoiceDefs','rangerSubclassOutcome','subclassAlwaysPreparedSpells','subclassCompanions','Hunter\'s Prey','Dreadful Strike','Ley Line Tracker','Frozen Haunt'])assert.ok(source.includes(token),`Contrato mecânico ausente: ${token}`);
+for(const token of['rangerSubclassChoiceDefs','rangerSubclassOutcome','subclassAlwaysPreparedSpells','subclassCompanions','Hunter\'s Prey','Dreadful Strike','Ley Line Tracker','Frozen Haunt','ironMindAlt'])assert.ok(source.includes(token),`Contrato mecânico ausente: ${token}`);
 assert.ok(ui.includes('data-ranger-subclass-pending')&&ui.includes('data-ranger-subclass-combat')&&ui.includes('data-ranger-subclass-spells'),'UI não integra pendências, combate e magias.');
 assert.ok(rules.includes('applyRangerSubclassMechanics(d)')&&rules.includes('applyRangerSubclassRuleDetails(d)'),'derive() não aplica Patrulheiro.');assert.ok(classUi.includes('initRangerSubclassUi'),'Construtor não inicializa Patrulheiro.');
 
@@ -26,7 +26,10 @@ for(const name of names){const d=make(name),out=rangerSubclassOutcome(d),row=mec
  const d=make('Fey Wanderer');let out=rangerSubclassOutcome(d);assert.ok(out.pending.some(x=>x.id==='socialSkill'));setRangerSubclassChoice(d,'socialSkill','Persuasão');out=rangerSubclassOutcome(d);assert.ok(out.skills.includes('Persuasão'));assert.ok(out.summary.some(x=>x.name==='Dreadful Strikes'&&x.value==='1d6 Psychic'));assert.equal(out.alwaysPreparedSpellNames.length,5);assert.ok(out.resources.some(x=>x.name==='Misty Wanderer'&&x.uses===4))
 }
 {
- const out=rangerSubclassOutcome(make('Gloom Stalker'));assert.ok(out.resources.some(x=>x.name==='Dreadful Strike'&&x.uses===4&&/2d8/.test(x.detail)));assert.ok(out.senses.some(x=>x.name==='Darkvision'&&x.range===60));assert.ok(out.saveProficiencies.includes('Sabedoria'));assert.ok(out.defenses.some(x=>x.name==='Shadowy Dodge'&&/30 ft/.test(x.value)))
+ const d=make('Gloom Stalker'),out=rangerSubclassOutcome(d);assert.ok(out.resources.some(x=>x.name==='Dreadful Strike'&&x.uses===4&&/2d8/.test(x.detail)));assert.ok(out.senses.some(x=>x.name==='Darkvision'&&x.range===60));assert.ok(out.saveProficiencies.includes('Sabedoria'));assert.ok(out.defenses.some(x=>x.name==='Shadowy Dodge'&&/30 ft/.test(x.value)))
+}
+{
+ const d=make('Gloom Stalker');d.saveProficiencies=['Força','Destreza','Sabedoria'];let out=rangerSubclassOutcome(d);assert.ok(out.pending.some(x=>x.id==='ironMindAlt'),'Iron Mind deve pedir alternativa se Sabedoria já for proficiente.');const def=rangerSubclassChoiceDefs(d).find(x=>x.id==='ironMindAlt');assert.deepEqual(def.options,['Inteligência','Carisma']);setRangerSubclassChoice(d,'ironMindAlt','Carisma');out=rangerSubclassOutcome(d);assert.equal(out.pending.length,0);assert.ok(out.saveProficiencies.includes('Carisma'),'Iron Mind alternativo não foi aplicado.')
 }
 {
  const d=make('Hunter');let out=rangerSubclassOutcome(d);assert.equal(out.pending.length,2);setRangerSubclassChoice(d,'huntersPrey','Colossus Slayer');setRangerSubclassChoice(d,'defensiveTactic','Multiattack Defense');out=rangerSubclassOutcome(d);assert.equal(out.pending.length,0);assert.ok(out.summary.some(x=>x.name==='Colossus Slayer'&&/1d8/.test(x.value)));assert.ok(out.defenses.some(x=>x.name==='Multiattack Defense'));assert.ok(out.summary.some(x=>x.name==="Superior Hunter's Prey"))
