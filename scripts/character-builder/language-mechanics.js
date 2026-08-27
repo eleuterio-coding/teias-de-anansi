@@ -22,36 +22,24 @@ function featStages(){
 function selectedFeatObjects(){const stages=featStages();return uniq([...stages.origin,...stages.species,...stages.progression])}
 function grantsFromText(sourceKey,label,text){const f=fold(text),fixed=[],grants=[];if(/\byou know druidic\b/.test(f)||/\bconhece druidico\b/.test(f))fixed.push('Druídico');if(/thieves['’]? cant/.test(f)||/cant dos ladroes/.test(f))fixed.push('Cant dos Ladrões');if(/serpentine speech/.test(f)||/linguagem de sinais serpentina/.test(f))fixed.push('Linguagem de Sinais Serpentina');if(fixed.length)grants.push({key:`${sourceKey}:fixed`,label,fixed:uniq(fixed),choose:0,pool:[]});const patterns=[/(?:you know |and )(one|two|three|\d+) other languages? of your choice/,/you know (one|two|three|\d+) languages? of your choice/,/(?:conhece |e )(um|uma|dois|duas|tres|três|\d+) outros? idiomas? (?:de|a) sua escolha/,/conhece (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|a) sua escolha/,/(?:ganha|recebe) (um|uma|dois|duas|tres|três|\d+) idiomas? (?:de|a) sua escolha/];for(const re of patterns){const m=f.match(re);if(m){grants.push({key:`${sourceKey}:choice`,label,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});break}}return grants}
 function classLanguageDefinitions(klass,level){if(!klass)return[];const defs=[];if(klass.slug==='druid'&&level>=1)defs.push({key:'class:druid:druidic',label:`${klass.name} — Druídico`,fixed:['Druídico'],choose:0,pool:[]});if(klass.slug==='rogue'&&level>=1)defs.push({key:'class:rogue:thieves-cant',label:`${klass.name} — Cant dos Ladrões`,fixed:['Cant dos Ladrões'],choose:1,pool:ALL_LANGUAGES});if(klass.slug==='ranger'&&level>=2)defs.push({key:'class:ranger:deft-explorer',label:`${klass.name} — Explorador Hábil`,fixed:[],choose:2,pool:ALL_LANGUAGES});return defs}
-function subclassLanguageDefinitions(sub){const name=fold(sub?.mechanics?.name||sub?.name||''),defs=[];if(name===fold('Path of the Demonshard')){const value=state.c.choices?.subclassMechanics?.['path-of-the-demonshard']?.demontongue;if(['Abissal','Infernal'].includes(value))defs.push({key:'subclass:demonshard:demontongue',label:`${sub.name} — Demontongue`,fixed:[value],choose:0,pool:[]})}if(name===fold('College of the Moon')||name===fold('Colégio da Lua'))defs.push({key:'subclass:college-of-the-moon:druidic',label:`${sub.name} — Primal Lore`,fixed:['Druídico'],choose:0,pool:[]});return defs}
+function subclassLanguageDefinitions(sub){const name=fold(sub?.mechanics?.name||sub?.name||''),defs=[];if(name===fold('Path of the Demonshard')){const value=state.c.choices?.subclassMechanics?.['path-of-the-demonshard']?.demontongue;if(['Abissal','Infernal'].includes(value))defs.push({key:'subclass:demonshard:demontongue',label:`${sub.name} — Demontongue`,fixed:[value],choose:0,pool:[]})}if(name===fold('College of the Moon')||name===fold('Colégio da Lua'))defs.push({key:'subclass:college-of-the-moon:druidic',label:`${sub.name} — Primal Lore`,fixed:['Druídico'],choose:0,pool:[]});if(name===fold('Circle of the Shepherd')||name===fold('Círculo do Pastor'))defs.push({key:'subclass:shepherd:speech-of-the-woods',label:`${sub.name} — Speech of the Woods`,fixed:['Silvestre'],choose:0,pool:[]});return defs}
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
 function backgroundLanguageDefinitions(bg){if(!bg)return[];const fixed=[],defs=[];for(const raw of arr(bg.languages)){const value=canonical(raw);if(!value)continue;const m=fold(value).match(/^(um|uma|dois|duas|tres|três|\d+).*escolh/);if(m)defs.push({key:`background:${bg.id}:languages-choice`,label:`${bg.name} — idiomas`,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});else fixed.push(value)}if(fixed.length)defs.push({key:`background:${bg.id}:languages-fixed`,label:`${bg.name} — idiomas`,fixed:uniq(fixed),choose:0,pool:[]});return defs}
 function appendTextSources(defs,sources){for(const[sourceKey,label,text]of sources)defs.push(...grantsFromText(sourceKey,label,text))}
 export function languageGrantDefinitions(){
  ensureState();const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices?.class?.level)||1)),defs=[];
- // A ordem abaixo é deliberada: uma etapa posterior pode ficar redundante,
- // mas nunca invalida uma escolha já feita em uma etapa anterior.
  defs.push(...classLanguageDefinitions(klass,level),...subclassLanguageDefinitions(sub));
  const classSources=[];for(const f of arr(klass?.features).filter(x=>num(x.level)<=level&&!structuredClassFeature(klass,x)))classSources.push([`class:${klass.slug}:${keyPart(f.name)}`,`${klass.name} — ${f.name}`,f.text||f.description||'']);if(sub?.description)classSources.push([`subclass:${sub.id||sub.name}`,sub.name,sub.description]);appendTextSources(defs,classSources);
  defs.push({key:'core:languages',label:'Criação de Personagem',fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES},...backgroundLanguageDefinitions(bg));
  const originSources=[];if(bg?.feature)originSources.push([`background:${bg.id}:feature`,`${bg.name} — característica`,bg.feature.text||bg.feature.description||'']);const stages=featStages();for(const feat of stages.origin)originSources.push([`feat:origin:${feat.id}`,`Talento de Origem — ${feat.name}`,feat.description||'']);appendTextSources(defs,originSources);
  const lineage=species?.lineages?.find(x=>x.name===state.c.choices?.species?.lineage)||null,speciesTraits=lineage?.replaceBaseTraits?arr(lineage.traits):[...arr(species?.traits),...arr(lineage?.traits)],raceSources=[];for(const t of speciesTraits)raceSources.push([`species:${species?.id||species?.name}:${keyPart(t.name)}`,`${species?.name||'Raça'} — ${t.name}`,t.text||t.description||'']);for(const feat of stages.species)raceSources.push([`feat:species:${feat.id}`,`Talento racial — ${feat.name}`,feat.description||'']);appendTextSources(defs,raceSources);
  const progressionSources=[];for(const feat of stages.progression)progressionSources.push([`feat:progression:${feat.id}`,`Talento de Progressão — ${feat.name}`,feat.description||'']);appendTextSources(defs,progressionSources);
- // Mantém o detector agregado disponível como contrato para auditorias e consumidores.
  selectedFeatObjects();
  const seen=new Set;return defs.filter(d=>d.choose||d.fixed.length).filter(d=>!seen.has(d.key)&&(seen.add(d.key),true))
 }
 export function sanitizeLanguageChoices(){
  const data=ensureState(),defs=languageGrantDefinitions(),clean={},used=new Set;
- for(const def of defs){
-  // Primeiro entram apenas os benefícios fixos desta etapa. Benefícios fixos
-  // de etapas posteriores não podem apagar escolhas já confirmadas antes.
-  for(const fixed of arr(def.fixed))used.add(fold(canonical(fixed)));
-  for(let i=0;i<def.choose;i++){
-   const key=`${def.key}:${i}`,v=canonical(data.choices[key]);
-   if(!v||!def.pool.some(x=>fold(x)===fold(v))||used.has(fold(v)))continue;
-   clean[key]=v;used.add(fold(v))
-  }
- }
+ for(const def of defs){for(const fixed of arr(def.fixed))used.add(fold(canonical(fixed)));for(let i=0;i<def.choose;i++){const key=`${def.key}:${i}`,v=canonical(data.choices[key]);if(!v||!def.pool.some(x=>fold(x)===fold(v))||used.has(fold(v)))continue;clean[key]=v;used.add(fold(v))}}
  data.choices=clean;return clean
 }
 function manualLanguages(){const text=state.c.sheet?.profile?.languages||'';return String(text).split(/[;,\n]+/).map(x=>canonical(x.trim())).filter(Boolean)}

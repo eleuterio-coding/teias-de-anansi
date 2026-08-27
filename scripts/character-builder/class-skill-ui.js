@@ -5,6 +5,7 @@ import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-su
 import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260827-barbarian-subclasses1';
 import{initArtificerSubclassUi}from'./artificer-subclass-ui.js?v=20260827-artificer-subclasses1';
 import{initBardSubclassUi}from'./bard-subclass-ui.js?v=20260827-bard-subclasses1';
+import{initDruidSubclassUi}from'./druid-subclass-ui.js?v=20260827-druid-subclasses1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 function normalizeSkillChoices(klass){
@@ -66,6 +67,6 @@ export function initClassSkillUi(){
  new MutationObserver(()=>queueMicrotask(decorate)).observe(box,{childList:true,subtree:true});
  $('classe')?.addEventListener('change',()=>queueMicrotask(decorate));$('nivel')?.addEventListener('change',()=>queueMicrotask(decorate));$('new-character')?.addEventListener('click',()=>queueMicrotask(decorate));
  document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
- initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi()});
+ initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi()});
  initExpertiseCompanionUi()
 }
