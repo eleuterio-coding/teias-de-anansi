@@ -34,13 +34,13 @@ setArtificerSubclassChoice(d,'toolReplacement1',"Smith's Tools");
 defs=replacementDefs(d);assert.ok(!defs.find(x=>x.id==='toolReplacement2').options.includes("Smith's Tools"),'Os dois seletores não podem escolher a mesma ferramenta.');
 setArtificerSubclassChoice(d,'toolReplacement2',"Woodcarver's Tools");
 let out=artificerSubclassOutcome(d);
-assert.ok(out.tools.includes("Alchemist's Supplies")&&out.tools.includes('Herbalism Kit'),'As proficiências fixas da subclasse precisam permanecer ativas.');
-assert.ok(out.tools.includes("Smith's Tools")&&out.tools.includes("Woodcarver's Tools"),'As duas substituições válidas precisam chegar às proficiências finais.');
+assert.ok(out.tools.includes('Suprimentos de Alquimista')&&out.tools.includes('Kit de Herbalismo'),'As proficiências fixas da subclasse precisam permanecer ativas.');
+assert.ok(out.tools.includes('Ferramentas de Ferreiro')&&out.tools.includes('Ferramentas de Entalhador'),'As duas substituições válidas precisam chegar às proficiências finais.');
 assert.equal(out.pending.filter(x=>x.id.startsWith('toolReplacement')).length,0,'Substituições válidas não podem permanecer pendentes.');
 
 reset();d=make(["Alchemist's Supplies"]);setArtificerSubclassChoice(d,'toolReplacement1','Herbalism Kit');out=artificerSubclassOutcome(d);
 assert.ok(out.pending.some(x=>x.id==='toolReplacement1'),'Uma opção que não seja Ferramenta de Artesão deve ser rejeitada e continuar pendente.');
-assert.ok(!out.tools.filter(x=>x==='Herbalism Kit').length||out.tools.filter(x=>x==='Herbalism Kit').length===1,'A tentativa inválida não pode adicionar uma proficiência extra em Herbalism Kit.');
+assert.equal(out.tools.filter(x=>x==='Kit de Herbalismo').length,1,'A tentativa inválida não pode adicionar uma proficiência extra em Herbalism Kit.');
 
 reset();setArtificerBaseArtisanTool("Alchemist's Supplies");d=make();
 assert.equal(replacementDefs(d).length,1,'A Ferramenta de Artesão escolhida pela própria classe precisa participar da detecção de duplicidade da subclasse.');
