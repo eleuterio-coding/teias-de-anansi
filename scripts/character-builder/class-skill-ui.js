@@ -1,5 +1,6 @@
 import{state,$,arr,SKILL_AB,esc}from'./state.js';
 import{selected,derive}from'./rules.js';
+import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 function normalizeSkillChoices(klass){
@@ -60,5 +61,6 @@ export function initClassSkillUi(){
  decorate();box.addEventListener('change',onChange,true);
  new MutationObserver(()=>queueMicrotask(decorate)).observe(box,{childList:true,subtree:true});
  $('classe')?.addEventListener('change',()=>queueMicrotask(decorate));$('nivel')?.addEventListener('change',()=>queueMicrotask(decorate));$('new-character')?.addEventListener('click',()=>queueMicrotask(decorate));
- document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)})
+ document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
+ initExpertiseCompanionUi()
 }
