@@ -1,6 +1,7 @@
 (()=>{
   'use strict';
-  const VERSION='20260827-subclass-mechanics1';
+  const VERSION='20260827-library-rendered-layout2';
+  const LAYOUT='biblioteca-light.css?v=20260827-library-layout2';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -39,6 +40,12 @@
       [/(<header><h1>Antecedentes<\/h1><\/header>)/i,'$1<div class="nota"><strong>Regra da Casa:</strong> em personagens 5.5e do Hub, qualquer antecedente concede +2 em um atributo e +1 em outro atributo diferente, escolhidos livremente, além de um Talento de Origem livre. Os atributos e talentos impressos na fonte permanecem como referência da publicação, mas não limitam essas escolhas no Hub.</div>']
     ]}
   };
+  function applySharedLayout(html){
+    const tag=`<link id="hub-library-layout" rel="stylesheet" href="${LAYOUT}">`;
+    html=html.replace(/<link\b[^>]*id=["']hub-library-layout["'][^>]*>\s*/gi,'');
+    if(!/<\/head>/i.test(html))throw new Error('HTML do módulo sem </head>.');
+    return html.replace(/<\/head>/i,`${tag}</head>`);
+  }
   async function load(){
     const c=cfg[key];
     if(!c)throw new Error('Módulo de limpeza inválido.');
@@ -46,6 +53,7 @@
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     let html=await r.text();
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
+    html=applySharedLayout(html);
     if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script></body>`);
     document.open();
     document.write(html);
