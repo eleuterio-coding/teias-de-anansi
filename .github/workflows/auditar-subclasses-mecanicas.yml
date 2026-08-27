@@ -11,6 +11,8 @@ on:
       - 'scripts/character-builder/subclass-mechanics-data.js'
       - 'scripts/character-builder/barbarian-subclass-mechanics.js'
       - 'scripts/character-builder/barbarian-subclass-ui.js'
+      - 'scripts/character-builder/artificer-subclass-mechanics.js'
+      - 'scripts/character-builder/artificer-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -28,6 +30,8 @@ on:
       - 'scripts/character-builder/subclass-mechanics-data.js'
       - 'scripts/character-builder/barbarian-subclass-mechanics.js'
       - 'scripts/character-builder/barbarian-subclass-ui.js'
+      - 'scripts/character-builder/artificer-subclass-mechanics.js'
+      - 'scripts/character-builder/artificer-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -55,6 +59,8 @@ jobs:
           node --check scripts/character-builder/subclass-mechanics-data.js
           node --check scripts/character-builder/barbarian-subclass-mechanics.js
           node --check scripts/character-builder/barbarian-subclass-ui.js
+          node --check scripts/character-builder/artificer-subclass-mechanics.js
+          node --check scripts/character-builder/artificer-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/language-ui.js
