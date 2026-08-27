@@ -24,6 +24,7 @@ on:
       - 'tests/auditar-subclasses-mecanicas.mjs'
       - 'tests/auditar-bardo-subclasses.mjs'
       - 'tests/auditar-druida-subclasses.mjs'
+      - 'tests/auditar-druida-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -49,6 +50,7 @@ on:
       - 'tests/auditar-subclasses-mecanicas.mjs'
       - 'tests/auditar-bardo-subclasses.mjs'
       - 'tests/auditar-druida-subclasses.mjs'
+      - 'tests/auditar-druida-integracao.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -68,6 +70,7 @@ jobs:
           node tests/auditar-subclasses-mecanicas.mjs
           node tests/auditar-bardo-subclasses.mjs
           node tests/auditar-druida-subclasses.mjs
+          node tests/auditar-druida-integracao.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
