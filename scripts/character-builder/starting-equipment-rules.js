@@ -140,6 +140,7 @@ export function formatPhysicalItems(items){
 }
 export function clampCreationLevel(value){return Math.max(1,Math.min(20,num(value)||1))}
 export function wealthBaseGp(level){const l=clampCreationLevel(level);return l>=2?WEALTH_BY_LEVEL[l]||0:0}
+function adjustedWealthGp(base,profile){const percent=Math.round(num(profile?.multiplier)*100);return Math.round((base*percent)/100)}
 function tierKey(value){const key=fold(value).replace(/[^a-z]/g,'');return WEALTH_TIERS[key]?key:''}
 export function backgroundWealthProfile(bg=currentBackground()){
  const explicit=tierKey(bg?.wealthTier||bg?.wealth_tier||bg?.faixaEconomica||bg?.faixa_economica);
@@ -149,11 +150,11 @@ export function backgroundWealthProfile(bg=currentBackground()){
  return WEALTH_TIERS.regular
 }
 export function wealthGp(level,bg=currentBackground()){
- const base=wealthBaseGp(level);if(!base)return 0;return Math.round(base*backgroundWealthProfile(bg).multiplier)
+ const base=wealthBaseGp(level);if(!base)return 0;return adjustedWealthGp(base,backgroundWealthProfile(bg))
 }
 export function creationBudgetBreakdown(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){
- const l=clampCreationLevel(level),resolvedClassChoice=String(classChoice||state.c?.choices?.class?.equipment||'A').toUpperCase(),resolvedBgChoice=String(bgChoice||'A').toUpperCase(),profile=backgroundWealthProfile(bg),baseWealthGp=wealthBaseGp(l),adjustedWealthGp=l>=2?Math.round(baseWealthGp*profile.multiplier):0,classCp=classPackageCurrencyCp(klass,resolvedClassChoice),backgroundCp=packageCurrencyCp(bg,resolvedBgChoice),wealthCp=adjustedWealthGp*100;
- return{level:l,classChoice:resolvedClassChoice,backgroundChoice:resolvedBgChoice,classCp,backgroundCp,baseWealthGp,wealthTier:profile.id,wealthTierLabel:profile.label,wealthMultiplier:profile.multiplier,adjustedWealthGp,wealthCp,totalCp:classCp+backgroundCp+wealthCp}
+ const l=clampCreationLevel(level),resolvedClassChoice=String(classChoice||state.c?.choices?.class?.equipment||'A').toUpperCase(),resolvedBgChoice=String(bgChoice||'A').toUpperCase(),profile=backgroundWealthProfile(bg),baseWealthGp=wealthBaseGp(l),adjusted=l>=2?adjustedWealthGp(baseWealthGp,profile):0,classCp=classPackageCurrencyCp(klass,resolvedClassChoice),backgroundCp=packageCurrencyCp(bg,resolvedBgChoice),wealthCp=adjusted*100;
+ return{level:l,classChoice:resolvedClassChoice,backgroundChoice:resolvedBgChoice,classCp,backgroundCp,baseWealthGp,wealthTier:profile.id,wealthTierLabel:profile.label,wealthMultiplier:profile.multiplier,adjustedWealthGp:adjusted,wealthCp,totalCp:classCp+backgroundCp+wealthCp}
 }
 export function creationBudgetCp(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){return creationBudgetBreakdown(bg,bgChoice,level,klass,classChoice).totalCp}
 export function creationPhysicalItems(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){
