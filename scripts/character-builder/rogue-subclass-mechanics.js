@@ -13,6 +13,7 @@ function store(d){state.c.choices=state.c.choices||{};state.c.choices.subclassMe
 const spellByName=name=>state.catalogs?.spells?.find(s=>fold(s.name)===fold(name)||fold(s.originalName)===fold(name))||null;
 const optionValue=(options,v)=>arr(options).map(x=>typeof x==='string'?x:x.value).includes(v);
 const wizardSpellOptions=(min,max)=>arr(state.catalogs?.spells).filter(s=>arr(s.classes).some(c=>['wizard','mago'].includes(fold(c)))&&num(s.level)>=min&&num(s.level)<=max).sort((a,b)=>num(a.level)-num(b.level)||a.name.localeCompare(b.name,'pt-BR')).map(s=>({value:s.id,label:num(s.level)?`${s.name} · ${s.level}º`:s.name}));
+const atCantripOptions=()=>wizardSpellOptions(0,0).filter(x=>fold(x.label)!=='mage hand');
 const atMaxLevel=l=>l>=19?4:l>=13?3:l>=7?2:1;
 const atPrepared=l=>l>=20?13:l>=19?12:l>=16?11:l>=14?10:l>=13?9:l>=11?8:l>=10?7:l>=8?6:l>=7?5:l>=4?4:3;
 const atSlots=l=>l<3?{}:{1:l>=7?4:l>=4?3:2,2:l>=10?3:l>=7?2:0,3:l>=16?3:l>=13?2:0,4:l>=19?1:0};
@@ -22,7 +23,7 @@ function phantomOptions(d){const skills=new Set(arr(d.skills).map(fold)),tools=n
 
 export function rogueSubclassChoiceDefs(d){
  if(!isRogue(d))return[];const name=canonical(d),l=num(d.level),defs=[],add=(id,level,label,options,frequency,required=false,note='',kind='select',choose=1)=>{if(l>=level)defs.push(choiceDef(id,level,label,options,frequency,required,note,kind,choose))};
- if(name==='Arcane Trickster'){add('atCantrips',3,'Truques de Wizard adicionais',wizardSpellOptions(0,0),'ao ganhar níveis de Ladino',true,'Mage Hand é concedido automaticamente.','multi',l>=10?3:2);add('atSpells',3,'Magias preparadas de Wizard',wizardSpellOptions(1,atMaxLevel(l)),'ao ganhar nível de Ladino',true,'Lista completa de Wizard; nível máximo e quantidade seguem a progressão do Arcane Trickster.','multi',atPrepared(l))}
+ if(name==='Arcane Trickster'){add('atCantrips',3,'Truques de Wizard adicionais',atCantripOptions(),'ao ganhar níveis de Ladino',true,'Mage Hand é concedido automaticamente.','multi',l>=10?3:2);add('atSpells',3,'Magias preparadas de Wizard',wizardSpellOptions(1,atMaxLevel(l)),'ao ganhar nível de Ladino',true,'Lista completa de Wizard; nível máximo e quantidade seguem a progressão do Arcane Trickster.','multi',atPrepared(l))}
  else if(name==='Scion of the Three')add('dreadAllegiance',3,'Dread Allegiance atual',['Bane','Bhaal','Myrkul'],'após Descanso Longo',true,'Pode ser trocada após cada Descanso Longo.');
  else if(name==='Phantom')add('whispersProficiency',3,'Whispers of the Dead atual',phantomOptions(d),'após Descanso Curto ou Longo',true,'Escolha uma perícia ou ferramenta em que ainda não seja proficiente.');
  else if(name==='Mastermind'){add('gamingSet',3,'Gaming Set',GAMING_SETS,'ao escolher a subclasse',true);add('language1',3,'Idioma de Master of Intrigue 1',[],'ao escolher a subclasse',true,'Digite um idioma.','text');add('language2',3,'Idioma de Master of Intrigue 2',[],'ao escolher a subclasse',true,'Deve ser diferente do primeiro.','text')}
