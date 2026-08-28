@@ -32,6 +32,7 @@ function subclassLanguageDefinitions(sub){
  if(name===fold('Cavalier')){const row=choices.cavalier||{},value=String(row.bonusLanguage||'').trim();if(row.bonusMode==='Idioma'&&value)defs.push({key:'subclass:cavalier:bonus-language',label:`${sub.name} — Bonus Proficiency`,fixed:[value],choose:0,pool:[]})}
  if(name===fold('Samurai')){const row=choices.samurai||{},value=String(row.bonusLanguage||'').trim();if(row.bonusMode==='Idioma'&&value)defs.push({key:'subclass:samurai:bonus-language',label:`${sub.name} — Bonus Proficiency`,fixed:[value],choose:0,pool:[]})}
  if(name===fold('Mastermind')){const row=choices.mastermind||{},fixed=[row.language1,row.language2].map(canonical).filter(Boolean);if(fixed.length)defs.push({key:'subclass:mastermind:master-of-intrigue',label:`${sub.name} — Master of Intrigue`,fixed:uniq(fixed),choose:0,pool:[]})}
+ if(name===fold('Storm Sorcery'))defs.push({key:'subclass:storm-sorcery:wind-speaker',label:`${sub.name} — Wind Speaker`,fixed:['Primordial'],choose:0,pool:[]});
  return defs
 }
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}

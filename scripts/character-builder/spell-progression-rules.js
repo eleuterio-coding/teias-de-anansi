@@ -16,12 +16,14 @@ function classSpellData(klass,level){
  if(!maxLevel&&klass?.slug==='warlock')maxLevel=num(s.slot_level??specific.slot_level??specific.spell_slot_level);
  return{cantrips:num(s.cantrips_known??s.cantrips),prepared:num(s.spells_prepared??s.prepared_spells??s.magias_preparadas??s.spells_known),slots,maxLevel}
 }
-function normalClassMatch(klass,spell){
- const wanted=new Set([klass?.name,...arr(CLASS_NAMES[klass?.slug])].filter(Boolean).map(fold));
- return arr(spell?.classes).some(name=>wanted.has(fold(name)))
+function normalClassMatch(klass,spell,classLevel=20){
+ const wanted=new Set([klass?.name,...arr(CLASS_NAMES[klass?.slug])].filter(Boolean).map(fold)),matched=arr(spell?.classes).some(name=>wanted.has(fold(name)));
+ if(!matched)return false;
+ if(klass?.slug==='sorcerer'&&spell?._divineSoulSorcererGrant&&num(classLevel)<3)return false;
+ return true
 }
 function bardMagicalSecretsMatch(klass,spell,classLevel){
- if(klass?.slug!=='bard'||num(classLevel)<10)return normalClassMatch(klass,spell);
+ if(klass?.slug!=='bard'||num(classLevel)<10)return normalClassMatch(klass,spell,classLevel);
  const wanted=new Set(['Bardo','Bard','Clérigo','Cleric','Druida','Druid','Mago','Wizard'].map(fold));
  return arr(spell?.classes).some(name=>wanted.has(fold(name)))
 }
@@ -29,8 +31,8 @@ export function spellProgressionCandidates(klass,classLevel,{kind='leveled',exac
  const progress=classSpellData(klass,classLevel),isCantrip=kind==='cantrip',isArcanum=kind==='arcanum';
  return arr(state.catalogs.spells).filter(spell=>{
   const level=num(spell.level);
-  if(isCantrip){if(level!==0||!normalClassMatch(klass,spell))return false}
-  else if(isArcanum){if(level!==num(exactLevel)||!normalClassMatch(klass,spell))return false}
+  if(isCantrip){if(level!==0||!normalClassMatch(klass,spell,classLevel))return false}
+  else if(isArcanum){if(level!==num(exactLevel)||!normalClassMatch(klass,spell,classLevel))return false}
   else if(level<1||level>progress.maxLevel||!bardMagicalSecretsMatch(klass,spell,classLevel))return false;
   return exactLevel==null||level===num(exactLevel)
  }).sort((a,b)=>num(a.level)-num(b.level)||String(a.name).localeCompare(String(b.name),'pt-BR'))
