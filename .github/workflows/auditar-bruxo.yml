@@ -1,0 +1,41 @@
+name: Auditar Bruxo
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/warlock-subclass-mechanics.js'
+      - 'scripts/character-builder/warlock-subclass-ui.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'tests/auditar-bruxo-subclasses.mjs'
+      - '.github/workflows/auditar-bruxo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/warlock-subclass-mechanics.js'
+      - 'scripts/character-builder/warlock-subclass-ui.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'tests/auditar-bruxo-subclasses.mjs'
+      - '.github/workflows/auditar-bruxo.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Bruxo 8/8
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validar subclasses de Bruxo
+        run: node tests/auditar-bruxo-subclasses.mjs
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/character-builder/warlock-subclass-mechanics.js
+          node --check scripts/character-builder/warlock-subclass-ui.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/class-skill-ui.js
