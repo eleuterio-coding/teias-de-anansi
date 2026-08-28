@@ -1,6 +1,6 @@
 import{state,$,esc,signed}from'./state.js';
 import{derive}from'./rules.js?v=20260824-stage-isolation1';
-import{ownedEquipment,canUseArmor,canUseShield,canUseWeapon,weaponAttackProfile}from'./equipment-ownership.js?v=20260826-equipment-ownership3';
+import{ownedEquipment,canUseArmor,canUseShield,canUseWeapon,weaponAttackProfile}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
 let rendering=false,combatRendering=false,initialized=false;
 const ACTIVE_MARK='equipment-ownership-active-v3',COMBAT_MARK='equipment-ownership-combat-v3';
