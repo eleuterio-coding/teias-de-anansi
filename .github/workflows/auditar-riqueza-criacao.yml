@@ -1,0 +1,35 @@
+name: Auditar riqueza de criação
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/starting-equipment-rules.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/state.js'
+      - 'tests/auditar-riqueza-criacao.mjs'
+      - '.github/workflows/auditar-riqueza-criacao.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/starting-equipment-rules.js'
+      - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/state.js'
+      - 'tests/auditar-riqueza-criacao.mjs'
+
+permissions:
+  contents: read
+
+jobs:
+  riqueza-criacao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Auditar fórmula e pacotes
+        run: node tests/auditar-riqueza-criacao.mjs
