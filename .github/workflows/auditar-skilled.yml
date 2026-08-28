@@ -66,7 +66,7 @@ jobs:
           assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
           assert 'initSkilledFeatUi' in package
           assert 'skilled-feat-ui.js?v=20260825-skilled-existing1' in package
-          assert '20260825-package-b-purchase3' in builder
+          assert 'package-b-purchase-ui.js?v=20260828-wealth-background1' in builder
           assert 'supabase' not in (skilled+package).lower()
           print('Integração do Skilled com filtro de perícias existentes validada.')
           PY

@@ -1,5 +1,5 @@
 import{state,arr,num,fold,mod,signed}from'./state.js';
-import{packagePhysicalItems}from'./starting-equipment-rules.js?v=20260824-starting-equipment1';
+import{creationPhysicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
 import{featMechanicalOutcome}from'./feat-mechanics.js';
 
 const currentClass=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)||null;
@@ -75,11 +75,10 @@ function aggregate(rows){
  return[...map.values()]
 }
 export function ownedEquipment({includeLegacyActive=true}={}){
- const rows=[],bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),choice=state.c?.choices?.background?.equipment||'A';
- for(const item of packagePhysicalItems(bg,choice).filter(Boolean))rows.push(classifyNamedItem(item,'Pacote inicial'));
+ const rows=[],klass=currentClass(),bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),bgChoice=state.c?.choices?.background?.equipment||'A',classChoice=state.c?.choices?.class?.equipment||'A';
+ for(const row of creationPhysicalItems(bg,bgChoice,level,klass,classChoice).filter(Boolean))rows.push(classifyNamedItem(row,row._startingSource||'Pacote inicial'));
  const purchases=state.c?.choices?.purchases||{},snapshots=purchases.items||{};
  for(const[id,qty]of Object.entries(purchases.quantities||{})){const row=purchaseRow(id,qty,snapshots[id]);if(row)rows.push(row)}
- if(level>1){for(let i=rows.length-1;i>=0;i--)if(rows[i].source==='Pacote inicial')rows.splice(i,1)}
  let all=aggregate(rows);
  if(includeLegacyActive){
   const weaponId=state.c?.choices?.equipment?.weapon,armorId=state.c?.choices?.equipment?.armor,has=(kind,refId)=>all.some(row=>row.kind===kind&&row.refId===refId);

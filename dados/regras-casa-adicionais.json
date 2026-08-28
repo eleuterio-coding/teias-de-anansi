@@ -6,65 +6,22 @@
       "familia": "Regra da Casa",
       "descricao": "Regra da Casa que permite manter combinações específicas de magias de concentração simultaneamente conforme a progressão de conjurador e os Limites de Coexistência.",
       "secoes": [
-        {
-          "titulo": "Siglas Oficiais",
-          "texto": "CM — Concentração Maior; CI — Concentração de Invocação; CZ — Concentração de Zona; CL — Concentração Leve. As nomenclaturas anteriores ficam superadas para esta regra."
-        },
-        {
-          "titulo": "Progressão de Concentração",
-          "texto": "Conforme avança de nível, o conjurador desbloqueia novas combinações de magias que podem ser mantidas simultaneamente, conforme a tabela."
-        },
-        {
-          "titulo": "Limites de Coexistência",
-          "texto": "As magias de concentração são divididas em categorias. O número e os tipos que podem coexistir dependem do nível do conjurador."
-        },
-        {
-          "titulo": "Progressão Oficial por Nível",
-          "texto": "Nível 1: 1 magia de concentração qualquer. Nível 5: 1 CM, CI ou CZ + 1 CL. Nível 10: 1 CM, CI ou CZ + 2 CL. Nível 20: 1 CM, CI ou CZ + 2 CL; OU 1 CM + 1 CI; OU 1 CM + 1 CZ. Combinações não expressamente listadas não são permitidas."
-        },
-        {
-          "titulo": "Uma Única Categoria por Magia",
-          "texto": "Cada magia pertence a apenas uma categoria de Concentração Expandida, determinada pela lista oficial da regra. A categoria cadastrada prevalece sobre interpretações ocasionais baseadas apenas no efeito da magia."
-        },
-        {
-          "titulo": "Nível de Conjurador",
-          "texto": "Para esta regra, use o nível efetivo de conjuração do personagem, considerando a contribuição real de cada classe ou subclasse para sua progressão de magia. Progressões parciais contribuem proporcionalmente conforme a progressão de espaços de magia do ruleset utilizado; Pact Magic ou progressão equivalente é considerada por sua própria progressão."
-        },
-        {
-          "titulo": "Dano e Múltiplas Concentrações",
-          "texto": "Cada ocorrência de dano gera apenas um teste de concentração, independentemente de quantas magias de concentração o personagem esteja mantendo."
-        },
-        {
-          "titulo": "Falha no Teste",
-          "texto": "Se falhar no teste de concentração, o personagem encerra uma das magias de concentração que estiver mantendo, à sua escolha."
-        },
-        {
-          "titulo": "Aumento da CD",
-          "texto": "A CD do teste de concentração aumenta em +2 para cada magia de concentração mantida além da primeira, respeitando o teto aplicável da regra-base utilizada pela mesa."
-        },
-        {
-          "titulo": "Combinações Proibidas",
-          "texto": "Combinações não apresentadas na progressão não são permitidas. CI + CZ não é uma combinação válida no nível 20. Duas magias CM nunca podem coexistir."
-        },
-        {
-          "titulo": "Nova Magia Acima do Limite",
-          "texto": "Se uma nova magia criar uma combinação de concentração não permitida para seu nível, o personagem deve encerrar uma das concentrações incompatíveis antes de manter a nova magia."
-        },
-        {
-          "titulo": "Autoridade da Lista e Versionamento",
-          "texto": "A classificação da lista oficial é normativa. Para 5.5e/2024, use os dados da versão 2024 da magia para determinar se ela exige concentração e qual classificação se aplica; versões 2014 permanecem registradas separadamente e não determinam automaticamente a classificação da versão 2024."
-        },
-        {
-          "titulo": "Validação de Magias Novas ou Revisadas",
-          "texto": "Uma magia nova ou revisada que exija concentração não recebe categoria por inferência automática. Ela deve ser validada contra sua versão e então cadastrada explicitamente como CM, CI, CZ ou CL. Até essa validação, permanece pendente de classificação e não integra automaticamente os Limites de Coexistência."
-        }
+        {"titulo":"Siglas Oficiais","texto":"CM — Concentração Maior; CI — Concentração de Invocação; CZ — Concentração de Zona; CL — Concentração Leve. As nomenclaturas anteriores ficam superadas para esta regra."},
+        {"titulo":"Progressão de Concentração","texto":"Conforme avança de nível, o conjurador desbloqueia novas combinações de magias que podem ser mantidas simultaneamente, conforme a tabela."},
+        {"titulo":"Limites de Coexistência","texto":"As magias de concentração são divididas em categorias. O número e os tipos que podem coexistir dependem do nível do conjurador."},
+        {"titulo":"Progressão Oficial por Nível","texto":"Nível 1: 1 magia de concentração qualquer. Nível 5: 1 CM, CI ou CZ + 1 CL. Nível 10: 1 CM, CI ou CZ + 2 CL. Nível 20: 1 CM, CI ou CZ + 2 CL; OU 1 CM + 1 CI; OU 1 CM + 1 CZ. Combinações não expressamente listadas não são permitidas."},
+        {"titulo":"Uma Única Categoria por Magia","texto":"Cada magia pertence a apenas uma categoria de Concentração Expandida, determinada pela lista oficial da regra. A categoria cadastrada prevalece sobre interpretações ocasionais baseadas apenas no efeito da magia."},
+        {"titulo":"Nível de Conjurador","texto":"Para esta regra, use o nível efetivo de conjuração do personagem, considerando a contribuição real de cada classe ou subclasse para sua progressão de magia. Progressões parciais contribuem proporcionalmente conforme a progressão de espaços de magia do ruleset utilizado; Pact Magic ou progressão equivalente é considerada por sua própria progressão."},
+        {"titulo":"Dano e Múltiplas Concentrações","texto":"Cada ocorrência de dano gera apenas um teste de concentração, independentemente de quantas magias de concentração o personagem esteja mantendo."},
+        {"titulo":"Falha no Teste","texto":"Se falhar no teste de concentração, o personagem encerra uma das magias de concentração que estiver mantendo, à sua escolha."},
+        {"titulo":"Aumento da CD","texto":"A CD do teste de concentração aumenta em +2 para cada magia de concentração mantida além da primeira, respeitando o teto aplicável da regra-base utilizada pela mesa."},
+        {"titulo":"Combinações Proibidas","texto":"Combinações não apresentadas na progressão não são permitidas. CI + CZ não é uma combinação válida no nível 20. Duas magias CM nunca podem coexistir."},
+        {"titulo":"Nova Magia Acima do Limite","texto":"Se uma nova magia criar uma combinação de concentração não permitida para seu nível, o personagem deve encerrar uma das concentrações incompatíveis antes de manter a nova magia."},
+        {"titulo":"Autoridade da Lista e Versionamento","texto":"A classificação da lista oficial é normativa. Para 5.5e/2024, use os dados da versão 2024 da magia para determinar se ela exige concentração e qual classificação se aplica; versões 2014 permanecem registradas separadamente e não determinam automaticamente a classificação da versão 2024."},
+        {"titulo":"Validação de Magias Novas ou Revisadas","texto":"Uma magia nova ou revisada que exija concentração não recebe categoria por inferência automática. Ela deve ser validada contra sua versão e então cadastrada explicitamente como CM, CI, CZ ou CL. Até essa validação, permanece pendente de classificação e não integra automaticamente os Limites de Coexistência."}
       ],
       "inserir_depois_de": "Magic Items Slots (D&D 3.5e - House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     },
     {
       "nome": "Antecedentes: Regras Mecânicas",
@@ -72,25 +29,12 @@
       "familia": "Regra da Casa",
       "descricao": "Regras da Casa para flexibilizar a construção mecânica dos antecedentes sem vincular o personagem a combinações fixas de atributos e talento de origem.",
       "secoes": [
-        {
-          "titulo": "Estrutura dos Antecedentes",
-          "texto": "O antecedente define atributos, proficiências, equipamento e talento de origem."
-        },
-        {
-          "titulo": "Bônus de Atributos",
-          "texto": "O jogador escolhe +2 em um atributo e +1 em outro atributo diferente."
-        },
-        {
-          "titulo": "Talento de Origem Livre",
-          "texto": "O jogador pode escolher qualquer Talento de Origem, desde que a escolha seja coerente e justificável pela história do personagem."
-        }
+        {"titulo":"Estrutura dos Antecedentes","texto":"O antecedente define atributos, proficiências, equipamento, talento de origem e, para a Riqueza por Level durante a criação, uma Faixa Econômica."},
+        {"titulo":"Bônus de Atributos","texto":"O jogador escolhe +2 em um atributo e +1 em outro atributo diferente."},
+        {"titulo":"Talento de Origem Livre","texto":"O jogador pode escolher qualquer Talento de Origem, desde que a escolha seja coerente e justificável pela história do personagem."}
       ],
       "inserir_depois_de": "Expanded Concentration (House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     },
     {
       "nome": "Antecedentes e Organizações: Regras Narrativas",
@@ -98,53 +42,19 @@
       "familia": "Regra da Casa",
       "descricao": "Regras narrativas para tornar antecedentes, facções e organizações elementos ativos da identidade do personagem e da campanha.",
       "secoes": [
-        {
-          "titulo": "Narrativa dos Antecedentes",
-          "texto": "Antecedentes podem possuir mais lore, vínculos sociais e consequências narrativas."
-        },
-        {
-          "titulo": "Antecedentes de Cenário",
-          "texto": "Podem ser criados antecedentes ligados a cidades, religiões, regiões, florestas, guildas, ordens militares ou facções."
-        },
-        {
-          "titulo": "Facções como Antecedentes",
-          "texto": "Facções podem ser transformadas em antecedentes jogáveis."
-        },
-        {
-          "titulo": "Organizações Jogáveis",
-          "texto": "A organização relacionada ao personagem continua relevante ao longo da campanha."
-        },
-        {
-          "titulo": "História do Antecedente",
-          "texto": "Um antecedente ou organização relevante pode incluir resumo, fundação, líderes, locais importantes e relação com o personagem."
-        },
-        {
-          "titulo": "Ranks Internos",
-          "texto": "Organizações podem possuir níveis internos de pertencimento, como Iniciado, Membro e Veterano."
-        },
-        {
-          "titulo": "Progressão por Missões",
-          "texto": "O avanço de rank pode depender de missões realizadas, nível mínimo e envolvimento real com a organização."
-        },
-        {
-          "titulo": "Benefícios por Rank",
-          "texto": "Cada rank pode conceder benefícios narrativos, contatos, acesso a locais, favores, reconhecimento, pequenos recursos ou outros benefícios apropriados."
-        },
-        {
-          "titulo": "Talentos Próprios de Organização",
-          "texto": "Organizações podem possuir talentos ligados à sua identidade. Esses talentos podem ter componentes narrativos e mecânicos, definidos individualmente quando forem criados ou utilizados."
-        },
-        {
-          "titulo": "Integração com a Campanha",
-          "texto": "Narrador e jogador constroem juntos conexões entre personagem, antecedente, organizações, mundo e campanha."
-        }
+        {"titulo":"Narrativa dos Antecedentes","texto":"Antecedentes podem possuir mais lore, vínculos sociais e consequências narrativas."},
+        {"titulo":"Antecedentes de Cenário","texto":"Podem ser criados antecedentes ligados a cidades, religiões, regiões, florestas, guildas, ordens militares ou facções."},
+        {"titulo":"Facções como Antecedentes","texto":"Facções podem ser transformadas em antecedentes jogáveis."},
+        {"titulo":"Organizações Jogáveis","texto":"A organização relacionada ao personagem continua relevante ao longo da campanha."},
+        {"titulo":"História do Antecedente","texto":"Um antecedente ou organização relevante pode incluir resumo, fundação, líderes, locais importantes e relação com o personagem."},
+        {"titulo":"Ranks Internos","texto":"Organizações podem possuir níveis internos de pertencimento, como Iniciado, Membro e Veterano."},
+        {"titulo":"Progressão por Missões","texto":"O avanço de rank pode depender de missões realizadas, nível mínimo e envolvimento real com a organização."},
+        {"titulo":"Benefícios por Rank","texto":"Cada rank pode conceder benefícios narrativos, contatos, acesso a locais, favores, reconhecimento, pequenos recursos ou outros benefícios apropriados."},
+        {"titulo":"Talentos Próprios de Organização","texto":"Organizações podem possuir talentos ligados à sua identidade. Esses talentos podem ter componentes narrativos e mecânicos, definidos individualmente quando forem criados ou utilizados."},
+        {"titulo":"Integração com a Campanha","texto":"Narrador e jogador constroem juntos conexões entre personagem, antecedente, organizações, mundo e campanha."}
       ],
       "inserir_depois_de": "Backgrounds: Mechanical Rule (House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     },
     {
       "nome": "Progressão Universal de Talentos e Atributos",
@@ -152,37 +62,15 @@
       "familia": "Regra da Casa",
       "descricao": "Progressão universal baseada no nível total do personagem que separa a aquisição de talentos dos aumentos de atributo e substitui os marcos regulares de classe destinados à escolha padrão entre esses benefícios.",
       "secoes": [
-        {
-          "titulo": "Talentos",
-          "texto": "Todo personagem recebe 1 talento nos níveis totais 1, 3, 6, 9, 12, 15 e 18. Cada talento escolhido continua sujeito a seus pré-requisitos normais de nível, atributo, proficiência, categoria ou outros requisitos próprios."
-        },
-        {
-          "titulo": "Aumentos de Atributo",
-          "texto": "Todo personagem recebe +1 em um atributo à sua escolha nos níveis totais 4, 8, 12, 16 e 20, respeitando o limite máximo aplicável ao personagem e ao ruleset utilizado. O mesmo atributo pode ser escolhido em marcos diferentes."
-        },
-        {
-          "titulo": "Nível 12",
-          "texto": "No nível total 12, o personagem recebe simultaneamente 1 talento e +1 em um atributo."
-        },
-        {
-          "titulo": "Interação com a Progressão de Classe",
-          "texto": "Esta progressão substitui os marcos regulares de classe cuja função seja conceder a escolha padrão entre talento e aumento de atributo. Esses benefícios não são recebidos novamente nos níveis originais da classe. Benefícios diferentes ou explicitamente adicionais de classe, subclasse, espécie, antecedente, organização, item ou outra Regra da Casa permanecem separados."
-        },
-        {
-          "titulo": "Talento de Origem",
-          "texto": "O Talento de Origem concedido pelo antecedente é independente desta progressão e permanece como benefício separado."
-        },
-        {
-          "titulo": "Multiclasse",
-          "texto": "Use sempre o nível total do personagem, somando todos os níveis de classe. A classe em que o personagem alcança o marco não altera nem duplica o talento ou o aumento de atributo concedido."
-        }
+        {"titulo":"Talentos","texto":"Todo personagem recebe 1 talento nos níveis totais 1, 3, 6, 9, 12, 15 e 18. Cada talento escolhido continua sujeito a seus pré-requisitos normais de nível, atributo, proficiência, categoria ou outros requisitos próprios."},
+        {"titulo":"Aumentos de Atributo","texto":"Todo personagem recebe +1 em um atributo à sua escolha nos níveis totais 4, 8, 12, 16 e 20, respeitando o limite máximo aplicável ao personagem e ao ruleset utilizado. O mesmo atributo pode ser escolhido em marcos diferentes."},
+        {"titulo":"Nível 12","texto":"No nível total 12, o personagem recebe simultaneamente 1 talento e +1 em um atributo."},
+        {"titulo":"Interação com a Progressão de Classe","texto":"Esta progressão substitui os marcos regulares de classe cuja função seja conceder a escolha padrão entre talento e aumento de atributo. Esses benefícios não são recebidos novamente nos níveis originais da classe. Benefícios diferentes ou explicitamente adicionais de classe, subclasse, espécie, antecedente, organização, item ou outra Regra da Casa permanecem separados."},
+        {"titulo":"Talento de Origem","texto":"O Talento de Origem concedido pelo antecedente é independente desta progressão e permanece como benefício separado."},
+        {"titulo":"Multiclasse","texto":"Use sempre o nível total do personagem, somando todos os níveis de classe. A classe em que o personagem alcança o marco não altera nem duplica o talento ou o aumento de atributo concedido."}
       ],
       "inserir_depois_de": "Backgrounds and Organizations: Narrative Rules  (House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     },
     {
       "nome": "Distribuição de Atributos Base",
@@ -190,75 +78,36 @@
       "familia": "Regra da Casa",
       "descricao": "Regra da Casa para a distribuição dos valores-base de atributo durante a criação do personagem, usando um orçamento inicial de pontos e limites próprios.",
       "secoes": [
-        {
-          "titulo": "Orçamento Base",
-          "texto": "A referência normal de cada atributo é 10, com orçamento-base de 72 pontos para distribuir entre Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma."
-        },
-        {
-          "titulo": "Limite Superior",
-          "texto": "O maior valor-base permitido para um atributo é 18. Bônus posteriores de outras fontes são aplicados depois da distribuição-base."
-        },
-        {
-          "titulo": "Redução para 8",
-          "texto": "Pode haver 1 único atributo com valor-base 8. Nesse caso, os 2 pontos retirados abaixo de 10 são acrescentados ao orçamento e o total disponível passa de 72 para 74 pontos."
-        },
-        {
-          "titulo": "Redução para 9",
-          "texto": "Alternativamente, pode haver até 2 atributos com valor-base 9. Um atributo em 9 aumenta o orçamento para 73 pontos; dois atributos em 9 aumentam para 74 pontos."
-        },
-        {
-          "titulo": "Restrições",
-          "texto": "Não é permitido combinar um atributo em 8 com outro atributo em 9, ter mais de um atributo em 8 ou ter mais de dois atributos em 9."
-        },
-        {
-          "titulo": "Bônus Posteriores",
-          "texto": "Bônus de Antecedente, Raça, Progressão, Talentos, classe ou outras fontes são aplicados separadamente e não consomem o orçamento de pontos da distribuição-base."
-        }
+        {"titulo":"Orçamento Base","texto":"A referência normal de cada atributo é 10, com orçamento-base de 72 pontos para distribuir entre Força, Destreza, Constituição, Inteligência, Sabedoria e Carisma."},
+        {"titulo":"Limite Superior","texto":"O maior valor-base permitido para um atributo é 18. Bônus posteriores de outras fontes são aplicados depois da distribuição-base."},
+        {"titulo":"Redução para 8","texto":"Pode haver 1 único atributo com valor-base 8. Nesse caso, os 2 pontos retirados abaixo de 10 são acrescentados ao orçamento e o total disponível passa de 72 para 74 pontos."},
+        {"titulo":"Redução para 9","texto":"Alternativamente, pode haver até 2 atributos com valor-base 9. Um atributo em 9 aumenta o orçamento para 73 pontos; dois atributos em 9 aumentam para 74 pontos."},
+        {"titulo":"Restrições","texto":"Não é permitido combinar um atributo em 8 com outro atributo em 9, ter mais de um atributo em 8 ou ter mais de dois atributos em 9."},
+        {"titulo":"Bônus Posteriores","texto":"Bônus de Antecedente, Raça, Progressão, Talentos, classe ou outras fontes são aplicados separadamente e não consomem o orçamento de pontos da distribuição-base."}
       ],
       "inserir_depois_de": "Universal Feat and Ability Progression (House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     },
     {
-      "nome": "Riqueza por Nível",
+      "nome": "Riqueza por Level",
       "original": "Wealth by Level (House Rule)",
       "familia": "Regra da Casa",
-      "descricao": "Regra da Casa para definir recursos de criação de personagens iniciados acima do 1º nível e para permitir a compra dos equipamentos iniciais com os PO disponíveis.",
+      "descricao": "Regra da Casa para calcular os recursos de um personagem criado acima do Level 1, preservando os pacotes iniciais de Classe e Antecedente e ajustando a riqueza adicional pela condição econômica do Antecedente.",
       "secoes": [
-        {
-          "titulo": "Aplicação",
-          "texto": "Esta regra é usada somente ao criar um personagem diretamente no nível 2 ou superior. Ela não concede riqueza novamente quando um personagem já em jogo sobe de nível."
-        },
-        {
-          "titulo": "Nível 1",
-          "texto": "No nível 1, a escolha normal entre Pacote A e Pacote B permanece inalterada e Riqueza por Nível não é aplicada."
-        },
-        {
-          "titulo": "Nível 2 ou Superior",
-          "texto": "Do nível 2 em diante, o valor correspondente ao nível inicial é adicionado automaticamente às moedas disponíveis para a criação."
-        },
-        {
-          "titulo": "Compras",
-          "texto": "Nenhum item mágico é concedido automaticamente. Itens mágicos, armas, armaduras, equipamento de aventura, ferramentas, montarias e veículos devem ser comprados com os PO disponíveis. Cada compra é debitada do orçamento e o saldo restante é atualizado em tempo real."
-        },
-        {
-          "titulo": "Pacote B",
-          "texto": "Ao escolher um Pacote B composto por moedas, a etapa de compras é aberta também no nível 1. Do nível 2 em diante, a etapa de compras é sempre disponibilizada."
-        },
-        {
-          "titulo": "Valores por Nível",
-          "texto": "Nível 1: —. Nível 2: 225 PO. Nível 3: 325 PO. Nível 4: 500 PO. Nível 5: 1.150 PO. Nível 6: 1.450 PO. Nível 7: 1.900 PO. Nível 8: 2.500 PO. Nível 9: 3.500 PO. Nível 10: 4.850 PO. Nível 11: 11.800 PO. Nível 12: 13.200 PO. Nível 13: 14.900 PO. Nível 14: 17.050 PO. Nível 15: 19.650 PO. Nível 16: 22.850 PO. Nível 17: 75.200 PO. Nível 18: 79.450 PO. Nível 19: 84.600 PO. Nível 20: 90.800 PO."
-        }
+        {"titulo":"Aplicação","texto":"A Riqueza por Level é aplicada somente durante a criação de um personagem diretamente no Level 2 ou superior. Ela não concede PO quando um personagem já em campanha sobe de Level."},
+        {"titulo":"Level 1","texto":"No Level 1, o personagem recebe normalmente o equipamento e as moedas concedidos pelas opções escolhidas de Classe e Antecedente. A Riqueza por Level adicional é 0 PO."},
+        {"titulo":"Pacotes Iniciais","texto":"Classe e Antecedente são fontes independentes de equipamento inicial. Ambos os pacotes são mantidos em qualquer Level de criação. Um pacote com itens pode também conceder PO residual. Os itens físicos recebidos não são convertidos em PO para este cálculo."},
+        {"titulo":"Opções em Moedas","texto":"O Pacote B padrão de Antecedente concede 50 PO. As opções em moedas das Classes usam os valores próprios de cada Classe. Classes que possuam mais de duas opções, como o Guerreiro com A, B e C, mantêm todas as opções previstas."},
+        {"titulo":"Fórmula","texto":"PO inicial para compras e saldo = PO da opção da Classe + PO da opção do Antecedente + Riqueza Base do Level × Multiplicador Econômico do Antecedente. A parcela de Riqueza por Level é arredondada para o PO inteiro mais próximo antes de ser somada aos PO dos pacotes."},
+        {"titulo":"Faixas Econômicas","texto":"Precária ×0,90; Modesta ×0,95; Regular ×1,00; Estável ×1,05; Próspera ×1,10; Privilegiada ×1,15. A Faixa Econômica modifica somente a parcela adicional de Riqueza por Level."},
+        {"titulo":"Classificação Padrão dos Antecedentes","texto":"Acólito — Modesta; Artesão — Estável; Charlatão — Regular; Criminoso — Modesta; Artista — Regular; Fazendeiro — Modesta; Guarda — Regular; Guia — Modesta; Eremita — Precária; Mercador — Próspera; Nobre — Privilegiada; Sábio — Modesta; Marinheiro — Regular; Escriba — Estável; Soldado — Regular; Viajante — Precária."},
+        {"titulo":"Antecedentes Personalizados","texto":"Antecedentes personalizados, de cenário, facção ou organização podem receber uma Faixa Econômica própria. Quando nenhuma faixa for definida, o Hub usa Regular ×1,00 como padrão."},
+        {"titulo":"Classe e Riqueza","texto":"A Classe não aplica multiplicador sobre a Riqueza por Level. Seu impacto econômico já é representado pelo equipamento e pelas moedas do próprio pacote inicial; o custo de armas ou armaduras de uma Classe não representa maior condição socioeconômica."},
+        {"titulo":"Compras","texto":"As compras realizadas durante a criação são debitadas do total de PO disponível. Armas, armaduras, equipamento de aventura, ferramentas, montarias, veículos e itens mágicos adquiridos aparecem no inventário, e o saldo restante é atualizado automaticamente."},
+        {"titulo":"Valores por Level","texto":"Level 1: —. Level 2: 25 PO. Level 3: 75 PO. Level 4: 150 PO. Level 5: 650 PO. Level 6: 1.250 PO. Level 7: 2.000 PO. Level 8: 3.000 PO. Level 9: 4.000 PO. Level 10: 5.000 PO. Level 11: 6.500 PO. Level 12: 8.500 PO. Level 13: 11.000 PO. Level 14: 13.500 PO. Level 15: 16.000 PO. Level 16: 18.750 PO. Level 17: 21.500 PO. Level 18: 24.000 PO. Level 19: 27.000 PO. Level 20: 30.000 PO."}
       ],
       "inserir_depois_de": "Base Ability Score Distribution (House Rule)",
-      "fonte": {
-        "livro": "Regra da Casa — Hub de RPG",
-        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
-        "url": ""
-      }
+      "fonte": {"livro":"Regra da Casa — Hub de RPG","edicao":"D&D 5.5e / 2024 — Regra da Casa","url":""}
     }
   ]
 }

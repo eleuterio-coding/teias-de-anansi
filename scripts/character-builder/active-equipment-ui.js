@@ -1,4 +1,4 @@
-import{ownedEquipment}from'./equipment-ownership.js?v=20260826-equipment-ownership3';
+import{ownedEquipment}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
 /* Compatibilidade temporária.
    Este módulo antigo controlava #equipamento-escolhas ao mesmo tempo que

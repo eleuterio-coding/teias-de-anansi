@@ -41,7 +41,7 @@ jobs:
           required = {
               'Universal Feat and Ability Progression (House Rule)': 'Progressão Universal de Talentos e Atributos',
               'Base Ability Score Distribution (House Rule)': 'Distribuição de Atributos Base',
-              'Wealth by Level (House Rule)': 'Riqueza por Nível',
+              'Wealth by Level (House Rule)': 'Riqueza por Level',
           }
           for original, name in required.items():
               row = by_original.get(original)
@@ -51,6 +51,20 @@ jobs:
                   raise AssertionError(f'Nome incorreto para {original}: {row.get("nome")!r}')
               if row.get('familia') != 'Regra da Casa':
                   raise AssertionError(f'{name} não está marcada como Regra da Casa')
+
+          wealth = by_original['Wealth by Level (House Rule)']
+          sections = {s.get('titulo'): s.get('texto','') for s in wealth.get('secoes', [])}
+          for title in ['Aplicação','Pacotes Iniciais','Fórmula','Faixas Econômicas','Classificação Padrão dos Antecedentes','Valores por Level']:
+              if title not in sections:
+                  raise AssertionError(f'Riqueza por Level sem seção normativa: {title}')
+          if 'Level 20: 30.000 PO' not in sections['Valores por Level']:
+              raise AssertionError('Curva vigente de Riqueza por Level não termina em 30.000 PO no Level 20.')
+          if '90.800 PO' in json.dumps(wealth, ensure_ascii=False):
+              raise AssertionError('A curva anterior de Riqueza por Level ainda está presente.')
+          if 'Precária ×0,90' not in sections['Faixas Econômicas'] or 'Privilegiada ×1,15' not in sections['Faixas Econômicas']:
+              raise AssertionError('Faixas Econômicas incompletas na regra normativa.')
+          if sum(1 for row in items if row.get('original')=='Wealth by Level (House Rule)') != 1:
+              raise AssertionError('Riqueza por Level deve substituir a regra anterior, sem duplicata.')
 
           forbidden = [
               'id="regra-casa-progressao-universal"',
@@ -69,5 +83,5 @@ jobs:
           if 'renderHouse' not in viewer or "kind:'house'" not in viewer:
               raise AssertionError('Regras da Casa não estão usando o mesmo renderizador do catálogo.')
 
-          print('Biblioteca de Regras da Casa normalizada: 3 regras no catálogo comum, nomes corretos e bloco de compatibilidade removido.')
+          print('Biblioteca de Regras da Casa validada: Riqueza por Level vigente, única e sem curva anterior.')
           PY

@@ -5,11 +5,13 @@ on:
     paths:
       - 'scripts/character-builder/ability-score-*.js'
       - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-atributos-72.yml'
   push:
     branches: [main]
     paths:
       - 'scripts/character-builder/ability-score-*.js'
       - 'scripts/character-builder.js'
+      - '.github/workflows/auditar-atributos-72.yml'
 
 permissions:
   contents: read
@@ -27,7 +29,7 @@ jobs:
           node --check scripts/character-builder/ability-score-rules.js
           node --check scripts/character-builder/ability-score-ui.js
           node --check scripts/character-builder.js
-      - name: Testar orçamento, modificadores e total derivado
+      - name: Testar orçamento, reduções, modificadores e total derivado
         run: |
           node --input-type=module <<'JS'
           import{
@@ -35,25 +37,28 @@ jobs:
             baseAbilityModifier,abilityDisplayState,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange
           }from'./scripts/character-builder/ability-score-rules.js';
           const AB=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
-          if(BASE_ABILITY_POINT_BUDGET!==72)throw new Error('Orçamento deve ser 72.');
-          if(BASE_ABILITY_MIN!==10||BASE_ABILITY_MAX!==18)throw new Error('Faixa base deve ser 10–18.');
-          if(baseAbilityModifier(10)!==0||baseAbilityModifier(16)!==3||baseAbilityModifier(18)!==4)throw new Error('Cálculo de modificador dos atributos falhou.');
+          if(BASE_ABILITY_POINT_BUDGET!==72)throw new Error('Orçamento base deve ser 72.');
+          if(BASE_ABILITY_MIN!==8||BASE_ABILITY_MAX!==18)throw new Error('Faixa base vigente deve ser 8–18.');
+          if(baseAbilityModifier(8)!==-1||baseAbilityModifier(10)!==0||baseAbilityModifier(16)!==3||baseAbilityModifier(18)!==4)throw new Error('Cálculo de modificador dos atributos falhou.');
           const display=abilityDisplayState(16,18);
           if(display.base!==16||display.final!==18||display.bonus!==2||display.modifier!==4)throw new Error('Total final deve somar bônus existentes antes de calcular o modificador.');
           let scores=Object.fromEntries(AB.map(a=>[a,10]));
           let v=baseAbilityValidation(scores,AB);
-          if(v.total!==60||v.remaining!==12)throw new Error('Personagem novo deve começar com 60 usados e 12 restantes.');
+          if(v.total!==60||v.remaining!==12||v.budget!==72)throw new Error('Personagem novo deve começar com 60 usados e 12 restantes.');
           let r=applyBaseAbilityChange(scores,AB,'Força',18);scores=r.scores;
           if(scores.Força!==18||r.remaining!==4)throw new Error('Aumento válido não consumiu pontos corretamente.');
           r=applyBaseAbilityChange(scores,AB,'Destreza',18);scores=r.scores;
-          if(scores.Destreza!==14||r.remaining!==0)throw new Error('Sistema deve limitar automaticamente a tentativa de ultrapassar 72 pontos.');
+          if(scores.Destreza!==14||r.remaining!==0)throw new Error('Sistema deve limitar automaticamente a tentativa de ultrapassar o orçamento vigente.');
           r=applyBaseAbilityChange(scores,AB,'Constituição',5);scores=r.scores;
-          if(scores.Constituição!==10)throw new Error('Valor-base não pode ficar abaixo de 10.');
-          r=applyBaseAbilityChange(scores,AB,'Constituição',30);scores=r.scores;
-          if(scores.Constituição!==10)throw new Error('Sem pontos restantes, outro atributo não pode subir.');
+          if(scores.Constituição!==8||r.budget!==74||r.remaining!==4)throw new Error('Um único atributo em 8 deve liberar 2 pontos e elevar o orçamento a 74.');
+          r=applyBaseAbilityChange(scores,AB,'Inteligência',9);scores=r.scores;
+          if(scores.Inteligência!==10)throw new Error('Não é permitido combinar um atributo em 8 com outro em 9.');
+          const two9={Força:9,Destreza:9,Constituição:14,Inteligência:14,Sabedoria:14,Carisma:14};
+          v=baseAbilityValidation(two9,AB);
+          if(v.budget!==74||!v.patternValid)throw new Error('Até dois atributos em 9 devem liberar até 2 pontos.');
           const normalized=normalizeBaseAbilities({Força:30,Destreza:1,Constituição:12,Inteligência:13,Sabedoria:14,Carisma:15},AB);
-          if(normalized.Força!==18||normalized.Destreza!==10)throw new Error('Normalização da faixa 10–18 falhou.');
-          console.log('Distribuição, modificadores e total derivado validados.');
+          if(normalized.Força!==18||normalized.Destreza!==8)throw new Error('Normalização da faixa 8–18 falhou.');
+          console.log('Distribuição 72, reduções 8/9, modificadores e total derivado validados.');
           JS
       - name: Verificar integração e isolamento
         run: |
@@ -63,7 +68,7 @@ jobs:
           ui=Path('scripts/character-builder/ability-score-ui.js').read_text(encoding='utf-8')
           rules=Path('scripts/character-builder/ability-score-rules.js').read_text(encoding='utf-8')
           assert 'ability-score-ui.js' in loader, 'Extensão de atributos não carregada.'
-          assert 'ability-budget3' in loader, 'Cache da extensão de atributos não foi atualizado.'
+          assert 'ability-budget4' in loader, 'Cache da extensão de atributos não está na revisão vigente.'
           assert "addEventListener('change',onAbilityChange,true)" in ui, 'A validação deve interceptar o campo antes do handler legado.'
           assert 'state.c.baseAbilities=result.scores' in ui, 'A alteração não está sendo persistida no estado.'
           assert "import{derive}from'./rules.js" in ui, 'A Etapa 4 deve ler o valor final calculado pelo motor de regras.'
@@ -71,9 +76,9 @@ jobs:
           assert 'Bônus acumulados ${signed(display.bonus)}' in ui, 'Bônus acumulados não estão visíveis ao lado do atributo.'
           assert 'choices.background' not in ui and 'refs.species' not in ui and 'refs.class' not in ui, 'Etapa Atributos não pode reescrever etapas anteriores.'
           assert 'BASE_ABILITY_POINT_BUDGET=72' in rules
-          assert 'BASE_ABILITY_MIN=10' in rules
+          assert 'BASE_ABILITY_MIN=8' in rules
           assert 'BASE_ABILITY_MAX=18' in rules
-          assert 'abilityDisplayState' in rules
+          assert 'baseAbilityReductionState' in rules and 'abilityDisplayState' in rules
           assert 'supabase' not in (loader+ui+rules).lower()
-          print('Integração da Etapa 4 validada com total final, bônus acumulados e isolamento entre etapas.')
+          print('Integração da Etapa 4 validada com reduções 8/9, bônus acumulados e isolamento entre etapas.')
           PY
