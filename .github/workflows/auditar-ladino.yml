@@ -33,8 +33,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Validar subclasses de Ladino
-        run: node tests/auditar-ladino-subclasses.mjs
+      - name: Executar regressão e preservar diagnóstico
+        id: regression
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          node tests/auditar-ladino-subclasses.mjs > ladino-audit.log 2>&1
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Publicar diagnóstico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ladino-audit-log
+          path: ladino-audit.log
+      - name: Falhar se a regressão falhou
+        if: steps.regression.outputs.exit_code != '0'
+        run: exit 1
       - name: Validar sintaxe
         run: |
           node --check scripts/character-builder/rogue-subclass-mechanics.js
