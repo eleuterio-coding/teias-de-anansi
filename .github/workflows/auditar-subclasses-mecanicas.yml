@@ -29,6 +29,8 @@ on:
       - 'scripts/character-builder/ranger-subclass-mechanics.js'
       - 'scripts/character-builder/ranger-subclass-details.js'
       - 'scripts/character-builder/ranger-subclass-ui.js'
+      - 'scripts/character-builder/warlock-subclass-mechanics.js'
+      - 'scripts/character-builder/warlock-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -44,6 +46,7 @@ on:
       - 'tests/auditar-paladino-integracao.mjs'
       - 'tests/auditar-patrulheiro-subclasses.mjs'
       - 'tests/auditar-patrulheiro-integracao.mjs'
+      - 'tests/auditar-bruxo-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
   push:
     branches: [main]
@@ -74,6 +77,8 @@ on:
       - 'scripts/character-builder/ranger-subclass-mechanics.js'
       - 'scripts/character-builder/ranger-subclass-details.js'
       - 'scripts/character-builder/ranger-subclass-ui.js'
+      - 'scripts/character-builder/warlock-subclass-mechanics.js'
+      - 'scripts/character-builder/warlock-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
@@ -89,6 +94,7 @@ on:
       - 'tests/auditar-paladino-integracao.mjs'
       - 'tests/auditar-patrulheiro-subclasses.mjs'
       - 'tests/auditar-patrulheiro-integracao.mjs'
+      - 'tests/auditar-bruxo-subclasses.mjs'
       - '.github/workflows/auditar-subclasses-mecanicas.yml'
 
 permissions:
@@ -116,6 +122,7 @@ jobs:
           node tests/auditar-paladino-integracao.mjs
           node tests/auditar-patrulheiro-subclasses.mjs
           node tests/auditar-patrulheiro-integracao.mjs
+          node tests/auditar-bruxo-subclasses.mjs
       - name: Validar sintaxe dos módulos JavaScript
         run: |
           node --check scripts/subclass-mechanics-catalog.js
@@ -140,6 +147,8 @@ jobs:
           node --check scripts/character-builder/ranger-subclass-mechanics.js
           node --check scripts/character-builder/ranger-subclass-details.js
           node --check scripts/character-builder/ranger-subclass-ui.js
+          node --check scripts/character-builder/warlock-subclass-mechanics.js
+          node --check scripts/character-builder/warlock-subclass-ui.js
           node --check scripts/character-builder/class-skill-ui.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/language-ui.js
