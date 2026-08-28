@@ -13,6 +13,7 @@ import{initRangerSubclassUi}from'./ranger-subclass-ui.js?v=20260827-ranger-subcl
 import{initRogueSubclassUi}from'./rogue-subclass-ui.js?v=20260827-rogue-subclasses1';
 import{initSorcererSubclassUi}from'./sorcerer-subclass-ui.js?v=20260828-sorcerer-subclasses1';
 import{initWarlockSubclassUi}from'./warlock-subclass-ui.js?v=20260828-warlock-subclasses1';
+import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260828-wizard-subclasses1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 function normalizeSkillChoices(klass){
@@ -74,6 +75,6 @@ export function initClassSkillUi(){
  new MutationObserver(()=>queueMicrotask(decorate)).observe(box,{childList:true,subtree:true});
  $('classe')?.addEventListener('change',()=>queueMicrotask(decorate));$('nivel')?.addEventListener('change',()=>queueMicrotask(decorate));$('new-character')?.addEventListener('click',()=>queueMicrotask(decorate));
  document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
- initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi();initFighterSubclassUi();initMonkSubclassUi();initPaladinSubclassUi();initRangerSubclassUi();initRogueSubclassUi();initSorcererSubclassUi();initWarlockSubclassUi()});
+ initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi();initFighterSubclassUi();initMonkSubclassUi();initPaladinSubclassUi();initRangerSubclassUi();initRogueSubclassUi();initSorcererSubclassUi();initWarlockSubclassUi();initWizardSubclassUi()});
  initExpertiseCompanionUi()
 }
