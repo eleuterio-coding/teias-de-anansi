@@ -1,7 +1,7 @@
 import{state,$,AB,SKILL_AB,arr,num,esc,slug,mod,signed,blank,read,write,loadCharacter,json,snapshot}from'./state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./catalogs.js?v=20260823-character-builder26';
 import{loadSpells}from'./spells.js';
-import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,spellCreditState,sanitizeSelections,initializeHouseBackgroundChoices}from'./rules.js?v=20260824-stage-isolation1';
+import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,spellCreditState,sanitizeSelections,initializeHouseBackgroundChoices}from'./rules.js?v=20260828-character-builder-freeze1';
 let spellQuery='';
 
 function fill(el,items,placeholder,val){if(!el)return;el.innerHTML=`<option value="">${esc(placeholder)}</option>`+items.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(x=>`<option value="${esc(x.id)}" ${x.id===val?'selected':''}>${esc(x.name)}</option>`).join('')}
