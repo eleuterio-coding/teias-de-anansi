@@ -17,7 +17,7 @@ import{applyRogueSubclassMechanics}from'./rogue-subclass-mechanics.js?v=20260827
 import{applySorcererSubclassMechanics}from'./sorcerer-subclass-mechanics.js?v=20260828-sorcerer-subclasses1';
 import{syncSorcererSpellAccess}from'./sorcerer-spell-access.js?v=20260828-sorcerer-subclasses1';
 import{applyWarlockSubclassMechanics}from'./warlock-subclass-mechanics.js?v=20260828-warlock-subclasses1';
-import{applyWizardSubclassMechanics}from'./wizard-subclass-mechanics.js?v=20260828-wizard-subclasses1';
+import{applyWizardSubclassMechanics}from'./wizard-subclass-mechanics.js?v=20260828-wizard-subclasses2';
 export * from './rules-base.js?v=20260824-race-variants1';
 
 export const HOUSE_FEAT_LEVELS=[1,3,6,9,12,15,18];

@@ -3,20 +3,32 @@ name: Auditar Mago
 on:
   pull_request:
     paths:
+      - 'criacao-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/ui.js'
       - 'scripts/character-builder/wizard-subclass-mechanics.js'
       - 'scripts/character-builder/wizard-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
+      - 'scripts/character-builder/active-equipment-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-mago-subclasses.mjs'
+      - 'tests/auditar-criacao-sem-travamento.mjs'
       - '.github/workflows/auditar-mago.yml'
   push:
     branches: [main]
     paths:
+      - 'criacao-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/ui.js'
       - 'scripts/character-builder/wizard-subclass-mechanics.js'
       - 'scripts/character-builder/wizard-subclass-ui.js'
       - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
+      - 'scripts/character-builder/active-equipment-ui.js'
       - 'scripts/character-builder/rules.js'
       - 'tests/auditar-mago-subclasses.mjs'
+      - 'tests/auditar-criacao-sem-travamento.mjs'
       - '.github/workflows/auditar-mago.yml'
 
 permissions:
@@ -24,7 +36,7 @@ permissions:
 
 jobs:
   audit:
-    name: Mago 8/8
+    name: Mago 8/8 + criação responsiva
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,9 +45,15 @@ jobs:
           node-version: '20'
       - name: Validar subclasses de Mago
         run: node tests/auditar-mago-subclasses.mjs
+      - name: Validar criação sem travamento
+        run: node tests/auditar-criacao-sem-travamento.mjs
       - name: Validar sintaxe
         run: |
+          node --check scripts/character-builder.js
+          node --check scripts/character-builder/ui.js
           node --check scripts/character-builder/wizard-subclass-mechanics.js
           node --check scripts/character-builder/wizard-subclass-ui.js
           node --check scripts/character-builder/rules.js
           node --check scripts/character-builder/class-skill-ui.js
+          node --check scripts/character-builder/equipment-ownership-ui.js
+          node --check scripts/character-builder/active-equipment-ui.js
