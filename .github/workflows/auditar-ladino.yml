@@ -1,0 +1,44 @@
+name: Auditar Ladino
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/rogue-subclass-mechanics.js'
+      - 'scripts/character-builder/rogue-subclass-ui.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/rules.js'
+      - 'tests/auditar-ladino-subclasses.mjs'
+      - '.github/workflows/auditar-ladino.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/rogue-subclass-mechanics.js'
+      - 'scripts/character-builder/rogue-subclass-ui.js'
+      - 'scripts/character-builder/class-skill-ui.js'
+      - 'scripts/character-builder/language-mechanics.js'
+      - 'scripts/character-builder/rules.js'
+      - 'tests/auditar-ladino-subclasses.mjs'
+      - '.github/workflows/auditar-ladino.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Ladino 11/11
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validar subclasses de Ladino
+        run: node tests/auditar-ladino-subclasses.mjs
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/character-builder/rogue-subclass-mechanics.js
+          node --check scripts/character-builder/rogue-subclass-ui.js
+          node --check scripts/character-builder/rules.js
+          node --check scripts/character-builder/class-skill-ui.js
+          node --check scripts/character-builder/language-mechanics.js
