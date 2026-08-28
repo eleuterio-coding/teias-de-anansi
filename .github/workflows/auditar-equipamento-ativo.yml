@@ -4,7 +4,8 @@ on:
   pull_request:
     paths:
       - 'scripts/character-builder/active-equipment-ui.js'
-      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
       - '.github/workflows/auditar-equipamento-ativo.yml'
@@ -12,7 +13,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/character-builder/active-equipment-ui.js'
-      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership-ui.js'
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
       - '.github/workflows/auditar-equipamento-ativo.yml'
@@ -31,54 +33,43 @@ jobs:
       - name: Validar JavaScript
         run: |
           node --check scripts/character-builder/active-equipment-ui.js
-          node --check scripts/character-builder/wizard-ui.js
-      - name: Auditar interface e fontes do inventário
+          node --check scripts/character-builder/equipment-ownership.js
+          node --check scripts/character-builder/equipment-ownership-ui.js
+          node --check scripts/character-builder/starting-equipment-rules.js
+      - name: Auditar controlador único e fontes do inventário
         run: |
           python - <<'PY'
           from pathlib import Path
-          ui=Path('scripts/character-builder/active-equipment-ui.js').read_text(encoding='utf-8')
-          wizard=Path('scripts/character-builder/wizard-ui.js').read_text(encoding='utf-8')
-          required=[
-              'Armas disponíveis','Armaduras disponíveis','Escudos disponíveis',
-              'creationPhysicalItems','purchases?.quantities','weapon:','armor:',
-              'data-active-weapon','data-active-armor','data-active-shield',
-              'Somente itens que o personagem possui são exibidos'
-          ]
-          missing=[token for token in required if token not in ui]
-          if missing: raise RuntimeError('Proteções ausentes: '+', '.join(missing))
-          if '<select' in ui.lower(): raise RuntimeError('Equipamento ativo não pode voltar a usar menu suspenso.')
-          if 'initActiveEquipmentUi' not in wizard: raise RuntimeError('A interface de equipamento ativo não está integrada ao construtor.')
-          print('Interface de equipamento ativo validada.')
+          legacy=Path('scripts/character-builder/active-equipment-ui.js').read_text(encoding='utf-8')
+          ownership=Path('scripts/character-builder/equipment-ownership.js').read_text(encoding='utf-8')
+          ui=Path('scripts/character-builder/equipment-ownership-ui.js').read_text(encoding='utf-8')
+          required_ownership=['creationPhysicalItems','purchases.quantities','weapon:','armor:','Pacote inicial','Compra']
+          missing=[token for token in required_ownership if token not in ownership]
+          if missing: raise RuntimeError('Fontes do inventário ausentes: '+', '.join(missing))
+          for token in ['Armadura equipada','Escudo equipado','Arma principal','hub:equipment-inventory-changed']:
+              if token not in ui: raise RuntimeError(f'Interface ativa sem proteção esperada: {token}')
+          if 'no-op intencional' not in legacy or 'ownedEquipment' not in legacy:
+              raise RuntimeError('Compatibilidade legada deve delegar ao controlador único de inventário.')
+          if 'MutationObserver' in legacy.split('export function initActiveEquipmentUi',1)[-1].replace('Não registrar listeners nem MutationObservers.',''):
+              raise RuntimeError('Módulo legado não pode voltar a registrar MutationObserver.')
+          joined='\n'.join([legacy,ownership,ui])
+          if 'supabase' in joined.lower(): raise RuntimeError('Supabase não pode ser introduzido nesta implementação.')
+          print('Equipamento ativo usa controlador único e inventário consolidado.')
           PY
-      - name: Testar origem e compras como fontes
+      - name: Testar pacotes físicos como fontes em qualquer Level
         run: |
-          cp scripts/character-builder/state.js /tmp/state.mjs
-          sed "s|'./state.js'|'./state.mjs'|" scripts/character-builder/starting-equipment-rules.js > /tmp/starting-equipment-rules.mjs
-          sed -e "s|'./state.js'|'./state.mjs'|" \
-              -e "s|'./rules.js?v=20260824-stage-isolation1'|'./rules-stub.mjs'|" \
-              -e "s|'./starting-equipment-rules.js?v=20260824-starting-equipment1'|'./starting-equipment-rules.mjs'|" \
-              scripts/character-builder/active-equipment-ui.js > /tmp/active-equipment-ui.mjs
-          cat >/tmp/rules-stub.mjs <<'NODE'
-          import{state}from'./state.mjs';
-          export function selected(){return{bg:state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null}}
-          NODE
           node --input-type=module <<'NODE'
-          import{state}from'file:///tmp/state.mjs';
-          import{ownedActiveEquipment}from'file:///tmp/active-equipment-ui.mjs';
+          import{creationPhysicalItems,classPackageOptions}from'./scripts/character-builder/starting-equipment-rules.js';
+          const fighter={slug:'fighter',name:'Guerreiro'};
+          const bg={name:'Teste',equipmentOptions:[{id:'A',itens:[{nome:'Dagger',quantidade:1},{nome:'Shield',quantidade:1},{nome:'PO',quantidade:8}]}]};
           const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
-          state.G={armas:{Dagger:'Adaga'},armaduras:{Shield:'Escudo','Leather Armor':'Armadura de Couro'}};
-          state.catalogs.weapons=[{id:'dagger',nome:'Adaga',nome_original:'Dagger',dano:'1d4 perfurante',categoria:'Simples corpo a corpo'}];
-          state.catalogs.armors=[{id:'phb-2024-leather-armor',nome:'Leather Armor',categoria:'Leve',ca:'11 + Destreza'},{id:'phb-2024-shield',nome:'Shield',categoria:'Escudo',ca:'+2'}];
-          state.catalogs.backgrounds=[{id:'bg:test',name:'Teste',equipmentOptions:[{id:'A',itens:[{nome:'Dagger',quantidade:1},{nome:'Shield',quantidade:1}]}],equipmentText:''}];
-          state.c={refs:{background:'bg:test'},choices:{class:{level:1},background:{equipment:'A'},purchases:{quantities:{'armor:phb-2024-leather-armor':1,'weapon:dagger':2}},equipment:{armor:null,shield:false,weapon:null}}};
-          let owned=ownedActiveEquipment();
-          assert(owned.weapons.length===1,'A Adaga deve aparecer uma única vez consolidada.');
-          assert(owned.weapons[0].qty===3,'A quantidade deve somar Antecedente e compra.');
-          assert(owned.armors.some(x=>x.item.id==='phb-2024-leather-armor'),'Armadura comprada deve aparecer automaticamente.');
-          assert(owned.shields.some(x=>x.item.id==='phb-2024-shield'),'Escudo do Antecedente deve aparecer automaticamente.');
-          state.c.choices.background.equipment='B';
-          owned=ownedActiveEquipment();
-          assert(!owned.shields.length,'Pacote B não deve conceder o escudo do Pacote A.');
-          assert(owned.weapons[0].qty===2,'Ao mudar para Pacote B deve restar apenas a quantidade comprada.');
-          console.log('Antecedente e compras alimentam corretamente o equipamento ativo.');
+          assert(classPackageOptions(fighter).length===3,'Guerreiro deve preservar A/B/C.');
+          const l1=creationPhysicalItems(bg,'A',1,fighter,'A');
+          const l5=creationPhysicalItems(bg,'A',5,fighter,'A');
+          for(const rows of [l1,l5]){
+            assert(rows.some(x=>x._startingSource==='Pacote inicial · Classe'),'Classe deve alimentar o inventário.');
+            assert(rows.some(x=>x._startingSource==='Pacote inicial · Antecedente'),'Antecedente deve alimentar o inventário.');
+            assert(!rows.some(x=>x.nome==='PO'),'Moedas dos pacotes não devem virar item físico.');
+          }
+          console.log('Classe e Antecedente alimentam o inventário físico no Level 1 e acima dele.');
           NODE
