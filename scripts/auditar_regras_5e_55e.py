@@ -45,7 +45,7 @@ precedencia = ' '.join(policy.get('precedencia', []))
 require('versão 5.5e/2024' in precedencia and 'permanece disponível' in precedencia,
         'Política não expressa simultaneamente precedência 2024 e preservação do legado único')
 
-# As cinco Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
+# As sete Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
 hub_rules = load('dados/regras-hub.json')
 extra_rules = load('dados/regras-casa-adicionais.json')
 house = [*hub_rules.get('itens', []), *extra_rules.get('itens', [])]
@@ -56,23 +56,39 @@ required_house = {
     'Backgrounds: Mechanical Rule (House Rule)',
     'Backgrounds and Organizations: Narrative Rules  (House Rule)',
     'Universal Feat and Ability Progression (House Rule)',
+    'Base Ability Score Distribution (House Rule)',
+    'Wealth by Level (House Rule)',
 }
-require(len(house) == 5, f'Quantidade inesperada de Regras da Casa: {len(house)}/5')
+require(len(house) == 7, f'Quantidade inesperada de Regras da Casa: {len(house)}/7')
 require(required_house.issubset(house_names),
         f'Regras da Casa ausentes: {sorted(required_house - house_names)}')
 viewer = text('scripts/regras-srd-view-v7.js')
-require('HOUSE.length!==5' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/5' in viewer,
+require('HOUSE.length!==7' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/7' in viewer,
         'Catálogo de Regras ainda espera quantidade antiga de Regras da Casa')
+wealth_rules = [x for x in house if x.get('original') == 'Wealth by Level (House Rule)']
+require(len(wealth_rules) == 1, 'Riqueza por Level deve existir uma única vez e substituir a versão anterior')
+wealth = wealth_rules[0]
+require(wealth.get('nome') == 'Riqueza por Level', 'Nome vigente da regra deve ser Riqueza por Level')
+wealth_text = json.dumps(wealth, ensure_ascii=False)
+require('Level 20: 30.000 PO' in wealth_text and '90.800 PO' not in wealth_text,
+        'Riqueza por Level ainda contém a curva anterior ou não contém a curva vigente')
+require('Precária ×0,90' in wealth_text and 'Privilegiada ×1,15' in wealth_text,
+        'Faixas Econômicas da Riqueza por Level estão incompletas')
 
-# Matriz semântica de Regras precisa acompanhar o mesmo conjunto pesquisável.
+# A matriz semântica curada histórica cobre as cinco regras que já possuíam relações cruzadas.
+# As duas regras econômicas/atributos permanecem pesquisáveis no módulo mesmo sem relações semânticas curadas.
 curated = load('dados/referencias-regras-curadas.json')
+curated_house = required_house - {
+    'Base Ability Score Distribution (House Rule)',
+    'Wealth by Level (House Rule)',
+}
 require(curated.get('total_regras') == 160,
-        f'Matriz curada com contagem antiga: {curated.get("total_regras")}/160')
-require(required_house.issubset(set(curated.get('regras', {}))),
-        'Matriz curada não inclui todas as Regras da Casa')
+        f'Matriz curada com contagem inesperada: {curated.get("total_regras")}/160')
+require(curated_house.issubset(set(curated.get('regras', {}))),
+        'Matriz curada não inclui as Regras da Casa historicamente relacionadas')
 curated_js = text('scripts/referencias-regras-curadas.js')
 require('curated.total_regras!==160' in curated_js,
-        'Consumidor da matriz curada ainda espera a contagem anterior')
+        'Consumidor da matriz curada diverge da contagem publicada')
 
 # Criador de personagem: progressão da casa e compatibilidade 2014/2024.
 rules = text('scripts/character-builder/rules.js')
