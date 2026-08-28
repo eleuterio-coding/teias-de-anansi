@@ -1,5 +1,5 @@
 import{state,$,esc,signed}from'./state.js';
-import{derive}from'./rules.js?v=20260824-stage-isolation1';
+import{derive}from'./rules.js?v=20260828-character-builder-freeze1';
 import{ownedEquipment,canUseArmor,canUseShield,canUseWeapon,weaponAttackProfile}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
 let rendering=false,combatRendering=false,initialized=false;
@@ -26,12 +26,12 @@ function renderActive(){
     Se ele estiver controlando o bloco, não disputamos o DOM: isso evita o ping-pong
     que congelava a criação. Em carregamentos novos, wizard-ui não inicializa mais o legado. */
  if(box.querySelector('[data-owned-equipment-ui]')){normalizeActive();return}
- rendering=true;try{normalizeActive();box.innerHTML=markup()}finally{rendering=false}
+ rendering=true;try{normalizeActive();const html=markup();if(box.innerHTML!==html)box.innerHTML=html}finally{rendering=false}
 }
 function weaponCard(d,row){const weapon=row.data||state.catalogs.weapons.find(w=>w.id===row.refId),p=weaponAttackProfile(d,weapon);if(!weapon||!p)return'';return`<div class="preview-block"><strong>${esc(weapon.nome)}${row.qty>1?` ×${row.qty}`:''}</strong><div class="value-row"><span>Ataque</span><strong>${signed(p.attack)}${p.proficient?' ●':''}</strong></div><div class="value-row"><span>Dano</span><strong>${esc(weapon.dano)} ${p.damageModifier}</strong></div><div class="value-row"><span>Maestria</span><strong>${esc(weapon.maestria||'—')}</strong></div></div>`}
 function renderCombat(){
  const box=$('combat');if(!box||!state.c||combatRendering)return;combatRendering=true;
- try{const d=derive(),owned=ownedEquipment(),cards=owned.weapons.map(row=>weaponCard(d,row)).join(''),html=`<div data-equipment-combat="${COMBAT_MARK}"><div class="value-row"><span>CA</span><strong>${d.ac}</strong></div>${d.armor?`<div class="value-row"><span>Armadura</span><strong>${esc(d.armor.nome)}</strong></div>`:''}${state.c.choices.equipment.shield?'<div class="value-row"><span>Escudo</span><strong>Equipado</strong></div>':''}${cards||'<p class="muted">Nenhuma arma no inventário.</p>'}</div>`;box.innerHTML=html}finally{combatRendering=false}
+ try{const d=derive(),owned=ownedEquipment(),cards=owned.weapons.map(row=>weaponCard(d,row)).join(''),html=`<div data-equipment-combat="${COMBAT_MARK}"><div class="value-row"><span>CA</span><strong>${d.ac}</strong></div>${d.armor?`<div class="value-row"><span>Armadura</span><strong>${esc(d.armor.nome)}</strong></div>`:''}${state.c.choices.equipment.shield?'<div class="value-row"><span>Escudo</span><strong>Equipado</strong></div>':''}${cards||'<p class="muted">Nenhuma arma no inventário.</p>'}</div>`;if(box.innerHTML!==html)box.innerHTML=html}finally{combatRendering=false}
 }
 function refresh(){normalizeActive();renderActive();renderCombat()}
 function bind(){
