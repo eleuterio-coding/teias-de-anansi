@@ -14,7 +14,7 @@ function ensureState(){state.c.choices=state.c.choices||{};state.c.choices.langu
 function featObject(id){return item('feats',id)||null}
 function featStages(){
  const progression=[];for(const id of Object.values(state.c.choices?.feats||{})){if(typeof id!=='string')continue;const feat=featObject(id);if(feat)progression.push(feat)}
- const speciesIds=new Set;const walk=v=>{if(typeof v==='string'&&featObject(v))speciesIds.add(v);else if(Array.isArray(v))v.forEach(walk);else if(v&&typeof v==='object')Object.values(v).forEach(walk)};walk(state.c.choices?.species?.traitChoices);
+ const speciesIds=new Set;const walk=v=>{if(typeof v==='string'&&featObject(v))speciesIds.add(v);else if(Array.isArray(v)){for(const x of v)walk(x)}else if(v&&typeof v==='object'){for(const x of Object.values(v))walk(x)}};walk(state.c.choices?.species?.traitChoices);
  const species=[...speciesIds].map(featObject).filter(Boolean),origin=[],{bg}=selected();
  if(bg?.feat?.name){const feat=state.catalogs.feats.find(x=>fold(x.name)===fold(bg.feat.name));if(feat)origin.push(feat)}
  return{origin,species,progression}
@@ -31,6 +31,7 @@ function subclassLanguageDefinitions(sub){
  if(name===fold('Banneret')){const value=String(choices.banneret?.currentLanguage||'').trim();if(value)defs.push({key:'subclass:banneret:knightly-envoy-language',label:`${sub.name} — Knightly Envoy`,fixed:[value],choose:0,pool:[]})}
  if(name===fold('Cavalier')){const row=choices.cavalier||{},value=String(row.bonusLanguage||'').trim();if(row.bonusMode==='Idioma'&&value)defs.push({key:'subclass:cavalier:bonus-language',label:`${sub.name} — Bonus Proficiency`,fixed:[value],choose:0,pool:[]})}
  if(name===fold('Samurai')){const row=choices.samurai||{},value=String(row.bonusLanguage||'').trim();if(row.bonusMode==='Idioma'&&value)defs.push({key:'subclass:samurai:bonus-language',label:`${sub.name} — Bonus Proficiency`,fixed:[value],choose:0,pool:[]})}
+ if(name===fold('Mastermind')){const row=choices.mastermind||{},fixed=[row.language1,row.language2].map(canonical).filter(Boolean);if(fixed.length)defs.push({key:'subclass:mastermind:master-of-intrigue',label:`${sub.name} — Master of Intrigue`,fixed:uniq(fixed),choose:0,pool:[]})}
  return defs
 }
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
