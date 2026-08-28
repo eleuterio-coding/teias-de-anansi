@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {
  STANDARD_BACKGROUND_PACKAGE_B_GP,
  WEALTH_BY_LEVEL,
@@ -57,10 +58,21 @@ assert.equal(acolyteL5.totalCp,63000,'Guerreiro A + Acólito A no Level 5 deve t
 assert.ok(nobleL5.totalCp>acolyteL5.totalCp,'Nobre deve iniciar com mais PO que Acólito no mesmo Level e Classe.');
 
 const fighterCashNobleCash=creationBudgetBreakdown(noble,'B',1,fighter,'C');
-assert.equal(fighterCashNobleCash.totalCp,20500,'Guerreiro C + Nobre B no Level 1 deve totalizar 205 PO.');
+assert.equal(fighterCashNobleCash.totalCp,20500,'Guerreiro C + Antecedente B no Level 1 deve totalizar 205 PO.');
 
 const physicalAtL5=creationPhysicalItems(noble,'A',5,fighter,'A');
 assert.ok(physicalAtL5.some(x=>x.nome==='Greatsword'&&x._startingSource.includes('Classe')),'Pacote físico da Classe deve ser mantido acima do Level 1.');
 assert.ok(physicalAtL5.some(x=>x.nome==='Fine Clothes'&&x._startingSource.includes('Antecedente')),'Pacote físico do Antecedente deve ser mantido acima do Level 1.');
 
-console.log('OK — Riqueza por Level, faixas econômicas e pacotes iniciais auditados.');
+const rules=JSON.parse(readFileSync(new URL('../dados/regras-casa-adicionais.json',import.meta.url),'utf8'));
+const wealthRule=rules.itens.find(x=>x.nome==='Riqueza por Level');
+assert.ok(wealthRule,'Biblioteca de Regras da Casa deve conter Riqueza por Level.');
+const values=wealthRule.secoes.find(x=>x.titulo==='Valores por Level')?.texto||'';
+assert.match(values,/Level 5: 650 PO/);
+assert.match(values,/Level 20: 30\.000 PO/);
+assert.doesNotMatch(values,/90\.800 PO/,'A curva anterior não pode permanecer na regra normativa.');
+const tiers=wealthRule.secoes.find(x=>x.titulo==='Faixas Econômicas')?.texto||'';
+assert.match(tiers,/Privilegiada ×1,15/);
+assert.match(tiers,/Precária ×0,90/);
+
+console.log('OK — Riqueza por Level, faixas econômicas, pacotes iniciais e regra normativa auditados.');
