@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20260831-era-cenario2';
+  const VERSION='20260831-era-cenario3';
   const DROP=Symbol('hub-era-drop');
 
   const norm=value=>String(value??'')
@@ -64,6 +64,7 @@
   ]);
   const CONTEXT_KEYS=new Set(['categoria','category','tipo','type','subtipo','subtype','tag','tags','grupo','group']);
   const DESCRIPTION_KEYS=new Set(['descricao','description','texto','text','resumo','summary','observacao','observation']);
+  const TABULAR_RECORD_PATHS=/(^|\.)(itens|items|opcoes|options|equipmentoptions|equipamentoopcoes)(\.|$)/;
 
   function matchesName(value){
     const text=norm(value);
@@ -94,10 +95,16 @@
     return false;
   }
 
+  function isTabularRecordArray(value,path){
+    if(!Array.isArray(value)||value.length<2||typeof value[0]!=='string'||!matchesName(value[0]))return false;
+    const normalizedPath=norm(path).replace(/\s/g,'');
+    return TABULAR_RECORD_PATHS.test(normalizedPath);
+  }
+
   function sanitize(value,path=''){
     if(value==null)return value;
     if(Array.isArray(value)){
-      if(value.length&&typeof value[0]==='string'&&matchesName(value[0]))return DROP;
+      if(isTabularRecordArray(value,path))return DROP;
       const out=[];
       for(const entry of value){
         if(typeof entry==='string'&&entry.length<=140&&matchesName(entry))continue;
