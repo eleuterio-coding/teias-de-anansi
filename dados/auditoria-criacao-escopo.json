@@ -53,6 +53,7 @@
     "tests/auditar-precedencia-antecedentes-quickstone-2024.mjs",
     "tests/auditar-semantica-antecedentes-legado-2014.mjs",
     "tests/auditar-talentos-caracteristicas-classe.mjs",
+    "tests/auditar-talentos-especiais-antecedentes.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
