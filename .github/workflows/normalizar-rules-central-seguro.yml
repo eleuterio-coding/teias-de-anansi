@@ -1,0 +1,78 @@
+name: Normalizar rules.js central com segurança
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - '.github/workflows/normalizar-rules-central-seguro.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Normalizar apenas o motor central
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          REV='20260831-class-tools1'
+          # O lookbehind impede casar ability-score-rules.js, spell-progression-rules.js etc.
+          central=re.compile(r'(?<![A-Za-z0-9_-])rules\.js\?v=[A-Za-z0-9._-]+')
+          changed=[]
+          candidates=list(Path('scripts/character-builder').rglob('*.js'))+list(Path('scripts').glob('character-sheet*.js'))
+          for p in candidates:
+              text=p.read_text(encoding='utf-8')
+              new=central.sub(f'rules.js?v={REV}',text)
+              if new!=text:
+                  p.write_text(new,encoding='utf-8')
+                  changed.append(str(p))
+
+          # Invalidação da cadeia página -> loader -> núcleo.
+          p=Path('criacao-personagem.html')
+          text=p.read_text(encoding='utf-8')
+          new=re.sub(r'character-builder\.js\?v=[A-Za-z0-9._-]+',f'character-builder.js?v={REV}',text)
+          if new!=text:
+              p.write_text(new,encoding='utf-8')
+              changed.append(str(p))
+
+          p=Path('scripts/character-builder.js')
+          text=p.read_text(encoding='utf-8')
+          new=re.sub(r'(?<![A-Za-z0-9_-])ui\.js\?v=[A-Za-z0-9._-]+',f'ui.js?v={REV}',text)
+          new=re.sub(r'class-skill-ui\.js\?v=[A-Za-z0-9._-]+',f'class-skill-ui.js?v={REV}',new)
+          if new!=text:
+              p.write_text(new,encoding='utf-8')
+              changed.append(str(p))
+
+          print(f'Arquivos alterados: {len(changed)}')
+          print('\n'.join(changed))
+          PY
+      - name: Provar que módulos especializados não foram reversionados
+        run: |
+          git diff -- scripts | grep -E '^[-+].*(ability-score-rules|spell-progression-rules|starting-equipment-rules|skill-check-mechanics)\.js\?v=' && exit 1 || true
+      - name: Validar antes de publicar
+        run: |
+          node tests/auditar-revisao-unica-rules.mjs
+          node tests/auditar-criacao-sem-travamento.mjs
+          find scripts/character-builder -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Publicar normalização
+        run: |
+          if git diff --quiet; then
+            echo 'Nenhuma alteração necessária.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add criacao-personagem.html scripts
+          git commit -m 'Unifica revisão do rules.js central sem alterar módulos especializados'
+          git push origin HEAD:audit/normativa-total-criacao
