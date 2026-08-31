@@ -15,8 +15,8 @@
     "evidencia_e_bloqueio"
   ],
   "dominios": [
-    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json"],"runtime":"loadClasses"},
-    {"id":"subclasses","fontes":["dados/subclasses-mecanicas-*.json"],"runtime":"subclass-mechanics-data.js"},
+    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json"],"runtime":"loadClasses"},
+    {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json"],"runtime":"subclass-mechanics-data.js"},
     {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
     {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
     {"id":"talentos","fontes":["dados/talentos-*.json"],"runtime":"feat-mechanics.js"},
@@ -26,8 +26,16 @@
     {"id":"equipamentos","fontes":["dados/armas-*.json","dados/armaduras-*.json","dados/equipamentos-*.json","dados/ferramentas-*.json"],"runtime":"starting-equipment-rules.js"},
     {"id":"magias","fontes":["dados/magias-*.json"],"runtime":"spell-progression-rules.js"},
     {"id":"compatibilidade","fontes":["dados/politica-compatibilidade-5e-5.5e.json"],"runtime":"compatibility.js"},
-    {"id":"regras_casa","fontes":["dados/regras-casa-adicionais.json","dados/regras-hub.json"],"runtime":"rules.js"},
+    {"id":"regras","fontes":["dados/regras-*.json"],"runtime":"rules.js"},
     {"id":"localizacao","fontes":["dados/localizacao-*.json"],"runtime":"catalogs.js"}
+  ],
+  "testes_criticos": [
+    "tests/auditar-cobertura-total-criacao.mjs",
+    "tests/auditar-subclasses-mecanicas.mjs",
+    "tests/auditar-regras-casa.mjs",
+    "tests/auditar-testes-pericia.mjs",
+    "tests/auditar-riqueza-criacao.mjs",
+    "tests/auditar-criacao-sem-travamento.mjs"
   ],
   "excecoes_runtime": [
     {
