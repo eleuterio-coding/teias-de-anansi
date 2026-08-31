@@ -20,44 +20,60 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Normalizar apenas o motor central
+      - name: Normalizar motor central e propagar invalidação de cache
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
 
           REV='20260831-class-tools1'
-          # O lookbehind impede casar ability-score-rules.js, spell-progression-rules.js etc.
           central=re.compile(r'(?<![A-Za-z0-9_-])rules\.js\?v=[A-Za-z0-9._-]+')
-          changed=[]
-          candidates=list(Path('scripts/character-builder').rglob('*.js'))+list(Path('scripts').glob('character-sheet*.js'))
-          for p in candidates:
+          runtime=list(Path('scripts').rglob('*.js'))
+          html=list(Path('.').glob('*.html'))
+          changed=set()
+
+          # 1) Altera somente imports do motor central rules.js.
+          scope=list(Path('scripts/character-builder').rglob('*.js'))+list(Path('scripts').glob('character-sheet*.js'))
+          for p in scope:
               text=p.read_text(encoding='utf-8')
               new=central.sub(f'rules.js?v={REV}',text)
               if new!=text:
                   p.write_text(new,encoding='utf-8')
-                  changed.append(str(p))
+                  changed.add(p)
 
-          # Invalidação da cadeia página -> loader -> núcleo.
-          p=Path('criacao-personagem.html')
+          # 2) Propaga a nova revisão pelos importadores dos arquivos efetivamente alterados.
+          #    É um fechamento transitivo: se A mudou e B importa A, B é invalidado; se C importa B, C também.
+          candidates=runtime+html
+          progressed=True
+          while progressed:
+              progressed=False
+              names={p.name for p in changed}
+              for p in candidates:
+                  text=p.read_text(encoding='utf-8')
+                  new=text
+                  for name in names:
+                      pat=re.compile(rf'(?<![A-Za-z0-9_-]){re.escape(name)}\?v=[A-Za-z0-9._-]+')
+                      new=pat.sub(f'{name}?v={REV}',new)
+                  if new!=text:
+                      p.write_text(new,encoding='utf-8')
+                      if p not in changed:
+                          changed.add(p)
+                          progressed=True
+
+          # 3) Atualiza o teste de regressão para a revisão única que agora atravessa a cadeia alterada.
+          p=Path('tests/auditar-criacao-sem-travamento.mjs')
           text=p.read_text(encoding='utf-8')
-          new=re.sub(r'character-builder\.js\?v=[A-Za-z0-9._-]+',f'character-builder.js?v={REV}',text)
+          new=re.sub(r"const REV='[^']+'",f"const REV='{REV}'",text)
+          new=re.sub(r"const SKILL_REV='[^']+'",f"const SKILL_REV='{REV}'",new)
+          new=re.sub(r"const WEALTH_REV='[^']+'",f"const WEALTH_REV='{REV}'",new)
           if new!=text:
               p.write_text(new,encoding='utf-8')
-              changed.append(str(p))
-
-          p=Path('scripts/character-builder.js')
-          text=p.read_text(encoding='utf-8')
-          new=re.sub(r'(?<![A-Za-z0-9_-])ui\.js\?v=[A-Za-z0-9._-]+',f'ui.js?v={REV}',text)
-          new=re.sub(r'class-skill-ui\.js\?v=[A-Za-z0-9._-]+',f'class-skill-ui.js?v={REV}',new)
-          if new!=text:
-              p.write_text(new,encoding='utf-8')
-              changed.append(str(p))
+              changed.add(p)
 
           print(f'Arquivos alterados: {len(changed)}')
-          print('\n'.join(changed))
+          for p in sorted(changed,key=str): print(p)
           PY
-      - name: Provar que módulos especializados não foram reversionados
+      - name: Provar que revisões internas de módulos especializados foram preservadas
         run: |
           git diff -- scripts | grep -E '^[-+].*(ability-score-rules|spell-progression-rules|starting-equipment-rules|skill-check-mechanics)\.js\?v=' && exit 1 || true
       - name: Validar antes de publicar
@@ -73,6 +89,6 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add criacao-personagem.html scripts
-          git commit -m 'Unifica revisão do rules.js central sem alterar módulos especializados'
+          git add scripts '*.html' tests/auditar-criacao-sem-travamento.mjs
+          git commit -m 'Unifica rules.js central e propaga invalidação de cache'
           git push origin HEAD:audit/normativa-total-criacao
