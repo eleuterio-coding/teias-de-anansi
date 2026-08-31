@@ -1,0 +1,39 @@
+name: Aplicar segundo lote semântico Tasha 2020
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - 'scripts/migrations/corrigir-semantica-tasha-2020-lote2.mjs'
+      - 'tests/auditar-semantica-subclasses-tasha-2020.mjs'
+      - '.github/workflows/aplicar-correcao-semantica-tasha-2020-lote2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Aplicar correções estruturadas
+        run: node scripts/migrations/corrigir-semantica-tasha-2020-lote2.mjs
+      - name: Validar semântica corrigida
+        run: node tests/auditar-semantica-subclasses-tasha-2020.mjs
+      - name: Publicar dados corrigidos
+        run: |
+          if git diff --quiet -- dados/subclasses-mecanicas-tasha-2020.json; then
+            echo 'Nenhuma alteração necessária.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dados/subclasses-mecanicas-tasha-2020.json
+          git commit -m 'Corrige segundo lote semântico de Tasha 2020'
+          git push origin HEAD:audit/normativa-total-criacao
