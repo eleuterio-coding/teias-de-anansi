@@ -45,6 +45,7 @@
     "tests/auditar-semantica-subclasses-larsene-ledger-2024.mjs",
     "tests/auditar-semantica-especies-phb-2024.mjs",
     "tests/auditar-semantica-especies-forge-2025.mjs",
+    "tests/auditar-semantica-especies-quickstone-2024.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
