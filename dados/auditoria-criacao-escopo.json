@@ -15,7 +15,7 @@
     "evidencia_e_bloqueio"
   ],
   "dominios": [
-    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json"],"runtime":"loadClasses"},
+    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json"],"runtime":"loadClasses + invocation-catalog.js + invocation-mechanics.js"},
     {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json","dados/precedencia-subclasses.json"],"runtime":"subclass-mechanics-data.js"},
     {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
     {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
@@ -55,6 +55,7 @@
     "tests/auditar-talentos-caracteristicas-classe.mjs",
     "tests/auditar-talentos-especiais-antecedentes.mjs",
     "tests/auditar-talentos-xanathar-2017.mjs",
+    "tests/auditar-invocacoes-bruxo-2024.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
