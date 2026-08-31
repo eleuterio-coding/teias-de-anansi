@@ -103,11 +103,10 @@ const companion=feature('Draconic Sorcery','Dragon Companion');
 assert.equal(companion.nivel,18);assert.match(companion.descricao,/Summon Dragon/);assert.match(companion.descricao,/sem componente Material/);assert.match(companion.descricao,/sem gastar slot/);assert.match(companion.descricao,/Concentração/);assert.match(companion.descricao,/1 minuto/);
 assert.ok(!mechanics.get('Draconic Sorcery').progressao.some(x=>/Presence/i.test(x.nome)),'Draconic Sorcery não pode restaurar o capstone legado Presence.');
 
-// Runtime conhecido precisa continuar alinhado às correções semânticas.
-assert.ok(wizard.includes('potentCantrip:level>=3'),'Runtime do Evoker precisa ativar Potent Cantrip no nível 3.');
-assert.ok(wizard.includes('sculptSpells:level>=6'),'Runtime do Evoker precisa ativar Sculpt Spells no nível 6.');
-assert.ok(sorcerer.includes("dragonWings:level>=14?{durationHours:1,flySpeed:60}"),'Runtime de Dragon Wings precisa manter 1 hora e Fly Speed 60.');
-assert.ok(sorcerer.includes("dragonCompanion:level>=18?{spell:'Summon Dragon',materialComponent:false,freeOncePerLongRest:true,concentration:false,durationMinutes:1}"),'Runtime de Dragon Companion precisa permanecer alinhado à revisão 2024.');
+// Runtime conhecido: valida comportamento sem depender da minificação/formatação do arquivo.
+assert.match(wizard,/else if\(name==='Evoker'\)\{\s*add\('Potent Cantrip',[\s\S]*?if\(l>=6\)add\('Sculpt Spells'/,'Runtime do Evoker precisa aplicar Potent Cantrip desde a entrada da subclasse (nível 3) e Sculpt Spells somente no nível 6.');
+assert.match(sorcerer,/if\(l>=14\)\{[\s\S]*?movementModes\.fly=\{value:60,scope:'Dragon Wings · 1 hora quando ativo'\}[\s\S]*?resource\('Dragon Wings',1,'Descanso Longo','Ação Bônus; Fly 60 ft por 1 hora\. Restaura o uso gastando 3 SP\.'/,'Runtime de Dragon Wings precisa manter nível 14, 1 hora, Fly Speed 60 e restauração por 3 SP.');
+assert.match(sorcerer,/if\(l>=18\)resource\('Dragon Companion',1,'Descanso Longo','Summon Dragon sem componente Material e 1 vez sem slot; pode remover Concentração e reduzir duração para 1 minuto\.'/,'Runtime de Dragon Companion precisa permanecer alinhado à revisão 2024 no nível 18.');
 
 const joined=[JSON.stringify(matrix),JSON.stringify(mech),JSON.stringify(catalog),wizard,sorcerer].join('\n').toLowerCase();
 assert.ok(!joined.includes('supabase'),'Escopo normativo de subclasses não pode introduzir Supabase.');
