@@ -123,7 +123,8 @@ jobs:
           skilled=Path('scripts/character-builder/skilled-feat-ui.js').read_text(encoding='utf-8')
           sheet=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
           race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
-          assert 'package-b-purchase-ui.js?v=20260828-wealth-background1' in builder
+          assert 'package-b-purchase-ui.js?v=20260831-magic-rarity2' in builder
+          assert 'wealth-purchase-ui.js?v=20260831-magic-rarity2' in package
           assert 'wealth-background1' in package
           assert 'skilled-existing1' in package
           assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package and 'initSkilledFeatUi' in package
@@ -146,5 +147,5 @@ jobs:
           assert "removeAttribute('data-feat-mixed')" in skilled
           joined='\n'.join([builder,package,wealth,equipment,rules,ownership,origin,feats,skilled,sheet,race])
           assert 'supabase' not in joined.lower()
-          print('Compras, pacotes de Classe/Antecedente, Riqueza por Level e Skilled validados.')
+          print('Compras, pacotes de Classe/Antecedente, Riqueza por Level e Skilled validados com revisão de cache vigente.')
           PY

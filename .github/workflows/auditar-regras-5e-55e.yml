@@ -64,7 +64,6 @@ jobs:
           node --check scripts/character-builder/rules-base.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/house-rules-ui.js
-          node --check scripts/character-builder/manual-feat-ui.js
           node --check scripts/character-builder/spells.js
           node --check scripts/character-builder/spell-selection-ui.js
           node --check scripts/character-builder/spell-quota-ui.js

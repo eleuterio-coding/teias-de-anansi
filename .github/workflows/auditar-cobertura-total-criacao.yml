@@ -1,0 +1,89 @@
+name: Auditar cobertura total da criação
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cobertura-total:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 01 · Inventário e integridade sintática
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/character-builder.js
+          find scripts/character-builder -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find scripts -maxdepth 1 -type f \( -name 'character-sheet*.js' -o -name 'regras-*.js' -o -name 'politica-*.js' \) -print0 | sort -z | xargs -0 -r -n1 node --check
+          find tests -type f -name 'auditar-*.mjs' -print0 | sort -z | xargs -0 -r -n1 node --check
+
+      - name: 02 · Integridade completa dos dados
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);
+          const files=walk('dados').filter(p=>p.endsWith('.json'));
+          const errors=[];
+          for(const file of files){try{JSON.parse(fs.readFileSync(file,'utf8'))}catch(error){errors.push(`${file}: ${error.message}`)}}
+          if(errors.length){console.error(errors.join('\n'));process.exit(1)}
+          console.log(`JSON válidos: ${files.length}/${files.length}.`);
+          NODE
+          if grep -RniE 'supabase' criacao-personagem.html ficha-personagem.html scripts/character-builder.js scripts/character-builder scripts/character-sheet*.js; then
+            echo 'Supabase é proibido no Hub de RPG.' >&2
+            exit 1
+          fi
+
+      - name: 03 · Escopo fail-closed e rastreabilidade de runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tests/auditar-escopo-criacao.mjs
+          node tests/auditar-cobertura-total-criacao.mjs
+
+      - name: 04 · Aplicação mecânica, interações, cenários e regressão
+        shell: bash
+        run: |
+          set -euo pipefail
+          count=0
+          for test in tests/auditar-*.mjs; do
+            case "$test" in
+              tests/auditar-escopo-criacao.mjs|tests/auditar-cobertura-total-criacao.mjs) continue ;;
+            esac
+            echo "=== $test ==="
+            node "$test"
+            count=$((count+1))
+          done
+          test "$count" -gt 0
+          echo "Suíte mecânica concluída: $count auditorias executadas."
+
+      - name: 05 · Políticas globais e consistência editorial
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/auditar_regras_5e_55e.py
+          python scripts/auditar_localizacao_ptbr.py
+
+      - name: 06 · Evidência verificável de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-total-criacao
+          path: |
+            artifacts/cobertura-criacao.json
+            artifacts/escopo-criacao.json
+          if-no-files-found: error
