@@ -1,7 +1,7 @@
 {
-  "schema": "hub-rpg/auditoria-criacao/v1",
+  "schema": "hub-rpg/auditoria-criacao/v2",
   "politica": "fail-closed",
-  "objetivo": "Nenhum conteúdo que possa alterar a criação ou a ficha de personagem pode permanecer sem classificação, integração e teste.",
+  "objetivo": "Nenhum conteúdo que possa alterar a criação ou a ficha de personagem pode permanecer sem classificação, integração, validação e teste.",
   "etapas_obrigatorias": [
     "inventario",
     "integridade_sintatica",
@@ -26,13 +26,26 @@
     {"id":"equipamentos","fontes":["dados/armas-*.json","dados/armaduras-*.json","dados/equipamentos-*.json","dados/ferramentas-*.json"],"runtime":"starting-equipment-rules.js"},
     {"id":"magias","fontes":["dados/magias-*.json"],"runtime":"spell-progression-rules.js"},
     {"id":"compatibilidade","fontes":["dados/politica-compatibilidade-5e-5.5e.json"],"runtime":"compatibility.js"},
-    {"id":"regras_casa","fontes":["dados/regras-casa-adicionais.json","dados/regras-hub.json"],"runtime":"rules.js"}
+    {"id":"regras_casa","fontes":["dados/regras-casa-adicionais.json","dados/regras-hub.json"],"runtime":"rules.js"},
+    {"id":"localizacao","fontes":["dados/localizacao-*.json"],"runtime":"catalogs.js"}
+  ],
+  "excecoes_runtime": [
+    {
+      "arquivo": "scripts/character-builder/active-equipment-ui.js",
+      "tipo": "compatibilidade_cache",
+      "motivo": "Shim sem listeners mantido apenas para páginas antigas em cache; a interface vigente é equipment-ownership-ui.js.",
+      "requisito": "O inicializador deve permanecer no-op e o módulo não pode controlar o DOM ativo."
+    }
   ],
   "criterio_fechamento": {
+    "modulo_sem_classificacao": 0,
     "orfao_mecanico": 0,
     "fonte_sem_classificacao": 0,
+    "dependencia_de_dados_ausente": 0,
     "teste_falhando": 0,
     "erro_sintatico": 0,
-    "divergencia_normativa_conhecida": 0
+    "json_invalido": 0,
+    "divergencia_normativa_conhecida": 0,
+    "uso_supabase": 0
   }
 }
