@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'dados/auditoria-criacao-escopo.json'
+      - 'dados/auditoria-normativa-*.json'
       - 'dados/fontes-normativas-criacao.json'
       - 'dados/politica-compatibilidade-5e-5.5e.json'
       - 'dados/classes-base-2024.json'
@@ -25,12 +26,14 @@ on:
       - 'dados/regras-*.json'
       - 'dados/localizacao-*.json'
       - 'tests/auditar-proveniencia-normativa.mjs'
+      - 'tests/auditar-semantica-*.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
   push:
     branches: [main]
     paths:
       - 'dados/**'
       - 'tests/auditar-proveniencia-normativa.mjs'
+      - 'tests/auditar-semantica-*.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
   workflow_dispatch:
 
@@ -45,5 +48,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validar proveniência normativa fail-closed
+      - name: 11A · Validar proveniência normativa fail-closed
         run: node tests/auditar-proveniencia-normativa.mjs
+      - name: 11B · Validar semântica das classes core 2024
+        run: node tests/auditar-semantica-classes-core.mjs
