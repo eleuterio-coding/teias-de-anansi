@@ -22,7 +22,19 @@ jobs:
         with:
           node-version: '22'
       - name: Aplicar integração
-        run: python3 scripts/integrar_tasha_metamagia.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/integrar_tasha_metamagia.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('tests/auditar-invocacoes-bruxo-2024.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="state.c.choices.class.level=1;let eligible=invocationEligibleOptions();assert.ok(eligible.some(x=>x.id==='pact-of-the-blade'));assert.ok(!eligible.some(x=>x.id==='devouring-blade'));\nlet check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true);"
+          new="state.c.choices.class.level=1;let eligible=invocationEligibleOptions();assert.ok(eligible.some(x=>x.id==='pact-of-the-blade'));assert.ok(!eligible.some(x=>x.id==='devouring-blade'));\nstate.c.choices.class.level=2;let check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true,'Agonizing Blast deve ser elegível no nível 2 quando há truque de dano de Bruxo compatível.');"
+          if old not in s and new not in s: raise SystemExit('âncora de Agonizing Blast ausente')
+          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          PY
       - name: Validar sintaxe e gates críticos
         shell: bash
         run: |
