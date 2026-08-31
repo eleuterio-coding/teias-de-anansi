@@ -32,8 +32,12 @@ jobs:
           s=p.read_text(encoding='utf-8')
           old="state.c.choices.class.level=1;let eligible=invocationEligibleOptions();assert.ok(eligible.some(x=>x.id==='pact-of-the-blade'));assert.ok(!eligible.some(x=>x.id==='devouring-blade'));\nlet check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true);"
           new="state.c.choices.class.level=1;let eligible=invocationEligibleOptions();assert.ok(eligible.some(x=>x.id==='pact-of-the-blade'));assert.ok(!eligible.some(x=>x.id==='devouring-blade'));\nstate.c.choices.class.level=2;let check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true,'Agonizing Blast deve ser elegível no nível 2 quando há truque de dano de Bruxo compatível.');"
-          if old not in s and new not in s: raise SystemExit('âncora de Agonizing Blast ausente')
-          p.write_text(s.replace(old,new,1),encoding='utf-8')
+          if old in s: s=s.replace(old,new,1)
+          old2="state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Pactos atuais exigem níveis de Bruxo mesmo quando consultados por talento.');\nstate.c.refs.class='warlock';"
+          new2="state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,true,'Pact of the Blade 2024 não possui pré-requisito e pode ser escolhido por Eldritch Adept sob a precedência atual.');check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Invocação que exige níveis de Bruxo deve permanecer bloqueada para não-Bruxos.');\nstate.c.refs.class='warlock';"
+          if old2 in s: s=s.replace(old2,new2,1)
+          if new not in s or new2 not in s: raise SystemExit('cenários atualizados de Invocações não encontrados')
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Validar sintaxe e gates críticos
         shell: bash
