@@ -1,5 +1,6 @@
-import{state,$,AB,arr,num,fold}from'./state.js';
+import{state,$,arr,fold}from'./state.js';
 import{applyHouseRules,derive,selected}from'./rules.js?v=20260831-class-tools1';
+import{featPrerequisiteOk}from'./feat-prerequisite-mechanics.js?v=20260831-feat-prereq1';
 
 let initialized=false,queued=false,enforcing=false;
 const clone=v=>structuredClone(v);
@@ -21,50 +22,20 @@ function contextAt(level,slot){
   applyHouseRules()
  }
 }
-function minimumLevel(feat){
- const p=fold(feat?.prereq||'');
- const match=p.match(/(?:nivel|level)\s*(\d+)\s*\+?/);
- if(match)return num(match[1]);
- return fold(feat?.category)==='geral'?4:1
-}
-function hasTraining(d,kind){
- const raw=fold([...arr(d.klass?.proficiencies),...arr(d.klass?.proficienciesRaw)].join(' '));
- const armor=arr(d.featMechanics?.armorTraining).map(fold),k=fold(kind);
- if(k==='escudo')return/shield|escudo/.test(raw)||!!d.featMechanics?.shieldTraining;
- const aliases={leve:['light armor','armadura leve'],media:['medium armor','armadura media'],pesada:['heavy armor','armadura pesada']};
- const tokens=aliases[k]||[];
- return/all armor|todas as armaduras/.test(raw)||tokens.some(t=>raw.includes(t))||armor.includes(k)
-}
-function abilityPrereqOk(prereq,d){
- if(!/13\+/.test(prereq))return true;
- const mentioned=AB.filter(a=>prereq.includes(fold(a)));
- if(!mentioned.length)return true;
- return mentioned.some(a=>num(d.scores?.[a])>=13)
-}
-function prereqOk(feat,entry,d){
- const p=fold(feat?.prereq||'');
- if(entry.level<minimumLevel(feat))return false;
- if(!abilityPrereqOk(p,d))return false;
- if((p.includes('conjuracao')||p.includes('spellcasting')||p.includes('magia de pacto')||p.includes('pact magic'))&&!d.klass?.spellAbility)return false;
- if((p.includes('armadura media')||p.includes('medium armor'))&&!hasTraining(d,'media'))return false;
- if((p.includes('armadura pesada')||p.includes('heavy armor'))&&!hasTraining(d,'pesada'))return false;
- if((p.includes('armadura leve')||p.includes('light armor'))&&!hasTraining(d,'leve'))return false;
- if((p.includes('treinamento com escudo')||p.includes('shield training'))&&!hasTraining(d,'escudo'))return false;
- return true
-}
+function prerequisiteContext(d,level){return{level,klass:d.klass,species:d.species,lineage:d.lineage,size:state.c?.choices?.species?.size,scores:d.scores,featMechanics:d.featMechanics,activeFeats:arr(d.featMechanics?.instances).map(x=>x.feat),allFeats:state.catalogs.feats}}
 function eligible(feat,entry,d){
  if(!feat||!entry)return false;
  const category=fold(feat.category);
  if(!['origem','geral'].includes(category))return false;
  const name=fold(feat.name);
  if(entry.kind==='house'&&(/ability score improvement/.test(name)||/melhoria.*atribut/.test(name)||/aumento.*atribut/.test(name)))return false;
- return prereqOk(feat,entry,d)
+ return featPrerequisiteOk(feat,prerequisiteContext(d,entry.level))
 }
 function removeMechanics(slot){if(state.c?.choices?.featMechanics)delete state.c.choices.featMechanics[`class:${slot}`]}
 function usedFeatIds(excludeSlot){
  const used=new Set,origin=state.c?.choices?.background?.originFeat;
  if(origin)used.add(origin);
- for(const[id,value]of Object.entries(state.c?.choices?.species?.traitChoices||{})){
+ for(const value of Object.values(state.c?.choices?.species?.traitChoices||{})){
   if(typeof value==='string'&&featById(value))used.add(value);
   if(Array.isArray(value))for(const v of value)if(featById(v))used.add(v)
  }
