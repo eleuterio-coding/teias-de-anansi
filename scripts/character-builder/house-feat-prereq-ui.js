@@ -1,5 +1,5 @@
 import{state,$,arr,fold}from'./state.js';
-import{applyHouseRules,derive,selected}from'./rules.js?v=20260831-class-tools1';
+import{applyHouseRules,derive,selected}from'./rules.js?v=20260831-warlock-invocations2';
 import{featPrerequisiteOk}from'./feat-prerequisite-mechanics.js?v=20260831-feat-prereq1';
 
 let initialized=false,queued=false,enforcing=false;

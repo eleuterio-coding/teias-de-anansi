@@ -2,7 +2,7 @@ import assert from'node:assert/strict';
 import fs from'node:fs';
 import path from'node:path';
 
-const ROOT=process.cwd(),REV='20260831-class-tools1';
+const ROOT=process.cwd(),REV='20260831-warlock-invocations2';
 const files=[];
 function walk(dir){for(const entry of fs.readdirSync(path.join(ROOT,dir),{withFileTypes:true})){const rel=path.posix.join(dir,entry.name);if(entry.isDirectory())walk(rel);else if(entry.name.endsWith('.js'))files.push(rel)}}
 walk('scripts/character-builder');

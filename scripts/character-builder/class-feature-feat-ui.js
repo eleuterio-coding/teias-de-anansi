@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold}from'./state.js';
-import{derive}from'./rules.js?v=20260831-class-tools1';
+import{derive}from'./rules.js?v=20260831-warlock-invocations2';
 import{activeFeatInstances}from'./feat-mechanics.js';
 import{classFeatureFeatGrants,eligibleClassFeatureFeats,sanitizeClassFeatureFeatSelections}from'./class-feature-feat-mechanics.js';
 

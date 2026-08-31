@@ -1,5 +1,5 @@
 import{state}from'./state.js';
-import{selected}from'./rules.js?v=20260831-class-tools1';
+import{selected}from'./rules.js?v=20260831-warlock-invocations2';
 
 let initialized=false;
 function chosenOriginFeat(){const id=state.c?.choices?.background?.originFeat;return id?state.catalogs.feats.find(feat=>feat.id===id)||null:null}
