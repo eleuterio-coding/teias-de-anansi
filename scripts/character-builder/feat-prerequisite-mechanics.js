@@ -7,7 +7,8 @@ const ABILITY_ALIASES={
 const SPECIES_ALIASES={
  halfling:['halfling'],dragonborn:['dragonborn','draconato'],drow:['drow'],dwarf:['dwarf','anao'],elf:['elf','elfo'],
  halfElf:['half-elf','half elf','meio-elfo','meio elfo'],gnome:['gnome','gnomo'],highElf:['high elf','alto elfo'],
- tiefling:['tiefling'],halfOrc:['half-orc','half orc','meio-orc','meio orc'],human:['human','humano'],woodElf:['wood elf','elfo da floresta']
+ tiefling:['tiefling'],halfOrc:['half-orc','half orc','meio-orc','meio orc'],human:['human','humano'],woodElf:['wood elf','elfo da floresta'],
+ khoravar:['khoravar'],orc:['orc']
 };
 
 export function minimumFeatLevel(feat){const p=fold(feat?.prereq||''),match=p.match(/(?:nivel|level)\s*(\d+)\s*\+?/);if(match)return num(match[1]);const category=fold(feat?.category||feat?.categoria||'');if(category==='dadiva epica')return 19;if(category==='geral')return 4;return 1}
@@ -20,6 +21,8 @@ function speciesHas(context,key){const {names}=speciesText(context);return arr(S
 function speciesPrereqOk(prereq,context){
  const {size}=speciesText(context),small=/small|pequen/.test(size);
  if(/half[- ]?elf.*half[- ]?orc.*human|meio[- ]?elfo.*meio[- ]?orc.*humano/.test(prereq))return speciesHas(context,'halfElf')||speciesHas(context,'halfOrc')||speciesHas(context,'human');
+ if(/human.*orc.*half[- ]?orc|humano.*orc.*meio[- ]?orc/.test(prereq))return speciesHas(context,'human')||speciesHas(context,'orc')||speciesHas(context,'halfOrc');
+ if(/khoravar.*half[- ]?elf|khoravar.*meio[- ]?elfo/.test(prereq))return speciesHas(context,'khoravar')||speciesHas(context,'halfElf');
  if(/elf.*half[- ]?elf|elfo.*meio[- ]?elfo/.test(prereq))return speciesHas(context,'elf')||speciesHas(context,'halfElf');
  if(/dwarf.*small|anao.*pequen/.test(prereq))return speciesHas(context,'dwarf')||small;
  if(/wood elf|elfo da floresta/.test(prereq))return speciesHas(context,'woodElf');
@@ -32,6 +35,9 @@ function speciesPrereqOk(prereq,context){
  if(/dwarf|anao/.test(prereq))return speciesHas(context,'dwarf');
  if(/gnome|gnomo/.test(prereq))return speciesHas(context,'gnome');
  if(/tiefling/.test(prereq))return speciesHas(context,'tiefling');
+ if(/khoravar/.test(prereq))return speciesHas(context,'khoravar');
+ if(/\bhuman\b|\bhumano\b/.test(prereq))return speciesHas(context,'human');
+ if(/\borc\b/.test(prereq))return speciesHas(context,'orc');
  if(/\belf\b|\belfo\b/.test(prereq))return speciesHas(context,'elf');
  return true
 }
