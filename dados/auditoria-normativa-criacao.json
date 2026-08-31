@@ -3,11 +3,11 @@
   "politica":"fail-closed",
   "objetivo":"Provar, por etapas verificáveis, que cada mecânica usada na criação e na ficha preserva a autoridade, a versão e a intenção normativa da fonte escolhida.",
   "etapas":[
-    {"id":"11A_proveniencia","status":"implementado","criterio":"100% das fontes mecânicas do escopo possuem uma única autoridade normativa declarada."},
-    {"id":"11B_semantica_dados","status":"pendente","criterio":"Cada entidade mecânica é confrontada com sua fonte e tem campos críticos validados."},
+    {"id":"11A_proveniencia","status":"concluido","criterio":"100% das fontes mecânicas do escopo possuem uma única autoridade normativa declarada.","evidencia":"83/83 fontes mecânicas classificadas em 45 mapeamentos; workflow proveniencia-normativa verde."},
+    {"id":"11B_semantica_dados","status":"em_andamento","criterio":"Cada entidade mecânica é confrontada com sua fonte e tem campos críticos validados.","evidencia_parcial":"12/12 classes core validadas em dado de vida, salvaguardas, perícias, proficiências e atributo de conjuração; proficiências de ferramentas de Classe adicionadas após divergência real encontrada."},
     {"id":"11C_precedencia_versoes","status":"pendente","criterio":"Nenhuma versão antiga ou terceira substitui silenciosamente uma versão oficial vigente."},
     {"id":"11D_overrides_casa","status":"pendente","criterio":"Toda divergência deliberada do oficial está vinculada a uma Regra da Casa explícita."},
-    {"id":"11E_runtime_normativo","status":"pendente","criterio":"O runtime aplica exatamente os valores e escolhas validados na camada normativa."},
+    {"id":"11E_runtime_normativo","status":"em_andamento","criterio":"O runtime aplica exatamente os valores e escolhas validados na camada normativa.","evidencia_parcial":"Ferramentas de Classe integradas ao derive; revisão única do motor de regras sendo tornada obrigatória."},
     {"id":"11F_cenarios_normativos","status":"pendente","criterio":"Cenários de personagem exercitam combinações críticas de fontes, legado e Regras da Casa."},
     {"id":"11G_evidencia_fechamento","status":"pendente","criterio":"Relatório final contém zero entidade sem revisão semântica e zero divergência normativa conhecida."}
   ],
