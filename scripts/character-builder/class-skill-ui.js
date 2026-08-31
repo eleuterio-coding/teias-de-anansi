@@ -1,5 +1,5 @@
 import{state,$,arr,SKILL_AB,esc,signed}from'./state.js';
-import{selected,derive}from'./rules.js?v=20260828-character-builder-freeze1';
+import{selected,derive}from'./rules.js?v=20260831-skill-checks1';
 import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
 import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-subclass-mechanics2';
 import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260827-barbarian-subclasses1';
