@@ -8,6 +8,7 @@ const tasha=read('dados/subclasses-mecanicas-tasha-2020.json');
 const phb=read('dados/subclasses-mecanicas-phb-2024.json');
 const catalog=read('dados/subclasses-pdfs.json');
 const runtime=fs.readFileSync('scripts/character-builder/subclass-mechanics-data.js','utf8');
+const catalogsRuntime=fs.readFileSync('scripts/character-builder/catalogs.js','utf8');
 const fold=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const uniqueLevels=row=>[...new Set((row.progressao||[]).map(x=>Number(x.nivel)))].sort((a,b)=>a-b);
 const sorted=a=>[...a].sort((a,b)=>String(a).localeCompare(String(b),'en'));
@@ -82,8 +83,12 @@ assert.ok(Number(p['tasha-2020'])>Number(p['quickstone-2024']),'Fonte oficial le
 assert.ok(runtime.includes("const PRECEDENCE='dados/precedencia-subclasses.json'"),'Runtime de mecânicas precisa carregar a política de precedência.');
 assert.ok(runtime.includes('superseded.has(precedenceKey(pkg.fonte_id,row.nome))'),'Runtime precisa bloquear versões explicitamente substituídas.');
 assert.ok(runtime.includes('rank(value.fonte_id)>rank(current.fonte_id)'),'Runtime precisa impedir que uma fonte de prioridade inferior sobreponha uma superior por colisão de nome.');
+assert.ok(catalogsRuntime.includes("json('dados/precedencia-subclasses.json')"),'Catálogo runtime precisa carregar a política de precedência.');
+assert.ok(catalogsRuntime.includes("superseded.has(`${s.fonte_id}:${fold(s.nome)}`)"),'Catálogo runtime precisa bloquear versões explicitamente substituídas sem depender apenas do status editorial.');
+assert.ok(catalogsRuntime.includes('rank>oldRank'),'Catálogo runtime precisa escolher a fonte de maior prioridade em colisões de identidade textual.');
+assert.ok(catalogsRuntime.includes('originalName:s.nome')&&catalogsRuntime.includes("sourceId:s.fonte_id||''"),'Catálogo runtime precisa preservar identidade original e fonte para rastreabilidade normativa.');
 
-const all=[matrix,precedence,tasha,phb,catalog].map(JSON.stringify).join('\n').toLowerCase()+runtime.toLowerCase();
+const all=[matrix,precedence,tasha,phb,catalog].map(JSON.stringify).join('\n').toLowerCase()+runtime.toLowerCase()+catalogsRuntime.toLowerCase();
 assert.ok(!all.includes('supabase'),'Precedência de subclasses não pode introduzir Supabase.');
 
-console.log('Precedência Tasha 2020 → PHB 2024 validada: 26 no escopo, 18 legados únicos, 8 substituições e 4 equivalências renomeadas protegidas no dado e no runtime.');
+console.log('Precedência Tasha 2020 → PHB 2024 validada: 26 no escopo, 18 legados únicos, 8 substituições e 4 equivalências renomeadas protegidas no dado, catálogo e runtime mecânico.');
