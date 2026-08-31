@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   validar:
@@ -30,7 +31,29 @@ jobs:
         with:
           node-version: '22'
       - name: Validar política global
-        run: python scripts/auditar_regras_5e_55e.py
+        id: global-audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          python scripts/auditar_regras_5e_55e.py 2>&1 | tee /tmp/auditoria-regras.log
+      - name: Publicar diagnóstico no PR
+        if: steps.global-audit.outcome == 'failure' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### Falha na auditoria 5e/5.5e'
+            echo
+            echo '```text'
+            cat /tmp/auditoria-regras.log
+            echo '```'
+          } > /tmp/auditoria-regras-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/auditoria-regras-comment.md
+      - name: Reprovar política global se necessário
+        if: steps.global-audit.outcome == 'failure'
+        run: exit 1
       - name: Validar JavaScript auditado
         run: |
           node --check scripts/character-builder.js
@@ -48,4 +71,5 @@ jobs:
           node --check scripts/concentracao-expandida-selos.js
           node --check scripts/regras-srd-view-v7.js
           node --check scripts/politica-regras-biblioteca.js
+          node --check scripts/politica-era-cenario.js
           node --check scripts/module-clean-loader.js

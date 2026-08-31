@@ -7,7 +7,7 @@
     "precedencia": "A regra oficial 5.5e/2024 permanece soberana. Versões 5e e suplementares só substituem versões anteriores equivalentes dentro da mesma linha editorial quando são claramente revisões posteriores.",
     "xyleff": "Conteúdo de Xyleff é demonstrativo e permanece isolado como não canônico; nunca substitui uma arma oficial.",
     "taxonomia": "Armas mágicas localizadas nos PDFs são excluídas deste módulo e permanecem em Itens Mágicos. Ataques de blocos de monstros e explosivos também não são cadastrados como armas de equipamento.",
-    "escopo_tematico": "O catálogo exclui armas modernas e futuristas incompatíveis com fantasia medieval. Armas de pólvora antiga/renascentista, como musket, pistol e blunderbuss, podem permanecer por serem compatíveis com cenários de fantasia histórica ou fantástica."
+    "escopo_tematico": "O catálogo ativo do Hub exclui armas de fogo, pólvora e armamento mundano industrial, moderno ou futurista, independentemente da edição, fonte, período histórico ou status oficial. As fontes brutas podem permanecer no repositório apenas para rastreabilidade e auditoria, mas a política global de era impede que esses registros sejam oferecidos ou aplicados mecanicamente no site."
   },
   "controle": {
     "quantidade": 107,
@@ -28,7 +28,8 @@
       "Armas mágicas encontradas em pdf24_merged.pdf foram excluídas por taxonomia.",
       "Ataques nomeados dentro de stat blocks de monstros foram excluídos por não serem entradas de equipamento.",
       "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas.",
-      "Automatic Rifle, Hunting Rifle, Revolver, Semiautomatic Pistol, Shotgun, Antimatter Rifle, Laser Pistol e Laser Rifle do Dungeon Master's Guide 2024 foram removidos por incompatibilidade com o escopo de fantasia medieval do Hub."
+      "Automatic Rifle, Hunting Rifle, Revolver, Semiautomatic Pistol, Shotgun, Antimatter Rifle, Laser Pistol e Laser Rifle do Dungeon Master's Guide 2024 foram removidos por incompatibilidade com o escopo de fantasia medieval do Hub.",
+      "Musket, Pistol, Blunderbuss, Revolver, Rifle e equivalentes de pólvora permanecem apenas nas fontes brutas para auditoria e são excluídos do catálogo ativo pela política global de era do cenário."
     ]
   },
   "fontes": {

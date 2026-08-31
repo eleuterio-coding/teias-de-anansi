@@ -1,0 +1,46 @@
+name: Auditar política de era do cenário
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auditar-era:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validar barreira de conteúdo moderno
+        id: audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          node tests/auditar-politica-era-cenario.mjs 2>&1 | tee /tmp/auditoria-era.log
+
+      - name: Publicar diagnóstico no PR
+        if: steps.audit.outcome == 'failure' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### Falha na auditoria de era'
+            echo
+            echo '```text'
+            cat /tmp/auditoria-era.log
+            echo '```'
+          } > /tmp/auditoria-era-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/auditoria-era-comment.md
+
+      - name: Reprovar se a auditoria falhou
+        if: steps.audit.outcome == 'failure'
+        run: exit 1
