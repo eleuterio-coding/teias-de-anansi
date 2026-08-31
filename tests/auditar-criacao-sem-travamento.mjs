@@ -12,13 +12,16 @@ const equipmentUi=text('scripts/character-builder/equipment-ownership-ui.js');
 const legacyEquipment=text('scripts/character-builder/active-equipment-ui.js');
 
 const REV='20260828-character-builder-freeze1';
+const SKILL_REV='20260831-skill-checks1';
 assert.ok(html.includes(`character-builder.js?v=${REV}`),'A página precisa invalidar o carregador antigo em cache.');
 assert.ok(loader.includes(`ui.js?v=${REV}`),'O núcleo da criação precisa usar a revisão anti-travamento.');
-assert.ok(loader.includes(`class-skill-ui.js?v=${REV}`),'A etapa de classe precisa usar a revisão anti-travamento.');
+assert.ok(loader.includes(`class-skill-ui.js?v=${SKILL_REV}`),'A etapa de perícias precisa invalidar a revisão anterior após mudança mecânica.');
 assert.ok(loader.includes(`equipment-ownership-ui.js?v=${REV}`),'Equipamento ativo precisa usar a revisão anti-travamento.');
-for(const [label,source] of [['núcleo',core],['perícias',classUi],['Mago',wizardUi],['equipamento',equipmentUi]]){
- assert.ok(source.includes(`rules.js?v=${REV}`),`${label}: rules.js deve ser carregado pela mesma revisão.`);
+for(const [label,source] of [['núcleo',core],['Mago',wizardUi],['equipamento',equipmentUi]]){
+ assert.ok(source.includes(`rules.js?v=${REV}`),`${label}: rules.js deve permanecer na revisão anti-travamento.`);
 }
+assert.ok(classUi.includes(`rules.js?v=${SKILL_REV}`),'Perícias devem carregar a revisão de rules.js que contém a integração de testes de perícia.');
+assert.ok(classUi.includes('renderSkillChecks'),'A revisão dedicada de perícias precisa aplicar os valores mecânicos no preview.');
 
 for(const token of['ensureSpellIndex','spellCatalogRef','schoolLevelCache','spellByIdCache','sameChoiceState'])assert.ok(wizardMechanics.includes(token),`Cache do Mago ausente: ${token}`);
 assert.ok(!wizardMechanics.includes("arr(state.catalogs?.spells).filter(s=>wizardSpell(s)&&sLevel(s)===level"),'Savant não pode voltar a varrer o catálogo inteiro por escolha.');
@@ -48,4 +51,4 @@ assert.equal(firstReads,spells.length,'Primeira indexação deve visitar cada ma
 for(let i=0;i<25;i++)wizardSubclassChoiceDefs(d);
 assert.equal(classReads,firstReads,'Chamadas repetidas de derive/choiceDefs não podem revarrer as 537 magias.');
 
-console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago.');
+console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago; revisão mecânica de perícias isolada e rastreada.');
