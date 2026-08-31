@@ -1,0 +1,46 @@
+{
+  "schema": "hub-rpg/invocacoes-bruxo/v1",
+  "fonte": {
+    "titulo": "D&D Basic Rules 2024 — Warlock",
+    "autoridade": "oficial_atual",
+    "ruleset": "5.5e",
+    "revisao": 2024,
+    "url": "https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Warlock"
+  },
+  "precedencia": {
+    "politica": "Para personagens 5.5e, a lista atual de Invocações Místicas do Bruxo 2024 prevalece. Talentos legados que instruam escolher uma Invocação da classe Bruxo reutilizam esta lista atual; opções legadas adicionais só entram após auditoria normativa própria.",
+    "consumidores": ["Bruxo 2024", "Eldritch Adept (Tasha 2020, compatibilidade)"]
+  },
+  "progressao": {"1":1,"2":3,"3":3,"4":3,"5":5,"6":5,"7":6,"8":6,"9":7,"10":7,"11":7,"12":8,"13":8,"14":8,"15":9,"16":9,"17":9,"18":10,"19":10,"20":10},
+  "controle": {"validado":true,"quantidade":28},
+  "itens": [
+    {"id":"agonizing-blast","nome":"Agonizing Blast","nivel_bruxo":2,"requer_bruxo":true,"requer_cantrip_bruxo":"dano","repeatable":true,"escolha":{"tipo":"cantrip_bruxo_dano","unica_por_repeticao":true},"efeitos":{"flags":["agonizingBlast"],"adiciona_carisma_ao_dano_do_cantrip":true}},
+    {"id":"armor-of-shadows","nome":"Armor of Shadows","nivel_bruxo":0,"requer_bruxo":false,"repeatable":false,"efeitos":{"magias":[{"nome":"Mage Armor","sem_espaco":true,"alvo":"si mesmo","uso":"à vontade"}]}},
+    {"id":"ascendant-step","nome":"Ascendant Step","nivel_bruxo":5,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Levitate","sem_espaco":true,"alvo":"si mesmo","uso":"à vontade"}]}},
+    {"id":"devils-sight","nome":"Devil's Sight","nivel_bruxo":2,"requer_bruxo":true,"repeatable":false,"efeitos":{"flags":["devilsSight120"],"visao_escuridao_magica_e_normal_ft":120}},
+    {"id":"devouring-blade","nome":"Devouring Blade","nivel_bruxo":12,"requer_bruxo":true,"requer_invocacoes":["thirsting-blade"],"repeatable":false,"efeitos":{"ataques_arma_pacto_por_acao":3,"flags":["devouringBlade"]}},
+    {"id":"eldritch-mind","nome":"Eldritch Mind","nivel_bruxo":0,"requer_bruxo":false,"repeatable":false,"efeitos":{"flags":["advantageConcentrationSaves"]}},
+    {"id":"eldritch-smite","nome":"Eldritch Smite","nivel_bruxo":5,"requer_bruxo":true,"requer_invocacoes":["pact-of-the-blade"],"repeatable":false,"efeitos":{"flags":["eldritchSmite"],"dano_forca":"1d8 + 1d8 por nível do espaço de Magia de Pacto","derruba_ate_tamanho":"Huge"}},
+    {"id":"eldritch-spear","nome":"Eldritch Spear","nivel_bruxo":2,"requer_bruxo":true,"requer_cantrip_bruxo":"dano_alcance_10+","repeatable":true,"escolha":{"tipo":"cantrip_bruxo_dano_alcance","unica_por_repeticao":true},"efeitos":{"flags":["eldritchSpear"],"aumento_alcance_ft_por_nivel_bruxo":30}},
+    {"id":"fiendish-vigor","nome":"Fiendish Vigor","nivel_bruxo":2,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"False Life","sem_espaco":true,"alvo":"si mesmo","uso":"à vontade","maximiza_pv_temporarios":true}]}},
+    {"id":"gaze-of-two-minds","nome":"Gaze of Two Minds","nivel_bruxo":5,"requer_bruxo":true,"repeatable":false,"efeitos":{"flags":["gazeOfTwoMinds"]}},
+    {"id":"gift-of-the-depths","nome":"Gift of the Depths","nivel_bruxo":5,"requer_bruxo":true,"repeatable":false,"efeitos":{"respira_debaixo_agua":true,"deslocamento_nado_igual_deslocamento":true,"magias":[{"nome":"Water Breathing","sem_espaco":true,"uso":"1/Descanso Longo"}]}},
+    {"id":"gift-of-the-protectors","nome":"Gift of the Protectors","nivel_bruxo":9,"requer_bruxo":true,"requer_invocacoes":["pact-of-the-tome"],"repeatable":false,"efeitos":{"flags":["giftOfTheProtectors"]}},
+    {"id":"investment-of-the-chain-master","nome":"Investment of the Chain Master","nivel_bruxo":5,"requer_bruxo":true,"requer_invocacoes":["pact-of-the-chain"],"repeatable":false,"efeitos":{"flags":["investmentChainMaster"]}},
+    {"id":"lessons-of-the-first-ones","nome":"Lessons of the First Ones","nivel_bruxo":2,"requer_bruxo":true,"repeatable":true,"escolha":{"tipo":"talento_origem","unica_por_repeticao":true},"efeitos":{"concede_talento_origem":true}},
+    {"id":"lifedrinker","nome":"Lifedrinker","nivel_bruxo":9,"requer_bruxo":true,"requer_invocacoes":["pact-of-the-blade"],"repeatable":false,"efeitos":{"flags":["lifedrinker"],"dano_extra":"1d6 Necrótico, Psíquico ou Radiante uma vez por turno","cura_com_dado_vida":true}},
+    {"id":"mask-of-many-faces","nome":"Mask of Many Faces","nivel_bruxo":2,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Disguise Self","sem_espaco":true,"uso":"à vontade"}]}},
+    {"id":"master-of-myriad-forms","nome":"Master of Myriad Forms","nivel_bruxo":5,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Alter Self","sem_espaco":true,"uso":"à vontade"}]}},
+    {"id":"misty-visions","nome":"Misty Visions","nivel_bruxo":2,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Silent Image","sem_espaco":true,"uso":"à vontade"}]}},
+    {"id":"one-with-shadows","nome":"One with Shadows","nivel_bruxo":5,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Invisibility","sem_espaco":true,"alvo":"si mesmo","condicao":"luz baixa ou escuridão"}]}},
+    {"id":"otherworldly-leap","nome":"Otherworldly Leap","nivel_bruxo":2,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Jump","sem_espaco":true,"alvo":"si mesmo","uso":"à vontade"}]}},
+    {"id":"pact-of-the-blade","nome":"Pact of the Blade","nivel_bruxo":0,"requer_bruxo":false,"repeatable":false,"escolha":{"tipo":"arma_pacto"},"efeitos":{"flags":["pactOfTheBlade"],"proficiencia_arma_pacto":true,"arma_como_foco":true,"pode_usar_carisma_ataque_dano":true,"tipos_dano_opcionais":["Necrótico","Psíquico","Radiante"]}},
+    {"id":"pact-of-the-chain","nome":"Pact of the Chain","nivel_bruxo":0,"requer_bruxo":false,"repeatable":false,"efeitos":{"magias":[{"nome":"Find Familiar","sem_espaco":true,"tempo":"Ação Mágica"}],"flags":["pactOfTheChain"],"familiares_especiais":["Imp","Pseudodragon","Quasit","Skeleton","Slaad Tadpole","Sphinx of Wonder","Sprite","Venomous Snake"]}},
+    {"id":"pact-of-the-tome","nome":"Pact of the Tome","nivel_bruxo":0,"requer_bruxo":false,"repeatable":false,"escolha":{"tipo":"pact_tome_spells","cantrips":3,"rituais_nivel_1":2,"qualquer_lista":true,"nao_preparadas":true},"efeitos":{"flags":["pactOfTheTome"],"livro_como_foco":true}},
+    {"id":"repelling-blast","nome":"Repelling Blast","nivel_bruxo":2,"requer_bruxo":true,"requer_cantrip_bruxo":"ataque_dano","repeatable":true,"escolha":{"tipo":"cantrip_bruxo_ataque","unica_por_repeticao":true},"efeitos":{"flags":["repellingBlast"],"empurra_ft":10,"alvo_maximo":"Large"}},
+    {"id":"thirsting-blade","nome":"Thirsting Blade","nivel_bruxo":5,"requer_bruxo":true,"requer_invocacoes":["pact-of-the-blade"],"repeatable":false,"efeitos":{"ataques_arma_pacto_por_acao":2,"flags":["thirstingBlade"]}},
+    {"id":"visions-of-distant-realms","nome":"Visions of Distant Realms","nivel_bruxo":9,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Arcane Eye","sem_espaco":true,"uso":"à vontade"}]}},
+    {"id":"whispers-of-the-grave","nome":"Whispers of the Grave","nivel_bruxo":7,"requer_bruxo":true,"repeatable":false,"efeitos":{"magias":[{"nome":"Speak with Dead","sem_espaco":true,"uso":"à vontade"}]}},
+    {"id":"witch-sight","nome":"Witch Sight","nivel_bruxo":15,"requer_bruxo":true,"repeatable":false,"efeitos":{"sentidos":{"Truesight":30},"flags":["witchSight30"]}}
+  ]
+}
