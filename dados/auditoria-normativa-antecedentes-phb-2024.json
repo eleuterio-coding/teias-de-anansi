@@ -1,0 +1,40 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-antecedentes-phb-2024/v1",
+  "politica": "fail-closed",
+  "autoridade": "oficial_atual",
+  "fonte": "Player's Handbook (2024)",
+  "ruleset": "5.5e",
+  "quantidade": 16,
+  "distribuicao_fontes_runtime": {
+    "dados/antecedentes-srd-5.2.1.json": 4,
+    "dados/antecedentes-pdf-phb-2024.json": 11,
+    "dados/antecedentes-abertos-adicionais.json#Wayfarer": 1
+  },
+  "contrato_2024": {
+    "atributos_elegiveis": 3,
+    "pericias": 2,
+    "talento_origem": 1,
+    "proficiência_ferramenta": 1,
+    "equipamento_alternativa_b_po": 50,
+    "aumento_atributo": "+2/+1 em atributos distintos ou +1/+1/+1",
+    "limite_atributo": 20
+  },
+  "antecedentes": [
+    {"nome_original":"Acolyte","nome_runtime":"Acólito","arquivo":"srd","atributos":["Inteligência","Sabedoria","Carisma"],"talento":"Magic Initiate","talento_escolha":"Clérigo","pericias":["Intuição","Religião"],"ferramenta":"Suprimentos de Calígrafo"},
+    {"nome_original":"Artisan","nome_runtime":"Artesão","arquivo":"phb","atributos":["Força","Destreza","Inteligência"],"talento":"Crafter","pericias":["Investigação","Persuasão"],"ferramenta_escolha":"Ferramentas de Artesão"},
+    {"nome_original":"Charlatan","nome_runtime":"Charlatão","arquivo":"phb","atributos":["Destreza","Constituição","Carisma"],"talento":"Skilled","pericias":["Enganação","Prestidigitação"],"ferramenta":"Kit de Falsificação"},
+    {"nome_original":"Criminal","nome_runtime":"Criminoso","arquivo":"srd","atributos":["Destreza","Constituição","Inteligência"],"talento":"Alert","pericias":["Prestidigitação","Furtividade"],"ferramenta":"Ferramentas de Ladrão"},
+    {"nome_original":"Entertainer","nome_runtime":"Artista","arquivo":"phb","atributos":["Força","Destreza","Carisma"],"talento":"Musician","pericias":["Acrobacia","Atuação"],"ferramenta_escolha":"Instrumento Musical"},
+    {"nome_original":"Farmer","nome_runtime":"Fazendeiro","arquivo":"phb","atributos":["Força","Constituição","Sabedoria"],"talento":"Tough","pericias":["Adestrar Animais","Natureza"],"ferramenta":"Ferramentas de Carpinteiro"},
+    {"nome_original":"Guard","nome_runtime":"Guarda","arquivo":"phb","atributos":["Força","Inteligência","Sabedoria"],"talento":"Alert","pericias":["Atletismo","Percepção"],"ferramenta_escolha":"Conjunto de Jogo"},
+    {"nome_original":"Guide","nome_runtime":"Guia","arquivo":"phb","atributos":["Destreza","Constituição","Sabedoria"],"talento":"Magic Initiate","talento_escolha":"Druid","pericias":["Furtividade","Sobrevivência"],"ferramenta":"Ferramentas de Cartógrafo"},
+    {"nome_original":"Hermit","nome_runtime":"Eremita","arquivo":"phb","atributos":["Constituição","Sabedoria","Carisma"],"talento":"Healer","pericias":["Medicina","Religião"],"ferramenta":"Kit de Herbalismo"},
+    {"nome_original":"Merchant","nome_runtime":"Mercador","arquivo":"phb","atributos":["Constituição","Inteligência","Carisma"],"talento":"Lucky","pericias":["Adestrar Animais","Persuasão"],"ferramenta":"Ferramentas de Navegador"},
+    {"nome_original":"Noble","nome_runtime":"Nobre","arquivo":"phb","atributos":["Força","Inteligência","Carisma"],"talento":"Skilled","pericias":["História","Persuasão"],"ferramenta_escolha":"Conjunto de Jogo"},
+    {"nome_original":"Sage","nome_runtime":"Sábio","arquivo":"srd","atributos":["Constituição","Inteligência","Sabedoria"],"talento":"Magic Initiate","talento_escolha":"Mago","pericias":["Arcanismo","História"],"ferramenta":"Suprimentos de Calígrafo"},
+    {"nome_original":"Sailor","nome_runtime":"Marinheiro","arquivo":"phb","atributos":["Força","Destreza","Sabedoria"],"talento":"Tavern Brawler","pericias":["Acrobacia","Percepção"],"ferramenta":"Ferramentas de Navegador"},
+    {"nome_original":"Scribe","nome_runtime":"Escriba","arquivo":"phb","atributos":["Destreza","Inteligência","Sabedoria"],"talento":"Skilled","pericias":["Investigação","Percepção"],"ferramenta":"Suprimentos de Calígrafo"},
+    {"nome_original":"Soldier","nome_runtime":"Soldado","arquivo":"srd","atributos":["Força","Destreza","Constituição"],"talento":"Savage Attacker","pericias":["Atletismo","Intimidação"],"ferramenta_escolha":"Conjunto de Jogo"},
+    {"nome_original":"Wayfarer","nome_runtime":"Wayfarer","arquivo":"abertos","atributos":["Destreza","Sabedoria","Carisma"],"talento":"Lucky","pericias":["Intuição","Furtividade"],"ferramenta":"Ferramentas de Ladrão"}
+  ]
+}
