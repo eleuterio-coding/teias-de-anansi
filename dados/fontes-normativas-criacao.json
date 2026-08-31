@@ -15,6 +15,7 @@
     {"padrao":"dados/classes-base-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024 / SRD 5.2.1","proveniencia":"arquivo"},
     {"padrao":"dados/classes-ptbr/*.json","autoridade":"derivado_localizacao","fonte":"Classes 2024 localizadas","proveniencia":"arquivo"},
     {"padrao":"dados/artificer-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/invocacoes-bruxo-2024.json","autoridade":"oficial_atual","fonte":"D&D Basic Rules 2024 — Warlock","proveniencia":"arquivo"},
 
     {"padrao":"dados/subclasses-pdfs.json","autoridade":"consolidado_misto","fonte":"Catálogo consolidado de subclasses","proveniencia":"item"},
     {"padrao":"dados/subclasses-mecanicas-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
