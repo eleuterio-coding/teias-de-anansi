@@ -1,0 +1,39 @@
+name: Aplicar primeiro lote semântico Xanathar 2017
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - 'scripts/migrations/corrigir-semantica-xanathar-2017-lote1.mjs'
+      - 'tests/auditar-semantica-subclasses-xanathar-2017.mjs'
+      - '.github/workflows/aplicar-correcao-semantica-xanathar-2017-lote1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Aplicar correções estruturadas
+        run: node scripts/migrations/corrigir-semantica-xanathar-2017-lote1.mjs
+      - name: Validar semântica corrigida
+        run: node tests/auditar-semantica-subclasses-xanathar-2017.mjs
+      - name: Publicar dados corrigidos
+        run: |
+          if git diff --quiet -- dados/subclasses-mecanicas-xanathar-2017.json; then
+            echo 'Nenhuma alteração necessária.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dados/subclasses-mecanicas-xanathar-2017.json
+          git commit -m 'Corrige primeiro lote semântico de Xanathar 2017'
+          git push origin HEAD:audit/normativa-total-criacao
