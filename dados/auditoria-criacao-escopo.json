@@ -1,0 +1,38 @@
+{
+  "schema": "hub-rpg/auditoria-criacao/v1",
+  "politica": "fail-closed",
+  "objetivo": "Nenhum conteúdo que possa alterar a criação ou a ficha de personagem pode permanecer sem classificação, integração e teste.",
+  "etapas_obrigatorias": [
+    "inventario",
+    "integridade_sintatica",
+    "integridade_dados",
+    "rastreabilidade_runtime",
+    "aplicacao_mecanica",
+    "interacoes_cruzadas",
+    "cenarios_personagem",
+    "regressao",
+    "politicas_globais",
+    "evidencia_e_bloqueio"
+  ],
+  "dominios": [
+    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json"],"runtime":"loadClasses"},
+    {"id":"subclasses","fontes":["dados/subclasses-mecanicas-*.json"],"runtime":"subclass-mechanics-data.js"},
+    {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
+    {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
+    {"id":"talentos","fontes":["dados/talentos-*.json"],"runtime":"feat-mechanics.js"},
+    {"id":"atributos","fontes":["dados/regras-casa-adicionais.json"],"runtime":"ability-score-rules.js"},
+    {"id":"pericias","fontes":["dados/classes-ptbr/*.json","dados/antecedentes-*.json"],"runtime":"skill-check-mechanics.js"},
+    {"id":"idiomas","fontes":["dados/idiomas-*.json"],"runtime":"language-mechanics.js"},
+    {"id":"equipamentos","fontes":["dados/armas-*.json","dados/armaduras-*.json","dados/equipamentos-*.json","dados/ferramentas-*.json"],"runtime":"starting-equipment-rules.js"},
+    {"id":"magias","fontes":["dados/magias-*.json"],"runtime":"spell-progression-rules.js"},
+    {"id":"compatibilidade","fontes":["dados/politica-compatibilidade-5e-5.5e.json"],"runtime":"compatibility.js"},
+    {"id":"regras_casa","fontes":["dados/regras-casa-adicionais.json","dados/regras-hub.json"],"runtime":"rules.js"}
+  ],
+  "criterio_fechamento": {
+    "orfao_mecanico": 0,
+    "fonte_sem_classificacao": 0,
+    "teste_falhando": 0,
+    "erro_sintatico": 0,
+    "divergencia_normativa_conhecida": 0
+  }
+}
