@@ -112,6 +112,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          REV='20260831-class-tools1'
           builder=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           package=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
           wealth=Path('scripts/character-builder/wealth-purchase-ui.js').read_text(encoding='utf-8')
@@ -123,10 +124,11 @@ jobs:
           skilled=Path('scripts/character-builder/skilled-feat-ui.js').read_text(encoding='utf-8')
           sheet=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
           race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
-          assert 'package-b-purchase-ui.js?v=20260831-magic-rarity2' in builder
-          assert 'wealth-purchase-ui.js?v=20260831-magic-rarity2' in package
-          assert 'wealth-background1' in package
-          assert 'skilled-existing1' in package
+          assert f'package-b-purchase-ui.js?v={REV}' in builder
+          assert f'wealth-purchase-ui.js?v={REV}' in package
+          assert f'starting-equipment-ui.js?v={REV}' in package
+          assert f'origin-feat-sync.js?v={REV}' in package
+          assert f'skilled-feat-ui.js?v={REV}' in package
           assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package and 'initSkilledFeatUi' in package
           assert 'STANDARD_BACKGROUND_PACKAGE_B_GP=50' in rules
           assert 'WEALTH_TIERS' in rules and 'backgroundWealthProfile' in rules and 'classPackageOptions' in rules
@@ -147,5 +149,5 @@ jobs:
           assert "removeAttribute('data-feat-mixed')" in skilled
           joined='\n'.join([builder,package,wealth,equipment,rules,ownership,origin,feats,skilled,sheet,race])
           assert 'supabase' not in joined.lower()
-          print('Compras, pacotes de Classe/Antecedente, Riqueza por Level e Skilled validados com revisão de cache vigente.')
+          print('Compras, pacotes de Classe/Antecedente, Riqueza por Level e Skilled validados com revisão canônica.')
           PY
