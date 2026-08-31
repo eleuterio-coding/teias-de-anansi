@@ -43,6 +43,12 @@
       "tipo": "compatibilidade_cache",
       "motivo": "Shim sem listeners mantido apenas para páginas antigas em cache; a interface vigente é equipment-ownership-ui.js.",
       "requisito": "O inicializador deve permanecer no-op e o módulo não pode controlar o DOM ativo."
+    },
+    {
+      "arquivo": "scripts/character-builder/manual-feat-ui.js",
+      "tipo": "diagnostico_legado",
+      "motivo": "Fallback de segurança preservado para conteúdo legado e auditorias históricas; o runtime vigente deve aplicar talentos por feat-mechanics.js.",
+      "requisito": "Não pode substituir a aplicação mecânica vigente; qualquer talento atual sem regra mecânica deve ser detectado pelas auditorias de talentos."
     }
   ],
   "criterio_fechamento": {
