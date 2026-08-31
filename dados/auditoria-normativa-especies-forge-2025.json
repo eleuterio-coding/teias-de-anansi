@@ -1,0 +1,28 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-especies/v1",
+  "etapa":"11B",
+  "dominio":"especies",
+  "fonte_id":"eberron-forge-2025",
+  "fonte":"Eberron: Forge of the Artificer (2025)",
+  "autoridade":"oficial_atual",
+  "quantidade":5,
+  "identidades":["Changeling","Kalashtar","Khoravar","Shifter","Warforged"],
+  "invariantes_publicos":[
+    "Changeling possui Changeling Instincts e Shape-Shifter.",
+    "Kalashtar é Aberration e possui Dual Mind, Mental Discipline, Mind Link e Severed from Dreams.",
+    "Mind Link escala em alcance com o nível do personagem; a limitação de escala registrada pelo D&D Beyond é de implementação da plataforma, não da regra.",
+    "Khoravar possui Darkvision, Fey Ancestry, Fey Gift, Lethargy Resilience e Skill Versatility.",
+    "Fey Gift concede Friends e permite substituí-lo após Long Rest por cantrip de Cleric, Druid ou Wizard; limitações do D&D Beyond não alteram a regra do Hub.",
+    "Lethargy Resilience permanece regra da espécie mesmo sendo marcada como não suportada pela implementação do D&D Beyond.",
+    "Shifter possui Bestial Instincts, Darkvision e Shifting.",
+    "Warforged é Construct e possui Construct Resilience, Integrated Protection, Sentry's Rest, Specialized Design e Tireless.",
+    "Nenhuma das cinco espécies aplica aumento de atributo racial no runtime 2024."
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — Character Species / Eberron: Forge of the Artificer",
+    "D&D Beyond — Eberron: Forge of the Artificer Issues and Support Thread",
+    "D&D Beyond — Eberron Species Starter Pack"
+  ],
+  "status":"estrutural_com_invariantes_publicos",
+  "observacao":"A auditoria separa regra publicada de limitações da implementação do D&D Beyond. Essas limitações não devem ser reproduzidas pelo runtime do Hub."
+}
