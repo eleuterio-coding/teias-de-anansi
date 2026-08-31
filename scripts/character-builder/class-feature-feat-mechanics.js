@@ -26,13 +26,13 @@ export function featEligibleForClassGrant(feat,grant,{klass=null,level=1,scores=
  if(grant.kind==='fightingStyle')return feat.category==='Estilo de Luta'&&hasClassFeature(klass,current,'fightingStyle');
  if(grant.kind!=='epicBoon'||!hasClassFeature(klass,current,'epicBoon'))return false;
  if(levelRequirement(feat)>current)return false;
- const prereq=fold(feat.prereq||'');
+ const prereq=fold(feat.prereq||''),resolvedClassProficiencies=arr(classProficiencies).length?arr(classProficiencies):[...arr(klass?.proficiencies),...arr(klass?.proficienciesRaw)],training={classProficiencies:resolvedClassProficiencies,featArmorTraining,featShieldTraining};
  if(/fighting style|estilo de luta/.test(prereq)&&!hasClassFeature(klass,current,'fightingStyle'))return false;
  if((/conjuracao|spellcasting|magia de pacto|pact magic/.test(prereq))&&!klass?.spellAbility)return false;
- if(/treinamento com armadura leve|light armor training/.test(prereq)&&!trainedFromContext({classProficiencies,featArmorTraining,featShieldTraining},'armadura leve'))return false;
- if(/treinamento com armadura media|medium armor training/.test(prereq)&&!trainedFromContext({classProficiencies,featArmorTraining,featShieldTraining},'armadura media'))return false;
- if(/treinamento com armadura pesada|heavy armor training/.test(prereq)&&!trainedFromContext({classProficiencies,featArmorTraining,featShieldTraining},'armadura pesada'))return false;
- if(/treinamento com escudo|shield training/.test(prereq)&&!trainedFromContext({classProficiencies,featArmorTraining,featShieldTraining},'escudo'))return false;
+ if(/treinamento com armadura leve|light armor training/.test(prereq)&&!trainedFromContext(training,'armadura leve'))return false;
+ if(/treinamento com armadura media|medium armor training/.test(prereq)&&!trainedFromContext(training,'armadura media'))return false;
+ if(/treinamento com armadura pesada|heavy armor training/.test(prereq)&&!trainedFromContext(training,'armadura pesada'))return false;
+ if(/treinamento com escudo|shield training/.test(prereq)&&!trainedFromContext(training,'escudo'))return false;
  const abilities=abilityRequirements(feat);if(abilities.length&&scores&&!abilities.some(a=>num(scores?.[a])>=13))return false;
  return true
 }
