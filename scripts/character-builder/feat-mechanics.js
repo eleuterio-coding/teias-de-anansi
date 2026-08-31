@@ -2,6 +2,7 @@ import{state,AB,SKILL_AB,arr,num,uniq,fold,pb}from'./state.js';
 import{classFeatureFeatInstances,sanitizeClassFeatureFeatSelections}from'./class-feature-feat-mechanics.js';
 import{backgroundSpecialFeatInstance,sanitizeBackgroundSpecialFeatChoice}from'./background-special-feat-mechanics.js?v=20260831-background-special-feat1';
 import{XANATHAR_2017_FEAT_RULES}from'./feat-rules-xanathar-2017.js?v=20260831-xanathar-feats1';
+import{TASHA_2020_FEAT_RULES}from'./feat-rules-tasha-2020.js?v=20260831-tasha-metamagic1';
 
 export const ALL_SKILLS=Object.keys(SKILL_AB);
 export const MENTAL_ABILITIES=['Inteligência','Sabedoria','Carisma'];
@@ -48,7 +49,8 @@ export const FEAT_RULES={
  'Boon of Spell Recall':epic(MENTAL_ABILITIES,{combatFlags:['freeCasting1to4']}),
  'Boon of the Night Spirit':epic(AB,{combatFlags:['mergeWithShadows','shadowyForm']}),
  'Boon of Truesight':epic(AB,{combatFlags:['truesight60']}),
- ...XANATHAR_2017_FEAT_RULES
+ ...XANATHAR_2017_FEAT_RULES,
+ ...TASHA_2020_FEAT_RULES
 };
 
 const featByName=name=>state.catalogs.feats.find(f=>fold(f.name)===fold(name))||null;

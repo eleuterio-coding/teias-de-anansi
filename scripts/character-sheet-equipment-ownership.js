@@ -1,6 +1,6 @@
 import{state,$,esc,signed}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
-import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260826-equipment-ownership1';
+import{derive}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
+import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260831-tasha-metamagic1';
 
 let rendering=false;
 const sourceBadge=v=>v?`<span class="source">${esc(v)}</span>`:'';

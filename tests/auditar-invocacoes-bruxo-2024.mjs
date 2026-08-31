@@ -27,8 +27,8 @@ state.c={refs:{class:'warlock'},choices:{class:{level:1},spells:{cantrips:['eldr
 assert.equal(invocationLimit(1),1);state.c.choices.class.level=2;assert.equal(invocationLimit(),3);state.c.choices.class.level=18;assert.equal(invocationLimit(),10);
 
 state.c.choices.class.level=1;let eligible=invocationEligibleOptions();assert.ok(eligible.some(x=>x.id==='pact-of-the-blade'));assert.ok(!eligible.some(x=>x.id==='devouring-blade'));
-let check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true);
-state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Pactos atuais exigem níveis de Bruxo mesmo quando consultados por talento.');
+state.c.choices.class.level=2;let check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'class',selectedIds:[]});assert.equal(check.ok,true,'Agonizing Blast deve ser elegível no nível 2 quando há truque de dano de Bruxo compatível.');
+state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,true,'Pact of the Blade 2024 não possui pré-requisito e pode ser escolhido por Eldritch Adept sob a precedência atual.');check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Invocação que exige níveis de Bruxo deve permanecer bloqueada para não-Bruxos.');
 state.c.refs.class='warlock';
 
 state.c.choices.class.level=2;let clean=sanitizeInvocationSlots([
@@ -43,7 +43,7 @@ clean=sanitizeInvocationSlots([
 ],{consumer:'class',limit:2});assert.equal(clean.slots[1].choice,null,'Repetição de Lessons exige Talento de Origem diferente.');assert.equal(clean.pending.length,1);
 
 state.c.choices.class.level=12;clean=sanitizeInvocationSlots([{id:'devouring-blade',choice:null}],{consumer:'class',limit:1});assert.equal(clean.slots[0].id,'','Devouring Blade sem Thirsting Blade deve ser removida.');
-clean=sanitizeInvocationSlots([{id:'thirsting-blade',choice:null},{id:'devouring-blade',choice:null}],{consumer:'class',limit:2});assert.equal(clean.slots[1].id,'devouring-blade');
+clean=sanitizeInvocationSlots([{id:'pact-of-the-blade',choice:{weaponId:'longsword'}},{id:'thirsting-blade',choice:null},{id:'devouring-blade',choice:null}],{consumer:'class',limit:3});assert.equal(clean.slots[2].id,'devouring-blade','A cadeia Pact of the Blade → Thirsting Blade → Devouring Blade deve permanecer válida no nível 12.');
 
 state.c.choices.class.level=2;clean=sanitizeInvocationSlots([{id:'pact-of-the-tome',choice:{cantrips:['mage-hand','eldritch-blast','poison-spray'],rituals:['detect-magic','identify']}}],{consumer:'class',limit:1});assert.equal(clean.pending.length,0);assert.equal(clean.slots[0].choice.cantrips.length,3);assert.equal(clean.slots[0].choice.rituals.length,2);
 

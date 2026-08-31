@@ -1,5 +1,5 @@
 import{state,$,esc,arr,json}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{artificerSubclassChoiceDefs,setArtificerSubclassChoice,artificerBaseArtisanToolOptions,artificerBaseArtisanTool,setArtificerBaseArtisanTool,artificerToolLabel}from'./artificer-subclass-mechanics.js?v=20260827-artificer-tools1';
 
 let queued=false,toolLoadError='';

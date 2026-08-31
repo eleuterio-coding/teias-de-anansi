@@ -15,20 +15,116 @@
     "evidencia_e_bloqueio"
   ],
   "dominios": [
-    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json"],"runtime":"loadClasses"},
-    {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json","dados/precedencia-subclasses.json"],"runtime":"subclass-mechanics-data.js"},
-    {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
-    {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
-    {"id":"talentos","fontes":["dados/talentos-*.json"],"runtime":"feat-mechanics.js"},
-    {"id":"atributos","fontes":["dados/regras-casa-adicionais.json"],"runtime":"ability-score-rules.js"},
-    {"id":"pericias","fontes":["dados/classes-ptbr/*.json","dados/antecedentes-*.json"],"runtime":"skill-check-mechanics.js"},
-    {"id":"idiomas","fontes":["dados/idiomas-*.json"],"runtime":"language-mechanics.js"},
-    {"id":"equipamentos","fontes":["dados/armas-*.json","dados/armaduras-*.json","dados/equipamentos-*.json","dados/ferramentas-*.json","dados/maestrias-de-arma-pdfs.json"],"runtime":"starting-equipment-rules.js"},
-    {"id":"itens_magicos","fontes":["dados/itens-magicos/*.json"],"runtime":"wealth-purchase-ui.js"},
-    {"id":"magias","fontes":["dados/magias-*.json"],"runtime":"spell-progression-rules.js"},
-    {"id":"compatibilidade","fontes":["dados/politica-compatibilidade-5e-5.5e.json"],"runtime":"compatibility.js"},
-    {"id":"regras","fontes":["dados/regras-*.json"],"runtime":"rules.js"},
-    {"id":"localizacao","fontes":["dados/localizacao-*.json"],"runtime":"catalogs.js"}
+    {
+      "id": "classes",
+      "fontes": [
+        "dados/classes-base-2024.json",
+        "dados/classes-ptbr/*.json",
+        "dados/artificer-2025.json",
+        "dados/invocacoes-bruxo-2024.json",
+        "dados/metamagias-feiticeiro-2024.json"
+      ],
+      "runtime": "loadClasses"
+    },
+    {
+      "id": "subclasses",
+      "fontes": [
+        "dados/subclasses-pdfs.json",
+        "dados/subclasses-mecanicas-*.json",
+        "dados/precedencia-subclasses.json"
+      ],
+      "runtime": "subclass-mechanics-data.js"
+    },
+    {
+      "id": "especies",
+      "fontes": [
+        "dados/especies-*.json",
+        "dados/tiefling-variantes.json"
+      ],
+      "runtime": "loadSpecies"
+    },
+    {
+      "id": "antecedentes",
+      "fontes": [
+        "dados/antecedentes-*.json"
+      ],
+      "runtime": "loadBackgrounds"
+    },
+    {
+      "id": "talentos",
+      "fontes": [
+        "dados/talentos-*.json"
+      ],
+      "runtime": "feat-mechanics.js"
+    },
+    {
+      "id": "atributos",
+      "fontes": [
+        "dados/regras-casa-adicionais.json"
+      ],
+      "runtime": "ability-score-rules.js"
+    },
+    {
+      "id": "pericias",
+      "fontes": [
+        "dados/classes-ptbr/*.json",
+        "dados/antecedentes-*.json"
+      ],
+      "runtime": "skill-check-mechanics.js"
+    },
+    {
+      "id": "idiomas",
+      "fontes": [
+        "dados/idiomas-*.json"
+      ],
+      "runtime": "language-mechanics.js"
+    },
+    {
+      "id": "equipamentos",
+      "fontes": [
+        "dados/armas-*.json",
+        "dados/armaduras-*.json",
+        "dados/equipamentos-*.json",
+        "dados/ferramentas-*.json",
+        "dados/maestrias-de-arma-pdfs.json"
+      ],
+      "runtime": "starting-equipment-rules.js"
+    },
+    {
+      "id": "itens_magicos",
+      "fontes": [
+        "dados/itens-magicos/*.json"
+      ],
+      "runtime": "wealth-purchase-ui.js"
+    },
+    {
+      "id": "magias",
+      "fontes": [
+        "dados/magias-*.json"
+      ],
+      "runtime": "spell-progression-rules.js"
+    },
+    {
+      "id": "compatibilidade",
+      "fontes": [
+        "dados/politica-compatibilidade-5e-5.5e.json"
+      ],
+      "runtime": "compatibility.js"
+    },
+    {
+      "id": "regras",
+      "fontes": [
+        "dados/regras-*.json"
+      ],
+      "runtime": "rules.js"
+    },
+    {
+      "id": "localizacao",
+      "fontes": [
+        "dados/localizacao-*.json"
+      ],
+      "runtime": "catalogs.js"
+    }
   ],
   "testes_criticos": [
     "tests/auditar-escopo-criacao.mjs",
@@ -65,7 +161,9 @@
     "tests/auditar-ficha-pericias.mjs",
     "tests/auditar-riqueza-criacao.mjs",
     "tests/auditar-itens-magicos-criacao.mjs",
-    "tests/auditar-criacao-sem-travamento.mjs"
+    "tests/auditar-criacao-sem-travamento.mjs",
+    "tests/auditar-metamagias-feiticeiro-2024.mjs",
+    "tests/auditar-talentos-tasha-2020.mjs"
   ],
   "excecoes_runtime": [
     {

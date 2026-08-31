@@ -1,5 +1,5 @@
 import{state,AB,ABKEY,SKILL_AB,arr,num,uniq,fold,mod,pb}from'./state.js';
-import{activeFeatInstances,featMechanicalOutcome,sanitizeFeatChoices}from'./feat-mechanics.js';
+import{activeFeatInstances,featMechanicalOutcome,sanitizeFeatChoices}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 
 export const item=(k,id)=>state.catalogs[k].find(x=>x.id===id)||null;
 export const compatible=k=>state.catalogs[k].filter(x=>!x.ruleset||x.ruleset==='5.5e');

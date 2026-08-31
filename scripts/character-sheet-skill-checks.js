@@ -1,5 +1,5 @@
 import{state,$,SKILL_AB,esc,signed}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 
 function renderSkillChecks(){
  if(!state.c)return;

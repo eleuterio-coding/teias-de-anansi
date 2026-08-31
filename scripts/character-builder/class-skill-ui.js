@@ -1,23 +1,25 @@
 import{state,$,arr,SKILL_AB,esc,signed}from'./state.js';
-import{selected,derive}from'./rules.js?v=20260831-warlock-invocations2';
-import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
+import{selected,derive}from'./rules.js?v=20260831-tasha-metamagic1';
+import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260831-tasha-metamagic1';
 import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-subclass-mechanics2';
-import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260827-barbarian-subclasses1';
-import{initArtificerSubclassUi}from'./artificer-subclass-ui.js?v=20260827-artificer-subclasses1';
-import{initBardSubclassUi}from'./bard-subclass-ui.js?v=20260827-bard-subclasses1';
-import{initDruidSubclassUi}from'./druid-subclass-ui.js?v=20260827-druid-subclasses1';
-import{initFighterSubclassUi}from'./fighter-subclass-ui.js?v=20260827-fighter-subclasses1';
-import{initMonkSubclassUi}from'./monk-subclass-ui.js?v=20260827-monk-subclasses1';
-import{initPaladinSubclassUi}from'./paladin-subclass-ui.js?v=20260827-paladin-subclasses1';
-import{initRangerSubclassUi}from'./ranger-subclass-ui.js?v=20260827-ranger-subclasses1';
-import{initRogueSubclassUi}from'./rogue-subclass-ui.js?v=20260827-rogue-subclasses1';
-import{initSorcererSubclassUi}from'./sorcerer-subclass-ui.js?v=20260828-sorcerer-subclasses1';
-import{initWarlockSubclassUi}from'./warlock-subclass-ui.js?v=20260828-warlock-subclasses1';
-import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260831-class-tools1';
+import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initArtificerSubclassUi}from'./artificer-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initBardSubclassUi}from'./bard-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initDruidSubclassUi}from'./druid-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initFighterSubclassUi}from'./fighter-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initMonkSubclassUi}from'./monk-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initPaladinSubclassUi}from'./paladin-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initRangerSubclassUi}from'./ranger-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initRogueSubclassUi}from'./rogue-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initSorcererSubclassUi}from'./sorcerer-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initWarlockSubclassUi}from'./warlock-subclass-ui.js?v=20260831-tasha-metamagic1';
+import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260831-tasha-metamagic1';
 import{initClassToolUi}from'./class-tool-ui.js?v=20260831-class-tools1';
-import{initClassFeatureFeatUi}from'./class-feature-feat-ui.js?v=20260831-class-feature-feats1';
-import{initFeatMultiOptionUi}from'./feat-multi-option-ui.js?v=20260831-class-feature-feats1';
-import{initInvocationUi}from'./invocation-ui.js?v=20260831-warlock-invocations2';
+import{initClassFeatureFeatUi}from'./class-feature-feat-ui.js?v=20260831-tasha-metamagic1';
+import{initFeatMultiOptionUi}from'./feat-multi-option-ui.js?v=20260831-tasha-metamagic1';
+import{initInvocationUi}from'./invocation-ui.js?v=20260831-tasha-metamagic1';
+import{initMetamagicUi}from'./metamagic-ui.js?v=20260831-tasha-metamagic1';
+import{initTashaFeatUi}from'./tasha-feat-ui.js?v=20260831-tasha-metamagic1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 function normalizeSkillChoices(klass){
@@ -87,7 +89,7 @@ export function initClassSkillUi(){
  $('classe')?.addEventListener('change',()=>queueMicrotask(decorate));$('nivel')?.addEventListener('change',()=>queueMicrotask(decorate));$('new-character')?.addEventListener('click',()=>queueMicrotask(decorate));
  document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
  for(const event of['hub:class-skills-changed','hub:abilities-context-changed','hub:progression-context-changed','hub:species-context-changed','hub:origin-context-changed','hub:class-context-changed'])document.addEventListener(event,()=>queueMicrotask(renderSkillChecks));
- initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();
+ initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();initMetamagicUi();initTashaFeatUi();
  initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi();initFighterSubclassUi();initMonkSubclassUi();initPaladinSubclassUi();initRangerSubclassUi();initRogueSubclassUi();initSorcererSubclassUi();initWarlockSubclassUi();initWizardSubclassUi()});
  initExpertiseCompanionUi();queueMicrotask(renderSkillChecks)
 }

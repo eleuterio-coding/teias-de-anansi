@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,signed}from'./state.js';
-import{selected,derive,spellSelectionQuota}from'./rules.js';
+import{selected,derive,spellSelectionQuota}from'./rules.js?v=20260831-tasha-metamagic1';
 import{spellProgressionCandidates,spellProgressionState,spellProgressionPending,resetSpellProgression}from'./spell-progression-rules.js?v=20260825-spell-progression1';
 import{buildSpellVisualMap}from'./spell-selection-visual.js?v=20260825-spell-swap-sync1';
 

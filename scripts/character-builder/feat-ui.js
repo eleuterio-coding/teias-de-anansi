@@ -1,6 +1,6 @@
 import{state,$,AB,SKILL_AB,arr,num,esc,fold,mod,signed,pb}from'./state.js';
-import{derive,speciesTraitChoiceDefs}from'./rules.js';
-import{ALL_SKILLS,activeFeatInstances,featRule,featChoiceDefs,sanitizeFeatChoices,featEligibleSpells,featMissingChoices}from'./feat-mechanics.js';
+import{derive,speciesTraitChoiceDefs}from'./rules.js?v=20260831-tasha-metamagic1';
+import{ALL_SKILLS,activeFeatInstances,featRule,featChoiceDefs,sanitizeFeatChoices,featEligibleSpells,featMissingChoices}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 
 let applying=false,scheduled=false;
 const store=()=>state.c.choices.featMechanics||(state.c.choices.featMechanics={});

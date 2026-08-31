@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{barbarianSubclassChoiceDefs,setBarbarianSubclassChoice}from'./barbarian-subclass-mechanics.js?v=20260827-barbarian-subclasses2';
 
 let queued=false;

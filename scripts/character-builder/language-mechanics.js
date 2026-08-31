@@ -1,5 +1,5 @@
 import{state,arr,num,fold,uniq}from'./state.js';
-import{selected,item}from'./rules.js';
+import{selected,item}from'./rules.js?v=20260831-tasha-metamagic1';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Halfling','Orc'];
 export const RARE_LANGUAGES=['Abissal','Celestial','Fala Profunda','Druídico','Infernal','Primordial','Silvestre','Cant dos Ladrões','Subcomum'];

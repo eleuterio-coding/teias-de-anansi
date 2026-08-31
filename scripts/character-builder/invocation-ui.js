@@ -1,6 +1,6 @@
 import{state,$,arr,esc}from'./state.js';
 import{loadInvocations}from'./invocation-catalog.js?v=20260831-warlock-invocations2';
-import{sanitizeWarlockInvocations,invocationChoicePool,invocationEligibleOptions,invocationPrerequisiteResult}from'./invocation-mechanics.js?v=20260831-warlock-invocations2';
+import{sanitizeWarlockInvocations,invocationChoicePool,invocationEligibleOptions,invocationPrerequisiteResult}from'./invocation-mechanics.js?v=20260831-tasha-metamagic1';
 
 let initialized=false,loading=null,rendering=false;
 function klass(){return(state.catalogs.classes||[]).find(x=>x.id===state.c?.refs?.class)||null}

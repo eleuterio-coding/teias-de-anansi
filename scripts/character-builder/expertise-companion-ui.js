@@ -1,6 +1,6 @@
 import{state,$,arr,num,esc,fold,SKILL_AB,mod,signed}from'./state.js';
-import{selected,derive}from'./rules.js';
-import{activeFeatInstances}from'./feat-mechanics.js';
+import{selected,derive}from'./rules.js?v=20260831-tasha-metamagic1';
+import{activeFeatInstances}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 
 const FAMILIAR_FORMS=['Morcego','Gato','Sapo','Falcão','Lagarto','Polvo','Coruja','Rato','Corvo','Aranha','Doninha','Outra Besta de ND 0'];
 const CREATURE_TYPES=['Celestial','Fada','Ínfero'];

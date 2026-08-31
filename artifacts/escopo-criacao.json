@@ -1,0 +1,20 @@
+{
+  "schema": "hub-rpg/auditoria-criacao/v2",
+  "policy": "fail-closed",
+  "stages": 10,
+  "domains": 14,
+  "declaredDataFiles": 86,
+  "runtimeDataReferences": 41,
+  "runtimeModules": 98,
+  "closure": {
+    "modulo_sem_classificacao": 0,
+    "orfao_mecanico": 0,
+    "fonte_sem_classificacao": 0,
+    "dependencia_de_dados_ausente": 0,
+    "teste_falhando": 0,
+    "erro_sintatico": 0,
+    "json_invalido": 0,
+    "divergencia_normativa_conhecida": 0,
+    "uso_supabase": 0
+  }
+}

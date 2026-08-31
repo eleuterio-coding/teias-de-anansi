@@ -1,7 +1,7 @@
 import{state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{loadSpells}from'./character-builder/spells.js';
-import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js';
+import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 
 const CONDITIONS=['Agarrado','Amedrontado','Atordoado','Caído','Cego','Enfeitiçado','Envenenado','Impedido','Incapacitado','Inconsciente','Invisível','Paralisado','Petrificado','Surdo'];
 

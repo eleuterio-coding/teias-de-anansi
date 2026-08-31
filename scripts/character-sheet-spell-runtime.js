@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,read,write,uid}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 import{casterProfile,normalizedSlotPools,pactPool,eligibleSlotPools,firstAvailableSlotLevel,adjustSlotUse,remainingLabel,activeClassSpellIds,freeLongRestFeat}from'./character-sheet-spell-runtime-rules.js?v=20260825-spell-runtime1';
 
 let initialized=false,rendering=false,queued=false;

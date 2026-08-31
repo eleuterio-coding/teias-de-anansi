@@ -12,9 +12,9 @@ const equipmentUi=text('scripts/character-builder/equipment-ownership-ui.js');
 const legacyEquipment=text('scripts/character-builder/active-equipment-ui.js');
 const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 
-const REV='20260831-class-tools1';
-const SKILL_REV='20260831-class-tools1';
-const WEALTH_REV='20260831-class-tools1';
+const REV='20260831-tasha-metamagic1';
+const SKILL_REV='20260831-tasha-metamagic1';
+const WEALTH_REV='20260831-tasha-metamagic1';
 assert.ok(html.includes(`character-builder.js?v=${REV}`),'A página precisa invalidar o carregador antigo em cache.');
 assert.ok(loader.includes(`ui.js?v=${REV}`),'O núcleo da criação precisa usar a revisão anti-travamento.');
 assert.ok(loader.includes(`class-skill-ui.js?v=${SKILL_REV}`),'A etapa de perícias precisa invalidar a revisão anterior após mudança mecânica.');

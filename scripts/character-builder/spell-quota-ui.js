@@ -1,5 +1,5 @@
 import{state,$,arr,num}from'./state.js';
-import{selected,item,spellProgress,spellSelectionQuota,spellCreditState}from'./rules.js';
+import{selected,item,spellProgress,spellSelectionQuota,spellCreditState}from'./rules.js?v=20260831-tasha-metamagic1';
 
 let choiceScheduled=false,sheetScheduled=false;
 function selectedByLevel(ids){const counts={};for(const id of arr(ids)){const spell=item('spells',id),level=num(spell?.level);if(level>0)counts[level]=num(counts[level])+1}return counts}

@@ -1,5 +1,5 @@
 import{state,$,AB,slug}from'./state.js';
-import{derive}from'./rules.js?v=20260831-warlock-invocations2';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{BASE_ABILITY_POINT_BUDGET,BASE_ABILITY_DEFAULT,BASE_ABILITY_MIN,BASE_ABILITY_MAX,baseAbilityModifier,abilityDisplayState,normalizeBaseAbilities,baseAbilityValidation,applyBaseAbilityChange}from'./ability-score-rules.js?v=20260824-ability-budget4';
 
 let syncingPending=false;

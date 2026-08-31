@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js?v=20260831-warlock-invocations2';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{wizardSubclassChoiceDefs,setWizardSubclassChoice}from'./wizard-subclass-mechanics.js?v=20260828-wizard-subclasses2';
 let queued=false;const CARD_ID='wizard-subclass-mechanics-card';
 function ensureCard(){let card=$(CARD_ID);if(card)return card;const host=document.querySelector('[data-wizard-panel="classe"] .step-grid');if(!host)return null;card=document.createElement('section');card.id=CARD_ID;card.className='card full';card.hidden=true;host.appendChild(card);return card}

@@ -1,6 +1,6 @@
 import{state,arr,num,fold,mod,signed}from'./state.js';
 import{creationPhysicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
-import{featMechanicalOutcome}from'./feat-mechanics.js';
+import{featMechanicalOutcome}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 
 const currentClass=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)||null;
 const currentSpecies=()=>state.catalogs.species.find(x=>x.id===state.c?.refs?.species)||null;

@@ -1,5 +1,5 @@
 import{state,$}from'./state.js';
-import{featRule,activeFeatInstances}from'./feat-mechanics.js';
+import{featRule,activeFeatInstances}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 let raf=0;
 function manualInstances(){return activeFeatInstances().filter(inst=>!featRule(inst.feat))}
 function decorate(){

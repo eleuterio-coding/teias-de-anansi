@@ -1,5 +1,5 @@
 import{state,$,esc,fold}from'./state.js';
-import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js';
+import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js?v=20260831-tasha-metamagic1';
 
 let queued=false;
 function ensureHost(){

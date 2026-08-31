@@ -1,7 +1,7 @@
 import{state,$,num,esc}from'./state.js';
-import{selected}from'./rules.js?v=20260831-warlock-invocations2';
+import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
 import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
-import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260828-wealth-background1';
+import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260831-tasha-metamagic1';
 
 let rendering=false,scheduled=false,initialized=false;
 const level=()=>Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1));

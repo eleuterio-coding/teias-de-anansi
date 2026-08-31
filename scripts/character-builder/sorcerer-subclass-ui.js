@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{sorcererSubclassChoiceDefs,setSorcererSubclassChoice}from'./sorcerer-subclass-mechanics.js?v=20260828-sorcerer-subclasses1';
 import{syncSorcererSpellAccess}from'./sorcerer-spell-access.js?v=20260828-sorcerer-subclasses1';
 

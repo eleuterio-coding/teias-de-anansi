@@ -1,5 +1,5 @@
 import{state,$,esc,arr,SKILL_AB,mod}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{fighterSubclassChoiceDefs,setFighterSubclassChoice}from'./fighter-subclass-mechanics.js?v=20260827-fighter-subclasses1';
 
 let queued=false;const CARD_ID='fighter-subclass-mechanics-card';

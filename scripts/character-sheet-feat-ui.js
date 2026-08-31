@@ -1,5 +1,5 @@
 import{state,$,AB,SKILL_AB,arr,esc,mod,signed,fold}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 import{deriveSkillCheckMechanics}from'./character-builder/skill-check-mechanics.js?v=20260826-jack-of-all-trades1';
 import{creationPhysicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260824-starting-equipment1';
 

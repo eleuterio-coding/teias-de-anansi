@@ -1,6 +1,6 @@
-import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260831-class-tools1';
-import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260831-class-tools1';
-import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260831-class-tools1';
+import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260831-tasha-metamagic1';
+import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260831-tasha-metamagic1';
+import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260831-tasha-metamagic1';
 const STEPS=[
  {id:'classe',title:'Classe e Nível',description:'Defina a classe, o nível atual, a subclasse quando disponível, as perícias da classe e as magias.'},
  {id:'origem',title:'Origem',description:'Escolha o antecedente e complete os detalhes, características físicas, características pessoais e notas do personagem.'},

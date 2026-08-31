@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{monkSubclassChoiceDefs,setMonkSubclassChoice}from'./monk-subclass-mechanics.js?v=20260827-monk-subclasses1';
 
 let queued=false;const CARD_ID='monk-subclass-mechanics-card';

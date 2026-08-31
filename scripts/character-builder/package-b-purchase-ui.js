@@ -1,7 +1,7 @@
-import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260831-class-tools1';
-import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260831-class-tools1';
-import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260831-class-tools1';
-import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260831-class-tools1';
+import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260831-tasha-metamagic1';
+import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260831-tasha-metamagic1';
+import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260831-tasha-metamagic1';
+import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260831-tasha-metamagic1';
 
 let purchaseCollapseGuardBound=false;
 let rememberedOpenAreas=null;

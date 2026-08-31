@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc}from'./state.js';
-import{featChoiceDefs,sanitizeFeatChoices}from'./feat-mechanics.js';
+import{featChoiceDefs,sanitizeFeatChoices}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 
 let initialized=false,rendering=false,scheduled=false;
 function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;render()})}

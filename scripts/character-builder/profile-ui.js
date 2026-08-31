@@ -1,7 +1,7 @@
 import{state,$,arr,num,esc}from'./state.js';
-import{derive}from'./rules.js';
-import{languageOutcome}from'./language-mechanics.js';
-import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260826-equipment-ownership1';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
+import{languageOutcome}from'./language-mechanics.js?v=20260831-tasha-metamagic1';
+import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260831-tasha-metamagic1';
 
 function ensureSheetState(){
  const c=state.c;

@@ -1,6 +1,6 @@
 import{state,$,arr,num,esc,fold}from'./state.js';
-import{derive}from'./rules.js?v=20260831-warlock-invocations2';
-import{activeFeatInstances}from'./feat-mechanics.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
+import{activeFeatInstances}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
 import{classFeatureFeatGrants,eligibleClassFeatureFeats,sanitizeClassFeatureFeatSelections}from'./class-feature-feat-mechanics.js';
 
 let initialized=false,rendering=false,scheduled=false;

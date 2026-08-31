@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{paladinSubclassChoiceDefs,setPaladinSubclassChoice}from'./paladin-subclass-mechanics.js?v=20260827-paladin-subclasses1';
 
 let queued=false;const CARD_ID='paladin-subclass-mechanics-card';

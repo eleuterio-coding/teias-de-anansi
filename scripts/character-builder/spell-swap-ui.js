@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc}from'./state.js';
-import{selected}from'./rules.js';
+import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
 import{spellProgressionCandidates,spellProgressionState}from'./spell-progression-rules.js?v=20260825-spell-progression1';
 
 let initialized=false,queued=false;

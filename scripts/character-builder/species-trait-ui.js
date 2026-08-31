@@ -1,5 +1,5 @@
 import{state,$,SKILL_AB,arr,esc,fold,num}from'./state.js';
-import{compatible,selected,speciesTraitChoiceDefs,sanitizeSpeciesTraitChoices}from'./rules.js';
+import{compatible,selected,speciesTraitChoiceDefs,sanitizeSpeciesTraitChoices}from'./rules.js?v=20260831-tasha-metamagic1';
 
 let applying=false,scheduled=false;
 const allSkills=()=>Object.keys(SKILL_AB);
