@@ -1,0 +1,71 @@
+name: Auditar cobertura total da criação
+
+on:
+  pull_request:
+    paths:
+      - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'dados/classes-base-2024.json'
+      - 'dados/classes-ptbr/**'
+      - 'dados/especies-*.json'
+      - 'dados/antecedentes-*.json'
+      - 'dados/talentos-*.json'
+      - 'dados/subclasses-mecanicas-*.json'
+      - 'dados/armas-*.json'
+      - 'dados/armaduras-*.json'
+      - 'dados/equipamentos-*.json'
+      - 'dados/ferramentas-*.json'
+      - 'dados/idiomas-*.json'
+      - 'dados/magias-*.json'
+      - 'dados/regras-*.json'
+      - 'dados/politica-compatibilidade-5e-5.5e.json'
+      - 'tests/auditar-cobertura-total-criacao.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'dados/**'
+      - 'tests/auditar-cobertura-total-criacao.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cobertura-total:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe de 100% dos módulos do construtor
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/character-builder.js
+          find scripts/character-builder -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find scripts -maxdepth 1 -type f -name 'character-sheet*.js' -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Auditar cobertura mecânica integral
+        run: node tests/auditar-cobertura-total-criacao.mjs
+      - name: Executar toda a suíte de auditoria da criação
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test in tests/auditar-*.mjs; do
+            echo "=== $test ==="
+            node "$test"
+          done
+      - name: Publicar mapa de cobertura
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-total-criacao
+          path: artifacts/cobertura-criacao.json
+          if-no-files-found: error
