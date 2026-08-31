@@ -1,5 +1,5 @@
 import{state,$,num,esc}from'./state.js';
-import{selected}from'./rules.js?v=20260824-stage-isolation1';
+import{selected}from'./rules.js?v=20260831-class-tools1';
 import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260828-wealth-background1';
 

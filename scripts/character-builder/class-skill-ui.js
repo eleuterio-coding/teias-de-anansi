@@ -1,5 +1,5 @@
 import{state,$,arr,SKILL_AB,esc,signed}from'./state.js';
-import{selected,derive}from'./rules.js?v=20260831-skill-checks1';
+import{selected,derive}from'./rules.js?v=20260831-class-tools1';
 import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
 import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-subclass-mechanics2';
 import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260827-barbarian-subclasses1';
@@ -13,7 +13,7 @@ import{initRangerSubclassUi}from'./ranger-subclass-ui.js?v=20260827-ranger-subcl
 import{initRogueSubclassUi}from'./rogue-subclass-ui.js?v=20260827-rogue-subclasses1';
 import{initSorcererSubclassUi}from'./sorcerer-subclass-ui.js?v=20260828-sorcerer-subclasses1';
 import{initWarlockSubclassUi}from'./warlock-subclass-ui.js?v=20260828-warlock-subclasses1';
-import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260828-wizard-subclasses2';
+import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260831-class-tools1';
 import{initClassToolUi}from'./class-tool-ui.js?v=20260831-class-tools1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);

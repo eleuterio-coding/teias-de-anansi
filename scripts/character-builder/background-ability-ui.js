@@ -1,5 +1,5 @@
 import{state,$,AB}from'./state.js';
-import{applyHouseRules}from'./rules.js?v=20260824-stage-isolation1';
+import{applyHouseRules}from'./rules.js?v=20260831-class-tools1';
 
 let initialized=false;
 

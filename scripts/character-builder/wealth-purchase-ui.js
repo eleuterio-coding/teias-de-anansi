@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,json}from'./state.js';
-import{selected}from'./rules.js?v=20260824-stage-isolation1';
+import{selected}from'./rules.js?v=20260831-class-tools1';
 import{WEALTH_BY_LEVEL,creationBudgetCp,creationBudgetBreakdown}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
 import{purchasePermission}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
