@@ -1,0 +1,60 @@
+name: Corrigir War Domain PHB 2024
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - '.github/workflows/corrigir-war-domain-phb-2024.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - name: Corrigir War Domain para a revisão final 2024
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('dados/subclasses-mecanicas-phb-2024.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          war=[x for x in data['subclasses'] if x['nome']=='War Domain']
+          if len(war)!=1: raise SystemExit(f'War Domain: esperado 1 registro; encontrados {len(war)}')
+          features={x['nome']:x for x in war[0]['progressao']}
+          required=['War Domain Spells','War Priest','Guided Strike',"War God's Blessing",'Avatar of Battle']
+          missing=[x for x in required if x not in features]
+          if missing: raise SystemExit('War Domain sem recursos: '+', '.join(missing))
+          features['War Domain Spells']['descricao']='Mantém preparadas, conforme o nível, Guiding Bolt, Shield of Faith, Magic Weapon, Spiritual Weapon, Crusader’s Mantle, Spirit Guardians, Freedom of Movement, Fire Shield, Hold Monster e Steel Wind Strike.'
+          features['War Priest']['descricao']='Como Ação Bônus, pode fazer um ataque com arma ou Unarmed Strike. Usa esse benefício um número de vezes igual ao modificador de Sabedoria (mínimo 1) e recupera todos os usos ao terminar Descanso Curto ou Longo.'
+          features['Guided Strike']['descricao']='Quando você ou uma criatura a até 30 pés erra uma jogada de ataque, pode usar a Reação e gastar Channel Divinity para conceder +10 à rolagem, potencialmente transformando o erro em acerto.'
+          features["War God's Blessing"]['descricao']='Ao usar Channel Divinity, pode conjurar Shield of Faith ou Spiritual Weapon sem gastar slot e sem exigir Concentração; o benefício dura até 1 minuto conforme a magia escolhida.'
+          features['Avatar of Battle']['descricao']='Ganha resistência a dano Bludgeoning, Piercing e Slashing, sem a antiga limitação a dano de armas não mágicas.'
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Validar contrato final do War Domain
+        run: |
+          node --input-type=module <<'JS'
+          import fs from'node:fs';import assert from'node:assert/strict';
+          const d=JSON.parse(fs.readFileSync('dados/subclasses-mecanicas-phb-2024.json','utf8'));
+          const war=d.subclasses.find(x=>x.nome==='War Domain'),f=n=>war.progressao.find(x=>x.nome===n)?.descricao||'';
+          for(const s of ['Guiding Bolt','Shield of Faith','Magic Weapon','Spiritual Weapon','Crusader’s Mantle','Spirit Guardians','Freedom of Movement','Fire Shield','Hold Monster','Steel Wind Strike'])assert.ok(f('War Domain Spells').includes(s),`Magia ausente: ${s}`);
+          assert.ok(/Unarmed Strike/.test(f('War Priest'))&&/Sabedoria/.test(f('War Priest'))&&/Descanso Curto ou Longo/.test(f('War Priest')));
+          assert.ok(/30 pés/.test(f('Guided Strike'))&&/Reação/.test(f('Guided Strike'))&&/\+10/.test(f('Guided Strike')));
+          assert.ok(/Shield of Faith/.test(f("War God's Blessing"))&&/Spiritual Weapon/.test(f("War God's Blessing"))&&/sem gastar slot/.test(f("War God's Blessing"))&&/sem exigir Concentração/.test(f("War God's Blessing")));
+          assert.ok(/Bludgeoning/.test(f('Avatar of Battle'))&&/Piercing/.test(f('Avatar of Battle'))&&/Slashing/.test(f('Avatar of Battle'))&&/sem a antiga limitação/.test(f('Avatar of Battle')));
+          JS
+          node tests/auditar-subclasses-mecanicas.mjs
+      - name: Publicar correção
+        run: |
+          if git diff --quiet -- dados/subclasses-mecanicas-phb-2024.json; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dados/subclasses-mecanicas-phb-2024.json
+          git commit -m 'Completa semântica do War Domain 2024'
+          git push origin HEAD:audit/normativa-total-criacao
