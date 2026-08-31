@@ -41,6 +41,14 @@ jobs:
           if old3 in s: s=s.replace(old3,new3,1)
           if new not in s or new2 not in s or new3 not in s: raise SystemExit('cenários atualizados de Invocações não encontrados')
           p.write_text(s,encoding='utf-8')
+
+          p=Path('tests/auditar-talentos-tasha-2020.mjs')
+          s=p.read_text(encoding='utf-8')
+          old="assert.ok(d.legacyInvocationEffects.some(x=>x.source==='Eldritch Adept'&&x.flags.includes('armorOfShadows')));"
+          new="assert.ok(d.legacyInvocationEffects.some(x=>x.source==='Eldritch Adept'&&x.spellGrants.some(g=>g.spell?.id==='mage-armor'&&g.noSlot&&g.usage==='à vontade')),'Armor of Shadows via Eldritch Adept deve conceder Mage Armor à vontade e sem espaço.');"
+          if old in s: s=s.replace(old,new,1)
+          if new not in s: raise SystemExit('cenário de Armor of Shadows atualizado não encontrado')
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Validar sintaxe e gates críticos
         shell: bash
