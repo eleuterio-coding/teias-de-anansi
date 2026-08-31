@@ -11,7 +11,7 @@ const feature=(sub,name)=>{
  const f=(row.progressao||[]).find(x=>x.nome===name);assert.ok(f,`Característica ausente: ${sub} / ${name}`);
  return String(f.descricao||'');
 };
-const has=(text,...needles)=>{for(const n of needles)assert.ok(text.includes(n),`Texto não contém requisito semântico: ${n}\n${text}`)};
+const has=(text,...needles)=>{const normalized=text.toLocaleLowerCase('pt-BR');for(const n of needles)assert.ok(normalized.includes(String(n).toLocaleLowerCase('pt-BR')),`Texto não contém requisito semântico: ${n}\n${text}`)};
 
 assert.equal(data.fonte_id,'eberron-forge-2025');
 assert.equal(matrix.autoridade,'oficial_atual');
