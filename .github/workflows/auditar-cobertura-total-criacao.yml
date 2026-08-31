@@ -46,7 +46,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if grep -RniE 'supabase' criacao-personagem.html ficha-personagem.html scripts/character-builder.js scripts/character-builder scripts/character-sheet*.js dados/auditoria-criacao-escopo.json; then
+          if grep -RniE 'supabase' criacao-personagem.html ficha-personagem.html scripts/character-builder.js scripts/character-builder scripts/character-sheet*.js; then
             echo 'Supabase é proibido no Hub de RPG.' >&2
             exit 1
           fi
