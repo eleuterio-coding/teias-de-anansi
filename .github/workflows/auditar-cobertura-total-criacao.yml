@@ -2,37 +2,8 @@ name: Auditar cobertura total da criação
 
 on:
   pull_request:
-    paths:
-      - 'criacao-personagem.html'
-      - 'ficha-personagem.html'
-      - 'scripts/character-builder.js'
-      - 'scripts/character-builder/**'
-      - 'scripts/character-sheet*.js'
-      - 'dados/classes-base-2024.json'
-      - 'dados/classes-ptbr/**'
-      - 'dados/especies-*.json'
-      - 'dados/antecedentes-*.json'
-      - 'dados/talentos-*.json'
-      - 'dados/subclasses-mecanicas-*.json'
-      - 'dados/armas-*.json'
-      - 'dados/armaduras-*.json'
-      - 'dados/equipamentos-*.json'
-      - 'dados/ferramentas-*.json'
-      - 'dados/idiomas-*.json'
-      - 'dados/magias-*.json'
-      - 'dados/regras-*.json'
-      - 'dados/politica-compatibilidade-5e-5.5e.json'
-      - 'tests/auditar-cobertura-total-criacao.mjs'
   push:
     branches: [main]
-    paths:
-      - 'criacao-personagem.html'
-      - 'ficha-personagem.html'
-      - 'scripts/character-builder.js'
-      - 'scripts/character-builder/**'
-      - 'scripts/character-sheet*.js'
-      - 'dados/**'
-      - 'tests/auditar-cobertura-total-criacao.mjs'
   workflow_dispatch:
 
 permissions:
@@ -46,23 +17,56 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validar sintaxe de 100% dos módulos do construtor
+
+      - name: Validar sintaxe de todo o código da criação e regras
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/character-builder.js
           find scripts/character-builder -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
-          find scripts -maxdepth 1 -type f -name 'character-sheet*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find scripts -maxdepth 1 -type f \( -name 'character-sheet*.js' -o -name 'regras-*.js' \) -print0 | sort -z | xargs -0 -r -n1 node --check
+          find tests -type f -name 'auditar-*.mjs' -print0 | sort -z | xargs -0 -r -n1 node --check
+
+      - name: Validar integridade de todos os JSON de dados
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);
+          const files=walk('dados').filter(p=>p.endsWith('.json'));
+          const errors=[];
+          for(const file of files){try{JSON.parse(fs.readFileSync(file,'utf8'))}catch(error){errors.push(`${file}: ${error.message}`)}}
+          if(errors.length){console.error(errors.join('\n'));process.exit(1)}
+          console.log(`JSON válidos: ${files.length}/${files.length}.`);
+          NODE
+
+      - name: Bloquear dependência Supabase no escopo do personagem
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -RniE 'supabase' criacao-personagem.html ficha-personagem.html scripts/character-builder.js scripts/character-builder scripts/character-sheet*.js dados/auditoria-criacao-escopo.json; then
+            echo 'Supabase é proibido no Hub de RPG.' >&2
+            exit 1
+          fi
+
       - name: Auditar cobertura mecânica integral
         run: node tests/auditar-cobertura-total-criacao.mjs
+
       - name: Executar toda a suíte de auditoria da criação
         shell: bash
         run: |
           set -euo pipefail
+          count=0
           for test in tests/auditar-*.mjs; do
             echo "=== $test ==="
             node "$test"
+            count=$((count+1))
           done
+          test "$count" -gt 0
+          echo "Suíte mestre concluída: $count auditorias executadas."
+
       - name: Publicar mapa de cobertura
         uses: actions/upload-artifact@v4
         with:
