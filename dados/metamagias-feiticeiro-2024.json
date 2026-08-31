@@ -1,0 +1,30 @@
+{
+  "schema":"hub-rpg/metamagias-feiticeiro/v1",
+  "fonte":{
+    "titulo":"D&D Basic Rules (2024) — Sorcerer",
+    "ano":2024,
+    "ruleset":"5.5e",
+    "revisao_core":2024,
+    "natureza":"oficial",
+    "autoridade":"oficial_atual",
+    "url":"https://www.dndbeyond.com/sources/dnd/br-2024/character-classes#Sorcerer"
+  },
+  "precedencia":{
+    "politica":"No ruleset 5.5e, a lista atual de Metamagia do Feiticeiro 2024 prevalece. Metamagic Adept legado reutiliza esta lista atual, evitando duplicar opções 2014/2020 que já possuem revisão vigente.",
+    "consumidores":["Feiticeiro 2024","Metamagic Adept (Tasha 2020 em compatibilidade 5.5e)"]
+  },
+  "progressao":{"1":0,"2":2,"3":2,"4":2,"5":2,"6":2,"7":2,"8":2,"9":2,"10":4,"11":4,"12":4,"13":4,"14":4,"15":4,"16":4,"17":6,"18":6,"19":6,"20":6},
+  "controle":{"validado":true,"quantidade":10},
+  "itens":[
+    {"id":"careful-spell","nome":"Careful Spell","custo":1,"efeitos":{"protege_alvos_em_salvaguardas":true,"sem_dano_se_sucesso_normalmente_reduz_metade":true},"resumo":"Protege criaturas escolhidas de uma magia com salvaguarda, fazendo-as obter sucesso automático e evitando dano quando um sucesso normalmente reduziria o dano pela metade."},
+    {"id":"distant-spell","nome":"Distant Spell","custo":1,"efeitos":{"duplica_alcance_minimo_ft":5,"toque_vira_ft":30},"resumo":"Amplia o alcance de uma magia ou transforma alcance Toque em 30 pés."},
+    {"id":"empowered-spell","nome":"Empowered Spell","custo":1,"efeitos":{"rerrola_dados_dano_ate_modificador_carisma":true,"combina_com_outra_metamagia":true},"resumo":"Permite rerrolar dados de dano até o modificador de Carisma e pode ser combinada com outra opção de Metamagia na mesma conjuração."},
+    {"id":"extended-spell","nome":"Extended Spell","custo":1,"efeitos":{"duplica_duracao_minimo_1_minuto":true,"duracao_maxima_horas":24,"vantagem_salvaguarda_concentracao":true},"resumo":"Duplica a duração de magias duradouras, até 24 horas, e melhora a manutenção de Concentração."},
+    {"id":"heightened-spell","nome":"Heightened Spell","custo":2,"efeitos":{"desvantagem_salvaguardas_alvo":true},"resumo":"Impõe Desvantagem a um alvo nas salvaguardas contra a magia afetada."},
+    {"id":"quickened-spell","nome":"Quickened Spell","custo":2,"efeitos":{"acao_vira_acao_bonus":true,"restricao_magia_nivel_1_mais_no_turno":true},"resumo":"Converte uma magia de Ação em Ação Bônus, respeitando a restrição de conjuração de magias de nível 1 ou superior no turno."},
+    {"id":"seeking-spell","nome":"Seeking Spell","custo":1,"efeitos":{"rerrola_ataque_magia_errado":true,"combina_com_outra_metamagia":true},"resumo":"Permite rerrolar um ataque de magia que errou e pode ser usada mesmo com outra opção de Metamagia."},
+    {"id":"subtle-spell","nome":"Subtle Spell","custo":1,"efeitos":{"ignora_componentes":["Verbal","Somático","Material sem custo e não consumido"]},"resumo":"Remove componentes Verbal, Somático e materiais sem custo especificado e não consumidos."},
+    {"id":"transmuted-spell","nome":"Transmuted Spell","custo":1,"efeitos":{"tipos_dano":["Ácido","Frio","Fogo","Elétrico","Veneno","Trovejante"]},"resumo":"Troca entre os tipos de dano elementais permitidos pela opção."},
+    {"id":"twinned-spell","nome":"Twinned Spell","custo":1,"efeitos":{"aumenta_nivel_efetivo_para_alvo_adicional":1},"resumo":"Em magias que ganham um alvo adicional ao serem conjuradas com espaço superior, aumenta o nível efetivo em 1 para obter esse alvo adicional."}
+  ]
+}
