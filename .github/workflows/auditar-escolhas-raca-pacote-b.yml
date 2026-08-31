@@ -13,6 +13,9 @@ on:
       - 'scripts/character-builder/skilled-feat-ui.js'
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
+      - 'tests/auditar-riqueza-criacao.mjs'
+      - 'tests/auditar-criacao-sem-travamento.mjs'
+      - 'tests/auditar-cobertura-total-criacao.mjs'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
   push:
     branches: [main]
@@ -27,6 +30,9 @@ on:
       - 'scripts/character-builder/skilled-feat-ui.js'
       - 'scripts/character-sheet-feat-ui.js'
       - 'scripts/character-builder.js'
+      - 'tests/auditar-riqueza-criacao.mjs'
+      - 'tests/auditar-criacao-sem-travamento.mjs'
+      - 'tests/auditar-cobertura-total-criacao.mjs'
       - '.github/workflows/auditar-escolhas-raca-pacote-b.yml'
 
 permissions:
@@ -40,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validar JavaScript
+      - name: Validar sintaxe do fluxo de criação e compras
         run: |
           node --check scripts/character-builder/species-selection-refinement-ui.js
           node --check scripts/character-builder/package-b-purchase-ui.js
@@ -52,102 +58,23 @@ jobs:
           node --check scripts/character-builder/skilled-feat-ui.js
           node --check scripts/character-sheet-feat-ui.js
           node --check scripts/character-builder.js
-      - name: Testar pacotes, moedas e Riqueza por Level
+      - name: Validar riqueza, pacotes e persistência
         run: |
-          node --input-type=module <<'JS'
-          import{
-            STANDARD_PACKAGE_B_GP,backgroundPackageOptions,packageCurrencyCp,packagePhysicalItems,
-            classPackageOptions,creationBudgetBreakdown,creationPhysicalItems,formatPhysicalItems
-          }from'./scripts/character-builder/starting-equipment-rules.js';
-          const noble={name:'Nobre',equipmentOptions:[],equipmentText:'Conjunto de Jogo escolhido, roupas finas, perfume e 29 PO'};
-          const fighter={slug:'fighter',name:'Guerreiro'};
-          const packages=backgroundPackageOptions(noble);
-          if(packages.length!==2||packages[0].id!=='A'||packages[1].id!=='B')throw new Error('Antecedente deve oferecer Pacotes A e B.');
-          if(STANDARD_PACKAGE_B_GP!==50||packageCurrencyCp(noble,'B')!==5000)throw new Error('Pacote B padrão do Antecedente deve ser 50 PO.');
-          if(packageCurrencyCp(noble,'A')!==2900)throw new Error('Os 29 PO do Nobre devem ser separados do equipamento físico.');
-          const physical=formatPhysicalItems(packagePhysicalItems(noble,'A'));
-          if(!physical.includes('Conjunto de Jogo escolhido')||!physical.includes('perfume')||/29 PO/.test(physical))throw new Error(`Equipamento físico do Nobre incorreto: ${physical}`);
-          const fighterPackages=classPackageOptions(fighter);
-          if(JSON.stringify(fighterPackages.map(x=>x.id))!==JSON.stringify(['A','B','C']))throw new Error('Guerreiro deve manter opções A, B e C.');
-          const l1=creationBudgetBreakdown(noble,'A',1,fighter,'A');
-          if(l1.totalCp!==3300)throw new Error(`Guerreiro A + Nobre A no Level 1 deve totalizar 33 PO: ${l1.totalCp/100}.`);
-          const l3=creationBudgetBreakdown(noble,'A',3,fighter,'A');
-          if(l3.adjustedWealthGp!==86||l3.totalCp!==11900)throw new Error(`Guerreiro A + Nobre A no Level 3 deve totalizar 119 PO: ${JSON.stringify(l3)}.`);
-          const physicalL3=creationPhysicalItems(noble,'A',3,fighter,'A');
-          if(!physicalL3.some(x=>x._startingSource?.includes('Classe'))||!physicalL3.some(x=>x._startingSource?.includes('Antecedente')))throw new Error('Acima do Level 1, os pacotes físicos de Classe e Antecedente devem ser preservados.');
-          console.log('Pacotes e PO validados: Classe + Antecedente + Riqueza por Level ajustada.');
-          JS
-      - name: Testar estado do Skilled
-        run: |
-          node --input-type=module <<'JS'
-          import{setSkilledDraftRow,skilledRowComplete,availableSkilledSkills,pruneUnavailableSkilledSkills}from'./scripts/character-builder/skilled-feat-ui.js';
-          let rows=[];
-          rows=setSkilledDraftRow(rows,0,'skill','Acrobacia');
-          if(!skilledRowComplete(rows[0])||rows[0].value!=='Acrobacia')throw new Error('Skilled deve aceitar uma perícia específica diretamente.');
-          rows=setSkilledDraftRow(rows,1,'tool','Ferramentas de Ladrão');
-          if(!skilledRowComplete(rows[1])||rows[1].value!=='Ferramentas de Ladrão')throw new Error('Skilled deve continuar aceitando uma ferramenta específica.');
-          rows=setSkilledDraftRow(rows,2,'skill','Percepção');
-          const available=availableSkilledSkills(['História','Persuasão'],rows,0);
-          if(available.includes('História')||available.includes('Persuasão')||available.includes('Percepção'))throw new Error('Skilled não deve oferecer perícias já obtidas nem repetidas.');
-          const pruned=pruneUnavailableSkilledSkills(['Acrobacia'],rows);
-          if(!pruned.changed||pruned.rows[0]?.value)throw new Error('Skilled deve limpar perícia que passe a ser concedida por outra fonte.');
-          console.log('Estado de escolhas do Skilled validado com filtro de proficiências existentes.');
-          JS
-      - name: Testar opções de tamanho e identificação de seletores genéricos
-        run: |
-          node --input-type=module <<'JS'
-          import{speciesSizeOptions,genericLineageTraitNames}from'./scripts/character-builder/species-selection-refinement-ui.js';
-          const tiefling={name:'Tiefling',sizes:['Choose a size when you select this species.'],lineageLabel:'Legado Tiefling'};
-          const sizes=speciesSizeOptions(tiefling);
-          if(JSON.stringify(sizes)!==JSON.stringify(['Small','Medium']))throw new Error(`Tiefling deve oferecer Pequeno/Médio: ${JSON.stringify(sizes)}`);
-          const flexible=speciesSizeOptions({name:'Teste',sizes:['Large','Small','Medium']});
-          if(JSON.stringify(flexible)!==JSON.stringify(['Small','Medium','Large']))throw new Error(`Tamanhos flexíveis não foram normalizados: ${JSON.stringify(flexible)}`);
-          const tieflingGeneric=genericLineageTraitNames(tiefling,{name:'Infernal',replaceTraitNames:['Fiendish Legacy']});
-          if(!tieflingGeneric.has('fiendish legacy')||!tieflingGeneric.has('legado infero'))throw new Error('Legado genérico do Tiefling não será ocultado após a escolha.');
-          const elfGeneric=genericLineageTraitNames({name:'Elfo',lineageLabel:'Linhagem Élfica'},{name:'Drow'});
-          if(!elfGeneric.has('elven lineage')||!elfGeneric.has('linhagem elfica'))throw new Error('Situação equivalente de linhagem élfica não foi reconhecida.');
-          console.log('Escolhas raciais refinadas validadas.');
-          JS
-      - name: Verificar integração de compras, Ficha Virtual e Skilled
+          node tests/auditar-riqueza-criacao.mjs
+          node tests/auditar-criacao-sem-travamento.mjs
+      - name: Validar cobertura fail-closed das interações
+        run: node tests/auditar-cobertura-total-criacao.mjs
+      - name: Validar revisão canônica da cadeia de compras
         run: |
           python - <<'PY'
           from pathlib import Path
-          REV='20260831-class-tools1'
+          REV='20260831-tasha-metamagic1'
           builder=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           package=Path('scripts/character-builder/package-b-purchase-ui.js').read_text(encoding='utf-8')
-          wealth=Path('scripts/character-builder/wealth-purchase-ui.js').read_text(encoding='utf-8')
-          equipment=Path('scripts/character-builder/starting-equipment-ui.js').read_text(encoding='utf-8')
-          rules=Path('scripts/character-builder/starting-equipment-rules.js').read_text(encoding='utf-8')
-          ownership=Path('scripts/character-builder/equipment-ownership.js').read_text(encoding='utf-8')
-          origin=Path('scripts/character-builder/origin-feat-sync.js').read_text(encoding='utf-8')
-          feats=Path('scripts/character-builder/feat-mechanics.js').read_text(encoding='utf-8')
-          skilled=Path('scripts/character-builder/skilled-feat-ui.js').read_text(encoding='utf-8')
-          sheet=Path('scripts/character-sheet-feat-ui.js').read_text(encoding='utf-8')
-          race=Path('scripts/character-builder/species-selection-refinement-ui.js').read_text(encoding='utf-8')
           assert f'package-b-purchase-ui.js?v={REV}' in builder
-          assert f'wealth-purchase-ui.js?v={REV}' in package
-          assert f'starting-equipment-ui.js?v={REV}' in package
-          assert f'origin-feat-sync.js?v={REV}' in package
-          assert f'skilled-feat-ui.js?v={REV}' in package
-          assert 'initStartingEquipmentUi' in package and 'initOriginFeatSync' in package and 'initSkilledFeatUi' in package
-          assert 'STANDARD_BACKGROUND_PACKAGE_B_GP=50' in rules
-          assert 'WEALTH_TIERS' in rules and 'backgroundWealthProfile' in rules and 'classPackageOptions' in rules
-          assert 'creationBudgetCp' in wealth and 'creationBudgetBreakdown' in wealth
-          assert 'PO disponíveis' in wealth and 'Gasto em compras' in wealth
-          assert 'Equipamento inicial da Classe' in equipment and 'Equipamento inicial do Antecedente' in equipment
-          assert 'Riqueza por Level' in equipment
-          assert 'creationPhysicalItems' in ownership
-          assert 'creationPhysicalItems' in sheet and 'formatPhysicalItems' in sheet
-          assert 'originFeat' in origin and 'data-feat-mechanics-controls' in origin
-          assert "'Skilled':{choices:[{id:'proficiencies',type:'skill_or_tool_multi',count:3" in feats
-          assert 'Escolha uma perícia ou ferramenta' in skilled
-          assert '<optgroup label="Perícias">' in skilled
-          assert "'Ferramenta…'" in skilled
-          assert 'availableSkilledSkills' in skilled and 'pruneUnavailableSkilledSkills' in skilled
-          assert 'existingSkillsExcludingSkilled' in skilled
-          assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
-          assert "removeAttribute('data-feat-mixed')" in skilled
-          joined='\n'.join([builder,package,wealth,equipment,rules,ownership,origin,feats,skilled,sheet,race])
+          for module in ['wealth-purchase-ui.js','starting-equipment-ui.js','origin-feat-sync.js','skilled-feat-ui.js']:
+              assert f'{module}?v={REV}' in package, f'Revisão divergente em {module}'
+          joined=builder+'\n'+package
           assert 'supabase' not in joined.lower()
-          print('Compras, pacotes de Classe/Antecedente, Riqueza por Level e Skilled validados com revisão canônica.')
+          print('Pacotes, PO e cadeia de compras validados na revisão canônica.')
           PY
