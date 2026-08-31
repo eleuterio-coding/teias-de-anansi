@@ -1,66 +1,1490 @@
 {
-  "schema":"hub-rpg/subclass-mechanics/v1",
-  "fonte_id":"phb-2024",
-  "fonte":"Player's Handbook (2024)",
-  "subclasses":[
-    {"nome":"Path of the Berserker","resumo":"Fúria ofensiva focada em dano extra, imunidade mental e retaliação.","progressao":[{"nivel":3,"nome":"Frenzy","descricao":"Durante a Fúria, se usar Reckless Attack, o primeiro acerto do turno baseado em Força causa dados d6 extras em quantidade igual ao bônus de Rage Damage; o dano mantém o tipo do ataque."},{"nivel":6,"nome":"Mindless Rage","descricao":"Enquanto estiver em Fúria, fica imune a Charmed e Frightened; iniciar a Fúria encerra essas condições."},{"nivel":10,"nome":"Retaliation","descricao":"Quando uma criatura a até 5 pés causa dano em você, pode usar a Reação para fazer um ataque corpo a corpo contra ela."},{"nivel":14,"nome":"Intimidating Presence","descricao":"Ação Bônus para forçar criaturas escolhidas em emanação de 30 pés a teste de Sabedoria contra CD 8 + Força + PB; falha causa Frightened por até 1 minuto, com novo teste ao fim dos turnos. Recupera no Descanso Longo ou gastando um uso de Rage."}]},
-    {"nome":"Path of the Wild Heart","resumo":"Adapta a Fúria com aspectos animais escolhidos para resistência, mobilidade, apoio e controle.","progressao":[{"nivel":3,"nome":"Animal Speaker","descricao":"Mantém Beast Sense e Speak with Animals disponíveis como rituais, usando Sabedoria."},{"nivel":3,"nome":"Rage of the Wilds","descricao":"Ao iniciar a Fúria escolhe um aspecto: Bear concede resistência a quase todos os tipos de dano, exceto Force, Necrotic, Psychic e Radiant; Eagle combina Dash e Disengage na ativação e como Ação Bônus durante a Fúria; Wolf concede Vantagem aos aliados contra inimigos adjacentes a você."},{"nivel":6,"nome":"Aspect of the Wilds","descricao":"Após Descanso Longo escolhe Owl (Darkvision 60 pés ou +60 pés), Panther (Climb Speed igual ao deslocamento) ou Salmon (Swim Speed igual ao deslocamento)."},{"nivel":10,"nome":"Nature Speaker","descricao":"Pode conjurar Commune with Nature como ritual."},{"nivel":14,"nome":"Power of the Wilds","descricao":"Ao iniciar a Fúria escolhe Falcon (Fly Speed igual ao deslocamento se sem armadura), Lion (inimigos adjacentes têm Desvantagem para atacar outros alvos) ou Ram (acertos corpo a corpo podem derrubar criaturas Grandes ou menores)."}]},
-    {"nome":"Path of the World Tree","resumo":"Usa a Fúria para gerar pontos temporários, reposicionar criaturas e teleportar pelo tecido do multiverso.","progressao":[{"nivel":3,"nome":"Vitality of the Tree","descricao":"Ao iniciar a Fúria ganha PV temporários iguais ao nível de Bárbaro. No início de cada turno durante a Fúria, pode conceder a outra criatura a até 10 pés PV temporários rolando uma quantidade de d6 igual ao bônus de Rage Damage."},{"nivel":6,"nome":"Branches of the Tree","descricao":"Reação quando uma criatura visível começa o turno a até 30 pés durante sua Fúria; em falha no teste de Força contra CD 8 + Força + PB, ela é teleportada para um espaço junto de você e seu Speed fica 0 até o fim do turno atual."},{"nivel":10,"nome":"Battering Roots","descricao":"Em seus turnos, armas corpo a corpo Heavy ou Versatile ganham +10 pés de alcance. Ao acertar, pode aplicar Push ou Topple Mastery além da propriedade de Maestria normalmente usada."},{"nivel":14,"nome":"Travel Along the Tree","descricao":"Ao ativar a Fúria e como Ação Bônus enquanto ela durar, teleporta até 60 pés. Uma vez por Fúria pode ampliar para 150 pés e transportar até seis criaturas voluntárias próximas."}]},
-    {"nome":"Path of the Zealot","resumo":"Fúria divina com dano radiante/necrótico, autocura, proteção contra falhas e sobrevivência sobrenatural.","progressao":[{"nivel":3,"nome":"Divine Fury","descricao":"Uma vez por turno durante a Fúria, o primeiro acerto com arma ou Unarmed Strike causa 1d6 + metade do nível de Bárbaro (arredondado para baixo) de dano Radiant ou Necrotic."},{"nivel":3,"nome":"Warrior of the Gods","descricao":"Possui uma reserva de dados d12 de cura; como Ação Bônus gasta dados para recuperar PV. Começa com 4d12 e a reserva aumenta em níveis superiores, recuperando no Descanso Longo."},{"nivel":6,"nome":"Fanatical Focus","descricao":"Uma vez por Fúria, ao falhar em um teste de resistência pode repeti-lo e adicionar o bônus de Rage Damage ao novo resultado."},{"nivel":10,"nome":"Zealous Presence","descricao":"Ação Bônus para dar Vantagem em ataques e testes de resistência a até dez criaturas escolhidas a 60 pés até o início do seu próximo turno. Recupera no Descanso Longo ou gastando um uso de Rage."},{"nivel":14,"nome":"Rage of the Gods","descricao":"Ao iniciar a Fúria pode assumir forma divina por 1 minuto: Fly Speed igual ao deslocamento com Hover e resistência a Necrotic, Psychic e Radiant. Também pode impedir que uma criatura próxima caia a 0 PV, gastando uma Rage para deixá-la com PV iguais ao nível de Bárbaro. Forma: 1/Descanso Longo."}]},
-
-    {"nome":"College of Dance","resumo":"Bardo móvel e desarmado que transforma Bardic Inspiration em defesa, golpes e reposicionamento.","progressao":[{"nivel":3,"nome":"Dazzling Footwork","descricao":"Sem armadura nem escudo, CA = 10 + Destreza + Carisma. Pode usar Destreza nos Unarmed Strikes e o dado de dano pode ser o dado de Bardic Inspiration + Destreza. Ao gastar Bardic Inspiration como Ação, Ação Bônus ou Reação, também pode fazer um Unarmed Strike."},{"nivel":6,"nome":"Inspiring Movement","descricao":"Quando um inimigo termina o turno a até 5 pés, usa Reação e gasta Bardic Inspiration para mover até metade do Speed sem provocar OA; um aliado a até 30 pés pode usar a própria Reação para fazer o mesmo."},{"nivel":6,"nome":"Tandem Footwork","descricao":"Ao rolar Iniciativa, pode gastar e rolar Bardic Inspiration; você e aliados a até 30 pés adicionam o resultado à Iniciativa."},{"nivel":14,"nome":"Leading Evasion","descricao":"Em testes de Destreza que normalmente causariam metade do dano no sucesso, você sofre 0 no sucesso e metade na falha. Criaturas a até 5 pés podem receber o mesmo benefício enquanto você não estiver Incapacitated."}]},
-    {"nome":"College of Glamour","resumo":"Controla emoções e posicionamento do grupo por magia feérica, encanto e medo.","progressao":[{"nivel":3,"nome":"Beguiling Magic","descricao":"Charm Person e Mirror Image ficam sempre preparadas. Após conjurar magia de Enchantment ou Illusion com slot, pode forçar uma criatura visível a 60 pés a teste de Sabedoria; falha causa Charmed ou Frightened por até 1 minuto. 1/Descanso Longo ou restaura gastando Bardic Inspiration."},{"nivel":3,"nome":"Mantle of Inspiration","descricao":"Ação Bônus e gasto de Bardic Inspiration: escolhe criaturas a 60 pés até o modificador de Carisma; cada uma recebe PV temporários iguais a duas vezes o resultado do dado e pode usar Reação para mover até o próprio Speed sem provocar OA."},{"nivel":6,"nome":"Mantle of Majesty","descricao":"Command fica sempre preparada. Pode assumir presença majestosa por 1 minuto e conjurar Command repetidamente como Ação Bônus sem gastar slots enquanto o efeito durar; criaturas já encantadas por você são especialmente suscetíveis."},{"nivel":14,"nome":"Unbreakable Majesty","descricao":"Ação Bônus para uma presença de 1 minuto. Na primeira vez em cada turno que uma criatura acerta você, ela deve passar em teste de Carisma contra sua CD de magia ou o ataque erra. Recupera após Descanso Curto ou Longo."}]},
-    {"nome":"College of Lore","resumo":"Especialista versátil que debilita rolagens inimigas e amplia o repertório mágico.","progressao":[{"nivel":3,"nome":"Bonus Proficiencies","descricao":"Ganha proficiência em três perícias à escolha."},{"nivel":3,"nome":"Cutting Words","descricao":"Reação quando criatura visível a 60 pés causa dano, tem sucesso em ability check ou acerta ataque; gasta Bardic Inspiration e subtrai o dado da rolagem, podendo transformar sucesso em falha."},{"nivel":6,"nome":"Magical Discoveries","descricao":"Escolhe duas magias de Cleric, Druid ou Wizard que possa conjurar; ficam sempre preparadas e contam como magias de Bardo. Pode substituir uma delas ao ganhar nível de Bardo."},{"nivel":14,"nome":"Peerless Skill","descricao":"Quando falha em ability check ou ataque, pode rolar Bardic Inspiration e somar ao teste; se continuar falhando, o uso não é gasto."}]},
-    {"nome":"College of Valor","resumo":"Bardo marcial com armaduras, escudo, ataque extra e integração direta entre magia e armas.","progressao":[{"nivel":3,"nome":"Combat Inspiration","descricao":"Quem possui seu Bardic Inspiration pode usar Reação para somar o dado à CA contra um ataque que acertaria ou somar o dado ao dano de um ataque que acabou de acertar."},{"nivel":3,"nome":"Martial Training","descricao":"Ganha treinamento com armas marciais, armadura média e escudos. Armas simples ou marciais podem funcionar como foco de conjuração de Bardo."},{"nivel":6,"nome":"Extra Attack","descricao":"Ataca duas vezes na ação Attack; pode substituir um desses ataques pela conjuração de um cantrip com tempo de Ação."},{"nivel":14,"nome":"Battle Magic","descricao":"Depois de conjurar uma magia com tempo de Ação, pode fazer um ataque com arma como Ação Bônus."}]},
-
-    {"nome":"Life Domain","resumo":"Maximiza cura e sustentação do grupo, incluindo cura em área e autocura ao restaurar aliados.","progressao":[{"nivel":3,"nome":"Disciple of Life","descricao":"Ao curar com magia de slot, aumenta a cura em 2 + nível do slot."},{"nivel":3,"nome":"Life Domain Spells","descricao":"Mantém preparadas magias de cura e proteção, incluindo Aid, Bless, Cure Wounds, Lesser Restoration, Mass Healing Word, Revivify, Aura of Life, Death Ward, Greater Restoration e Mass Cure Wounds conforme o nível."},{"nivel":3,"nome":"Preserve Life","descricao":"Magic Action + Channel Divinity: distribui uma reserva de cura igual a 5 × nível de Cleric entre criaturas Bloodied a até 30 pés, sem elevá-las acima de metade dos PV máximos."},{"nivel":6,"nome":"Blessed Healer","descricao":"Quando uma magia de slot cura outra criatura, você também recupera 2 + nível do slot em PV."},{"nivel":17,"nome":"Supreme Healing","descricao":"Quando uma magia ou Channel Divinity rola dados para restaurar PV, usa o valor máximo dos dados em vez de rolar."}]},
-    {"nome":"Light Domain","resumo":"Clérigo ofensivo de fogo e luz, com explosões radiantes e defesa por Warding Flare.","progressao":[{"nivel":3,"nome":"Light Domain Spells","descricao":"Mantém preparadas magias de luz e fogo, incluindo Burning Hands, Faerie Fire, Scorching Ray, See Invisibility, Daylight, Fireball, Arcane Eye, Wall of Fire, Flame Strike e Scrying conforme o nível."},{"nivel":3,"nome":"Radiance of the Dawn","descricao":"Magic Action + Channel Divinity: dissipa Darkness mágica em emanação de 30 pés e criaturas escolhidas fazem teste de Constituição; recebem 2d10 + nível de Cleric de Radiant na falha, metade no sucesso."},{"nivel":3,"nome":"Warding Flare","descricao":"Reação para impor Desvantagem a ataque de uma criatura visível a 30 pés. Usos iguais ao modificador de Sabedoria (mínimo 1)."},{"nivel":6,"nome":"Improved Warding Flare","descricao":"Recupera Warding Flare em Descanso Curto ou Longo e o alvo protegido recebe 2d6 + Sabedoria de PV temporários."},{"nivel":17,"nome":"Corona of Light","descricao":"Magic Action cria aura de luz por 1 minuto; inimigos na luz têm Desvantagem nos saves contra Radiance of the Dawn e contra suas magias que causam Fire ou Radiant. Usos por Descanso Longo baseados em Sabedoria."}]},
-    {"nome":"Trickery Domain","resumo":"Cria duplicata ilusória, melhora furtividade e reposiciona-se para conjurar de ângulos impossíveis.","progressao":[{"nivel":3,"nome":"Blessing of the Trickster","descricao":"Magic Action concede a você ou criatura voluntária a até 30 pés Vantagem em Dexterity (Stealth) até o Descanso Longo ou até usar de novo."},{"nivel":3,"nome":"Invoke Duplicity","descricao":"Ação Bônus + Channel Divinity cria duplicata a 30 pés por 1 minuto. Pode conjurar como se estivesse no espaço dela, mover a ilusão com Ação Bônus e ganha Vantagem em ataques quando você e a duplicata estão adjacentes ao alvo."},{"nivel":3,"nome":"Trickery Domain Spells","descricao":"Mantém preparadas Charm Person, Disguise Self, Invisibility, Pass without Trace, Hypnotic Pattern, Nondetection, Confusion, Dimension Door, Dominate Person e Modify Memory conforme o nível."},{"nivel":6,"nome":"Trickster's Transposition","descricao":"Ao criar ou mover a duplicata com Ação Bônus, pode trocar de lugar com ela."},{"nivel":17,"nome":"Improved Duplicity","descricao":"Você e aliados têm Vantagem contra criaturas a 5 pés da duplicata. Quando a duplicata termina, você ou criatura junto dela recupera PV iguais ao seu nível de Cleric."}]},
-    {"nome":"War Domain","resumo":"Clérigo de linha de frente que combina armas, Channel Divinity ofensivo, domínio tático e resistência em combate.","progressao":[{"nivel":3,"nome":"War Domain Spells","descricao":"Mantém preparadas magias de combate e suporte como Divine Favor, Magic Weapon, Shield of Faith, Spiritual Weapon e outras opções marciais conforme o nível."},{"nivel":3,"nome":"War Priest","descricao":"Ganha treinamento marcial adicional e pode realizar ataques extras com arma por meio do recurso da subclasse, com usos limitados recuperados em descanso."},{"nivel":3,"nome":"Guided Strike","descricao":"Channel Divinity melhora decisivamente uma jogada de ataque, podendo ser aplicado após ver o resultado para transformar um quase erro em acerto."},{"nivel":6,"nome":"War God's Blessing","descricao":"Expande Guided Strike para auxiliar ataques de aliados próximos e reforça a coordenação ofensiva do grupo."},{"nivel":17,"nome":"Avatar of Battle","descricao":"Concede resistência duradoura contra dano físico de ataques com armas, tornando o Clérigo muito mais resistente na linha de frente."}]},
-
-    {"nome":"Circle of the Land","resumo":"Druida versátil que sintoniza um tipo de terreno, recebe magias temáticas e usa poder da terra para dano, cura e proteção.","progressao":[{"nivel":3,"nome":"Circle Spells","descricao":"Após Descanso Longo sintoniza um ambiente (Arid, Polar, Temperate ou Tropical) e mantém preparadas as magias correspondentes; pode mudar a escolha em outro Descanso Longo."},{"nivel":3,"nome":"Land's Aid","descricao":"Magic Action gastando Wild Shape afeta área próxima: inimigos fazem teste de Constituição e sofrem Necrotic, enquanto uma criatura escolhida recupera PV; os dados aumentam em níveis superiores."},{"nivel":6,"nome":"Natural Recovery","descricao":"Recupera parte da energia de conjuração em descanso e ganha eficiência adicional para sustentar magias ao longo do dia."},{"nivel":10,"nome":"Nature's Ward","descricao":"A sintonia natural concede proteção adaptável contra perigos ambientais e tipos de dano relacionados ao terreno escolhido."},{"nivel":14,"nome":"Nature's Sanctuary","descricao":"Manifesta área protetora de natureza primal que beneficia aliados e dificulta a ação de inimigos dentro da zona."}]},
-    {"nome":"Circle of the Moon","resumo":"Especialista em Wild Shape de combate, com formas mais fortes, teleporte lunar e dano radiante crescente.","progressao":[{"nivel":3,"nome":"Circle Forms","descricao":"Wild Shape pode assumir Bestas com CR máximo igual a um terço do nível de Druid (arredondado para baixo). A forma recebe CA mínima 13 + Sabedoria e PV temporários iguais a 3 × nível de Druid."},{"nivel":3,"nome":"Circle of the Moon Spells","descricao":"Cure Wounds, Moonbeam e Starry Wisp ficam disponíveis no nível 3; depois Conjure Animals, Fount of Moonlight e Mass Cure Wounds. Essas magias podem ser conjuradas em Wild Shape conforme a progressão."},{"nivel":6,"nome":"Improved Circle Forms","descricao":"Ataques da forma podem causar Radiant em vez do tipo normal e você adiciona Sabedoria a testes de resistência de Constituição em Wild Shape."},{"nivel":10,"nome":"Moonlight Step","descricao":"Ação Bônus teleporta 30 pés e concede Vantagem no próximo ataque do turno. Usos iguais ao modificador de Sabedoria por Descanso Longo; pode restaurar uso gastando slot de nível 2 ou maior."},{"nivel":14,"nome":"Lunar Form","descricao":"Uma vez por turno, ataque em Wild Shape causa +2d10 Radiant. Moonlight Step pode levar uma criatura voluntária próxima para um espaço próximo ao destino."}]},
-    {"nome":"Circle of the Sea","resumo":"Druida de tempestade e oceano com aura móvel de dano, empurrão, natação e voo.","progressao":[{"nivel":3,"nome":"Circle Spells","descricao":"Mantém preparadas magias de água, gelo, vento e tempestade, incluindo Fog Cloud, Gust of Wind, Ray of Frost, Shatter, Thunderwave, Lightning Bolt, Water Breathing, Control Water, Ice Storm, Conjure Elemental e Hold Monster conforme o nível."},{"nivel":3,"nome":"Wrath of the Sea","descricao":"Ação Bônus gastando Wild Shape cria emanação de 5 pés por 10 minutos. Ao surgir e em Ações Bônus posteriores, escolhe criatura na aura para teste de Constituição; falha sofre dados d6 de Cold em quantidade igual à Sabedoria e, se Grande ou menor, é empurrada 15 pés."},{"nivel":6,"nome":"Aquatic Affinity","descricao":"A emanação aumenta para 10 pés e você ganha Swim Speed igual ao Speed."},{"nivel":10,"nome":"Stormborn","descricao":"Enquanto Wrath of the Sea estiver ativa, ganha Fly Speed igual ao Speed e resistência a Cold, Lightning e Thunder."},{"nivel":14,"nome":"Oceanic Gift","descricao":"Pode centralizar Wrath of the Sea em criatura voluntária a 60 pés; gastando dois Wild Shapes, mantém uma aura em você e outra no aliado."}]},
-    {"nome":"Circle of the Stars","resumo":"Canaliza constelações para ataque, cura, concentração e manipulação de presságios.","progressao":[{"nivel":3,"nome":"Star Map","descricao":"Possui mapa estelar que funciona como foco; aprende Guidance e mantém Guiding Bolt preparada, com conjurações gratuitas limitadas por PB a cada Descanso Longo."},{"nivel":3,"nome":"Starry Form","descricao":"Ação Bônus gastando Wild Shape assume constelação por 10 minutos: Archer realiza ataque radiante à distância por Ação Bônus; Chalice aumenta cura de magias; Dragon melhora testes de Inteligência/Sabedoria e testes de Concentração."},{"nivel":6,"nome":"Cosmic Omen","descricao":"Após Descanso Longo obtém presságio Weal ou Woe; usa Reação para somar ou subtrair 1d6 de ataques, saves ou ability checks de criaturas a 30 pés, com usos limitados por PB."},{"nivel":10,"nome":"Twinkling Constellations","descricao":"Melhora os efeitos das três Starry Forms e permite alternar a constelação ativa no início de cada turno sem novo gasto de Wild Shape."},{"nivel":14,"nome":"Full of Stars","descricao":"Enquanto Starry Form estiver ativa, ganha resistência a Bludgeoning, Piercing e Slashing."}]},
-
-    {"nome":"Battle Master","resumo":"Fighter tático com dados de Superioridade e manobras escolhidas que alteram ataques, defesa e movimento.","progressao":[{"nivel":3,"nome":"Combat Superiority","descricao":"Aprende manobras e possui quatro dados de Superioridade d8, recuperados em Descanso Curto ou Longo. A CD das manobras é 8 + PB + Força ou Destreza. Aprende mais manobras e ganha mais dados nos níveis superiores."},{"nivel":3,"nome":"Student of War","descricao":"Ganha proficiência com um tipo de Artisan's Tools."},{"nivel":7,"nome":"Know Your Enemy","descricao":"Analisa uma criatura para obter informação tática sobre capacidades de combate e comparação com suas próprias estatísticas."},{"nivel":10,"nome":"Improved Combat Superiority","descricao":"Os dados de Superioridade aumentam de tamanho, elevando os efeitos das manobras."},{"nivel":15,"nome":"Relentless","descricao":"Recupera um dado de Superioridade quando entra em combate sem nenhum disponível, garantindo acesso contínuo às manobras."},{"nivel":18,"nome":"Ultimate Combat Superiority","descricao":"Aumenta novamente o tamanho dos dados de Superioridade."}]},
-    {"nome":"Champion","resumo":"Fighter direto com crítico ampliado, melhor atletismo, estilo adicional e grande regeneração no fim da progressão.","progressao":[{"nivel":3,"nome":"Improved Critical","descricao":"Seus ataques com arma e Unarmed Strike obtêm crítico em 19–20."},{"nivel":3,"nome":"Remarkable Athlete","descricao":"Aprimora testes atléticos e Iniciativa, reforçando mobilidade e desempenho físico sem gastar recursos."},{"nivel":7,"nome":"Additional Fighting Style","descricao":"Ganha mais um Fighting Style para ampliar a especialização marcial."},{"nivel":10,"nome":"Heroic Warrior","descricao":"Ganha Heroic Inspiration de forma recorrente quando entra em combate sem ela, aumentando a consistência das rolagens-chave."},{"nivel":15,"nome":"Superior Critical","descricao":"A faixa de crítico aumenta novamente, para 18–20."},{"nivel":18,"nome":"Survivor","descricao":"Aumenta drasticamente a sobrevivência: melhora Death Saves e regenera PV no início dos turnos quando está Bloodied e ainda consciente."}]},
-    {"nome":"Eldritch Knight","resumo":"Fighter que combina ataques múltiplos com magia de Wizard e teleporte tático.","progressao":[{"nivel":3,"nome":"Spellcasting","descricao":"Ganha conjuração baseada em Inteligência usando lista de Wizard, com slots e magias conforme a tabela da subclasse."},{"nivel":3,"nome":"War Bond","descricao":"Vincula até duas armas; não pode ser desarmado delas contra a vontade e pode convocar uma arma vinculada para a mão como Ação Bônus."},{"nivel":7,"nome":"War Magic","descricao":"Ao usar Attack, pode substituir um dos ataques por um cantrip com tempo de Ação."},{"nivel":10,"nome":"Eldritch Strike","descricao":"Ao acertar uma criatura com arma, ela tem Desvantagem no próximo teste de resistência contra uma de suas magias antes do fim do seu próximo turno."},{"nivel":15,"nome":"Arcane Charge","descricao":"Ao usar Action Surge, pode teleportar até 30 pés para espaço visível antes ou depois da ação adicional."},{"nivel":18,"nome":"Improved War Magic","descricao":"A integração entre Attack e magia se amplia, permitindo substituir um ataque por magia de nível baixo em vez de ficar restrito a cantrip."}]},
-    {"nome":"Psi Warrior","resumo":"Fighter psíquico que usa dados de Energia Psiônica para proteção, dano, telecinese e mobilidade aérea.","progressao":[{"nivel":3,"nome":"Psionic Power","descricao":"Recebe dados de Psionic Energy e três usos principais: Protective Field reduz dano em aliado visível; Psionic Strike acrescenta dano Force após acerto; Telekinetic Movement move criatura ou objeto. Os dados crescem e recuperam em descansos conforme a progressão."},{"nivel":7,"nome":"Telekinetic Adept","descricao":"Psi-Powered Leap concede Fly Speed temporário como Ação Bônus; Telekinetic Thrust permite que Psionic Strike empurre ou derrube o alvo em falha de Força."},{"nivel":10,"nome":"Guarded Mind","descricao":"Ganha resistência a Psychic; pode gastar dado psiônico para encerrar Charmed ou Frightened em si."},{"nivel":15,"nome":"Bulwark of Force","descricao":"Ação Bônus concede Half Cover por 1 minuto a você e aliados escolhidos próximos; uso gratuito por Descanso Longo ou repetição gastando dado psiônico."},{"nivel":18,"nome":"Telekinetic Master","descricao":"Telekinesis fica sempre preparada e pode ser conjurada sem slot uma vez por Descanso Longo ou mediante gasto psiônico; durante a concentração, melhora sua capacidade de continuar atacando."}]},
-
-    {"nome":"Warrior of Mercy","resumo":"Monk que converte Focus em cura ou dano necrótico, remove condições e pode reviver aliados.","progressao":[{"nivel":3,"nome":"Implements of Mercy","descricao":"Ganha proficiência em Insight, Medicine e Herbalism Kit."},{"nivel":3,"nome":"Hand of Healing","descricao":"Magic Action + 1 Focus toca criatura e cura Martial Arts die + Sabedoria. Durante Flurry of Blows, pode substituir um dos golpes por essa cura sem custo adicional além do Flurry."},{"nivel":3,"nome":"Hand of Harm","descricao":"Uma vez por turno ao acertar Unarmed Strike, gasta 1 Focus para causar dano Necrotic extra igual a Martial Arts die + Sabedoria."},{"nivel":6,"nome":"Physician's Touch","descricao":"Hand of Harm também causa Poisoned até o fim do próximo turno; Hand of Healing pode encerrar Blinded, Deafened, Paralyzed, Poisoned ou Stunned."},{"nivel":11,"nome":"Flurry of Healing and Harm","descricao":"Ao usar Flurry, pode substituir ambos os ataques por Hand of Healing sem Focus adicional e pode aplicar Hand of Harm em um golpe do Flurry sem pagar seu custo normal."},{"nivel":17,"nome":"Hand of Ultimate Mercy","descricao":"Ação + 5 Focus pode trazer de volta criatura morta nas últimas 24 horas com 4d10 + Sabedoria PV e remover várias condições debilitantes. 1/Descanso Longo."}]},
-    {"nome":"Warrior of Shadow","resumo":"Monk de escuridão mágica, furtividade, teleporte entre sombras e invisibilidade.","progressao":[{"nivel":3,"nome":"Shadow Arts","descricao":"Ganha recursos mágicos ligados a Darkness e ilusão; pode criar escuridão usando Focus e enxergar através da própria Darkness, usando-a como ferramenta de combate e infiltração."},{"nivel":6,"nome":"Shadow Step","descricao":"Ação Bônus teleporta entre áreas de Dim Light/Darkness dentro do alcance e ganha Vantagem no próximo ataque corpo a corpo feito no mesmo turno."},{"nivel":11,"nome":"Improved Shadow Step","descricao":"Pode gastar Focus para usar Shadow Step mesmo quando as condições de iluminação não seriam ideais e encadear o teleporte com ataque tático."},{"nivel":17,"nome":"Cloak of Shadows","descricao":"Usa sombras para ganhar invisibilidade prolongada e reposicionamento defensivo enquanto permanece em luz baixa ou escuridão."}]},
-    {"nome":"Warrior of the Elements","resumo":"Monk elemental que amplia o alcance dos golpes, altera tipos de dano, empurra/puxa alvos e ganha ataque em área.","progressao":[{"nivel":3,"nome":"Elemental Attunement","descricao":"Conhece Elementalism. Ação Bônus + 1 Focus ativa por 10 minutos: Unarmed Strikes ganham +10 pés de alcance, podem causar Acid, Cold, Fire, Lightning ou Thunder e podem empurrar/puxar alvos em falha de teste."},{"nivel":6,"nome":"Elemental Burst","descricao":"Magic Action + 2 Focus cria explosão elemental em esfera a distância; criaturas fazem save de Destreza e sofrem múltiplos Martial Arts dice do tipo elemental escolhido, metade no sucesso."},{"nivel":11,"nome":"Stride of the Elements","descricao":"Enquanto Elemental Attunement estiver ativa, ganha Fly e Swim Speed iguais ao Speed."},{"nivel":17,"nome":"Elemental Epitome","descricao":"A forma elemental ganha proteção adicional e efeitos ofensivos aprimorados, permitindo resistência adaptável e dano elemental extra ligado à sua movimentação e golpes."}]},
-    {"nome":"Warrior of the Open Hand","resumo":"Monk de controle corporal que derruba, empurra, bloqueia reações, autocura e aplica Quivering Palm.","progressao":[{"nivel":3,"nome":"Open Hand Technique","descricao":"Quando acerta ataques de Flurry of Blows, pode aplicar técnicas sem custo adicional: impedir Opportunity Attacks, empurrar o alvo ou derrubá-lo mediante teste apropriado."},{"nivel":6,"nome":"Wholeness of Body","descricao":"Ação Bônus de autocura com quantidade baseada no Martial Arts die e Sabedoria, com usos limitados recuperados em Descanso Longo."},{"nivel":11,"nome":"Fleet Step","descricao":"Integra Step of the Wind à economia de Ação Bônus, concedendo mobilidade adicional sem sacrificar completamente as demais opções do Monk."},{"nivel":17,"nome":"Quivering Palm","descricao":"Após acertar Unarmed Strike, gasta Focus para implantar vibrações. Depois pode detoná-las e forçar teste de Constituição; falha causa grande quantidade de dano Force, sucesso metade."}]},
-
-    {"nome":"Oath of Devotion","resumo":"Paladino clássico de luz sagrada, proteção contra encanto e arma consagrada.","progressao":[{"nivel":3,"nome":"Oath Spells","descricao":"Mantém preparadas magias temáticas de proteção e verdade conforme os níveis de Paladino."},{"nivel":3,"nome":"Sacred Weapon","descricao":"Channel Divinity consagra uma arma, aumentando sua precisão com Carisma e fazendo seus ataques brilharem com poder sagrado por duração limitada."},{"nivel":7,"nome":"Aura of Devotion","descricao":"Você e aliados dentro da aura ficam protegidos contra Charmed; o alcance aumenta com a Aura of Protection da classe."},{"nivel":15,"nome":"Smite of Protection","descricao":"Usar Divine Smite concede proteção adicional ao alvo/aliados próximos, convertendo o ataque sagrado em defesa temporária."},{"nivel":20,"nome":"Holy Nimbus","descricao":"Ação Bônus assume forma sagrada por 1 minuto, emitindo luz e dano Radiant contra inimigos próximos e fornecendo proteção adicional contra ameaças sobrenaturais."}]},
-    {"nome":"Oath of Glory","resumo":"Paladino atlético que amplia mobilidade, feitos heroicos e pressão ofensiva do grupo.","progressao":[{"nivel":3,"nome":"Oath Spells","descricao":"Mantém preparadas magias ligadas a heroísmo, mobilidade e feitos atléticos."},{"nivel":3,"nome":"Peerless Athlete","descricao":"Channel Divinity melhora testes físicos, saltos e capacidade de carregar/empurrar durante um período de esforço heroico."},{"nivel":3,"nome":"Inspiring Smite","descricao":"Após Divine Smite, pode usar Channel Divinity para distribuir PV temporários entre criaturas escolhidas próximas."},{"nivel":7,"nome":"Aura of Alacrity","descricao":"Aumenta seu Speed e o de aliados que iniciam o turno na aura."},{"nivel":15,"nome":"Glorious Defense","descricao":"Reação adiciona Carisma à CA de criatura próxima contra ataque; se o ataque errar, pode realizar contra-ataque."},{"nivel":20,"nome":"Living Legend","descricao":"Ação Bônus por 1 minuto: Vantagem em Charisma checks, pode transformar um ataque que errou em acerto uma vez por turno e repetir save falho com Reação. 1/Descanso Longo ou reutiliza gastando slot de 5º."}]},
-    {"nome":"Oath of the Ancients","resumo":"Paladino feérico e natural, com controle de inimigos e aura resistente a magia.","progressao":[{"nivel":3,"nome":"Oath Spells","descricao":"Mantém preparadas magias de natureza, fadas, restrição e mobilidade conforme o nível."},{"nivel":3,"nome":"Nature's Wrath","descricao":"Channel Divinity invoca poder natural para restringir e controlar criatura próxima mediante save."},{"nivel":7,"nome":"Aura of Warding","descricao":"Você e aliados na aura recebem forte proteção contra dano causado por magias."},{"nivel":15,"nome":"Undying Sentinel","descricao":"Resistência à morte e longevidade sobrenatural; uma queda fatal pode ser evitada por recurso limitado."},{"nivel":20,"nome":"Elder Champion","descricao":"Transformação de 1 minuto com regeneração, conjuração melhorada de magias de Paladino e pressão mágica sobre inimigos próximos."}]},
-    {"nome":"Oath of Vengeance","resumo":"Paladino caçador de alvo único, com Vow of Enmity, perseguição e contra-ataque.","progressao":[{"nivel":3,"nome":"Oath Spells","descricao":"Mantém preparadas magias de perseguição, marcação, mobilidade e punição conforme o nível."},{"nivel":3,"nome":"Vow of Enmity","descricao":"Channel Divinity marca inimigo como alvo de vingança, concedendo Vantagem em ataques contra ele e facilitando persegui-lo durante o combate."},{"nivel":7,"nome":"Relentless Avenger","descricao":"Após Opportunity Attack, pode se mover parte do Speed sem provocar Opportunity Attacks, mantendo contato com o alvo."},{"nivel":15,"nome":"Soul of Vengeance","descricao":"Reação para atacar o alvo de Vow of Enmity quando ele realiza certas ações/ataques, aumentando pressão fora do seu turno."},{"nivel":20,"nome":"Avenging Angel","descricao":"Transformação temporária concede Fly Speed e aura de medo, tornando o Paladino um perseguidor sobrenatural."}]},
-
-    {"nome":"Beast Master","resumo":"Ranger com companheiro primal cujo bloco, ataques e sobrevivência escalam com a classe.","progressao":[{"nivel":3,"nome":"Primal Companion","descricao":"Escolhe Fera da Terra, do Mar ou do Céu. O companheiro usa bloco próprio, age junto de você e pode ser comandado para atacar; estatísticas escalam com PB e nível de Ranger, e pode ser restaurado/ressuscitado pelas regras da subclasse."},{"nivel":7,"nome":"Exceptional Training","descricao":"Melhora a economia de ações e a eficiência do companheiro; seus ataques passam a interagir melhor com as defesas e recursos mágicos do Ranger."},{"nivel":11,"nome":"Bestial Fury","descricao":"O companheiro passa a atacar mais vezes quando recebe a ordem de ataque, aumentando significativamente o dano por rodada."},{"nivel":15,"nome":"Share Spells","descricao":"Magias que você conjura em si podem afetar simultaneamente o companheiro quando ele está próximo."}]},
-    {"nome":"Fey Wanderer","resumo":"Ranger feérico com dano psíquico, habilidades sociais, resistência mental e invocação de Fey.","progressao":[{"nivel":3,"nome":"Dreadful Strikes","descricao":"Uma vez por turno por criatura, ataques podem causar dano Psychic extra; o dado aumenta em níveis posteriores."},{"nivel":3,"nome":"Fey Wanderer Magic","descricao":"Ganha magias adicionais sempre preparadas ligadas a encanto, fadas e deslocamento conforme o nível."},{"nivel":3,"nome":"Otherworldly Glamour","descricao":"Adiciona Sabedoria a checks de Carisma e ganha proficiência em uma perícia social."},{"nivel":7,"nome":"Beguiling Twist","descricao":"Vantagem contra Charmed/Frightened; quando você ou criatura próxima resiste a esses efeitos, pode redirecionar encanto/medo contra outro alvo por Reação."},{"nivel":11,"nome":"Fey Reinforcements","descricao":"Summon Fey fica disponível e pode ser conjurada com uso gratuito; a subclasse melhora a forma de conjurar/usar o espírito feérico."},{"nivel":15,"nome":"Misty Wanderer","descricao":"Misty Step ganha usos gratuitos e pode levar outra criatura voluntária próxima durante o teleporte."}]},
-    {"nome":"Gloom Stalker","resumo":"Ranger de emboscada e escuridão, com iniciativa, dano inicial, invisibilidade contra Darkvision e defesa mental.","progressao":[{"nivel":3,"nome":"Dread Ambusher","descricao":"Melhora Iniciativa e o primeiro turno de combate, concedendo deslocamento/ataque e dano adicionais em emboscadas."},{"nivel":3,"nome":"Gloom Stalker Magic","descricao":"Mantém preparadas magias de ocultação, medo, mobilidade e caça conforme o nível."},{"nivel":3,"nome":"Umbral Sight","descricao":"Aumenta Darkvision e torna você difícil ou impossível de perceber por criaturas que dependem apenas de Darkvision na escuridão."},{"nivel":7,"nome":"Iron Mind","descricao":"Ganha proficiência adicional em save mental ou reforço equivalente contra efeitos mentais."},{"nivel":11,"nome":"Stalker's Flurry","descricao":"Transforma ataques falhos ou sequências ofensivas em novas oportunidades de ataque, melhorando consistência por turno."},{"nivel":15,"nome":"Shadowy Dodge","descricao":"Reação defensiva contra ataque de criatura visível, impondo penalidade/Desvantagem para reduzir chance de ser atingido."}]},
-    {"nome":"Hunter","resumo":"Ranger modular que escolhe técnicas de caça contra diferentes tipos de inimigo e pode adaptar opções em níveis superiores.","progressao":[{"nivel":3,"nome":"Hunter's Lore","descricao":"Hunter's Mark revela informações úteis do alvo marcado, como vulnerabilidades, resistências ou imunidades relevantes."},{"nivel":3,"nome":"Hunter's Prey","descricao":"Escolhe técnica ofensiva de caça para aumentar dano/pressão contra alvos específicos; as opções cobrem inimigo ferido, inimigos agrupados ou ataques adicionais."},{"nivel":7,"nome":"Defensive Tactics","descricao":"Escolhe técnica defensiva para reduzir oportunidades de inimigos, escapar de cercos ou resistir a ataques repetidos."},{"nivel":11,"nome":"Superior Hunter's Prey","descricao":"A técnica ofensiva evolui, permitindo explorar múltiplos alvos ou obter benefício adicional contra a presa marcada."},{"nivel":15,"nome":"Superior Hunter's Defense","descricao":"A defesa escolhida evolui para reduzir dano ou redirecionar ataques com mais consistência."}]},
-
-    {"nome":"Arcane Trickster","resumo":"Rogue com magia de Wizard, Mage Hand aprimorada, emboscada mágica e uso de magia durante Sneak Attack.","progressao":[{"nivel":3,"nome":"Spellcasting","descricao":"Ganha conjuração baseada em Inteligência usando seleção de magias de Wizard e slots próprios da subclasse."},{"nivel":3,"nome":"Mage Hand Legerdemain","descricao":"Mage Hand fica aprimorada e invisível, podendo manipular objetos, ferramentas e bolsos à distância com usos furtivos."},{"nivel":9,"nome":"Magical Ambush","descricao":"Quando conjura estando escondido, inimigos têm mais dificuldade para resistir às suas magias, normalmente por Desvantagem no primeiro save."},{"nivel":13,"nome":"Versatile Trickster","descricao":"Mage Hand pode ajudar a criar abertura contra um alvo, concedendo Vantagem para facilitar Sneak Attack."},{"nivel":17,"nome":"Spell Thief","descricao":"Reação após resistir a magia permite bloquear temporariamente aquela magia para o conjurador e aprendê-la/usar seu efeito conforme as limitações da subclasse."}]},
-    {"nome":"Assassin","resumo":"Rogue de abertura explosiva, venenos, infiltração e Death Strike.","progressao":[{"nivel":3,"nome":"Assassinate","descricao":"Vantagem em Iniciativa e benefício ofensivo contra criaturas que ainda não agiram; Sneak Attack na abertura causa dano adicional forte."},{"nivel":3,"nome":"Assassin's Tools","descricao":"Ganha proficiência com Disguise Kit e Poisoner's Kit e usa esses recursos para infiltração e preparação."},{"nivel":9,"nome":"Infiltration Expertise","descricao":"Cria identidades falsas e imita documentação/comportamento para infiltração prolongada com muito mais segurança."},{"nivel":13,"nome":"Envenom Weapons","descricao":"Ao aplicar veneno com a subclasse, aumenta a eficácia e dano, integrando Poison com Sneak Attack."},{"nivel":17,"nome":"Death Strike","descricao":"Quando acerta uma criatura ainda vulnerável à sua abertura de Assassin, pode forçar save de Constituição para multiplicar drasticamente o dano do ataque."}]},
-    {"nome":"Soulknife","resumo":"Rogue psíquico com dados psiônicos, lâminas mentais, telepatia, teleporte e invisibilidade.","progressao":[{"nivel":3,"nome":"Psionic Power","descricao":"Recebe dados de Psionic Energy. Psi-Bolstered Knack adiciona dado a ability check proficiente falho; Psychic Whispers cria telepatia temporária entre criaturas escolhidas."},{"nivel":3,"nome":"Psychic Blades","descricao":"Manifesta lâminas psíquicas como parte do Attack, usando Destreza e dano Psychic; pode fazer ataque secundário como Ação Bônus."},{"nivel":9,"nome":"Soul Blades","descricao":"Homing Strikes gasta dado psiônico para melhorar ataque que errou; Psychic Teleportation arremessa lâmina e teleporta para o local usando dado psiônico."},{"nivel":13,"nome":"Psychic Veil","descricao":"Magic Action fica Invisible por 1 hora ou até quebrar o efeito; possui uso gratuito e pode repetir gastando dado psiônico."},{"nivel":17,"nome":"Rend Mind","descricao":"Após Sneak Attack com Psychic Blades, pode forçar save de Sabedoria para Stunned; usos limitados, com repetição mediante gasto psiônico."}]},
-    {"nome":"Thief","resumo":"Rogue rápido com objetos, escalada, furtividade avançada, itens mágicos e turnos extras.","progressao":[{"nivel":3,"nome":"Fast Hands","descricao":"Cunning Action permite opções extras de Utilize/Search e manipulação de objetos como Ação Bônus, ampliando itens utilizáveis em combate."},{"nivel":3,"nome":"Second-Story Work","descricao":"Ganha Climb Speed e melhora saltos/mobilidade vertical."},{"nivel":9,"nome":"Supreme Sneak","descricao":"Obtém Vantagem ou benefício ampliado em Stealth quando cumpre condições de movimentação/ocultação."},{"nivel":13,"nome":"Use Magic Device","descricao":"Ignora parte das restrições de itens mágicos, ganha cargas/uso mais eficiente e pode usar pergaminhos além da capacidade normal."},{"nivel":17,"nome":"Thief's Reflexes","descricao":"Ganha um segundo turno em uma rodada-chave do combate, aumentando enormemente ações na abertura."}]},
-
-    {"nome":"Aberrant Sorcery","resumo":"Sorcerer psíquico com lista adicional, telepatia, conjuração sem componentes e forma aberrante.","progressao":[{"nivel":3,"nome":"Psionic Spells","descricao":"Mantém preparada lista temática de Enchantment/Divination/psíquica e pode substituir dentro das restrições da subclasse."},{"nivel":3,"nome":"Telepathic Speech","descricao":"Ação Bônus cria ligação telepática com criatura próxima por duração baseada no nível, dentro de grande alcance."},{"nivel":6,"nome":"Psionic Sorcery","descricao":"Pode conjurar magias da lista psionic gastando Sorcery Points em vez de slot e sem componentes Verbal/Somatic/Material não consumido."},{"nivel":6,"nome":"Psychic Defenses","descricao":"Resistência a Psychic e Vantagem contra Charmed/Frightened."},{"nivel":14,"nome":"Revelation in Flesh","descricao":"Ação Bônus gasta Sorcery Points para adaptações aberrantes temporárias: voo, natação, sentidos especiais ou corpo maleável."},{"nivel":18,"nome":"Warping Implosion","descricao":"Ação Bônus teleporta e cria implosão que puxa criaturas e causa dano Force em falha de Força; uso gratuito por Descanso Longo ou repetição com Sorcery Points."}]},
-    {"nome":"Clockwork Sorcery","resumo":"Sorcerer de ordem planar que cancela Vantagem/Desvantagem, cria escudo de dados e estabiliza resultados.","progressao":[{"nivel":3,"nome":"Clockwork Spells","descricao":"Mantém preparada lista de proteção, controle e ordem, com possibilidade de substituições dentro das escolas permitidas."},{"nivel":3,"nome":"Restore Balance","descricao":"Reação cancela Vantagem ou Desvantagem em uma rolagem de criatura próxima. Usos iguais ao PB por Descanso Longo."},{"nivel":6,"nome":"Bastion of Law","descricao":"Gasta Sorcery Points para criar pool de d8 protetores em criatura; quando ela sofre dano, pode gastar dados para reduzir o dano."},{"nivel":14,"nome":"Trance of Order","descricao":"Ação Bônus por 1 minuto: ataques contra você não podem ter Vantagem e rolagens suas de 9 ou menos em ataque/ability/save contam como 10. 1/Descanso Longo ou reusa com Sorcery Points."},{"nivel":18,"nome":"Clockwork Cavalcade","descricao":"Ação convoca espíritos mecânicos em área para curar aliados, reparar objetos e dissipar efeitos mágicos de inimigos. 1/Descanso Longo ou reusa com Sorcery Points."}]},
-    {"nome":"Draconic Sorcery","resumo":"Sorcerer dracônico com CA e PV superiores, afinidade elemental, asas e presença aterradora.","progressao":[{"nivel":3,"nome":"Draconic Resilience","descricao":"Aumenta PV máximos por nível de Sorcerer e fornece CA natural enquanto não usa armadura."},{"nivel":3,"nome":"Draconic Spells","descricao":"Mantém preparadas magias associadas a poder dracônico e ao elemento escolhido conforme o nível."},{"nivel":6,"nome":"Elemental Affinity","descricao":"Escolhe afinidade de dano dracônico; ganha resistência apropriada e adiciona Carisma a uma rolagem de dano de magia do tipo correspondente."},{"nivel":14,"nome":"Dragon Wings","descricao":"Ação Bônus manifesta asas e ganha Fly Speed, mantendo-as até dispensar ou ficar incapacitado."},{"nivel":18,"nome":"Dragon Companion / Presence","descricao":"Capstone dracônico amplia sua presença sobrenatural com efeito poderoso de controle/manifestação de dragão, consumindo recurso limitado de Sorcery Points/descanso."}]},
-    {"nome":"Wild Magic Sorcery","resumo":"Sorcerer caótico que aciona Wild Magic Surge, manipula sorte e controla parcialmente seus surtos.","progressao":[{"nivel":3,"nome":"Wild Magic Surge","descricao":"Após conjurar certas magias, pode rolar na tabela de Wild Magic para produzir efeito aleatório; a frequência aumenta por recursos da subclasse."},{"nivel":3,"nome":"Tides of Chaos","descricao":"Concede Vantagem em um D20 Test; recupera no Descanso Longo ou antes quando o DM/efeito força novo Wild Magic Surge."},{"nivel":6,"nome":"Bend Luck","descricao":"Reação + Sorcery Points para rolar dado e somar/subtrair de ataque, ability check ou save de outra criatura."},{"nivel":14,"nome":"Controlled Chaos","descricao":"Ao rolar Wild Magic Surge, pode rolar mais de uma vez e escolher o resultado, reduzindo riscos ruins."},{"nivel":18,"nome":"Tamed Surge","descricao":"Ganha controle muito maior sobre Wild Magic, permitindo escolher/dirigir resultados de surto com uso limitado."}]},
-
-    {"nome":"Archfey Patron","resumo":"Warlock feérico de teleporte, encanto e medo, com Misty Step ampliado e defesas ilusórias.","progressao":[{"nivel":3,"nome":"Archfey Spells","descricao":"Mantém preparadas magias de encanto, ilusão e teleporte associadas ao patrono."},{"nivel":3,"nome":"Steps of the Fey","descricao":"Misty Step fica central à subclasse, ganhando usos/efeitos adicionais. Ao teleportar pode aplicar benefícios feéricos como desaparecer, encantar, assustar ou transportar aliado conforme a opção escolhida."},{"nivel":6,"nome":"Misty Escape","descricao":"Reação ao sofrer dano permite teleportar e obter proteção/Invisible temporária, evitando continuação do ataque inimigo."},{"nivel":10,"nome":"Beguiling Defenses","descricao":"Imunidade ou forte proteção contra Charmed; quando alguém tenta encantá-lo, pode reverter o efeito contra o agressor."},{"nivel":14,"nome":"Bewitching Magic","descricao":"Conjurar Enchantment/Illusion permite Misty Step ou outro deslocamento feérico sem consumir a economia normal, encadeando magia e teleporte."}]},
-    {"nome":"Celestial Patron","resumo":"Warlock curador com luz, dados de Healing Light, resistência radiante e retorno explosivo da inconsciência.","progressao":[{"nivel":3,"nome":"Celestial Spells","descricao":"Mantém preparadas magias de cura, luz e fogo associadas ao patrono celestial."},{"nivel":3,"nome":"Healing Light","descricao":"Possui reserva de d6; como Ação Bônus gasta dados para curar criatura a 60 pés. A reserva cresce com o nível de Warlock e recupera no Descanso Longo."},{"nivel":6,"nome":"Radiant Soul","descricao":"Resistência a Radiant e melhora dano de uma magia que cause Fire/Radiant adicionando Carisma a uma rolagem."},{"nivel":10,"nome":"Celestial Resilience","descricao":"Após descanso, você e aliados recebem PV temporários proporcionais ao nível de Warlock e Carisma."},{"nivel":14,"nome":"Searing Vengeance","descricao":"Quando faria Death Saves no início do turno, pode recuperar grande quantidade de PV, levantar-se e causar Radiant/cegueira em inimigos próximos. 1/Descanso Longo."}]},
-    {"nome":"Fiend Patron","resumo":"Warlock infernal que ganha PV temporários ao derrubar inimigos, adapta resistência e arremessa vítimas através do Inferno.","progressao":[{"nivel":3,"nome":"Fiend Spells","descricao":"Mantém preparadas magias de fogo, destruição e controle ligadas a Fiends."},{"nivel":3,"nome":"Dark One's Blessing","descricao":"Quando inimigo próximo cai a 0 PV, ganha PV temporários baseados no nível de Warlock + Carisma."},{"nivel":6,"nome":"Dark One's Own Luck","descricao":"Após falhar D20 Test, adiciona d10 para tentar transformar em sucesso; usos/recuperação limitados."},{"nivel":10,"nome":"Fiendish Resilience","descricao":"Após Descanso escolhe tipo de dano para receber resistência, com restrições contra dano de armas mágicas/especiais conforme a regra."},{"nivel":14,"nome":"Hurl Through Hell","descricao":"Ao acertar ataque, envia o alvo momentaneamente através de plano infernal; ele desaparece e retorna sofrendo grande dano Psychic, com uso limitado por Descanso Longo."}]},
-    {"nome":"Great Old One Patron","resumo":"Warlock psíquico que comunica por telepatia, converte dano em Psychic, perturba mentes e invoca aberrações.","progressao":[{"nivel":3,"nome":"Great Old One Spells","descricao":"Mantém preparadas magias de mente, Divination e aberração associadas ao patrono."},{"nivel":3,"nome":"Awakened Mind","descricao":"Telepatia com criaturas próximas, permitindo comunicação mental sem idioma falado normal."},{"nivel":3,"nome":"Psychic Spells","descricao":"Magias do patrono podem alterar componentes e/ou converter tipos de dano em Psychic para refletir poder mental."},{"nivel":6,"nome":"Clairvoyant Combatant","descricao":"Liga-se mentalmente a um oponente para obter vantagem tática em ataques e impor dificuldade contra você."},{"nivel":10,"nome":"Eldritch Hex","descricao":"Hex recebe ampliação psíquica, afetando mais tipos de testes/saves e causando interferência mental adicional."},{"nivel":14,"nome":"Create Thrall","descricao":"Summon Aberration fica sempre preparada e a subclasse concede uso/aprimoramento especial para manter servo aberrante sem comprometer tanto a concentração normal."}]},
-
-    {"nome":"Abjurer","resumo":"Wizard especialista em proteção, Arcane Ward e contramágica.","progressao":[{"nivel":3,"nome":"Abjuration Savant","descricao":"Adiciona magias de Abjuration ao spellbook com mais eficiência e mantém acesso ampliado a essa escola."},{"nivel":3,"nome":"Arcane Ward","descricao":"Ao conjurar Abjuration cria/recupera barreira com PV próprios que absorve dano antes de você; escala com nível de Wizard e Inteligência."},{"nivel":6,"nome":"Projected Ward","descricao":"Reação permite que Arcane Ward absorva dano sofrido por criatura a 30 pés."},{"nivel":10,"nome":"Spell Breaker","descricao":"Aprimora Counterspell/Dispel Magic e recupera recursos ou garante melhor resultado ao quebrar magia inimiga."},{"nivel":14,"nome":"Spell Resistance","descricao":"Vantagem em saves contra magias e resistência a dano causado por magias."}]},
-    {"nome":"Diviner","resumo":"Wizard de Portent, informação e manipulação de rolagens futuras.","progressao":[{"nivel":3,"nome":"Divination Savant","descricao":"Facilita adicionar magias de Divination ao spellbook e aumenta eficiência da escola."},{"nivel":3,"nome":"Portent","descricao":"Após Descanso Longo rola dados d20 e guarda resultados; antes de certas rolagens de ataque/save/check, substitui a rolagem por um resultado guardado."},{"nivel":6,"nome":"Expert Divination","descricao":"Conjurar Divination com slot recupera parte da energia mágica em slot de nível inferior, permitindo cadeia eficiente de adivinhações."},{"nivel":10,"nome":"The Third Eye","descricao":"Ação concede sentido escolhido, como Darkvision, visão etérea/invisível ou leitura aprimorada, até descanso/uso seguinte."},{"nivel":14,"nome":"Greater Portent","descricao":"Aumenta a quantidade de resultados de Portent disponíveis por dia."}]},
-    {"nome":"Evoker","resumo":"Wizard de dano em área que protege aliados, melhora cantrips e maximiza explosões de Evocation.","progressao":[{"nivel":3,"nome":"Evocation Savant","descricao":"Facilita adicionar magias de Evocation ao spellbook."},{"nivel":3,"nome":"Potent Cantrip / Sculpt Spells","descricao":"Sculpt Spells permite excluir criaturas dos efeitos prejudiciais das Evocations em área; cantrips ofensivos recebem consistência adicional em níveis da subclasse."},{"nivel":6,"nome":"Potent Cantrip","descricao":"Cantrips que dependem de save ainda causam parte do dano em sucesso, ou obtêm efeito equivalente de consistência."},{"nivel":10,"nome":"Empowered Evocation","descricao":"Adiciona Inteligência a uma rolagem de dano de magia de Evocation de Wizard."},{"nivel":14,"nome":"Overchannel","descricao":"Pode maximizar o dano de magia de Wizard de nível baixo/médio; repetir antes de descanso causa dano crescente em você."}]},
-    {"nome":"Illusionist","resumo":"Wizard que melhora ilusões, conjura sem componentes óbvios e torna partes da ilusão temporariamente reais.","progressao":[{"nivel":3,"nome":"Illusion Savant","descricao":"Facilita adicionar magias de Illusion ao spellbook."},{"nivel":3,"nome":"Improved Illusions","descricao":"Aprimora Minor Illusion e outras ilusões, combinando estímulos/alcance ou permitindo conjuração mais sutil conforme a regra de 2024."},{"nivel":6,"nome":"Phantasmal Creatures","descricao":"Invocações/ilusões de criaturas recebem benefícios próprios e podem ser usadas de forma mais rápida ou eficiente."},{"nivel":10,"nome":"Illusory Self","descricao":"Reação cria duplicata ilusória para fazer um ataque contra você errar. Uso limitado por descanso, com possibilidade de restaurar usando slot."},{"nivel":14,"nome":"Illusory Reality","descricao":"Ao conjurar Illusion com slot, pode tornar um objeto inanimado da ilusão temporariamente real, desde que não cause dano direto nem funcione como item mágico."}]}
+  "schema": "hub-rpg/subclass-mechanics/v1",
+  "fonte_id": "phb-2024",
+  "fonte": "Player's Handbook (2024)",
+  "subclasses": [
+    {
+      "nome": "Path of the Berserker",
+      "resumo": "Fúria ofensiva focada em dano extra, imunidade mental e retaliação.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Frenzy",
+          "descricao": "Durante a Fúria, se usar Reckless Attack, o primeiro acerto do turno baseado em Força causa dados d6 extras em quantidade igual ao bônus de Rage Damage; o dano mantém o tipo do ataque."
+        },
+        {
+          "nivel": 6,
+          "nome": "Mindless Rage",
+          "descricao": "Enquanto estiver em Fúria, fica imune a Charmed e Frightened; iniciar a Fúria encerra essas condições."
+        },
+        {
+          "nivel": 10,
+          "nome": "Retaliation",
+          "descricao": "Quando uma criatura a até 5 pés causa dano em você, pode usar a Reação para fazer um ataque corpo a corpo contra ela."
+        },
+        {
+          "nivel": 14,
+          "nome": "Intimidating Presence",
+          "descricao": "Ação Bônus para forçar criaturas escolhidas em emanação de 30 pés a teste de Sabedoria contra CD 8 + Força + PB; falha causa Frightened por até 1 minuto, com novo teste ao fim dos turnos. Recupera no Descanso Longo ou gastando um uso de Rage."
+        }
+      ]
+    },
+    {
+      "nome": "Path of the Wild Heart",
+      "resumo": "Adapta a Fúria com aspectos animais escolhidos para resistência, mobilidade, apoio e controle.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Animal Speaker",
+          "descricao": "Mantém Beast Sense e Speak with Animals disponíveis como rituais, usando Sabedoria."
+        },
+        {
+          "nivel": 3,
+          "nome": "Rage of the Wilds",
+          "descricao": "Ao iniciar a Fúria escolhe um aspecto: Bear concede resistência a quase todos os tipos de dano, exceto Force, Necrotic, Psychic e Radiant; Eagle combina Dash e Disengage na ativação e como Ação Bônus durante a Fúria; Wolf concede Vantagem aos aliados contra inimigos adjacentes a você."
+        },
+        {
+          "nivel": 6,
+          "nome": "Aspect of the Wilds",
+          "descricao": "Após Descanso Longo escolhe Owl (Darkvision 60 pés ou +60 pés), Panther (Climb Speed igual ao deslocamento) ou Salmon (Swim Speed igual ao deslocamento)."
+        },
+        {
+          "nivel": 10,
+          "nome": "Nature Speaker",
+          "descricao": "Pode conjurar Commune with Nature como ritual."
+        },
+        {
+          "nivel": 14,
+          "nome": "Power of the Wilds",
+          "descricao": "Ao iniciar a Fúria escolhe Falcon (Fly Speed igual ao deslocamento se sem armadura), Lion (inimigos adjacentes têm Desvantagem para atacar outros alvos) ou Ram (acertos corpo a corpo podem derrubar criaturas Grandes ou menores)."
+        }
+      ]
+    },
+    {
+      "nome": "Path of the World Tree",
+      "resumo": "Usa a Fúria para gerar pontos temporários, reposicionar criaturas e teleportar pelo tecido do multiverso.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Vitality of the Tree",
+          "descricao": "Ao iniciar a Fúria ganha PV temporários iguais ao nível de Bárbaro. No início de cada turno durante a Fúria, pode conceder a outra criatura a até 10 pés PV temporários rolando uma quantidade de d6 igual ao bônus de Rage Damage."
+        },
+        {
+          "nivel": 6,
+          "nome": "Branches of the Tree",
+          "descricao": "Reação quando uma criatura visível começa o turno a até 30 pés durante sua Fúria; em falha no teste de Força contra CD 8 + Força + PB, ela é teleportada para um espaço junto de você e seu Speed fica 0 até o fim do turno atual."
+        },
+        {
+          "nivel": 10,
+          "nome": "Battering Roots",
+          "descricao": "Em seus turnos, armas corpo a corpo Heavy ou Versatile ganham +10 pés de alcance. Ao acertar, pode aplicar Push ou Topple Mastery além da propriedade de Maestria normalmente usada."
+        },
+        {
+          "nivel": 14,
+          "nome": "Travel Along the Tree",
+          "descricao": "Ao ativar a Fúria e como Ação Bônus enquanto ela durar, teleporta até 60 pés. Uma vez por Fúria pode ampliar para 150 pés e transportar até seis criaturas voluntárias próximas."
+        }
+      ]
+    },
+    {
+      "nome": "Path of the Zealot",
+      "resumo": "Fúria divina com dano radiante/necrótico, autocura, proteção contra falhas e sobrevivência sobrenatural.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Divine Fury",
+          "descricao": "Uma vez por turno durante a Fúria, o primeiro acerto com arma ou Unarmed Strike causa 1d6 + metade do nível de Bárbaro (arredondado para baixo) de dano Radiant ou Necrotic."
+        },
+        {
+          "nivel": 3,
+          "nome": "Warrior of the Gods",
+          "descricao": "Possui uma reserva de dados d12 de cura; como Ação Bônus gasta dados para recuperar PV. Começa com 4d12 e a reserva aumenta em níveis superiores, recuperando no Descanso Longo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Fanatical Focus",
+          "descricao": "Uma vez por Fúria, ao falhar em um teste de resistência pode repeti-lo e adicionar o bônus de Rage Damage ao novo resultado."
+        },
+        {
+          "nivel": 10,
+          "nome": "Zealous Presence",
+          "descricao": "Ação Bônus para dar Vantagem em ataques e testes de resistência a até dez criaturas escolhidas a 60 pés até o início do seu próximo turno. Recupera no Descanso Longo ou gastando um uso de Rage."
+        },
+        {
+          "nivel": 14,
+          "nome": "Rage of the Gods",
+          "descricao": "Ao iniciar a Fúria pode assumir forma divina por 1 minuto: Fly Speed igual ao deslocamento com Hover e resistência a Necrotic, Psychic e Radiant. Também pode impedir que uma criatura próxima caia a 0 PV, gastando uma Rage para deixá-la com PV iguais ao nível de Bárbaro. Forma: 1/Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "College of Dance",
+      "resumo": "Bardo móvel e desarmado que transforma Bardic Inspiration em defesa, golpes e reposicionamento.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Dazzling Footwork",
+          "descricao": "Sem armadura nem escudo, CA = 10 + Destreza + Carisma. Pode usar Destreza nos Unarmed Strikes e o dado de dano pode ser o dado de Bardic Inspiration + Destreza. Ao gastar Bardic Inspiration como Ação, Ação Bônus ou Reação, também pode fazer um Unarmed Strike."
+        },
+        {
+          "nivel": 6,
+          "nome": "Inspiring Movement",
+          "descricao": "Quando um inimigo termina o turno a até 5 pés, usa Reação e gasta Bardic Inspiration para mover até metade do Speed sem provocar OA; um aliado a até 30 pés pode usar a própria Reação para fazer o mesmo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Tandem Footwork",
+          "descricao": "Ao rolar Iniciativa, pode gastar e rolar Bardic Inspiration; você e aliados a até 30 pés adicionam o resultado à Iniciativa."
+        },
+        {
+          "nivel": 14,
+          "nome": "Leading Evasion",
+          "descricao": "Em testes de Destreza que normalmente causariam metade do dano no sucesso, você sofre 0 no sucesso e metade na falha. Criaturas a até 5 pés podem receber o mesmo benefício enquanto você não estiver Incapacitated."
+        }
+      ]
+    },
+    {
+      "nome": "College of Glamour",
+      "resumo": "Controla emoções e posicionamento do grupo por magia feérica, encanto e medo.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Beguiling Magic",
+          "descricao": "Charm Person e Mirror Image ficam sempre preparadas. Após conjurar magia de Enchantment ou Illusion com slot, pode forçar uma criatura visível a 60 pés a teste de Sabedoria; falha causa Charmed ou Frightened por até 1 minuto. 1/Descanso Longo ou restaura gastando Bardic Inspiration."
+        },
+        {
+          "nivel": 3,
+          "nome": "Mantle of Inspiration",
+          "descricao": "Ação Bônus e gasto de Bardic Inspiration: escolhe criaturas a 60 pés até o modificador de Carisma; cada uma recebe PV temporários iguais a duas vezes o resultado do dado e pode usar Reação para mover até o próprio Speed sem provocar OA."
+        },
+        {
+          "nivel": 6,
+          "nome": "Mantle of Majesty",
+          "descricao": "Command fica sempre preparada. Pode assumir presença majestosa por 1 minuto e conjurar Command repetidamente como Ação Bônus sem gastar slots enquanto o efeito durar; criaturas já encantadas por você são especialmente suscetíveis."
+        },
+        {
+          "nivel": 14,
+          "nome": "Unbreakable Majesty",
+          "descricao": "Ação Bônus para uma presença de 1 minuto. Na primeira vez em cada turno que uma criatura acerta você, ela deve passar em teste de Carisma contra sua CD de magia ou o ataque erra. Recupera após Descanso Curto ou Longo."
+        }
+      ]
+    },
+    {
+      "nome": "College of Lore",
+      "resumo": "Especialista versátil que debilita rolagens inimigas e amplia o repertório mágico.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Bonus Proficiencies",
+          "descricao": "Ganha proficiência em três perícias à escolha."
+        },
+        {
+          "nivel": 3,
+          "nome": "Cutting Words",
+          "descricao": "Reação quando criatura visível a 60 pés causa dano, tem sucesso em ability check ou acerta ataque; gasta Bardic Inspiration e subtrai o dado da rolagem, podendo transformar sucesso em falha."
+        },
+        {
+          "nivel": 6,
+          "nome": "Magical Discoveries",
+          "descricao": "Escolhe duas magias de Cleric, Druid ou Wizard que possa conjurar; ficam sempre preparadas e contam como magias de Bardo. Pode substituir uma delas ao ganhar nível de Bardo."
+        },
+        {
+          "nivel": 14,
+          "nome": "Peerless Skill",
+          "descricao": "Quando falha em ability check ou ataque, pode rolar Bardic Inspiration e somar ao teste; se continuar falhando, o uso não é gasto."
+        }
+      ]
+    },
+    {
+      "nome": "College of Valor",
+      "resumo": "Bardo marcial com armaduras, escudo, ataque extra e integração direta entre magia e armas.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Combat Inspiration",
+          "descricao": "Quem possui seu Bardic Inspiration pode usar Reação para somar o dado à CA contra um ataque que acertaria ou somar o dado ao dano de um ataque que acabou de acertar."
+        },
+        {
+          "nivel": 3,
+          "nome": "Martial Training",
+          "descricao": "Ganha treinamento com armas marciais, armadura média e escudos. Armas simples ou marciais podem funcionar como foco de conjuração de Bardo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Extra Attack",
+          "descricao": "Ataca duas vezes na ação Attack; pode substituir um desses ataques pela conjuração de um cantrip com tempo de Ação."
+        },
+        {
+          "nivel": 14,
+          "nome": "Battle Magic",
+          "descricao": "Depois de conjurar uma magia com tempo de Ação, pode fazer um ataque com arma como Ação Bônus."
+        }
+      ]
+    },
+    {
+      "nome": "Life Domain",
+      "resumo": "Maximiza cura e sustentação do grupo, incluindo cura em área e autocura ao restaurar aliados.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Disciple of Life",
+          "descricao": "Ao curar com magia de slot, aumenta a cura em 2 + nível do slot."
+        },
+        {
+          "nivel": 3,
+          "nome": "Life Domain Spells",
+          "descricao": "Mantém preparadas magias de cura e proteção, incluindo Aid, Bless, Cure Wounds, Lesser Restoration, Mass Healing Word, Revivify, Aura of Life, Death Ward, Greater Restoration e Mass Cure Wounds conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Preserve Life",
+          "descricao": "Magic Action + Channel Divinity: distribui uma reserva de cura igual a 5 × nível de Cleric entre criaturas Bloodied a até 30 pés, sem elevá-las acima de metade dos PV máximos."
+        },
+        {
+          "nivel": 6,
+          "nome": "Blessed Healer",
+          "descricao": "Quando uma magia de slot cura outra criatura, você também recupera 2 + nível do slot em PV."
+        },
+        {
+          "nivel": 17,
+          "nome": "Supreme Healing",
+          "descricao": "Quando uma magia ou Channel Divinity rola dados para restaurar PV, usa o valor máximo dos dados em vez de rolar."
+        }
+      ]
+    },
+    {
+      "nome": "Light Domain",
+      "resumo": "Clérigo ofensivo de fogo e luz, com explosões radiantes e defesa por Warding Flare.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Light Domain Spells",
+          "descricao": "Mantém preparadas magias de luz e fogo, incluindo Burning Hands, Faerie Fire, Scorching Ray, See Invisibility, Daylight, Fireball, Arcane Eye, Wall of Fire, Flame Strike e Scrying conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Radiance of the Dawn",
+          "descricao": "Magic Action + Channel Divinity: dissipa Darkness mágica em emanação de 30 pés e criaturas escolhidas fazem teste de Constituição; recebem 2d10 + nível de Cleric de Radiant na falha, metade no sucesso."
+        },
+        {
+          "nivel": 3,
+          "nome": "Warding Flare",
+          "descricao": "Reação para impor Desvantagem a ataque de uma criatura visível a 30 pés. Usos iguais ao modificador de Sabedoria (mínimo 1)."
+        },
+        {
+          "nivel": 6,
+          "nome": "Improved Warding Flare",
+          "descricao": "Recupera Warding Flare em Descanso Curto ou Longo e o alvo protegido recebe 2d6 + Sabedoria de PV temporários."
+        },
+        {
+          "nivel": 17,
+          "nome": "Corona of Light",
+          "descricao": "Magic Action cria aura de luz por 1 minuto; inimigos na luz têm Desvantagem nos saves contra Radiance of the Dawn e contra suas magias que causam Fire ou Radiant. Usos por Descanso Longo baseados em Sabedoria."
+        }
+      ]
+    },
+    {
+      "nome": "Trickery Domain",
+      "resumo": "Cria duplicata ilusória, melhora furtividade e reposiciona-se para conjurar de ângulos impossíveis.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Blessing of the Trickster",
+          "descricao": "Magic Action concede a você ou criatura voluntária a até 30 pés Vantagem em Dexterity (Stealth) até o Descanso Longo ou até usar de novo."
+        },
+        {
+          "nivel": 3,
+          "nome": "Invoke Duplicity",
+          "descricao": "Ação Bônus + Channel Divinity cria duplicata a 30 pés por 1 minuto. Pode conjurar como se estivesse no espaço dela, mover a ilusão com Ação Bônus e ganha Vantagem em ataques quando você e a duplicata estão adjacentes ao alvo."
+        },
+        {
+          "nivel": 3,
+          "nome": "Trickery Domain Spells",
+          "descricao": "Mantém preparadas Charm Person, Disguise Self, Invisibility, Pass without Trace, Hypnotic Pattern, Nondetection, Confusion, Dimension Door, Dominate Person e Modify Memory conforme o nível."
+        },
+        {
+          "nivel": 6,
+          "nome": "Trickster's Transposition",
+          "descricao": "Ao criar ou mover a duplicata com Ação Bônus, pode trocar de lugar com ela."
+        },
+        {
+          "nivel": 17,
+          "nome": "Improved Duplicity",
+          "descricao": "Você e aliados têm Vantagem contra criaturas a 5 pés da duplicata. Quando a duplicata termina, você ou criatura junto dela recupera PV iguais ao seu nível de Cleric."
+        }
+      ]
+    },
+    {
+      "nome": "War Domain",
+      "resumo": "Clérigo de linha de frente que combina armas, Channel Divinity ofensivo, domínio tático e resistência em combate.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "War Domain Spells",
+          "descricao": "Mantém preparadas as magias do domínio de guerra conforme o nível, incluindo Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon, Fire Shield e Steel Wind Strike; a lista 2024 não usa Divine Favor como magia de domínio."
+        },
+        {
+          "nivel": 3,
+          "nome": "War Priest",
+          "descricao": "Ganha treinamento marcial adicional e pode realizar ataques extras com arma por meio do recurso da subclasse, com usos limitados recuperados em descanso."
+        },
+        {
+          "nivel": 3,
+          "nome": "Guided Strike",
+          "descricao": "Channel Divinity melhora decisivamente uma jogada de ataque, podendo ser aplicado após ver o resultado para transformar um quase erro em acerto."
+        },
+        {
+          "nivel": 6,
+          "nome": "War God's Blessing",
+          "descricao": "Ao usar Channel Divinity, pode conjurar Shield of Faith ou Spiritual Weapon sem gastar slot e sem exigir Concentração; o benefício dura até 1 minuto conforme a magia escolhida."
+        },
+        {
+          "nivel": 17,
+          "nome": "Avatar of Battle",
+          "descricao": "Concede resistência duradoura contra dano físico de ataques com armas, tornando o Clérigo muito mais resistente na linha de frente."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of the Land",
+      "resumo": "Druida versátil que sintoniza um tipo de terreno, recebe magias temáticas e usa poder da terra para dano, cura e proteção.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Circle Spells",
+          "descricao": "Após Descanso Longo sintoniza um ambiente (Arid, Polar, Temperate ou Tropical) e mantém preparadas as magias correspondentes; pode mudar a escolha em outro Descanso Longo."
+        },
+        {
+          "nivel": 3,
+          "nome": "Land's Aid",
+          "descricao": "Magic Action gastando Wild Shape afeta área próxima: inimigos fazem teste de Constituição e sofrem Necrotic, enquanto uma criatura escolhida recupera PV; os dados aumentam em níveis superiores."
+        },
+        {
+          "nivel": 6,
+          "nome": "Natural Recovery",
+          "descricao": "Recupera parte da energia de conjuração em descanso e ganha eficiência adicional para sustentar magias ao longo do dia."
+        },
+        {
+          "nivel": 10,
+          "nome": "Nature's Ward",
+          "descricao": "A sintonia natural concede proteção adaptável contra perigos ambientais e tipos de dano relacionados ao terreno escolhido."
+        },
+        {
+          "nivel": 14,
+          "nome": "Nature's Sanctuary",
+          "descricao": "Manifesta área protetora de natureza primal que beneficia aliados e dificulta a ação de inimigos dentro da zona."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of the Moon",
+      "resumo": "Especialista em Wild Shape de combate, com formas mais fortes, teleporte lunar e dano radiante crescente.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Circle Forms",
+          "descricao": "Wild Shape pode assumir Bestas com CR máximo igual a um terço do nível de Druid (arredondado para baixo). A forma recebe CA mínima 13 + Sabedoria e PV temporários iguais a 3 × nível de Druid."
+        },
+        {
+          "nivel": 3,
+          "nome": "Circle of the Moon Spells",
+          "descricao": "Cure Wounds, Moonbeam e Starry Wisp ficam disponíveis no nível 3; depois Conjure Animals, Fount of Moonlight e Mass Cure Wounds. Essas magias podem ser conjuradas em Wild Shape conforme a progressão."
+        },
+        {
+          "nivel": 6,
+          "nome": "Improved Circle Forms",
+          "descricao": "Ataques da forma podem causar Radiant em vez do tipo normal e você adiciona Sabedoria a testes de resistência de Constituição em Wild Shape."
+        },
+        {
+          "nivel": 10,
+          "nome": "Moonlight Step",
+          "descricao": "Ação Bônus teleporta 30 pés e concede Vantagem no próximo ataque do turno. Usos iguais ao modificador de Sabedoria por Descanso Longo; pode restaurar uso gastando slot de nível 2 ou maior."
+        },
+        {
+          "nivel": 14,
+          "nome": "Lunar Form",
+          "descricao": "Uma vez por turno, ataque em Wild Shape causa +2d10 Radiant. Moonlight Step pode levar uma criatura voluntária próxima para um espaço próximo ao destino."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of the Sea",
+      "resumo": "Druida de tempestade e oceano com aura móvel de dano, empurrão, natação e voo.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Circle Spells",
+          "descricao": "Mantém preparadas magias de água, gelo, vento e tempestade, incluindo Fog Cloud, Gust of Wind, Ray of Frost, Shatter, Thunderwave, Lightning Bolt, Water Breathing, Control Water, Ice Storm, Conjure Elemental e Hold Monster conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Wrath of the Sea",
+          "descricao": "Ação Bônus gastando Wild Shape cria emanação de 5 pés por 10 minutos. Ao surgir e em Ações Bônus posteriores, escolhe criatura na aura para teste de Constituição; falha sofre dados d6 de Cold em quantidade igual à Sabedoria e, se Grande ou menor, é empurrada 15 pés."
+        },
+        {
+          "nivel": 6,
+          "nome": "Aquatic Affinity",
+          "descricao": "A emanação aumenta para 10 pés e você ganha Swim Speed igual ao Speed."
+        },
+        {
+          "nivel": 10,
+          "nome": "Stormborn",
+          "descricao": "Enquanto Wrath of the Sea estiver ativa, ganha Fly Speed igual ao Speed e resistência a Cold, Lightning e Thunder."
+        },
+        {
+          "nivel": 14,
+          "nome": "Oceanic Gift",
+          "descricao": "Pode centralizar Wrath of the Sea em criatura voluntária a 60 pés; gastando dois Wild Shapes, mantém uma aura em você e outra no aliado."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of the Stars",
+      "resumo": "Canaliza constelações para ataque, cura, concentração e manipulação de presságios.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Star Map",
+          "descricao": "Possui mapa estelar que funciona como foco; aprende Guidance e mantém Guiding Bolt preparada, com conjurações gratuitas limitadas por PB a cada Descanso Longo."
+        },
+        {
+          "nivel": 3,
+          "nome": "Starry Form",
+          "descricao": "Ação Bônus gastando Wild Shape assume constelação por 10 minutos: Archer realiza ataque radiante à distância por Ação Bônus; Chalice aumenta cura de magias; Dragon melhora testes de Inteligência/Sabedoria e testes de Concentração."
+        },
+        {
+          "nivel": 6,
+          "nome": "Cosmic Omen",
+          "descricao": "Após Descanso Longo obtém presságio Weal ou Woe; usa Reação para somar ou subtrair 1d6 de ataques, saves ou ability checks de criaturas a 30 pés, com usos limitados por PB."
+        },
+        {
+          "nivel": 10,
+          "nome": "Twinkling Constellations",
+          "descricao": "Melhora os efeitos das três Starry Forms e permite alternar a constelação ativa no início de cada turno sem novo gasto de Wild Shape."
+        },
+        {
+          "nivel": 14,
+          "nome": "Full of Stars",
+          "descricao": "Enquanto Starry Form estiver ativa, ganha resistência a Bludgeoning, Piercing e Slashing."
+        }
+      ]
+    },
+    {
+      "nome": "Battle Master",
+      "resumo": "Fighter tático com dados de Superioridade e manobras escolhidas que alteram ataques, defesa e movimento.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Combat Superiority",
+          "descricao": "Aprende manobras e possui quatro dados de Superioridade d8, recuperados em Descanso Curto ou Longo. A CD das manobras é 8 + PB + Força ou Destreza. Aprende mais manobras e ganha mais dados nos níveis superiores."
+        },
+        {
+          "nivel": 3,
+          "nome": "Student of War",
+          "descricao": "Ganha proficiência com um tipo de Artisan's Tools."
+        },
+        {
+          "nivel": 7,
+          "nome": "Know Your Enemy",
+          "descricao": "Analisa uma criatura para obter informação tática sobre capacidades de combate e comparação com suas próprias estatísticas."
+        },
+        {
+          "nivel": 10,
+          "nome": "Improved Combat Superiority",
+          "descricao": "Os dados de Superioridade aumentam de tamanho, elevando os efeitos das manobras."
+        },
+        {
+          "nivel": 15,
+          "nome": "Relentless",
+          "descricao": "Recupera um dado de Superioridade quando entra em combate sem nenhum disponível, garantindo acesso contínuo às manobras."
+        },
+        {
+          "nivel": 18,
+          "nome": "Ultimate Combat Superiority",
+          "descricao": "Aumenta novamente o tamanho dos dados de Superioridade."
+        }
+      ]
+    },
+    {
+      "nome": "Champion",
+      "resumo": "Fighter direto com crítico ampliado, melhor atletismo, estilo adicional e grande regeneração no fim da progressão.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Improved Critical",
+          "descricao": "Seus ataques com arma e Unarmed Strike obtêm crítico em 19–20."
+        },
+        {
+          "nivel": 3,
+          "nome": "Remarkable Athlete",
+          "descricao": "Aprimora testes atléticos e Iniciativa, reforçando mobilidade e desempenho físico sem gastar recursos."
+        },
+        {
+          "nivel": 7,
+          "nome": "Additional Fighting Style",
+          "descricao": "Ganha mais um Fighting Style para ampliar a especialização marcial."
+        },
+        {
+          "nivel": 10,
+          "nome": "Heroic Warrior",
+          "descricao": "Ganha Heroic Inspiration de forma recorrente quando entra em combate sem ela, aumentando a consistência das rolagens-chave."
+        },
+        {
+          "nivel": 15,
+          "nome": "Superior Critical",
+          "descricao": "A faixa de crítico aumenta novamente, para 18–20."
+        },
+        {
+          "nivel": 18,
+          "nome": "Survivor",
+          "descricao": "Aumenta drasticamente a sobrevivência: melhora Death Saves e regenera PV no início dos turnos quando está Bloodied e ainda consciente."
+        }
+      ]
+    },
+    {
+      "nome": "Eldritch Knight",
+      "resumo": "Fighter que combina ataques múltiplos com magia de Wizard e teleporte tático.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Spellcasting",
+          "descricao": "Ganha conjuração baseada em Inteligência usando lista de Wizard, com slots e magias conforme a tabela da subclasse."
+        },
+        {
+          "nivel": 3,
+          "nome": "War Bond",
+          "descricao": "Vincula até duas armas; não pode ser desarmado delas contra a vontade e pode convocar uma arma vinculada para a mão como Ação Bônus."
+        },
+        {
+          "nivel": 7,
+          "nome": "War Magic",
+          "descricao": "Ao usar Attack, pode substituir um dos ataques por um cantrip com tempo de Ação."
+        },
+        {
+          "nivel": 10,
+          "nome": "Eldritch Strike",
+          "descricao": "Ao acertar uma criatura com arma, ela tem Desvantagem no próximo teste de resistência contra uma de suas magias antes do fim do seu próximo turno."
+        },
+        {
+          "nivel": 15,
+          "nome": "Arcane Charge",
+          "descricao": "Ao usar Action Surge, pode teleportar até 30 pés para espaço visível antes ou depois da ação adicional."
+        },
+        {
+          "nivel": 18,
+          "nome": "Improved War Magic",
+          "descricao": "A integração entre Attack e magia se amplia, permitindo substituir um ataque por magia de nível baixo em vez de ficar restrito a cantrip."
+        }
+      ]
+    },
+    {
+      "nome": "Psi Warrior",
+      "resumo": "Fighter psíquico que usa dados de Energia Psiônica para proteção, dano, telecinese e mobilidade aérea.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Psionic Power",
+          "descricao": "Recebe dados de Psionic Energy e três usos principais: Protective Field reduz dano em aliado visível; Psionic Strike acrescenta dano Force após acerto; Telekinetic Movement move criatura ou objeto. Os dados crescem e recuperam em descansos conforme a progressão."
+        },
+        {
+          "nivel": 7,
+          "nome": "Telekinetic Adept",
+          "descricao": "Psi-Powered Leap concede Fly Speed temporário como Ação Bônus; Telekinetic Thrust permite que Psionic Strike empurre ou derrube o alvo em falha de Força."
+        },
+        {
+          "nivel": 10,
+          "nome": "Guarded Mind",
+          "descricao": "Ganha resistência a Psychic; pode gastar dado psiônico para encerrar Charmed ou Frightened em si."
+        },
+        {
+          "nivel": 15,
+          "nome": "Bulwark of Force",
+          "descricao": "Ação Bônus concede Half Cover por 1 minuto a você e aliados escolhidos próximos; uso gratuito por Descanso Longo ou repetição gastando dado psiônico."
+        },
+        {
+          "nivel": 18,
+          "nome": "Telekinetic Master",
+          "descricao": "Telekinesis fica sempre preparada e pode ser conjurada sem slot uma vez por Descanso Longo ou mediante gasto psiônico; durante a concentração, melhora sua capacidade de continuar atacando."
+        }
+      ]
+    },
+    {
+      "nome": "Warrior of Mercy",
+      "resumo": "Monk que converte Focus em cura ou dano necrótico, remove condições e pode reviver aliados.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Implements of Mercy",
+          "descricao": "Ganha proficiência em Insight, Medicine e Herbalism Kit."
+        },
+        {
+          "nivel": 3,
+          "nome": "Hand of Healing",
+          "descricao": "Magic Action + 1 Focus toca criatura e cura Martial Arts die + Sabedoria. Durante Flurry of Blows, pode substituir um dos golpes por essa cura sem custo adicional além do Flurry."
+        },
+        {
+          "nivel": 3,
+          "nome": "Hand of Harm",
+          "descricao": "Uma vez por turno ao acertar Unarmed Strike, gasta 1 Focus para causar dano Necrotic extra igual a Martial Arts die + Sabedoria."
+        },
+        {
+          "nivel": 6,
+          "nome": "Physician's Touch",
+          "descricao": "Hand of Harm também causa Poisoned até o fim do próximo turno; Hand of Healing pode encerrar Blinded, Deafened, Paralyzed, Poisoned ou Stunned."
+        },
+        {
+          "nivel": 11,
+          "nome": "Flurry of Healing and Harm",
+          "descricao": "Ao usar Flurry, pode substituir ambos os ataques por Hand of Healing sem Focus adicional e pode aplicar Hand of Harm em um golpe do Flurry sem pagar seu custo normal."
+        },
+        {
+          "nivel": 17,
+          "nome": "Hand of Ultimate Mercy",
+          "descricao": "Ação + 5 Focus pode trazer de volta criatura morta nas últimas 24 horas com 4d10 + Sabedoria PV e remover várias condições debilitantes. 1/Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Warrior of Shadow",
+      "resumo": "Monk de escuridão mágica, furtividade, teleporte entre sombras e invisibilidade.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Shadow Arts",
+          "descricao": "Ganha recursos mágicos ligados a Darkness e ilusão; pode criar escuridão usando Focus e enxergar através da própria Darkness, usando-a como ferramenta de combate e infiltração."
+        },
+        {
+          "nivel": 6,
+          "nome": "Shadow Step",
+          "descricao": "Ação Bônus teleporta entre áreas de Dim Light/Darkness dentro do alcance e ganha Vantagem no próximo ataque corpo a corpo feito no mesmo turno."
+        },
+        {
+          "nivel": 11,
+          "nome": "Improved Shadow Step",
+          "descricao": "Pode gastar Focus para usar Shadow Step mesmo quando as condições de iluminação não seriam ideais e encadear o teleporte com ataque tático."
+        },
+        {
+          "nivel": 17,
+          "nome": "Cloak of Shadows",
+          "descricao": "Usa sombras para ganhar invisibilidade prolongada e reposicionamento defensivo enquanto permanece em luz baixa ou escuridão."
+        }
+      ]
+    },
+    {
+      "nome": "Warrior of the Elements",
+      "resumo": "Monk elemental que amplia o alcance dos golpes, altera tipos de dano, empurra/puxa alvos e ganha ataque em área.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Elemental Attunement",
+          "descricao": "Conhece Elementalism. Ação Bônus + 1 Focus ativa por 10 minutos: Unarmed Strikes ganham +10 pés de alcance, podem causar Acid, Cold, Fire, Lightning ou Thunder e podem empurrar/puxar alvos em falha de teste."
+        },
+        {
+          "nivel": 6,
+          "nome": "Elemental Burst",
+          "descricao": "Magic Action + 2 Focus cria explosão elemental em esfera a distância; criaturas fazem save de Destreza e sofrem múltiplos Martial Arts dice do tipo elemental escolhido, metade no sucesso."
+        },
+        {
+          "nivel": 11,
+          "nome": "Stride of the Elements",
+          "descricao": "Enquanto Elemental Attunement estiver ativa, ganha Fly e Swim Speed iguais ao Speed."
+        },
+        {
+          "nivel": 17,
+          "nome": "Elemental Epitome",
+          "descricao": "A forma elemental ganha proteção adicional e efeitos ofensivos aprimorados, permitindo resistência adaptável e dano elemental extra ligado à sua movimentação e golpes."
+        }
+      ]
+    },
+    {
+      "nome": "Warrior of the Open Hand",
+      "resumo": "Monk de controle corporal que derruba, empurra, bloqueia reações, autocura e aplica Quivering Palm.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Open Hand Technique",
+          "descricao": "Quando acerta ataques de Flurry of Blows, pode aplicar técnicas sem custo adicional: impedir Opportunity Attacks, empurrar o alvo ou derrubá-lo mediante teste apropriado."
+        },
+        {
+          "nivel": 6,
+          "nome": "Wholeness of Body",
+          "descricao": "Ação Bônus de autocura com quantidade baseada no Martial Arts die e Sabedoria, com usos limitados recuperados em Descanso Longo."
+        },
+        {
+          "nivel": 11,
+          "nome": "Fleet Step",
+          "descricao": "Integra Step of the Wind à economia de Ação Bônus, concedendo mobilidade adicional sem sacrificar completamente as demais opções do Monk."
+        },
+        {
+          "nivel": 17,
+          "nome": "Quivering Palm",
+          "descricao": "Após acertar Unarmed Strike, gasta Focus para implantar vibrações. Depois pode detoná-las e forçar teste de Constituição; falha causa grande quantidade de dano Force, sucesso metade."
+        }
+      ]
+    },
+    {
+      "nome": "Oath of Devotion",
+      "resumo": "Paladino clássico de luz sagrada, proteção contra encanto e arma consagrada.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Oath Spells",
+          "descricao": "Mantém preparadas magias temáticas de proteção e verdade conforme os níveis de Paladino."
+        },
+        {
+          "nivel": 3,
+          "nome": "Sacred Weapon",
+          "descricao": "Channel Divinity consagra uma arma, aumentando sua precisão com Carisma e fazendo seus ataques brilharem com poder sagrado por duração limitada."
+        },
+        {
+          "nivel": 7,
+          "nome": "Aura of Devotion",
+          "descricao": "Você e aliados dentro da aura ficam protegidos contra Charmed; o alcance aumenta com a Aura of Protection da classe."
+        },
+        {
+          "nivel": 15,
+          "nome": "Smite of Protection",
+          "descricao": "Usar Divine Smite concede proteção adicional ao alvo/aliados próximos, convertendo o ataque sagrado em defesa temporária."
+        },
+        {
+          "nivel": 20,
+          "nome": "Holy Nimbus",
+          "descricao": "Ação Bônus assume forma sagrada por 1 minuto, emitindo luz e dano Radiant contra inimigos próximos e fornecendo proteção adicional contra ameaças sobrenaturais."
+        }
+      ]
+    },
+    {
+      "nome": "Oath of Glory",
+      "resumo": "Paladino atlético que amplia mobilidade, feitos heroicos e pressão ofensiva do grupo.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Oath Spells",
+          "descricao": "Mantém preparadas magias ligadas a heroísmo, mobilidade e feitos atléticos."
+        },
+        {
+          "nivel": 3,
+          "nome": "Peerless Athlete",
+          "descricao": "Channel Divinity melhora testes físicos, saltos e capacidade de carregar/empurrar durante um período de esforço heroico."
+        },
+        {
+          "nivel": 3,
+          "nome": "Inspiring Smite",
+          "descricao": "Após Divine Smite, pode usar Channel Divinity para distribuir PV temporários entre criaturas escolhidas próximas."
+        },
+        {
+          "nivel": 7,
+          "nome": "Aura of Alacrity",
+          "descricao": "Aumenta seu Speed e o de aliados que iniciam o turno na aura."
+        },
+        {
+          "nivel": 15,
+          "nome": "Glorious Defense",
+          "descricao": "Reação adiciona Carisma à CA de criatura próxima contra ataque; se o ataque errar, pode realizar contra-ataque."
+        },
+        {
+          "nivel": 20,
+          "nome": "Living Legend",
+          "descricao": "Ação Bônus por 1 minuto: Vantagem em Charisma checks, pode transformar um ataque que errou em acerto uma vez por turno e repetir save falho com Reação. 1/Descanso Longo ou reutiliza gastando slot de 5º."
+        }
+      ]
+    },
+    {
+      "nome": "Oath of the Ancients",
+      "resumo": "Paladino feérico e natural, com controle de inimigos e aura resistente a magia.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Oath Spells",
+          "descricao": "Mantém preparadas magias de natureza, fadas, restrição e mobilidade conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Nature's Wrath",
+          "descricao": "Channel Divinity invoca poder natural para restringir e controlar criatura próxima mediante save."
+        },
+        {
+          "nivel": 7,
+          "nome": "Aura of Warding",
+          "descricao": "Você e aliados na aura recebem forte proteção contra dano causado por magias."
+        },
+        {
+          "nivel": 15,
+          "nome": "Undying Sentinel",
+          "descricao": "Resistência à morte e longevidade sobrenatural; uma queda fatal pode ser evitada por recurso limitado."
+        },
+        {
+          "nivel": 20,
+          "nome": "Elder Champion",
+          "descricao": "Transformação de 1 minuto com regeneração, conjuração melhorada de magias de Paladino e pressão mágica sobre inimigos próximos."
+        }
+      ]
+    },
+    {
+      "nome": "Oath of Vengeance",
+      "resumo": "Paladino caçador de alvo único, com Vow of Enmity, perseguição e contra-ataque.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Oath Spells",
+          "descricao": "Mantém preparadas magias de perseguição, marcação, mobilidade e punição conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Vow of Enmity",
+          "descricao": "Channel Divinity marca inimigo como alvo de vingança, concedendo Vantagem em ataques contra ele e facilitando persegui-lo durante o combate."
+        },
+        {
+          "nivel": 7,
+          "nome": "Relentless Avenger",
+          "descricao": "Após Opportunity Attack, pode se mover parte do Speed sem provocar Opportunity Attacks, mantendo contato com o alvo."
+        },
+        {
+          "nivel": 15,
+          "nome": "Soul of Vengeance",
+          "descricao": "Reação para atacar o alvo de Vow of Enmity quando ele realiza certas ações/ataques, aumentando pressão fora do seu turno."
+        },
+        {
+          "nivel": 20,
+          "nome": "Avenging Angel",
+          "descricao": "Transformação temporária concede Fly Speed e aura de medo, tornando o Paladino um perseguidor sobrenatural."
+        }
+      ]
+    },
+    {
+      "nome": "Beast Master",
+      "resumo": "Ranger com companheiro primal cujo bloco, ataques e sobrevivência escalam com a classe.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Primal Companion",
+          "descricao": "Escolhe Fera da Terra, do Mar ou do Céu. O companheiro usa bloco próprio, age junto de você e pode ser comandado para atacar; estatísticas escalam com PB e nível de Ranger, e pode ser restaurado/ressuscitado pelas regras da subclasse."
+        },
+        {
+          "nivel": 7,
+          "nome": "Exceptional Training",
+          "descricao": "Melhora a economia de ações e a eficiência do companheiro; seus ataques passam a interagir melhor com as defesas e recursos mágicos do Ranger."
+        },
+        {
+          "nivel": 11,
+          "nome": "Bestial Fury",
+          "descricao": "O companheiro passa a atacar mais vezes quando recebe a ordem de ataque, aumentando significativamente o dano por rodada."
+        },
+        {
+          "nivel": 15,
+          "nome": "Share Spells",
+          "descricao": "Magias que você conjura em si podem afetar simultaneamente o companheiro quando ele está próximo."
+        }
+      ]
+    },
+    {
+      "nome": "Fey Wanderer",
+      "resumo": "Ranger feérico com dano psíquico, habilidades sociais, resistência mental e invocação de Fey.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Dreadful Strikes",
+          "descricao": "Uma vez por turno por criatura, ataques podem causar dano Psychic extra; o dado aumenta em níveis posteriores."
+        },
+        {
+          "nivel": 3,
+          "nome": "Fey Wanderer Magic",
+          "descricao": "Ganha magias adicionais sempre preparadas ligadas a encanto, fadas e deslocamento conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Otherworldly Glamour",
+          "descricao": "Adiciona Sabedoria a checks de Carisma e ganha proficiência em uma perícia social."
+        },
+        {
+          "nivel": 7,
+          "nome": "Beguiling Twist",
+          "descricao": "Vantagem contra Charmed/Frightened; quando você ou criatura próxima resiste a esses efeitos, pode redirecionar encanto/medo contra outro alvo por Reação."
+        },
+        {
+          "nivel": 11,
+          "nome": "Fey Reinforcements",
+          "descricao": "Summon Fey fica disponível e pode ser conjurada com uso gratuito; a subclasse melhora a forma de conjurar/usar o espírito feérico."
+        },
+        {
+          "nivel": 15,
+          "nome": "Misty Wanderer",
+          "descricao": "Misty Step ganha usos gratuitos e pode levar outra criatura voluntária próxima durante o teleporte."
+        }
+      ]
+    },
+    {
+      "nome": "Gloom Stalker",
+      "resumo": "Ranger de emboscada e escuridão, com iniciativa, dano inicial, invisibilidade contra Darkvision e defesa mental.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Dread Ambusher",
+          "descricao": "Melhora Iniciativa e o primeiro turno de combate, concedendo deslocamento/ataque e dano adicionais em emboscadas."
+        },
+        {
+          "nivel": 3,
+          "nome": "Gloom Stalker Magic",
+          "descricao": "Mantém preparadas magias de ocultação, medo, mobilidade e caça conforme o nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Umbral Sight",
+          "descricao": "Aumenta Darkvision e torna você difícil ou impossível de perceber por criaturas que dependem apenas de Darkvision na escuridão."
+        },
+        {
+          "nivel": 7,
+          "nome": "Iron Mind",
+          "descricao": "Ganha proficiência adicional em save mental ou reforço equivalente contra efeitos mentais."
+        },
+        {
+          "nivel": 11,
+          "nome": "Stalker's Flurry",
+          "descricao": "Transforma ataques falhos ou sequências ofensivas em novas oportunidades de ataque, melhorando consistência por turno."
+        },
+        {
+          "nivel": 15,
+          "nome": "Shadowy Dodge",
+          "descricao": "Reação defensiva contra ataque de criatura visível, impondo penalidade/Desvantagem para reduzir chance de ser atingido."
+        }
+      ]
+    },
+    {
+      "nome": "Hunter",
+      "resumo": "Ranger modular que escolhe técnicas de caça contra diferentes tipos de inimigo e pode adaptar opções em níveis superiores.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Hunter's Lore",
+          "descricao": "Hunter's Mark revela informações úteis do alvo marcado, como vulnerabilidades, resistências ou imunidades relevantes."
+        },
+        {
+          "nivel": 3,
+          "nome": "Hunter's Prey",
+          "descricao": "Escolhe técnica ofensiva de caça para aumentar dano/pressão contra alvos específicos; as opções cobrem inimigo ferido, inimigos agrupados ou ataques adicionais."
+        },
+        {
+          "nivel": 7,
+          "nome": "Defensive Tactics",
+          "descricao": "Escolhe técnica defensiva para reduzir oportunidades de inimigos, escapar de cercos ou resistir a ataques repetidos."
+        },
+        {
+          "nivel": 11,
+          "nome": "Superior Hunter's Prey",
+          "descricao": "A técnica ofensiva evolui, permitindo explorar múltiplos alvos ou obter benefício adicional contra a presa marcada."
+        },
+        {
+          "nivel": 15,
+          "nome": "Superior Hunter's Defense",
+          "descricao": "A defesa escolhida evolui para reduzir dano ou redirecionar ataques com mais consistência."
+        }
+      ]
+    },
+    {
+      "nome": "Arcane Trickster",
+      "resumo": "Rogue com magia de Wizard, Mage Hand aprimorada, emboscada mágica e uso de magia durante Sneak Attack.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Spellcasting",
+          "descricao": "Ganha conjuração baseada em Inteligência usando seleção de magias de Wizard e slots próprios da subclasse."
+        },
+        {
+          "nivel": 3,
+          "nome": "Mage Hand Legerdemain",
+          "descricao": "Mage Hand fica aprimorada e invisível, podendo manipular objetos, ferramentas e bolsos à distância com usos furtivos."
+        },
+        {
+          "nivel": 9,
+          "nome": "Magical Ambush",
+          "descricao": "Quando conjura estando escondido, inimigos têm mais dificuldade para resistir às suas magias, normalmente por Desvantagem no primeiro save."
+        },
+        {
+          "nivel": 13,
+          "nome": "Versatile Trickster",
+          "descricao": "Mage Hand pode ajudar a criar abertura contra um alvo, concedendo Vantagem para facilitar Sneak Attack."
+        },
+        {
+          "nivel": 17,
+          "nome": "Spell Thief",
+          "descricao": "Reação após resistir a magia permite bloquear temporariamente aquela magia para o conjurador e aprendê-la/usar seu efeito conforme as limitações da subclasse."
+        }
+      ]
+    },
+    {
+      "nome": "Assassin",
+      "resumo": "Rogue de abertura explosiva, venenos, infiltração e Death Strike.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Assassinate",
+          "descricao": "Vantagem em Iniciativa e benefício ofensivo contra criaturas que ainda não agiram; Sneak Attack na abertura causa dano adicional forte."
+        },
+        {
+          "nivel": 3,
+          "nome": "Assassin's Tools",
+          "descricao": "Ganha proficiência com Disguise Kit e Poisoner's Kit e usa esses recursos para infiltração e preparação."
+        },
+        {
+          "nivel": 9,
+          "nome": "Infiltration Expertise",
+          "descricao": "Cria identidades falsas e imita documentação/comportamento para infiltração prolongada com muito mais segurança."
+        },
+        {
+          "nivel": 13,
+          "nome": "Envenom Weapons",
+          "descricao": "Ao aplicar veneno com a subclasse, aumenta a eficácia e dano, integrando Poison com Sneak Attack."
+        },
+        {
+          "nivel": 17,
+          "nome": "Death Strike",
+          "descricao": "Quando acerta uma criatura ainda vulnerável à sua abertura de Assassin, pode forçar save de Constituição para multiplicar drasticamente o dano do ataque."
+        }
+      ]
+    },
+    {
+      "nome": "Soulknife",
+      "resumo": "Rogue psíquico com dados psiônicos, lâminas mentais, telepatia, teleporte e invisibilidade.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Psionic Power",
+          "descricao": "Recebe dados de Psionic Energy. Psi-Bolstered Knack adiciona dado a ability check proficiente falho; Psychic Whispers cria telepatia temporária entre criaturas escolhidas."
+        },
+        {
+          "nivel": 3,
+          "nome": "Psychic Blades",
+          "descricao": "Manifesta lâminas psíquicas como parte do Attack, usando Destreza e dano Psychic; pode fazer ataque secundário como Ação Bônus."
+        },
+        {
+          "nivel": 9,
+          "nome": "Soul Blades",
+          "descricao": "Homing Strikes gasta dado psiônico para melhorar ataque que errou; Psychic Teleportation arremessa lâmina e teleporta para o local usando dado psiônico."
+        },
+        {
+          "nivel": 13,
+          "nome": "Psychic Veil",
+          "descricao": "Magic Action fica Invisible por 1 hora ou até quebrar o efeito; possui uso gratuito e pode repetir gastando dado psiônico."
+        },
+        {
+          "nivel": 17,
+          "nome": "Rend Mind",
+          "descricao": "Após Sneak Attack com Psychic Blades, pode forçar save de Sabedoria para Stunned; usos limitados, com repetição mediante gasto psiônico."
+        }
+      ]
+    },
+    {
+      "nome": "Thief",
+      "resumo": "Rogue rápido com objetos, escalada, furtividade avançada, itens mágicos e turnos extras.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Fast Hands",
+          "descricao": "Cunning Action permite opções extras de Utilize/Search e manipulação de objetos como Ação Bônus, ampliando itens utilizáveis em combate."
+        },
+        {
+          "nivel": 3,
+          "nome": "Second-Story Work",
+          "descricao": "Ganha Climb Speed e melhora saltos/mobilidade vertical."
+        },
+        {
+          "nivel": 9,
+          "nome": "Supreme Sneak",
+          "descricao": "Obtém Vantagem ou benefício ampliado em Stealth quando cumpre condições de movimentação/ocultação."
+        },
+        {
+          "nivel": 13,
+          "nome": "Use Magic Device",
+          "descricao": "Ignora parte das restrições de itens mágicos, ganha cargas/uso mais eficiente e pode usar pergaminhos além da capacidade normal."
+        },
+        {
+          "nivel": 17,
+          "nome": "Thief's Reflexes",
+          "descricao": "Ganha um segundo turno em uma rodada-chave do combate, aumentando enormemente ações na abertura."
+        }
+      ]
+    },
+    {
+      "nome": "Aberrant Sorcery",
+      "resumo": "Sorcerer psíquico com lista adicional, telepatia, conjuração sem componentes e forma aberrante.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Psionic Spells",
+          "descricao": "Mantém preparada lista temática de Enchantment/Divination/psíquica e pode substituir dentro das restrições da subclasse."
+        },
+        {
+          "nivel": 3,
+          "nome": "Telepathic Speech",
+          "descricao": "Ação Bônus cria ligação telepática com criatura próxima por duração baseada no nível, dentro de grande alcance."
+        },
+        {
+          "nivel": 6,
+          "nome": "Psionic Sorcery",
+          "descricao": "Pode conjurar magias da lista psionic gastando Sorcery Points em vez de slot e sem componentes Verbal/Somatic/Material não consumido."
+        },
+        {
+          "nivel": 6,
+          "nome": "Psychic Defenses",
+          "descricao": "Resistência a Psychic e Vantagem contra Charmed/Frightened."
+        },
+        {
+          "nivel": 14,
+          "nome": "Revelation in Flesh",
+          "descricao": "Ação Bônus gasta Sorcery Points para adaptações aberrantes temporárias: voo, natação, sentidos especiais ou corpo maleável."
+        },
+        {
+          "nivel": 18,
+          "nome": "Warping Implosion",
+          "descricao": "Ação Bônus teleporta e cria implosão que puxa criaturas e causa dano Force em falha de Força; uso gratuito por Descanso Longo ou repetição com Sorcery Points."
+        }
+      ]
+    },
+    {
+      "nome": "Clockwork Sorcery",
+      "resumo": "Sorcerer de ordem planar que cancela Vantagem/Desvantagem, cria escudo de dados e estabiliza resultados.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Clockwork Spells",
+          "descricao": "Mantém preparada lista de proteção, controle e ordem, com possibilidade de substituições dentro das escolas permitidas."
+        },
+        {
+          "nivel": 3,
+          "nome": "Restore Balance",
+          "descricao": "Reação cancela Vantagem ou Desvantagem em uma rolagem de criatura próxima. Usos iguais ao PB por Descanso Longo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Bastion of Law",
+          "descricao": "Gasta Sorcery Points para criar pool de d8 protetores em criatura; quando ela sofre dano, pode gastar dados para reduzir o dano."
+        },
+        {
+          "nivel": 14,
+          "nome": "Trance of Order",
+          "descricao": "Ação Bônus por 1 minuto: ataques contra você não podem ter Vantagem e rolagens suas de 9 ou menos em ataque/ability/save contam como 10. 1/Descanso Longo ou reusa com Sorcery Points."
+        },
+        {
+          "nivel": 18,
+          "nome": "Clockwork Cavalcade",
+          "descricao": "Ação convoca espíritos mecânicos em área para curar aliados, reparar objetos e dissipar efeitos mágicos de inimigos. 1/Descanso Longo ou reusa com Sorcery Points."
+        }
+      ]
+    },
+    {
+      "nome": "Draconic Sorcery",
+      "resumo": "Sorcerer dracônico com CA e PV superiores, afinidade elemental, asas e presença aterradora.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Draconic Resilience",
+          "descricao": "Aumenta PV máximos por nível de Sorcerer e fornece CA natural enquanto não usa armadura."
+        },
+        {
+          "nivel": 3,
+          "nome": "Draconic Spells",
+          "descricao": "Mantém preparadas magias associadas a poder dracônico e ao elemento escolhido conforme o nível."
+        },
+        {
+          "nivel": 6,
+          "nome": "Elemental Affinity",
+          "descricao": "Escolhe afinidade de dano dracônico; ganha resistência apropriada e adiciona Carisma a uma rolagem de dano de magia do tipo correspondente."
+        },
+        {
+          "nivel": 14,
+          "nome": "Dragon Wings",
+          "descricao": "Como Ação Bônus, manifesta asas dracônicas por 1 hora e ganha Fly Speed de 60 pés. Recupera o uso após Descanso Longo ou pode restaurá-lo gastando 3 Sorcery Points."
+        },
+        {
+          "nivel": 18,
+          "nome": "Dragon Companion",
+          "descricao": "Pode conjurar Summon Dragon sem componente Material e uma vez sem gastar slot por Descanso Longo. Ao iniciar a conjuração, pode remover a necessidade de Concentração; nesse caso, a duração passa a 1 minuto."
+        }
+      ]
+    },
+    {
+      "nome": "Wild Magic Sorcery",
+      "resumo": "Sorcerer caótico que aciona Wild Magic Surge, manipula sorte e controla parcialmente seus surtos.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Wild Magic Surge",
+          "descricao": "Após conjurar certas magias, pode rolar na tabela de Wild Magic para produzir efeito aleatório; a frequência aumenta por recursos da subclasse."
+        },
+        {
+          "nivel": 3,
+          "nome": "Tides of Chaos",
+          "descricao": "Concede Vantagem em um D20 Test; recupera no Descanso Longo ou antes quando o DM/efeito força novo Wild Magic Surge."
+        },
+        {
+          "nivel": 6,
+          "nome": "Bend Luck",
+          "descricao": "Reação + Sorcery Points para rolar dado e somar/subtrair de ataque, ability check ou save de outra criatura."
+        },
+        {
+          "nivel": 14,
+          "nome": "Controlled Chaos",
+          "descricao": "Ao rolar Wild Magic Surge, pode rolar mais de uma vez e escolher o resultado, reduzindo riscos ruins."
+        },
+        {
+          "nivel": 18,
+          "nome": "Tamed Surge",
+          "descricao": "Ganha controle muito maior sobre Wild Magic, permitindo escolher/dirigir resultados de surto com uso limitado."
+        }
+      ]
+    },
+    {
+      "nome": "Archfey Patron",
+      "resumo": "Warlock feérico de teleporte, encanto e medo, com Misty Step ampliado e defesas ilusórias.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Archfey Spells",
+          "descricao": "Mantém preparadas magias de encanto, ilusão e teleporte associadas ao patrono."
+        },
+        {
+          "nivel": 3,
+          "nome": "Steps of the Fey",
+          "descricao": "Misty Step fica central à subclasse, ganhando usos/efeitos adicionais. Ao teleportar pode aplicar benefícios feéricos como desaparecer, encantar, assustar ou transportar aliado conforme a opção escolhida."
+        },
+        {
+          "nivel": 6,
+          "nome": "Misty Escape",
+          "descricao": "Reação ao sofrer dano permite teleportar e obter proteção/Invisible temporária, evitando continuação do ataque inimigo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Beguiling Defenses",
+          "descricao": "Imunidade ou forte proteção contra Charmed; quando alguém tenta encantá-lo, pode reverter o efeito contra o agressor."
+        },
+        {
+          "nivel": 14,
+          "nome": "Bewitching Magic",
+          "descricao": "Conjurar Enchantment/Illusion permite Misty Step ou outro deslocamento feérico sem consumir a economia normal, encadeando magia e teleporte."
+        }
+      ]
+    },
+    {
+      "nome": "Celestial Patron",
+      "resumo": "Warlock curador com luz, dados de Healing Light, resistência radiante e retorno explosivo da inconsciência.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Celestial Spells",
+          "descricao": "Mantém preparadas magias de cura, luz e fogo associadas ao patrono celestial."
+        },
+        {
+          "nivel": 3,
+          "nome": "Healing Light",
+          "descricao": "Possui reserva de d6; como Ação Bônus gasta dados para curar criatura a 60 pés. A reserva cresce com o nível de Warlock e recupera no Descanso Longo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Radiant Soul",
+          "descricao": "Resistência a Radiant e melhora dano de uma magia que cause Fire/Radiant adicionando Carisma a uma rolagem."
+        },
+        {
+          "nivel": 10,
+          "nome": "Celestial Resilience",
+          "descricao": "Após descanso, você e aliados recebem PV temporários proporcionais ao nível de Warlock e Carisma."
+        },
+        {
+          "nivel": 14,
+          "nome": "Searing Vengeance",
+          "descricao": "Quando faria Death Saves no início do turno, pode recuperar grande quantidade de PV, levantar-se e causar Radiant/cegueira em inimigos próximos. 1/Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Fiend Patron",
+      "resumo": "Warlock infernal que ganha PV temporários ao derrubar inimigos, adapta resistência e arremessa vítimas através do Inferno.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Fiend Spells",
+          "descricao": "Mantém preparadas magias de fogo, destruição e controle ligadas a Fiends."
+        },
+        {
+          "nivel": 3,
+          "nome": "Dark One's Blessing",
+          "descricao": "Quando inimigo próximo cai a 0 PV, ganha PV temporários baseados no nível de Warlock + Carisma."
+        },
+        {
+          "nivel": 6,
+          "nome": "Dark One's Own Luck",
+          "descricao": "Após falhar D20 Test, adiciona d10 para tentar transformar em sucesso; usos/recuperação limitados."
+        },
+        {
+          "nivel": 10,
+          "nome": "Fiendish Resilience",
+          "descricao": "Após Descanso escolhe tipo de dano para receber resistência, com restrições contra dano de armas mágicas/especiais conforme a regra."
+        },
+        {
+          "nivel": 14,
+          "nome": "Hurl Through Hell",
+          "descricao": "Ao acertar ataque, envia o alvo momentaneamente através de plano infernal; ele desaparece e retorna sofrendo grande dano Psychic, com uso limitado por Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Great Old One Patron",
+      "resumo": "Warlock psíquico que comunica por telepatia, converte dano em Psychic, perturba mentes e invoca aberrações.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Great Old One Spells",
+          "descricao": "Mantém preparadas magias de mente, Divination e aberração associadas ao patrono."
+        },
+        {
+          "nivel": 3,
+          "nome": "Awakened Mind",
+          "descricao": "Telepatia com criaturas próximas, permitindo comunicação mental sem idioma falado normal."
+        },
+        {
+          "nivel": 3,
+          "nome": "Psychic Spells",
+          "descricao": "Magias do patrono podem alterar componentes e/ou converter tipos de dano em Psychic para refletir poder mental."
+        },
+        {
+          "nivel": 6,
+          "nome": "Clairvoyant Combatant",
+          "descricao": "Liga-se mentalmente a um oponente para obter vantagem tática em ataques e impor dificuldade contra você."
+        },
+        {
+          "nivel": 10,
+          "nome": "Eldritch Hex",
+          "descricao": "Hex recebe ampliação psíquica, afetando mais tipos de testes/saves e causando interferência mental adicional."
+        },
+        {
+          "nivel": 14,
+          "nome": "Create Thrall",
+          "descricao": "Summon Aberration fica sempre preparada e a subclasse concede uso/aprimoramento especial para manter servo aberrante sem comprometer tanto a concentração normal."
+        }
+      ]
+    },
+    {
+      "nome": "Abjurer",
+      "resumo": "Wizard especialista em proteção, Arcane Ward e contramágica.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Abjuration Savant",
+          "descricao": "Adiciona magias de Abjuration ao spellbook com mais eficiência e mantém acesso ampliado a essa escola."
+        },
+        {
+          "nivel": 3,
+          "nome": "Arcane Ward",
+          "descricao": "Ao conjurar Abjuration cria/recupera barreira com PV próprios que absorve dano antes de você; escala com nível de Wizard e Inteligência."
+        },
+        {
+          "nivel": 6,
+          "nome": "Projected Ward",
+          "descricao": "Reação permite que Arcane Ward absorva dano sofrido por criatura a 30 pés."
+        },
+        {
+          "nivel": 10,
+          "nome": "Spell Breaker",
+          "descricao": "Aprimora Counterspell/Dispel Magic e recupera recursos ou garante melhor resultado ao quebrar magia inimiga."
+        },
+        {
+          "nivel": 14,
+          "nome": "Spell Resistance",
+          "descricao": "Vantagem em saves contra magias e resistência a dano causado por magias."
+        }
+      ]
+    },
+    {
+      "nome": "Diviner",
+      "resumo": "Wizard de Portent, informação e manipulação de rolagens futuras.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Divination Savant",
+          "descricao": "Facilita adicionar magias de Divination ao spellbook e aumenta eficiência da escola."
+        },
+        {
+          "nivel": 3,
+          "nome": "Portent",
+          "descricao": "Após Descanso Longo rola dados d20 e guarda resultados; antes de certas rolagens de ataque/save/check, substitui a rolagem por um resultado guardado."
+        },
+        {
+          "nivel": 6,
+          "nome": "Expert Divination",
+          "descricao": "Conjurar Divination com slot recupera parte da energia mágica em slot de nível inferior, permitindo cadeia eficiente de adivinhações."
+        },
+        {
+          "nivel": 10,
+          "nome": "The Third Eye",
+          "descricao": "Ação concede sentido escolhido, como Darkvision, visão etérea/invisível ou leitura aprimorada, até descanso/uso seguinte."
+        },
+        {
+          "nivel": 14,
+          "nome": "Greater Portent",
+          "descricao": "Aumenta a quantidade de resultados de Portent disponíveis por dia."
+        }
+      ]
+    },
+    {
+      "nome": "Evoker",
+      "resumo": "Wizard de dano em área que protege aliados, melhora cantrips e maximiza explosões de Evocation.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Evocation Savant",
+          "descricao": "Facilita adicionar magias de Evocation ao spellbook."
+        },
+        {
+          "nivel": 3,
+          "nome": "Potent Cantrip",
+          "descricao": "Cantrips que causam dano ainda causam metade do dano quando o ataque erra ou quando o alvo obtém sucesso no teste de resistência; efeitos adicionais do cantrip não se aplicam nesse caso."
+        },
+        {
+          "nivel": 6,
+          "nome": "Sculpt Spells",
+          "descricao": "Ao conjurar uma magia de Evocation que afeta outras criaturas visíveis, pode proteger um número delas igual a 1 + o nível da magia; elas passam automaticamente no teste de resistência e sofrem 0 dano se normalmente sofreriam metade no sucesso."
+        },
+        {
+          "nivel": 10,
+          "nome": "Empowered Evocation",
+          "descricao": "Adiciona Inteligência a uma rolagem de dano de magia de Evocation de Wizard."
+        },
+        {
+          "nivel": 14,
+          "nome": "Overchannel",
+          "descricao": "Pode maximizar o dano de magia de Wizard de nível baixo/médio; repetir antes de descanso causa dano crescente em você."
+        }
+      ]
+    },
+    {
+      "nome": "Illusionist",
+      "resumo": "Wizard que melhora ilusões, conjura sem componentes óbvios e torna partes da ilusão temporariamente reais.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Illusion Savant",
+          "descricao": "Facilita adicionar magias de Illusion ao spellbook."
+        },
+        {
+          "nivel": 3,
+          "nome": "Improved Illusions",
+          "descricao": "Aprimora Minor Illusion e outras ilusões, combinando estímulos/alcance ou permitindo conjuração mais sutil conforme a regra de 2024."
+        },
+        {
+          "nivel": 6,
+          "nome": "Phantasmal Creatures",
+          "descricao": "Invocações/ilusões de criaturas recebem benefícios próprios e podem ser usadas de forma mais rápida ou eficiente."
+        },
+        {
+          "nivel": 10,
+          "nome": "Illusory Self",
+          "descricao": "Reação cria duplicata ilusória para fazer um ataque contra você errar. Uso limitado por descanso, com possibilidade de restaurar usando slot."
+        },
+        {
+          "nivel": 14,
+          "nome": "Illusory Reality",
+          "descricao": "Ao conjurar Illusion com slot, pode tornar um objeto inanimado da ilusão temporariamente real, desde que não cause dano direto nem funcione como item mágico."
+        }
+      ]
+    }
   ]
 }
