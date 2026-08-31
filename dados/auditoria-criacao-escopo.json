@@ -24,6 +24,7 @@
     {"id":"pericias","fontes":["dados/classes-ptbr/*.json","dados/antecedentes-*.json"],"runtime":"skill-check-mechanics.js"},
     {"id":"idiomas","fontes":["dados/idiomas-*.json"],"runtime":"language-mechanics.js"},
     {"id":"equipamentos","fontes":["dados/armas-*.json","dados/armaduras-*.json","dados/equipamentos-*.json","dados/ferramentas-*.json","dados/maestrias-de-arma-pdfs.json"],"runtime":"starting-equipment-rules.js"},
+    {"id":"itens_magicos","fontes":["dados/itens-magicos/*.json"],"runtime":"dados/itens-magicos/manifest.json"},
     {"id":"magias","fontes":["dados/magias-*.json"],"runtime":"spell-progression-rules.js"},
     {"id":"compatibilidade","fontes":["dados/politica-compatibilidade-5e-5.5e.json"],"runtime":"compatibility.js"},
     {"id":"regras","fontes":["dados/regras-*.json"],"runtime":"rules.js"},
