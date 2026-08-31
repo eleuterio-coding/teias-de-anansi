@@ -1,0 +1,61 @@
+import{state,AB,arr,num,fold}from'./state.js';
+
+const ABILITY_ALIASES={
+ Força:['forca','strength'],Destreza:['destreza','dexterity'],Constituição:['constituicao','constitution'],
+ Inteligência:['inteligencia','intelligence'],Sabedoria:['sabedoria','wisdom'],Carisma:['carisma','charisma']
+};
+const SPECIES_ALIASES={
+ halfling:['halfling'],dragonborn:['dragonborn','draconato'],drow:['drow'],dwarf:['dwarf','anao'],elf:['elf','elfo'],
+ halfElf:['half-elf','half elf','meio-elfo','meio elfo'],gnome:['gnome','gnomo'],highElf:['high elf','alto elfo'],
+ tiefling:['tiefling'],halfOrc:['half-orc','half orc','meio-orc','meio orc'],human:['human','humano'],woodElf:['wood elf','elfo da floresta']
+};
+
+export function minimumFeatLevel(feat){const p=fold(feat?.prereq||''),match=p.match(/(?:nivel|level)\s*(\d+)\s*\+?/);if(match)return num(match[1]);const category=fold(feat?.category||feat?.categoria||'');if(category==='dadiva epica')return 19;if(category==='geral')return 4;return 1}
+function classTraining(context){return fold([...arr(context?.klass?.proficiencies),...arr(context?.klass?.proficienciesRaw),...arr(context?.classProficiencies),...arr(context?.featMechanics?.armorTraining).map(x=>`armadura ${x}`),...arr(context?.featMechanics?.weaponTraining).map(x=>`armas ${x}s`)].join(' '))}
+function hasTraining(context,kind){const raw=classTraining(context),k=fold(kind);if(k==='escudo')return/shield|escudo/.test(raw)||!!context?.featMechanics?.shieldTraining;if(k==='arma marcial')return/martial weapon|arma marcial|armas marciais/.test(raw);const map={leve:/light armor|armadura leve|all armor|todas as armaduras/,media:/medium armor|armadura media|all armor|todas as armaduras/,pesada:/heavy armor|armadura pesada|all armor|todas as armaduras/};return!!map[k]?.test(raw)}
+function activeFeatureText(context){return fold(arr(context?.klass?.features).filter(f=>num(f.level)<=num(context?.level)).map(f=>f.name).join(' '))}
+function abilityOk(prereq,context){if(!/13\+/.test(prereq))return true;const mentioned=AB.filter(a=>ABILITY_ALIASES[a].some(alias=>prereq.includes(alias)));if(!mentioned.length)return true;return mentioned.some(a=>num(context?.scores?.[a])>=13)}
+function speciesText(context){const species=context?.species,lineage=context?.lineage,size=context?.size||state.c?.choices?.species?.size;return{names:fold([species?.name,species?.originalName,lineage?.name,lineage?.originalName].filter(Boolean).join(' | ')),size:fold(size||arr(species?.sizes)[0]||'')}}
+function speciesHas(context,key){const {names}=speciesText(context);return arr(SPECIES_ALIASES[key]).some(alias=>names.includes(alias))}
+function speciesPrereqOk(prereq,context){
+ const {size}=speciesText(context),small=/small|pequen/.test(size);
+ if(/half[- ]?elf.*half[- ]?orc.*human|meio[- ]?elfo.*meio[- ]?orc.*humano/.test(prereq))return speciesHas(context,'halfElf')||speciesHas(context,'halfOrc')||speciesHas(context,'human');
+ if(/elf.*half[- ]?elf|elfo.*meio[- ]?elfo/.test(prereq))return speciesHas(context,'elf')||speciesHas(context,'halfElf');
+ if(/dwarf.*small|anao.*pequen/.test(prereq))return speciesHas(context,'dwarf')||small;
+ if(/wood elf|elfo da floresta/.test(prereq))return speciesHas(context,'woodElf');
+ if(/high elf|alto elfo/.test(prereq))return speciesHas(context,'highElf');
+ if(/half[- ]?orc|meio[- ]?orc/.test(prereq))return speciesHas(context,'halfOrc');
+ if(/half[- ]?elf|meio[- ]?elfo/.test(prereq))return speciesHas(context,'halfElf');
+ if(/dragonborn|draconato/.test(prereq))return speciesHas(context,'dragonborn');
+ if(/halfling/.test(prereq))return speciesHas(context,'halfling');
+ if(/drow/.test(prereq))return speciesHas(context,'drow');
+ if(/dwarf|anao/.test(prereq))return speciesHas(context,'dwarf');
+ if(/gnome|gnomo/.test(prereq))return speciesHas(context,'gnome');
+ if(/tiefling/.test(prereq))return speciesHas(context,'tiefling');
+ if(/\belf\b|\belfo\b/.test(prereq))return speciesHas(context,'elf');
+ return true
+}
+function activeFeats(context){if(arr(context?.activeFeats).length)return arr(context.activeFeats);const names=new Set(arr(context?.activeFeatNames).map(fold));return arr(state.catalogs?.feats).filter(feat=>names.has(fold(feat.name)))}
+function featDependencyOk(feat,prereq,context){
+ const active=activeFeats(context),activeNames=new Set(active.map(f=>fold(f.name)));
+ if(/qualquer dragonmark|any dragonmark/.test(prereq))return active.some(f=>fold(f.category)==='dragonmark');
+ const candidates=arr(context?.allFeats).length?arr(context.allFeats):arr(state.catalogs?.feats);
+ const required=candidates.filter(other=>other?.id!==feat?.id&&fold(other?.name).length>=5&&prereq.includes(fold(other.name)));
+ return required.every(other=>activeNames.has(fold(other.name)))
+}
+export function featPrerequisiteResult(feat,context={}){
+ const prereq=fold(feat?.prereq||''),level=Math.max(1,num(context?.level)||1),reasons=[];
+ if(level<minimumFeatLevel(feat))reasons.push(`nível ${minimumFeatLevel(feat)}+`);
+ if(!abilityOk(prereq,context))reasons.push('atributo 13+');
+ if((/conjuracao|spellcasting|magia de pacto|pact magic/.test(prereq))&&!context?.klass?.spellAbility)reasons.push('Conjuração ou Magia de Pacto');
+ if(/armadura media|medium armor/.test(prereq)&&!hasTraining(context,'media'))reasons.push('treinamento com armadura média');
+ if(/armadura pesada|heavy armor/.test(prereq)&&!hasTraining(context,'pesada'))reasons.push('treinamento com armadura pesada');
+ if(/armadura leve|light armor/.test(prereq)&&!hasTraining(context,'leve'))reasons.push('treinamento com armadura leve');
+ if(/treinamento com escudo|shield training/.test(prereq)&&!hasTraining(context,'escudo'))reasons.push('treinamento com escudo');
+ if(/proficiencia com uma arma marcial|proficiency with a martial weapon/.test(prereq)&&!hasTraining(context,'arma marcial'))reasons.push('proficiência com arma marcial');
+ if(/caracteristica estilo de luta|fighting style feature/.test(prereq)&&!/fighting style|estilo de luta/.test(activeFeatureText(context)))reasons.push('característica Estilo de Luta');
+ if(!speciesPrereqOk(prereq,context))reasons.push('espécie/linhagem exigida');
+ if(!featDependencyOk(feat,prereq,context))reasons.push('talento pré-requisito');
+ return{ok:reasons.length===0,reasons,minimumLevel:minimumFeatLevel(feat)}
+}
+export function featPrerequisiteOk(feat,context={}){return featPrerequisiteResult(feat,context).ok}
