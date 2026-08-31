@@ -1,0 +1,38 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-especies/v1",
+  "etapa":"11B-11C",
+  "dominio":"especies",
+  "fonte_id":"quickstone-2024",
+  "fonte":"Frontiers of Eberron: Quickstone (2024)",
+  "autoridade":"terceiro_compativel",
+  "itens_runtime":6,
+  "especies_novas":5,
+  "variante_tiefling":1,
+  "identidades":["Gargoyle","Gnoll","Harpy","Medusa","Tiefling — Eberron","Worg"],
+  "especies_novas_identidades":["Gargoyle","Gnoll","Harpy","Medusa","Worg"],
+  "tiefling_legados":7,
+  "aliases_editoriais_atuais":[
+    {"especie":"Gargoyle","local":"Elemental Nature","atual":["Elemental Resilience","Immutable Form","Tireless"],"acao":"não redistribuir texto sem confronto integral"},
+    {"especie":"Harpy","local":"Natural Performer","atual":"Songbird","acao":"alias editorial"},
+    {"especie":"Harpy","local":"Siren's Song","atual":"Harpy’s Charms","acao":"alias editorial"},
+    {"especie":"Medusa","local":"Menacing","atual":"Fearsome Presence","acao":"alias editorial"},
+    {"especie":"Medusa","local":"Serpentine Speech","atual":"Serpentine","acao":"alias editorial"},
+    {"especie":"Medusa","local":"Gray Gaze","atual":"Petrifying Gaze","acao":"alias editorial; Gray Gaze também existe como magia na fonte"},
+    {"especie":"Worg","local":"Pack Tactics","atual":"For the Pack","acao":"alias editorial"}
+  ],
+  "invariantes_publicos":[
+    "A fonte permanece conteúdo de terceiro e exige categoria Visionary Production and Design Inc. no D&D Beyond.",
+    "O livro possui 5 espécies novas e 7 novas linhagens de Tiefling; o Hub representa essas linhagens como um sexto item runtime variante_de Tiefling.",
+    "O índice da fonte contém Gargoyle, Gnoll, Harpy, Medusa, Tiefling e Worg.",
+    "Worg Quadruped possui limitações mecânicas que o D&D Beyond informa não conseguir impor; o Hub deve preservar a regra em texto/dados em vez de descartá-la.",
+    "Quickstone não pode substituir espécies oficiais atuais por colisão de identidade.",
+    "Tiefling — Eberron deve permanecer variante da espécie Tiefling, não uma segunda espécie core independente."
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — Frontiers of Eberron: Quickstone source index",
+    "D&D Beyond — Frontiers of Eberron: Quickstone Issues and Support Thread",
+    "D&D Beyond — Character Species listing"
+  ],
+  "status":"estrutural_proveniencia_e_aliases_publicos",
+  "observacao":"Os aliases editoriais atuais são registrados sem reescrever destrutivamente a síntese mecânica local quando a divisão textual completa entre novos rótulos não é publicamente verificável."
+}
