@@ -42,7 +42,7 @@ assert.equal(catalogRows.length,8,'Catálogo deve conter 8 subclasses Heroes 202
 for(const name of Object.keys(expected))assert.ok(catalogRows.some(x=>x.nome===name),`Catálogo Heroes sem ${name}.`);
 
 has(feature('College of the Moon',"Moon's Inspiration"),'Inspired Eclipse','Invisible','teleportar','Lunar Vitality','cura');
-has(feature('College of the Moon','Blessing of Moonlight'),'Moonbeam','Descanso Longo','cura');
+has(feature('College of the Moon','Blessing of Moonlight'),'Moonbeam','Descanso Longo','recupera','2d4 PV');
 has(feature('College of the Moon',"Eventide's Splendor"),'Inspired Eclipse','Reação','teleportar','Invisible');
 
 has(feature('Knowledge Domain','Blessings of Knowledge'),"Artisan's Tools",'Expertise','Arcana','History','Nature','Religion');
