@@ -1,0 +1,40 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-subclasses-phb-2024/v1",
+  "fonte_id": "phb-2024",
+  "fonte": "Player's Handbook (2024)",
+  "ruleset": "5.5e",
+  "revisao": 2024,
+  "politica": "fail-closed",
+  "quantidade_esperada": 48,
+  "classes": {
+    "Barbarian": {"niveis": [3,6,10,14], "subclasses": ["Path of the Berserker","Path of the Wild Heart","Path of the World Tree","Path of the Zealot"]},
+    "Bard": {"niveis": [3,6,14], "subclasses": ["College of Dance","College of Glamour","College of Lore","College of Valor"]},
+    "Cleric": {"niveis": [3,6,17], "subclasses": ["Life Domain","Light Domain","Trickery Domain","War Domain"]},
+    "Druid": {"niveis": [3,6,10,14], "subclasses": ["Circle of the Land","Circle of the Moon","Circle of the Sea","Circle of the Stars"]},
+    "Fighter": {"niveis": [3,7,10,15,18], "subclasses": ["Battle Master","Champion","Eldritch Knight","Psi Warrior"]},
+    "Monk": {"niveis": [3,6,11,17], "subclasses": ["Warrior of Mercy","Warrior of Shadow","Warrior of the Elements","Warrior of the Open Hand"]},
+    "Paladin": {"niveis": [3,7,15,20], "subclasses": ["Oath of Devotion","Oath of Glory","Oath of the Ancients","Oath of Vengeance"]},
+    "Ranger": {"niveis": [3,7,11,15], "subclasses": ["Beast Master","Fey Wanderer","Gloom Stalker","Hunter"]},
+    "Rogue": {"niveis": [3,9,13,17], "subclasses": ["Arcane Trickster","Assassin","Soulknife","Thief"]},
+    "Sorcerer": {"niveis": [3,6,14,18], "subclasses": ["Aberrant Sorcery","Clockwork Sorcery","Draconic Sorcery","Wild Magic Sorcery"]},
+    "Warlock": {"niveis": [3,6,10,14], "subclasses": ["Archfey Patron","Celestial Patron","Fiend Patron","Great Old One Patron"]},
+    "Wizard": {"niveis": [3,6,10,14], "subclasses": ["Abjurer","Diviner","Evoker","Illusionist"]}
+  },
+  "correcoes_confirmadas": [
+    {"subclasse":"Evoker","divergencia":"Potent Cantrip e Sculpt Spells estavam associados aos níveis errados.","estado":"corrigido"},
+    {"subclasse":"War Domain","divergencia":"Lista de magias e War God's Blessing ainda refletiam semântica anterior à revisão 2024.","estado":"corrigido"},
+    {"subclasse":"Draconic Sorcery","divergencia":"Dragon Wings e o capstone ainda preservavam semântica legada em vez de Dragon Companion 2024.","estado":"corrigido"}
+  ],
+  "runtime_alinhado": [
+    {"subclasse":"Evoker","arquivo":"scripts/character-builder/wizard-subclass-mechanics.js"},
+    {"subclasse":"Draconic Sorcery","arquivo":"scripts/character-builder/sorcerer-subclass-mechanics.js"}
+  ],
+  "criterio_fechamento": {
+    "subclasse_ausente": 0,
+    "subclasse_extra": 0,
+    "classe_incorreta": 0,
+    "nivel_de_recurso_fora_da_progressao": 0,
+    "divergencia_semantica_conhecida": 0,
+    "runtime_conhecido_divergente": 0
+  }
+}
