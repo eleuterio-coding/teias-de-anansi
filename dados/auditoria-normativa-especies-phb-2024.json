@@ -1,0 +1,32 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-especies/v1",
+  "etapa":"11B",
+  "dominio":"especies",
+  "fonte_id":"phb-2024",
+  "fonte":"Player's Handbook (2024) / SRD 5.2.1",
+  "autoridade":"oficial_atual",
+  "quantidade_core":10,
+  "srd_pin":"bfd3db4bcc31699cce703b46feb9af3f0ff08999",
+  "composicao_runtime":{"srd_5_2_1":9,"arquivo_local_aasimar":1},
+  "identidades":["Aasimar","Dragonborn","Dwarf","Elf","Gnome","Goliath","Halfling","Human","Orc","Tiefling"],
+  "invariantes_publicos":[
+    "Aumentos de atributos não são definidos pela espécie em 2024.",
+    "Aasimar Celestial Revelation é obtida no nível 3 e ativada com Bonus Action; a opção é escolhida a cada transformação.",
+    "Aasimar Inner Radiance causa dano Radiant igual ao PB a criaturas em 10 pés ao fim de cada turno durante a transformação.",
+    "Dragonborn Breath Weapon pode ser Cone de 15 pés ou Line de 30 pés e tem usos iguais ao PB; Draconic Flight surge no nível 5.",
+    "Dwarf tem Speed 30, Darkvision 120 e Stonecunning com Tremorsense temporário.",
+    "Elf possui três linhagens 2024: Drow, High Elf e Wood Elf.",
+    "Gnome possui Forest e Rock lineages; Speed 30.",
+    "Goliath possui Speed 35, seis Giant Ancestries, Large Form no nível 5 e Powerful Build.",
+    "Halfling possui Brave, Halfling Nimbleness, Luck e Naturally Stealthy; Speed 30.",
+    "Human possui Resourceful, Skillful e Versatile; Versatile concede um Origin feat adicional.",
+    "Orc possui Darkvision 120 e Adrenaline Rush recarrega em Short ou Long Rest.",
+    "Tiefling possui três legados atuais: Abyssal, Chthonic e Infernal; cada legado fornece resistência e magias nos níveis 3 e 5."
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — The 10 Species in the 2024 Player's Handbook",
+    "5e-bits/5e-database — SRD 5.2.1 pinado no runtime"
+  ],
+  "status":"estrutural_com_invariantes_publicos",
+  "observacao":"O SRD externo é imutável por SHA no runtime. A matriz registra a composição auditada desse pin e o arquivo local do Aasimar; não depende de uma referência flutuante."
+}
