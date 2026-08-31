@@ -48,6 +48,7 @@
     "tests/auditar-semantica-especies-quickstone-2024.mjs",
     "tests/auditar-semantica-especies-motm-2022.mjs",
     "tests/auditar-precedencia-tiefling.mjs",
+    "tests/auditar-semantica-antecedentes-phb-2024.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
