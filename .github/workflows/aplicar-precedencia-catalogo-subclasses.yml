@@ -1,0 +1,65 @@
+name: Aplicar precedência no catálogo de subclasses
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - '.github/workflows/aplicar-precedencia-catalogo-subclasses.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Aplicar política de precedência no catálogo
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('scripts/character-builder/catalogs.js')
+          text=p.read_text(encoding='utf-8')
+          pattern=r"export async function loadSubclasses\(\)\{.*?\}\nfunction featRows"
+          replacement="""export async function loadSubclasses(){
+ const[d,L,precedence]=await Promise.all([
+  json('dados/subclasses-pdfs.json').catch(()=>({subclasses:[]})),
+  json('dados/localizacao-ptbr-subclasses.json').catch(()=>({})),
+  json('dados/precedencia-subclasses.json').catch(()=>({prioridade_fontes:{},substituicoes:[]}))
+ ]),m=L.subclasses||L||{},priority=precedence.prioridade_fontes||{};
+ const superseded=new Set(arr(precedence.substituicoes).map(x=>`${x.fonte_anterior}:${fold(x.nome_anterior)}`));
+ const eligible=arr(d.subclasses).filter(s=>(!s.status||!/substituid|descartad/i.test(s.status))&&!superseded.has(`${s.fonte_id}:${fold(s.nome)}`));
+ const chosen=new Map();
+ for(const s of eligible){
+  const key=fold(s.nome),current=chosen.get(key),rank=Number(priority[s.fonte_id])||0,currentRank=Number(priority[current?.fonte_id])||0;
+  if(!current||rank>currentRank)chosen.set(key,s)
+ }
+ return[...chosen.values()].map((s,i)=>{const current=/5\\.5e|regras\\s*2024/i.test(s.edicao||'');return{id:`subclasses:${s.fonte_id||'pdf'}:${slug(s.nome)}:${i}`,name:m[s.nome]?.name||m[s.nome]||s.nome,originalName:s.nome,sourceId:s.fonte_id||'',classSlug:classSlug(s.classe),ruleset:current?'5.5e':'5e',revision:current?2024:2014,status:s.status||(current?'atual':'legado_com_conteudo_unico'),compatibleWith:current?[]:['5.5e'],source:s.fonte||'PDF',description:s.descricao||''}}).filter(isCompatible55).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'))
+}
+function featRows"""
+          new,n=re.subn(pattern,replacement,text,flags=re.S)
+          if n!=1: raise SystemExit(f'Esperava substituir exatamente loadSubclasses; encontrados {n}')
+          p.write_text(new,encoding='utf-8')
+          PY
+      - name: Validar sintaxe e contrato de precedência
+        run: |
+          node --check scripts/character-builder/catalogs.js
+          node --check scripts/character-builder/subclass-mechanics-data.js
+          grep -q "precedencia-subclasses.json" scripts/character-builder/catalogs.js
+          grep -q "superseded" scripts/character-builder/catalogs.js
+          grep -q "priority" scripts/character-builder/catalogs.js
+      - name: Publicar migração
+        run: |
+          if git diff --quiet -- scripts/character-builder/catalogs.js; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/character-builder/catalogs.js
+          git commit -m 'Aplica precedência normativa ao catálogo de subclasses'
+          git push origin HEAD:audit/normativa-total-criacao
