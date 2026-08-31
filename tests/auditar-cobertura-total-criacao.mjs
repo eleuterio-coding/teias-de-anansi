@@ -122,12 +122,20 @@ for(const domain of domains){
 const runtime=[...seen].map(read).join('\n')+'\n'+read(ENTRY);
 for(const domain of domains)if(!runtime.includes(domain.runtime)&&!html.includes(domain.runtime))fail(`Domínio ${domain.id} sem integração verificável no runtime: ${domain.runtime}`);
 
-const dataRefs=new Set();
-for(const m of runtime.matchAll(/['"`](dados\/[^'"`?]+\.json)(?:\?[^'"`]*)?['"`]/g))dataRefs.add(m[1]);
+const dataRefs=new Set(),dynamicDataRefs=new Set();
+for(const m of runtime.matchAll(/['"`](dados\/[^'"`?]+\.json)(?:\?[^'"`]*)?['"`]/g)){
+  const ref=m[1];
+  if(ref.includes('${'))dynamicDataRefs.add(ref);else dataRefs.add(ref)
+}
 for(const ref of dataRefs){
   const p=path.join(ROOT,ref);if(!exists(p))fail(`Dependência local de dados ausente: ${ref}`);
   JSON.parse(read(p));
   if(!classifiedSources.has(ref))fail(`Fonte usada pelo runtime sem classificação no manifesto: ${ref}`);
+}
+for(const ref of dynamicDataRefs){
+  const prefix=ref.split('${',1)[0],suffix=ref.includes('}')?ref.slice(ref.lastIndexOf('}')+1):'';
+  const matches=[...classifiedSources].filter(file=>file.startsWith(prefix)&&file.endsWith(suffix));
+  if(!matches.length)fail(`Dependência dinâmica de dados sem conjunto classificado correspondente: ${ref}`);
 }
 for(const file of dataFiles.filter(file=>/^dados\/(?:regras-|politica-compatibilidade-5e-5\.5e)/.test(file)))if(!classifiedSources.has(file))fail(`Módulo normativo sem classificação no manifesto: ${file}`);
 
@@ -149,6 +157,7 @@ const manifest={
   orphanMechanics:[],
   classifiedSources:[...classifiedSources].sort(),
   runtimeDataDependencies:[...dataRefs].sort(),
+  dynamicRuntimeDataDependencies:[...dynamicDataRefs].sort(),
   auditTests,
   criticalTests,
   coverage:{
@@ -160,4 +169,4 @@ const manifest={
 };
 fs.mkdirSync(path.join(ROOT,'artifacts'),{recursive:true});
 fs.writeFileSync(path.join(ROOT,'artifacts','cobertura-criacao.json'),JSON.stringify(manifest,null,2));
-console.log(`Cobertura fail-closed validada: ${allJs.length}/${allJs.length} módulos classificados, ${mechanical.length}/${mechanical.length} mecânicos no runtime, ${dataRefs.size}/${dataRefs.size} dependências locais classificadas e ${auditTests.length} auditorias executáveis inventariadas.`);
+console.log(`Cobertura fail-closed validada: ${allJs.length}/${allJs.length} módulos classificados, ${mechanical.length}/${mechanical.length} mecânicos no runtime, ${dataRefs.size} dependências estáticas + ${dynamicDataRefs.size} dinâmicas classificadas e ${auditTests.length} auditorias executáveis inventariadas.`);
