@@ -40,6 +40,7 @@
     "tests/auditar-semantica-subclasses-tasha-2020.mjs",
     "tests/auditar-semantica-subclasses-xanathar-2017.mjs",
     "tests/auditar-semantica-subclasses-forge-2025.mjs",
+    "tests/auditar-semantica-subclasses-heroes-faerun-2025.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
