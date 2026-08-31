@@ -12,6 +12,7 @@ on:
       - 'dados/classes-ptbr/**'
       - 'dados/artificer-2025.json'
       - 'dados/invocacoes-bruxo-2024.json'
+      - 'dados/metamagias-feiticeiro-2024.json'
       - 'dados/subclasses-*.json'
       - 'dados/especies-*.json'
       - 'dados/tiefling-variantes.json'
@@ -35,6 +36,7 @@ on:
       - 'tests/auditar-precedencia-*.mjs'
       - 'tests/auditar-talentos-*.mjs'
       - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -50,6 +52,7 @@ on:
       - 'tests/auditar-precedencia-*.mjs'
       - 'tests/auditar-talentos-*.mjs'
       - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -112,6 +115,10 @@ jobs:
         run: node tests/auditar-talentos-xanathar-2017.mjs
       - name: 11B/11C/11E · Validar Invocações Místicas do Bruxo 2024
         run: node tests/auditar-invocacoes-bruxo-2024.mjs
+      - name: 11B/11E · Validar Metamagia do Feiticeiro 2024
+        run: node tests/auditar-metamagias-feiticeiro-2024.mjs
+      - name: 11B/11E · Validar talentos Tasha 2020
+        run: node tests/auditar-talentos-tasha-2020.mjs
       - name: 11C · Validar precedência Tasha 2020 → PHB 2024
         run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
       - name: 11C · Validar precedência Xanathar 2017 → PHB 2024
