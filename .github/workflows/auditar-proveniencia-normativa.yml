@@ -32,6 +32,7 @@ on:
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
       - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-talentos-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -45,6 +46,7 @@ on:
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
       - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-talentos-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -99,6 +101,8 @@ jobs:
         run: node tests/auditar-precedencia-antecedentes-quickstone-2024.mjs
       - name: 11B/11D · Validar antecedentes legados 2014 e adaptações do Hub
         run: node tests/auditar-semantica-antecedentes-legado-2014.mjs
+      - name: 11B/11E · Validar Fighting Style e Epic Boon da Classe
+        run: node tests/auditar-talentos-caracteristicas-classe.mjs
       - name: 11C · Validar precedência Tasha 2020 → PHB 2024
         run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
       - name: 11C · Validar precedência Xanathar 2017 → PHB 2024
