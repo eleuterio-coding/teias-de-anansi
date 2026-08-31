@@ -1,0 +1,24 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-classes-core/v1",
+  "ruleset":"5.5e",
+  "revisao":2024,
+  "autoridade":"oficial_atual",
+  "fonte":"D&D Beyond Basic Rules 2024 — Character Classes / Core Class Traits",
+  "status":"verificado",
+  "campos_verificados":["hit_die","saving_throws","skill_choice_count","skill_options","proficiencies","spellcasting_ability"],
+  "classes":{
+    "barbarian":{"hit_die":12,"saving_throws":["STR","CON"],"skill_choice_count":2,"skill_options":["Animal Handling","Athletics","Intimidation","Nature","Perception","Survival"],"proficiencies":["Light Armor","Medium Armor","Shields","Simple Weapons","Martial Weapons"],"spellcasting_ability":null},
+    "bard":{"hit_die":8,"saving_throws":["DEX","CHA"],"skill_choice_count":3,"skill_options":["Acrobatics","Animal Handling","Arcana","Athletics","Deception","History","Insight","Intimidation","Investigation","Medicine","Nature","Perception","Performance","Persuasion","Religion","Sleight of Hand","Stealth","Survival"],"proficiencies":["Light Armor","Simple Weapons"],"spellcasting_ability":"CHA"},
+    "cleric":{"hit_die":8,"saving_throws":["WIS","CHA"],"skill_choice_count":2,"skill_options":["History","Insight","Medicine","Persuasion","Religion"],"proficiencies":["Light Armor","Medium Armor","Shields","Simple Weapons"],"spellcasting_ability":"WIS"},
+    "druid":{"hit_die":8,"saving_throws":["INT","WIS"],"skill_choice_count":2,"skill_options":["Arcana","Animal Handling","Insight","Medicine","Nature","Perception","Religion","Survival"],"proficiencies":["Light Armor","Shields","Simple Weapons"],"spellcasting_ability":"WIS"},
+    "fighter":{"hit_die":10,"saving_throws":["STR","CON"],"skill_choice_count":2,"skill_options":["Acrobatics","Animal Handling","Athletics","History","Insight","Intimidation","Perception","Persuasion","Survival"],"proficiencies":["Light Armor","Medium Armor","Heavy Armor","Shields","Simple Weapons","Martial Weapons"],"spellcasting_ability":null},
+    "monk":{"hit_die":8,"saving_throws":["STR","DEX"],"skill_choice_count":2,"skill_options":["Acrobatics","Athletics","History","Insight","Religion","Stealth"],"proficiencies":["Simple Weapons","Martial Weapons with the Light property"],"spellcasting_ability":null},
+    "paladin":{"hit_die":10,"saving_throws":["WIS","CHA"],"skill_choice_count":2,"skill_options":["Athletics","Insight","Intimidation","Medicine","Persuasion","Religion"],"proficiencies":["Light Armor","Medium Armor","Heavy Armor","Shields","Simple Weapons","Martial Weapons"],"spellcasting_ability":"CHA"},
+    "ranger":{"hit_die":10,"saving_throws":["STR","DEX"],"skill_choice_count":3,"skill_options":["Animal Handling","Athletics","Insight","Investigation","Nature","Perception","Stealth","Survival"],"proficiencies":["Light Armor","Medium Armor","Shields","Simple Weapons","Martial Weapons"],"spellcasting_ability":"WIS"},
+    "rogue":{"hit_die":8,"saving_throws":["DEX","INT"],"skill_choice_count":4,"skill_options":["Acrobatics","Athletics","Deception","Insight","Intimidation","Investigation","Perception","Persuasion","Sleight of Hand","Stealth"],"proficiencies":["Light Armor","Simple Weapons","Martial Weapons with the Finesse or Light property"],"spellcasting_ability":null},
+    "sorcerer":{"hit_die":6,"saving_throws":["CON","CHA"],"skill_choice_count":2,"skill_options":["Arcana","Deception","Insight","Intimidation","Persuasion","Religion"],"proficiencies":["Simple Weapons"],"spellcasting_ability":"CHA"},
+    "warlock":{"hit_die":8,"saving_throws":["WIS","CHA"],"skill_choice_count":2,"skill_options":["Arcana","Deception","History","Intimidation","Investigation","Nature","Religion"],"proficiencies":["Light Armor","Simple Weapons"],"spellcasting_ability":"CHA"},
+    "wizard":{"hit_die":6,"saving_throws":["INT","WIS"],"skill_choice_count":2,"skill_options":["Arcana","History","Insight","Investigation","Medicine","Nature","Religion"],"proficiencies":["Simple Weapons"],"spellcasting_ability":"INT"}
+  },
+  "controle":{"quantidade":12,"verificadas":12,"pendentes":0,"divergencias_conhecidas":0}
+}
