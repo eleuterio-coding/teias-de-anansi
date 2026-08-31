@@ -1,0 +1,91 @@
+name: Corrigir semântica das subclasses PHB 2024
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - '.github/workflows/corrigir-semantica-subclasses-phb-2024.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  corrigir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Corrigir divergências normativas confirmadas
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path=Path('dados/subclasses-mecanicas-phb-2024.json')
+          data=json.loads(path.read_text(encoding='utf-8'))
+          rows={row['nome']:row for row in data['subclasses']}
+
+          def feature(subclass, *, level=None, name=None):
+              matches=[f for f in rows[subclass]['progressao'] if (level is None or int(f['nivel'])==level) and (name is None or f['nome']==name)]
+              if len(matches)!=1:
+                  raise SystemExit(f'{subclass}: esperado 1 recurso level={level} name={name}; encontrados {len(matches)}')
+              return matches[0]
+
+          # Evoker 2024: Potent Cantrip passa ao nível 3; Sculpt Spells passa ao nível 6.
+          ev3=feature('Evoker',level=3,name='Potent Cantrip / Sculpt Spells')
+          ev3['nome']='Potent Cantrip'
+          ev3['descricao']='Cantrips que causam dano ainda causam metade do dano quando o ataque erra ou quando o alvo obtém sucesso no teste de resistência; efeitos adicionais do cantrip não se aplicam nesse caso.'
+          ev6=feature('Evoker',level=6,name='Potent Cantrip')
+          ev6['nome']='Sculpt Spells'
+          ev6['descricao']='Ao conjurar uma magia de Evocation que afeta outras criaturas visíveis, pode proteger um número delas igual a 1 + o nível da magia; elas passam automaticamente no teste de resistência e sofrem 0 dano se normalmente sofreriam metade no sucesso.'
+
+          # War Domain 2024: lista e benefício de nível 6 foram revistos no PHB 2024.
+          war_spells=feature('War Domain',level=3,name='War Domain Spells')
+          war_spells['descricao']='Mantém preparadas as magias do domínio de guerra conforme o nível, incluindo Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon, Fire Shield e Steel Wind Strike; a lista 2024 não usa Divine Favor como magia de domínio.'
+          war6=feature('War Domain',level=6,name="War God's Blessing")
+          war6['descricao']='Ao usar Channel Divinity, pode conjurar Shield of Faith ou Spiritual Weapon sem gastar slot e sem exigir Concentração; o benefício dura até 1 minuto conforme a magia escolhida.'
+
+          # Draconic Sorcery 2024: Dragon Wings dura 1 hora e o capstone é Dragon Companion.
+          wings=feature('Draconic Sorcery',level=14,name='Dragon Wings')
+          wings['descricao']='Como Ação Bônus, manifesta asas dracônicas por 1 hora e ganha Fly Speed de 60 pés. Recupera o uso após Descanso Longo ou pode restaurá-lo gastando 3 Sorcery Points.'
+          cap=feature('Draconic Sorcery',level=18,name='Dragon Companion / Presence')
+          cap['nome']='Dragon Companion'
+          cap['descricao']='Pode conjurar Summon Dragon sem componente Material e uma vez sem gastar slot por Descanso Longo. Ao iniciar a conjuração, pode remover a necessidade de Concentração; nesse caso, a duração passa a 1 minuto.'
+
+          path.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+      - name: Validar correções e cobertura existente
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const data=JSON.parse(fs.readFileSync('dados/subclasses-mecanicas-phb-2024.json','utf8'));
+          const row=n=>data.subclasses.find(x=>x.nome===n);
+          const feat=(n,l)=>row(n).progressao.filter(x=>x.nivel===l);
+          assert.deepEqual(feat('Evoker',3).map(x=>x.nome),['Evocation Savant','Potent Cantrip']);
+          assert.equal(feat('Evoker',6)[0].nome,'Sculpt Spells');
+          assert.ok(row('War Domain').progressao.find(x=>x.nome==='War Domain Spells').descricao.includes('Guiding Bolt'));
+          assert.ok(!row('War Domain').progressao.find(x=>x.nome==='War Domain Spells').descricao.includes('Divine Favor como magia de domínio.')); // texto explicita a exclusão normativa
+          assert.equal(feat('Draconic Sorcery',18)[0].nome,'Dragon Companion');
+          assert.match(feat('Draconic Sorcery',14)[0].descricao,/1 hora/);
+          assert.match(feat('Draconic Sorcery',14)[0].descricao,/60 pés/);
+          JS
+          node tests/auditar-subclasses-mecanicas.mjs
+          node --check scripts/character-builder/sorcerer-subclass-mechanics.js
+          node --check scripts/character-builder/wizard-subclass-mechanics.js
+      - name: Publicar correções
+        run: |
+          if git diff --quiet -- dados/subclasses-mecanicas-phb-2024.json; then
+            echo 'Nenhuma alteração necessária.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add dados/subclasses-mecanicas-phb-2024.json
+          git commit -m 'Corrige semântica de subclasses PHB 2024'
+          git push origin HEAD:audit/normativa-total-criacao
