@@ -36,7 +36,10 @@ jobs:
           old2="state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Pactos atuais exigem níveis de Bruxo mesmo quando consultados por talento.');\nstate.c.refs.class='warlock';"
           new2="state.c.refs.class='wizard';check=invocationPrerequisiteResult(byId('pact-of-the-blade'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,true,'Pact of the Blade 2024 não possui pré-requisito e pode ser escolhido por Eldritch Adept sob a precedência atual.');check=invocationPrerequisiteResult(byId('agonizing-blast'),{consumer:'feat',selectedIds:[]});assert.equal(check.ok,false,'Invocação que exige níveis de Bruxo deve permanecer bloqueada para não-Bruxos.');\nstate.c.refs.class='warlock';"
           if old2 in s: s=s.replace(old2,new2,1)
-          if new not in s or new2 not in s: raise SystemExit('cenários atualizados de Invocações não encontrados')
+          old3="clean=sanitizeInvocationSlots([{id:'thirsting-blade',choice:null},{id:'devouring-blade',choice:null}],{consumer:'class',limit:2});assert.equal(clean.slots[1].id,'devouring-blade');"
+          new3="clean=sanitizeInvocationSlots([{id:'pact-of-the-blade',choice:{weaponId:'longsword'}},{id:'thirsting-blade',choice:null},{id:'devouring-blade',choice:null}],{consumer:'class',limit:3});assert.equal(clean.slots[2].id,'devouring-blade','A cadeia Pact of the Blade → Thirsting Blade → Devouring Blade deve permanecer válida no nível 12.');"
+          if old3 in s: s=s.replace(old3,new3,1)
+          if new not in s or new2 not in s or new3 not in s: raise SystemExit('cenários atualizados de Invocações não encontrados')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Validar sintaxe e gates críticos
