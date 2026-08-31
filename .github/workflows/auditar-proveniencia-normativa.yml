@@ -73,5 +73,7 @@ jobs:
         run: node tests/auditar-semantica-subclasses-tasha-2020.mjs
       - name: 11C · Validar precedência Tasha 2020 → PHB 2024
         run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
+      - name: 11C · Validar precedência Xanathar 2017 → PHB 2024
+        run: node tests/auditar-precedencia-subclasses-xanathar-2017.mjs
       - name: 11E · Impedir múltiplas revisões do motor de regras
         run: node tests/auditar-revisao-unica-rules.mjs
