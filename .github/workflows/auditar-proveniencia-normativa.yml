@@ -6,6 +6,7 @@ on:
       - 'dados/auditoria-criacao-escopo.json'
       - 'dados/auditoria-normativa-*.json'
       - 'dados/fontes-normativas-criacao.json'
+      - 'dados/precedencia-subclasses.json'
       - 'dados/politica-compatibilidade-5e-5.5e.json'
       - 'dados/classes-base-2024.json'
       - 'dados/classes-ptbr/**'
@@ -30,6 +31,7 @@ on:
       - 'criacao-personagem.html'
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
+      - 'tests/auditar-precedencia-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -42,6 +44,7 @@ on:
       - 'criacao-personagem.html'
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
+      - 'tests/auditar-precedencia-*.mjs'
       - 'tests/auditar-ferramentas-classe.mjs'
       - 'tests/auditar-revisao-unica-rules.mjs'
       - '.github/workflows/auditar-proveniencia-normativa.yml'
@@ -66,5 +69,7 @@ jobs:
         run: node tests/auditar-ferramentas-classe.mjs
       - name: 11B · Validar subclasses PHB 2024
         run: node tests/auditar-semantica-subclasses-phb-2024.mjs
+      - name: 11C · Validar precedência Tasha 2020 → PHB 2024
+        run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
       - name: 11E · Impedir múltiplas revisões do motor de regras
         run: node tests/auditar-revisao-unica-rules.mjs
