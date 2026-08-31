@@ -26,11 +26,12 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
+          REV='20260831-class-tools1'
           html = Path('ficha-personagem.html').read_text(encoding='utf-8')
           js = Path('scripts/character-sheet-unified-spells.js').read_text(encoding='utf-8')
 
           checks = {
-              'módulo carregado pela ficha': 'character-sheet-unified-spells.js?v=20260826-unified-spells2' in html,
+              'módulo carregado pela ficha': f'character-sheet-unified-spells.js?v={REV}' in html,
               'cards expansíveis': '<details class="uspell"' in js,
               'lista consolidada': 'function collect(d)' in js,
               'magias da classe': 'function classSpells' in js,
