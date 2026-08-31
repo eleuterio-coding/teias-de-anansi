@@ -64,5 +64,7 @@ jobs:
         run: node tests/auditar-semantica-classes-core.mjs
       - name: 11B · Validar ferramentas de Classe
         run: node tests/auditar-ferramentas-classe.mjs
+      - name: 11B · Validar subclasses PHB 2024
+        run: node tests/auditar-semantica-subclasses-phb-2024.mjs
       - name: 11E · Impedir múltiplas revisões do motor de regras
         run: node tests/auditar-revisao-unica-rules.mjs
