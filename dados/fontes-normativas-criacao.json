@@ -24,6 +24,7 @@
     {"padrao":"dados/subclasses-mecanicas-larsene-ledger-2024.json","autoridade":"terceiro_compativel","fonte":"L'Arsène's Ledger of Treasure and Trinkets","proveniencia":"arquivo"},
     {"padrao":"dados/subclasses-mecanicas-tasha-2020.json","autoridade":"oficial_legado","fonte":"Tasha's Cauldron of Everything (2020)","proveniencia":"arquivo"},
     {"padrao":"dados/subclasses-mecanicas-xanathar-2017.json","autoridade":"oficial_legado","fonte":"Xanathar's Guide to Everything (2017)","proveniencia":"arquivo"},
+    {"padrao":"dados/precedencia-subclasses.json","autoridade":"regra_casa","fonte":"Política normativa de precedência de subclasses do Hub","proveniencia":"arquivo"},
 
     {"padrao":"dados/especies-pdf-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
     {"padrao":"dados/especies-pdf-forge-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
