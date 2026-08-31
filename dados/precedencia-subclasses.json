@@ -19,6 +19,10 @@
     {"fonte_anterior":"tasha-2020","nome_anterior":"Fey Wanderer","classe":"Ranger","fonte_vigente":"phb-2024","nome_vigente":"Fey Wanderer"},
     {"fonte_anterior":"tasha-2020","nome_anterior":"Soulknife","classe":"Rogue","fonte_vigente":"phb-2024","nome_vigente":"Soulknife"},
     {"fonte_anterior":"tasha-2020","nome_anterior":"Aberrant Mind","classe":"Sorcerer","fonte_vigente":"phb-2024","nome_vigente":"Aberrant Sorcery"},
-    {"fonte_anterior":"tasha-2020","nome_anterior":"Clockwork Soul","classe":"Sorcerer","fonte_vigente":"phb-2024","nome_vigente":"Clockwork Sorcery"}
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Clockwork Soul","classe":"Sorcerer","fonte_vigente":"phb-2024","nome_vigente":"Clockwork Sorcery"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"Path of the Zealot","classe":"Barbarian","fonte_vigente":"phb-2024","nome_vigente":"Path of the Zealot"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"College of Glamour","classe":"Bard","fonte_vigente":"phb-2024","nome_vigente":"College of Glamour"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"Gloom Stalker","classe":"Ranger","fonte_vigente":"phb-2024","nome_vigente":"Gloom Stalker"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"The Celestial","classe":"Warlock","fonte_vigente":"phb-2024","nome_vigente":"Celestial Patron"}
   ]
 }
