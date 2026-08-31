@@ -1,25 +1,615 @@
 {
-  "schema":"hub-rpg/subclass-mechanics/v1",
-  "fonte_id":"tasha-2020",
-  "fonte":"Tasha's Cauldron of Everything (2020)",
-  "subclasses":[
-    {"nome":"Path of the Beast","resumo":"Bárbaro que manifesta armas naturais durante a Rage e evolui para adaptações bestiais, fúria infecciosa e caça em bando.","progressao":[{"nivel":3,"nome":"Form of the Beast","descricao":"Ao entrar em Rage manifesta uma arma natural até a Rage terminar. Bite: 1d8 Piercing e, uma vez por turno ao acertar, se estiver abaixo de metade dos PV máximos recupera PV iguais ao PB. Claws: 1d6 Slashing e, uma vez por turno ao atacar com garra na ação Attack, faz um ataque de garra adicional. Tail: 1d8 Piercing, Reach, e pode usar Reação contra ataque que o acertaria para rolar 1d8 e somar à CA contra aquele ataque."},{"nivel":6,"nome":"Bestial Soul","descricao":"As armas de Form of the Beast contam como mágicas para superar resistência/imunidade. Após Descanso Curto ou Longo escolhe adaptação: Swim Speed igual ao Speed e respirar em água; Climb Speed igual ao Speed e escalar superfícies difíceis/teto sem check; ou saltos ampliados por Athletics."},{"nivel":10,"nome":"Infectious Fury","descricao":"Quando acerta com arma natural de Form of the Beast, força Wisdom save contra CD 8 + Constituição + PB. Na falha escolhe: alvo usa Reação para fazer ataque corpo a corpo contra outra criatura escolhida; ou sofre 2d12 Psychic. Usos = PB por Descanso Longo."},{"nivel":14,"nome":"Call the Hunt","descricao":"Ao entrar em Rage escolhe criaturas voluntárias a até 30 pés até o modificador de Constituição (mín. 1). Você ganha 5 PV temporários por criatura que aceitar; até a Rage terminar, uma vez por turno cada aliado afetado causa +1d6 no dano quando acerta ataque. Usos = PB por Descanso Longo."}]},
-    {"nome":"Path of Wild Magic","resumo":"Bárbaro tocado por magia caótica que detecta magia, produz surtos de Rage e reforça aliados ou spell slots.","progressao":[{"nivel":3,"nome":"Magic Awareness","descricao":"Como Ação, até o fim do próximo turno conhece a localização de magias e itens mágicos a até 60 pés que não estejam atrás de Total Cover e identifica a escola das magias. Usos = PB por Descanso Longo."},{"nivel":3,"nome":"Wild Surge","descricao":"Sempre que entra em Rage rola na tabela Wild Magic para produzir um de oito efeitos mágicos de combate, incluindo teleporte, explosão de energia, proteção, terreno difícil, arma de força e retaliação luminosa. O efeito usa Constituição quando precisa de CD."},{"nivel":6,"nome":"Bolstering Magic","descricao":"Ação toca criatura e escolhe: por 10 minutos ela adiciona 1d3 a ataques e ability checks; ou rola 1d3 e recupera um spell slot gasto de nível igual ou menor ao resultado. Uma criatura só pode receber a recuperação de slot uma vez por Descanso Longo. Usos totais = PB por Descanso Longo."},{"nivel":10,"nome":"Unstable Backlash","descricao":"Enquanto estiver em Rage, quando sofrer dano ou falhar em save pode usar Reação para rolar novamente Wild Surge; o novo resultado substitui o efeito atual."},{"nivel":14,"nome":"Controlled Surge","descricao":"Quando rola Wild Surge, rola dois dados e escolhe qual efeito usar. Se ambos mostrarem o mesmo número, pode escolher qualquer efeito da tabela."}]},
-    {"nome":"College of Creation","resumo":"Bardo que amplia Bardic Inspiration com Motes of Potential, cria objetos e anima itens como Dancing Items.","progressao":[{"nivel":3,"nome":"Mote of Potential","descricao":"Ao conceder Bardic Inspiration cria um mote que modifica seu uso. Ability Check: pode rolar o dado de inspiração duas vezes e escolher. Attack: após somar o dado, alvo e criaturas escolhidas a 5 pés fazem Constitution save ou sofrem Thunder igual ao resultado. Saving Throw: ao adicionar o dado, recebe PV temporários iguais ao resultado + modificador de Carisma."},{"nivel":3,"nome":"Performance of Creation","descricao":"Ação cria um item não mágico Medium ou menor em espaço a 10 pés, com valor máximo de 20 × nível de Bard GP; dura número de horas igual ao PB. 1/Descanso Longo ou pode repetir gastando spell slot de nível 2+. Só um item criado por vez. Tamanho máximo aumenta para Large no nível 6 e Huge no 14."},{"nivel":6,"nome":"Animating Performance","descricao":"Ação anima item não mágico Large ou menor a 30 pés por 1 hora usando Dancing Item stat block. Age depois de você; Dodge por padrão e é comandado por Ação Bônus para usar outra ação. 1/Descanso Longo ou reutiliza gastando spell slot de nível 3+."},{"nivel":14,"nome":"Creative Crescendo","descricao":"Performance of Creation deixa de ter limite de valor em GP e pode criar simultaneamente número de itens igual ao modificador de Carisma; apenas um deles pode ter o tamanho máximo permitido, e os demais devem ser Small ou Tiny."}]},
-    {"nome":"College of Eloquence","resumo":"Bardo de oratória extremamente consistente que enfraquece salvaguardas, preserva Bardic Inspiration e comunica-se universalmente.","progressao":[{"nivel":3,"nome":"Silver Tongue","descricao":"Ao fazer Charisma (Deception) ou Charisma (Persuasion), resultado d20 de 9 ou menos conta como 10."},{"nivel":3,"nome":"Unsettling Words","descricao":"Ação Bônus gasta Bardic Inspiration e escolhe criatura a até 60 pés. Role o dado; a criatura subtrai o resultado da próxima salvaguarda que fizer antes do início do seu próximo turno."},{"nivel":6,"nome":"Unfailing Inspiration","descricao":"Quando criatura adiciona seu Bardic Inspiration a ability check, ataque ou save e ainda falha, ela mantém o dado em vez de perdê-lo."},{"nivel":6,"nome":"Universal Speech","descricao":"Ação escolhe criaturas a 60 pés até o modificador de Carisma (mín. 1); por 1 hora elas entendem magicamente sua fala. 1/Descanso Longo ou reutiliza gastando spell slot."},{"nivel":14,"nome":"Infectious Inspiration","descricao":"Quando criatura usa seu Bardic Inspiration e tem sucesso no D20 Test, pode usar Reação para dar Bardic Inspiration a outra criatura a 60 pés sem gastar um uso normal. Usos = modificador de Carisma (mín. 1) por Descanso Longo."}]},
-    {"nome":"Order Domain","resumo":"Clérigo de comando que transforma buffs em ataques de aliados, domina multidões e conjura Enchantment com velocidade superior.","progressao":[{"nivel":1,"nome":"Bonus Proficiencies","descricao":"Ganha treinamento com Heavy Armor e proficiência em Intimidation ou Persuasion."},{"nivel":1,"nome":"Voice of Authority","descricao":"Quando conjura magia usando spell slot e mira um aliado, pode escolher um aliado afetado para usar imediatamente a Reação e fazer um ataque com arma. Se a magia mirar mais de um aliado, escolhe qual pode atacar."},{"nivel":1,"nome":"Order Domain Spells","descricao":"Mantém preparadas magias de comando, compulsão e controle conforme o nível, incluindo Command, Heroism, Hold Person, Zone of Truth, Mass Healing Word, Slow, Compulsion, Locate Creature, Commune e Dominate Person."},{"nivel":2,"nome":"Order's Demand","descricao":"Ação + Channel Divinity: criaturas escolhidas a 30 pés que possam ver/ouvir você fazem Wisdom save; falha causa Charmed até o fim do próximo turno ou até sofrer dano. Uma criatura Charmed dessa forma também deixa cair o que estiver segurando quando falha."},{"nivel":6,"nome":"Embodiment of the Law","descricao":"Quando conjura magia de Enchantment com tempo de Ação usando spell slot, pode mudar o tempo para Ação Bônus. Usos = modificador de Sabedoria (mín. 1) por Descanso Longo."},{"nivel":8,"nome":"Divine Strike","descricao":"Uma vez em cada turno, ao acertar ataque com arma causa +1d8 Psychic; aumenta para +2d8 no nível 14."},{"nivel":17,"nome":"Order's Wrath","descricao":"Quando causa Divine Strike em uma criatura, ela fica marcada até o início do seu próximo turno. A primeira vez que um aliado acerta a criatura marcada, o alvo sofre +2d8 Psychic e a marca termina."}]},
-    {"nome":"Peace Domain","resumo":"Clérigo de ligação comunitária que conecta aliados com Emboldening Bond, cura enquanto atravessa o campo e permite dividir dano.","progressao":[{"nivel":1,"nome":"Implement of Peace","descricao":"Ganha proficiência em Insight, Performance ou Persuasion."},{"nivel":1,"nome":"Emboldening Bond","descricao":"Ação escolhe criaturas voluntárias a 30 pés em quantidade igual ao PB. Por 10 minutos, enquanto uma criatura vinculada estiver a 30 pés de outra vinculada, uma vez por turno pode rolar 1d4 e somar a ataque, ability check ou save. Usos = PB por Descanso Longo."},{"nivel":1,"nome":"Peace Domain Spells","descricao":"Mantém preparadas magias de proteção, comunicação e vínculo, incluindo Heroism, Sanctuary, Aid, Warding Bond, Beacon of Hope, Sending, Aura of Purity, Otiluke's Resilient Sphere, Greater Restoration e Rary's Telepathic Bond."},{"nivel":2,"nome":"Balm of Peace","descricao":"Ação + Channel Divinity: move até seu Speed sem provocar Opportunity Attacks. Na primeira vez que fica a 5 pés de cada criatura voluntária durante esse movimento, pode fazê-la recuperar 2d6 + Sabedoria PV."},{"nivel":6,"nome":"Protective Bond","descricao":"Quando criatura sob Emboldening Bond está prestes a sofrer dano, outra criatura vinculada a até 30 pés pode usar Reação para teleportar para espaço a 5 pés dela e receber todo o dano em seu lugar."},{"nivel":8,"nome":"Potent Spellcasting","descricao":"Adiciona modificador de Sabedoria ao dano causado por qualquer cantrip de Cleric."},{"nivel":17,"nome":"Expansive Bond","descricao":"O alcance funcional de Emboldening Bond e Protective Bond aumenta para 60 pés. A criatura que usa Protective Bond também ganha resistência a todo o dano transferido naquele evento."}]},
-    {"nome":"Twilight Domain","resumo":"Clérigo de penumbra com Darkvision extrema, vantagem na Iniciativa, voo noturno e Twilight Sanctuary que concede PV temporários ou remove medo/encanto.","progressao":[{"nivel":1,"nome":"Bonus Proficiencies","descricao":"Ganha treinamento com Martial Weapons e Heavy Armor."},{"nivel":1,"nome":"Eyes of Night","descricao":"Darkvision de 300 pés. Como Ação pode compartilhá-la por 1 hora com criaturas voluntárias a 10 pés até o modificador de Sabedoria (mín. 1). 1/Descanso Longo ou reutiliza gastando spell slot."},{"nivel":1,"nome":"Vigilant Blessing","descricao":"Ação toca criatura e concede Vantagem na próxima rolagem de Iniciativa; o benefício termina após a rolagem ou quando você usar a característica em outra criatura."},{"nivel":1,"nome":"Twilight Domain Spells","descricao":"Mantém preparadas magias de proteção, noite e mobilidade como Faerie Fire, Sleep, Moonbeam, See Invisibility, Aura of Vitality, Leomund's Tiny Hut, Aura of Life, Greater Invisibility, Circle of Power e Mislead."},{"nivel":2,"nome":"Twilight Sanctuary","descricao":"Ação + Channel Divinity cria esfera de Dim Light de 30 pés centrada em você por 1 minuto. No fim do turno de cada criatura aliada na esfera, você pode conceder 1d6 + nível de Cleric PV temporários ou encerrar Charmed ou Frightened nela."},{"nivel":6,"nome":"Steps of Night","descricao":"Como Ação Bônus enquanto estiver em Dim Light ou Darkness, ganha Fly Speed igual ao Walking Speed por 1 minuto. Usos = PB por Descanso Longo."},{"nivel":8,"nome":"Divine Strike","descricao":"Uma vez por turno, ataque com arma causa +1d8 Radiant; aumenta para +2d8 no nível 14."},{"nivel":17,"nome":"Twilight Shroud","descricao":"Enquanto Twilight Sanctuary estiver ativa, você e aliados dentro da esfera recebem Half Cover."}]},
-    {"nome":"Circle of Spores","resumo":"Druida fúngico que causa dano de esporos por Reação, reforça o corpo com Symbiotic Entity e anima cadáveres temporários.","progressao":[{"nivel":2,"nome":"Circle Spells","descricao":"Aprende Chill Touch e mantém preparadas magias de temática fúngica/necrótica como Blindness/Deafness, Gentle Repose, Animate Dead, Gaseous Form, Blight, Confusion, Cloudkill e Contagion conforme o nível."},{"nivel":2,"nome":"Halo of Spores","descricao":"Quando criatura visível entra em espaço a 10 pés ou começa turno ali, pode usar Reação para forçar Constitution save; falha sofre 1d4 Necrotic. Dado cresce para d6 no nível 6, d8 no 10 e d10 no 14."},{"nivel":2,"nome":"Symbiotic Entity","descricao":"Ação gasta Wild Shape para ganhar 4 PV temporários por nível de Druid por 10 minutos. Enquanto mantiver esses PV: Halo of Spores usa o dobro de dados e ataques corpo a corpo com arma causam +1d6 Necrotic."},{"nivel":6,"nome":"Fungal Infestation","descricao":"Quando Beast ou Humanoid Small/Medium morre a 10 pés, usa Reação para animá-lo como Zombie com 1 PV; age logo após você, apenas com ação Attack, e dura 1 hora. Usos = modificador de Sabedoria (mín. 1) por Descanso Longo."},{"nivel":10,"nome":"Spreading Spores","descricao":"Ação Bônus enquanto Symbiotic Entity está ativa arremessa esporos a 30 pés, criando cubo de 10 pés por 1 minuto. Criaturas que entram ou começam turno ali sofrem o dano de Halo of Spores em falha no save. Enquanto o cubo existir, não usa Halo of Spores por Reação."},{"nivel":14,"nome":"Fungal Body","descricao":"Fica imune a Blinded, Deafened, Frightened e Poisoned. Acertos críticos contra você contam como acertos normais, exceto enquanto estiver Incapacitated."}]},
-    {"nome":"Circle of Wildfire","resumo":"Druida que invoca Wildfire Spirit, canaliza magias por ele e converte chamas residuais em cura ou dano.","progressao":[{"nivel":2,"nome":"Circle Spells","descricao":"Mantém preparadas magias de fogo e restauração, incluindo Burning Hands, Cure Wounds, Flaming Sphere, Scorching Ray, Plant Growth, Revivify, Aura of Life, Fire Shield, Flame Strike e Mass Cure Wounds."},{"nivel":2,"nome":"Summon Wildfire Spirit","descricao":"Ação gasta Wild Shape para invocar Wildfire Spirit a 30 pés. Criaturas próximas ao espaço de aparecimento fazem Dexterity save ou sofrem 2d6 Fire. O espírito usa bloco próprio, age depois de você e precisa de Ação Bônus para receber comando diferente de Dodge. Fiery Teleportation permite teleportar a si e aliados próximos 15 pés e causa Fire a inimigos que ficam para trás."},{"nivel":6,"nome":"Enhanced Bond","descricao":"Enquanto o espírito estiver invocado, quando conjura magia que causa Fire ou restaura PV rola 1d8 e soma a uma rolagem de dano ou cura da magia. Magias com alcance diferente de Self podem originar-se do espaço do espírito."},{"nivel":10,"nome":"Cauterizing Flames","descricao":"Quando criatura Small ou maior morre a 30 pés, pode usar Reação para criar chama espectral no espaço por 1 minuto. Quando criatura entra no espaço, pode fazê-la recuperar 2d10 + Sabedoria PV ou sofrer o mesmo valor de Fire. Usos = modificador de Sabedoria (mín. 1) por Descanso Longo."},{"nivel":14,"nome":"Blazing Revival","descricao":"Quando cai a 0 PV e o Wildfire Spirit está a 120 pés, pode fazer o espírito cair a 0 PV e você recupera metade dos PV máximos. Uso 1/Descanso Longo."}]},
-    {"nome":"Rune Knight","resumo":"Fighter rúnico que grava runas com poderes passivos/ativáveis e cresce com Giant's Might.","progressao":[{"nivel":3,"nome":"Bonus Proficiencies","descricao":"Ganha proficiência com Smith's Tools e aprende Giant."},{"nivel":3,"nome":"Rune Carver","descricao":"Aprende duas runas e grava cada uma em arma, armadura, escudo, joia ou objeto. Cada runa concede benefício passivo e um poder invocável; CD = 8 + PB + Constituição. Aprende runa adicional nos níveis 7, 10 e 15 e pode trocar runas ao ganhar nível."},{"nivel":3,"nome":"Giant's Might","descricao":"Ação Bônus por 1 minuto: se menor que Large fica Large com equipamento; Vantagem em Strength checks e saves; uma vez por turno, um ataque com arma/Unarmed Strike causa +1d6. Usos = PB por Descanso Longo."},{"nivel":7,"nome":"Runic Shield","descricao":"Quando outra criatura a 60 pés é atingida por ataque, pode usar Reação para forçar o atacante a rerrolar o d20 e usar a nova rolagem. Usos = PB por Descanso Longo."},{"nivel":10,"nome":"Great Stature","descricao":"Cresce permanentemente 3d4 polegadas e o dano adicional de Giant's Might aumenta para 1d8."},{"nivel":15,"nome":"Master of Runes","descricao":"Pode invocar cada runa conhecida duas vezes, em vez de uma, entre Descansos Curtos ou Longos."},{"nivel":18,"nome":"Runic Juggernaut","descricao":"Giant's Might pode tornar você Huge, o alcance aumenta em 5 pés durante a transformação e o dano adicional aumenta para 1d10."}]},
-    {"nome":"Way of the Astral Self","resumo":"Monk que manifesta braços, rosto e corpo astral, usando Sabedoria nos golpes e ganhando alcance, sentidos e defesa energética.","progressao":[{"nivel":3,"nome":"Arms of the Astral Self","descricao":"Ação Bônus + 1 Ki manifesta braços por 10 minutos; ao surgir, criaturas escolhidas a 10 pés fazem Dexterity save ou sofrem duas rolagens do Martial Arts die de Force. Enquanto ativos: pode usar Sabedoria em Strength checks/saves, os braços contam como Unarmed Strikes com Reach +5 pés no seu turno e podem usar Sabedoria em ataque e dano, causando Force."},{"nivel":6,"nome":"Visage of the Astral Self","descricao":"Ação Bônus + 1 Ki, ou junto com Arms, manifesta rosto por 10 minutos. Ganha visão em Darkness normal/mágica a 120 pés, Vantagem em Wisdom (Insight) e Charisma (Intimidation) e pode amplificar a voz ou falar telepaticamente a criatura visível a 60 pés."},{"nivel":11,"nome":"Body of the Astral Self","descricao":"Com Arms e Visage ativos, pode usar Reação para reduzir dano Acid, Cold, Fire, Force, Lightning ou Thunder em 1d10 + Sabedoria. Uma vez por turno, ao acertar com braços astrais causa dano extra igual a um Martial Arts die."},{"nivel":17,"nome":"Awakened Astral Self","descricao":"Ação Bônus + 5 Ki manifesta forma completa por 10 minutos. Recebe +2 CA e, ao usar Attack, pode atacar três vezes com braços astrais em vez de duas."}]},
-    {"nome":"Oath of the Watchers","resumo":"Paladino guardião planar, especializado em saves mentais, iniciativa e expulsão de Aberrations, Celestials, Elementals, Fey e Fiends.","progressao":[{"nivel":3,"nome":"Oath Spells","descricao":"Mantém preparadas magias de detecção, proteção e banimento como Alarm, Detect Magic, Moonbeam, See Invisibility, Counterspell, Nondetection, Aura of Purity, Banishment, Hold Monster e Scrying."},{"nivel":3,"nome":"Channel Divinity: Watcher's Will","descricao":"Ação escolhe criaturas a 30 pés até o modificador de Carisma (mín. 1); por 1 minuto elas têm Vantagem em Intelligence, Wisdom e Charisma saving throws."},{"nivel":3,"nome":"Channel Divinity: Abjure the Extraplanar","descricao":"Ação: Aberrations, Celestials, Elementals, Fey e Fiends escolhidos a 30 pés fazem Wisdom save; em falha ficam Turned por 1 minuto ou até sofrer dano."},{"nivel":7,"nome":"Aura of the Sentinel","descricao":"Você e criaturas escolhidas dentro da Aura adicionam seu PB à Iniciativa."},{"nivel":15,"nome":"Vigilant Rebuke","descricao":"Quando você ou criatura a 30 pés tem sucesso em Intelligence, Wisdom ou Charisma save, pode usar Reação para causar 2d8 + Carisma Force na criatura que forçou o save."},{"nivel":20,"nome":"Mortal Bulwark","descricao":"Ação Bônus assume forma vigilante por 1 minuto: ganha Truesight 120 pés, Vantagem em ataques contra Aberrations, Celestials, Elementals, Fey e Fiends e, ao acertar esses tipos, pode forçar Charisma save para bani-los temporariamente. Uso 1/Descanso Longo."}]},
-    {"nome":"Swarmkeeper","resumo":"Ranger acompanhado por enxame que causa dano, empurra, reposiciona o Ranger, concede voo e defesa reativa.","progressao":[{"nivel":3,"nome":"Gathered Swarm","descricao":"Uma vez por turno, imediatamente após acertar ataque, escolhe: alvo sofre +1d6 Piercing; ou faz Strength save e, em falha, é movido 15 pés horizontalmente; ou você é movido 5 pés horizontalmente sem provocar Opportunity Attacks. O dano aumenta para 1d8 no nível 11."},{"nivel":3,"nome":"Swarmkeeper Magic","descricao":"Aprende Mage Hand e mantém preparadas Faerie Fire, Web, Gaseous Form, Arcane Eye e Insect Plague conforme os níveis de Ranger; Mage Hand assume aparência do enxame."},{"nivel":7,"nome":"Writhing Tide","descricao":"Ação Bônus concede Fly Speed de 10 pés com Hover por 1 minuto. Usos = PB por Descanso Longo."},{"nivel":11,"nome":"Mighty Swarm","descricao":"Gathered Swarm melhora: dano vira 1d8; ao mover alvo pode também derrubá-lo Prone; ao mover você, concede Half Cover até o início do próximo turno."},{"nivel":15,"nome":"Swarming Dispersal","descricao":"Quando sofre dano, Reação concede resistência àquela instância de dano e teleporta até 30 pés para espaço visível. Usos = PB por Descanso Longo."}]},
-    {"nome":"Phantom","resumo":"Rogue ligado aos mortos que empresta proficiências, espalha Sneak Attack necrótico, guarda Soul Trinkets e atravessa matéria como fantasma.","progressao":[{"nivel":3,"nome":"Whispers of the Dead","descricao":"Após Descanso Curto ou Longo escolhe uma perícia ou ferramenta na qual não é proficiente e ganha proficiência nela até usar a característica novamente."},{"nivel":3,"nome":"Wails from the Grave","descricao":"Imediatamente após causar Sneak Attack, escolhe segunda criatura visível a 30 pés do primeiro alvo; ela sofre Necrotic igual à metade dos dados de Sneak Attack, arredondando para cima. Usos = PB por Descanso Longo."},{"nivel":9,"nome":"Tokens of the Departed","descricao":"Reação quando criatura morre a 30 pés cria Soul Trinket, máximo = PB. Enquanto carrega ao menos um, tem Vantagem em Death Saves e Constitution saves. Pode destruir um para fazer pergunta ao espírito do morto ou, quando usa Wails from the Grave, destruir um em vez de gastar uso da característica."},{"nivel":13,"nome":"Ghost Walk","descricao":"Ação Bônus assume forma espectral por 10 minutos: Fly Speed 10 pés com Hover, ataques contra você têm Desvantagem e pode atravessar criaturas/objetos como Difficult Terrain, sofrendo dano se terminar dentro deles. 1/Descanso Longo ou reutiliza destruindo Soul Trinket."},{"nivel":17,"nome":"Death's Friend","descricao":"Wails from the Grave também causa dano Necrotic ao alvo original do Sneak Attack igual à metade dos dados de Sneak Attack. Ao terminar Descanso Longo sem Soul Trinkets, ganha um."}]},
-    {"nome":"The Fathomless","resumo":"Warlock oceânico que luta com tentáculo espectral, respira e nada livremente e usa a criatura para reduzir dano e teleportar pelo mar.","progressao":[{"nivel":1,"nome":"Expanded Spell List","descricao":"Expande opções com magias aquáticas, de frio, tempestade e tentáculos conforme os níveis de spell."},{"nivel":1,"nome":"Tentacle of the Deeps","descricao":"Ação Bônus cria tentáculo de 10 pés em espaço a 60 pés por 1 minuto e faz melee spell attack: 1d8 Cold e Speed do alvo -10 pés até início do seu próximo turno. Em turnos seguintes, Ação Bônus move o tentáculo 30 pés e repete ataque. Usos = PB por Descanso Longo. Dano sobe para 2d8 no nível 10."},{"nivel":1,"nome":"Gift of the Sea","descricao":"Ganha Swim Speed 40 pés e pode respirar ar e água."},{"nivel":6,"nome":"Oceanic Soul","descricao":"Ganha resistência a Cold. Submerso, você e qualquer criatura também submersa entendem a fala um do outro."},{"nivel":6,"nome":"Guardian Coil","descricao":"Quando você ou criatura a 10 pés do tentáculo sofre dano, pode usar Reação para reduzir o dano em 1d8; aumenta para 2d8 no nível 10."},{"nivel":10,"nome":"Grasping Tentacles","descricao":"Evard's Black Tentacles fica preparada. Pode conjurá-la 1/Descanso Longo sem slot; ao conjurar ganha PV temporários iguais ao nível de Warlock e sofrer dano não pode quebrar sua Concentração nessa magia."},{"nivel":14,"nome":"Fathomless Plunge","descricao":"Ação teleporta você e até cinco criaturas voluntárias a 30 pés para corpo de água que tenha visto a até 1 milha ou para espaço a 30 pés desse corpo d'água. Uso 1/Descanso Curto ou Longo."}]},
-    {"nome":"The Genie","resumo":"Warlock ligado a Dao, Djinni, Efreeti ou Marid, com Vessel extradimensional, dano elemental, voo e Limited Wish.","progressao":[{"nivel":1,"nome":"Expanded Spell List / Genie Kind","descricao":"Escolhe Dao (Earth), Djinni (Air), Efreeti (Fire) ou Marid (Water). A escolha define tipo de dano e magias expandidas; todas as variantes também têm acesso a Wish no patamar máximo da lista."},{"nivel":1,"nome":"Genie's Vessel","descricao":"Recebe Tiny vessel que funciona como foco. Bottled Respite: Ação entra no espaço extradimensional do recipiente por até 2 × PB horas, 1/Descanso Longo. Genie's Wrath: uma vez por turno, ao acertar ataque, causa dano extra igual ao PB do tipo associado ao patrono."},{"nivel":6,"nome":"Elemental Gift","descricao":"Ganha resistência ao tipo de dano do patrono. Ação Bônus ganha Fly Speed 30 pés por 10 minutos; usos = PB por Descanso Longo."},{"nivel":10,"nome":"Sanctuary Vessel","descricao":"Ao entrar no Vessel pode levar até cinco criaturas voluntárias a 30 pés. Permanecer 10 minutos no interior pode completar Descanso Curto; criaturas que gastam Hit Dice ali recuperam PV adicionais iguais ao seu PB por dado gasto."},{"nivel":14,"nome":"Limited Wish","descricao":"Ação pede ao patrono o efeito de qualquer magia de nível 6 ou menor com tempo de Ação; a magia ocorre sem componentes e sem exigir que você a conheça. Depois de usar, não pode usar novamente por 1d4 Descansos Longos."}]},
-    {"nome":"Bladesinging","resumo":"Versão de Tasha do Wizard Bladesinger: Bladesong defensiva, Extra Attack com cantrip e conversão de slots em redução de dano.","progressao":[{"nivel":2,"nome":"Training in War and Song","descricao":"Ganha proficiência com Light Armor, uma arma corpo a corpo de uma mão à escolha e Performance."},{"nivel":2,"nome":"Bladesong","descricao":"Ação Bônus ativa por 1 minuto enquanto não usa Medium/Heavy Armor ou Shield nem ataca com duas mãos. Recebe Inteligência à CA, +10 pés de Walking Speed, Vantagem em Acrobatics e Inteligência nos Constitution saves para manter Concentração. Usos = PB por Descanso Longo."},{"nivel":6,"nome":"Extra Attack","descricao":"Ataca duas vezes ao usar Attack e pode substituir um dos ataques pela conjuração de um cantrip."},{"nivel":10,"nome":"Song of Defense","descricao":"Enquanto Bladesong estiver ativa, ao sofrer dano pode usar Reação e gastar spell slot para reduzir o dano em 5 × nível do slot."},{"nivel":14,"nome":"Song of Victory","descricao":"Enquanto Bladesong estiver ativa, adiciona modificador de Inteligência ao dano dos ataques corpo a corpo com arma."}]},
-    {"nome":"Order of Scribes","resumo":"Wizard cujo Spellbook desperta como mente mágica, troca tipos de dano, manifesta consciência remota e cria scrolls aprimorados.","progressao":[{"nivel":2,"nome":"Wizardly Quill","descricao":"Ação Bônus cria quill mágica Tiny. Não precisa de tinta, copia magias para spellbook em 2 minutos por nível de spell e pode apagar texto produzido por ela ao tocar o texto como Ação Bônus."},{"nivel":2,"nome":"Awakened Spellbook","descricao":"O spellbook desperta. Pode usá-lo como foco. Ao conjurar Wizard spell com slot, pode substituir o tipo de dano por um tipo que apareça em outra Wizard spell do mesmo nível existente no livro. Ao conjurar Wizard spell como Ritual, uma vez por Descanso Longo pode usar o tempo normal da magia em vez de adicionar 10 minutos."},{"nivel":6,"nome":"Manifest Mind","descricao":"Ação Bônus manifesta a mente espectral do spellbook a até 60 pés. É intangível, fornece sentidos próprios e telepatia; como Ação Bônus move até 30 pés. Enquanto estiver a até 300 pés, pode conjurar Wizard spells como se estivesse no espaço da mente um número de vezes igual ao PB por Descanso Longo."},{"nivel":10,"nome":"Master Scrivener","descricao":"Após Descanso Longo pode criar scroll mágico especial contendo uma magia de nível 1 ou 2 do spellbook; apenas você pode usá-lo e, ao fazê-lo, a magia funciona como se conjurada um nível acima. O scroll desaparece no próximo Descanso Longo. Também reduz pela metade tempo/custo de criar Spell Scrolls."},{"nivel":14,"nome":"One with the Word","descricao":"Ganha Vantagem em Intelligence (Arcana). Quando a mente do spellbook estiver manifestada e você sofrer dano, pode usar Reação para dispensar a mente e evitar todo o dano; em troca, parte do conhecimento do spellbook fica temporariamente inacessível, removendo níveis de magias determinados por rolagem até completar os descansos exigidos pela característica."}]}
+  "schema": "hub-rpg/subclass-mechanics/v1",
+  "fonte_id": "tasha-2020",
+  "fonte": "Tasha's Cauldron of Everything (2020)",
+  "subclasses": [
+    {
+      "nome": "Path of the Beast",
+      "resumo": "Bárbaro que manifesta armas naturais durante a Rage e evolui para adaptações bestiais, fúria infecciosa e caça em bando.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Form of the Beast",
+          "descricao": "Ao entrar em Rage manifesta uma arma natural até a Rage terminar. Bite: 1d8 Piercing e, uma vez por turno ao acertar, se estiver abaixo de metade dos PV máximos recupera PV iguais ao PB. Claws: 1d6 Slashing e, uma vez por turno ao atacar com garra na ação Attack, faz um ataque de garra adicional. Tail: 1d8 Piercing, Reach, e pode usar Reação contra ataque que o acertaria para rolar 1d8 e somar à CA contra aquele ataque."
+        },
+        {
+          "nivel": 6,
+          "nome": "Bestial Soul",
+          "descricao": "As armas de Form of the Beast contam como mágicas para superar resistência/imunidade. Após Descanso Curto ou Longo escolhe adaptação: Swim Speed igual ao Speed e respirar em água; Climb Speed igual ao Speed e escalar superfícies difíceis/teto sem check; ou saltos ampliados por Athletics."
+        },
+        {
+          "nivel": 10,
+          "nome": "Infectious Fury",
+          "descricao": "Quando acerta com arma natural de Form of the Beast, força Wisdom save contra CD 8 + Constituição + PB. Na falha escolhe: alvo usa Reação para fazer ataque corpo a corpo contra outra criatura escolhida; ou sofre 2d12 Psychic. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 14,
+          "nome": "Call the Hunt",
+          "descricao": "Ao entrar em Rage escolhe criaturas voluntárias a até 30 pés até o modificador de Constituição (mín. 1). Você ganha 5 PV temporários por criatura que aceitar; até a Rage terminar, uma vez por turno cada aliado afetado causa +1d6 no dano quando acerta ataque. Usos = PB por Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Path of Wild Magic",
+      "resumo": "Bárbaro tocado por magia caótica que detecta magia, produz surtos de Rage e reforça aliados ou spell slots.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Magic Awareness",
+          "descricao": "Como Ação, até o fim do próximo turno conhece a localização de magias e itens mágicos a até 60 pés que não estejam atrás de Total Cover e identifica a escola das magias. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 3,
+          "nome": "Wild Surge",
+          "descricao": "Sempre que entra em Rage rola na tabela Wild Magic para produzir um de oito efeitos mágicos de combate, incluindo teleporte, explosão de energia, proteção, terreno difícil, arma de força e retaliação luminosa. O efeito usa Constituição quando precisa de CD."
+        },
+        {
+          "nivel": 6,
+          "nome": "Bolstering Magic",
+          "descricao": "Ação toca criatura e escolhe: por 10 minutos ela adiciona 1d3 a ataques e ability checks; ou rola 1d3 e recupera um spell slot gasto de nível igual ou menor ao resultado. Uma criatura só pode receber a recuperação de slot uma vez por Descanso Longo. Usos totais = PB por Descanso Longo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Unstable Backlash",
+          "descricao": "Enquanto estiver em Rage, quando sofrer dano ou falhar em save pode usar Reação para rolar novamente Wild Surge; o novo resultado substitui o efeito atual."
+        },
+        {
+          "nivel": 14,
+          "nome": "Controlled Surge",
+          "descricao": "Quando rola Wild Surge, rola dois dados e escolhe qual efeito usar. Se ambos mostrarem o mesmo número, pode escolher qualquer efeito da tabela."
+        }
+      ]
+    },
+    {
+      "nome": "College of Creation",
+      "resumo": "Bardo que amplia Bardic Inspiration com Motes of Potential, cria objetos e anima itens como Dancing Items.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Mote of Potential",
+          "descricao": "Ao conceder Bardic Inspiration cria um mote que modifica seu uso. Ability Check: pode rolar o dado de inspiração duas vezes e escolher. Attack: após somar o dado, alvo e criaturas escolhidas a 5 pés fazem Constitution save ou sofrem Thunder igual ao resultado. Saving Throw: ao adicionar o dado, recebe PV temporários iguais ao resultado + modificador de Carisma."
+        },
+        {
+          "nivel": 3,
+          "nome": "Performance of Creation",
+          "descricao": "Ação cria um item não mágico Medium ou menor em espaço a 10 pés, com valor máximo de 20 × nível de Bard GP; dura número de horas igual ao PB. 1/Descanso Longo ou pode repetir gastando spell slot de nível 2+. Só um item criado por vez. Tamanho máximo aumenta para Large no nível 6 e Huge no 14."
+        },
+        {
+          "nivel": 6,
+          "nome": "Animating Performance",
+          "descricao": "Ação anima item não mágico Large ou menor a 30 pés por 1 hora usando Dancing Item stat block. Age depois de você; Dodge por padrão e é comandado por Ação Bônus para usar outra ação. 1/Descanso Longo ou reutiliza gastando spell slot de nível 3+."
+        },
+        {
+          "nivel": 14,
+          "nome": "Creative Crescendo",
+          "descricao": "Performance of Creation deixa de ter limite de valor em GP e pode criar simultaneamente número de itens igual ao modificador de Carisma; apenas um deles pode ter o tamanho máximo permitido, e os demais devem ser Small ou Tiny."
+        }
+      ]
+    },
+    {
+      "nome": "College of Eloquence",
+      "resumo": "Bardo de oratória extremamente consistente que enfraquece salvaguardas, preserva Bardic Inspiration e comunica-se universalmente.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Silver Tongue",
+          "descricao": "Ao fazer Charisma (Deception) ou Charisma (Persuasion), resultado d20 de 9 ou menos conta como 10."
+        },
+        {
+          "nivel": 3,
+          "nome": "Unsettling Words",
+          "descricao": "Ação Bônus gasta Bardic Inspiration e escolhe criatura a até 60 pés. Role o dado; a criatura subtrai o resultado da próxima salvaguarda que fizer antes do início do seu próximo turno."
+        },
+        {
+          "nivel": 6,
+          "nome": "Unfailing Inspiration",
+          "descricao": "Quando criatura adiciona seu Bardic Inspiration a ability check, ataque ou save e ainda falha, ela mantém o dado em vez de perdê-lo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Universal Speech",
+          "descricao": "Ação escolhe criaturas a 60 pés até o modificador de Carisma (mín. 1); por 1 hora elas entendem magicamente sua fala. 1/Descanso Longo ou reutiliza gastando spell slot."
+        },
+        {
+          "nivel": 14,
+          "nome": "Infectious Inspiration",
+          "descricao": "Quando criatura usa seu Bardic Inspiration e tem sucesso no D20 Test, pode usar Reação para dar Bardic Inspiration a outra criatura a 60 pés sem gastar um uso normal. Usos = modificador de Carisma (mín. 1) por Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Order Domain",
+      "resumo": "Clérigo de comando que transforma buffs em ataques de aliados, domina multidões e conjura Enchantment com velocidade superior.",
+      "progressao": [
+        {
+          "nivel": 1,
+          "nome": "Bonus Proficiencies",
+          "descricao": "Ganha treinamento com Heavy Armor e proficiência em Intimidation ou Persuasion."
+        },
+        {
+          "nivel": 1,
+          "nome": "Voice of Authority",
+          "descricao": "Quando conjura magia usando spell slot e mira um aliado, pode escolher um aliado afetado para usar imediatamente a Reação e fazer um ataque com arma. Se a magia mirar mais de um aliado, escolhe qual pode atacar."
+        },
+        {
+          "nivel": 1,
+          "nome": "Order Domain Spells",
+          "descricao": "Mantém preparadas magias de comando, compulsão e controle conforme o nível, incluindo Command, Heroism, Hold Person, Zone of Truth, Mass Healing Word, Slow, Compulsion, Locate Creature, Commune e Dominate Person."
+        },
+        {
+          "nivel": 2,
+          "nome": "Order's Demand",
+          "descricao": "Ação + Channel Divinity: criaturas escolhidas a 30 pés que possam ver/ouvir você fazem Wisdom save; falha causa Charmed até o fim do próximo turno ou até sofrer dano. Uma criatura Charmed dessa forma também deixa cair o que estiver segurando quando falha."
+        },
+        {
+          "nivel": 6,
+          "nome": "Embodiment of the Law",
+          "descricao": "Quando conjura magia de Enchantment com tempo de Ação usando spell slot, pode mudar o tempo para Ação Bônus. Usos = modificador de Sabedoria (mín. 1) por Descanso Longo."
+        },
+        {
+          "nivel": 8,
+          "nome": "Divine Strike",
+          "descricao": "Uma vez em cada turno, ao acertar ataque com arma causa +1d8 Psychic; aumenta para +2d8 no nível 14."
+        },
+        {
+          "nivel": 17,
+          "nome": "Order's Wrath",
+          "descricao": "Quando causa o dano de Divine Strike a uma criatura no seu turno, pode amaldiçoá-la até o início do seu próximo turno. A próxima vez que um aliado acertar a criatura amaldiçoada com um ataque, ela sofre +2d8 Psychic e a maldição termina. Só pode amaldiçoar uma criatura dessa forma uma vez por turno."
+        }
+      ]
+    },
+    {
+      "nome": "Peace Domain",
+      "resumo": "Clérigo de ligação comunitária que conecta aliados com Emboldening Bond, cura enquanto atravessa o campo e permite dividir dano.",
+      "progressao": [
+        {
+          "nivel": 1,
+          "nome": "Implement of Peace",
+          "descricao": "Ganha proficiência em Insight, Performance ou Persuasion."
+        },
+        {
+          "nivel": 1,
+          "nome": "Emboldening Bond",
+          "descricao": "Ação escolhe criaturas voluntárias a 30 pés em quantidade igual ao PB. Por 10 minutos, enquanto uma criatura vinculada estiver a 30 pés de outra vinculada, uma vez por turno pode rolar 1d4 e somar a ataque, ability check ou save. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 1,
+          "nome": "Peace Domain Spells",
+          "descricao": "Mantém preparadas magias de proteção, comunicação e vínculo, incluindo Heroism, Sanctuary, Aid, Warding Bond, Beacon of Hope, Sending, Aura of Purity, Otiluke's Resilient Sphere, Greater Restoration e Rary's Telepathic Bond."
+        },
+        {
+          "nivel": 2,
+          "nome": "Balm of Peace",
+          "descricao": "Ação + Channel Divinity: move até seu Speed sem provocar Opportunity Attacks. Na primeira vez que fica a 5 pés de cada criatura voluntária durante esse movimento, pode fazê-la recuperar 2d6 + Sabedoria PV."
+        },
+        {
+          "nivel": 6,
+          "nome": "Protective Bond",
+          "descricao": "Quando criatura sob Emboldening Bond está prestes a sofrer dano, outra criatura vinculada a até 30 pés pode usar Reação para teleportar para espaço a 5 pés dela e receber todo o dano em seu lugar."
+        },
+        {
+          "nivel": 8,
+          "nome": "Potent Spellcasting",
+          "descricao": "Adiciona modificador de Sabedoria ao dano causado por qualquer cantrip de Cleric."
+        },
+        {
+          "nivel": 17,
+          "nome": "Expansive Bond",
+          "descricao": "O alcance funcional de Emboldening Bond e Protective Bond aumenta para 60 pés. A criatura que usa Protective Bond também ganha resistência a todo o dano transferido naquele evento."
+        }
+      ]
+    },
+    {
+      "nome": "Twilight Domain",
+      "resumo": "Clérigo de penumbra com Darkvision extrema, vantagem na Iniciativa, voo noturno e Twilight Sanctuary que concede PV temporários ou remove medo/encanto.",
+      "progressao": [
+        {
+          "nivel": 1,
+          "nome": "Bonus Proficiencies",
+          "descricao": "Ganha treinamento com Martial Weapons e Heavy Armor."
+        },
+        {
+          "nivel": 1,
+          "nome": "Eyes of Night",
+          "descricao": "Darkvision de 300 pés. Como Ação pode compartilhá-la por 1 hora com criaturas voluntárias a 10 pés até o modificador de Sabedoria (mín. 1). 1/Descanso Longo ou reutiliza gastando spell slot."
+        },
+        {
+          "nivel": 1,
+          "nome": "Vigilant Blessing",
+          "descricao": "Ação toca criatura e concede Vantagem na próxima rolagem de Iniciativa; o benefício termina após a rolagem ou quando você usar a característica em outra criatura."
+        },
+        {
+          "nivel": 1,
+          "nome": "Twilight Domain Spells",
+          "descricao": "Mantém preparadas magias de proteção, noite e mobilidade como Faerie Fire, Sleep, Moonbeam, See Invisibility, Aura of Vitality, Leomund's Tiny Hut, Aura of Life, Greater Invisibility, Circle of Power e Mislead."
+        },
+        {
+          "nivel": 2,
+          "nome": "Twilight Sanctuary",
+          "descricao": "Ação + Channel Divinity cria esfera de Dim Light de 30 pés centrada em você por 1 minuto. No fim do turno de cada criatura aliada na esfera, você pode conceder 1d6 + nível de Cleric PV temporários ou encerrar Charmed ou Frightened nela."
+        },
+        {
+          "nivel": 6,
+          "nome": "Steps of Night",
+          "descricao": "Como Ação Bônus enquanto estiver em Dim Light ou Darkness, ganha Fly Speed igual ao Walking Speed por 1 minuto. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 8,
+          "nome": "Divine Strike",
+          "descricao": "Uma vez por turno, ataque com arma causa +1d8 Radiant; aumenta para +2d8 no nível 14."
+        },
+        {
+          "nivel": 17,
+          "nome": "Twilight Shroud",
+          "descricao": "Enquanto Twilight Sanctuary estiver ativa, você e aliados dentro da esfera recebem Half Cover."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of Spores",
+      "resumo": "Druida fúngico que causa dano de esporos por Reação, reforça o corpo com Symbiotic Entity e anima cadáveres temporários.",
+      "progressao": [
+        {
+          "nivel": 2,
+          "nome": "Circle Spells",
+          "descricao": "Aprende Chill Touch e mantém preparadas magias de temática fúngica/necrótica como Blindness/Deafness, Gentle Repose, Animate Dead, Gaseous Form, Blight, Confusion, Cloudkill e Contagion conforme o nível."
+        },
+        {
+          "nivel": 2,
+          "nome": "Halo of Spores",
+          "descricao": "Quando criatura visível entra em espaço a 10 pés ou começa turno ali, pode usar Reação para forçar Constitution save; falha sofre 1d4 Necrotic. Dado cresce para d6 no nível 6, d8 no 10 e d10 no 14."
+        },
+        {
+          "nivel": 2,
+          "nome": "Symbiotic Entity",
+          "descricao": "Ação gasta Wild Shape para ganhar 4 PV temporários por nível de Druid por 10 minutos. Enquanto mantiver esses PV: Halo of Spores usa o dobro de dados e ataques corpo a corpo com arma causam +1d6 Necrotic."
+        },
+        {
+          "nivel": 6,
+          "nome": "Fungal Infestation",
+          "descricao": "Quando Beast ou Humanoid Small/Medium morre a 10 pés, usa Reação para animá-lo como Zombie com 1 PV; age logo após você, apenas com ação Attack, e dura 1 hora. Usos = modificador de Sabedoria (mín. 1) por Descanso Longo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Spreading Spores",
+          "descricao": "Ação Bônus enquanto Symbiotic Entity está ativa arremessa esporos a 30 pés, criando cubo de 10 pés por 1 minuto. Criaturas que entram ou começam turno ali sofrem o dano de Halo of Spores em falha no save. Enquanto o cubo existir, não usa Halo of Spores por Reação."
+        },
+        {
+          "nivel": 14,
+          "nome": "Fungal Body",
+          "descricao": "Fica imune a Blinded, Deafened, Frightened e Poisoned. Acertos críticos contra você contam como acertos normais, exceto enquanto estiver Incapacitated."
+        }
+      ]
+    },
+    {
+      "nome": "Circle of Wildfire",
+      "resumo": "Druida que invoca Wildfire Spirit, canaliza magias por ele e converte chamas residuais em cura ou dano.",
+      "progressao": [
+        {
+          "nivel": 2,
+          "nome": "Circle Spells",
+          "descricao": "Mantém preparadas magias de fogo e restauração, incluindo Burning Hands, Cure Wounds, Flaming Sphere, Scorching Ray, Plant Growth, Revivify, Aura of Life, Fire Shield, Flame Strike e Mass Cure Wounds."
+        },
+        {
+          "nivel": 2,
+          "nome": "Summon Wildfire Spirit",
+          "descricao": "Ação gasta Wild Shape para invocar Wildfire Spirit a 30 pés. Criaturas próximas ao espaço de aparecimento fazem Dexterity save ou sofrem 2d6 Fire. O espírito usa bloco próprio, age depois de você e precisa de Ação Bônus para receber comando diferente de Dodge. Fiery Teleportation permite teleportar a si e aliados próximos 15 pés e causa Fire a inimigos que ficam para trás."
+        },
+        {
+          "nivel": 6,
+          "nome": "Enhanced Bond",
+          "descricao": "Enquanto o espírito estiver invocado, quando conjura magia que causa Fire ou restaura PV rola 1d8 e soma a uma rolagem de dano ou cura da magia. Magias com alcance diferente de Self podem originar-se do espaço do espírito."
+        },
+        {
+          "nivel": 10,
+          "nome": "Cauterizing Flames",
+          "descricao": "Quando uma criatura Small ou maior morre a até 30 pés de você ou do Wildfire Spirit, uma chama espectral surge no espaço do morto por 1 minuto. Quando uma criatura que você possa ver entra nesse espaço, você pode usar sua Reação para extinguir a chama e escolher fazê-la recuperar 2d10 + modificador de Sabedoria PV ou sofrer o mesmo valor de Fire. Usos dessa Reação = PB por Descanso Longo."
+        },
+        {
+          "nivel": 14,
+          "nome": "Blazing Revival",
+          "descricao": "Quando cai a 0 PV e o Wildfire Spirit está a 120 pés, pode fazer o espírito cair a 0 PV e você recupera metade dos PV máximos. Uso 1/Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Rune Knight",
+      "resumo": "Fighter rúnico que grava runas com poderes passivos/ativáveis e cresce com Giant's Might.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Bonus Proficiencies",
+          "descricao": "Ganha proficiência com Smith's Tools e aprende Giant."
+        },
+        {
+          "nivel": 3,
+          "nome": "Rune Carver",
+          "descricao": "Aprende duas runas e grava cada uma em arma, armadura, escudo, joia ou objeto. Cada runa concede benefício passivo e um poder invocável; CD = 8 + PB + Constituição. Aprende runa adicional nos níveis 7, 10 e 15 e pode trocar runas ao ganhar nível."
+        },
+        {
+          "nivel": 3,
+          "nome": "Giant's Might",
+          "descricao": "Ação Bônus por 1 minuto: se menor que Large fica Large com equipamento; Vantagem em Strength checks e saves; uma vez por turno, um ataque com arma/Unarmed Strike causa +1d6. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 7,
+          "nome": "Runic Shield",
+          "descricao": "Quando outra criatura a 60 pés é atingida por ataque, pode usar Reação para forçar o atacante a rerrolar o d20 e usar a nova rolagem. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Great Stature",
+          "descricao": "Cresce permanentemente 3d4 polegadas e o dano adicional de Giant's Might aumenta para 1d8."
+        },
+        {
+          "nivel": 15,
+          "nome": "Master of Runes",
+          "descricao": "Pode invocar cada runa conhecida duas vezes, em vez de uma, entre Descansos Curtos ou Longos."
+        },
+        {
+          "nivel": 18,
+          "nome": "Runic Juggernaut",
+          "descricao": "Giant's Might pode tornar você Huge, o alcance aumenta em 5 pés durante a transformação e o dano adicional aumenta para 1d10."
+        }
+      ]
+    },
+    {
+      "nome": "Way of the Astral Self",
+      "resumo": "Monk que manifesta braços, rosto e corpo astral, usando Sabedoria nos golpes e ganhando alcance, sentidos e defesa energética.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Arms of the Astral Self",
+          "descricao": "Ação Bônus + 1 Ki manifesta braços por 10 minutos; ao surgir, criaturas escolhidas a 10 pés fazem Dexterity save ou sofrem duas rolagens do Martial Arts die de Force. Enquanto ativos: pode usar Sabedoria em Strength checks/saves, os braços contam como Unarmed Strikes com Reach +5 pés no seu turno e podem usar Sabedoria em ataque e dano, causando Force."
+        },
+        {
+          "nivel": 6,
+          "nome": "Visage of the Astral Self",
+          "descricao": "Ação Bônus + 1 Ki, ou junto com Arms, manifesta rosto por 10 minutos. Ganha visão em Darkness normal/mágica a 120 pés, Vantagem em Wisdom (Insight) e Charisma (Intimidation) e pode amplificar a voz ou falar telepaticamente a criatura visível a 60 pés."
+        },
+        {
+          "nivel": 11,
+          "nome": "Body of the Astral Self",
+          "descricao": "Com Arms e Visage ativos, pode usar Reação para reduzir dano Acid, Cold, Fire, Force, Lightning ou Thunder em 1d10 + Sabedoria. Uma vez por turno, ao acertar com braços astrais causa dano extra igual a um Martial Arts die."
+        },
+        {
+          "nivel": 17,
+          "nome": "Awakened Astral Self",
+          "descricao": "Ação Bônus + 5 Ki manifesta braços, visage e corpo astrais por 10 minutos; termina antes se ficar Incapacitated ou morrer. Recebe +2 CA. Quando usar a característica Extra Attack para atacar duas vezes, pode atacar três vezes em vez disso, desde que todos os ataques sejam feitos com os braços astrais."
+        }
+      ]
+    },
+    {
+      "nome": "Oath of the Watchers",
+      "resumo": "Paladino guardião planar, especializado em saves mentais, iniciativa e expulsão de Aberrations, Celestials, Elementals, Fey e Fiends.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Oath Spells",
+          "descricao": "Mantém preparadas magias de detecção, proteção e banimento como Alarm, Detect Magic, Moonbeam, See Invisibility, Counterspell, Nondetection, Aura of Purity, Banishment, Hold Monster e Scrying."
+        },
+        {
+          "nivel": 3,
+          "nome": "Channel Divinity: Watcher's Will",
+          "descricao": "Ação escolhe criaturas a 30 pés até o modificador de Carisma (mín. 1); por 1 minuto elas têm Vantagem em Intelligence, Wisdom e Charisma saving throws."
+        },
+        {
+          "nivel": 3,
+          "nome": "Channel Divinity: Abjure the Extraplanar",
+          "descricao": "Ação: Aberrations, Celestials, Elementals, Fey e Fiends escolhidos a 30 pés fazem Wisdom save; em falha ficam Turned por 1 minuto ou até sofrer dano."
+        },
+        {
+          "nivel": 7,
+          "nome": "Aura of the Sentinel",
+          "descricao": "Você e criaturas escolhidas dentro da Aura adicionam seu PB à Iniciativa."
+        },
+        {
+          "nivel": 15,
+          "nome": "Vigilant Rebuke",
+          "descricao": "Quando você ou criatura a 30 pés tem sucesso em Intelligence, Wisdom ou Charisma save, pode usar Reação para causar 2d8 + Carisma Force na criatura que forçou o save."
+        },
+        {
+          "nivel": 20,
+          "nome": "Mortal Bulwark",
+          "descricao": "Ação Bônus assume forma vigilante por 1 minuto: ganha Truesight 120 pés, Vantagem em ataques contra Aberrations, Celestials, Elementals, Fey e Fiends e, ao acertar esses tipos, pode forçar Charisma save para bani-los temporariamente. Uso 1/Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Swarmkeeper",
+      "resumo": "Ranger acompanhado por enxame que causa dano, empurra, reposiciona o Ranger, concede voo e defesa reativa.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Gathered Swarm",
+          "descricao": "Uma vez por turno, imediatamente após acertar ataque, escolhe: alvo sofre +1d6 Piercing; ou faz Strength save e, em falha, é movido 15 pés horizontalmente; ou você é movido 5 pés horizontalmente sem provocar Opportunity Attacks. O dano aumenta para 1d8 no nível 11."
+        },
+        {
+          "nivel": 3,
+          "nome": "Swarmkeeper Magic",
+          "descricao": "Aprende Mage Hand e mantém preparadas Faerie Fire, Web, Gaseous Form, Arcane Eye e Insect Plague conforme os níveis de Ranger; Mage Hand assume aparência do enxame."
+        },
+        {
+          "nivel": 7,
+          "nome": "Writhing Tide",
+          "descricao": "Ação Bônus concede Fly Speed de 10 pés com Hover por 1 minuto. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 11,
+          "nome": "Mighty Swarm",
+          "descricao": "Gathered Swarm melhora: dano vira 1d8; ao mover alvo pode também derrubá-lo Prone; ao mover você, concede Half Cover até o início do próximo turno."
+        },
+        {
+          "nivel": 15,
+          "nome": "Swarming Dispersal",
+          "descricao": "Quando sofre dano, Reação concede resistência àquela instância de dano e teleporta até 30 pés para espaço visível. Usos = PB por Descanso Longo."
+        }
+      ]
+    },
+    {
+      "nome": "Phantom",
+      "resumo": "Rogue ligado aos mortos que empresta proficiências, espalha Sneak Attack necrótico, guarda Soul Trinkets e atravessa matéria como fantasma.",
+      "progressao": [
+        {
+          "nivel": 3,
+          "nome": "Whispers of the Dead",
+          "descricao": "Após Descanso Curto ou Longo escolhe uma perícia ou ferramenta na qual não é proficiente e ganha proficiência nela até usar a característica novamente."
+        },
+        {
+          "nivel": 3,
+          "nome": "Wails from the Grave",
+          "descricao": "Imediatamente após causar Sneak Attack, escolhe segunda criatura visível a 30 pés do primeiro alvo; ela sofre Necrotic igual à metade dos dados de Sneak Attack, arredondando para cima. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 9,
+          "nome": "Tokens of the Departed",
+          "descricao": "Reação quando criatura morre a 30 pés cria Soul Trinket, máximo = PB. Enquanto carrega ao menos um, tem Vantagem em Death Saves e Constitution saves. Pode destruir um para fazer pergunta ao espírito do morto ou, quando usa Wails from the Grave, destruir um em vez de gastar uso da característica."
+        },
+        {
+          "nivel": 13,
+          "nome": "Ghost Walk",
+          "descricao": "Ação Bônus assume forma espectral por 10 minutos: Fly Speed 10 pés com Hover, ataques contra você têm Desvantagem e pode atravessar criaturas/objetos como Difficult Terrain. Se terminar o turno dentro de criatura ou objeto, sofre 1d10 Force. Pode encerrar a forma como Ação Bônus; para ativá-la novamente, precisa concluir Descanso Longo ou destruir um Soul Trinket como parte da Ação Bônus de ativação."
+        },
+        {
+          "nivel": 17,
+          "nome": "Death's Friend",
+          "descricao": "Wails from the Grave também causa dano Necrotic ao alvo original do Sneak Attack igual à metade dos dados de Sneak Attack. Ao terminar Descanso Longo sem Soul Trinkets, ganha um."
+        }
+      ]
+    },
+    {
+      "nome": "The Fathomless",
+      "resumo": "Warlock oceânico que luta com tentáculo espectral, respira e nada livremente e usa a criatura para reduzir dano e teleportar pelo mar.",
+      "progressao": [
+        {
+          "nivel": 1,
+          "nome": "Expanded Spell List",
+          "descricao": "Expande opções com magias aquáticas, de frio, tempestade e tentáculos conforme os níveis de spell."
+        },
+        {
+          "nivel": 1,
+          "nome": "Tentacle of the Deeps",
+          "descricao": "Ação Bônus cria tentáculo de 10 pés em espaço a 60 pés por 1 minuto e faz melee spell attack: 1d8 Cold e Speed do alvo -10 pés até início do seu próximo turno. Em turnos seguintes, Ação Bônus move o tentáculo 30 pés e repete ataque. Usos = PB por Descanso Longo. Dano sobe para 2d8 no nível 10."
+        },
+        {
+          "nivel": 1,
+          "nome": "Gift of the Sea",
+          "descricao": "Ganha Swim Speed 40 pés e pode respirar ar e água."
+        },
+        {
+          "nivel": 6,
+          "nome": "Oceanic Soul",
+          "descricao": "Ganha resistência a Cold. Submerso, você e qualquer criatura também submersa entendem a fala um do outro."
+        },
+        {
+          "nivel": 6,
+          "nome": "Guardian Coil",
+          "descricao": "Quando você ou criatura a 10 pés do tentáculo sofre dano, pode usar Reação para reduzir o dano em 1d8; aumenta para 2d8 no nível 10."
+        },
+        {
+          "nivel": 10,
+          "nome": "Grasping Tentacles",
+          "descricao": "Evard's Black Tentacles fica preparada. Pode conjurá-la 1/Descanso Longo sem slot; ao conjurar ganha PV temporários iguais ao nível de Warlock e sofrer dano não pode quebrar sua Concentração nessa magia."
+        },
+        {
+          "nivel": 14,
+          "nome": "Fathomless Plunge",
+          "descricao": "Ação teleporta você e até cinco criaturas voluntárias a 30 pés para corpo de água que tenha visto a até 1 milha ou para espaço a 30 pés desse corpo d'água. Uso 1/Descanso Curto ou Longo."
+        }
+      ]
+    },
+    {
+      "nome": "The Genie",
+      "resumo": "Warlock ligado a Dao, Djinni, Efreeti ou Marid, com Vessel extradimensional, dano elemental, voo e Limited Wish.",
+      "progressao": [
+        {
+          "nivel": 1,
+          "nome": "Expanded Spell List / Genie Kind",
+          "descricao": "Escolhe Dao (Earth), Djinni (Air), Efreeti (Fire) ou Marid (Water). A escolha define tipo de dano e magias expandidas; todas as variantes também têm acesso a Wish no patamar máximo da lista."
+        },
+        {
+          "nivel": 1,
+          "nome": "Genie's Vessel",
+          "descricao": "Recebe Tiny vessel que funciona como foco. Bottled Respite: Ação entra no espaço extradimensional do recipiente por até 2 × PB horas, 1/Descanso Longo. Genie's Wrath: uma vez por turno, ao acertar ataque, causa dano extra igual ao PB do tipo associado ao patrono."
+        },
+        {
+          "nivel": 6,
+          "nome": "Elemental Gift",
+          "descricao": "Ganha resistência ao tipo de dano do patrono. Ação Bônus ganha Fly Speed 30 pés por 10 minutos; usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Sanctuary Vessel",
+          "descricao": "Ao entrar no Vessel pode levar até cinco criaturas voluntárias que você veja a até 30 pés. Como Ação Bônus pode ejetar qualquer quantidade delas; todos são ejetados se você sair, morrer ou o Vessel for destruído. Quem permanecer ali por pelo menos 10 minutos recebe os benefícios de um Descanso Curto; se gastar qualquer Hit Die nesse descanso, adiciona seu PB uma única vez ao total de PV recuperados."
+        },
+        {
+          "nivel": 14,
+          "nome": "Limited Wish",
+          "descricao": "Ação pede ao patrono o efeito de qualquer magia de nível 6 ou menor com tempo de Ação; a magia ocorre sem componentes e sem exigir que você a conheça. Depois de usar, não pode usar novamente por 1d4 Descansos Longos."
+        }
+      ]
+    },
+    {
+      "nome": "Bladesinging",
+      "resumo": "Versão de Tasha do Wizard Bladesinger: Bladesong defensiva, Extra Attack com cantrip e conversão de slots em redução de dano.",
+      "progressao": [
+        {
+          "nivel": 2,
+          "nome": "Training in War and Song",
+          "descricao": "Ganha proficiência com Light Armor, uma arma corpo a corpo de uma mão à escolha e Performance."
+        },
+        {
+          "nivel": 2,
+          "nome": "Bladesong",
+          "descricao": "Ação Bônus ativa por 1 minuto enquanto não usa Medium/Heavy Armor ou Shield nem ataca com duas mãos. Recebe Inteligência à CA, +10 pés de Walking Speed, Vantagem em Acrobatics e Inteligência nos Constitution saves para manter Concentração. Usos = PB por Descanso Longo."
+        },
+        {
+          "nivel": 6,
+          "nome": "Extra Attack",
+          "descricao": "Ataca duas vezes ao usar Attack e pode substituir um dos ataques pela conjuração de um cantrip."
+        },
+        {
+          "nivel": 10,
+          "nome": "Song of Defense",
+          "descricao": "Enquanto Bladesong estiver ativa, ao sofrer dano pode usar Reação e gastar spell slot para reduzir o dano em 5 × nível do slot."
+        },
+        {
+          "nivel": 14,
+          "nome": "Song of Victory",
+          "descricao": "Enquanto Bladesong estiver ativa, adiciona modificador de Inteligência ao dano dos ataques corpo a corpo com arma."
+        }
+      ]
+    },
+    {
+      "nome": "Order of Scribes",
+      "resumo": "Wizard cujo Spellbook desperta como mente mágica, troca tipos de dano, manifesta consciência remota e cria scrolls aprimorados.",
+      "progressao": [
+        {
+          "nivel": 2,
+          "nome": "Wizardly Quill",
+          "descricao": "Ação Bônus cria quill mágica Tiny. Não precisa de tinta, copia magias para spellbook em 2 minutos por nível de spell e pode apagar texto produzido por ela ao tocar o texto como Ação Bônus."
+        },
+        {
+          "nivel": 2,
+          "nome": "Awakened Spellbook",
+          "descricao": "O spellbook desperta. Pode usá-lo como foco. Ao conjurar Wizard spell com slot, pode substituir o tipo de dano por um tipo que apareça em outra Wizard spell do mesmo nível existente no livro. Ao conjurar Wizard spell como Ritual, uma vez por Descanso Longo pode usar o tempo normal da magia em vez de adicionar 10 minutos."
+        },
+        {
+          "nivel": 6,
+          "nome": "Manifest Mind",
+          "descricao": "Ação Bônus manifesta a mente espectral do spellbook a até 60 pés. É intangível, fornece sentidos próprios e telepatia; como Ação Bônus move até 30 pés. Enquanto estiver a até 300 pés, pode conjurar Wizard spells como se estivesse no espaço da mente um número de vezes igual ao PB por Descanso Longo."
+        },
+        {
+          "nivel": 10,
+          "nome": "Master Scrivener",
+          "descricao": "Após Descanso Longo pode criar um scroll mágico especial com uma magia de nível 1 ou 2 do Awakened Spellbook que tenha tempo de conjuração de 1 Ação. Apenas você pode lê-lo; a magia conta como um nível acima e o scroll desaparece após ser usado ou no próximo Descanso Longo. Também reduz pela metade tempo e custo de criar Spell Scrolls."
+        },
+        {
+          "nivel": 14,
+          "nome": "One with the Word",
+          "descricao": "Ganha Vantagem em Intelligence (Arcana). Quando a mente do spellbook estiver manifestada e você sofrer dano, pode usar Reação para dispensar a mente e evitar todo o dano; em troca, parte do conhecimento do spellbook fica temporariamente inacessível, removendo níveis de magias determinados por rolagem até completar os descansos exigidos pela característica."
+        }
+      ]
+    }
   ]
 }
