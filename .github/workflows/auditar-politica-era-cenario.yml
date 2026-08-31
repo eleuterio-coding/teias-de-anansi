@@ -1,0 +1,21 @@
+name: Auditar política de era do cenário
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auditar-era:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Validar barreira de conteúdo moderno
+        run: node tests/auditar-politica-era-cenario.mjs
