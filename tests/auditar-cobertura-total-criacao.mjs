@@ -16,17 +16,23 @@ if(!exists(ENTRY)||!exists(HTML)||!exists(BUILDER_DIR))fail('Estrutura base da c
 const allJs=walk(BUILDER_DIR).filter(p=>p.endsWith('.js'));
 const mechanical=allJs.filter(p=>/(?:^|\/)(?:.*(?:mechanics|rules)|compatibility|race-variants|equipment-ownership|language-mechanics|spell-progression-rules|sorcerer-spell-access|subclass-mechanics-data)\.js$/i.test(rel(p)));
 
+function resolveLocal(file,spec){
+  spec=String(spec||'').split('?')[0].split('#')[0];
+  if(!spec.startsWith('.'))return null;
+  let target=path.resolve(path.dirname(file),spec);
+  if(!path.extname(target))target+='.js';
+  return exists(target)&&target.endsWith('.js')?target:null;
+}
 function localDeps(file){
-  const src=read(file),deps=[];
-  const re=/(?:from\s*|import\s*\()\s*['"]([^'"]+)['"]/g;
-  for(const m of src.matchAll(re)){
-    let spec=m[1].split('?')[0].split('#')[0];
-    if(!spec.startsWith('.'))continue;
-    let target=path.resolve(path.dirname(file),spec);
-    if(!path.extname(target))target+='.js';
-    if(exists(target))deps.push(target);
-  }
-  return deps;
+  const src=read(file),deps=new Set();
+  const imports=/(?:from\s*|import\s*\()\s*['"]([^'"]+)['"]/g;
+  for(const m of src.matchAll(imports)){const target=resolveLocal(file,m[1]);if(target)deps.add(target)}
+  // O loader principal mantém extensões em uma tabela de strings e chama import(path).
+  // Qualquer literal relativo apontando para .js é tratado como dependência para que a
+  // auditoria reflita o grafo real do navegador, sem depender de uma lista manual.
+  const moduleLiterals=/['"](\.\.?\/[^'"]+\.js(?:\?[^'"]*)?)['"]/g;
+  for(const m of src.matchAll(moduleLiterals)){const target=resolveLocal(file,m[1]);if(target)deps.add(target)}
+  return [...deps];
 }
 
 const html=read(HTML);
@@ -46,11 +52,9 @@ while(queue.length){
 const orphanMechanics=mechanical.filter(p=>!seen.has(p));
 if(orphanMechanics.length)fail('Módulos mecânicos órfãos, não consumidos pela criação: '+orphanMechanics.map(rel).join(', '));
 
-// Todo módulo de mecânica de subclasse precisa estar ligado ao catálogo genérico ou ao runtime da criação.
 const subclassMechanics=allJs.filter(p=>/-subclass-mechanics\.js$/i.test(p));
 for(const p of subclassMechanics)if(!seen.has(p))fail('Mecânica de subclasse fora do runtime: '+rel(p));
 
-// Fontes mecânicas declaradas no agregador precisam existir e ser JSON válido.
 const aggregator=path.join(BUILDER_DIR,'subclass-mechanics-data.js');
 if(exists(aggregator)){
   const src=read(aggregator);
@@ -70,11 +74,10 @@ if(exists(aggregator)){
   }
 }
 
-// Catálogos que interferem diretamente na criação devem estar representados no carregador/runtime.
 const requiredDomains={
   classes:['loadClasses','classes-base-2024.json'],
-  species:['loadSpecies','loadSpecies'],
-  backgrounds:['loadBackgrounds','loadBackgrounds'],
+  species:['loadSpecies'],
+  backgrounds:['loadBackgrounds'],
   feats:['loadFeats','talentos-phb-2024.json'],
   equipment:['loadEquipment','starting-equipment-rules'],
   spells:['loadSpells','magias-catalogo.json']
@@ -82,8 +85,7 @@ const requiredDomains={
 const runtime=[...seen].map(read).join('\n')+'\n'+read(ENTRY);
 for(const [domain,tokens] of Object.entries(requiredDomains))for(const token of tokens)if(!runtime.includes(token)&&!html.includes(token))fail(`Domínio ${domain} sem integração verificável: ${token}`);
 
-// Garante que todos os módulos JS do construtor sejam pelo menos sintaticamente auditáveis pelo workflow.
-const manifest={generatedBy:'tests/auditar-cobertura-total-criacao.mjs',builderModules:allJs.map(rel).sort(),mechanicalModules:mechanical.map(rel).sort(),reachable:[...seen].filter(p=>p.startsWith(BUILDER_DIR)||p===ENTRY).map(rel).sort()};
+const manifest={generatedBy:'tests/auditar-cobertura-total-criacao.mjs',builderModules:allJs.map(rel).sort(),mechanicalModules:mechanical.map(rel).sort(),reachable:[...seen].filter(p=>p.startsWith(BUILDER_DIR)||p===ENTRY).map(rel).sort(),orphanMechanics:[]};
 fs.mkdirSync(path.join(ROOT,'artifacts'),{recursive:true});
 fs.writeFileSync(path.join(ROOT,'artifacts','cobertura-criacao.json'),JSON.stringify(manifest,null,2));
 console.log(`Cobertura estrutural validada: ${allJs.length} módulos do construtor, ${mechanical.length} módulos mecânicos, ${manifest.reachable.length} módulos alcançáveis.`);
