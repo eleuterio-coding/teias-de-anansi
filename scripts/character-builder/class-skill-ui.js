@@ -17,6 +17,7 @@ import{initWizardSubclassUi}from'./wizard-subclass-ui.js?v=20260831-class-tools1
 import{initClassToolUi}from'./class-tool-ui.js?v=20260831-class-tools1';
 import{initClassFeatureFeatUi}from'./class-feature-feat-ui.js?v=20260831-class-feature-feats1';
 import{initFeatMultiOptionUi}from'./feat-multi-option-ui.js?v=20260831-class-feature-feats1';
+import{initInvocationUi}from'./invocation-ui.js?v=20260831-warlock-invocations2';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 function normalizeSkillChoices(klass){
@@ -86,7 +87,7 @@ export function initClassSkillUi(){
  $('classe')?.addEventListener('change',()=>queueMicrotask(decorate));$('nivel')?.addEventListener('change',()=>queueMicrotask(decorate));$('new-character')?.addEventListener('click',()=>queueMicrotask(decorate));
  document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
  for(const event of['hub:class-skills-changed','hub:abilities-context-changed','hub:progression-context-changed','hub:species-context-changed','hub:origin-context-changed','hub:class-context-changed'])document.addEventListener(event,()=>queueMicrotask(renderSkillChecks));
- initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();
+ initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();
  initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi();initFighterSubclassUi();initMonkSubclassUi();initPaladinSubclassUi();initRangerSubclassUi();initRogueSubclassUi();initSorcererSubclassUi();initWarlockSubclassUi();initWizardSubclassUi()});
  initExpertiseCompanionUi();queueMicrotask(renderSkillChecks)
 }
