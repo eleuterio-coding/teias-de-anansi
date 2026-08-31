@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
 
-  const VERSION='20260831-era-cenario1';
+  const VERSION='20260831-era-cenario2';
   const DROP=Symbol('hub-era-drop');
 
   const norm=value=>String(value??'')
@@ -16,6 +16,10 @@
   // Política de cenário do Hub: fantasia medieval/fantástica sem tecnologia
   // mundana de pólvora, industrial, moderna ou futurista. Tecnologia explicitamente
   // mágica/fantástica não é bloqueada só por ser avançada (ex.: constructos e airships).
+  const FANTASY_EXEMPT_PATTERNS=[
+    /\b(eldritch|arcane|magic|magical|mistico|mistica|arcano|arcana)\s+(cannon|canhao)\b/
+  ];
+
   const NAME_PATTERNS=[
     /\b(mosquete|musket)\b/,
     /\b(pistola|pistol)\b/,
@@ -25,11 +29,13 @@
     /\b(blunderbuss|trabuco)\b/,
     /\b(arcabuz|arquebus)\b/,
     /\b(carbine|carabina)\b/,
+    /\b(cannon|canhao)\b/,
     /\b(machine gun|submachine gun|metralhadora|fuzil automatico|automatic rifle|semiautomatic pistol|pistola semiautomatica|hunting rifle|rifle de caca)\b/,
     /\b(laser pistol|laser rifle|pistola laser|rifle laser|antimatter rifle|rifle de antimateria|plasma gun|arma de plasma)\b/,
+    /\b(grenade launcher|lancador de granadas|rocket launcher|lancador de foguetes)\b/,
     /\b(gunner|artilheiro de armas de fogo)\b/,
     /\b(gunpowder|polvora|powder horn|chifre de polvora|gunpowder keg|barril de polvora)\b/,
-    /\b(dynamite|dinamite|fragmentation grenade|granada de fragmentacao|smoke grenade|granada de fumaca|modern grenade|granada moderna)\b/,
+    /\b(dynamite|dinamite|fragmentation grenade|grenade\s*[,\-–—:]?\s*fragmentation|granada de fragmentacao|smoke grenade|grenade\s*[,\-–—:]?\s*smoke|granada de fumaca|modern grenade|granada moderna)\b/,
     /\b(motorcycle|motorbike|motocicleta)\b/,
     /\b(automobile|automovel)\b/,
     /\b(truck|caminhao)\b/,
@@ -44,16 +50,16 @@
 
   const STRONG_CONTEXT_PATTERNS=[
     /\b(arma de fogo|armas de fogo|firearm|firearms)\b/,
+    /\b(explosivo|explosivos|explosive|explosives)\b/,
     /\b(armamento moderno|modern weapon|modern weapons)\b/,
     /\b(armamento futurista|futuristic weapon|futuristic weapons)\b/,
-    /\b(explosivo industrial|industrial explosive)\b/,
     /\b(veiculo motorizado|motor vehicle)\b/,
     /\b(tecnologia moderna|modern technology)\b/,
     /\b(tecnologia futurista|futuristic technology)\b/
   ];
 
   const IDENTITY_KEYS=new Set([
-    'nome','name','nome_original','original_name','originalname','id','slug','titulo','title',
+    'nome','name','nomeoriginal','originalname','id','slug','titulo','title',
     'item','equipamento','equipment','arma','weapon','veiculo','vehicle','talento','feat'
   ]);
   const CONTEXT_KEYS=new Set(['categoria','category','tipo','type','subtipo','subtype','tag','tags','grupo','group']);
@@ -61,7 +67,9 @@
 
   function matchesName(value){
     const text=norm(value);
-    return !!text&&NAME_PATTERNS.some(rx=>rx.test(text));
+    if(!text)return false;
+    if(FANTASY_EXEMPT_PATTERNS.some(rx=>rx.test(text)))return false;
+    return NAME_PATTERNS.some(rx=>rx.test(text));
   }
 
   function matchesStrongContext(value){
@@ -163,7 +171,8 @@
   }
 
   function shouldRemoveElement(el){
-    return matchesName(elementIdentity(el))||matchesStrongContext(elementIdentity(el));
+    const identity=elementIdentity(el);
+    return matchesName(identity)||matchesStrongContext(identity);
   }
 
   function updateVisibleCount(removed){
@@ -187,8 +196,8 @@
     let removed=0;
     try{
       const nodes=[...document.querySelectorAll(CANDIDATE_SELECTOR)];
-      // Remove primeiro os elementos mais específicos para evitar apagar um contêiner pai inteiro.
-      nodes.sort((a,b)=>b.querySelectorAll('*').length-a.querySelectorAll('*').length);
+      // Filhos/entradas específicas primeiro; um item moderno não deve apagar o contêiner geral.
+      nodes.sort((a,b)=>a.querySelectorAll('*').length-b.querySelectorAll('*').length);
       for(const el of nodes){
         if(!el.isConnected)continue;
         if(shouldRemoveElement(el)){
