@@ -95,6 +95,10 @@ jobs:
         run: node tests/auditar-semantica-antecedentes-phb-2024.mjs
       - name: 11B · Validar antecedentes Forge e Heroes 2025
         run: node tests/auditar-semantica-antecedentes-suplementos-2025.mjs
+      - name: 11B/11C · Validar migração dos antecedentes Dragonmarked de Quickstone
+        run: node tests/auditar-precedencia-antecedentes-quickstone-2024.mjs
+      - name: 11B/11D · Validar antecedentes legados 2014 e adaptações do Hub
+        run: node tests/auditar-semantica-antecedentes-legado-2014.mjs
       - name: 11C · Validar precedência Tasha 2020 → PHB 2024
         run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
       - name: 11C · Validar precedência Xanathar 2017 → PHB 2024

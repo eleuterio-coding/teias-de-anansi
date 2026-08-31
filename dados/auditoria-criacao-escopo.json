@@ -50,6 +50,8 @@
     "tests/auditar-precedencia-tiefling.mjs",
     "tests/auditar-semantica-antecedentes-phb-2024.mjs",
     "tests/auditar-semantica-antecedentes-suplementos-2025.mjs",
+    "tests/auditar-precedencia-antecedentes-quickstone-2024.mjs",
+    "tests/auditar-semantica-antecedentes-legado-2014.mjs",
     "tests/auditar-precedencia-subclasses-tasha-2020.mjs",
     "tests/auditar-precedencia-subclasses-xanathar-2017.mjs",
     "tests/auditar-revisao-unica-rules.mjs",
