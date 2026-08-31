@@ -321,17 +321,17 @@
         {
           "nivel": 3,
           "nome": "War Domain Spells",
-          "descricao": "Mantém preparadas as magias do domínio de guerra conforme o nível, incluindo Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon, Fire Shield e Steel Wind Strike; a lista 2024 não usa Divine Favor como magia de domínio."
+          "descricao": "Mantém preparadas, conforme o nível, Guiding Bolt, Shield of Faith, Magic Weapon, Spiritual Weapon, Crusader’s Mantle, Spirit Guardians, Freedom of Movement, Fire Shield, Hold Monster e Steel Wind Strike."
         },
         {
           "nivel": 3,
           "nome": "War Priest",
-          "descricao": "Ganha treinamento marcial adicional e pode realizar ataques extras com arma por meio do recurso da subclasse, com usos limitados recuperados em descanso."
+          "descricao": "Como Ação Bônus, pode fazer um ataque com arma ou Unarmed Strike. Usa esse benefício um número de vezes igual ao modificador de Sabedoria (mínimo 1) e recupera todos os usos ao terminar Descanso Curto ou Longo."
         },
         {
           "nivel": 3,
           "nome": "Guided Strike",
-          "descricao": "Channel Divinity melhora decisivamente uma jogada de ataque, podendo ser aplicado após ver o resultado para transformar um quase erro em acerto."
+          "descricao": "Quando você ou uma criatura a até 30 pés erra uma jogada de ataque, pode usar a Reação e gastar Channel Divinity para conceder +10 à rolagem, potencialmente transformando o erro em acerto."
         },
         {
           "nivel": 6,
@@ -341,7 +341,7 @@
         {
           "nivel": 17,
           "nome": "Avatar of Battle",
-          "descricao": "Concede resistência duradoura contra dano físico de ataques com armas, tornando o Clérigo muito mais resistente na linha de frente."
+          "descricao": "Ganha resistência a dano Bludgeoning, Piercing e Slashing, sem a antiga limitação a dano de armas não mágicas."
         }
       ]
     },
