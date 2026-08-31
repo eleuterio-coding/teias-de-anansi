@@ -124,8 +124,8 @@ require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
         'Texto de carregamento removido voltou ao criador')
-require('character-builder29' in creation and 'character-builder29' in builder,
-        'Criador não está usando a revisão de cache esperada')
+require('scripts/character-builder.js?v=' in creation and "import('./character-builder/ui.js?v=" in builder,
+        'Criador deve manter revisão explícita de cache na entrada e no núcleo, sem congelar uma revisão histórica específica')
 require('organizeRaceVariants' in catalogs and 'race-variants.js' in catalogs,
         'Catálogo racial não usa a normalização compartilhada de variantes')
 for token in ['Eladrin', 'Elfo do Mar', 'Shadar-kai', 'Duergar', 'Gnomo das Profundezas',
