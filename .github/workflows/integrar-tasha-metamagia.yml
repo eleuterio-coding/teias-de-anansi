@@ -76,13 +76,16 @@ jobs:
             node "$test"
           done
           git diff --check
-      - name: Publicar integração validada
+      - name: Publicar código validado
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm .github/workflows/integrar-tasha-metamagia.yml .github/tasha-metamagia-trigger scripts/integrar_tasha_metamagia.py
+          # GitHub Apps sem permissão workflows não podem publicar mudanças em .github/workflows.
+          # Esses arquivos serão atualizados pelo conector após este commit de código/dados/testes.
+          git checkout HEAD -- .github/workflows/auditar-proveniencia-normativa.yml .github/workflows/auditar-skilled.yml .github/workflows/auditar-escolhas-raca-pacote-b.yml .github/workflows/integrar-tasha-metamagia.yml
+          git rm .github/tasha-metamagia-trigger scripts/integrar_tasha_metamagia.py
           git add .
           git commit -m 'Integrar Metamagia 2024 e talentos Tasha com gates fail-closed'
           git push origin HEAD:audit/normativa-total-criacao
