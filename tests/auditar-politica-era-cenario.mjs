@@ -72,7 +72,10 @@ assert(workflow.includes("replace('</head>'"),'Política de era não é carregad
 
 const manifest=JSON.parse(fs.readFileSync(path.join(ROOT,'dados','armas-pdfs-manifest.json'),'utf8'));
 const scope=String(manifest.politica?.escopo_tematico||'');
-assert(!/podem permanecer/i.test(scope),'Manifesto ainda autoriza armas de pólvora antigas.');
-assert(/exclui/i.test(scope)&&/(polvora|arma de fogo)/i.test(scope.normalize('NFD').replace(/[\u0300-\u036f]/g,'')),'Manifesto não registra a nova exclusão de armas de fogo.');
+const scopeNorm=scope.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+assert(/catalogo ativo/.test(scopeNorm),'Manifesto não distingue fonte bruta de catálogo ativo.');
+assert(/exclui/.test(scopeNorm)&&/(polvora|arma de fogo)/.test(scopeNorm),'Manifesto não registra a exclusão de armas de fogo/pólvora.');
+assert(/impede/.test(scopeNorm)&&/(mecanic|oferecid)/.test(scopeNorm),'Manifesto não bloqueia aplicação mecânica/oferta de conteúdo moderno.');
+assert(!/(mosquete|musket|pistola|pistol|blunderbuss).{0,120}(permit|autoriz|catalogo ativo)/i.test(scopeNorm),'Manifesto ainda autoriza armas de pólvora no catálogo ativo.');
 
 console.log('Política de era validada: conteúdo de pólvora, industrial, moderno e futurista bloqueado; fantasia medieval/mágica preservada.');
