@@ -14,10 +14,14 @@ const rarityHits=text=>{
   }
   return found;
 };
-const runtimeRarities=item=>{
-  const block=`${item?.bloco_original||''} ${item?.bloco||''}`,direct=rarityHits(block);
-  if(direct.length)return direct;
-  return /rarity varies|raridade variavel/.test(fold(block))?rarityHits(item?.descricao||''):[];
+const magicClassification=item=>{
+  const block=`${item?.bloco_original||''} ${item?.bloco||''}`;
+  const direct=rarityHits(block);
+  if(direct.length)return{kind:'priced',rarities:direct};
+  const normalized=fold(block);
+  if(/(?:^|[^a-z])(artifact|artefato)(?=[^a-z]|$)/.test(normalized))return{kind:'artifact',rarities:[]};
+  if(/rarity varies|raridade variavel/.test(normalized))return{kind:'varies',rarities:rarityHits(item?.descricao||'')};
+  return{kind:'unknown',rarities:[]};
 };
 
 assert.ok(fs.existsSync(MANIFEST),'Manifesto de itens mágicos ausente.');
@@ -36,7 +40,7 @@ const diskChunks=fs.readdirSync(path.dirname(MANIFEST))
 assert.deepEqual(manifest.chunks,[...manifest.chunks].sort(),'Chunks do manifesto devem estar completos e em ordem determinística.');
 assert.deepEqual(manifest.chunks,diskChunks,'Manifesto e arquivos de chunks no disco divergem.');
 
-const ids=new Set(),rows=[];
+const ids=new Set(),rows=[],artifacts=[],variable=[];
 for(const chunk of manifest.chunks){
   const file=path.join(ROOT,chunk);
   assert.ok(fs.existsSync(file),`Chunk declarado e ausente: ${chunk}`);
@@ -48,9 +52,16 @@ for(const chunk of manifest.chunks){
     for(const field of ['id','nome','nome_original','bloco_original','descricao','fonte'])assert.ok(String(item[field]??'').trim(),`${where}: campo obrigatório ausente: ${field}`);
     assert.ok(!ids.has(item.id),`${where}: id duplicado: ${item.id}`);ids.add(item.id);
     assert.ok(['srd521','srd51'].includes(item.fonte),`${where}: fonte não autorizada: ${item.fonte}`);
-    const rarities=runtimeRarities(item);
-    assert.ok(rarities.length>0,`${where}: nenhuma raridade concreta é reconhecível pelo parser vigente da loja.`);
-    for(const rarity of rarities)assert.ok(['common','uncommon','rare','very rare','legendary'].includes(rarity),`${where}: raridade normalizada inválida: ${rarity}`);
+    const classification=magicClassification(item);
+    assert.notEqual(classification.kind,'unknown',`${where}: classificação de raridade desconhecida; o item ficaria silenciosamente fora da loja.`);
+    if(classification.kind==='artifact'){
+      artifacts.push(item);
+      assert.equal(classification.rarities.length,0,`${where}: Artefatos não podem receber preço de criação.`);
+    }else{
+      assert.ok(classification.rarities.length>0,`${where}: nenhuma raridade concreta é reconhecível pelo parser vigente da loja.`);
+      for(const rarity of classification.rarities)assert.ok(['common','uncommon','rare','very rare','legendary'].includes(rarity),`${where}: raridade normalizada inválida: ${rarity}`);
+      if(classification.kind==='varies')variable.push(item);
+    }
     rows.push(item);
   }
 }
@@ -58,6 +69,7 @@ for(const chunk of manifest.chunks){
 assert.equal(rows.length,manifest.controle.quantidade,'Quantidade real de itens diverge do manifesto.');
 assert.equal(rows.filter(x=>x.fonte==='srd521').length,manifest.controle.srd521,'Quantidade SRD 5.2.1 diverge do manifesto.');
 assert.equal(rows.filter(x=>x.fonte==='srd51').length,manifest.controle.srd51_legado_ativo,'Quantidade legada SRD 5.1 diverge do manifesto.');
+assert.ok(artifacts.length>0,'Catálogo não exercita a política de Artefatos não compráveis.');
 
 const legacyOriginals=rows.filter(x=>x.fonte==='srd51').map(x=>x.nome_original).sort();
 assert.deepEqual(legacyOriginals,[...(manifest.controle.legado_51_preservado||[])].sort(),'Itens legados ativos divergem da política declarada.');
@@ -72,5 +84,7 @@ assert.ok(shop.includes("json('dados/itens-magicos/manifest.json')"),'Loja não 
 assert.ok(/manifest\.chunks/.test(shop)&&/map\(path=>json\(path\)\)/.test(shop),'Loja não percorre mecanicamente todos os chunks declarados.');
 assert.ok(/normalizeMagic/.test(shop)&&/MAGIC_PRICES/.test(shop),'Itens mágicos não estão integrados à normalização/preço da loja.');
 assert.ok(/function rarityHits/.test(shop)&&/rarity varies\|raridade variavel/.test(shop),'Runtime não possui tratamento explícito e auditável para raridade variável.');
+const priceTable=(shop.match(/const MAGIC_PRICES=\{[^}]+\}/)||[''])[0];
+assert.ok(priceTable&&!/(?:artifact|artefato)\s*:/.test(fold(priceTable)),'Artefatos não podem receber preço automático na criação.');
 
-console.log(`Itens mágicos auditados: ${rows.length}/${manifest.controle.quantidade}; chunks ${manifest.chunks.length}/${diskChunks.length}; SRD 5.2.1 ${manifest.controle.srd521}; legado ativo ${manifest.controle.srd51_legado_ativo}.`);
+console.log(`Itens mágicos auditados: ${rows.length}/${manifest.controle.quantidade}; chunks ${manifest.chunks.length}/${diskChunks.length}; compráveis ${rows.length-artifacts.length}; artefatos não compráveis ${artifacts.length}; raridade variável ${variable.length}; SRD 5.2.1 ${manifest.controle.srd521}; legado ativo ${manifest.controle.srd51_legado_ativo}.`);
