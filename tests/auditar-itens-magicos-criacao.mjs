@@ -8,8 +8,8 @@ const SHOP=path.join(ROOT,'scripts','character-builder','wealth-purchase-ui.js')
 const readJson=file=>JSON.parse(fs.readFileSync(file,'utf8'));
 const fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const rarityHits=text=>{
-  const normalized=fold(text),map={common:'common',comum:'common',uncommon:'uncommon',incomum:'uncommon',rare:'rare',raro:'rare','very rare':'very rare','muito raro':'very rare',legendary:'legendary',lendario:'legendary'},found=[];
-  for(const m of normalized.matchAll(/(?:^|[^a-z])(very rare|muito raro|legendary|lendario|uncommon|incomum|rare|raro|common|comum)(?=[^a-z]|$)/g)){
+  const normalized=fold(text),map={common:'common',comum:'common',uncommon:'uncommon',incomum:'uncommon',rare:'rare',raro:'rare',rara:'rare','very rare':'very rare','muito raro':'very rare','muito rara':'very rare',legendary:'legendary',lendario:'legendary',lendaria:'legendary'},found=[];
+  for(const m of normalized.matchAll(/(?:^|[^a-z])(very rare|muito raro|muito rara|legendary|lendario|lendaria|uncommon|incomum|rare|raro|rara|common|comum)(?=[^a-z]|$)/g)){
     const key=map[m[1]];if(key&&!found.includes(key))found.push(key);
   }
   return found;
@@ -84,6 +84,7 @@ assert.ok(shop.includes("json('dados/itens-magicos/manifest.json')"),'Loja não 
 assert.ok(/manifest\.chunks/.test(shop)&&/map\(path=>json\(path\)\)/.test(shop),'Loja não percorre mecanicamente todos os chunks declarados.');
 assert.ok(/normalizeMagic/.test(shop)&&/MAGIC_PRICES/.test(shop),'Itens mágicos não estão integrados à normalização/preço da loja.');
 assert.ok(/function rarityHits/.test(shop)&&/rarity varies\|raridade variavel/.test(shop),'Runtime não possui tratamento explícito e auditável para raridade variável.');
+assert.ok(/muito rara/.test(shop)&&/lendaria/.test(shop)&&/rara/.test(shop),'Runtime não reconhece flexão feminina das raridades PT-BR em descrições de variantes.');
 const priceTable=(shop.match(/const MAGIC_PRICES=\{[^}]+\}/)||[''])[0];
 assert.ok(priceTable&&!/(?:artifact|artefato)\s*:/.test(fold(priceTable)),'Artefatos não podem receber preço automático na criação.');
 
