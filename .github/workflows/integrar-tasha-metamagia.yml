@@ -4,7 +4,7 @@ on:
   push:
     branches: [audit/normativa-total-criacao]
     paths:
-      - '.github/workflows/integrar-tasha-metamagia.yml'
+      - '.github/tasha-metamagia-trigger'
 
 permissions:
   contents: write
@@ -20,52 +20,73 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Integrar módulos compartilhados
+      - name: Integrar sistemas e corrigir contratos de cobertura
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           from pathlib import Path
-          import re
+          import json,re,posixpath
 
-          # 1) Registrar os cinco talentos de Tasha no mapa mecânico principal.
-          path=Path('scripts/character-builder/feat-mechanics.js')
-          text=path.read_text(encoding='utf-8')
+          REV='20260831-tasha-metamagic1'
+
+          def read(path): return Path(path).read_text(encoding='utf-8')
+          def write(path,text): Path(path).write_text(text,encoding='utf-8')
+          def replace_once(path,old,new):
+              text=read(path)
+              if new in text: return
+              assert old in text, f'Âncora ausente em {path}: {old[:100]}'
+              write(path,text.replace(old,new,1))
+
+          # Tasha: os 2 pontos do talento são um pool restrito a Metamagia.
+          path='scripts/character-builder/tasha-feat-mechanics.js'
+          text=read(path)
+          text=text.replace("d.sorceryPointsBonus=num(d.sorceryPointsBonus)+2;", "d.metamagicAdeptSorceryPoints=num(d.metamagicAdeptSorceryPoints)+2;")
+          write(path,text)
+          path='tests/auditar-talentos-tasha-2020.mjs'
+          text=read(path)
+          text=text.replace('sorceryPointsBonus:0,','metamagicAdeptSorceryPoints:0,')
+          text=text.replace('assert.equal(d.sorceryPointsBonus,2);','assert.equal(d.metamagicAdeptSorceryPoints,2);')
+          if "assert.equal(d.sorceryPoints,undefined" not in text:
+              text=text.replace("assert.equal(d.metamagicAdeptSorceryPoints,2);", "assert.equal(d.metamagicAdeptSorceryPoints,2);assert.equal(d.sorceryPoints,undefined,'Metamagic Adept não pode engrossar o pool normal de Pontos de Feitiçaria.');")
+          write(path,text)
+
+          # Registrar regras legadas Tasha no motor central de talentos.
+          path='scripts/character-builder/feat-mechanics.js'
+          text=read(path)
           anchor="import{XANATHAR_2017_FEAT_RULES}from'./feat-rules-xanathar-2017.js?v=20260831-xanathar-feats1';\n"
           addition="import{TASHA_2020_FEAT_RULES}from'./feat-rules-tasha-2020.js?v=20260831-tasha-metamagic1';\n"
           if addition not in text:
               assert anchor in text
-              text=text.replace(anchor,anchor+addition)
-          old=" ...XANATHAR_2017_FEAT_RULES\n};"
-          new=" ...XANATHAR_2017_FEAT_RULES,\n ...TASHA_2020_FEAT_RULES\n};"
-          if new not in text:
-              assert old in text
-              text=text.replace(old,new)
-          path.write_text(text,encoding='utf-8')
+              text=text.replace(anchor,anchor+addition,1)
+          if '...TASHA_2020_FEAT_RULES' not in text:
+              assert '...XANATHAR_2017_FEAT_RULES\n};' in text
+              text=text.replace('...XANATHAR_2017_FEAT_RULES\n};','...XANATHAR_2017_FEAT_RULES,\n ...TASHA_2020_FEAT_RULES\n};',1)
+          write(path,text)
 
-          # 2) Inicializar Metamagia da classe e UI dos talentos no orquestrador da etapa Classe.
-          path=Path('scripts/character-builder/class-skill-ui.js')
-          text=path.read_text(encoding='utf-8')
+          # Classe: inicializar Invocações, Metamagia e controles Tasha no mesmo orquestrador.
+          path='scripts/character-builder/class-skill-ui.js'
+          text=read(path)
           anchor="import{initInvocationUi}from'./invocation-ui.js?v=20260831-warlock-invocations2';\n"
           additions="import{initMetamagicUi}from'./metamagic-ui.js?v=20260831-tasha-metamagic1';\nimport{initTashaFeatUi}from'./tasha-feat-ui.js?v=20260831-tasha-metamagic1';\n"
-          if "initMetamagicUi" not in text:
+          if 'initMetamagicUi' not in text:
               assert anchor in text
-              text=text.replace(anchor,anchor+additions)
-          old="initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();"
-          new="initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();initMetamagicUi();initTashaFeatUi();"
+              text=text.replace(anchor,anchor+additions,1)
+          old='initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();'
+          new='initClassToolUi();initClassFeatureFeatUi();initFeatMultiOptionUi();initInvocationUi();initMetamagicUi();initTashaFeatUi();'
           if new not in text:
               assert old in text
-              text=text.replace(old,new)
-          path.write_text(text,encoding='utf-8')
+              text=text.replace(old,new,1)
+          write(path,text)
 
-          # 3) Integrar os dois sistemas no rules.js sem duplicar seus motores.
-          path=Path('scripts/character-builder/rules.js')
-          text=path.read_text(encoding='utf-8')
+          # Rules central: compartilhar motores de Invocação/Metamagia/Tasha sem duplicação.
+          path='scripts/character-builder/rules.js'
+          text=read(path)
           anchor="import{invocationOutcome,sanitizeWarlockInvocations}from'./invocation-mechanics.js?v=20260831-warlock-invocations2';\n"
           additions="import{metamagicOutcome,sanitizeSorcererMetamagic}from'./metamagic-mechanics.js?v=20260831-tasha-metamagic1';\nimport{applyTashaFeatEffects,tashaOriginFeatInstances,sanitizeTashaFeatChoices}from'./tasha-feat-mechanics.js?v=20260831-tasha-metamagic1';\n"
-          if "applyTashaFeatEffects" not in text:
+          if 'applyTashaFeatEffects' not in text:
               assert anchor in text
-              text=text.replace(anchor,anchor+additions)
+              text=text.replace(anchor,anchor+additions,1)
 
           pattern=re.compile(r"function withInvocationOriginFeats\(fn\)\{.*?\}\nexport function speciesTraitChoiceDefs",re.S)
           replacement="""function withSupplementalOriginFeats(fn){const classGrants=arr(invocationOutcome().originFeatIds).map(id=>({id,kind:'invocation',source:'Invocação Mística · Lessons of the First Ones'})),tashaGrants=tashaOriginFeatInstances().map(inst=>({id:inst.feat.id,kind:'tasha-invocation',source:inst.source})),grants=[...classGrants,...tashaGrants],klass=(state.catalogs.classes||[]).find(x=>x.id===state.c?.refs?.class);if(!grants.length||!klass||!state.c?.choices)return fn();const progression=klass._houseFeatProgression,choices=state.c.choices.feats||(state.c.choices.feats={}),saved={};klass._houseFeatProgression=[...arr(progression)];grants.forEach((grant,index)=>{const slot=`supplemental-origin-${index}`;saved[slot]=Object.prototype.hasOwnProperty.call(choices,slot)?choices[slot]:undefined;choices[slot]=grant.id;klass._houseFeatProgression.push({level:1,kind:grant.kind,slot,index,source:grant.source})});try{return fn()}finally{klass._houseFeatProgression=progression;for(const[id,value]of Object.entries(saved)){if(value===undefined)delete choices[id];else choices[id]=value}}}
@@ -78,7 +99,7 @@ export function speciesTraitChoiceDefs"""
           new="export function sanitizeSelections(){applyHouseRules();syncSorcererSpellAccess();const result=withLineagePackage(()=>withLegacyCompatibility(()=>base.sanitizeSelections()));sanitizeWarlockInvocations();sanitizeSorcererMetamagic();sanitizeTashaFeatChoices();applyHouseRules();return result}"
           if new not in text:
               assert old in text
-              text=text.replace(old,new)
+              text=text.replace(old,new,1)
 
           pattern=re.compile(r"function sourceForInstance\(inst,klass\)\{.*?\}\nfunction applyEpicAbilityScores",re.S)
           replacement="""function sourceForInstance(inst,klass){if(inst.key==='background')return'Talento de Origem · Antecedente';if(!inst.key?.startsWith('class:'))return inst.source;const slot=inst.key.slice(6),entry=arr(klass?._houseFeatProgression).find(x=>x.slot===slot);if(!entry)return inst.source;if(entry.kind==='invocation')return'Invocação Mística · Lessons of the First Ones';if(entry.kind==='tasha-invocation')return entry.source||'Eldritch Adept · Lessons of the First Ones';if(entry.kind==='house')return`Regra da Casa · nível ${entry.level}`;return`Classe · nível ${entry.level} · talento adicional`}
@@ -90,14 +111,89 @@ function applyEpicAbilityScores"""
           helper="function applyMetamagicEffects(d){const outcome=metamagicOutcome();d.metamagicClass=outcome;d.metamagicOptions=uniq([...arr(d.metamagicOptions),...outcome.options.map(x=>x.option.id)]);d.sorceryPoints=outcome.sorceryPoints;return d}\n"
           if helper not in text:
               assert anchor in text
-              text=text.replace(anchor,helper+anchor)
+              text=text.replace(anchor,helper+anchor,1)
 
           pattern=re.compile(r"export function derive\(\)\{.*?return d\}\n/\* Compatibilidade",re.S)
-          derive="""export function derive(){applyHouseRules();syncSorcererSpellAccess();let d=withLineagePackage(()=>withSupplementalOriginFeats(()=>base.derive()));d=applyEpicAbilityScores(d);d=applyLineagePackageEffects(d);d=applyInvocationEffects(d);d=applyClassToolEffects(d);d=applyMetamagicEffects(d);d=applyTashaFeatEffects(d);d.sorceryPoints=num(d.sorceryPoints)+num(d.sorceryPointsBonus);applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);applyBardSubclassMechanics(d);applyDruidSubclassMechanics(d);applyFighterSubclassMechanics(d);applyFighterSubclassRuleDetails(d);applyMonkSubclassMechanics(d);applyMonkSubclassRuleDetails(d);applyPaladinSubclassMechanics(d);applyPaladinSubclassRuleDetails(d);applyRangerSubclassMechanics(d);applyRangerSubclassRuleDetails(d);applyRogueSubclassMechanics(d);applySorcererSubclassMechanics(d);applyWarlockSubclassMechanics(d);applyWizardSubclassMechanics(d);applyFeatAttackEffects(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}const skillChecks=deriveSkillCheckMechanics(d);d.skillChecks=skillChecks.checks;d.jackOfAllTrades=skillChecks.jackOfAllTrades;d.passive=skillChecks.passivePerception;return d}
+          derive="""export function derive(){applyHouseRules();syncSorcererSpellAccess();let d=withLineagePackage(()=>withSupplementalOriginFeats(()=>base.derive()));d=applyEpicAbilityScores(d);d=applyLineagePackageEffects(d);d=applyInvocationEffects(d);d=applyClassToolEffects(d);d=applyMetamagicEffects(d);d=applyTashaFeatEffects(d);applyBarbarianSubclassMechanics(d);applyArtificerSubclassMechanics(d);applyBardSubclassMechanics(d);applyDruidSubclassMechanics(d);applyFighterSubclassMechanics(d);applyFighterSubclassRuleDetails(d);applyMonkSubclassMechanics(d);applyMonkSubclassRuleDetails(d);applyPaladinSubclassMechanics(d);applyPaladinSubclassRuleDetails(d);applyRangerSubclassMechanics(d);applyRangerSubclassRuleDetails(d);applyRogueSubclassMechanics(d);applySorcererSubclassMechanics(d);applyWarlockSubclassMechanics(d);applyWizardSubclassMechanics(d);applyFeatAttackEffects(d);d.classFeatures=arr(d.classFeatures).filter(feature=>!isReplacedClassFeat(feature));d.houseFeatProgression=arr(d.klass?._houseFeatProgression).filter(entry=>entry.level<=d.level).map(entry=>({...entry}));const choices=state.c.choices.houseAbilities||{};d.houseAbilityProgression=HOUSE_ABILITY_LEVELS.filter(level=>level<=d.level).map(level=>({level,ability:choices[String(level)]||choices[level]||null}));if(d.featMechanics){d.featMechanics.instances=arr(d.featMechanics.instances).map(inst=>({...inst,source:sourceForInstance(inst,d.klass)}));d.featMechanics.houseAbilityProgression=d.houseAbilityProgression}const skillChecks=deriveSkillCheckMechanics(d);d.skillChecks=skillChecks.checks;d.jackOfAllTrades=skillChecks.jackOfAllTrades;d.passive=skillChecks.passivePerception;return d}
 /* Compatibilidade"""
           text,count=pattern.subn(derive,text,count=1)
           assert count==1
-          path.write_text(text,encoding='utf-8')
+          write(path,text)
+
+          # Escopo fail-closed: Metamagia pertence ao domínio de Classes e os dois testes são críticos.
+          path='dados/auditoria-criacao-escopo.json'
+          data=json.loads(read(path))
+          classes=next(d for d in data['dominios'] if d['id']=='classes')
+          if 'dados/metamagias-feiticeiro-2024.json' not in classes['fontes']:
+              classes['fontes'].append('dados/metamagias-feiticeiro-2024.json')
+          for test in ['tests/auditar-metamagias-feiticeiro-2024.mjs','tests/auditar-talentos-tasha-2020.mjs']:
+              if test not in data['testes_criticos']: data['testes_criticos'].append(test)
+          write(path,json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+
+          # Workflow normativo: observar e executar os novos gates.
+          path='.github/workflows/auditar-proveniencia-normativa.yml'
+          text=read(path)
+          if "      - 'dados/metamagias-feiticeiro-2024.json'\n" not in text:
+              text=text.replace("      - 'dados/artificer-2025.json'\n","      - 'dados/artificer-2025.json'\n      - 'dados/metamagias-feiticeiro-2024.json'\n",1)
+          if "      - 'tests/auditar-metamagias-feiticeiro-2024.mjs'\n" not in text:
+              text=text.replace("      - 'tests/auditar-ferramentas-classe.mjs'\n","      - 'tests/auditar-ferramentas-classe.mjs'\n      - 'tests/auditar-metamagias-feiticeiro-2024.mjs'\n",1)
+          marker="      - name: 11B/11C/11E · Validar Invocações Místicas do Bruxo 2024\n        run: node tests/auditar-invocacoes-bruxo-2024.mjs\n"
+          extra="      - name: 11B/11E · Validar Metamagia do Feiticeiro 2024\n        run: node tests/auditar-metamagias-feiticeiro-2024.mjs\n      - name: 11B/11E · Validar talentos Tasha 2020\n        run: node tests/auditar-talentos-tasha-2020.mjs\n"
+          if 'Validar Metamagia do Feiticeiro 2024' not in text:
+              assert marker in text
+              text=text.replace(marker,marker+extra,1)
+          write(path,text)
+
+          # Invalidação de cache por grafo: só dependentes de módulos realmente alterados.
+          roots={
+            'scripts/character-builder/rules.js','scripts/character-builder/feat-mechanics.js',
+            'scripts/character-builder/class-skill-ui.js','scripts/character-builder/invocation-mechanics.js',
+            'scripts/character-builder/metamagic-catalog.js','scripts/character-builder/metamagic-mechanics.js',
+            'scripts/character-builder/metamagic-ui.js','scripts/character-builder/tasha-feat-mechanics.js',
+            'scripts/character-builder/tasha-feat-ui.js','scripts/character-builder/feat-rules-tasha-2020.js'
+          }
+          jsfiles=[p for p in Path('scripts').rglob('*.js')]
+          changed=set(roots)
+          spec_re=re.compile(r"(?P<q>['\"])(?P<spec>\.\.?/[^'\"]+?\.js)(?:\?v=[A-Za-z0-9._-]+)?(?P=q)")
+          def resolve(src,spec):
+              base=posixpath.dirname(src)
+              return posixpath.normpath(posixpath.join(base,spec))
+          while True:
+              any_change=False
+              for p in jsfiles:
+                  rel=p.as_posix(); text=p.read_text(encoding='utf-8')
+                  def repl(m):
+                      nonlocal_dummy=None
+                      spec=m.group('spec'); target=resolve(rel,spec)
+                      if target not in changed: return m.group(0)
+                      desired=f"{m.group('q')}{spec}?v={REV}{m.group('q')}"
+                      return desired
+                  new=spec_re.sub(repl,text)
+                  if new!=text:
+                      p.write_text(new,encoding='utf-8');
+                      if rel not in changed: changed.add(rel); any_change=True
+              if not any_change: break
+
+          # Entrada HTML acompanha a revisão do loader alterado.
+          path='criacao-personagem.html'; text=read(path)
+          text=re.sub(r'character-builder\.js\?v=[A-Za-z0-9._-]+',f'character-builder.js?v={REV}',text)
+          write(path,text)
+
+          # Contratos que explicitamente representam a revisão canônica do motor.
+          for path in ['tests/auditar-revisao-unica-rules.mjs','tests/auditar-criacao-sem-travamento.mjs']:
+              text=read(path)
+              text=re.sub(r"const REV='[^']+';",f"const REV='{REV}';",text, count=1)
+              if path.endswith('auditar-criacao-sem-travamento.mjs'):
+                  text=re.sub(r"const SKILL_REV='[^']+';",f"const SKILL_REV='{REV}';",text,count=1)
+                  text=re.sub(r"const WEALTH_REV='[^']+';",f"const WEALTH_REV='{REV}';",text,count=1)
+              write(path,text)
+          for path in ['.github/workflows/auditar-skilled.yml','.github/workflows/auditar-escolhas-raca-pacote-b.yml']:
+              text=read(path)
+              text=re.sub(r"REV='20260831-(?:class-tools1|warlock-invocations2)'",f"REV='{REV}'",text)
+              write(path,text)
+
+          # O workflow temporário é removido apenas após a suíte validar tudo.
+          print('Arquivos alterados pelo grafo de cache:',len(changed))
           PY
 
           node --check scripts/character-builder/feat-mechanics.js
@@ -107,18 +203,28 @@ function applyEpicAbilityScores"""
           node --check scripts/character-builder/tasha-feat-ui.js
           node --check scripts/character-builder/metamagic-mechanics.js
           node --check scripts/character-builder/metamagic-ui.js
+          node tests/auditar-proveniencia-normativa.mjs
+          node tests/auditar-escopo-criacao.mjs
+          node tests/auditar-cobertura-total-criacao.mjs
           node tests/auditar-invocacoes-bruxo-2024.mjs
           node tests/auditar-metamagias-feiticeiro-2024.mjs
           node tests/auditar-talentos-tasha-2020.mjs
           node tests/auditar-revisao-unica-rules.mjs
+          node tests/auditar-criacao-sem-travamento.mjs
+          for test in tests/auditar-*.mjs; do
+            case "$test" in
+              tests/auditar-proveniencia-normativa.mjs|tests/auditar-escopo-criacao.mjs|tests/auditar-cobertura-total-criacao.mjs|tests/auditar-invocacoes-bruxo-2024.mjs|tests/auditar-metamagias-feiticeiro-2024.mjs|tests/auditar-talentos-tasha-2020.mjs|tests/auditar-revisao-unica-rules.mjs|tests/auditar-criacao-sem-travamento.mjs) continue ;;
+            esac
+            node "$test"
+          done
           git diff --check
-      - name: Publicar e remover workflow temporário
+      - name: Publicar e remover executores temporários
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git rm .github/workflows/integrar-tasha-metamagia.yml
-          git add scripts
-          git commit -m 'Integrar Metamagia 2024 e talentos Tasha'
+          git rm .github/workflows/integrar-tasha-metamagia.yml .github/tasha-metamagia-trigger
+          git add .
+          git commit -m 'Integrar Metamagia 2024 e talentos Tasha com gates fail-closed'
           git push origin HEAD:audit/normativa-total-criacao
