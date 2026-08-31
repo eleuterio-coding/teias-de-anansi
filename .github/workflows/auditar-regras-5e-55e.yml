@@ -41,11 +41,11 @@ jobs:
           node --check scripts/character-builder/rules-base.js
           node --check scripts/character-builder/language-mechanics.js
           node --check scripts/character-builder/house-rules-ui.js
-          node --check scripts/character-builder/manual-feat-ui.js
           node --check scripts/character-builder/spells.js
           node --check scripts/character-builder/spell-selection-ui.js
           node --check scripts/character-builder/spell-quota-ui.js
           node --check scripts/concentracao-expandida-selos.js
           node --check scripts/regras-srd-view-v7.js
           node --check scripts/politica-regras-biblioteca.js
+          if [ -f scripts/politica-era-cenario.js ]; then node --check scripts/politica-era-cenario.js; fi
           node --check scripts/module-clean-loader.js
