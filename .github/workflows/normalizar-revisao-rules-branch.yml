@@ -1,0 +1,62 @@
+name: Normalizar revisão única do motor
+
+on:
+  push:
+    branches: [audit/normativa-total-criacao]
+    paths:
+      - '.github/workflows/normalizar-revisao-rules-branch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: audit/normativa-total-criacao
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unificar revisões
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          REV='20260831-class-tools1'
+          changed=[]
+          candidates=list(Path('scripts/character-builder').glob('*.js'))+list(Path('scripts').glob('character-sheet*.js'))
+          for p in candidates:
+              text=p.read_text(encoding='utf-8')
+              new=re.sub(r'rules\.js\?v=[A-Za-z0-9._-]+',f'rules.js?v={REV}',text)
+              if new!=text:
+                  p.write_text(new,encoding='utf-8');changed.append(str(p))
+          p=Path('criacao-personagem.html');text=p.read_text(encoding='utf-8')
+          new=re.sub(r'character-builder\.js\?v=[A-Za-z0-9._-]+',f'character-builder.js?v={REV}',text)
+          if new!=text:p.write_text(new,encoding='utf-8');changed.append(str(p))
+          p=Path('scripts/character-builder.js');text=p.read_text(encoding='utf-8')
+          new=re.sub(r'ui\.js\?v=[A-Za-z0-9._-]+',f'ui.js?v={REV}',text)
+          new=re.sub(r'class-skill-ui\.js\?v=[A-Za-z0-9._-]+',f'class-skill-ui.js?v={REV}',new)
+          if new!=text:p.write_text(new,encoding='utf-8');changed.append(str(p))
+          p=Path('tests/auditar-criacao-sem-travamento.mjs');text=p.read_text(encoding='utf-8')
+          new=re.sub(r"const REV='[^']+'",f"const REV='{REV}'",text)
+          new=re.sub(r"const SKILL_REV='[^']+'",f"const SKILL_REV='{REV}'",new)
+          if new!=text:p.write_text(new,encoding='utf-8');changed.append(str(p))
+          print('Arquivos normalizados:',len(changed))
+          print('\n'.join(changed))
+          PY
+      - name: Verificar resultado antes do commit
+        run: |
+          node tests/auditar-revisao-unica-rules.mjs
+          node tests/auditar-criacao-sem-travamento.mjs
+          find scripts/character-builder -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Publicar migração
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add criacao-personagem.html scripts tests/auditar-criacao-sem-travamento.mjs
+          git commit -m 'Unifica revisão do motor de regras e invalida caches'
+          git push origin HEAD:audit/normativa-total-criacao
