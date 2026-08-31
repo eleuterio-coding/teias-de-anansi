@@ -30,6 +30,7 @@ for(const[klass,def]of Object.entries(matrix.classes||{})){
 }
 assert.equal(expected.size,48,'A matriz precisa enumerar exatamente 48 subclasses PHB 2024.');
 
+// Catálogo é a camada que associa identidade, classe e proveniência.
 const catalogRows=(catalog.subclasses||[]).filter(x=>sourceId(x)==='phb-2024');
 assert.equal(catalogRows.length,48,'Catálogo precisa conter exatamente 48 subclasses PHB 2024.');
 assert.deepEqual(sorted(catalogRows.map(x=>x.nome)),sorted(expected.keys()),'Catálogo e matriz divergem nas identidades PHB 2024.');
@@ -42,9 +43,10 @@ for(const row of catalogRows){
   assert.equal(row.status,'vigente_mais_recente',`${row.nome}: versão PHB 2024 precisa permanecer vigente.`);
 }
 
+// Mecânicas são uma camada enxuta por identidade; classe não é duplicada nesse arquivo.
 const mechanics=new Map();
 for(const row of mech.subclasses||[]){
-  assert.ok(row?.nome&&row?.classe,`Registro mecânico inválido: ${JSON.stringify(row)}`);
+  assert.ok(String(row?.nome||'').trim(),`Registro mecânico sem identidade: ${JSON.stringify(row)}`);
   assert.ok(!mechanics.has(row.nome),`Mecânica duplicada: ${row.nome}`);
   mechanics.set(row.nome,row);
 }
@@ -52,7 +54,6 @@ assert.equal(mechanics.size,48,'Mecânicas precisam conter exatamente 48 identid
 assert.deepEqual(sorted(mechanics.keys()),sorted(expected.keys()),'Mecânicas e matriz divergem nas identidades PHB 2024.');
 for(const[name,exp]of expected){
   const row=mechanics.get(name);
-  assert.equal(row.classe,exp.klass,`${name}: classe divergente nas mecânicas.`);
   assert.ok(Array.isArray(row.progressao)&&row.progressao.length,`${name}: progressão mecânica vazia.`);
   const levels=[...new Set(row.progressao.map(x=>Number(x.nivel)))].sort((a,b)=>a-b);
   assert.deepEqual(levels,[...exp.levels].sort((a,b)=>a-b),`${name}: níveis de recursos divergem da matriz 2024.`);
