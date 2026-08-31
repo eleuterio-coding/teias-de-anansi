@@ -16,16 +16,17 @@ const P=sandbox.HubEraPolicy;
 assert(P,'HubEraPolicy não foi exposta.');
 
 const prohibited=[
-  'Mosquete','Musket','Pistola','Pistol','Blunderbuss','Revolver','Rifle','Shotgun',
+  'Mosquete','Musket','Pistola','Pistol','Blunderbuss','Revolver','Rifle','Shotgun','Cannon',
   'Automatic Rifle','Hunting Rifle','Semiautomatic Pistol','Antimatter Rifle','Laser Pistol','Laser Rifle',
-  'Gunner','Gunpowder Keg','Powder Horn','Dinamite','Fragmentation Grenade','Granada de fumaça',
-  'Motorcycle','Automóvel','Truck','Helicopter','Airplane','Spaceship','Computer','Smartphone'
+  'Gunner','Gunpowder Keg','Powder Horn','Dinamite','Fragmentation Grenade','Grenade, Fragmentation',
+  'Grenade, Smoke','Granada de fumaça','Rocket Launcher','Motorcycle','Automóvel','Truck','Helicopter',
+  'Airplane','Spaceship','Computer','Smartphone'
 ];
 for(const name of prohibited)assert(P.matchesName(name),`Conteúdo moderno não bloqueado: ${name}`);
 
 const allowed=[
   'Espada Longa','Adaga','Arco Longo','Besta Pesada','Funda','Sling Bullet','Carroça','Carruagem','Biga',
-  'Dirigível','Airship','Corcel Nimblewright','Artífice','Warhammer','Alquimia','Granada Arcana'
+  'Dirigível','Airship','Corcel Nimblewright','Artífice','Warhammer','Alquimia','Granada Arcana','Eldritch Cannon'
 ];
 for(const name of allowed)assert(!P.matchesName(name),`Falso positivo da política de era: ${name}`);
 
@@ -55,6 +56,13 @@ assert.equal(rowFiltered.itens[0][0],'Alert','Linha válida foi danificada ao fi
 
 const assocFiltered=P.sanitizePayload({armas_associadas:{pdf:['Shotgun','Warhammer','Greatsword']}});
 assert.deepEqual(Array.from(assocFiltered.armas_associadas.pdf),['Warhammer','Greatsword'],'Lista de associações não foi saneada corretamente.');
+
+const explosiveFiltered=P.sanitizePayload({itens:[
+  {nome:'Bomb',categoria:'Explosives',descricao:'Mundane explosive.'},
+  {nome:'Óleo',categoria:'Equipamento de Aventura',descricao:'Frasco de óleo comum.'}
+]});
+assert.equal(explosiveFiltered.itens.length,1,'Categoria mundana de explosivos não foi bloqueada.');
+assert.equal(explosiveFiltered.itens[0].nome,'Óleo','Equipamento medieval foi removido junto com explosivos.');
 
 const workflow=fs.readFileSync(path.join(ROOT,'.github','workflows','deploy-pages.yml'),'utf8');
 assert(workflow.includes('data-hub-era-policy="1"'),'Deploy não injeta a política global de era.');
