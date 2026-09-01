@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {state} from '../scripts/character-builder/state.js';
+import {applyBackgroundWealthTier,isStandardWealthBackground} from '../scripts/character-builder/background-wealth-tier-ui.js';
 import {
  STANDARD_BACKGROUND_PACKAGE_B_GP,
  WEALTH_BY_LEVEL,
@@ -32,6 +34,21 @@ assert.equal(backgroundWealthProfile(acolyte).id,'modesta');
 assert.equal(backgroundWealthProfile(acolyte).multiplier,.95);
 assert.equal(backgroundWealthProfile(custom).id,'regular','Antecedente sem classificação explícita deve usar Regular.');
 assert.equal(backgroundWealthProfile({name:'Personalizado',wealthTier:'Próspera'}).multiplier,1.10,'Faixa econômica explícita deve prevalecer.');
+
+assert.equal(isStandardWealthBackground(noble),true,'Nobre deve ser reconhecido como Antecedente-padrão.');
+assert.equal(isStandardWealthBackground(custom),false,'Antecedente não padronizado deve permitir Faixa Econômica configurável.');
+state.catalogs.backgrounds=[custom];state.c={id:'pc-wealth-tier-test',refs:{background:custom.id},choices:{background:{}}};
+let customProfile=applyBackgroundWealthTier(custom);
+assert.equal(customProfile.id,'regular','Antecedente personalizado deve iniciar na Faixa Regular.');
+assert.equal(state.c.choices.background.wealthTier,'regular','Faixa Regular padrão deve ser persistida na escolha do personagem.');
+state.c.choices.background.wealthTier='prospera';
+customProfile=applyBackgroundWealthTier(custom);
+assert.equal(customProfile.id,'prospera','Escolha explícita da Faixa Econômica deve chegar ao motor de Riqueza por Level.');
+assert.equal(custom.wealthTier,'prospera','Catálogo em runtime deve refletir a escolha econômica do personagem.');
+state.catalogs.backgrounds=[noble];state.c.refs.background=noble.id;
+const standardProfile=applyBackgroundWealthTier(noble);
+assert.equal(standardProfile.id,'privilegiada','Antecedente-padrão deve manter sua classificação normativa.');
+assert.equal(state.c.choices.background.wealthTier,null,'Classificação padrão não deve ser sobrescrita por escolha personalizada anterior.');
 
 assert.equal(wealthBaseGp(1),0);
 assert.equal(wealthBaseGp(5),650);
@@ -106,6 +123,12 @@ for(const{name,tierLabel}of normativeBackgroundTiers){
  const profile=backgroundWealthProfile({name});
  assert.equal(profile.label,tierLabel,`Regra normativa e motor divergem na Faixa Econômica de ${name}.`);
  assert.equal(profile.multiplier,tierMultiplierByLabel[tierLabel],`Multiplicador de ${name} diverge da Faixa Econômica normativa ${tierLabel}.`);
+ assert.equal(isStandardWealthBackground({name}),true,`A interface deve reconhecer ${name} como Antecedente-padrão e bloquear override econômico.`);
 }
 
-console.log('OK — Riqueza por Level, faixas econômicas, 16 antecedentes, pacotes iniciais e regra normativa sincronizados.');
+const packageUiSource=readFileSync(new URL('../scripts/character-builder/package-b-purchase-ui.js',import.meta.url),'utf8');
+assert.match(packageUiSource,/initBackgroundWealthTierUi/,'O fluxo de criação deve carregar a interface de Faixa Econômica.');
+const wealthTierUiSource=readFileSync(new URL('../scripts/character-builder/background-wealth-tier-ui.js',import.meta.url),'utf8');
+for(const id of['precaria','modesta','regular','estavel','prospera','privilegiada'])assert.match(wealthTierUiSource,new RegExp(id),`Interface deve contemplar a Faixa Econômica ${id}.`);
+
+console.log('OK — Riqueza por Level, faixas econômicas, 16 antecedentes, personalizados, pacotes iniciais e regra normativa sincronizados.');
