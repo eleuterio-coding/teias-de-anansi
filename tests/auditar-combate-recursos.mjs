@@ -64,7 +64,7 @@ const custom=addCustomResource(resChar,{name:'Dados de Superioridade',max:4,unit
 
 const ui=fs.readFileSync(new URL('../scripts/character-sheet-combat-ui.js',import.meta.url),'utf8');const rules=fs.readFileSync(new URL('../scripts/character-sheet-combat-rules.js',import.meta.url),'utf8');const resources=fs.readFileSync(new URL('../scripts/character-sheet-resource-rules.js',import.meta.url),'utf8');const equipment=fs.readFileSync(new URL('../scripts/character-sheet-equipment-ownership.js',import.meta.url),'utf8');
 for(const token of['Empunhadura','Mão principal','Mão secundária','Maestrias','Novo turno','Nova rodada','Recursos mecânicos','Ataque extra Leve','Weapon Master'])assert.ok(ui.includes(token),`UI de combate sem ${token}`);
-for(const token of['Versatile','Loading','Heavy','Ammunition','lightWeaponExtraAttack','registerWeaponAttack'])assert.ok(rules.includes(token),`Motor sem evidência de ${token}`);
+const rulesLower=rules.toLowerCase();for(const token of['versatile','loading','heavy','ammunition','lightweaponextraattack','registerweaponattack'])assert.ok(rulesLower.includes(token),`Motor sem evidência de ${token}`);
 for(const token of['Fúria','Segundo Fôlego','Surto de Ação','Pontos de Foco','Imposição das Mãos','Pontos de Feitiçaria'])assert.ok(resources.includes(token),`Recursos sem ${token}`);
 assert.ok(equipment.includes("import('./character-sheet-combat-ui.js"),'Combate mecânico deve carregar depois do render legado.');
 assert.equal([ui,rules,resources].join('\n').toLowerCase().includes('supabase'),false);
