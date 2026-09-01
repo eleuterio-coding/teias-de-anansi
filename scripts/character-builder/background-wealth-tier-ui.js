@@ -7,7 +7,8 @@ const STANDARD_BACKGROUND_NAMES=new Set([
  'merchant','mercador','noble','nobre','sage','sabio','sailor','marinheiro','scribe','escriba',
  'soldier','soldado','wayfarer','viajante'
 ]);
-const TIER_IDS=new Set(Object.keys(WEALTH_TIERS));
+const TIER_ORDER=['precaria','modesta','regular','estavel','prospera','privilegiada'];
+const TIER_IDS=new Set(TIER_ORDER);
 let initialized=false,lastBackgroundId=null,observer=null;
 
 function currentBackground(){return state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null}
@@ -29,7 +30,7 @@ export function applyBackgroundWealthTier(bg=currentBackground()){
 
 function fieldMarkup(bg,profile){
  if(isStandardWealthBackground(bg))return`<label id="bg-wealth-tier-field">Faixa econômica<input type="text" value="${profile.label} ×${profile.multiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}" readonly title="Classificação padrão definida pela Regra da Casa"></label>`;
- const options=Object.values(WEALTH_TIERS).map(t=>`<option value="${t.id}" ${t.id===profile.id?'selected':''}>${t.label} ×${t.multiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</option>`).join('');
+ const options=TIER_ORDER.map(id=>WEALTH_TIERS[id]).map(t=>`<option value="${t.id}" ${t.id===profile.id?'selected':''}>${t.label} ×${t.multiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</option>`).join('');
  return`<label id="bg-wealth-tier-field">Faixa econômica<select id="bg-wealth-tier">${options}</select><small class="muted">Antecedentes sem classificação padrão usam Regular; altere quando a história do personagem justificar outra condição econômica.</small></label>`
 }
 function render(){
