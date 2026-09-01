@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/character-sheet-level-up-rules.js'
       - 'scripts/character-sheet-level-up-ui.js'
+      - 'scripts/character-sheet-level-up-input-guard.js'
       - 'scripts/character-sheet-gameplay-ui.js'
       - 'scripts/character-builder-level-guard.js'
       - 'scripts/character-builder/package-b-purchase-ui.js'
@@ -19,6 +20,7 @@ on:
     paths:
       - 'scripts/character-sheet-level-up-rules.js'
       - 'scripts/character-sheet-level-up-ui.js'
+      - 'scripts/character-sheet-level-up-input-guard.js'
       - 'scripts/character-sheet-gameplay-ui.js'
       - 'scripts/character-builder-level-guard.js'
       - 'scripts/character-builder/package-b-purchase-ui.js'
@@ -44,6 +46,7 @@ jobs:
         run: |
           node --check scripts/character-sheet-level-up-rules.js
           node --check scripts/character-sheet-level-up-ui.js
+          node --check scripts/character-sheet-level-up-input-guard.js
           node --check scripts/character-sheet-gameplay-ui.js
           node --check scripts/character-builder-level-guard.js
       - name: Auditar progressão pós-criação
