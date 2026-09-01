@@ -1,0 +1,71 @@
+name: Auditar campanhas e mesas
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/campaign-state.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/character-sheet-campaign-ui.js'
+      - 'scripts/character-list-campaign-ui.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'campanhas.html'
+      - 'mesa.html'
+      - 'sessoes.html'
+      - 'lista-personagens.html'
+      - 'personagens.html'
+      - 'index.html'
+      - 'campaigns.css'
+      - 'tests/auditar-campanhas-mesas.mjs'
+      - '.github/workflows/auditar-campanhas-mesas.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-state.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/character-sheet-campaign-ui.js'
+      - 'scripts/character-list-campaign-ui.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'campanhas.html'
+      - 'mesa.html'
+      - 'sessoes.html'
+      - 'lista-personagens.html'
+      - 'personagens.html'
+      - 'index.html'
+      - 'campaigns.css'
+      - 'tests/auditar-campanhas-mesas.mjs'
+      - '.github/workflows/auditar-campanhas-mesas.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  campanhas-mesas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          node --check scripts/campaign-state.js
+          node --check scripts/campaign-list-ui.js
+          node --check scripts/campaign-table-ui.js
+          node --check scripts/campaign-sessions-ui.js
+          node --check scripts/character-sheet-campaign-ui.js
+          node --check scripts/character-list-campaign-ui.js
+          node --check scripts/character-sheet-gameplay-ui.js
+          node --check tests/auditar-campanhas-mesas.mjs
+      - name: Auditar Campanhas e Mesas
+        run: node tests/auditar-campanhas-mesas.mjs
+      - name: Proibir Supabase no bloco
+        run: |
+          if grep -RniE 'supabase' scripts/campaign-state.js scripts/campaign-list-ui.js scripts/campaign-table-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet-campaign-ui.js scripts/character-list-campaign-ui.js campanhas.html mesa.html sessoes.html campaigns.css; then
+            echo 'Supabase é proibido no Hub de RPG.' >&2
+            exit 1
+          fi
