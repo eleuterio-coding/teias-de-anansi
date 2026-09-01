@@ -1,0 +1,41 @@
+name: Auditar ficha em modo de jogo
+
+on:
+  pull_request:
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet.js'
+      - 'scripts/character-sheet-gameplay-state.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-sheet-*.js'
+      - 'tests/auditar-ficha-modo-jogo.mjs'
+      - '.github/workflows/auditar-ficha-modo-jogo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ficha-personagem.html'
+      - 'scripts/character-sheet.js'
+      - 'scripts/character-sheet-gameplay-state.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-sheet-*.js'
+      - 'tests/auditar-ficha-modo-jogo.mjs'
+      - '.github/workflows/auditar-ficha-modo-jogo.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  ficha-modo-jogo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar JavaScript
+        run: |
+          node --check scripts/character-sheet-gameplay-state.js
+          node --check scripts/character-sheet-gameplay-ui.js
+          node --check tests/auditar-ficha-modo-jogo.mjs
+      - name: Auditar autonomia operacional da ficha
+        run: node tests/auditar-ficha-modo-jogo.mjs
