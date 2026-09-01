@@ -6,10 +6,14 @@ on:
       - 'dados/regras-casa-adicionais.json'
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/starting-equipment-review-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/background-wealth-tier-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
       - 'scripts/character-builder/equipment-ownership.js'
       - 'scripts/character-builder/state.js'
       - 'tests/auditar-riqueza-criacao.mjs'
+      - 'tests/auditar-revisao-riqueza-criacao.mjs'
       - '.github/workflows/auditar-riqueza-criacao.yml'
   push:
     branches: [main]
@@ -17,10 +21,14 @@ on:
       - 'dados/regras-casa-adicionais.json'
       - 'scripts/character-builder/starting-equipment-rules.js'
       - 'scripts/character-builder/starting-equipment-ui.js'
+      - 'scripts/character-builder/starting-equipment-review-ui.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/background-wealth-tier-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
       - 'scripts/character-builder/equipment-ownership.js'
       - 'scripts/character-builder/state.js'
       - 'tests/auditar-riqueza-criacao.mjs'
+      - 'tests/auditar-revisao-riqueza-criacao.mjs'
 
 permissions:
   contents: read
@@ -35,3 +43,5 @@ jobs:
           node-version: 22
       - name: Auditar fórmula, pacotes e regra normativa
         run: node tests/auditar-riqueza-criacao.mjs
+      - name: Auditar resumo econômico da Revisão
+        run: node tests/auditar-revisao-riqueza-criacao.mjs

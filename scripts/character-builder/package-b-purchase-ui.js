@@ -1,5 +1,6 @@
 import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260831-magic-rarity2';
 import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260828-wealth-background1';
+import{initStartingEquipmentReviewUi}from'./starting-equipment-review-ui.js?v=20260901-starting-equipment-review1';
 import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260824-origin-feat-sync1';
 import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260825-skilled-existing1';
 import{initBackgroundWealthTierUi}from'./background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';
@@ -46,10 +47,10 @@ function bindPurchaseCollapseGuard(){
 
 // A Etapa 6 mantém os pacotes iniciais de Classe e Antecedente em qualquer Level de criação.
 // Acima do Level 1, a Riqueza por Level é adicional e recebe somente o modificador econômico do Antecedente.
-// O mesmo inicializador sincroniza o Talento de Origem, a Faixa Econômica e mantém suas escolhas mecânicas interativas.
+// O mesmo inicializador sincroniza o Talento de Origem, a Faixa Econômica e o resumo final dos pacotes/PO na Revisão.
 // A proteção observa toda reconstrução do catálogo e reaplica continuamente o estado aberto/fechado escolhido pelo usuário.
 export function initPackageBPurchaseUi(){
- initOriginFeatSync();initSkilledFeatUi();initBackgroundWealthTierUi();initStartingEquipmentUi();
+ initOriginFeatSync();initSkilledFeatUi();initBackgroundWealthTierUi();initStartingEquipmentUi();initStartingEquipmentReviewUi();
  const result=initWealthPurchaseUi();
  Promise.resolve(result).then(()=>bindPurchaseCollapseGuard());
  return result
