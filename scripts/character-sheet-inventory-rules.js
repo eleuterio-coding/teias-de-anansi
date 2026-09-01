@@ -46,10 +46,10 @@ export function currentInventoryQuantity(baseRows,character,item){const key=inve
 
 export function applyInventoryTransaction(character,baseRows=[],input={}){
  if(!character)return{ok:false,reason:'Personagem indisponível.'};
- const movement=String(input.movement||''),qty=cleanQty(input.qty),item=inventoryRowSnapshot({...input.item,qty:1,source:'Campanha'}),unitCostCp=cleanCost(input.unitCostCp);
+ const movement=String(input.movement||''),rawName=cleanName(input.item?.name),qty=cleanQty(input.qty),unitCostCp=cleanCost(input.unitCostCp);
  if(!INVENTORY_MOVEMENTS[movement])return{ok:false,reason:'Movimentação inválida.'};
- if(!cleanName(item.name))return{ok:false,reason:'Informe o item.'};
- const beforeRows=applyCampaignInventoryRows(baseRows,character),key=inventoryRowKey(item),beforeQty=beforeRows.find(row=>row.key===key)?.qty||0;
+ if(!rawName)return{ok:false,reason:'Informe o item.'};
+ const item=inventoryRowSnapshot({...input.item,name:rawName,qty:1,source:'Campanha'}),beforeRows=applyCampaignInventoryRows(baseRows,character),key=inventoryRowKey(item),beforeQty=beforeRows.find(row=>row.key===key)?.qty||0;
  if(REMOVE.has(movement)&&beforeQty<qty)return{ok:false,reason:`Quantidade insuficiente: há ${beforeQty} no inventário.`};
  const totalCp=unitCostCp*qty,balanceDeltaCp=movement==='buy'?-totalCp:movement==='sell'?totalCp:0,balanceBeforeCp=coinBalanceCp(character);
  if(balanceBeforeCp+balanceDeltaCp<0)return{ok:false,reason:'Saldo insuficiente para esta compra.',balanceBeforeCp};
