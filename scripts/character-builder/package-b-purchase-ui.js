@@ -1,3 +1,4 @@
+import'../character-builder-level-guard.js?v=20260901-level-up1';
 import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260831-magic-rarity2';
 import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260828-wealth-background1';
 import{initStartingEquipmentReviewUi}from'./starting-equipment-review-ui.js?v=20260901-starting-equipment-review1';
