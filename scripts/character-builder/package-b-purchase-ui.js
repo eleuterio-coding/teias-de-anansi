@@ -56,6 +56,6 @@ export function initPackageBPurchaseUi(){
  const restoreCurrentBalance=initPostCreationEconomyGuard();
  const result=initWealthPurchaseUi();
  restoreCurrentBalance?.();
- Promise.resolve(result).then(()=>{restoreCurrentBalance?.();bindPurchaseCollapseGuard()});
+ Promise.resolve(result).then(()=>bindPurchaseCollapseGuard()).then(()=>restoreCurrentBalance?.());
  return result
 }
