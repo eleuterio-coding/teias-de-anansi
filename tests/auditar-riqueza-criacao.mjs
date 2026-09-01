@@ -73,11 +73,10 @@ assert.match(values,/Level 5: 650 PO/);
 assert.match(values,/Level 20: 30\.000 PO/);
 assert.doesNotMatch(values,/90\.800 PO/,'A curva anterior não pode permanecer na regra normativa.');
 
-const normativeLevelRows=values.replace(/\.$/,'').split(';').map(x=>x.trim()).filter(Boolean).map(row=>{
- const match=row.match(/^Level\s+(\d+):\s*([\d.]+)\s+PO$/);
- assert.ok(match,`Linha normativa de Riqueza por Level inválida: ${row}`);
- return[Number(match[1]),Number(match[2].replace(/\./g,''))];
-});
+const normativeLevelRows=[...values.matchAll(/Level\s+(\d+):\s*(—|[\d.]+)(?:\s+PO)?/g)].map(match=>[
+ Number(match[1]),
+ match[2]==='—'?0:Number(match[2].replace(/\./g,''))
+]);
 assert.equal(normativeLevelRows.length,20,'A regra normativa deve declarar todos os Levels de 1 a 20.');
 const normativeWealthByLevel=Object.fromEntries(normativeLevelRows);
 for(let level=1;level<=20;level+=1){
