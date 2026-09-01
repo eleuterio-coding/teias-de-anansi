@@ -43,10 +43,11 @@ function injectGameChrome(){
 function hydrateGameplay(){
  const gameplay=ensureGameplayState(state.c);if(!gameplay)return;for(const input of document.querySelectorAll('[data-gameplay-field]'))input.value=gameplay[input.dataset.gameplayField]??'';renderLive();renderSaveState('Salvo')
 }
+function isDraftControl(target){return!!target?.closest?.('[data-gameplay-ignore]')}
 function bindGameplay(){
  const sheet=$('sheet');if(!sheet)return;
- sheet.addEventListener('input',event=>{const target=event.target;if(!target?.matches?.('input,textarea,select')||target.matches('input[type="number"],input[type="checkbox"],input[type="radio"]'))return;const field=target.dataset?.gameplayField;if(field)setGameplayField(state.c,field,target.value);scheduleSave();queueMicrotask(renderLive)});
- sheet.addEventListener('change',event=>{const target=event.target;if(!target?.matches?.('input,textarea,select'))return;const field=target.dataset?.gameplayField;if(field)setGameplayField(state.c,field,target.value);scheduleSave();queueMicrotask(renderLive)});
+ sheet.addEventListener('input',event=>{const target=event.target;if(isDraftControl(target)||!target?.matches?.('input,textarea,select')||target.matches('input[type="number"],input[type="checkbox"],input[type="radio"]'))return;const field=target.dataset?.gameplayField;if(field)setGameplayField(state.c,field,target.value);scheduleSave();queueMicrotask(renderLive)});
+ sheet.addEventListener('change',event=>{const target=event.target;if(isDraftControl(target)||!target?.matches?.('input,textarea,select'))return;const field=target.dataset?.gameplayField;if(field)setGameplayField(state.c,field,target.value);scheduleSave();queueMicrotask(renderLive)});
  sheet.addEventListener('click',event=>{if(event.target?.closest?.('#save-sheet'))queueMicrotask(()=>persistNow('Ficha salva.'));if(event.target?.closest?.('[data-slot],[data-rest-action],button'))queueMicrotask(renderLive)});
  document.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&String(event.key).toLowerCase()==='s'){event.preventDefault();persistNow('Ficha salva.')}});
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushSave()});
