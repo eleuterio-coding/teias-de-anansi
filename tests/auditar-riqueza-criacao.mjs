@@ -67,12 +67,45 @@ assert.ok(physicalAtL5.some(x=>x.nome==='Fine Clothes'&&x._startingSource.includ
 const rules=JSON.parse(readFileSync(new URL('../dados/regras-casa-adicionais.json',import.meta.url),'utf8'));
 const wealthRule=rules.itens.find(x=>x.nome==='Riqueza por Level');
 assert.ok(wealthRule,'Biblioteca de Regras da Casa deve conter Riqueza por Level.');
+
 const values=wealthRule.secoes.find(x=>x.titulo==='Valores por Level')?.texto||'';
 assert.match(values,/Level 5: 650 PO/);
 assert.match(values,/Level 20: 30\.000 PO/);
 assert.doesNotMatch(values,/90\.800 PO/,'A curva anterior não pode permanecer na regra normativa.');
+
+const normativeLevelRows=[...values.matchAll(/Level\s+(\d+):\s*(—|[\d.]+)(?:\s+PO)?/g)].map(match=>[
+ Number(match[1]),
+ match[2]==='—'?0:Number(match[2].replace(/\./g,''))
+]);
+assert.equal(normativeLevelRows.length,20,'A regra normativa deve declarar todos os Levels de 1 a 20.');
+const normativeWealthByLevel=Object.fromEntries(normativeLevelRows);
+for(let level=1;level<=20;level+=1){
+ assert.equal(normativeWealthByLevel[level],WEALTH_BY_LEVEL[level],`Regra normativa e motor divergem no Level ${level}.`);
+ assert.equal(wealthBaseGp(level),WEALTH_BY_LEVEL[level],`wealthBaseGp diverge da curva do motor no Level ${level}.`);
+}
+
 const tiers=wealthRule.secoes.find(x=>x.titulo==='Faixas Econômicas')?.texto||'';
 assert.match(tiers,/Privilegiada ×1,15/);
 assert.match(tiers,/Precária ×0,90/);
+const tierRows=[...tiers.matchAll(/(Precária|Modesta|Regular|Estável|Próspera|Privilegiada)\s+×\s*(\d+,\d+)/g)].map(match=>[
+ match[1],
+ Number(match[2].replace(',','.'))
+]);
+assert.equal(tierRows.length,6,'A regra normativa deve declarar exatamente 6 Faixas Econômicas.');
+const tierMultiplierByLabel=Object.fromEntries(tierRows);
 
-console.log('OK — Riqueza por Level, faixas econômicas, pacotes iniciais e regra normativa auditados.');
+const classifications=wealthRule.secoes.find(x=>x.titulo==='Classificação Padrão dos Antecedentes')?.texto||'';
+const normativeBackgroundTiers=classifications.replace(/\.$/,'').split(';').map(x=>x.trim()).filter(Boolean).map(row=>{
+ const match=row.match(/^(.+?)\s+—\s+(.+)$/);
+ assert.ok(match,`Classificação normativa de Antecedente inválida: ${row}`);
+ return{name:match[1].trim(),tierLabel:match[2].trim()};
+});
+assert.equal(normativeBackgroundTiers.length,16,'A regra normativa deve declarar os 16 Antecedentes-padrão.');
+for(const{name,tierLabel}of normativeBackgroundTiers){
+ assert.ok(Object.hasOwn(tierMultiplierByLabel,tierLabel),`Antecedente ${name} usa Faixa Econômica não declarada: ${tierLabel}.`);
+ const profile=backgroundWealthProfile({name});
+ assert.equal(profile.label,tierLabel,`Regra normativa e motor divergem na Faixa Econômica de ${name}.`);
+ assert.equal(profile.multiplier,tierMultiplierByLabel[tierLabel],`Multiplicador de ${name} diverge da Faixa Econômica normativa ${tierLabel}.`);
+}
+
+console.log('OK — Riqueza por Level, faixas econômicas, 16 antecedentes, pacotes iniciais e regra normativa sincronizados.');
