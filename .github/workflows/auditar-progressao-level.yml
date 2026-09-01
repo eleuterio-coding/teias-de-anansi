@@ -1,0 +1,53 @@
+name: Auditar progressão de Level
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-sheet-level-up-rules.js'
+      - 'scripts/character-sheet-level-up-ui.js'
+      - 'scripts/character-sheet-level-up-input-guard.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-builder-level-guard.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-builder/rules-base.js'
+      - 'scripts/character-builder/feat-mechanics.js'
+      - 'scripts/character-builder/*-subclass-mechanics.js'
+      - 'tests/auditar-progressao-level.mjs'
+      - '.github/workflows/auditar-progressao-level.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-sheet-level-up-rules.js'
+      - 'scripts/character-sheet-level-up-ui.js'
+      - 'scripts/character-sheet-level-up-input-guard.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-builder-level-guard.js'
+      - 'scripts/character-builder/package-b-purchase-ui.js'
+      - 'scripts/character-builder/rules.js'
+      - 'scripts/character-builder/rules-base.js'
+      - 'scripts/character-builder/feat-mechanics.js'
+      - 'scripts/character-builder/*-subclass-mechanics.js'
+      - 'tests/auditar-progressao-level.mjs'
+      - '.github/workflows/auditar-progressao-level.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  progressao-level:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar JavaScript da progressão
+        run: |
+          node --check scripts/character-sheet-level-up-rules.js
+          node --check scripts/character-sheet-level-up-ui.js
+          node --check scripts/character-sheet-level-up-input-guard.js
+          node --check scripts/character-sheet-gameplay-ui.js
+          node --check scripts/character-builder-level-guard.js
+      - name: Auditar progressão pós-criação
+        run: node tests/auditar-progressao-level.mjs
