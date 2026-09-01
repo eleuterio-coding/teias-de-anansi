@@ -57,4 +57,6 @@ if(typeof document!=='undefined'){
  for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed'])document.addEventListener(type,()=>queueMicrotask(render));
  queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()});
  import('./character-sheet-combat-ui.js?v=20260901-combat1');
+ import('./character-sheet-spellcasting-ui.js?v=20260901-rest1');
+ import('./character-sheet-rest-ui.js?v=20260901-rest1');
 }

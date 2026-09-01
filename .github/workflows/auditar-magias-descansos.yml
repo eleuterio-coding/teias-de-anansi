@@ -1,0 +1,60 @@
+name: Auditar magias e descansos
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/character-sheet-resource-rules.js'
+      - 'scripts/character-sheet-rest-rules.js'
+      - 'scripts/character-sheet-rest-ui.js'
+      - 'scripts/character-sheet-spellcasting-rules.js'
+      - 'scripts/character-sheet-spellcasting-ui.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - 'scripts/character-sheet-spell-runtime.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'tests/auditar-magias-descansos.mjs'
+      - '.github/workflows/auditar-magias-descansos.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/character-sheet-resource-rules.js'
+      - 'scripts/character-sheet-rest-rules.js'
+      - 'scripts/character-sheet-rest-ui.js'
+      - 'scripts/character-sheet-spellcasting-rules.js'
+      - 'scripts/character-sheet-spellcasting-ui.js'
+      - 'scripts/character-sheet-spell-preparation.js'
+      - 'scripts/character-sheet-spell-runtime.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'tests/auditar-magias-descansos.mjs'
+      - '.github/workflows/auditar-magias-descansos.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  magias-descansos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          node --check scripts/character-builder/spells.js
+          node --check scripts/character-sheet-resource-rules.js
+          node --check scripts/character-sheet-rest-rules.js
+          node --check scripts/character-sheet-rest-ui.js
+          node --check scripts/character-sheet-spellcasting-rules.js
+          node --check scripts/character-sheet-spellcasting-ui.js
+          node --check tests/auditar-magias-descansos.mjs
+      - name: Auditar magias e descansos
+        run: node tests/auditar-magias-descansos.mjs
+      - name: Proibir Supabase no bloco
+        run: |
+          if grep -RniE 'supabase' scripts/character-builder/spells.js scripts/character-sheet-resource-rules.js scripts/character-sheet-rest-rules.js scripts/character-sheet-rest-ui.js scripts/character-sheet-spellcasting-rules.js scripts/character-sheet-spellcasting-ui.js; then
+            echo 'Supabase é proibido no Hub de RPG.' >&2
+            exit 1
+          fi
