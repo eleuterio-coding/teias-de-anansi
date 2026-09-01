@@ -69,9 +69,11 @@ assert.equal(inventoryTransactionHistory(roundTrip).length,5);
 assert.deepEqual(applyCampaignInventoryRows(changedBase,roundTrip).map(row=>[row.name,row.qty]),applyCampaignInventoryRows(changedBase,character).map(row=>[row.name,row.qty]),'Inventário atual deve sobreviver ao save/reopen em JSON.');
 
 const ui=fs.readFileSync(new URL('../scripts/character-sheet-inventory-ui.js',import.meta.url),'utf8');
+const inventoryRules=fs.readFileSync(new URL('../scripts/character-sheet-inventory-rules.js',import.meta.url),'utf8');
 const ownership=fs.readFileSync(new URL('../scripts/character-builder/equipment-ownership.js',import.meta.url),'utf8');
 const gameplay=fs.readFileSync(new URL('../scripts/character-sheet-gameplay-ui.js',import.meta.url),'utf8');
-for(const token of['Inventário e economia de campanha','Registrar movimentação','Comprar','Vender','Receber','Perder','Saldo atual','Movimentar moedas','Receber moedas','Gastar moedas','Equipar','Desequipar','gameplayIgnore'])assert.ok(ui.includes(token),`UI de inventário sem ${token}`);
+for(const token of['Inventário e economia de campanha','Registrar movimentação','Saldo atual','Movimentar moedas','Equipar','Desequipar','gameplayIgnore'])assert.ok(ui.includes(token),`UI de inventário sem ${token}`);
+for(const token of["buy:'Comprar'","sell:'Vender'","gain:'Receber'","lose:'Perder'","income:'Receber moedas'","expense:'Gastar moedas'"])assert.ok(inventoryRules.includes(token),`Fonte normativa de movimentações sem ${token}`);
 for(const forbidden of['WEALTH_BY_LEVEL','creationBudgetCp(','creationBudgetBreakdown('])assert.equal(ui.includes(forbidden),false,`Inventário pós-criação não pode chamar ${forbidden}`);
 assert.ok(ownership.includes('includeCampaign=true'),'Inventário mecânico deve aceitar a camada de campanha.');
 assert.ok(ownership.includes('applyCampaignInventoryRows'),'Inventário mecânico deve aplicar as movimentações pós-criação.');
