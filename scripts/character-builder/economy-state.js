@@ -1,5 +1,5 @@
-const COINS=['cp','sp','ep','gp','pp'];
-const FACTORS={cp:1,sp:10,ep:50,gp:100,pp:1000};
+export const COINS=['cp','sp','ep','gp','pp'];
+export const COIN_FACTORS={cp:1,sp:10,ep:50,gp:100,pp:1000};
 const INVENTORY_DEFAULTS={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:''};
 
 export function ensureEconomyInventory(character){
@@ -15,7 +15,7 @@ export function ensureEconomyInventory(character){
 
 export function coinBalanceCp(character){
  const inv=ensureEconomyInventory(character);if(!inv)return 0;
- return COINS.reduce((total,coin)=>total+Math.max(0,Number(inv[coin])||0)*FACTORS[coin],0)
+ return COINS.reduce((total,coin)=>total+Math.max(0,Number(inv[coin])||0)*COIN_FACTORS[coin],0)
 }
 
 export function economyMode(character){
@@ -47,6 +47,20 @@ export function restoreCoinSnapshot(character,snapshot){
  const inv=ensureEconomyInventory(character);if(!inv||!snapshot)return inv;
  for(const coin of COINS)inv[coin]=Math.max(0,Number(snapshot[coin])||0);
  return inv
+}
+
+export function setCoinBalanceCp(character,totalCp){
+ const inv=ensureEconomyInventory(character);if(!inv)return null;
+ let rest=Math.max(0,Math.round(Number(totalCp)||0)),current=currentCoinSnapshot(character),next=Object.fromEntries(COINS.map(coin=>[coin,0]));
+ for(const coin of['pp','gp','ep','sp','cp']){const factor=COIN_FACTORS[coin],keep=Math.min(current[coin],Math.floor(rest/factor));next[coin]=keep;rest-=keep*factor}
+ for(const coin of['pp','gp','sp','cp']){const factor=COIN_FACTORS[coin],add=Math.floor(rest/factor);next[coin]+=add;rest-=add*factor}
+ restoreCoinSnapshot(character,next);return next
+}
+
+export function adjustCoinBalanceCp(character,deltaCp){
+ const before=coinBalanceCp(character),delta=Math.round(Number(deltaCp)||0),after=before+delta;
+ if(after<0)return{ok:false,beforeCp:before,afterCp:before,deltaCp:delta,reason:'Saldo insuficiente.'};
+ markCurrentEconomy(character);setCoinBalanceCp(character,after);return{ok:true,beforeCp:before,afterCp:after,deltaCp:delta}
 }
 
 export function recordCreationBalanceAndRestoreCurrent(character,currentSnapshot){

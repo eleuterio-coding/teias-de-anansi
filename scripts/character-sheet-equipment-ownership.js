@@ -1,9 +1,9 @@
 import{state,$,esc,signed,num}from'./character-builder/state.js';
 import{derive}from'./character-builder/rules.js';
-import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260826-equipment-ownership1';
+import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260901-campaign-inventory1';
 import{selectedBackgroundPackage,selectedClassPackage,creationBudgetBreakdown,itemsCurrencyCp,physicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260828-wealth-background1';
 import{isStandardWealthBackground}from'./character-builder/background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';
-import{coinBalanceCp,creationBalanceCp,economyMode,ensureEconomyMetadata,formatBalanceGp,markCurrentEconomy}from'./character-builder/economy-state.js?v=20260901-current-balance1';
+import{coinBalanceCp,creationBalanceCp,economyMode,ensureEconomyMetadata,formatBalanceGp,markCurrentEconomy}from'./character-builder/economy-state.js?v=20260901-campaign-inventory1';
 
 let rendering=false;
 const sourceBadge=v=>v?`<span class="source">${esc(v)}</span>`:'';
@@ -54,6 +54,6 @@ function renderInventory(){
 function render(){if(rendering||!state.c)return;rendering=true;try{renderCombat();renderInventory()}finally{rendering=false}}
 if(typeof document!=='undefined'){
  document.addEventListener('change',event=>{if(!/^coin-(cp|sp|ep|gp|pp)$/.test(event.target?.id||'')||!state.c)return;markCurrentEconomy(state.c);queueMicrotask(render)});
- for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready'])document.addEventListener(type,()=>queueMicrotask(render));
+ for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed'])document.addEventListener(type,()=>queueMicrotask(render));
  queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()})
 }

@@ -1,6 +1,7 @@
 import{state,arr,num,fold,mod,signed}from'./state.js';
 import{creationPhysicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
 import{featMechanicalOutcome}from'./feat-mechanics.js';
+import{applyCampaignInventoryRows}from'../character-sheet-inventory-rules.js?v=20260901-campaign-inventory1';
 
 const currentClass=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)||null;
 const currentSpecies=()=>state.catalogs.species.find(x=>x.id===state.c?.refs?.species)||null;
@@ -74,7 +75,8 @@ function aggregate(rows){
  }
  return[...map.values()]
 }
-export function ownedEquipment({includeLegacyActive=true}={}){
+function enrichCampaignRows(rows){return rows.map(row=>{if(row.data||!row.refId)return row;if(row.kind==='weapon'){const data=state.catalogs.weapons.find(w=>w.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}if(['armor','shield'].includes(row.kind)){const data=state.catalogs.armors.find(a=>a.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}return row})}
+export function ownedEquipment({includeLegacyActive=true,includeCampaign=true}={}){
  const rows=[],klass=currentClass(),bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),bgChoice=state.c?.choices?.background?.equipment||'A',classChoice=state.c?.choices?.class?.equipment||'A';
  for(const row of creationPhysicalItems(bg,bgChoice,level,klass,classChoice).filter(Boolean))rows.push(classifyNamedItem(row,row._startingSource||'Pacote inicial'));
  const purchases=state.c?.choices?.purchases||{},snapshots=purchases.items||{};
@@ -87,6 +89,7 @@ export function ownedEquipment({includeLegacyActive=true}={}){
   if(state.c?.choices?.equipment?.shield){const shield=state.catalogs.armors.find(a=>fold(a.categoria)==='escudo');if(shield&&!has('shield',shield.id))all.push({kind:'shield',refId:shield.id,name:shield.nome,qty:1,source:'Equipamento ativo legado',data:shield})}
   all=aggregate(all)
  }
+ if(includeCampaign)all=enrichCampaignRows(applyCampaignInventoryRows(all,state.c));
  return{all,weapons:all.filter(x=>x.kind==='weapon'),armors:all.filter(x=>x.kind==='armor'),shields:all.filter(x=>x.kind==='shield'),belongings:all.filter(x=>!['weapon','armor','shield'].includes(x.kind))}
 }
 export function ownedItemCount(rows){return arr(rows).reduce((sum,row)=>sum+Math.max(0,Math.floor(num(row.qty))),0)}
