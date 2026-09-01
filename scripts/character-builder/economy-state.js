@@ -1,11 +1,16 @@
 const COINS=['cp','sp','ep','gp','pp'];
 const FACTORS={cp:1,sp:10,ep:50,gp:100,pp:1000};
+const INVENTORY_DEFAULTS={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:''};
 
 export function ensureEconomyInventory(character){
  if(!character)return null;
  character.sheet=character.sheet||{};
- character.sheet.inventory={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:'',...(character.sheet.inventory||{})};
- return character.sheet.inventory
+ let inv=character.sheet.inventory;
+ if(!inv||typeof inv!=='object'||Array.isArray(inv)){
+  inv={...INVENTORY_DEFAULTS};character.sheet.inventory=inv;return inv
+ }
+ for(const[key,value]of Object.entries(INVENTORY_DEFAULTS))if(inv[key]===undefined)inv[key]=value;
+ return inv
 }
 
 export function coinBalanceCp(character){
