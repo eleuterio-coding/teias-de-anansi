@@ -10,12 +10,15 @@ on:
       - 'scripts/character-builder/package-b-purchase-ui.js'
       - 'scripts/character-builder/background-wealth-tier-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/economy-state.js'
+      - 'scripts/character-builder/post-creation-economy-guard.js'
       - 'scripts/character-builder/equipment-ownership.js'
       - 'scripts/character-builder/state.js'
       - 'scripts/character-sheet-equipment-ownership.js'
       - 'tests/auditar-riqueza-criacao.mjs'
       - 'tests/auditar-revisao-riqueza-criacao.mjs'
       - 'tests/auditar-economia-ficha.mjs'
+      - 'tests/auditar-saldo-pos-criacao.mjs'
       - '.github/workflows/auditar-riqueza-criacao.yml'
   push:
     branches: [main]
@@ -27,12 +30,15 @@ on:
       - 'scripts/character-builder/package-b-purchase-ui.js'
       - 'scripts/character-builder/background-wealth-tier-ui.js'
       - 'scripts/character-builder/wealth-purchase-ui.js'
+      - 'scripts/character-builder/economy-state.js'
+      - 'scripts/character-builder/post-creation-economy-guard.js'
       - 'scripts/character-builder/equipment-ownership.js'
       - 'scripts/character-builder/state.js'
       - 'scripts/character-sheet-equipment-ownership.js'
       - 'tests/auditar-riqueza-criacao.mjs'
       - 'tests/auditar-revisao-riqueza-criacao.mjs'
       - 'tests/auditar-economia-ficha.mjs'
+      - 'tests/auditar-saldo-pos-criacao.mjs'
 
 permissions:
   contents: read
@@ -51,3 +57,5 @@ jobs:
         run: node tests/auditar-revisao-riqueza-criacao.mjs
       - name: Auditar persistência econômica na ficha
         run: node tests/auditar-economia-ficha.mjs
+      - name: Auditar saldo atual pós-criação
+        run: node tests/auditar-saldo-pos-criacao.mjs
