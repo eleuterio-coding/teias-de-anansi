@@ -55,5 +55,6 @@ function render(){if(rendering||!state.c)return;rendering=true;try{renderCombat(
 if(typeof document!=='undefined'){
  document.addEventListener('change',event=>{if(!/^coin-(cp|sp|ep|gp|pp)$/.test(event.target?.id||'')||!state.c)return;markCurrentEconomy(state.c);queueMicrotask(render)});
  for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed'])document.addEventListener(type,()=>queueMicrotask(render));
- queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()})
+ queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()});
+ import('./character-sheet-combat-ui.js?v=20260901-combat1');
 }
