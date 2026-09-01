@@ -44,6 +44,7 @@ assert.equal(cap.validTarget,false,'Level 20 não pode progredir além do limite
 
 const ui=fs.readFileSync(new URL('../scripts/character-sheet-level-up-ui.js',import.meta.url),'utf8');
 const rules=fs.readFileSync(new URL('../scripts/character-sheet-level-up-rules.js',import.meta.url),'utf8');
+const inputGuard=fs.readFileSync(new URL('../scripts/character-sheet-level-up-input-guard.js',import.meta.url),'utf8');
 const gameplay=fs.readFileSync(new URL('../scripts/character-sheet-gameplay-ui.js',import.meta.url),'utf8');
 const builderGuard=fs.readFileSync(new URL('../scripts/character-builder-level-guard.js',import.meta.url),'utf8');
 const builderBridge=fs.readFileSync(new URL('../scripts/character-builder/package-b-purchase-ui.js',import.meta.url),'utf8');
@@ -51,7 +52,10 @@ for(const token of['Progressão de Level','Subir de Level','Concluir Level','dat
 for(const forbidden of['creationBudgetCp(','creationBudgetBreakdown(','WEALTH_BY_LEVEL'])assert.equal(ui.includes(forbidden),false,`Level-up não pode chamar ${forbidden}`);
 for(const token of['wealthGrantedCp:0','reapplyStartingPackages:false','reapplyCreationBudget:false'])assert.ok(rules.includes(token),`Política econômica ausente: ${token}`);
 assert.ok(gameplay.includes("import'./character-sheet-level-up-ui.js"),'Modo de Jogo deve carregar a progressão.');
+assert.ok(gameplay.includes("import'./character-sheet-level-up-input-guard.js"),'Modo de Jogo deve proteger a digitação do rascunho.');
 assert.ok(gameplay.includes("closest?.('[data-gameplay-ignore]')"),'Autosave deve ignorar o rascunho de progressão.');
+assert.ok(inputGuard.includes("document.addEventListener('input',guardDraftTyping,true)"),'Campos textuais do Level-up devem usar guarda de captura.');
+assert.ok(inputGuard.includes('event.stopPropagation()'),'Digitação não deve reconstruir o editor a cada tecla.');
 assert.ok(builderGuard.includes('readOnly=true'),'Construtor deve proteger Level após a primeira progressão.');
 assert.ok(builderGuard.includes('Progressão de Level'),'Construtor deve orientar a usar a ficha.');
 assert.ok(builderBridge.includes("import'../character-builder-level-guard.js"),'Proteção deve ser carregada no construtor.');
