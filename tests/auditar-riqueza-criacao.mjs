@@ -87,12 +87,12 @@ for(let level=1;level<=20;level+=1){
 const tiers=wealthRule.secoes.find(x=>x.titulo==='Faixas Econômicas')?.texto||'';
 assert.match(tiers,/Privilegiada ×1,15/);
 assert.match(tiers,/Precária ×0,90/);
-const tierMultiplierByLabel=Object.fromEntries(tiers.replace(/\.$/,'').split(';').map(x=>x.trim()).filter(Boolean).map(row=>{
- const match=row.match(/^(.+?)\s+×\s*(\d+,\d+)$/);
- assert.ok(match,`Faixa Econômica normativa inválida: ${row}`);
- return[match[1],Number(match[2].replace(',','.'))];
-}));
-assert.equal(Object.keys(tierMultiplierByLabel).length,6,'A regra normativa deve declarar exatamente 6 Faixas Econômicas.');
+const tierRows=[...tiers.matchAll(/(Precária|Modesta|Regular|Estável|Próspera|Privilegiada)\s+×\s*(\d+,\d+)/g)].map(match=>[
+ match[1],
+ Number(match[2].replace(',','.'))
+]);
+assert.equal(tierRows.length,6,'A regra normativa deve declarar exatamente 6 Faixas Econômicas.');
+const tierMultiplierByLabel=Object.fromEntries(tierRows);
 
 const classifications=wealthRule.secoes.find(x=>x.titulo==='Classificação Padrão dos Antecedentes')?.texto||'';
 const normativeBackgroundTiers=classifications.replace(/\.$/,'').split(';').map(x=>x.trim()).filter(Boolean).map(row=>{
