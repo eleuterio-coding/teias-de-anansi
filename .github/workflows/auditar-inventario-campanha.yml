@@ -1,0 +1,44 @@
+name: Auditar inventário e economia de campanha
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-sheet-inventory-rules.js'
+      - 'scripts/character-sheet-inventory-ui.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/economy-state.js'
+      - 'tests/auditar-inventario-campanha.mjs'
+      - '.github/workflows/auditar-inventario-campanha.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-sheet-inventory-rules.js'
+      - 'scripts/character-sheet-inventory-ui.js'
+      - 'scripts/character-sheet-gameplay-ui.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/economy-state.js'
+      - 'tests/auditar-inventario-campanha.mjs'
+      - '.github/workflows/auditar-inventario-campanha.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inventario-campanha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar JavaScript do inventário
+        run: |
+          node --check scripts/character-sheet-inventory-rules.js
+          node --check scripts/character-sheet-inventory-ui.js
+          node --check scripts/character-builder/equipment-ownership.js
+          node --check scripts/character-builder/economy-state.js
+      - name: Auditar inventário e economia pós-criação
+        run: node tests/auditar-inventario-campanha.mjs
