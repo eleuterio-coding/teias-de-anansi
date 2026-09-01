@@ -1,12 +1,13 @@
 import{arr,num,fold}from'./character-builder/state.js';
 import{adjustCoinBalanceCp,coinBalanceCp}from'./character-builder/economy-state.js?v=20260901-campaign-inventory1';
 
-export const INVENTORY_MOVEMENTS={buy:'Comprar',sell:'Vender',gain:'Receber',lose:'Perder'};
+export const INVENTORY_MOVEMENTS={buy:'Comprar',sell:'Vender',gain:'Receber',lose:'Perder',income:'Receber moedas',expense:'Gastar moedas'};
 const ACQUIRE=new Set(['buy','gain']);
 const REMOVE=new Set(['sell','lose']);
 const cleanQty=value=>Math.max(1,Math.floor(num(value)||1));
 const cleanCost=value=>Math.max(0,Math.round(num(value)||0));
 const cleanName=value=>String(value||'').trim();
+const txId=()=>`inv-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
 
 export function inventoryRowKey(row){
  const kind=String(row?.kind||'belonging'),refId=String(row?.refId||'').trim();
@@ -47,7 +48,7 @@ export function currentInventoryQuantity(baseRows,character,item){const key=inve
 export function applyInventoryTransaction(character,baseRows=[],input={}){
  if(!character)return{ok:false,reason:'Personagem indisponível.'};
  const movement=String(input.movement||''),rawName=cleanName(input.item?.name),qty=cleanQty(input.qty),unitCostCp=cleanCost(input.unitCostCp);
- if(!INVENTORY_MOVEMENTS[movement])return{ok:false,reason:'Movimentação inválida.'};
+ if(!['buy','sell','gain','lose'].includes(movement))return{ok:false,reason:'Movimentação de item inválida.'};
  if(!rawName)return{ok:false,reason:'Informe o item.'};
  const item=inventoryRowSnapshot({...input.item,name:rawName,qty:1,source:'Campanha'}),beforeRows=applyCampaignInventoryRows(baseRows,character),key=inventoryRowKey(item),beforeQty=beforeRows.find(row=>row.key===key)?.qty||0;
  if(REMOVE.has(movement)&&beforeQty<qty)return{ok:false,reason:`Quantidade insuficiente: há ${beforeQty} no inventário.`};
@@ -56,8 +57,16 @@ export function applyInventoryTransaction(character,baseRows=[],input={}){
  freezeCampaignInventoryBase(character,baseRows);const campaign=ensureCampaignInventory(character),delta=ACQUIRE.has(movement)?qty:-qty;
  campaign.items[key]={...item,qty:1};campaign.adjustments[key]=Math.trunc(num(campaign.adjustments[key]))+delta;if(!campaign.adjustments[key])delete campaign.adjustments[key];
  const balance=balanceDeltaCp?adjustCoinBalanceCp(character,balanceDeltaCp):{ok:true,beforeCp:balanceBeforeCp,afterCp:balanceBeforeCp,deltaCp:0};
- const tx={id:`inv-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,at:new Date().toISOString(),movement,item:{...item,qty:1},key,qty,deltaQty:delta,unitCostCp,totalCp,balanceDeltaCp,balanceBeforeCp,balanceAfterCp:balance.afterCp,note:cleanName(input.note)};
+ const tx={id:txId(),at:new Date().toISOString(),movement,item:{...item,qty:1},key,qty,deltaQty:delta,unitCostCp,totalCp,balanceDeltaCp,balanceBeforeCp,balanceAfterCp:balance.afterCp,note:cleanName(input.note)};
  campaign.transactions=[...campaign.transactions,tx];const rows=applyCampaignInventoryRows(baseRows,character);return{ok:true,transaction:tx,rows,balanceBeforeCp,balanceAfterCp:balance.afterCp}
+}
+
+export function applyCurrencyTransaction(character,input={}){
+ if(!character)return{ok:false,reason:'Personagem indisponível.'};const movement=String(input.movement||''),amountCp=cleanCost(input.amountCp),note=cleanName(input.note);
+ if(!['income','expense'].includes(movement))return{ok:false,reason:'Movimentação de moedas inválida.'};
+ if(amountCp<=0)return{ok:false,reason:'Informe um valor maior que zero.'};
+ const balanceBeforeCp=coinBalanceCp(character),balanceDeltaCp=movement==='income'?amountCp:-amountCp;if(balanceBeforeCp+balanceDeltaCp<0)return{ok:false,reason:'Saldo insuficiente para esta despesa.',balanceBeforeCp};
+ const balance=adjustCoinBalanceCp(character,balanceDeltaCp),campaign=ensureCampaignInventory(character),tx={id:txId(),at:new Date().toISOString(),movement,item:null,key:null,qty:0,deltaQty:0,unitCostCp:0,totalCp:amountCp,balanceDeltaCp,balanceBeforeCp,balanceAfterCp:balance.afterCp,note};campaign.transactions=[...campaign.transactions,tx];return{ok:true,transaction:tx,balanceBeforeCp,balanceAfterCp:balance.afterCp}
 }
 
 export function clearUnavailableActiveEquipment(character,rows=[]){
