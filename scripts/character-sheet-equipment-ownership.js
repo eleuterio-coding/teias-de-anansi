@@ -3,6 +3,7 @@ import{derive}from'./character-builder/rules.js';
 import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260826-equipment-ownership1';
 import{selectedBackgroundPackage,selectedClassPackage,creationBudgetBreakdown,itemsCurrencyCp,physicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260828-wealth-background1';
 import{isStandardWealthBackground}from'./character-builder/background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';
+import{coinBalanceCp,creationBalanceCp,economyMode,ensureEconomyMetadata,formatBalanceGp,markCurrentEconomy}from'./character-builder/economy-state.js?v=20260901-current-balance1';
 
 let rendering=false;
 const sourceBadge=v=>v?`<span class="source">${esc(v)}</span>`:'';
@@ -26,12 +27,15 @@ export function sheetCreationEconomySnapshot(character=state.c,klass=null,bg=nul
  return{level,classChoice,backgroundChoice,classPackage,backgroundPackage,breakdown}
 }
 function economyMarkup(d){
- const snap=sheetCreationEconomySnapshot(state.c,d.klass,d.bg);if(!snap)return'';const b=snap.breakdown,rows=[];
+ ensureEconomyMetadata(state.c);const snap=sheetCreationEconomySnapshot(state.c,d.klass,d.bg);if(!snap)return'';const b=snap.breakdown,rows=[],mode=economyMode(state.c),initialAfterPurchases=creationBalanceCp(state.c),current=coinBalanceCp(state.c);
  rows.push(`<div class="row"><span>Pacote da Classe · Opção ${esc(snap.classChoice)}</span><strong>${esc(packageSummary(snap.classPackage))}</strong></div>`);
  rows.push(`<div class="row"><span>Pacote do Antecedente · Opção ${esc(snap.backgroundChoice)}</span><strong>${esc(packageSummary(snap.backgroundPackage))}</strong></div>`);
  rows.push(`<div class="row"><span>Faixa Econômica</span><strong>${esc(b.wealthTierLabel)} ×${b.wealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</strong></div>`);
  if(snap.level>=2)rows.push(`<div class="row"><span>Riqueza por Level · Level ${snap.level}</span><strong>${b.baseWealthGp.toLocaleString('pt-BR')} PO → ${b.adjustedWealthGp.toLocaleString('pt-BR')} PO</strong></div>`);else rows.push('<div class="row"><span>Riqueza por Level</span><strong>— no Level 1</strong></div>');
- rows.push(`<div class="row"><span>Total inicial para compras/saldo</span><strong>${esc(fmtGp(b.totalCp))}</strong></div>`);
+ rows.push(`<div class="row"><span>Total inicial antes das compras</span><strong>${esc(fmtGp(b.totalCp))}</strong></div>`);
+ rows.push(`<div class="row"><span>Saldo inicial após compras</span><strong>${esc(formatBalanceGp(initialAfterPurchases))}</strong></div>`);
+ rows.push(`<div class="row"><span>Saldo atual${mode==='current'?' · pós-criação':''}</span><strong>${esc(formatBalanceGp(current))}</strong></div>`);
+ if(mode==='current')rows.push('<p class="mini">O saldo atual foi alterado na ficha e não será recalculado ao reabrir o construtor. As escolhas de criação continuam preservadas como histórico.</p>');
  return`<div class="section-source">Origem econômica da criação</div>${rows.join('')}`
 }
 function renderCombat(){
@@ -49,6 +53,7 @@ function renderInventory(){
 }
 function render(){if(rendering||!state.c)return;rendering=true;try{renderCombat();renderInventory()}finally{rendering=false}}
 if(typeof document!=='undefined'){
+ document.addEventListener('change',event=>{if(!/^coin-(cp|sp|ep|gp|pp)$/.test(event.target?.id||'')||!state.c)return;markCurrentEconomy(state.c);queueMicrotask(render)});
  for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready'])document.addEventListener(type,()=>queueMicrotask(render));
  queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()})
 }
