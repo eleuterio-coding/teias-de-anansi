@@ -4,6 +4,7 @@ import{initStartingEquipmentReviewUi}from'./starting-equipment-review-ui.js?v=20
 import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260824-origin-feat-sync1';
 import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260825-skilled-existing1';
 import{initBackgroundWealthTierUi}from'./background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';
+import{initPostCreationEconomyGuard}from'./post-creation-economy-guard.js?v=20260901-current-balance1';
 
 let purchaseCollapseGuardBound=false;
 let rememberedOpenAreas=null;
@@ -48,10 +49,13 @@ function bindPurchaseCollapseGuard(){
 // A Etapa 6 mantém os pacotes iniciais de Classe e Antecedente em qualquer Level de criação.
 // Acima do Level 1, a Riqueza por Level é adicional e recebe somente o modificador econômico do Antecedente.
 // O mesmo inicializador sincroniza o Talento de Origem, a Faixa Econômica e o resumo final dos pacotes/PO na Revisão.
+// Depois que a ficha altera as moedas, o saldo atual fica separado do histórico econômico da criação.
 // A proteção observa toda reconstrução do catálogo e reaplica continuamente o estado aberto/fechado escolhido pelo usuário.
 export function initPackageBPurchaseUi(){
  initOriginFeatSync();initSkilledFeatUi();initBackgroundWealthTierUi();initStartingEquipmentUi();initStartingEquipmentReviewUi();
+ const restoreCurrentBalance=initPostCreationEconomyGuard();
  const result=initWealthPurchaseUi();
- Promise.resolve(result).then(()=>bindPurchaseCollapseGuard());
+ restoreCurrentBalance?.();
+ Promise.resolve(result).then(()=>{restoreCurrentBalance?.();bindPurchaseCollapseGuard()});
  return result
 }
