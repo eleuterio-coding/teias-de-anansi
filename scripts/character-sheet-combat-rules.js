@@ -14,7 +14,7 @@ const MASTERY_DESCRIPTIONS=Object.freeze({
 const AMMO_SYNONYMS=Object.freeze({
  arrow:['arrow','arrows','flecha','flechas'],bolt:['bolt','bolts','virote','virotes'],needle:['needle','needles','agulha','agulhas'],bullet:['bullet','bullets','bala','balas','projétil','projéteis','projetil','projeteis']
 });
-const clampLevel=value=>Math.max(1,Math.min(20,Math.floor(num(value)||1));
+const clampLevel=value=>Math.max(1,Math.min(20,Math.floor(num(value)||1)));
 const cleanId=value=>String(value||'').trim();
 const propertyRows=weapon=>arr(weapon?.propriedades).map(value=>String(value||'').trim()).filter(Boolean);
 function splitDamage(value){const text=String(value||'').trim(),match=text.match(/^(\S+)(?:\s+(.+))?$/);return{dice:match?.[1]||text||'—',type:match?.[2]||''}}
