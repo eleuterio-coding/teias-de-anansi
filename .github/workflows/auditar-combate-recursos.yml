@@ -48,9 +48,9 @@ jobs:
           node --check tests/auditar-combate-recursos.mjs
       - name: Auditar mecânicas de combate e recursos
         run: node tests/auditar-combate-recursos.mjs
-      - name: Proibir Supabase no bloco
+      - name: Proibir Supabase no código do bloco
         run: |
-          if grep -RniE 'supabase' scripts/character-sheet-combat-rules.js scripts/character-sheet-combat-ui.js scripts/character-sheet-resource-rules.js tests/auditar-combate-recursos.mjs; then
+          if grep -RniE 'supabase' scripts/character-sheet-combat-rules.js scripts/character-sheet-combat-ui.js scripts/character-sheet-resource-rules.js; then
             echo 'Supabase é proibido no Hub de RPG.' >&2
             exit 1
           fi
