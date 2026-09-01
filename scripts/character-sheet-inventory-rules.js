@@ -1,9 +1,9 @@
 import{arr,num,fold}from'./character-builder/state.js';
 import{adjustCoinBalanceCp,coinBalanceCp}from'./character-builder/economy-state.js?v=20260901-campaign-inventory1';
 
-export const INVENTORY_MOVEMENTS={buy:'Comprar',sell:'Vender',gain:'Receber',lose:'Perder',income:'Receber moedas',expense:'Gastar moedas'};
+export const INVENTORY_MOVEMENTS={buy:'Comprar',sell:'Vender',gain:'Receber',lose:'Perder',consume:'Consumir',income:'Receber moedas',expense:'Gastar moedas'};
 const ACQUIRE=new Set(['buy','gain']);
-const REMOVE=new Set(['sell','lose']);
+const REMOVE=new Set(['sell','lose','consume']);
 const cleanQty=value=>Math.max(1,Math.floor(num(value)||1));
 const cleanCost=value=>Math.max(0,Math.round(num(value)||0));
 const cleanName=value=>String(value||'').trim();
@@ -48,7 +48,7 @@ export function currentInventoryQuantity(baseRows,character,item){const key=inve
 export function applyInventoryTransaction(character,baseRows=[],input={}){
  if(!character)return{ok:false,reason:'Personagem indisponível.'};
  const movement=String(input.movement||''),rawName=cleanName(input.item?.name),qty=cleanQty(input.qty),unitCostCp=cleanCost(input.unitCostCp);
- if(!['buy','sell','gain','lose'].includes(movement))return{ok:false,reason:'Movimentação de item inválida.'};
+ if(!['buy','sell','gain','lose','consume'].includes(movement))return{ok:false,reason:'Movimentação de item inválida.'};
  if(!rawName)return{ok:false,reason:'Informe o item.'};
  const item=inventoryRowSnapshot({...input.item,name:rawName,qty:1,source:'Campanha'}),beforeRows=applyCampaignInventoryRows(baseRows,character),key=inventoryRowKey(item),beforeQty=beforeRows.find(row=>row.key===key)?.qty||0;
  if(REMOVE.has(movement)&&beforeQty<qty)return{ok:false,reason:`Quantidade insuficiente: há ${beforeQty} no inventário.`};

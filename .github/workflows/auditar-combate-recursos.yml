@@ -1,0 +1,56 @@
+name: Auditar combate e recursos mecânicos
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/character-sheet-combat-rules.js'
+      - 'scripts/character-sheet-combat-ui.js'
+      - 'scripts/character-sheet-resource-rules.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'scripts/character-sheet-inventory-rules.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/feat-mechanics.js'
+      - 'dados/armas-srd.json'
+      - 'tests/auditar-combate-recursos.mjs'
+      - '.github/workflows/auditar-combate-recursos.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-sheet-combat-rules.js'
+      - 'scripts/character-sheet-combat-ui.js'
+      - 'scripts/character-sheet-resource-rules.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'scripts/character-sheet-inventory-rules.js'
+      - 'scripts/character-builder/equipment-ownership.js'
+      - 'scripts/character-builder/feat-mechanics.js'
+      - 'dados/armas-srd.json'
+      - 'tests/auditar-combate-recursos.mjs'
+      - '.github/workflows/auditar-combate-recursos.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  combate-recursos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          node --check scripts/character-sheet-combat-rules.js
+          node --check scripts/character-sheet-combat-ui.js
+          node --check scripts/character-sheet-resource-rules.js
+          node --check scripts/character-sheet-inventory-rules.js
+          node --check tests/auditar-combate-recursos.mjs
+      - name: Auditar mecânicas de combate e recursos
+        run: node tests/auditar-combate-recursos.mjs
+      - name: Proibir Supabase no código do bloco
+        run: |
+          if grep -RniE 'supabase' scripts/character-sheet-combat-rules.js scripts/character-sheet-combat-ui.js scripts/character-sheet-resource-rules.js; then
+            echo 'Supabase é proibido no Hub de RPG.' >&2
+            exit 1
+          fi
