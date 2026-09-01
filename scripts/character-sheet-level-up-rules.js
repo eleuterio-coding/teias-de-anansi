@@ -11,7 +11,7 @@ export function ensureProgressionState(character){
  const old=character.sheet.progression&&typeof character.sheet.progression==='object'?character.sheet.progression:{};
  const history=arr(old.history).filter(row=>row&&num(row.from)>=1&&num(row.to)>=1);
  const startingLevel=clampLevel(old.startingLevel||history[0]?.from||current);
- character.sheet.progression={startingLevel,history,draft:null,...old,startingLevel,history};
+ character.sheet.progression={...old,startingLevel,history,draft:null};
  return character.sheet.progression
 }
 
@@ -34,7 +34,9 @@ export function levelUpPlan(character,klass,subclass=null,targetLevel=null){
 }
 
 export function preserveDamageOnLevelUp(currentHp,oldMaxHp,newMaxHp){
- const oldMax=Math.max(0,num(oldMaxHp)),nextMax=Math.max(0,num(newMaxHp)),current=currentHp==null?oldMax:Math.max(0,num(currentHp)),damage=Math.max(0,oldMax-current);
+ const oldMax=Math.max(0,num(oldMaxHp)),nextMax=Math.max(0,num(newMaxHp)),current=currentHp==null?oldMax:Math.max(0,num(currentHp));
+ if(currentHp!=null&&current<=0)return 0;
+ const damage=Math.max(0,oldMax-current);
  return Math.max(0,Math.min(nextMax,nextMax-damage))
 }
 
