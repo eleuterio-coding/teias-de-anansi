@@ -10,43 +10,24 @@ function fighterActionSurge(level){return level<2?0:level>=17?2:1}
 function fighterIndomitable(level){return level<9?0:level>=17?3:level>=13?2:1}
 function rangerFavoredEnemy(level){return level>=17?6:level>=13?5:level>=9?4:level>=5?3:2}
 
-export function ensureResourceState(character){
- if(!character)return null;character.sheet=character.sheet||{};let state=character.sheet.resources;
- if(!state||typeof state!=='object'||Array.isArray(state))state={};
- state.items=state.items&&typeof state.items==='object'&&!Array.isArray(state.items)?state.items:{};
- character.sheet.resources=state;return state
-}
+export function ensureResourceState(character){if(!character)return null;character.sheet=character.sheet||{};let state=character.sheet.resources;if(!state||typeof state!=='object'||Array.isArray(state))state={};state.items=state.items&&typeof state.items==='object'&&!Array.isArray(state.items)?state.items:{};character.sheet.resources=state;return state}
 function autoResource(id,name,max,source,reset='long',unit='uso',note=''){return{id,name,max:Math.max(0,Math.floor(num(max))),source,reset,unit,note,auto:true}}
-export function automaticResourceDefinitions(klass,level,scores={}){
+export function automaticResourceDefinitions(klass,level,scores={},featResources=[]){
  const slug=fold(klass?.slug||klass?.name||klass?.nome),l=clampLevel(level),defs=[];
- if(['barbarian','barbaro'].includes(slug))defs.push(autoResource('barbarian-rage','Fúria',BARBARIAN_RAGES[l],'Bárbaro','long','uso','Recuperação e interações de descanso serão automatizadas no Bloco 5.'));
+ if(['barbarian','barbaro'].includes(slug))defs.push(autoResource('barbarian-rage','Fúria',BARBARIAN_RAGES[l],'Bárbaro','long','uso','Recuperação automática por descanso será conectada no Bloco 5.'));
  if(['bard','bardo'].includes(slug)){const uses=Math.max(1,mod(scores?.Carisma));defs.push(autoResource('bard-inspiration','Inspiração de Bardo',uses,'Bardo',l>=5?'short-long':'long','uso',`Dado: ${l>=15?'d12':l>=10?'d10':l>=5?'d8':'d6'}.`))}
  if(['cleric','clerigo'].includes(slug)){const max=clericChannel(l);if(max)defs.push(autoResource('cleric-channel-divinity','Canalizar Divindade',max,'Clérigo','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'))}
  if(['druid','druida'].includes(slug)){const max=druidShape(l);if(max)defs.push(autoResource('druid-wild-shape','Forma Selvagem',max,'Druida','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'))}
- if(['fighter','guerreiro'].includes(slug)){
-  defs.push(autoResource('fighter-second-wind','Segundo Fôlego',fighterSecondWind(l),'Guerreiro','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'));
-  const surge=fighterActionSurge(l);if(surge)defs.push(autoResource('fighter-action-surge','Surto de Ação',surge,'Guerreiro','short-long','uso'));
-  const indomitable=fighterIndomitable(l);if(indomitable)defs.push(autoResource('fighter-indomitable','Indomável',indomitable,'Guerreiro','long','uso'))
- }
+ if(['fighter','guerreiro'].includes(slug)){defs.push(autoResource('fighter-second-wind','Segundo Fôlego',fighterSecondWind(l),'Guerreiro','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'));const surge=fighterActionSurge(l);if(surge)defs.push(autoResource('fighter-action-surge','Surto de Ação',surge,'Guerreiro','short-long','uso','Ao gastar na ficha, libera imediatamente uma nova Ação no turno.'));const indomitable=fighterIndomitable(l);if(indomitable)defs.push(autoResource('fighter-indomitable','Indomável',indomitable,'Guerreiro','long','uso'))}
  if(['monk','monge'].includes(slug)&&l>=2){defs.push(autoResource('monk-focus','Pontos de Foco',l,'Monge','short-long','ponto'));defs.push(autoResource('monk-uncanny-metabolism','Metabolismo Sobrenatural',1,'Monge','long','uso'))}
- if(['paladin','paladino'].includes(slug)){
-  defs.push(autoResource('paladin-lay-on-hands','Imposição das Mãos',5*l,'Paladino','long','PV','Reserva de cura; gastar pontos reduz a reserva atual.'));
-  if(l>=3)defs.push(autoResource('paladin-channel-divinity','Canalizar Divindade',l>=11?3:2,'Paladino','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'))
- }
+ if(['paladin','paladino'].includes(slug)){defs.push(autoResource('paladin-lay-on-hands','Imposição das Mãos',5*l,'Paladino','long','PV','Reserva de cura; gastar pontos reduz a reserva atual.'));if(l>=3)defs.push(autoResource('paladin-channel-divinity','Canalizar Divindade',l>=11?3:2,'Paladino','short-partial-long','uso','Descanso Curto recupera 1 uso; Descanso Longo recupera todos.'))}
  if(['ranger','patrulheiro'].includes(slug))defs.push(autoResource('ranger-favored-enemy','Inimigo Favorito · Marca do Caçador',rangerFavoredEnemy(l),'Patrulheiro','long','uso','Conjurações gratuitas de Marca do Caçador.'));
- if(['sorcerer','feiticeiro'].includes(slug)){
-  defs.push(autoResource('sorcerer-innate-sorcery','Feitiçaria Inata',2,'Feiticeiro','long','uso'));
-  if(l>=2)defs.push(autoResource('sorcerer-points','Pontos de Feitiçaria',l,'Feiticeiro','long','ponto'));
-  if(l>=5)defs.push(autoResource('sorcerer-restoration','Restauração Feiticeira',1,'Feiticeiro','long','uso','Permite recuperar Pontos de Feitiçaria em Descanso Curto.'))
- }
+ if(['sorcerer','feiticeiro'].includes(slug)){defs.push(autoResource('sorcerer-innate-sorcery','Feitiçaria Inata',2,'Feiticeiro','long','uso'));if(l>=2)defs.push(autoResource('sorcerer-points','Pontos de Feitiçaria',l,'Feiticeiro','long','ponto'));if(l>=5)defs.push(autoResource('sorcerer-restoration','Restauração Feiticeira',1,'Feiticeiro','long','uso','Permite recuperar Pontos de Feitiçaria em Descanso Curto.'))}
+ for(const resource of arr(featResources)){const label=String(resource?.label||resource?.name||'').trim(),max=Math.max(0,Math.floor(num(resource?.max)));if(label&&max)defs.push(autoResource(`feat-${idFor(label)}`,label,max,'Talento','long','ponto','Recurso concedido por talento.'))}
  return defs.filter(def=>def.max>0)
 }
 
-export function syncAutomaticResources(character,klass,level,scores={}){
- const state=ensureResourceState(character),defs=automaticResourceDefinitions(klass,level,scores),wanted=new Set(defs.map(def=>def.id));
- for(const def of defs){const old=state.items[def.id],oldMax=Math.max(0,Math.floor(num(old?.max))),oldCurrent=Math.max(0,Math.floor(num(old?.current))),spent=old?Math.max(0,oldMax-oldCurrent):0,current=old?Math.max(0,def.max-spent):def.max;state.items[def.id]={...old,...def,current:Math.min(def.max,current)}}
- for(const[id,row]of Object.entries(state.items))if(row?.auto&&!wanted.has(id))delete state.items[id];return Object.values(state.items)
-}
+export function syncAutomaticResources(character,klass,level,scores={},featResources=[]){const state=ensureResourceState(character),defs=automaticResourceDefinitions(klass,level,scores,featResources),wanted=new Set(defs.map(def=>def.id));for(const def of defs){const old=state.items[def.id],oldMax=Math.max(0,Math.floor(num(old?.max))),oldCurrent=Math.max(0,Math.floor(num(old?.current))),spent=old?Math.max(0,oldMax-oldCurrent):0,current=old?Math.max(0,def.max-spent):def.max;state.items[def.id]={...old,...def,current:Math.min(def.max,current)}}for(const[id,row]of Object.entries(state.items))if(row?.auto&&!wanted.has(id))delete state.items[id];return Object.values(state.items)}
 export function resourceRows(character){return Object.values(ensureResourceState(character)?.items||{}).sort((a,b)=>String(a.source||'').localeCompare(String(b.source||''),'pt-BR')||String(a.name||'').localeCompare(String(b.name||''),'pt-BR'))}
 export function setResourceCurrent(character,id,value){const state=ensureResourceState(character),row=state?.items?.[id];if(!row)return null;row.current=Math.max(0,Math.min(Math.floor(num(row.max)),Math.floor(num(value))));return row}
 export function spendResource(character,id,amount=1){const state=ensureResourceState(character),row=state?.items?.[id],cost=Math.max(1,Math.floor(num(amount)||1));if(!row)return{ok:false,reason:'Recurso não encontrado.'};if(row.current<cost)return{ok:false,reason:'Recurso insuficiente.',row};row.current-=cost;return{ok:true,row}}
