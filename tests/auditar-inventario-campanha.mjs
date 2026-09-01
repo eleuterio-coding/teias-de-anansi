@@ -1,7 +1,7 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
 import{coinBalanceCp,creationBalanceCp,economyMode}from'../scripts/character-builder/economy-state.js';
-import{applyCampaignInventoryRows,applyInventoryTransaction,campaignInventoryStarted,clearUnavailableActiveEquipment,inventoryRowKey,inventoryTransactionHistory}from'../scripts/character-sheet-inventory-rules.js';
+import{applyCampaignInventoryRows,applyInventoryTransaction,applyCurrencyTransaction,campaignInventoryStarted,clearUnavailableActiveEquipment,inventoryRowKey,inventoryTransactionHistory}from'../scripts/character-sheet-inventory-rules.js';
 
 const sword={kind:'weapon',refId:'weapon:longsword',name:'Espada Longa',qty:1,source:'Pacote da Classe'};
 const rope={kind:'belonging',refId:null,name:'Corda de cânhamo',qty:1,source:'Pacote do Antecedente'};
@@ -46,6 +46,17 @@ assert.equal(gain.ok,true);
 assert.equal(coinBalanceCp(character),2550,'Receber item não deve alterar moedas, mesmo que um preço acidental seja informado.');
 assert.equal(gain.rows.some(row=>row.name==='Mapa antigo'&&row.qty===1),true);
 
+const income=applyCurrencyTransaction(character,{movement:'income',amountCp:500,note:'Recompensa da missão'});
+assert.equal(income.ok,true);
+assert.equal(coinBalanceCp(character),3050,'Receita avulsa deve aumentar o caixa sem criar item.');
+const expense=applyCurrencyTransaction(character,{movement:'expense',amountCp:250,note:'Hospedagem'});
+assert.equal(expense.ok,true);
+assert.equal(coinBalanceCp(character),2800,'Despesa avulsa deve reduzir o caixa.');
+const deniedExpense=applyCurrencyTransaction(character,{movement:'expense',amountCp:999999,note:'Despesa impossível'});
+assert.equal(deniedExpense.ok,false,'Despesa acima do saldo deve ser recusada.');
+assert.equal(coinBalanceCp(character),2800);
+assert.equal(JSON.stringify(character.choices.purchases),creationPurchases,'Caixa de campanha também não pode tocar compras de criação.');
+
 const poor={id:'pc-poor',choices:{equipment:{}},sheet:{inventory:{cp:0,sp:0,ep:0,gp:1,pp:0}}};
 const denied=applyInventoryTransaction(poor,[],{movement:'buy',item:{kind:'belonging',name:'Item caro'},qty:1,unitCostCp:200});
 assert.equal(denied.ok,false,'Compra acima do saldo deve ser recusada.');
@@ -53,17 +64,17 @@ assert.equal(coinBalanceCp(poor),100);
 assert.equal(campaignInventoryStarted(poor),false,'Compra recusada não deve congelar um inventário de campanha vazio.');
 
 const roundTrip=JSON.parse(JSON.stringify(character));
-assert.equal(coinBalanceCp(roundTrip),2550);
-assert.equal(inventoryTransactionHistory(roundTrip).length,3);
+assert.equal(coinBalanceCp(roundTrip),2800);
+assert.equal(inventoryTransactionHistory(roundTrip).length,5);
 assert.deepEqual(applyCampaignInventoryRows(changedBase,roundTrip).map(row=>[row.name,row.qty]),applyCampaignInventoryRows(changedBase,character).map(row=>[row.name,row.qty]),'Inventário atual deve sobreviver ao save/reopen em JSON.');
 
 const ui=fs.readFileSync(new URL('../scripts/character-sheet-inventory-ui.js',import.meta.url),'utf8');
 const ownership=fs.readFileSync(new URL('../scripts/character-builder/equipment-ownership.js',import.meta.url),'utf8');
 const gameplay=fs.readFileSync(new URL('../scripts/character-sheet-gameplay-ui.js',import.meta.url),'utf8');
-for(const token of['Inventário e economia de campanha','Registrar movimentação','Comprar','Vender','Receber','Perder','Saldo atual'])assert.ok(ui.includes(token),`UI de inventário sem ${token}`);
+for(const token of['Inventário e economia de campanha','Registrar movimentação','Comprar','Vender','Receber','Perder','Saldo atual','Movimentar moedas','Receber moedas','Gastar moedas','Equipar','Desequipar','data-gameplay-ignore'])assert.ok(ui.includes(token),`UI de inventário sem ${token}`);
 for(const forbidden of['WEALTH_BY_LEVEL','creationBudgetCp(','creationBudgetBreakdown('])assert.equal(ui.includes(forbidden),false,`Inventário pós-criação não pode chamar ${forbidden}`);
 assert.ok(ownership.includes('includeCampaign=true'),'Inventário mecânico deve aceitar a camada de campanha.');
 assert.ok(ownership.includes('applyCampaignInventoryRows'),'Inventário mecânico deve aplicar as movimentações pós-criação.');
 assert.ok(gameplay.includes("import'./character-sheet-inventory-ui.js"),'Modo de Jogo deve carregar o inventário de campanha.');
 
-console.log('OK — inventário de campanha preserva origem, saldo atual, snapshot e movimentações sem reaplicar criação.');
+console.log('OK — inventário e caixa de campanha preservam origem, saldo atual, snapshot e movimentações sem reaplicar criação.');
