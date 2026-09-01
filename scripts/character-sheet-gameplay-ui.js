@@ -4,6 +4,7 @@ import{ensureGameplayState,setGameplayField}from'./character-sheet-gameplay-stat
 import'./character-sheet-level-up-input-guard.js?v=20260901-level-up1';
 import'./character-sheet-level-up-ui.js?v=20260901-level-up1';
 import'./character-sheet-inventory-ui.js?v=20260901-campaign-inventory1';
+import'./character-sheet-campaign-ui.js?v=20260901-campaign1';
 
 let initialized=false,saveTimer=null,dirty=false;
 const AUTOSAVE_MS=450;
