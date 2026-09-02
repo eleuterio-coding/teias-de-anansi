@@ -1,0 +1,72 @@
+name: Auditar catálogos da Biblioteca
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'bibliotecas.html'
+      - 'scripts/catalog-registry.js'
+      - 'scripts/library-catalog-status.js'
+      - 'scripts/character-builder/state.js'
+      - 'scripts/character-builder/catalogs.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/gerar_referencias_hub.py'
+      - 'dados/**'
+      - 'tests/auditar-catalogos-biblioteca.mjs'
+      - '.github/workflows/auditar-catalogos-biblioteca.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'bibliotecas.html'
+      - 'scripts/catalog-registry.js'
+      - 'scripts/library-catalog-status.js'
+      - 'scripts/character-builder/state.js'
+      - 'scripts/character-builder/catalogs.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/gerar_referencias_hub.py'
+      - 'dados/**'
+      - 'tests/auditar-catalogos-biblioteca.mjs'
+      - '.github/workflows/auditar-catalogos-biblioteca.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  catalogos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe JavaScript
+        run: |
+          node --check scripts/catalog-registry.js
+          node --check scripts/library-catalog-status.js
+          node --check scripts/character-builder/state.js
+          node --check scripts/character-builder/spells.js
+          node --check tests/auditar-catalogos-biblioteca.mjs
+      - name: Auditar registro, fontes e relações
+        run: node tests/auditar-catalogos-biblioteca.mjs
+      - name: Gerar índice semântico de controle
+        run: |
+          python scripts/gerar_referencias_hub.py \
+            --root . \
+            --output /tmp/referencias-hub-index.json \
+            --stubs /tmp/referencias-hub-stubs.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('/tmp/referencias-hub-index.json').read_text(encoding='utf-8'))
+          if d.get('schema')!='hub-rpg.referencias.v3': raise RuntimeError('Schema semântico inesperado')
+          if len(d.get('modulos',{}))!=18: raise RuntimeError('Índice não cobre 18 módulos')
+          empty=[m for m,n in d.get('cobertura_modulos',{}).items() if int(n)<=0]
+          if empty: raise RuntimeError('Módulos sem referências: '+', '.join(empty))
+          print(f"Índice semântico validado: {d['total_entidades']} entidades em 18/18 módulos.")
+          PY
+      - name: Proibir backend incompatível no bloco
+        run: |
+          if grep -RniE 'supabase' scripts/catalog-registry.js scripts/library-catalog-status.js bibliotecas.html; then
+            echo 'Backend proibido detectado no bloco de Biblioteca.' >&2
+            exit 1
+          fi
