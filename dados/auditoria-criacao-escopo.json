@@ -2,21 +2,10 @@
   "schema": "hub-rpg/auditoria-criacao/v2",
   "politica": "fail-closed",
   "objetivo": "Nenhum conteúdo que possa alterar a criação ou a ficha de personagem pode permanecer sem classificação, integração, validação e teste.",
-  "etapas_obrigatorias": [
-    "inventario",
-    "integridade_sintatica",
-    "integridade_dados",
-    "rastreabilidade_runtime",
-    "aplicacao_mecanica",
-    "interacoes_cruzadas",
-    "cenarios_personagem",
-    "regressao",
-    "politicas_globais",
-    "evidencia_e_bloqueio"
-  ],
+  "etapas_obrigatorias": ["inventario","integridade_sintatica","integridade_dados","rastreabilidade_runtime","aplicacao_mecanica","interacoes_cruzadas","cenarios_personagem","regressao","politicas_globais","evidencia_e_bloqueio"],
   "dominios": [
     {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json","dados/metamagias-feiticeiro-2024.json"],"runtime":"loadClasses + class feature mechanics"},
-    {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json"],"runtime":"subclass-mechanics-data.js"},
+    {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json","dados/precedencia-subclasses.json"],"runtime":"subclass-mechanics-data.js"},
     {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
     {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
     {"id":"talentos","fontes":["dados/talentos-*.json"],"runtime":"feat-mechanics.js"},
@@ -30,41 +19,10 @@
     {"id":"regras","fontes":["dados/regras-*.json"],"runtime":"rules.js"},
     {"id":"localizacao","fontes":["dados/localizacao-*.json"],"runtime":"catalogs.js"}
   ],
-  "testes_criticos": [
-    "tests/auditar-escopo-criacao.mjs",
-    "tests/auditar-cobertura-total-criacao.mjs",
-    "tests/auditar-proveniencia-normativa.mjs",
-    "tests/auditar-subclasses-mecanicas.mjs",
-    "tests/auditar-regras-casa.mjs",
-    "tests/auditar-testes-pericia.mjs",
-    "tests/auditar-ficha-pericias.mjs",
-    "tests/auditar-riqueza-criacao.mjs",
-    "tests/auditar-itens-magicos-criacao.mjs",
-    "tests/auditar-criacao-sem-travamento.mjs"
-  ],
+  "testes_criticos": ["tests/auditar-escopo-criacao.mjs","tests/auditar-cobertura-total-criacao.mjs","tests/auditar-proveniencia-normativa.mjs","tests/auditar-subclasses-mecanicas.mjs","tests/auditar-regras-casa.mjs","tests/auditar-testes-pericia.mjs","tests/auditar-ficha-pericias.mjs","tests/auditar-riqueza-criacao.mjs","tests/auditar-itens-magicos-criacao.mjs","tests/auditar-criacao-sem-travamento.mjs"],
   "excecoes_runtime": [
-    {
-      "arquivo": "scripts/character-builder/active-equipment-ui.js",
-      "tipo": "compatibilidade_cache",
-      "motivo": "Shim sem listeners mantido apenas para páginas antigas em cache; a interface vigente é equipment-ownership-ui.js.",
-      "requisito": "O inicializador deve permanecer no-op e o módulo não pode controlar o DOM ativo."
-    },
-    {
-      "arquivo": "scripts/character-builder/manual-feat-ui.js",
-      "tipo": "diagnostico_legado",
-      "motivo": "Fallback de segurança preservado para conteúdo legado e auditorias históricas; o runtime vigente deve aplicar talentos por feat-mechanics.js.",
-      "requisito": "Não pode substituir a aplicação mecânica vigente; qualquer talento atual sem regra mecânica deve ser detectado pelas auditorias de talentos."
-    }
+    {"arquivo":"scripts/character-builder/active-equipment-ui.js","tipo":"compatibilidade_cache","motivo":"Shim sem listeners mantido apenas para páginas antigas em cache; a interface vigente é equipment-ownership-ui.js.","requisito":"O inicializador deve permanecer no-op e o módulo não pode controlar o DOM ativo."},
+    {"arquivo":"scripts/character-builder/manual-feat-ui.js","tipo":"diagnostico_legado","motivo":"Fallback de segurança preservado para conteúdo legado e auditorias históricas; o runtime vigente deve aplicar talentos por feat-mechanics.js.","requisito":"Não pode substituir a aplicação mecânica vigente; qualquer talento atual sem regra mecânica deve ser detectado pelas auditorias de talentos."}
   ],
-  "criterio_fechamento": {
-    "modulo_sem_classificacao": 0,
-    "orfao_mecanico": 0,
-    "fonte_sem_classificacao": 0,
-    "dependencia_de_dados_ausente": 0,
-    "teste_falhando": 0,
-    "erro_sintatico": 0,
-    "json_invalido": 0,
-    "divergencia_normativa_conhecida": 0,
-    "uso_supabase": 0
-  }
+  "criterio_fechamento": {"modulo_sem_classificacao":0,"orfao_mecanico":0,"fonte_sem_classificacao":0,"dependencia_de_dados_ausente":0,"teste_falhando":0,"erro_sintatico":0,"json_invalido":0,"divergencia_normativa_conhecida":0,"uso_supabase":0}
 }

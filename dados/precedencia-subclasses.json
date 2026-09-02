@@ -1,0 +1,28 @@
+{
+  "schema": "hub-rpg/precedencia-subclasses/v1",
+  "politica": "fail-closed",
+  "descricao": "Versões oficiais atuais prevalecem sobre versões oficiais legadas equivalentes; conteúdo legado único permanece; conteúdo de terceiros nunca substitui identidade oficial.",
+  "prioridade_fontes": {
+    "phb-2024": 400,
+    "eberron-forge-2025": 400,
+    "fr-heroes-2025": 400,
+    "tasha-2020": 300,
+    "xanathar-2017": 300,
+    "quickstone-2024": 200,
+    "larsene-ledger-2024": 200
+  },
+  "substituicoes": [
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Circle of Stars","classe":"Druid","fonte_vigente":"phb-2024","nome_vigente":"Circle of the Stars"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Psi Warrior","classe":"Fighter","fonte_vigente":"phb-2024","nome_vigente":"Psi Warrior"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Way of Mercy","classe":"Monk","fonte_vigente":"phb-2024","nome_vigente":"Warrior of Mercy"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Oath of Glory","classe":"Paladin","fonte_vigente":"phb-2024","nome_vigente":"Oath of Glory"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Fey Wanderer","classe":"Ranger","fonte_vigente":"phb-2024","nome_vigente":"Fey Wanderer"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Soulknife","classe":"Rogue","fonte_vigente":"phb-2024","nome_vigente":"Soulknife"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Aberrant Mind","classe":"Sorcerer","fonte_vigente":"phb-2024","nome_vigente":"Aberrant Sorcery"},
+    {"fonte_anterior":"tasha-2020","nome_anterior":"Clockwork Soul","classe":"Sorcerer","fonte_vigente":"phb-2024","nome_vigente":"Clockwork Sorcery"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"Path of the Zealot","classe":"Barbarian","fonte_vigente":"phb-2024","nome_vigente":"Path of the Zealot"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"College of Glamour","classe":"Bard","fonte_vigente":"phb-2024","nome_vigente":"College of Glamour"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"Gloom Stalker","classe":"Ranger","fonte_vigente":"phb-2024","nome_vigente":"Gloom Stalker"},
+    {"fonte_anterior":"xanathar-2017","nome_anterior":"The Celestial","classe":"Warlock","fonte_vigente":"phb-2024","nome_vigente":"Celestial Patron"}
+  ]
+}
