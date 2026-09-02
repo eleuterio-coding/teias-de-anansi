@@ -37,6 +37,12 @@ function importsOf(file) {
   for (const pattern of patterns) {
     for (const match of source.matchAll(pattern)) specs.push(match[1]);
   }
+  // character-builder.js registra extensões em uma tabela de strings e as
+  // importa em runtime. Essas entradas são parte explícita do grafo de carga,
+  // embora não apareçam sintaticamente como import('literal').
+  if (path.resolve(file) === path.join(SCRIPTS, 'character-builder.js')) {
+    for (const match of source.matchAll(/['"](\.\/character-builder\/[^'"]+\.js(?:\?[^'"]*)?)['"]/g)) specs.push(match[1]);
+  }
   return specs.map(spec => resolveImport(file, spec)).filter(Boolean);
 }
 
