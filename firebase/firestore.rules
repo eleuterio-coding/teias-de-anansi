@@ -1,0 +1,89 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function membershipId(campaignId) { return campaignId + '_' + request.auth.uid; }
+    function membership(campaignId) { return get(/databases/$(database)/documents/memberships/$(membershipId(campaignId))); }
+    function isMember(campaignId) { return signedIn() && exists(/databases/$(database)/documents/memberships/$(membershipId(campaignId))) && membership(campaignId).data.active == true; }
+    function isDm(campaignId) { return isMember(campaignId) && membership(campaignId).data.role == 'dm'; }
+    function isOwner(campaignId) { return signedIn() && get(/databases/$(database)/documents/campaigns/$(campaignId)).data.ownerId == request.auth.uid; }
+    function canManage(campaignId) { return isOwner(campaignId) || isDm(campaignId); }
+    function invite(inviteId) { return get(/databases/$(database)/documents/invites/$(inviteId)); }
+
+    match /users/{uid} {
+      allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+      match /characters/{characterId} {
+        allow read, create, update, delete: if signedIn() && request.auth.uid == uid
+          && (request.method == 'delete' || request.resource.data.ownerId == uid);
+      }
+    }
+
+    match /campaigns/{campaignId} {
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow read: if signedIn() && (resource.data.ownerId == request.auth.uid || isMember(campaignId));
+      allow update: if signedIn() && canManage(campaignId) && request.resource.data.ownerId == resource.data.ownerId;
+      allow delete: if signedIn() && resource.data.ownerId == request.auth.uid;
+
+      match /shared/{documentId} {
+        allow read: if signedIn() && (isOwner(campaignId) || isMember(campaignId));
+        allow create, update, delete: if signedIn() && canManage(campaignId);
+      }
+      match /private/{documentId} {
+        allow read, create, update, delete: if signedIn() && canManage(campaignId);
+      }
+      match /adventures/{adventureId} {
+        allow read, create, update, delete: if signedIn() && canManage(campaignId);
+      }
+      match /characters/{characterId} {
+        allow read: if signedIn() && (canManage(campaignId) || (isMember(campaignId) && membership(campaignId).data.characterId == characterId));
+        allow create, update: if signedIn() && request.resource.data.ownerUid == request.auth.uid
+          && isMember(campaignId) && membership(campaignId).data.characterId == characterId;
+        allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+      }
+    }
+
+    match /invites/{inviteId} {
+      allow create: if signedIn() && canManage(request.resource.data.campaignId)
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.status == 'open';
+      allow read: if signedIn() && (
+        resource.data.createdBy == request.auth.uid ||
+        resource.data.invitedEmail == request.auth.token.email ||
+        canManage(resource.data.campaignId)
+      );
+      allow update: if signedIn() && (
+        canManage(resource.data.campaignId) ||
+        (resource.data.status == 'open'
+          && resource.data.invitedEmail == request.auth.token.email
+          && request.resource.data.status == 'accepted'
+          && request.resource.data.acceptedBy == request.auth.uid
+          && request.resource.data.campaignId == resource.data.campaignId
+          && request.resource.data.invitedEmail == resource.data.invitedEmail
+          && request.resource.data.role == resource.data.role)
+      );
+      allow delete: if signedIn() && canManage(resource.data.campaignId);
+    }
+
+    match /memberships/{memberId} {
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || canManage(resource.data.campaignId));
+      allow create: if signedIn() && (
+        canManage(request.resource.data.campaignId) ||
+        (request.resource.data.uid == request.auth.uid
+          && request.resource.data.inviteId is string
+          && invite(request.resource.data.inviteId).data.status == 'open'
+          && invite(request.resource.data.inviteId).data.campaignId == request.resource.data.campaignId
+          && invite(request.resource.data.inviteId).data.invitedEmail == request.auth.token.email
+          && invite(request.resource.data.inviteId).data.role == request.resource.data.role)
+      );
+      allow update: if signedIn() && (
+        canManage(resource.data.campaignId) ||
+        (resource.data.uid == request.auth.uid
+          && request.resource.data.uid == resource.data.uid
+          && request.resource.data.campaignId == resource.data.campaignId
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['characterId','displayName','updatedAt']))
+      );
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || canManage(resource.data.campaignId));
+    }
+  }
+}
