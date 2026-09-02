@@ -63,4 +63,5 @@ if(typeof document!=='undefined'){
  import('./character-sheet-resolution-ui.js?v=20260902-resolution1');
  import('./character-sheet-magic-item-resolution-ui.js?v=20260902-resolution1');
  import('./character-sheet-death-ui.js?v=20260902-resolution1');
+ import('./character-sheet-encounter-target.js?v=20260902-encounters1');
 }
