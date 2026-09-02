@@ -19,7 +19,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 9. Auditoria normativa total — ✅ Aceito
 10. Fechamento mecânico total da Ficha — ✅ Aceito
 11. Rolagens e resolução de jogo — ✅ Aceito
-12. Encontros e ferramentas do Mestre — Planejado
+12. Encontros e ferramentas do Mestre — ✅ Aceito
 13. Aventuras — Planejado
 14. Persistência definitiva e portabilidade — Planejado
 15. Usuários, colaboração e sincronização — Planejado
