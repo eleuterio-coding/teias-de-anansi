@@ -1,6 +1,6 @@
 import{state,arr,num,uniq,fold,mod}from'./state.js';
 import{ARTISAN_TOOLS}from'./class-tool-mechanics.js?v=20260831-class-tools1';
-import{activeFeatInstances,featRule,FEAT_RULES}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
+import{activeFeatInstances,featRule,FEAT_RULES}from'./feat-mechanics.js';
 import{TASHA_2020_FEAT_RULES}from'./feat-rules-tasha-2020.js?v=20260831-tasha-metamagic1';
 import{sanitizeInvocationSlots,invocationOutcomeForSlots}from'./invocation-mechanics.js?v=20260831-tasha-metamagic1';
 import{sanitizeMetamagicIds}from'./metamagic-mechanics.js?v=20260831-tasha-metamagic1';
