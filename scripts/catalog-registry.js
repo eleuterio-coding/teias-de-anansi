@@ -6,7 +6,7 @@ export const FIVE_TOOLS_BASE='https://raw.githubusercontent.com/5etools-mirror-3
 
 const local=(path,{builder=false,sheet=false,kind='json'}={})=>({path,kind,local:true,builder,sheet});
 const remote=(url,{builder=false,sheet=false,pinned=false,kind='remote'}={})=>({url,kind,local:false,builder,sheet,pinned});
-const embedded=path=>local(path,{kind:'embedded'});
+const embedded=(path,opts={})=>local(path,{...opts,kind:'embedded'});
 
 export const CATALOG_MODULES=[
  {id:'rules',name:'Regras',publicName:'Regras',route:'regras.html',semanticName:'Regras',stage:'publicado',consumers:['biblioteca','referencias','ficha'],sources:[local('dados/regras-atuais-ptbr.part1.txt',{kind:'json-part'}),local('dados/regras-atuais-ptbr.part2.txt',{kind:'json-part'}),local('dados/regras-atuais-ptbr.part3.txt',{kind:'json-part'}),local('dados/regras-atuais-ptbr.part4.txt',{kind:'json-part'}),local('dados/regras-casa-adicionais.json'),local('dados/regras-hub.json')]},
@@ -19,14 +19,14 @@ export const CATALOG_MODULES=[
  {id:'monsters',name:'Monstros',publicName:'Monstros',route:'monstros.html',semanticName:'Monstros',stage:'publicado',consumers:['biblioteca','referencias'],sources:[remote('https://apisearch.thedmstoolkit.com/api/2024/monsters'),local('dados/monstros-pdf-extras.json'),local('dados/monstros-fontes',{kind:'directory'}),local('dados/monstros-srd-5.2.1-manifest.json')]},
  {id:'armors',name:'Armaduras',publicName:'Armaduras',route:'armaduras.html',semanticName:'Armaduras',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/armaduras-pdfs.json',{builder:true,sheet:true})]},
  {id:'weapons',name:'Armas',publicName:'Armas',route:'armas.html',semanticName:'Armas',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/armas-srd.json',{builder:true,sheet:true}),local('dados/armas-fontes',{kind:'directory'}),local('dados/armas-pdfs-manifest.json')]},
- {id:'adventuring-gear',name:'Equipamentos de Aventura',publicName:'Equipamentos de Aventura',route:'equipamentos-aventura.html',semanticName:'Equipamentos de Aventura',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/equipamentos-aventura-core-pdfs.json',{builder:true,sheet:true}),local('dados/equipamentos-aventura-pdfs.json',{builder:true,sheet:true})]},
- {id:'tools',name:'Ferramentas',publicName:'Ferramentas',route:'ferramentas.html',semanticName:'Ferramentas',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/ferramentas-pdfs.json',{builder:true,sheet:true})]},
- {id:'mounts-vehicles',name:'Montarias e Veículos',publicName:'Montarias e Veículos',route:'montarias-veiculos.html',semanticName:'Montarias e Veículos',stage:'publicado',consumers:['biblioteca','referencias'],sources:[embedded('montarias-veiculos.html')]},
+ {id:'adventuring-gear',name:'Equipamentos de Aventura',publicName:'Equipamentos de Aventura',route:'equipamentos-aventura.html',semanticName:'Equipamentos de Aventura',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/equipamentos-aventura-core-pdfs.json',{builder:true,sheet:true}),local('dados/equipamentos-aventura-pdfs.json',{sheet:true})]},
+ {id:'tools',name:'Ferramentas',publicName:'Ferramentas',route:'ferramentas.html',semanticName:'Ferramentas',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/ferramentas-pdfs.json',{sheet:true})]},
+ {id:'mounts-vehicles',name:'Montarias e Veículos',publicName:'Montarias e Veículos',route:'montarias-veiculos.html',semanticName:'Montarias e Veículos',stage:'publicado',consumers:['biblioteca','referencias','construtor'],sources:[embedded('montarias-veiculos.html',{builder:true})]},
  {id:'commerce',name:'Comércio e Despesas',publicName:'Comércio e Despesas',route:'comercio-e-despesas.html',semanticName:'Comércio e Despesas',stage:'publicado',consumers:['biblioteca','referencias','ficha'],sources:[embedded('comercio-e-despesas.html')]},
  {id:'trinkets',name:'Bugigangas',publicName:'Bugigangas',route:'bugigangas.html',semanticName:'Bugigangas',stage:'publicado',consumers:['biblioteca','referencias'],sources:[local('dados/bugigangas-pdfs.json')]},
- {id:'magic-items',name:'Itens Mágicos',publicName:'Itens Mágicos',route:'itens-magicos.html',semanticName:'Itens Mágicos',stage:'publicado',consumers:['biblioteca','referencias','ficha'],sources:[local('dados/itens-magicos/manifest.json',{sheet:true}),local('dados/itens-magicos',{sheet:true,kind:'directory'})]},
+ {id:'magic-items',name:'Itens Mágicos',publicName:'Itens Mágicos',route:'itens-magicos.html',semanticName:'Itens Mágicos',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/itens-magicos/manifest.json',{builder:true,sheet:true}),local('dados/itens-magicos',{builder:true,sheet:true,kind:'directory'})]},
  {id:'spells',name:'Magias',publicName:'Magias',route:'magias.html',semanticName:'Magias',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/magias-catalogo.json',{builder:true,sheet:true}),local('dados/magias-suplementos-locais.json',{builder:true,sheet:true}),local('dados/magias-srd.json',{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/spells/spells-xphb.json`,{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/spells/spells-xge.json`,{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/spells/spells-tce.json`,{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/spells/spells-frhof.json`,{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/spells/spells-efa.json`,{builder:true,sheet:true}),remote(`${FIVE_TOOLS_BASE}/generated/gendata-spell-source-lookup.json`,{builder:true,sheet:true})]},
- {id:'languages',name:'Idiomas',publicName:'Idiomas',route:'idiomas.html',semanticName:'Idiomas',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/idiomas-core-standard.json',{builder:true,sheet:true}),local('dados/idiomas-core-rare.json',{builder:true,sheet:true}),local('dados/idiomas-eberron.json',{sheet:true}),local('dados/idiomas-forgotten-realms.json',{sheet:true}),local('dados/idiomas-outros.json',{sheet:true})]}
+ {id:'languages',name:'Idiomas',publicName:'Idiomas',route:'idiomas.html',semanticName:'Idiomas',stage:'publicado',consumers:['biblioteca','referencias','construtor','ficha'],sources:[local('dados/idiomas-core-standard.json',{sheet:true}),local('dados/idiomas-core-rare.json',{sheet:true}),local('dados/idiomas-eberron.json',{sheet:true}),local('dados/idiomas-forgotten-realms.json',{sheet:true}),local('dados/idiomas-outros.json',{sheet:true})]}
 ];
 
 export const CATALOG_BY_ID=Object.fromEntries(CATALOG_MODULES.map(x=>[x.id,x]));
@@ -37,9 +37,19 @@ export function catalogSources(id,{consumer=null,localOnly=false}={}){const row=
 export function localSourcePaths(id,consumer=null){return catalogSources(id,{consumer,localOnly:true}).map(s=>s.path)}
 export function publicCatalogRoute(semanticName){return CATALOG_BY_SEMANTIC_NAME[semanticName]?.route||null}
 export function stageIndex(stage){return DATA_STAGES.indexOf(stage)}
+const firstLocal=(id,consumer,test=()=>true)=>localSourcePaths(id,consumer).find(test)||'';
 
 export const BACKGROUND_BUILDER_FILES=localSourcePaths('backgrounds','builder');
 export const SPECIES_BUILDER_FILES=localSourcePaths('species','builder').filter(path=>/^dados\/especies-pdf-/.test(path));
 export const FEAT_BUILDER_FILES=localSourcePaths('feats','builder');
+export const ARTIFICER_BUILDER_FILE=firstLocal('classes','builder',path=>/artificer-2025\.json$/.test(path));
+export const SUBCLASS_BUILDER_FILE=firstLocal('subclasses','builder',path=>/subclasses-pdfs\.json$/.test(path));
+export const SUBCLASS_LOCALIZATION_FILE=firstLocal('subclasses','builder',path=>/localizacao-ptbr-subclasses\.json$/.test(path));
+export const TIEFLING_VARIANTS_FILE=firstLocal('species','builder',path=>/tiefling-variantes\.json$/.test(path));
+export const ARMOR_BUILDER_FILE=firstLocal('armors','builder');
+export const WEAPON_BUILDER_FILE=firstLocal('weapons','builder');
+export const ADVENTURING_GEAR_BUILDER_FILE=firstLocal('adventuring-gear','builder');
+export const MOUNTS_BUILDER_ROUTE=firstLocal('mounts-vehicles','builder');
+export const MAGIC_ITEM_MANIFEST_FILE=firstLocal('magic-items','builder',path=>/manifest\.json$/.test(path));
 export const SPELL_REMOTE_SOURCES=catalogSources('spells',{consumer:'builder'}).filter(s=>!s.local&&/\/spells\/spells-/.test(s.url)).map(s=>s.url);
 export const SPELL_SOURCE_LOOKUP=catalogSources('spells',{consumer:'builder'}).find(s=>!s.local&&/gendata-spell-source-lookup\.json$/.test(s.url))?.url||'';
