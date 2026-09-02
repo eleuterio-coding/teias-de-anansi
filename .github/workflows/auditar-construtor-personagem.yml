@@ -114,18 +114,21 @@ jobs:
           if 'type="module"' not in html: raise RuntimeError('Loader ES module ausente.')
 
           feat_data=json.loads(Path('dados/talentos-phb-2024.json').read_text(encoding='utf-8'))
-          core=set()
+          core=set();catalog=set()
           for row in feat_data.get('itens',[]):
-              if isinstance(row,list) and len(row)>=2 and row[1] in {'Origem','Geral'}:
-                  core.add(row[0])
+              if isinstance(row,list) and len(row)>=2:
+                  name,category=row[0],row[1]
+                  if name: catalog.add(name)
+                  if name and category in {'Origem','Geral'}: core.add(name)
               elif isinstance(row,dict):
                   name=row.get('nome') or row.get('name');category=row.get('categoria') or row.get('category')
+                  if name: catalog.add(name)
                   if name and category in {'Origem','Geral'}: core.add(name)
           audited=set(re.findall(r"(?:^|,)\s*'([^']+)':",feat_rules,re.M))
           feat_missing=sorted(core-audited)
-          feat_extra=sorted(audited-core)
+          feat_extra=sorted(audited-catalog)
           if feat_missing: raise RuntimeError('Talentos sem regra mecânica auditada: '+', '.join(feat_missing))
-          if feat_extra: raise RuntimeError('Regras de talentos sem item correspondente no catálogo: '+', '.join(feat_extra))
+          if feat_extra: raise RuntimeError('Regras de talentos sem item correspondente no catálogo PHB 2024: '+', '.join(feat_extra))
           for feat in ['Alert','Crafter','Lucky','Magic Initiate','Musician','Skilled','Tavern Brawler','Tough','Ability Score Improvement','Keen Mind','Observant','Resilient','Ritual Caster','Skill Expert','Speedy','Weapon Master']:
               if feat not in audited: raise RuntimeError('Talento crítico não auditado: '+feat)
 
@@ -139,5 +142,5 @@ jobs:
               if token not in sheet_js: raise RuntimeError('Contrato da ficha digital ausente: '+token)
           for token in ['saveProficiencies','expertiseSkills','featSpellcasting','featResources','unarmedDamage']:
               if token not in sheet_feat_js: raise RuntimeError('Integração de talentos ausente na ficha digital: '+token)
-          print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados, fluxo em 7 etapas ativo e escolhas mecânicas preservadas.')
+          print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados e {len(catalog)} talentos PHB cobertos pelo catálogo, fluxo em 7 etapas ativo e escolhas mecânicas preservadas.')
           PY
