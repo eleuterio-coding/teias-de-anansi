@@ -18,9 +18,12 @@
         "dados/itens-magicos/manifest.json",
         "tests/auditar-itens-magicos-criacao.mjs",
         "scripts/character-builder/wealth-purchase-ui.js",
-        "scripts/character-sheet-inventory-rules.js"
+        "scripts/character-sheet-inventory-rules.js",
+        "scripts/character-sheet-magic-item-state.js",
+        "tests/auditar-magic-item-state-bloco10.mjs"
       ],
-      "problema": "O escopo classifica itens mágicos como conteúdo ativo, mas os gates atuais demonstram catálogo, raridade, preço e movimentação de inventário; não demonstram aplicação dos efeitos dos itens equipados/sintonizados na ficha.",
+      "progresso": "O estado estruturado e persistente de uso já existe: itens possuídos podem ser marcados como equipados/sintonizados por chave estável, itens ausentes são rejeitados e estados órfãos são limpos. O gate 10F comprova esse contrato.",
+      "problema": "Ainda falta aplicar à derivação da ficha os efeitos persistentes dos itens mágicos ativos. Catálogo, raridade, preço, inventário e estado equipado/sintonizado já estão cobertos, mas seus modificadores mecânicos ainda não estão demonstrados no runtime da ficha.",
       "exemplos_mecanizaveis_confirmados": [
         "Amulet of Health — Constituição 19 enquanto usado",
         "Armor, +1, +2, or +3 — bônus de CA enquanto vestida",
@@ -28,7 +31,7 @@
         "Armor of Invulnerability — resistência e estado temporário de imunidade",
         "Ammunition, +1, +2, or +3 — bônus em ataque e dano"
       ],
-      "proximo_passo": "Criar estado estruturado de item mágico possuído/equipado/sintonizado e um runtime de efeitos consumido pela derivação da ficha antes de declarar o domínio coberto. Efeitos de resolução instantânea permanecem para o Bloco 11, mas seus estados, bônus e modificadores persistentes devem existir no Bloco 10."
+      "proximo_passo": "Implementar um runtime de efeitos persistentes consumido pela derivação da ficha a partir do estado equipado/sintonizado. Efeitos de resolução instantânea permanecem para o Bloco 11, mas seus estados, bônus e modificadores persistentes devem existir no Bloco 10."
     },
     {
       "id": "barbarian-core-feature-text-only",
