@@ -1,0 +1,48 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-subclasses/v1",
+  "etapa":"11B",
+  "dominio":"subclasses",
+  "fonte_id":"eberron-forge-2025",
+  "fonte":"Eberron: Forge of the Artificer (2025)",
+  "autoridade":"oficial_atual",
+  "quantidade":5,
+  "identidades":[
+    {"nome":"Alchemist","classe":"Artificer","niveis":[3,5,9,15]},
+    {"nome":"Armorer","classe":"Artificer","niveis":[3,5,9,15]},
+    {"nome":"Artillerist","classe":"Artificer","niveis":[3,5,9,15]},
+    {"nome":"Battle Smith","classe":"Artificer","niveis":[3,5,9,15]},
+    {"nome":"Cartographer","classe":"Artificer","niveis":[3,5,9,15]}
+  ],
+  "confrontacao_detalhada":[
+    {"subclasse":"Alchemist","caracteristica":"Tools of the Trade","status":"confrontado"},
+    {"subclasse":"Alchemist","caracteristica":"Experimental Elixir","status":"confrontado"},
+    {"subclasse":"Armorer","caracteristica":"Tools of the Trade","status":"confrontado"},
+    {"subclasse":"Armorer","caracteristica":"Arcane Armor","status":"confrontado"},
+    {"subclasse":"Artillerist","caracteristica":"Tools of the Trade","status":"confrontado"},
+    {"subclasse":"Artillerist","caracteristica":"Arcane Firearm","status":"confrontado"},
+    {"subclasse":"Battle Smith","caracteristica":"Tools of the Trade","status":"confrontado"},
+    {"subclasse":"Battle Smith","caracteristica":"Battle Ready","status":"confrontado"},
+    {"subclasse":"Battle Smith","caracteristica":"Steel Defender","status":"confrontado"},
+    {"subclasse":"Battle Smith","caracteristica":"Extra Attack","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Tools of the Trade","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Adventurer's Atlas","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Mapping Magic","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Guided Precision","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Ingenious Movement","status":"confrontado"},
+    {"subclasse":"Cartographer","caracteristica":"Superior Atlas","status":"confrontado"}
+  ],
+  "correcoes_confirmadas":[
+    "Cartographer recebeu Tools of the Trade ausente no dado anterior.",
+    "Artillerist Tools of the Trade passou a registrar treinamento com Martial Ranged Weapons e redução de tempo de fabricação de Wands.",
+    "Battle Smith Tools of the Trade passou a conter treinamento marcial e redução do tempo de fabricação de armas; Battle Ready preserva Inteligência e foco por arma proficiente.",
+    "Battle Smith Extra Attack passou a registrar a interação com o Steel Defender.",
+    "Alchemist Experimental Elixir distingue elixires aleatórios de Descanso Longo de elixires escolhidos criados com spell slot.",
+    "Armorer e Alchemist registram as reduções de tempo de fabricação associadas a Tools of the Trade."
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — Eberron: Forge of the Artificer",
+    "D&D Beyond — Forge Your Story With 5 Inventive Artificer Subclasses"
+  ],
+  "status":"parcial_semantico_com_invariantes_de_alto_risco",
+  "observacao":"As cinco identidades e seus patamares foram auditados. A confrontação textual detalhada fica restrita às características listadas; não se declara revisão palavra por palavra do livro fechado."
+}

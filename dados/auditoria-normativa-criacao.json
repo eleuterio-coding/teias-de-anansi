@@ -1,0 +1,37 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-criacao/v2",
+  "politica": "fail-closed",
+  "roadmap": "ROADMAP-V1.md",
+  "objetivo": "Provar, sobre a main vigente, que cada mecânica usada na criação e na ficha preserva autoridade, versão, intenção normativa e overrides explícitos da v1.0.",
+  "origem_historica": {
+    "pr": 123,
+    "branch": "audit/normativa-total-criacao",
+    "politica_reuso": "reaproveitar evidencias e testes validos; nao mesclar a arvore historica diretamente"
+  },
+  "etapas": [
+    {"id":"11A_proveniencia","status":"aceito","criterio":"100% das fontes mecânicas do escopo possuem uma única autoridade normativa declarada."},
+    {"id":"11B_semantica_dados","status":"aceito","criterio":"Cada entidade mecânica do escopo v1.0 é confrontada com sua fonte e tem campos críticos validados."},
+    {"id":"11C_precedencia_versoes","status":"aceito","criterio":"Nenhuma versão antiga ou terceira substitui silenciosamente uma versão oficial vigente."},
+    {"id":"11D_overrides_casa","status":"aceito","criterio":"Toda divergência deliberada do oficial está vinculada a uma Regra da Casa explícita."},
+    {"id":"11E_runtime_normativo","status":"aceito","criterio":"O runtime atual aplica exatamente os valores e escolhas validados na camada normativa."},
+    {"id":"11F_cenarios_normativos","status":"aceito","criterio":"Cenários de personagem exercitam combinações críticas de fontes, legado e Regras da Casa sobre a arquitetura atual."},
+    {"id":"11G_evidencia_fechamento","status":"aceito","criterio":"Relatório final da v1.0 contém zero pendência normativa conhecida e fixa o congelamento de fontes."}
+  ],
+  "evidencia_fechamento": {
+    "data": "2026-09-02",
+    "politica": "zero pendencia normativa conhecida nos critérios rastreados pelo Bloco 9",
+    "fontes_congeladas": "dados/congelamento-fontes-v1.json",
+    "cenarios_criticos": "dados/cenarios-normativos-v1.json",
+    "workflow": ".github/workflows/auditar-proveniencia-normativa-v1.yml"
+  },
+  "dominios": ["classes","subclasses","especies","antecedentes","talentos","atributos","pericias","idiomas","equipamentos","itens_magicos","magias","compatibilidade","regras","localizacao"],
+  "criterio_fechamento": {
+    "entidade_sem_fonte": 0,
+    "entidade_sem_revisao_semantica": 0,
+    "divergencia_normativa_nao_justificada": 0,
+    "precedencia_incorreta": 0,
+    "override_casa_sem_registro": 0,
+    "runtime_divergente_da_fonte_validada": 0,
+    "cenario_critico_sem_teste": 0
+  }
+}

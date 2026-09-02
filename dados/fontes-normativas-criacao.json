@@ -1,0 +1,82 @@
+{
+  "schema": "hub-rpg/fontes-normativas-criacao/v1",
+  "politica": "fail-closed",
+  "objetivo": "Toda fonte de dados que altere criação ou ficha deve ter autoridade normativa explícita antes de poder ser considerada auditada.",
+  "hierarquia": [
+    {"id":"regra_casa","prioridade":100,"descricao":"Substituição explícita definida pelo Hub."},
+    {"id":"oficial_atual","prioridade":80,"descricao":"D&D 5.5e / revisão 2024 ou suplemento oficial publicado para essa revisão."},
+    {"id":"oficial_legado","prioridade":60,"descricao":"D&D 5e anterior sem substituto vigente, preservado pela política de compatibilidade."},
+    {"id":"terceiro_compativel","prioridade":40,"descricao":"Conteúdo de terceiro identificado e isolado; nunca substitui conteúdo oficial por identidade."},
+    {"id":"demonstrativo_nao_canonico","prioridade":0,"descricao":"Conteúdo demonstrativo que não pode ser promovido a regra canônica."},
+    {"id":"derivado_localizacao","prioridade":null,"descricao":"Localização/alias; não define mecânica normativa."},
+    {"id":"consolidado_misto","prioridade":null,"descricao":"Arquivo consolidado com proveniência obrigatória por item."}
+  ],
+  "mapeamentos": [
+    {"padrao":"dados/classes-base-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024 / SRD 5.2.1","proveniencia":"arquivo"},
+    {"padrao":"dados/classes-ptbr/*.json","autoridade":"derivado_localizacao","fonte":"Classes 2024 localizadas","proveniencia":"arquivo"},
+    {"padrao":"dados/artificer-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/invocacoes-bruxo-2024.json","autoridade":"oficial_atual","fonte":"D&D Basic Rules 2024 — Warlock","proveniencia":"arquivo"},
+    {"padrao":"dados/metamagias-feiticeiro-2024.json","autoridade":"oficial_atual","fonte":"D&D Basic Rules 2024 — Sorcerer","proveniencia":"arquivo"},
+
+    {"padrao":"dados/subclasses-pdfs.json","autoridade":"consolidado_misto","fonte":"Catálogo consolidado de subclasses","proveniencia":"item"},
+    {"padrao":"dados/subclasses-mecanicas-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-forge-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-heroes-faerun-2025.json","autoridade":"oficial_atual","fonte":"Forgotten Realms: Heroes of Faerûn (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-quickstone-2024.json","autoridade":"terceiro_compativel","fonte":"Frontiers of Eberron: Quickstone (2024)","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-larsene-ledger-2024.json","autoridade":"terceiro_compativel","fonte":"L'Arsène's Ledger of Treasure and Trinkets","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-tasha-2020.json","autoridade":"oficial_legado","fonte":"Tasha's Cauldron of Everything (2020)","proveniencia":"arquivo"},
+    {"padrao":"dados/subclasses-mecanicas-xanathar-2017.json","autoridade":"oficial_legado","fonte":"Xanathar's Guide to Everything (2017)","proveniencia":"arquivo"},
+    {"padrao":"dados/precedencia-subclasses.json","autoridade":"regra_casa","fonte":"Política normativa de precedência de subclasses do Hub","proveniencia":"arquivo"},
+
+    {"padrao":"dados/especies-pdf-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
+    {"padrao":"dados/especies-pdf-forge-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/especies-pdf-motm-2022.json","autoridade":"oficial_legado","fonte":"Mordenkainen Presents: Monsters of the Multiverse (2022)","proveniencia":"arquivo"},
+    {"padrao":"dados/especies-pdf-quickstone-2024.json","autoridade":"terceiro_compativel","fonte":"Frontiers of Eberron: Quickstone (2024)","proveniencia":"arquivo"},
+    {"padrao":"dados/tiefling-variantes.json","autoridade":"consolidado_misto","fonte":"Variantes Tiefling consolidadas","proveniencia":"item"},
+
+    {"padrao":"dados/antecedentes-srd-5.2.1.json","autoridade":"oficial_atual","fonte":"SRD 5.2.1","proveniencia":"arquivo"},
+    {"padrao":"dados/antecedentes-pdf-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
+    {"padrao":"dados/antecedentes-abertos-adicionais.json","autoridade":"oficial_atual","fonte":"Conteúdo oficial 2024 publicamente acessível","proveniencia":"item"},
+    {"padrao":"dados/antecedentes-pdf-forge-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/antecedentes-pdf-heroes-2025.json","autoridade":"oficial_atual","fonte":"Forgotten Realms: Heroes of Faerûn (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/antecedentes-pdf-quickstone-2024.json","autoridade":"terceiro_compativel","fonte":"Frontiers of Eberron: Quickstone (2024)","proveniencia":"arquivo"},
+
+    {"padrao":"dados/talentos-phb-2024.json","autoridade":"oficial_atual","fonte":"Player's Handbook 2024","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-forge-2025.json","autoridade":"oficial_atual","fonte":"Eberron: Forge of the Artificer (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-heroes-2025.json","autoridade":"oficial_atual","fonte":"Forgotten Realms: Heroes of Faerûn (2025)","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-quickstone-2024.json","autoridade":"terceiro_compativel","fonte":"Frontiers of Eberron: Quickstone (2024)","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-tasha-2020.json","autoridade":"oficial_legado","fonte":"Tasha's Cauldron of Everything (2020)","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-xanathar-2017.json","autoridade":"oficial_legado","fonte":"Xanathar's Guide to Everything (2017)","proveniencia":"arquivo"},
+    {"padrao":"dados/talentos-eberron-rising-2019.json","autoridade":"oficial_legado","fonte":"Eberron: Rising from the Last War (2019)","proveniencia":"arquivo"},
+
+    {"padrao":"dados/idiomas-*.json","autoridade":"consolidado_misto","fonte":"Catálogos de idiomas por cenário/fonte","proveniencia":"item"},
+
+    {"padrao":"dados/armas-srd.json","autoridade":"consolidado_misto","fonte":"SRD 5.2.1 + legado compatível consolidado","proveniencia":"item"},
+    {"padrao":"dados/armas-pdfs-manifest.json","autoridade":"consolidado_misto","fonte":"Manifesto de armas derivadas das fontes registradas","proveniencia":"item"},
+    {"padrao":"dados/armaduras-pdfs.json","autoridade":"consolidado_misto","fonte":"Armaduras consolidadas das fontes registradas","proveniencia":"item"},
+    {"padrao":"dados/equipamentos-aventura-core-pdfs.json","autoridade":"consolidado_misto","fonte":"Equipamento de aventura core consolidado","proveniencia":"item"},
+    {"padrao":"dados/equipamentos-aventura-pdfs.json","autoridade":"consolidado_misto","fonte":"Equipamento de aventura suplementar consolidado","proveniencia":"item"},
+    {"padrao":"dados/ferramentas-pdfs.json","autoridade":"consolidado_misto","fonte":"Ferramentas consolidadas das fontes registradas","proveniencia":"item"},
+    {"padrao":"dados/maestrias-de-arma-pdfs.json","autoridade":"consolidado_misto","fonte":"Maestrias 2024 + variantes explicitamente classificadas","proveniencia":"item"},
+
+    {"padrao":"dados/itens-magicos/*.json","autoridade":"consolidado_misto","fonte":"SRD 5.2.1 com legado único controlado","proveniencia":"item"},
+
+    {"padrao":"dados/magias-srd.json","autoridade":"oficial_atual","fonte":"SRD 5.2.1","proveniencia":"item"},
+    {"padrao":"dados/magias-catalogo.json","autoridade":"consolidado_misto","fonte":"Catálogo consolidado 5.5e/5e","proveniencia":"item"},
+    {"padrao":"dados/magias-suplementos-locais.json","autoridade":"consolidado_misto","fonte":"Suplementos locais registrados","proveniencia":"item"},
+
+    {"padrao":"dados/politica-compatibilidade-5e-5.5e.json","autoridade":"regra_casa","fonte":"Política normativa do Hub","proveniencia":"arquivo"},
+    {"padrao":"dados/regras-hub.json","autoridade":"regra_casa","fonte":"Regras da Casa do Hub","proveniencia":"arquivo"},
+    {"padrao":"dados/regras-casa-adicionais.json","autoridade":"regra_casa","fonte":"Regras da Casa adicionais do Hub","proveniencia":"arquivo"},
+
+    {"padrao":"dados/localizacao-*.json","autoridade":"derivado_localizacao","fonte":"Camada PT-BR derivada","proveniencia":"arquivo"}
+  ],
+  "criterio_fechamento": {
+    "fonte_mecanica_sem_autoridade": 0,
+    "fonte_com_multiplas_autoridades": 0,
+    "autoridade_desconhecida": 0,
+    "conteudo_terceiro_promovido_a_oficial": 0,
+    "demonstrativo_promovido_a_canonico": 0,
+    "localizacao_tratada_como_fonte_normativa": 0
+  }
+}

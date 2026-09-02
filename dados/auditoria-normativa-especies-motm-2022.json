@@ -1,0 +1,37 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-especies/v1",
+  "etapa":"11B-11C",
+  "dominio":"especies",
+  "fonte_id":"motm-2022",
+  "fonte":"Mordenkainen Presents: Monsters of the Multiverse (2022)",
+  "autoridade":"oficial_legado",
+  "publicadas_originalmente":33,
+  "preservadas_no_hub":28,
+  "substituidas_por_versao_atual":5,
+  "substituicoes":[
+    {"nome":"Aasimar","fonte_atual":"phb-2024"},
+    {"nome":"Goliath","fonte_atual":"phb-2024"},
+    {"nome":"Orc","fonte_atual":"phb-2024"},
+    {"nome":"Changeling","fonte_atual":"eberron-forge-2025"},
+    {"nome":"Shifter","fonte_atual":"eberron-forge-2025"}
+  ],
+  "invariantes_de_precedencia":[
+    "As cinco identidades substituídas não permanecem no arquivo MotM local.",
+    "As 28 opções sem versão atual equivalente permanecem como oficial_legado compatível com a política 5e→5.5e.",
+    "O runtime preferCurrent deve escolher uma versão 5.5e posterior em caso de reintrodução acidental de identidade legada equivalente.",
+    "A ausência de ASI racial na aplicação 5.5e deve prevalecer mesmo para conteúdo legado."
+  ],
+  "amostras_semanticas_publicas":[
+    {"nome":"Goblin","tracos":["Goblinoid","Darkvision","Fey Ancestry","Fury of the Small","Nimble Escape"]},
+    {"nome":"Kobold","tracos":["Darkvision","Draconic Cry","Kobold Legacy"]},
+    {"nome":"Lizardfolk","tracos":["Bite","Hold Breath","Hungry Jaws","Natural Armor","Nature's Intuition"]},
+    {"nome":"Yuan-ti","tracos":["Darkvision","Magic Resistance","Poison Resilience","Serpentine Spellcasting"]}
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — Mordenkainen Presents: Monsters of the Multiverse",
+    "D&D Beyond — Character Species listing",
+    "D&D Beyond — Exploring the New Goblin, Hobgoblin, and Kobold Races"
+  ],
+  "status":"estrutural_precedencia_com_amostras_semanticas",
+  "observacao":"A fonte original publica 33 espécies. O arquivo do Hub é deliberadamente reduzido a 28 porque cinco identidades possuem revisão 5.5e posterior e são carregadas de PHB 2024/Forge 2025."
+}

@@ -1,5 +1,5 @@
 import{state,$,AB,arr,num,fold}from'./state.js';
-import{applyHouseRules,derive,selected}from'./rules.js?v=20260824-stage-isolation1';
+import{applyHouseRules,derive,selected}from'./rules.js?v=20260831-tasha-metamagic1';
 
 let initialized=false,queued=false,enforcing=false;
 const clone=v=>structuredClone(v);

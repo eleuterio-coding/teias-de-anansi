@@ -1,0 +1,36 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-subclasses/v1",
+  "etapa":"11B-11C",
+  "dominio":"subclasses",
+  "fonte_id":"quickstone-2024",
+  "fonte":"Frontiers of Eberron: Quickstone (2024)",
+  "autoridade":"terceiro_compativel",
+  "quantidade":6,
+  "identidades":[
+    {"nome":"Path of the Demonshard","classe":"Barbarian","niveis":[3,6,10,14]},
+    {"nome":"College of Wands","classe":"Bard","niveis":[3,6,14]},
+    {"nome":"Commerce Domain","classe":"Cleric","niveis":[3,6,17]},
+    {"nome":"Bloodhound","classe":"Ranger","niveis":[3,7,11,15]},
+    {"nome":"Nemesis Sorcery","classe":"Sorcerer","niveis":[3,6,14,18]},
+    {"nome":"Stone Sovereign Patron","classe":"Warlock","niveis":[3,6,10,14]}
+  ],
+  "invariantes_de_proveniencia":[
+    "A fonte permanece terceiro_compativel mesmo quando distribuída no D&D Beyond.",
+    "Quickstone não pode substituir uma identidade de PHB 2024, Forge 2025 ou Heroes of Faerûn 2025.",
+    "A prioridade runtime de quickstone-2024 deve permanecer abaixo de fontes oficiais atuais.",
+    "As seis subclasses devem permanecer identificadas como conteúdo da fonte quickstone-2024."
+  ],
+  "confrontacao_publica":[
+    {"subclasse":"Stone Sovereign Patron","caracteristica":"Form of Stone","invariante":"nível 6","status":"confirmado_em_suporte_DDB"},
+    {"subclasse":"Stone Sovereign Patron","caracteristica":"Stone Sovereign Spells","invariante":"Earthbind e Earth Tremor presentes","status":"confirmado_em_suporte_DDB"},
+    {"subclasse":"Path of the Demonshard","caracteristica":"Fiendish Punishment","status":"confrontado_em_resenha_publica"},
+    {"subclasse":"College of Wands","caracteristica":"Bonus Cantrip / At Your Fingertips","status":"confrontado_em_resenha_publica"}
+  ],
+  "fontes_verificacao":[
+    "D&D Beyond — Frontiers of Eberron: Quickstone",
+    "D&D Beyond — Frontiers of Eberron: Quickstone Issues and Support Thread",
+    "RPGnet — Sharing My Thoughts on Frontiers of Eberron: Quickstone"
+  ],
+  "status":"estrutural_e_proveniencia_com_invariantes_publicos",
+  "observacao":"Conteúdo de terceiro é auditado contra sua própria fonte e isolado da autoridade oficial; hospedagem no D&D Beyond não o promove a publicação oficial da Wizards."
+}

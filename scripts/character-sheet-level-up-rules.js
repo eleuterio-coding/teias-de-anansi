@@ -1,5 +1,5 @@
 import{arr,num,fold}from'./character-builder/state.js';
-import{HOUSE_ABILITY_LEVELS,HOUSE_FEAT_LEVELS,subclassLevel,spellProgress,spellSelectionQuota}from'./character-builder/rules.js?v=20260901-level-up1';
+import{HOUSE_ABILITY_LEVELS,HOUSE_FEAT_LEVELS,subclassLevel,spellProgress,spellSelectionQuota}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 
 const clampLevel=value=>Math.max(1,Math.min(20,num(value)||1));
 const replacedAbilityFeature=feature=>/ability score improvement|melhoria.*atribut|aumento.*atribut/.test(fold(feature?.name||''));

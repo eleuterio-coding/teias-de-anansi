@@ -1,0 +1,114 @@
+name: Auditar normativa v1.0 — Bloco 9
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/**'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-proveniencia-normativa.mjs'
+      - 'tests/auditar-semantica-*.mjs'
+      - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
+      - 'tests/auditar-talentos-*.mjs'
+      - 'tests/auditar-revisao-unica-rules.mjs'
+      - 'tests/auditar-overrides-regras-casa.mjs'
+      - 'tests/auditar-cenarios-normativos-v1.mjs'
+      - 'tests/auditar-congelamento-fontes-v1.mjs'
+      - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/**'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-proveniencia-normativa.mjs'
+      - 'tests/auditar-semantica-*.mjs'
+      - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
+      - 'tests/auditar-talentos-*.mjs'
+      - 'tests/auditar-revisao-unica-rules.mjs'
+      - 'tests/auditar-overrides-regras-casa.mjs'
+      - 'tests/auditar-cenarios-normativos-v1.mjs'
+      - 'tests/auditar-congelamento-fontes-v1.mjs'
+      - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  normativa-v1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe dos gates normativos
+        run: |
+          for f in tests/auditar-proveniencia-normativa.mjs tests/auditar-semantica-*.mjs tests/auditar-precedencia-*.mjs tests/auditar-invocacoes-bruxo-2024.mjs tests/auditar-metamagias-feiticeiro-2024.mjs tests/auditar-talentos-*.mjs tests/auditar-revisao-unica-rules.mjs tests/auditar-overrides-regras-casa.mjs tests/auditar-cenarios-normativos-v1.mjs tests/auditar-congelamento-fontes-v1.mjs; do node --check "$f"; done
+      - name: 11A · Proveniência fail-closed
+        run: node tests/auditar-proveniencia-normativa.mjs
+      - name: 11B · Classes core 2024
+        run: node tests/auditar-semantica-classes-core.mjs
+      - name: 11B · Subclasses PHB 2024
+        run: node tests/auditar-semantica-subclasses-phb-2024.mjs
+      - name: 11B · Subclasses Forge 2025
+        run: node tests/auditar-semantica-subclasses-forge-2025.mjs
+      - name: 11B · Subclasses Heroes of Faerûn 2025
+        run: node tests/auditar-semantica-subclasses-heroes-faerun-2025.mjs
+      - name: 11B · Subclasses Quickstone 2024
+        run: node tests/auditar-semantica-subclasses-quickstone-2024.mjs
+      - name: 11B · Subclasses L’Arsène Ledger 2024
+        run: node tests/auditar-semantica-subclasses-larsene-ledger-2024.mjs
+      - name: 11B · Subclasses Tasha 2020
+        run: node tests/auditar-semantica-subclasses-tasha-2020.mjs
+      - name: 11B · Subclasses Xanathar 2017
+        run: node tests/auditar-semantica-subclasses-xanathar-2017.mjs
+      - name: 11C · Precedência de subclasses Tasha
+        run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
+      - name: 11C · Precedência de subclasses Xanathar
+        run: node tests/auditar-precedencia-subclasses-xanathar-2017.mjs
+      - name: 11B · Espécies PHB 2024
+        run: node tests/auditar-semantica-especies-phb-2024.mjs
+      - name: 11B · Espécies Forge 2025
+        run: node tests/auditar-semantica-especies-forge-2025.mjs
+      - name: 11B · Espécies Quickstone 2024
+        run: node tests/auditar-semantica-especies-quickstone-2024.mjs
+      - name: 11B · Espécies MotM 2022
+        run: node tests/auditar-semantica-especies-motm-2022.mjs
+      - name: 11C · Precedência Tiefling
+        run: node tests/auditar-precedencia-tiefling.mjs
+      - name: 11B · Antecedentes PHB 2024
+        run: node tests/auditar-semantica-antecedentes-phb-2024.mjs
+      - name: 11B · Antecedentes suplementos 2025
+        run: node tests/auditar-semantica-antecedentes-suplementos-2025.mjs
+      - name: 11B · Antecedentes legado 2014
+        run: node tests/auditar-semantica-antecedentes-legado-2014.mjs
+      - name: 11C · Precedência Antecedentes Quickstone
+        run: node tests/auditar-precedencia-antecedentes-quickstone-2024.mjs
+      - name: 11B/11E · Invocações Místicas 2024
+        run: node tests/auditar-invocacoes-bruxo-2024.mjs
+      - name: 11B/11E · Metamagia 2024
+        run: node tests/auditar-metamagias-feiticeiro-2024.mjs
+      - name: 11B/11E · Talentos Tasha 2020
+        run: node tests/auditar-talentos-tasha-2020.mjs
+      - name: 11B/11E · Talentos Xanathar 2017
+        run: node tests/auditar-talentos-xanathar-2017.mjs
+      - name: 11B/11E · Talentos concedidos por características de classe
+        run: node tests/auditar-talentos-caracteristicas-classe.mjs
+      - name: 11B/11E · Talentos especiais de Antecedentes
+        run: node tests/auditar-talentos-especiais-antecedentes.mjs
+      - name: 11D · Overrides de Regras da Casa
+        run: node tests/auditar-overrides-regras-casa.mjs
+      - name: 11E · Revisão única do motor central
+        run: node tests/auditar-revisao-unica-rules.mjs
+      - name: 11F · Cenários normativos críticos
+        run: node tests/auditar-cenarios-normativos-v1.mjs
+      - name: 11G · Evidência e congelamento de fontes
+        run: node tests/auditar-congelamento-fontes-v1.mjs

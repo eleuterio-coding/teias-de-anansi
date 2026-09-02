@@ -1,0 +1,10 @@
+import{state,arr,num,uniq}from'./state.js';
+
+const isSorcerer=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)?.slug==='sorcerer';
+const optionById=id=>arr(state.catalogs.metamagic).find(x=>x.id===id)||null;
+const catalogReady=()=>arr(state.catalogs.metamagic).length===10&&Object.keys(state.catalogs.metamagicProgression||{}).length>=20;
+export function metamagicLimit(level=num(state.c?.choices?.class?.level)||1){return Math.max(0,num(state.catalogs.metamagicProgression?.[String(Math.max(1,Math.min(20,num(level)||1)))]))}
+export function sanitizeMetamagicIds(values,{limit=metamagicLimit(),requireSorcerer=true}={}){const raw=arr(values);if(!catalogReady())return{ids:raw.slice(),options:[],pending:[],limit:requireSorcerer?(isSorcerer()?raw.length:0):Math.max(0,num(limit)),catalogReady:false};if(requireSorcerer&&!isSorcerer())return{ids:[],options:[],pending:[],limit:0,catalogReady:true};const ids=uniq(raw.filter(id=>optionById(id))).slice(0,Math.max(0,num(limit)));while(ids.length<Math.max(0,num(limit)))ids.push(null);const pending=[];for(let i=0;i<ids.length;i++)if(!ids[i])pending.push({slot:i,message:`Escolha a Metamagia ${i+1}.`});return{ids,options:ids.map((id,slot)=>({slot,option:optionById(id)})).filter(x=>x.option),pending,limit:Math.max(0,num(limit)),catalogReady:true}}
+export function sanitizeSorcererMetamagic(){if(!state.c?.choices)return{ids:[],options:[],pending:[],limit:0,catalogReady:false};state.c.choices.sorcererMetamagic=state.c.choices.sorcererMetamagic||{options:[]};const out=sanitizeMetamagicIds(state.c.choices.sorcererMetamagic.options,{requireSorcerer:true});if(out.catalogReady)state.c.choices.sorcererMetamagic.options=out.ids;return out}
+export function metamagicOutcome(){const clean=sanitizeSorcererMetamagic(),level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1));return{...clean,sorceryPoints:isSorcerer()&&level>=2?level:0,flags:clean.options.map(x=>x.option.id)}}
+export function metamagicMissingChoices(){return sanitizeSorcererMetamagic().pending.map(x=>x.message)}

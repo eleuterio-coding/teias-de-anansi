@@ -1,0 +1,22 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-antecedentes-suplementos/v1",
+  "politica":"fail-closed",
+  "fontes":[
+    {
+      "id":"forge-2025",
+      "autoridade":"oficial_atual",
+      "quantidade":17,
+      "nomes":["Aberrant Heir","Archaeologist","House Agent","Cannith Heir","Deneith Heir","Ghallanda Heir","Jorasco Heir","Kundarak Heir","Lyrandar Heir","Medani Heir","Orien Heir","Phiarlan Heir","Sivis Heir","Tharashk Heir","Thuranni Heir","Vadalis Heir","Inquisitive"],
+      "antecedentes_com_dragonmark":14,
+      "nota_dragonmark":"Aberrant Heir e os 13 herdeiros de Casas concedem Dragonmark feats específicos; esses talentos não pertencem à categoria Origem e não podem ser apagados pela escolha livre de Talento de Origem da Regra da Casa."
+    },
+    {
+      "id":"heroes-2025",
+      "autoridade":"oficial_atual",
+      "quantidade":18,
+      "nomes":["Chondathan Freebooter","Dead Magic Dweller","Flaming Fist Mercenary","Genie Touched","Ice Fisher","Moonwell Pilgrim","Mulhorandi Tomb Raider","Mythalkeeper","Rashemi Wanderer","Shadowmasters Exile","Dragon Cultist","Emerald Enclave Caretaker","Harper","Knight of the Gauntlet","Lords' Alliance Vassal","Purple Dragon Squire","Zhentarim Mercenary","Spellfire Initiate"],
+      "nota":"Os talentos de facção e Spellfire classificados como Origem permanecem sujeitos à Regra da Casa de Talento de Origem livre; os dados originais continuam registrados para proveniência."
+    }
+  ],
+  "contrato_estrutural_2024_2025":{"atributos":3,"pericias":2,"talento":1,"ferramenta_ou_escolha":1,"pacote_b_po":50}
+}

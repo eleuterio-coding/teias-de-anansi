@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,slug,mod,read,json}from'./character-builder/state.js';
-import{derive,speciesTraitChoiceDefs}from'./character-builder/rules.js?v=20260826-unified-spells2';
+import{derive,speciesTraitChoiceDefs}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
 import{activeClassSpellIds,freeLongRestFeat}from'./character-sheet-spell-runtime-rules.js?v=20260825-spell-runtime1';
 let initialized=false,loaded=false,loading=null,rendering=false;
 const ALIASES={

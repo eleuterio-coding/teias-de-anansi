@@ -1,0 +1,42 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-tiefling/v1",
+  "politica": "fail-closed",
+  "especie": "Tiefling",
+  "fonte_vigente": {
+    "id": "phb-2024",
+    "autoridade": "oficial_atual",
+    "ruleset": "5.5e",
+    "legados": [
+      {"nome":"Abissal","resistencia":"Veneno","nivel1":"Poison Spray","nivel3":"Ray of Sickness","nivel5":"Hold Person"},
+      {"nome":"Ctônico","resistencia":"Necrótico","nivel1":"Chill Touch","nivel3":"False Life","nivel5":"Ray of Enfeeblement"},
+      {"nome":"Infernal","resistencia":"Fogo","nivel1":"Fire Bolt","nivel3":"Hellish Rebuke","nivel5":"Darkness"}
+    ]
+  },
+  "legado_oficial_unico": {
+    "autoridade": "oficial_legado",
+    "ruleset": "5e",
+    "quantidade": 11,
+    "nomes": ["Língua do Diabo","Fogo Infernal","Alado","Baalzebul","Dispater","Fierna","Glasya","Levistus","Mammon","Mephistopheles","Zariel"],
+    "politica": "Preservar somente o pacote mecânico único que substitui Fiendish Legacy; aumentos raciais de atributo 5e não são aplicados."
+  },
+  "terceiro_quickstone": {
+    "autoridade": "terceiro_compativel",
+    "ruleset": "5e",
+    "quantidade": 7,
+    "nomes": ["Dolurrhi","Fernian","Kythrian","Mabaran","Risian","Sakah","Shavaran"],
+    "politica": "Fundir como opções de Legado Tiefling da espécie-base 2024; nunca promover Quickstone a oficial nem criar uma segunda espécie Tiefling no runtime."
+  },
+  "excluidos": [
+    {"nome":"Tiefling Feral","motivo":"A alteração mecânica relevante é aumento racial de atributo, substituído pela arquitetura 2024/Regras da Casa."},
+    {"nome":"Asmodeus","motivo":"A atualização funcional é o Legado Infernal 2024, que prevalece."},
+    {"nome":"Aparência Variante","motivo":"Opção cosmética sem bloco mecânico separado."}
+  ],
+  "runtime_esperado": {
+    "especies_tiefling": 1,
+    "legados_totais": 21,
+    "legados_2024": 3,
+    "legados_oficiais_legados": 11,
+    "legados_quickstone": 7,
+    "aumentos_atributo_raciais_aplicados": 0
+  }
+}
