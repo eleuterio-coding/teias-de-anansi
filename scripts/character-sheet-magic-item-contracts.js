@@ -33,14 +33,14 @@ function addFlag(outcome,key,value=true){outcome.flags[key]=value}
 function addApplied(outcome,id,effect,value){outcome.applied.push({id,effect,value})}
 
 export function applyGenericMagicItemPersistentContract(outcome,usage){
- const row=usage?.row,item=row?.data;if(!item)return false;
- const id=slug(row),text=fold(`${item.bloco||''} ${item.bloco_original||''} ${item.descricao||''}`),traits=semanticTraits(text),active=!!(usage.active||usage.equipped||usage.attuned);
+ const row=usage?.row,item=row?.data||null,id=slug(row);if(!id)return false;
+ const text=fold(`${item?.bloco||row?.block||row?.category||''} ${item?.bloco_original||''} ${item?.descricao||row?.description||''}`),traits=semanticTraits(text),active=!!(usage.active||usage.equipped||usage.attuned);
  if(!active)return false;
- const contract={id,sourceId:item.id||row.refId,traits,requiresAttunement:/sintoniza|attunement/.test(text),equipped:!!usage.equipped,attuned:!!usage.attuned,active:!!usage.active,damageTypes:damageTypesIn(text)};
+ const contract={id,sourceId:item?.id||row?.refId||id,traits,requiresAttunement:/sintoniza|attunement/.test(text),equipped:!!usage.equipped,attuned:!!usage.attuned,active:!!usage.active,damageTypes:damageTypesIn(text),catalogBacked:!!item};
  outcome.contracts=outcome.contracts||[];outcome.contracts.push(contract);
  outcome.flags.persistentContracts={...(outcome.flags.persistentContracts||{}),[id]:contract};
 
- // Efeitos simples e inequívocos que devem alterar a derivação já no Bloco 10.
+ // Efeitos simples e inequívocos que alteram a derivação ou expõem um estado mecânico persistente já no Bloco 10.
  const simple={
   'cloak-of-protection':{ac:1,save:1},'ring-of-protection':{ac:1,save:1},'bracers-of-defense':{conditionalAc:2},
   'gauntlets-of-ogre-power':{ability:['Força',19]},'headband-of-intellect':{ability:['Inteligência',19]},
@@ -54,7 +54,21 @@ export function applyGenericMagicItemPersistentContract(outcome,usage){
   'eyes-of-minute-seeing':{flags:['advantageOnCloseInvestigationChecks']},'eyes-of-the-eagle':{flags:['advantageOnSightPerceptionChecks']},
   'boots-of-striding-and-springing':{flags:['walkingSpeedMinimum30','jumpDistanceTripled']},
   'gloves-of-thievery':{flags:['sleightAndLockpickBonus5']},'bracers-of-archery':{flags:['shortbowLongbowTraining','rangedBowDamageBonus2']},
-  'necklace-of-adaptation':{flags:['breatheNormallyAnyEnvironment','advantageAgainstHarmfulGases']}
+  'necklace-of-adaptation':{flags:['breatheNormallyAnyEnvironment','advantageAgainstHarmfulGases']},
+  'cloak-of-displacement':{flags:['attacksAgainstHaveDisadvantageWhileDisplacementActive']},
+  'cloak-of-elvenkind':{flags:['advantageOnStealthChecks','disadvantageOnPerceptionChecksToSeeWearer']},
+  'sentinel-shield':{flags:['advantageOnInitiative','advantageOnPerceptionChecks']},
+  'spellguard-shield':{flags:['advantageOnSavesAgainstSpells','spellAttacksAgainstHaveDisadvantage']},
+  'weapon-of-warning':{flags:['advantageOnInitiative','cannotBeSurprisedWhileWarningWeaponAvailable']},
+  'ring-of-warmth':{resistance:['Frio'],flags:['extremeColdTolerance']},
+  'ring-of-water-walking':{flags:['canStandAndMoveOnLiquidSurfaces']},
+  'ring-of-feather-falling':{flags:['automaticFeatherFallWhileFalling']},
+  'ring-of-mind-shielding':{flags:['thoughtReadingBlocked','alignmentDetectionBlocked','creatureTypeDetectionBlocked']},
+  'gloves-of-swimming-and-climbing':{flags:['swimAndClimbWithoutExtraMovementCost']},
+  'slippers-of-spider-climbing':{flags:['spiderClimbWhileHandsFree']},
+  'boots-of-levitation':{flags:['levitationAvailableWhileWorn']},
+  'winged-boots':{flags:['flyingMovementAvailable']},
+  'cloak-of-arachnida':{flags:['climbSpeedEqualWalking','spiderClimb','webMovementUnrestricted']}
  }[id];
  if(simple){
   if(simple.ac)outcome.acBonus+=simple.ac;if(simple.save)outcome.savingThrowBonus+=simple.save;
@@ -66,13 +80,12 @@ export function applyGenericMagicItemPersistentContract(outcome,usage){
   addApplied(outcome,id,'persistent-contract',contract);return true
  }
 
- // Famílias que exigem escolha de variante. A implementação está presente, mas permanece
- // fail-closed até a escolha existir no estado do personagem.
+ // Famílias que exigem escolha de variante. A implementação permanece fail-closed até a escolha existir na Ficha.
  if(['belt-of-giant-strength','ioun-stone','ring-of-resistance','potion-of-resistance','dragon-scale-mail','shield-1-2-or-3','wand-of-the-war-mage-1-2-or-3'].includes(id)){
   outcome.pending.push({id,type:'parameter',reason:'Este item possui variante mecânica; registre a variante no estado da Ficha antes de aplicar seu modificador.'});return true
  }
 
- // Para efeitos cujo impacto ocorre em jogadas, ações, reações, alvos, cargas ou duração,
- // o contrato persistente fica estruturado aqui e a resolução matemática/consumo é do Bloco 11.
+ // Para efeitos cujo impacto final ocorre em uma jogada, ação, reação, alvo, carga ou duração,
+ // o estado persistente fica estruturado aqui e a resolução matemática/consumo é responsabilidade do Bloco 11.
  addApplied(outcome,id,'persistent-contract',contract);return true
 }
