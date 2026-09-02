@@ -1,0 +1,73 @@
+name: Auditar rolagens e resolução — Bloco 11
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/magias-catalogo.json'
+      - 'dados/itens-magicos/**'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-rolagens-resolucao.mjs'
+      - 'tests/auditar-ui-resolucao-bloco11.mjs'
+      - 'tests/auditar-itens-magicos-resolucao-bloco11.mjs'
+      - 'tests/auditar-morte-bloco11.mjs'
+      - 'tests/auditar-modificadores-combate-bloco11.mjs'
+      - '.github/workflows/auditar-rolagens-resolucao.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/magias-catalogo.json'
+      - 'dados/itens-magicos/**'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-rolagens-resolucao.mjs'
+      - 'tests/auditar-ui-resolucao-bloco11.mjs'
+      - 'tests/auditar-itens-magicos-resolucao-bloco11.mjs'
+      - 'tests/auditar-morte-bloco11.mjs'
+      - 'tests/auditar-modificadores-combate-bloco11.mjs'
+      - '.github/workflows/auditar-rolagens-resolucao.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rolagens-resolucao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/character-sheet-resolution-rules.js
+          node --check scripts/character-sheet-resolution-ui.js
+          node --check scripts/character-sheet-magic-item-resolution.js
+          node --check scripts/character-sheet-magic-item-resolution-ui.js
+          node --check scripts/character-sheet-death-rules.js
+          node --check scripts/character-sheet-death-ui.js
+          node --check tests/auditar-rolagens-resolucao.mjs
+          node --check tests/auditar-ui-resolucao-bloco11.mjs
+          node --check tests/auditar-itens-magicos-resolucao-bloco11.mjs
+          node --check tests/auditar-morte-bloco11.mjs
+          node --check tests/auditar-modificadores-combate-bloco11.mjs
+      - name: 11A · Motor matemático determinístico
+        run: node tests/auditar-rolagens-resolucao.mjs
+      - name: 11B · Integração com a Ficha Digital
+        run: node tests/auditar-ui-resolucao-bloco11.mjs
+      - name: 11C · Regressões centrais
+        run: |
+          node tests/auditar-combate-recursos.mjs
+          node tests/auditar-ficha-modo-jogo.mjs
+          node tests/auditar-magias-descansos.mjs
+          node tests/auditar-fechamento-mecanico-ficha.mjs
+          node tests/auditar-magic-item-state-bloco10.mjs
+      - name: 11D · Itens mágicos de resolução
+        run: node tests/auditar-itens-magicos-resolucao-bloco11.mjs
+      - name: 11E · Salvaguardas contra a Morte
+        run: node tests/auditar-morte-bloco11.mjs
+      - name: 11F · Modificadores condicionais de combate
+        run: node tests/auditar-modificadores-combate-bloco11.mjs
