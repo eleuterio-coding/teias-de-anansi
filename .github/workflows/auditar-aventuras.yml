@@ -5,6 +5,7 @@ on:
       - 'scripts/adventure-state.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/campaign-table-adventure-ui.js'
+      - 'scripts/campaign-list-ui.js'
       - 'aventuras.html'
       - 'adventures.css'
       - 'mesa.html'
@@ -26,6 +27,7 @@ jobs:
           node --check scripts/adventure-state.js
           node --check scripts/adventure-ui.js
           node --check scripts/campaign-table-adventure-ui.js
+          node --check scripts/campaign-list-ui.js
           node --check tests/auditar-aventuras.mjs
       - name: 13A–13H · Conteúdo narrativo, vínculos e condução
         run: node tests/auditar-aventuras.mjs
