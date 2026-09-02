@@ -1,6 +1,7 @@
 import{state,$,arr,esc}from'./state.js';
 import{loadMetamagic}from'./metamagic-catalog.js?v=20260831-tasha-metamagic1';
 import{sanitizeSorcererMetamagic}from'./metamagic-mechanics.js?v=20260831-tasha-metamagic1';
+import{initTashaFeatUi}from'./tasha-feat-ui.js?v=20260831-tasha-metamagic1';
 
 let initialized=false,loading=null,rendering=false;
 function klass(){return(state.catalogs.classes||[]).find(x=>x.id===state.c?.refs?.class)||null}
@@ -12,4 +13,4 @@ function render(){if(rendering||!state.c)return;rendering=true;try{const card=en
 function refreshSheet(){document.dispatchEvent(new CustomEvent('hub:sorcerer-metamagic-changed'));$('nome')?.dispatchEvent(new Event('input'))}
 function onChange(e){const select=e.target.closest('.sorcerer-metamagic-select');if(!select)return;const slot=Number(select.dataset.slot),data=ensureState(),values=arr(data.options).slice();while(values.length<=slot)values.push(null);values[slot]=select.value||null;data.options=values;sanitizeSorcererMetamagic();render();refreshSheet()}
 function bind(){$('classe')?.addEventListener('change',()=>queueMicrotask(render));$('nivel')?.addEventListener('change',()=>queueMicrotask(render));$('new-character')?.addEventListener('click',()=>queueMicrotask(render));for(const event of['hub:class-context-changed','hub:progression-context-changed','hub:metamagic-catalog-ready'])document.addEventListener(event,()=>queueMicrotask(render))}
-export function initMetamagicUi(){if(initialized)return;initialized=true;ensureState();ensureCard();bind();ensureCatalog().then(()=>render());render()}
+export function initMetamagicUi(){if(initialized)return;initialized=true;ensureState();ensureCard();bind();initTashaFeatUi();ensureCatalog().then(()=>render());render()}
