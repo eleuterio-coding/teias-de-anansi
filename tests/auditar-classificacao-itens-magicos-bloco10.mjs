@@ -2,7 +2,7 @@ import assert from'node:assert/strict';
 import{readFile}from'node:fs/promises';
 import{fileURLToPath}from'node:url';
 import{dirname,resolve}from'node:path';
-import{classifyMagicItemCatalog}from'../scripts/character-sheet-magic-item-classification.js';
+import{classifyMagicItemCatalog,MAGIC_ITEM_EXPLICIT_RESPONSIBILITY}from'../scripts/character-sheet-magic-item-classification.js';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=resolve(here,'..');
@@ -21,5 +21,10 @@ assert.equal(report.total,259,'10H · todos os 259 itens mágicos congelados dev
 assert.equal(report.entries.filter(entry=>!entry.category).length,0,'10H · nenhum item pode ficar sem categoria de responsabilidade');
 const categorized=Object.values(report.counts).reduce((sum,value)=>sum+value,0);
 assert.equal(categorized,259,'10H · soma das categorias deve corresponder ao catálogo completo');
-console.log('10H · Classificação integral dos itens mágicos:',JSON.stringify(report.counts));
-if(report.manualReview.length)console.log('10H · Revisão manual ainda necessária:',report.manualReview.map(entry=>entry.id).join(', '));
+assert.equal(report.manualReview.length,0,`10H · revisão semântica precisa estar zerada: ${report.manualReview.map(entry=>entry.id).join(', ')}`);
+assert.equal(Object.keys(MAGIC_ITEM_EXPLICIT_RESPONSIBILITY).length,38,'10H · os 38 casos antes ambíguos precisam permanecer classificados explicitamente');
+for(const[id,category]of Object.entries(MAGIC_ITEM_EXPLICIT_RESPONSIBILITY)){
+ assert.ok(ids.includes(id),`10H · responsabilidade explícita aponta para item fora do escopo congelado: ${id}`);
+ const entry=report.entries.find(x=>x.id===id);assert.equal(entry.category,category,`10H · categoria explícita divergente para ${id}`);assert.equal(entry.review,false,`10H · ${id} não pode voltar para revisão manual`)
+}
+console.log('10H · Classificação integral fechada dos itens mágicos:',JSON.stringify(report.counts),'revisão manual 0.');
