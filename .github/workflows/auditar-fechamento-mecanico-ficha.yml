@@ -1,0 +1,37 @@
+name: Auditar fechamento mecânico da Ficha — Bloco 10
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-fechamento-mecanico-ficha.mjs'
+      - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-sheet*.js'
+      - 'tests/auditar-fechamento-mecanico-ficha.mjs'
+      - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  fechamento-mecanico-ficha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe do gate
+        run: node --check tests/auditar-fechamento-mecanico-ficha.mjs
+      - name: 10A · Nenhum módulo mecânico órfão do runtime
+        run: node tests/auditar-fechamento-mecanico-ficha.mjs
