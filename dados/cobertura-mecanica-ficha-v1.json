@@ -1,0 +1,108 @@
+{
+  "schema": "hub-rpg/cobertura-mecanica-ficha/v1",
+  "bloco": 10,
+  "politica": "fail-closed",
+  "status": "aceito",
+  "objetivo": "Nenhuma característica suportada pelo escopo v1.0 pode permanecer apenas como texto quando deveria alterar cálculo, recurso, condição, rolagem ou estado representável digitalmente.",
+  "regra_de_aceite": {
+    "lacunas_conhecidas": 0,
+    "lacunas_nao_classificadas": 0,
+    "testes_falhando": 0
+  },
+  "estado_final": {
+    "modulos_mecanicos": {
+      "total": 22,
+      "alcancaveis_runtime": 22,
+      "orfaos": 0
+    },
+    "catalogo_itens_magicos": 259,
+    "classificacao": {
+      "persistent": 60,
+      "resolution": 100,
+      "mixed": 99,
+      "manual_review": 0
+    },
+    "revisao_manual_pendente": 0,
+    "itens_persistentes_ou_mistos": 159,
+    "contratos_persistentes": 159,
+    "sem_handler_persistente": 0
+  },
+  "evidencias": [
+    {
+      "id": "magic-items-runtime-only-purchase",
+      "dominio": "itens_magicos",
+      "status": "resolvida",
+      "fontes": [
+        "dados/itens-magicos/manifest.json",
+        "scripts/character-builder/equipment-ownership.js",
+        "scripts/character-sheet-inventory-rules.js",
+        "scripts/character-sheet-magic-item-classification.js",
+        "scripts/character-sheet-magic-item-contracts.js",
+        "scripts/character-sheet-magic-item-state.js",
+        "scripts/character-sheet-magic-item-ui.js",
+        "tests/auditar-classificacao-itens-magicos-bloco10.mjs",
+        "tests/auditar-cobertura-persistente-itens-magicos-bloco10.mjs",
+        "tests/auditar-magic-item-state-bloco10.mjs",
+        "tests/auditar-magic-item-ui-bloco10.mjs"
+      ],
+      "resolucao": "Os 259 itens mágicos do escopo congelado foram classificados integralmente: 60 persistentes, 100 de resolução e 99 mistos, com revisão manual pendente zero. Todos os 159 itens persistentes ou mistos possuem contrato estruturado no runtime. Compras de criação recuperam o refId canônico do item mágico; o inventário preserva os dados necessários ao contrato mesmo após congelamento e movimentações de campanha; a Ficha Digital expõe uso/equipamento, sintonização, efeito ativo e parâmetros de variantes. Efeitos persistentes simples alteram a derivação ou expõem flags mecânicas; escolhas ausentes permanecem fail-closed. A resolução instantânea de jogadas, ações, reações, cargas, consumo e duração é explicitamente responsabilidade do Bloco 11.",
+      "cobertura": {
+        "catalogo": "259/259",
+        "classificacao_sem_revisao_manual": "259/259",
+        "persistentes_ou_mistos_com_contrato": "159/159",
+        "sem_handler": 0
+      },
+      "exemplos_mecanizados": [
+        "Amulet of Health — Constituição mínima 19 com propagação para PV e CA aplicável",
+        "Adamantine Armor — acertos críticos recebidos tornam-se acertos normais",
+        "Armor, Shield, Weapon e Ammunition +1/+2/+3 — variantes explícitas e bônus estruturados",
+        "Armor, Ring e Potion of Resistance — tipo de dano parametrizado",
+        "Armor of Vulnerability — resistência escolhida e vulnerabilidades derivadas",
+        "Stone of Good Luck — bônus global em testes de habilidade e salvaguardas",
+        "Mithral Armor — remoção estruturada das penalidades aplicáveis",
+        "Defender — transferência parametrizada do bônus para CA",
+        "Belt e Potion of Giant Strength — variante de Força parametrizada",
+        "Carpet of Flying — deslocamento de voo parametrizado",
+        "itens restantes persistentes/mistos — contrato semântico estruturado para consumo pela Ficha e pelo motor do Bloco 11"
+      ]
+    },
+    {
+      "id": "barbarian-core-feature-text-only",
+      "dominio": "classes",
+      "entidade": "barbarian",
+      "status": "resolvida",
+      "fontes": [
+        "dados/classes-ptbr/barbaro.json",
+        "scripts/character-builder/rules.js",
+        "tests/auditar-barbarian-core-bloco10.mjs"
+      ],
+      "caracteristicas_mecanizadas": [
+        "barbarian-unarmored-defense",
+        "barbarian-extra-attack",
+        "barbarian-fast-movement",
+        "barbarian-feral-instinct",
+        "barbarian-primal-champion"
+      ],
+      "caracteristicas_com_resolucao_compartilhada_bloco_11": [
+        "barbarian-danger-sense",
+        "barbarian-reckless-attack",
+        "barbarian-brutal-strike",
+        "barbarian-relentless-rage",
+        "barbarian-indomitable-might"
+      ],
+      "resolucao": "A derivação central aplica o núcleo mecânico do Bárbaro: Defesa sem Armadura, Ataque Extra, Movimento Rápido sem Armadura Pesada, Instinto Selvagem e Campeão Primal com propagação para atributos, ataque, PV e CA. Características cujo resultado depende de uma rolagem ou resolução contextual permanecem estruturadas para o Bloco 11, sem serem tratadas como texto morto."
+    },
+    {
+      "id": "mechanics-runtime-reachability",
+      "dominio": "runtime",
+      "status": "resolvida",
+      "fontes": [
+        "tests/auditar-fechamento-mecanico-ficha.mjs",
+        ".github/workflows/auditar-fechamento-mecanico-ficha.yml"
+      ],
+      "resolucao": "O gate fail-closed encontra todos os módulos *-mechanics.js do escopo e comprova que 22 de 22 são alcançáveis pelo runtime da Ficha/Construtor, sem módulos mecânicos órfãos. Também valida chamadas centrais e efeitos comportamentais de ferramentas de classe e talentos de Tasha."
+    }
+  ],
+  "fronteira_bloco_11": "O Bloco 10 encerra estado, modificadores, recursos, condições e contratos mecânicos persistentes da Ficha. O Bloco 11 é responsável por resolver jogadas, ataques, dano, salvaguardas, cura, críticos, vantagem/desvantagem, consumo de cargas, ativações e demais resultados contextuais durante o jogo.",
+  "nota": "Bloco 10 Aceito após gate específico 10A–10J e suíte de cobertura total sem falhas, sem lacunas conhecidas ou não classificadas e sem revisão manual pendente."
+}

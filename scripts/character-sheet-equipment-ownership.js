@@ -1,6 +1,6 @@
 import{state,$,esc,signed,num}from'./character-builder/state.js';
 import{derive}from'./character-builder/rules.js';
-import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260901-campaign-inventory1';
+import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260902-magic-items2';
 import{selectedBackgroundPackage,selectedClassPackage,creationBudgetBreakdown,itemsCurrencyCp,physicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260828-wealth-background1';
 import{isStandardWealthBackground}from'./character-builder/background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';
 import{coinBalanceCp,creationBalanceCp,economyMode,ensureEconomyMetadata,formatBalanceGp,markCurrentEconomy}from'./character-builder/economy-state.js?v=20260901-campaign-inventory1';
@@ -54,9 +54,10 @@ function renderInventory(){
 function render(){if(rendering||!state.c)return;rendering=true;try{renderCombat();renderInventory()}finally{rendering=false}}
 if(typeof document!=='undefined'){
  document.addEventListener('change',event=>{if(!/^coin-(cp|sp|ep|gp|pp)$/.test(event.target?.id||'')||!state.c)return;markCurrentEconomy(state.c);queueMicrotask(render)});
- for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed'])document.addEventListener(type,()=>queueMicrotask(render));
+ for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed','hub-rpg:magic-items-changed','hub-rpg:magic-item-catalog-ready'])document.addEventListener(type,()=>queueMicrotask(render));
  queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()});
  import('./character-sheet-combat-ui.js?v=20260901-combat1');
  import('./character-sheet-spellcasting-ui.js?v=20260901-rest1');
  import('./character-sheet-rest-ui.js?v=20260901-rest1');
+ import('./character-sheet-magic-item-ui.js?v=20260902-magic-items2');
 }

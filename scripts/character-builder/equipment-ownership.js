@@ -60,11 +60,16 @@ function classifyNamedItem(item,source='Equipamento inicial'){
  const armor=armorByName(name);if(armor)return{kind:fold(armor.categoria)==='escudo'?'shield':'armor',refId:armor.id,name:armor.nome,qty,source,data:armor};
  return{kind:'belonging',refId:null,name,qty,source,data:null}
 }
+function magicRefFromPurchaseId(id){
+ if(!String(id||'').startsWith('magic:'))return null;
+ const body=String(id).slice(6),cut=body.lastIndexOf(':');
+ return cut>0?body.slice(0,cut):body||null
+}
 function purchaseRow(id,qty,snapshot){
  const amount=Math.max(0,Math.floor(num(qty)));if(!amount)return null;
  if(id.startsWith('weapon:')){const refId=id.slice(7),weapon=state.catalogs.weapons.find(w=>w.id===refId);if(weapon)return{kind:'weapon',refId,name:weapon.nome,qty:amount,source:'Compra',data:weapon}}
  if(id.startsWith('armor:')){const refId=id.slice(6),armor=state.catalogs.armors.find(a=>a.id===refId);if(armor)return{kind:fold(armor.categoria)==='escudo'?'shield':'armor',refId,name:armor.nome,qty:amount,source:'Compra',data:armor}}
- if(snapshot?.name)return{kind:snapshot.kind||'belonging',refId:snapshot.refId||null,name:snapshot.name,qty:amount,source:'Compra',data:null,area:snapshot.area||'',category:snapshot.category||''};
+ if(snapshot?.name){const magicRef=magicRefFromPurchaseId(id),refId=snapshot.refId||magicRef||null,kind=magicRef?'magic':snapshot.kind||'belonging';return{kind,refId,name:snapshot.name,qty:amount,source:'Compra',data:null,area:snapshot.area||'',category:snapshot.category||''}}
  return null
 }
 function aggregate(rows){
@@ -75,19 +80,19 @@ function aggregate(rows){
  }
  return[...map.values()]
 }
-function enrichCampaignRows(rows){return rows.map(row=>{if(row.data||!row.refId)return row;if(row.kind==='weapon'){const data=state.catalogs.weapons.find(w=>w.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}if(['armor','shield'].includes(row.kind)){const data=state.catalogs.armors.find(a=>a.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}return row})}
+function enrichCampaignRows(rows){return rows.map(row=>{if(row.data||!row.refId)return row;if(row.kind==='weapon'){const data=state.catalogs.weapons.find(w=>w.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}if(['armor','shield'].includes(row.kind)){const data=state.catalogs.armors.find(a=>a.id===row.refId);return data?{...row,name:data.nome||row.name,data}:row}if(row.kind==='magic'||String(row.refId).startsWith('itens-magicos:')){const data=arr(state.catalogs.magicItems).find(item=>item.id===row.refId);return data?{...row,kind:'magic',name:data.nome||row.name,data}:row}return row})}
 export function ownedEquipment({includeLegacyActive=true,includeCampaign=true}={}){
  const rows=[],klass=currentClass(),bg=state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null,level=Math.max(1,Math.min(20,num(state.c?.choices?.class?.level)||1)),bgChoice=state.c?.choices?.background?.equipment||'A',classChoice=state.c?.choices?.class?.equipment||'A';
  for(const row of creationPhysicalItems(bg,bgChoice,level,klass,classChoice).filter(Boolean))rows.push(classifyNamedItem(row,row._startingSource||'Pacote inicial'));
  const purchases=state.c?.choices?.purchases||{},snapshots=purchases.items||{};
  for(const[id,qty]of Object.entries(purchases.quantities||{})){const row=purchaseRow(id,qty,snapshots[id]);if(row)rows.push(row)}
- let all=aggregate(rows);
+ let all=enrichCampaignRows(aggregate(rows));
  if(includeLegacyActive){
   const weaponId=state.c?.choices?.equipment?.weapon,armorId=state.c?.choices?.equipment?.armor,has=(kind,refId)=>all.some(row=>row.kind===kind&&row.refId===refId);
   if(weaponId&&!has('weapon',weaponId)){const weapon=state.catalogs.weapons.find(w=>w.id===weaponId);if(weapon)all.push({kind:'weapon',refId:weapon.id,name:weapon.nome,qty:1,source:'Equipamento ativo legado',data:weapon})}
   if(armorId&&!has('armor',armorId)){const armor=state.catalogs.armors.find(a=>a.id===armorId);if(armor&&fold(armor.categoria)!=='escudo')all.push({kind:'armor',refId:armor.id,name:armor.nome,qty:1,source:'Equipamento ativo legado',data:armor})}
   if(state.c?.choices?.equipment?.shield){const shield=state.catalogs.armors.find(a=>fold(a.categoria)==='escudo');if(shield&&!has('shield',shield.id))all.push({kind:'shield',refId:shield.id,name:shield.nome,qty:1,source:'Equipamento ativo legado',data:shield})}
-  all=aggregate(all)
+  all=enrichCampaignRows(aggregate(all))
  }
  if(includeCampaign)all=enrichCampaignRows(applyCampaignInventoryRows(all,state.c));
  return{all,weapons:all.filter(x=>x.kind==='weapon'),armors:all.filter(x=>x.kind==='armor'),shields:all.filter(x=>x.kind==='shield'),belongings:all.filter(x=>!['weapon','armor','shield'].includes(x.kind))}

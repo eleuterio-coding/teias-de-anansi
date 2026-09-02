@@ -14,7 +14,10 @@ export function inventoryRowKey(row){
  if(refId)return`${kind}|ref:${refId}`;
  return`${kind}|name:${fold(cleanName(row?.name)||'item')}`
 }
-export function inventoryRowSnapshot(row){return{kind:String(row?.kind||'belonging'),refId:row?.refId||null,name:cleanName(row?.name)||'Item',qty:cleanQty(row?.qty),source:cleanName(row?.source)||'Campanha',area:cleanName(row?.area),category:cleanName(row?.category)}}
+export function inventoryRowSnapshot(row){
+ const kind=String(row?.kind||'belonging'),magic=kind==='magic'||String(row?.refId||'').startsWith('itens-magicos:');
+ return{kind,refId:row?.refId||null,name:cleanName(row?.name)||'Item',qty:cleanQty(row?.qty),source:cleanName(row?.source)||'Campanha',area:cleanName(row?.area),category:cleanName(row?.category),description:cleanName(row?.description),block:cleanName(row?.block),magicBonus:[1,2,3].includes(Number(row?.magicBonus))?Number(row.magicBonus):null,variantBonus:[1,2,3].includes(Number(row?.variantBonus))?Number(row.variantBonus):null,damageType:cleanName(row?.damageType)||null,magicDamageType:cleanName(row?.magicDamageType)||null,data:magic&&row?.data&&typeof row.data==='object'&&!Array.isArray(row.data)?row.data:null}
+}
 function aggregate(rows){const map=new Map();for(const source of arr(rows)){const row=inventoryRowSnapshot(source),key=inventoryRowKey(row),old=map.get(key);if(old)old.qty+=row.qty;else map.set(key,{...row,key})}return[...map.values()]}
 
 export function ensureCampaignInventory(character){
