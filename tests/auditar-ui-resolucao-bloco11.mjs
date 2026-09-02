@@ -25,7 +25,7 @@ for(const action of['activate','init-charges','spend-charge','restore-charges','
 assert.ok(magicRules.includes('capacityExpression')&&magicRules.includes('spendMagicItemCharges'),'11 · cargas precisam ser estado mecânico, não anotação textual');
 assert.ok(deathUi.includes('resolution-self-critical')&&deathUi.includes('rollDeathSave'),'11 · Ficha precisa distinguir dano crítico a 0 PV e rolar Salvaguarda contra a Morte');
 for(const rule of['natural===20','natural===1','applyDamageAtZeroConsequences','dano massivo'])assert.ok(deathRules.includes(rule),`11 · regra de morte ausente: ${rule}`);
-assert.ok(roadmap.includes('11. Rolagens e resolução de jogo — Em implementação'),'11 · roadmap precisa refletir execução do bloco');
+assert.ok(roadmap.includes('11. Rolagens e resolução de jogo — ✅ Aceito'),'11 · roadmap precisa refletir aceite do bloco');
 assert.ok(!/supabase/i.test(`${ui}\n${rules}\n${sheet}\n${magicUi}\n${magicRules}\n${deathUi}\n${deathRules}`),'11 · resolução não pode introduzir Supabase');
 
 console.log('Bloco 11 · integração da resolução na Ficha: OK');
