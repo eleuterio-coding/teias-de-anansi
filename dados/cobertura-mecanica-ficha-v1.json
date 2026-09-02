@@ -23,16 +23,19 @@
         "scripts/character-sheet-magic-item-state.js",
         "tests/auditar-magic-item-state-bloco10.mjs"
       ],
-      "progresso": "O estado estruturado de uso, a camada fail-closed de efeitos persistentes e sua integração à derivação central já existem. Amulet of Health produz Constituição mínima 19 com propagação para PV e Defesa sem Armadura; armaduras mágicas +1/+2/+3 aplicam bônus de CA quando a variante está explicitamente parametrizada; Armor of Resistance e Armor of Invulnerability estruturam resistências. A derivação usa o inventário-base pré-campanha e aplica os ajustes de campanha uma única vez dentro da camada de itens mágicos. Parâmetros escolhidos pelo Mestre ou variantes ausentes não são inventados: tornam-se pendências explícitas. O snapshot do inventário preserva os parâmetros mecânicos necessários.",
-      "problema": "O catálogo de 259 itens mágicos ainda não possui classificação exaustiva entre efeitos persistentes do Bloco 10 e efeitos de resolução do Bloco 11. Também faltam controles de UI para parametrizar escolhas legítimas, como o tipo de dano de Armor of Resistance e a variante +1/+2/+3 quando o item genérico é adquirido, além da mecanização dos demais bônus e estados persistentes identificados pela classificação.",
+      "progresso": "O estado estruturado de uso, a camada fail-closed de efeitos persistentes e sua integração à derivação central já existem. Amulet of Health produz Constituição mínima 19 com propagação para PV e Defesa sem Armadura; armaduras mágicas +1/+2/+3 aplicam bônus de CA somente quando a variante está explicitamente parametrizada; Armor of Resistance e Armor of Vulnerability persistem e validam o tipo de dano escolhido; Armor of Invulnerability estrutura resistências; Adamantine Armor expõe a normalização de críticos; Amulet of Proof against Detection and Location expõe bloqueios de Adivinhação e sensores de vidência. Parâmetros normativos agora pertencem ao estado persistente do item, e não dependem de metadados ocasionais do inventário. Escolhas ausentes ou inválidas permanecem pendentes/fail-closed.",
+      "problema": "O catálogo de 259 itens mágicos ainda não possui classificação exaustiva entre efeitos persistentes do Bloco 10 e efeitos de resolução do Bloco 11. A API de estado já suporta e valida parâmetros legítimos dos primeiros itens parametrizados, mas ainda faltam controles visuais para editá-los na ficha e a mecanização/classificação dos demais bônus e estados persistentes identificados no catálogo.",
       "exemplos_mecanizaveis_confirmados": [
         "Amulet of Health — Constituição 19 enquanto usado",
+        "Adamantine Armor — acertos críticos recebidos tornam-se acertos normais",
+        "Amulet of Proof against Detection and Location — bloqueio persistente de Adivinhação/vidência",
         "Armor, +1, +2, or +3 — bônus de CA enquanto vestida",
         "Armor of Resistance — resistência a dano enquanto vestida",
         "Armor of Invulnerability — resistência persistente; imunidade temporária depende de ativação",
+        "Armor of Vulnerability — resistência física escolhida e vulnerabilidade aos outros dois tipos",
         "Ammunition, +1, +2, or +3 — bônus em ataque e dano"
       ],
-      "proximo_passo": "Classificar fail-closed os 259 itens do catálogo, expor e validar na UI os parâmetros que exigem escolha legítima e implementar os demais estados, bônus e modificadores persistentes. Efeitos de resolução instantânea permanecem para o Bloco 11."
+      "proximo_passo": "Classificar fail-closed os 259 itens do catálogo, conectar controles de UI à API de parâmetros persistentes e implementar os demais estados, bônus e modificadores persistentes. Efeitos de resolução instantânea permanecem para o Bloco 11."
     },
     {
       "id": "barbarian-core-feature-text-only",
