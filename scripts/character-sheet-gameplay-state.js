@@ -1,3 +1,5 @@
+import'./hub-ux.js?v=20260901-ux-final1';
+
 const DEFAULTS={objective:'',scene:'',notes:'',reminders:''};
 
 export function ensureGameplayState(character){

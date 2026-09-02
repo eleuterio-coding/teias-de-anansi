@@ -1,3 +1,4 @@
+import'../hub-ux.js?v=20260901-ux-final1';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
 import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
@@ -18,11 +19,10 @@ const hashFor=id=>`#etapa-${id}`;
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
-.wizard-nav{display:grid!important;overflow:visible!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;padding-bottom:0!important}
-.wizard-nav button{min-width:0!important;width:100%!important;flex:none!important;white-space:normal!important}
-@media(max-width:1120px){.wizard-nav{grid-template-columns:repeat(4,minmax(0,1fr))!important}}
-@media(max-width:760px){.wizard-nav{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
-@media(max-width:420px){.wizard-nav{grid-template-columns:1fr!important}}
+.wizard-nav{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;position:sticky!important;top:0!important;z-index:50!important;background:#fff!important}
+.wizard-nav button{min-width:0!important;width:100%!important;white-space:normal!important}
+@media(max-width:1120px){.wizard-nav{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;overscroll-behavior-inline:contain!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important;padding-bottom:6px!important}.wizard-nav button{flex:0 0 160px!important;width:auto!important;min-height:54px!important}}
+@media(max-width:560px){.wizard-nav button{flex-basis:min(72vw,180px)!important}}
 `;document.head.appendChild(style)
 }
 function stepFromHash(){const raw=location.hash.replace(/^#etapa-/,'');const i=STEPS.findIndex(s=>s.id===raw);return i>=0?i:0}
@@ -31,7 +31,7 @@ function render({writeHash=true,scroll=true}={}){
  current=Math.max(0,Math.min(STEPS.length-1,current));const step=STEPS[current];
  for(const panel of panels())panel.hidden=panel.dataset.wizardPanel!==step.id;
  for(const button of buttons()){
-  const active=button.dataset.wizardStep===step.id;button.classList.toggle('is-active',active);button.setAttribute('aria-current',active?'step':'false')
+  const active=button.dataset.wizardStep===step.id;button.classList.toggle('is-active',active);button.setAttribute('aria-current',active?'step':'false');if(active)button.scrollIntoView({block:'nearest',inline:'center'})
  }
  const kicker=byId('wizard-kicker'),title=byId('wizard-title'),description=byId('wizard-description'),progress=byId('wizard-progress'),prev=byId('wizard-prev'),next=byId('wizard-next');
  if(kicker)kicker.textContent=`Etapa ${current+1} de ${STEPS.length}`;

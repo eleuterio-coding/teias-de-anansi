@@ -1,0 +1,74 @@
+name: Auditar UX, mobile e fechamento final
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'personagens.html'
+      - 'lista-personagens.html'
+      - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
+      - 'campanhas.html'
+      - 'mesa.html'
+      - 'sessoes.html'
+      - 'bibliotecas.html'
+      - 'campaigns.css'
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/character-sheet-gameplay-state.js'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - '.github/workflows/auditar-ux-mobile-final.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'personagens.html'
+      - 'lista-personagens.html'
+      - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
+      - 'campanhas.html'
+      - 'mesa.html'
+      - 'sessoes.html'
+      - 'bibliotecas.html'
+      - 'campaigns.css'
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/character-sheet-gameplay-state.js'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - '.github/workflows/auditar-ux-mobile-final.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  ux-final:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe da camada UX
+        run: |
+          node --check scripts/hub-ux.js
+          node --check scripts/character-builder/wizard-ui.js
+          node --check scripts/character-sheet-gameplay-state.js
+          node --check tests/auditar-ux-mobile-final.mjs
+      - name: Auditar UX, mobile e acessibilidade
+        run: node tests/auditar-ux-mobile-final.mjs
+      - name: Regressão dos fluxos principais
+        run: |
+          node tests/auditar-ficha-modo-jogo.mjs
+          node tests/auditar-campanhas-mesas.mjs
+          node tests/auditar-layout-bibliotecas.mjs
+          node tests/auditar-criacao-sem-travamento.mjs
+      - name: Proibir backend incompatível no bloco
+        run: |
+          forbidden='supa''base'
+          if grep -RniE "$forbidden" hub-ux.css scripts/hub-ux.js tests/auditar-ux-mobile-final.mjs; then
+            echo 'Backend incompatível detectado no Bloco 8.' >&2
+            exit 1
+          fi
