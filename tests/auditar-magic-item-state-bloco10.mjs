@@ -9,7 +9,8 @@ const invulnerability={kind:'magic-item',refId:'armor-of-invulnerability',name:'
 const adamantine={kind:'magic-item',refId:'adamantine-armor',name:'Adamantine Armor',qty:1,source:'Campanha'};
 const proof={kind:'magic-item',refId:'amulet-of-proof-against-detection-and-location',name:'Amulet of Proof against Detection and Location',qty:1,source:'Campanha'};
 const vulnerability={kind:'magic-item',refId:'armor-of-vulnerability',name:'Armor of Vulnerability',qty:1,source:'Campanha'};
-const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerability];
+const ammunition={kind:'magic-item',refId:'ammunition-1-2-or-3',name:'Ammunition, +1, +2, or +3',qty:10,source:'Campanha'};
+const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerability,ammunition];
 
 {
  const result=setMagicItemUsage(character,base,amulet,{equipped:true,attuned:true});
@@ -62,6 +63,20 @@ const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerabili
  assert.equal(configured.ok,true);assert.deepEqual(configured.parameters,{magicBonus:3});
  outcome=magicItemPersistentOutcome(c,[unresolved]);
  assert.equal(outcome.acBonus,3,'10G · variante explicitamente escolhida deve produzir o bônus correspondente');
+}
+{
+ const c={sheet:{},choices:{}};setMagicItemUsage(c,[ammunition],ammunition,{equipped:true});
+ let outcome=magicItemPersistentOutcome(c,[ammunition]);
+ assert.equal(outcome.conditionalAttackBonuses.length,0,'10G · munição genérica sem variante não pode inventar bônus de ataque');
+ assert.equal(outcome.conditionalDamageBonuses.length,0,'10G · munição genérica sem variante não pode inventar bônus de dano');
+ assert.equal(outcome.pending.length,1,'10G · variante ausente da munição deve permanecer pendente');
+ assert.equal(setMagicItemParameters(c,[ammunition],ammunition,{magicBonus:2}).ok,true,'10G · variante explícita da munição deve ser aceita');
+ outcome=magicItemPersistentOutcome(c,[ammunition]);
+ assert.deepEqual(outcome.conditionalAttackBonuses.map(x=>({value:x.value,scope:x.scope})),[{value:2,scope:'attack-with-this-ammunition'}],'10G · bônus de ataque deve permanecer vinculado à munição usada');
+ assert.deepEqual(outcome.conditionalDamageBonuses.map(x=>({value:x.value,scope:x.scope})),[{value:2,scope:'damage-with-this-ammunition'}],'10G · bônus de dano deve permanecer vinculado à munição usada');
+ const derived={scores:{Constituição:10},level:1,hp:8,ac:10,attack:5};applyMagicItemPersistentEffects(derived,c,[ammunition]);
+ assert.equal(derived.attack,5,'10G · bônus condicional de munição não pode contaminar o ataque global da ficha');
+ assert.equal(derived.magicItemMechanics.conditionalAttackBonuses[0].value,2,'10G · derivação deve expor o modificador para a resolução contextual do Bloco 11');
 }
 {
  const unresolved={kind:'magic-item',refId:'armor-of-resistance',name:'Armor of Resistance',qty:1,source:'Campanha'};
