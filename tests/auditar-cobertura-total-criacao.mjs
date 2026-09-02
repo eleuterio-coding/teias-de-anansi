@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {CATALOG_MODULES} from '../scripts/catalog-registry.js';
 
 const ROOT=process.cwd();
 const BUILDER_DIR=path.join(ROOT,'scripts','character-builder');
 const ENTRY=path.join(ROOT,'scripts','character-builder.js');
 const HTML=path.join(ROOT,'criacao-personagem.html');
 const SCOPE_FILE=path.join(ROOT,'dados','auditoria-criacao-escopo.json');
+const CATALOG_REGISTRY=path.join(ROOT,'scripts','catalog-registry.js');
 const rel=p=>path.relative(ROOT,p).replaceAll('\\','/');
 const fail=msg=>{throw new Error(msg)};
 const exists=p=>fs.existsSync(p);
@@ -119,13 +121,19 @@ for(const domain of domains){
   }
 }
 
-const runtime=[...seen].map(read).join('\n')+'\n'+read(ENTRY);
+// O registro canônico é metadado compartilhado por Biblioteca, criação e Ficha. Apenas
+// fontes explicitamente marcadas `builder:true` são dependências de dados da criação.
+const runtimeFiles=[...seen].filter(file=>file!==CATALOG_REGISTRY);
+const runtime=runtimeFiles.map(read).join('\n')+'\n'+read(ENTRY);
 for(const domain of domains)if(!runtime.includes(domain.runtime)&&!html.includes(domain.runtime))fail(`Domínio ${domain.id} sem integração verificável no runtime: ${domain.runtime}`);
 
 const dataRefs=new Set(),dynamicDataRefs=new Set();
 for(const m of runtime.matchAll(/['"`](dados\/[^'"`?]+\.json)(?:\?[^'"`]*)?['"`]/g)){
   const ref=m[1];
   if(ref.includes('${'))dynamicDataRefs.add(ref);else dataRefs.add(ref)
+}
+for(const module of CATALOG_MODULES)for(const source of module.sources||[]){
+  if(source?.local&&source?.builder&&typeof source.path==='string'&&source.path.endsWith('.json'))dataRefs.add(source.path);
 }
 for(const ref of dataRefs){
   const p=path.join(ROOT,ref);if(!exists(p))fail(`Dependência local de dados ausente: ${ref}`);

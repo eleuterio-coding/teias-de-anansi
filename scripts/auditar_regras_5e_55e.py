@@ -93,6 +93,7 @@ require('curated.total_regras!==160' in curated_js,
 # Criador de personagem: progressão da casa e compatibilidade 2014/2024.
 rules = text('scripts/character-builder/rules.js')
 state = text('scripts/character-builder/state.js')
+registry = text('scripts/catalog-registry.js')
 catalogs = text('scripts/character-builder/catalogs.js')
 race_variants = text('scripts/character-builder/race-variants.js')
 languages = text('scripts/character-builder/language-mechanics.js')
@@ -104,12 +105,14 @@ require('HOUSE_ABILITY_LEVELS=[4,8,12,16,20]' in rules,
         'Código diverge da progressão de atributos da casa')
 require('isCompatible55' in rules and 'withLegacyCompatibility' in rules,
         'Compatibilidade de legado não está ativa no construtor')
-require('RAW14' in state and 'FEATFILES' in state,
-        'Fontes legadas necessárias não estão declaradas')
-require('dados/especies-pdf-motm-2022.json' in state,
-        'MotM 2022 não está no catálogo de espécies')
-require('talentos-tasha-2020.json' in state and 'talentos-xanathar-2017.json' in state,
-        'Talentos legados únicos não estão no catálogo do criador')
+require('RAW14' in state and 'FEATFILES' in state and 'catalog-registry.js' in state,
+        'Fontes legadas necessárias não estão ligadas ao registro canônico')
+require('dados/especies-pdf-motm-2022.json' in registry and 'SPECIES_BUILDER_FILES' in state,
+        'MotM 2022 não está registrado como fonte ativa de espécies')
+require('talentos-tasha-2020.json' in registry and 'talentos-xanathar-2017.json' in registry and 'FEAT_BUILDER_FILES' in state,
+        'Talentos legados únicos não estão registrados para o criador')
+require('FIVE_E_BITS_PIN' in registry and 'FIVE_E_BITS_2014' in registry and 'FIVE_E_BITS_2024' in registry,
+        'Fontes 5e-bits não estão centralizadas/pinadas no registro canônico')
 require('abilityBonuses:current?arr(r.aumentos_atributo):[]' in catalogs,
         'Espécie 5e pode estar aplicando ASI antigo em personagem 5.5e')
 require('legado_com_conteudo_unico' in catalogs,
@@ -160,6 +163,8 @@ require('Espaços de Itens Mágicos' in magic_page and 'Sintonização no Hub' i
 spell_loader = text('scripts/character-builder/spells.js')
 require("json('dados/magias-catalogo.json" in spell_loader,
         'Criador não usa o catálogo consolidado de magias')
+require('SPELL_REMOTE_SOURCES' in spell_loader and 'SPELL_SOURCE_LOOKUP' in spell_loader,
+        'Fallback remoto de Magias não deriva do registro canônico')
 spells = load('dados/magias-catalogo.json')
 spell_items = spells.get('itens', [])
 require(spells.get('controle', {}).get('validado') is True and len(spell_items) >= 500,

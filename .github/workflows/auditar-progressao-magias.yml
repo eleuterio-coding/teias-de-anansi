@@ -3,6 +3,7 @@ name: Auditar Progressão de Magias
 on:
   pull_request:
     paths:
+      - 'scripts/catalog-registry.js'
       - 'scripts/character-builder/spell-progression-rules.js'
       - 'scripts/character-builder/spell-selection-ui.js'
       - 'scripts/character-builder/state.js'
@@ -10,6 +11,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/catalog-registry.js'
       - 'scripts/character-builder/spell-progression-rules.js'
       - 'scripts/character-builder/spell-selection-ui.js'
       - 'scripts/character-builder/state.js'
@@ -28,12 +30,14 @@ jobs:
           node-version: '22'
       - name: Validar JavaScript
         run: |
+          node --check scripts/catalog-registry.js
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/spell-progression-rules.js
           node --check scripts/character-builder/spell-selection-ui.js
       - name: Testar progressão nível por nível
         run: |
-          cp scripts/character-builder/state.js /tmp/state.mjs
+          cp scripts/catalog-registry.js /tmp/catalog-registry.mjs
+          sed "s|'../catalog-registry.js?v=20260901-catalog-registry1'|'./catalog-registry.mjs'|" scripts/character-builder/state.js > /tmp/state.mjs
           sed "s|'./state.js'|'./state.mjs'|" scripts/character-builder/spell-progression-rules.js > /tmp/spell-progression-rules.mjs
           node --input-type=module <<'NODE'
           import {state} from 'file:///tmp/state.mjs';
@@ -62,6 +66,7 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          registry=Path('scripts/catalog-registry.js').read_text(encoding='utf-8')
           state=Path('scripts/character-builder/state.js').read_text(encoding='utf-8')
           rules=Path('scripts/character-builder/spell-progression-rules.js').read_text(encoding='utf-8')
           ui=Path('scripts/character-builder/spell-selection-ui.js').read_text(encoding='utf-8')
@@ -69,8 +74,9 @@ jobs:
           missing=[token for token in required_rules if token not in rules]
           if missing: raise RuntimeError('Proteções da progressão ausentes: '+', '.join(missing))
           if 'progression:oldSpells.progression?structuredClone' not in state: raise RuntimeError('Histórico de magias não está sendo preservado ao reabrir o personagem.')
+          if 'FIVE_E_BITS_PIN' not in state or 'catalog-registry.js' not in state: raise RuntimeError('Estado não deriva fontes do registro canônico.')
           if 'data-spell-progression-ui' not in ui or 'Progressão de magias nível por nível' not in ui: raise RuntimeError('Interface sequencial de magias ausente.')
-          combined='\n'.join([state,rules,ui]).lower()
+          combined='\n'.join([registry,state,rules,ui]).lower()
           if 'supabase' in combined: raise RuntimeError('A implementação não pode introduzir Supabase.')
-          print('Persistência local e restrição sem Supabase validadas.')
+          print('Persistência local, registro canônico e restrição sem Supabase validados.')
           PY

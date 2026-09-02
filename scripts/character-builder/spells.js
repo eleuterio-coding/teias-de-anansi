@@ -1,7 +1,14 @@
 import{state,arr,num,slug,json}from'./state.js';
-const BASE='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data';
-const REMOTE=[['XPHB',`${BASE}/spells/spells-xphb.json`,20240917],['XGE',`${BASE}/spells/spells-xge.json`,20171121],['TCE',`${BASE}/spells/spells-tce.json`,20201117],['FRHoF',`${BASE}/spells/spells-frhof.json`,20251101],['EFA',`${BASE}/spells/spells-efa.json`,20251209]];
-const LOOKUP=`${BASE}/generated/gendata-spell-source-lookup.json`;
+import{SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP}from'../catalog-registry.js?v=20260901-catalog-registry1';
+const SOURCE_META_BY_FILE={
+ 'spells-xphb.json':['XPHB',20240917],
+ 'spells-xge.json':['XGE',20171121],
+ 'spells-tce.json':['TCE',20201117],
+ 'spells-frhof.json':['FRHoF',20251101],
+ 'spells-efa.json':['EFA',20251209]
+};
+const REMOTE=SPELL_REMOTE_SOURCES.map(url=>{const file=url.split('/').pop(),meta=SOURCE_META_BY_FILE[file];if(!meta)throw new Error(`Fonte remota de Magias sem metadados: ${file}`);return[meta[0],url,meta[1]]});
+const LOOKUP=SPELL_SOURCE_LOOKUP;
 const SCHOOL={A:'Abjuração',C:'Conjuração',D:'Adivinhação',E:'Encantamento',V:'Evocação',I:'Ilusão',N:'Necromancia',T:'Transmutação'};
 const CLASS_PT={Artificer:'Artífice',Bard:'Bardo',Cleric:'Clérigo',Druid:'Druida',Paladin:'Paladino',Ranger:'Patrulheiro',Sorcerer:'Feiticeiro',Warlock:'Bruxo',Wizard:'Mago',Fighter:'Guerreiro',Rogue:'Ladino',Monk:'Monge',Barbarian:'Bárbaro'};
 const META={XPHB:{source:"Player's Handbook (2024)",ruleset:'5.5e',revision:2024},XGE:{source:"Xanathar's Guide to Everything",ruleset:'5e',revision:2014},TCE:{source:"Tasha's Cauldron of Everything",ruleset:'5e',revision:2014},FRHoF:{source:'Forgotten Realms: Heroes of Faerûn',ruleset:'5.5e',revision:2024},EFA:{source:'Eberron: Forge of the Artificer',ruleset:'5.5e',revision:2024}};

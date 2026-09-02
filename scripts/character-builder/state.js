@@ -1,14 +1,16 @@
-export const KEY='hub-rpg:characters:v4',LEGACY_KEYS=['hub-rpg:characters:v3','hub-rpg:characters:v2','hub-rpg:characters:v1'],V='20260828-wealth-background1',PIN='bfd3db4bcc31699cce703b46feb9af3f0ff08999';
-export const RAW24=`https://raw.githubusercontent.com/5e-bits/5e-database/${PIN}/src/2024/en`;
-export const RAW14=`https://raw.githubusercontent.com/5e-bits/5e-database/${PIN}/src/2014/en`;
+import{FIVE_E_BITS_PIN,FIVE_E_BITS_2024,FIVE_E_BITS_2014,BACKGROUND_BUILDER_FILES,SPECIES_BUILDER_FILES,FEAT_BUILDER_FILES}from'../catalog-registry.js?v=20260901-catalog-registry1';
+
+export const KEY='hub-rpg:characters:v4',LEGACY_KEYS=['hub-rpg:characters:v3','hub-rpg:characters:v2','hub-rpg:characters:v1'],V='20260901-catalog-registry1',PIN=FIVE_E_BITS_PIN;
+export const RAW24=FIVE_E_BITS_2024;
+export const RAW14=FIVE_E_BITS_2014;
 export const AB=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
 export const ABKEY={STR:'Força',DEX:'Destreza',CON:'Constituição',INT:'Inteligência',WIS:'Sabedoria',CHA:'Carisma',Strength:'Força',Dexterity:'Destreza',Constitution:'Constituição',Intelligence:'Inteligência',Wisdom:'Sabedoria',Charisma:'Carisma'};
 export const SKILL_AB={'Acrobacia':'Destreza','Adestrar Animais':'Sabedoria','Arcanismo':'Inteligência','Atletismo':'Força','Atuação':'Carisma','Enganação':'Carisma','Furtividade':'Destreza','História':'Inteligência','Intimidação':'Carisma','Intuição':'Sabedoria','Investigação':'Inteligência','Medicina':'Sabedoria','Natureza':'Inteligência','Percepção':'Sabedoria','Persuasão':'Carisma','Prestidigitação':'Destreza','Religião':'Inteligência','Sobrevivência':'Sabedoria'};
 export const CLASS_SLUGS=['barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'];
 export const LOCFILES={barbarian:'barbaro',bard:'bardo',cleric:'clerigo',druid:'druida',fighter:'guerreiro',monk:'monge',paladin:'paladino',ranger:'patrulheiro',rogue:'ladino',sorcerer:'feiticeiro',warlock:'bruxo',wizard:'mago'};
-export const BGFILES=['dados/antecedentes-srd-5.2.1.json','dados/antecedentes-abertos-adicionais.json','dados/antecedentes-pdf-phb-2024.json','dados/antecedentes-pdf-forge-2025.json','dados/antecedentes-pdf-heroes-2025.json','dados/antecedentes-pdf-quickstone-2024.json'];
-export const SPFILES=['dados/especies-pdf-phb-2024.json','dados/especies-pdf-forge-2025.json','dados/especies-pdf-quickstone-2024.json','dados/especies-pdf-motm-2022.json'];
-export const FEATFILES=['dados/talentos-phb-2024.json','dados/talentos-forge-2025.json','dados/talentos-heroes-2025.json','dados/talentos-quickstone-2024.json','dados/talentos-tasha-2020.json','dados/talentos-xanathar-2017.json','dados/talentos-eberron-rising-2019.json'];
+export const BGFILES=BACKGROUND_BUILDER_FILES;
+export const SPFILES=SPECIES_BUILDER_FILES;
+export const FEATFILES=FEAT_BUILDER_FILES;
 export const state={catalogs:{classes:[],species:[],backgrounds:[],subclasses:[],feats:[],armors:[],weapons:[],spells:[]},c:null,warnings:[],G:{},LOCSP:{}};
 export const $=id=>document.getElementById(id),arr=v=>Array.isArray(v)?v:[],num=v=>Number.isFinite(Number(v))?Number(v):0,uniq=a=>[...new Set(a.filter(Boolean))];
 export const fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');

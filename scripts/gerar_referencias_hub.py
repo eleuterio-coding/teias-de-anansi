@@ -212,6 +212,26 @@ def html_docs(root):
             continue
         h = p.read_text(encoding="utf-8", errors="replace")
         seen = set()
+        if m == "Montarias e Veículos":
+            mount_pat = re.compile(
+                r'R\(\s*"([^"\n]+)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"',
+                re.I,
+            )
+            for mm in mount_pat.finditer(h):
+                n, original, tipo, fonte, status, descricao = [x.strip() for x in mm.groups()]
+                k = norm(n)
+                if not k or k in seen:
+                    continue
+                seen.add(k)
+                yield p, {
+                    "nome": n,
+                    "original": original or None,
+                    "modulo": m,
+                    "tipo": tipo,
+                    "fonte": fonte,
+                    "status_fonte": status,
+                    "descricao": descricao,
+                }
         pats = [
             re.compile(r"\bnome\s*:\s*'([^'\n]{2,100})'", re.I),
             re.compile(r'\bnome\s*:\s*"([^"\n]{2,100})"', re.I),
@@ -227,12 +247,44 @@ def html_docs(root):
                     yield p, {"nome": n, "modulo": m, "descricao": "", "_html_catalog": True}
 
 
+def semantic_bugigangas(data):
+    fontes = data.get("fontes") if isinstance(data, dict) else {}
+    fontes = fontes if isinstance(fontes, dict) else {}
+    out = []
+    for item in data.get("itens", []) if isinstance(data, dict) else []:
+        if not isinstance(item, dict):
+            continue
+        descricao = str(item.get("descricao") or "").strip()
+        if not descricao:
+            continue
+        fonte = fontes.get(item.get("fonte"), {}) if isinstance(fontes, dict) else {}
+        fonte = fonte if isinstance(fonte, dict) else {}
+        source_id = str(item.get("id") or "").strip()
+        aliases_item = []
+        if item.get("rolagem"):
+            aliases_item.append(f"Bugiganga {item.get('rolagem')}")
+        out.append({
+            "id": f"bugiganga:{source_id}" if source_id else None,
+            "nome": descricao,
+            "modulo": "Bugigangas",
+            "tipo": fonte.get("tabela") or "Bugiganga",
+            "fonte": fonte.get("livro") or item.get("fonte") or "",
+            "descricao": descricao,
+            "aliases": aliases_item,
+        })
+    return {"itens_semanticos": out}
+
+
 def docs(root):
     for p in (root / "dados").rglob("*.json"):
         if p.name.startswith("referencias-hub-") or p.name == "referencias-regras-curadas.json":
             continue
         try:
-            yield p, json.loads(p.read_text(encoding="utf-8", errors="replace"))
+            data = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+            if p.name == "bugigangas-pdfs.json":
+                yield p, semantic_bugigangas(data)
+            else:
+                yield p, data
         except Exception:
             pass
     parts = sorted((root / "dados").glob("regras-dndbeyond-2024.part*.txt"))
@@ -281,12 +333,23 @@ def validate_curated(root, allr):
         if r.get("modulo") == "Regras" and r.get("status") == "publicado" and r.get("original")
     }
     curated_keys = {norm(k): k for k in rules_map}
-    missing = sorted(k for k in published_rules if k not in curated_keys)
+    uncurated_published = {
+        norm("Base Ability Score Distribution (House Rule)"),
+        norm("Wealth by Level (House Rule)"),
+    }
+    absent_exceptions = sorted(k for k in uncurated_published if k not in published_rules)
+    curated_exceptions = sorted(k for k in uncurated_published if k in curated_keys)
+    if absent_exceptions or curated_exceptions:
+        raise RuntimeError(
+            f"Exceções curadas inconsistentes: ausentes_publicadas={absent_exceptions} "
+            f"presentes_no_mapa={curated_exceptions}"
+        )
+    missing = sorted(k for k in published_rules if k not in curated_keys and k not in uncurated_published)
     extra = sorted(k for k in curated_keys if k not in published_rules)
     if missing or extra:
         raise RuntimeError(f"Cobertura de origens curadas inválida: ausentes={missing[:8]} extras={extra[:8]}")
-    if len(rules_map) != 159 or data.get("total_regras") != 159:
-        raise RuntimeError(f"Mapa curado deve cobrir 159 regras; encontrou {len(rules_map)}.")
+    if len(rules_map) != 160 or data.get("total_regras") != 160:
+        raise RuntimeError(f"Mapa curado deve cobrir 160 regras; encontrou {len(rules_map)}.")
 
     by_id = {r["id"]: r for r in allr if r.get("id")}
     by_original = defaultdict(list)
@@ -347,6 +410,9 @@ def validate_curated(root, allr):
         "total_regras": len(rules_map),
         "total_referencias": total,
         "regras_sem_referencia": sum(1 for v in rules_map.values() if not v),
+        "regras_publicadas_sem_relacao_curada": [
+            published_rules[k].get("original") for k in sorted(uncurated_published)
+        ],
         "distribuicao_destinos": {m: int(dist.get(m, 0)) for m in ROUTES},
         "autorreferencias": 0,
         "destinos_invalidos": 0,
