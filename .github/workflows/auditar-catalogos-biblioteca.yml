@@ -55,6 +55,13 @@ jobs:
         run: node tests/auditar-catalogos-biblioteca.mjs
       - name: Gerar índice semântico de controle
         run: |
+          python - <<'PY'
+          from pathlib import Path
+          parts=[Path(f'dados/regras-atuais-ptbr.part{n}.txt') for n in range(1,5)]
+          missing=[str(p) for p in parts if not p.exists()]
+          if missing: raise RuntimeError('Fontes atuais de Regras ausentes: '+', '.join(missing))
+          Path('dados/regras-atuais-ptbr.generated.json').write_text(''.join(p.read_text(encoding='utf-8') for p in parts),encoding='utf-8')
+          PY
           python scripts/gerar_referencias_hub.py \
             --root . \
             --output /tmp/referencias-hub-index.json \
@@ -80,6 +87,7 @@ jobs:
           if unresolved: raise RuntimeError('Classes-pai de subclasses sem entidade/stub semântico: '+', '.join(unresolved))
           print(f"Índice semântico validado: {d['total_entidades']} entidades em 18/18 módulos; {len(subclasses)} relações subclasse→classe resolvidas.")
           PY
+          rm -f dados/regras-atuais-ptbr.generated.json
       - name: Proibir backend incompatível no bloco
         run: |
           if grep -RniE 'supabase' scripts/catalog-registry.js scripts/library-catalog-status.js scripts/library-reference-ui.js bibliotecas.html referencia.html; then
