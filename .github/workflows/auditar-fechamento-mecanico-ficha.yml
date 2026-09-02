@@ -9,6 +9,7 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-sheet*.js'
       - 'tests/auditar-fechamento-mecanico-ficha.mjs'
+      - 'tests/auditar-barbarian-core-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
   push:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-sheet*.js'
       - 'tests/auditar-fechamento-mecanico-ficha.mjs'
+      - 'tests/auditar-barbarian-core-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
 
 permissions:
@@ -31,7 +33,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Validar sintaxe do gate
-        run: node --check tests/auditar-fechamento-mecanico-ficha.mjs
-      - name: 10A · Nenhum módulo mecânico órfão do runtime
+      - name: Validar sintaxe dos gates
+        run: |
+          node --check tests/auditar-fechamento-mecanico-ficha.mjs
+          node --check tests/auditar-barbarian-core-bloco10.mjs
+      - name: 10A–10D · Cobertura estrutural e efeitos existentes
         run: node tests/auditar-fechamento-mecanico-ficha.mjs
+      - name: 10E · Núcleo mecânico do Bárbaro
+        run: node tests/auditar-barbarian-core-bloco10.mjs
