@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'ROADMAP-V1.md'
+      - 'dados/cobertura-mecanica-ficha-v1.json'
       - 'dados/itens-magicos/**'
       - 'scripts/character-builder/**'
       - 'scripts/character-builder.js'
@@ -13,11 +14,13 @@ on:
       - 'tests/auditar-barbarian-core-bloco10.mjs'
       - 'tests/auditar-magic-item-state-bloco10.mjs'
       - 'tests/auditar-classificacao-itens-magicos-bloco10.mjs'
+      - 'tests/auditar-magic-item-ui-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
   push:
     branches: [main]
     paths:
       - 'ROADMAP-V1.md'
+      - 'dados/cobertura-mecanica-ficha-v1.json'
       - 'dados/itens-magicos/**'
       - 'scripts/character-builder/**'
       - 'scripts/character-builder.js'
@@ -26,6 +29,7 @@ on:
       - 'tests/auditar-barbarian-core-bloco10.mjs'
       - 'tests/auditar-magic-item-state-bloco10.mjs'
       - 'tests/auditar-classificacao-itens-magicos-bloco10.mjs'
+      - 'tests/auditar-magic-item-ui-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
 
 permissions:
@@ -45,7 +49,10 @@ jobs:
           node --check tests/auditar-barbarian-core-bloco10.mjs
           node --check tests/auditar-magic-item-state-bloco10.mjs
           node --check tests/auditar-classificacao-itens-magicos-bloco10.mjs
+          node --check tests/auditar-magic-item-ui-bloco10.mjs
           node --check scripts/character-sheet-magic-item-classification.js
+          node --check scripts/character-sheet-magic-item-state.js
+          node --check scripts/character-sheet-magic-item-ui.js
       - name: 10A–10D · Cobertura estrutural e efeitos existentes
         run: node tests/auditar-fechamento-mecanico-ficha.mjs
       - name: 10E · Núcleo mecânico do Bárbaro
@@ -54,3 +61,5 @@ jobs:
         run: node tests/auditar-magic-item-state-bloco10.mjs
       - name: 10H · Classificação integral dos 259 itens mágicos
         run: node tests/auditar-classificacao-itens-magicos-bloco10.mjs
+      - name: 10I · Ponte de inventário e controles da Ficha
+        run: node tests/auditar-magic-item-ui-bloco10.mjs
