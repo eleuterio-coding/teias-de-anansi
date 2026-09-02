@@ -16,4 +16,6 @@ const great={...baseProfile,grip:'two',weapon:{...baseProfile.weapon,propriedade
 
 derived={...derived,featMechanics:{combatFlags:['ignoreBpsResistance'],rangedAttackBonus:0}};result=resolveWeaponAttack({derived,profile:baseProfile,target:{ac:1,resistances:['Cortante']},rng:seq(.5,.5)});assert.equal(result.attackModifier.ignoreBpsResistance,true);assert.equal(result.damage.effective,result.damage.raw,'Boon of Irresistible Offense ignora resistência física compatível.');
 
+derived={weapon:{id:'sword'},attack:5,featMechanics:{combatFlags:[],rangedAttackBonus:0},magicItemWeaponBonuses:{attack:[{refId:'sword',scope:'this-weapon',value:2}],damage:[{refId:'sword',scope:'this-weapon',value:2}],conditionalAttack:[],conditionalDamage:[]}};modifier=weaponResolutionModifier(derived,baseProfile);assert.equal(modifier.magicAttack,2,'Weapon +X vinculado à arma ativa precisa alimentar o ataque.');assert.equal(modifier.magicDamage,2,'Weapon +X vinculado à arma ativa precisa alimentar o dano.');
+
 console.log('Bloco 11 · modificadores condicionais de ataque e dano: OK');
