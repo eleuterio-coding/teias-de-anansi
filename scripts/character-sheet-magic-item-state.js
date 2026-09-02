@@ -8,6 +8,7 @@ const magicSlug=row=>String(row?.refId||'').trim().toLowerCase().split(':').pop(
 const magicBonus=row=>{
  const explicit=Number(row?.magicBonus??row?.variantBonus);
  if([1,2,3].includes(explicit))return explicit;
+ if(magicSlug(row)==='armor-1-2-or-3')return 0;
  const text=`${row?.name||''} ${row?.refId||''}`;
  const match=text.match(/(?:\+|plus[- ]?)([123])\b/i);
  return match?Number(match[1]):0
