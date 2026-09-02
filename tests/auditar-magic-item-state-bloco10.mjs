@@ -10,12 +10,18 @@ const adamantine={kind:'magic-item',refId:'adamantine-armor',name:'Adamantine Ar
 const proof={kind:'magic-item',refId:'amulet-of-proof-against-detection-and-location',name:'Amulet of Proof against Detection and Location',qty:1,source:'Campanha'};
 const vulnerability={kind:'magic-item',refId:'armor-of-vulnerability',name:'Armor of Vulnerability',qty:1,source:'Campanha'};
 const ammunition={kind:'magic-item',refId:'ammunition-1-2-or-3',name:'Ammunition, +1, +2, or +3',qty:10,source:'Campanha'};
-const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerability,ammunition];
+const weapon={kind:'magic-item',refId:'weapon-1-2-or-3',name:'Weapon, +1, +2, or +3',qty:1,source:'Campanha'};
+const luckstone={kind:'magic-item',refId:'stone-of-good-luck-luckstone',name:'Stone of Good Luck',qty:1,source:'Campanha'};
+const mithral={kind:'magic-item',refId:'mithral-armor',name:'Mithral Armor',qty:1,source:'Campanha'};
+const giantPotion={kind:'magic-item',refId:'potion-of-giant-strength',name:'Potion of Giant Strength',qty:1,source:'Campanha'};
+const carpet={kind:'magic-item',refId:'carpet-of-flying',name:'Carpet of Flying',qty:1,source:'Campanha'};
+const defender={kind:'magic-item',refId:'defender',name:'Defender',qty:1,source:'Campanha'};
+const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerability,ammunition,weapon,luckstone,mithral,giantPotion,carpet,defender];
 
 {
  const result=setMagicItemUsage(character,base,amulet,{equipped:true,attuned:true});
  assert.equal(result.ok,true,'10F · deve aceitar estado de uso para item possuído');
- assert.deepEqual(magicItemUsage(character,amulet),{key:'magic-item|ref:amulet-of-health',equipped:true,attuned:true,parameters:{}},'10F · estado equipado/sintonizado deve persistir por chave estável');
+ assert.deepEqual(magicItemUsage(character,amulet),{key:'magic-item|ref:amulet-of-health',equipped:true,attuned:true,active:false,parameters:{}},'10F · estado equipado/sintonizado deve persistir por chave estável');
 }
 {
  const active=activeMagicItemUsages(character,base);
@@ -23,6 +29,7 @@ const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerabili
  assert.equal(active[0].row.refId,'amulet-of-health');
  assert.equal(active[0].equipped,true);
  assert.equal(active[0].attuned,true);
+ assert.equal(active[0].active,false);
  assert.deepEqual(active[0].parameters,{});
 }
 {
@@ -108,8 +115,25 @@ const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerabili
  assert.deepEqual(new Set(outcome.vulnerabilities),new Set(['Concussão','Cortante']),'10G · os dois tipos físicos restantes devem virar vulnerabilidades estruturadas');
 }
 {
+ const c={sheet:{},choices:{}};setMagicItemUsage(c,[weapon],weapon,{equipped:true,parameters:{magicBonus:2}});const outcome=magicItemPersistentOutcome(c,[weapon]);
+ assert.equal(outcome.weaponAttackBonuses[0].value,2,'10G · Arma +1/+2/+3 deve expor bônus persistente de ataque');assert.equal(outcome.weaponDamageBonuses[0].value,2,'10G · Arma +1/+2/+3 deve expor bônus persistente de dano');
+}
+{
+ const c={sheet:{},choices:{}};setMagicItemUsage(c,[luckstone,mithral],luckstone,{attuned:true});setMagicItemUsage(c,[luckstone,mithral],mithral,{equipped:true});const derived={scores:{Constituição:10},level:1,hp:8,ac:16};applyMagicItemPersistentEffects(derived,c,[luckstone,mithral]);
+ assert.equal(derived.globalAbilityCheckBonus,1,'10G · Luckstone deve alimentar bônus global de testes de habilidade');assert.equal(derived.globalSavingThrowBonus,1,'10G · Luckstone deve alimentar bônus global de salvaguardas');assert.equal(derived.magicItemFlags.ignoreArmorStrengthRequirement,true,'10G · Mithral Armor deve remover requisito de Força da armadura');assert.equal(derived.magicItemFlags.ignoreArmorStealthDisadvantage,true,'10G · Mithral Armor deve remover desvantagem de Furtividade da armadura');
+}
+{
+ const c={sheet:{},choices:{}};assert.equal(setMagicItemUsage(c,[giantPotion],giantPotion,{active:true,parameters:{strengthScore:25}}).ok,true);const derived={scores:{Força:10,Constituição:10},level:5,hp:30,ac:12};applyMagicItemPersistentEffects(derived,c,[giantPotion]);assert.equal(derived.scores.Força,25,'10G · efeito ativo da Poção de Força do Gigante deve alterar o atributo efetivo');assert.equal(magicItemUsage(c,giantPotion).active,true,'10F · efeito temporário precisa persistir como estado ativo na Ficha');
+}
+{
+ const c={sheet:{},choices:{}};assert.equal(setMagicItemUsage(c,[carpet],carpet,{active:true,parameters:{flyingSpeed:60}}).ok,true);const derived={scores:{Constituição:10},level:1,hp:8,ac:10};applyMagicItemPersistentEffects(derived,c,[carpet]);assert.equal(derived.magicItemMovement.flySpeed,60,'10G · Tapete Voador ativo deve expor deslocamento de voo parametrizado');assert.equal(derived.magicItemFlags.ridingFlyingCarpet,true);
+}
+{
+ const c={sheet:{},choices:{}};assert.equal(setMagicItemUsage(c,[defender],defender,{equipped:true,attuned:true,parameters:{acTransfer:2}}).ok,true);const outcome=magicItemPersistentOutcome(c,[defender]);assert.equal(outcome.acBonus,2,'10G · Defender deve estruturar a parcela transferida para CA');assert.equal(outcome.weaponAttackBonuses[0].value,1,'10G · Defender deve manter somente o bônus restante no ataque');assert.equal(outcome.weaponDamageBonuses[0].value,1,'10G · Defender deve manter somente o bônus restante no dano');
+}
+{
  setMagicItemUsage(character,base,amulet,{equipped:false,attuned:false});
- assert.equal(activeMagicItemUsages(character,base).some(x=>x.row.refId==='amulet-of-health'),false,'10F · desligar ambos os estados deve remover a entrada persistida do amuleto');
+ assert.equal(activeMagicItemUsages(character,base).some(x=>x.row.refId==='amulet-of-health'),false,'10F · desligar todos os estados deve remover a entrada persistida do amuleto');
 }
 {
  const c={sheet:{},choices:{}};setMagicItemUsage(c,[armor],armor,{equipped:true});
