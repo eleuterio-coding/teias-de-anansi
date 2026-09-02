@@ -1,9 +1,11 @@
 import{state,arr,num,uniq,fold,mod}from'./state.js';
 import{ARTISAN_TOOLS}from'./class-tool-mechanics.js?v=20260831-class-tools1';
-import{activeFeatInstances,featRule}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
+import{activeFeatInstances,featRule,FEAT_RULES}from'./feat-mechanics.js?v=20260831-tasha-metamagic1';
+import{TASHA_2020_FEAT_RULES}from'./feat-rules-tasha-2020.js?v=20260831-tasha-metamagic1';
 import{sanitizeInvocationSlots,invocationOutcomeForSlots}from'./invocation-mechanics.js?v=20260831-tasha-metamagic1';
 import{sanitizeMetamagicIds}from'./metamagic-mechanics.js?v=20260831-tasha-metamagic1';
 
+Object.assign(FEAT_RULES,TASHA_2020_FEAT_RULES);
 export const TASHA_FEAT_NAMES=['Artificer Initiate','Eldritch Adept','Fighting Initiate','Gunner','Metamagic Adept'];
 export const FIGHTING_STYLE_NAMES=['Archery','Blind Fighting','Defense','Dueling','Great Weapon Fighting','Interception','Protection','Thrown Weapon Fighting','Two-Weapon Fighting','Unarmed Fighting'];
 const ARTIFICER_ALIASES=new Set(['artifice','artificer']);
