@@ -13,6 +13,7 @@ on:
       - 'tests/auditar-ui-resolucao-bloco11.mjs'
       - 'tests/auditar-itens-magicos-resolucao-bloco11.mjs'
       - 'tests/auditar-morte-bloco11.mjs'
+      - 'tests/auditar-modificadores-combate-bloco11.mjs'
       - '.github/workflows/auditar-rolagens-resolucao.yml'
   push:
     branches: [main]
@@ -26,6 +27,7 @@ on:
       - 'tests/auditar-ui-resolucao-bloco11.mjs'
       - 'tests/auditar-itens-magicos-resolucao-bloco11.mjs'
       - 'tests/auditar-morte-bloco11.mjs'
+      - 'tests/auditar-modificadores-combate-bloco11.mjs'
       - '.github/workflows/auditar-rolagens-resolucao.yml'
 
 permissions:
@@ -51,6 +53,7 @@ jobs:
           node --check tests/auditar-ui-resolucao-bloco11.mjs
           node --check tests/auditar-itens-magicos-resolucao-bloco11.mjs
           node --check tests/auditar-morte-bloco11.mjs
+          node --check tests/auditar-modificadores-combate-bloco11.mjs
       - name: 11A · Motor matemático determinístico
         run: node tests/auditar-rolagens-resolucao.mjs
       - name: 11B · Integração com a Ficha Digital
@@ -66,3 +69,5 @@ jobs:
         run: node tests/auditar-itens-magicos-resolucao-bloco11.mjs
       - name: 11E · Salvaguardas contra a Morte
         run: node tests/auditar-morte-bloco11.mjs
+      - name: 11F · Modificadores condicionais de combate
+        run: node tests/auditar-modificadores-combate-bloco11.mjs
