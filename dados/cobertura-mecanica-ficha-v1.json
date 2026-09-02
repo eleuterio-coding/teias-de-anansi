@@ -9,6 +9,16 @@
     "lacunas_nao_classificadas": 0,
     "testes_falhando": 0
   },
+  "estado_atual": {
+    "catalogo_itens_magicos": 259,
+    "classificacao_automatica": {
+      "persistent": 53,
+      "resolution": 85,
+      "mixed": 83,
+      "manual_review": 38
+    },
+    "revisao_manual_pendente": 38
+  },
   "evidencias": [
     {
       "id": "magic-items-runtime-only-purchase",
@@ -21,10 +31,12 @@
         "scripts/character-builder/rules.js",
         "scripts/character-sheet-inventory-rules.js",
         "scripts/character-sheet-magic-item-state.js",
-        "tests/auditar-magic-item-state-bloco10.mjs"
+        "scripts/character-sheet-magic-item-classification.js",
+        "tests/auditar-magic-item-state-bloco10.mjs",
+        "tests/auditar-classificacao-itens-magicos-bloco10.mjs"
       ],
-      "progresso": "O estado estruturado de uso, a camada fail-closed de efeitos persistentes e sua integração à derivação central já existem. Amulet of Health produz Constituição mínima 19 com propagação para PV e Defesa sem Armadura; armaduras mágicas +1/+2/+3 aplicam bônus de CA somente quando a variante está explicitamente parametrizada; Armor of Resistance e Armor of Vulnerability persistem e validam o tipo de dano escolhido; Armor of Invulnerability estrutura resistências; Adamantine Armor expõe a normalização de críticos; Amulet of Proof against Detection and Location expõe bloqueios de Adivinhação e sensores de vidência. Parâmetros normativos agora pertencem ao estado persistente do item, e não dependem de metadados ocasionais do inventário. Escolhas ausentes ou inválidas permanecem pendentes/fail-closed.",
-      "problema": "O catálogo de 259 itens mágicos ainda não possui classificação exaustiva entre efeitos persistentes do Bloco 10 e efeitos de resolução do Bloco 11. A API de estado já suporta e valida parâmetros legítimos dos primeiros itens parametrizados, mas ainda faltam controles visuais para editá-los na ficha e a mecanização/classificação dos demais bônus e estados persistentes identificados no catálogo.",
+      "progresso": "O estado estruturado de uso, a camada fail-closed de efeitos persistentes e sua integração à derivação central já existem. Amulet of Health produz Constituição mínima 19 com propagação para PV e Defesa sem Armadura; armaduras mágicas +1/+2/+3 aplicam bônus de CA somente quando a variante está explicitamente parametrizada; Armor of Resistance e Armor of Vulnerability persistem e validam o tipo de dano escolhido; Armor of Invulnerability estrutura resistências; Adamantine Armor expõe a normalização de críticos; Amulet of Proof against Detection and Location expõe bloqueios de Adivinhação e sensores de vidência. O gate 10H agora percorre todos os 259 itens congelados e os classifica por responsabilidade: 53 persistentes, 85 de resolução, 83 mistos e 38 ainda dependentes de revisão manual. Escolhas ausentes ou inválidas permanecem pendentes/fail-closed.",
+      "problema": "A cobertura deixou de ser uma lacuna difusa: os 259 itens entram no gate 10H, mas 38 ainda exigem revisão semântica manual antes de poderem ser atribuídos definitivamente ao Bloco 10, ao Bloco 11 ou a ambos. Além disso, faltam controles visuais para editar parâmetros persistentes na ficha e a mecanização dos demais efeitos persistentes confirmados.",
       "exemplos_mecanizaveis_confirmados": [
         "Amulet of Health — Constituição 19 enquanto usado",
         "Adamantine Armor — acertos críticos recebidos tornam-se acertos normais",
@@ -35,7 +47,7 @@
         "Armor of Vulnerability — resistência física escolhida e vulnerabilidade aos outros dois tipos",
         "Ammunition, +1, +2, or +3 — bônus em ataque e dano"
       ],
-      "proximo_passo": "Classificar fail-closed os 259 itens do catálogo, conectar controles de UI à API de parâmetros persistentes e implementar os demais estados, bônus e modificadores persistentes. Efeitos de resolução instantânea permanecem para o Bloco 11."
+      "proximo_passo": "Revisar semanticamente os 38 itens restantes, conectar controles de UI à API de parâmetros persistentes e implementar os demais estados, bônus e modificadores persistentes confirmados. Efeitos de resolução instantânea permanecem para o Bloco 11."
     },
     {
       "id": "barbarian-core-feature-text-only",
@@ -64,5 +76,5 @@
       "resolucao": "A derivação central agora aplica o núcleo mecânico do Bárbaro: fórmula de Defesa sem Armadura, duas investidas na ação Atacar, +10 ft de Movimento Rápido sem Armadura Pesada, Vantagem de Iniciativa e Campeão Primal com propagação para atributos, ataque, PV e CA. O gate 10E cobre os níveis 1, 5, 7 e 20, Armadura Pesada, Escudo e isolamento entre classes."
     }
   ],
-  "nota": "Este inventário registra lacunas confirmadas e resoluções verificadas, não uma lista exaustiva. O Bloco 10 permanece não Aceito até que todos os domínios do escopo tenham classificação mecânica e zero lacuna conhecida/não classificada."
+  "nota": "Este inventário registra lacunas confirmadas e resoluções verificadas. O Bloco 10 permanece não Aceito até que todos os domínios do escopo tenham classificação mecânica, revisão manual pendente zero e zero lacuna conhecida/não classificada."
 }
