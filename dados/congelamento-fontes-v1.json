@@ -1,0 +1,10 @@
+{
+  "schema": "hub-rpg/congelamento-fontes-v1/v1",
+  "status": "congelado",
+  "vigente_desde": "2026-09-02",
+  "registro": "dados/fontes-normativas-criacao.json",
+  "quantidade_mapeamentos": 47,
+  "politica_novos_conteudos": "Fontes, livros, suplementos e conteúdos adicionados após este congelamento pertencem a versões futuras e não reabrem a v1.0.",
+  "autoridades_permitidas": ["regra_casa", "oficial_atual", "oficial_legado", "terceiro_compativel", "demonstrativo_nao_canonico", "derivado_localizacao", "consolidado_misto"],
+  "criterios_zero": ["fonte_mecanica_sem_autoridade", "fonte_com_multiplas_autoridades", "autoridade_desconhecida", "conteudo_terceiro_promovido_a_oficial", "demonstrativo_promovido_a_canonico", "localizacao_tratada_como_fonte_normativa"]
+}
