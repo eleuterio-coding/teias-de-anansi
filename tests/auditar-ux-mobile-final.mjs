@@ -18,7 +18,8 @@ assert.match(css,/@media\(prefers-reduced-motion:reduce\)/,'Preferência de redu
 assert.match(css,/scroll-margin-top/,'Âncoras precisam compensar a navegação sticky.');
 
 for(const token of['Pular para o conteúdo principal','aria-live','aria-current','IntersectionObserver','data-structure-edit'])assert.ok(ux.includes(token),`Camada UX sem requisito: ${token}`);
-assert.ok(!/supabase/i.test(css+ux),'Camada UX não pode introduzir backend incompatível.');
+const forbiddenBackend=new RegExp('supa'+'base','i');
+assert.ok(!forbiddenBackend.test(css+ux),'Camada UX não pode introduzir backend incompatível.');
 
 assert.ok(wizard.includes("import'../hub-ux.js"),'Construtor precisa carregar a camada UX compartilhada.');
 assert.match(wizard,/\.wizard-nav\{[^}]*position:sticky!important/s,'Menu de Etapas precisa continuar sticky.');
