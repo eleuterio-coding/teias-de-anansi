@@ -30,8 +30,8 @@ function importsOf(file) {
   const source = fs.readFileSync(file, 'utf8');
   const specs = [];
   const patterns = [
-    /\bimport\s+(?:[^'";]+?\s+from\s+)?['"]([^'"]+)['"]/g,
-    /\bexport\s+[^'";]*?\s+from\s+['"]([^'"]+)['"]/g,
+    /\bimport\s*(?:[^'";]+?\s*from\s*)?['"]([^'"]+)['"]/g,
+    /\bexport\s*[^'";]*?\s*from\s*['"]([^'"]+)['"]/g,
     /\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
   ];
   for (const pattern of patterns) {
