@@ -16,7 +16,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 6. Campanhas/Mesas — ✅ Aceito
 7. Biblioteca e dados — ✅ Aceito
 8. UX, mobile e auditoria funcional — ✅ Aceito
-9. Auditoria normativa total — Em implementação
+9. Auditoria normativa total — ✅ Aceito
 10. Fechamento mecânico total da Ficha — Planejado
 11. Rolagens e resolução de jogo — Planejado
 12. Encontros e ferramentas do Mestre — Planejado
@@ -61,4 +61,4 @@ E2E em navegador real e mobile, fluxos longos 1–20, campanhas, recuperação d
 
 ## Política de escopo da v1.0
 
-Antes do encerramento do Bloco 9 será congelada a lista de fontes normativas e conteúdos da v1.0. Novos suplementos posteriores ao congelamento entram em versão futura.
+A lista de fontes normativas e conteúdos da v1.0 foi congelada no encerramento do Bloco 9. Novos suplementos posteriores ao congelamento entram em versão futura.
