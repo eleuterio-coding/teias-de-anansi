@@ -1,6 +1,8 @@
+import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = process.cwd();
 const SCRIPTS = path.join(ROOT, 'scripts');
@@ -85,3 +87,50 @@ if (orphaned.length) {
 }
 
 console.log('OK · nenhum módulo *-mechanics.js está órfão do runtime da ficha.');
+
+// 10B · Um módulo alcançável ainda pode estar morto no pipeline. As integrações
+// adicionadas durante o Bloco 10 precisam participar explicitamente tanto da
+// sanitização das escolhas quanto da derivação mecânica da ficha.
+const rulesSource = fs.readFileSync(path.join(BUILDER, 'rules.js'), 'utf8');
+const requiredRuntimeCalls = [
+  ['sanitizeClassToolChoices', 'class-tool-mechanics.js', 'sanitização das ferramentas de classe'],
+  ['classToolOutcome', 'class-tool-mechanics.js', 'derivação das ferramentas de classe'],
+  ['sanitizeTashaFeatChoices', 'tasha-feat-mechanics.js', 'sanitização dos talentos de Tasha'],
+  ['applyTashaFeatEffects', 'tasha-feat-mechanics.js', 'derivação dos talentos de Tasha'],
+];
+const missingCalls = requiredRuntimeCalls.filter(([name]) => !new RegExp(`\\b${name}\\s*\\(`).test(rulesSource));
+if (missingCalls.length) {
+  console.error('\nIntegrações mecânicas alcançáveis, porém não chamadas pelo pipeline central:');
+  for (const [name, module, purpose] of missingCalls) console.error(` - ${module}: ${name}() · ${purpose}`);
+  process.exit(1);
+}
+console.log(`OK · contratos centrais ativos: ${requiredRuntimeCalls.length}/${requiredRuntimeCalls.length}.`);
+
+// 10C · Teste comportamental puro das proficiências de ferramenta de classe.
+// Isso evita que o gate fique verde apenas porque class-tool-mechanics.js é
+// importado: escolhas, limites e proficiências fixas precisam produzir estado.
+const classToolUrl = `${pathToFileURL(path.join(BUILDER, 'class-tool-mechanics.js')).href}?audit=block10`;
+const { classToolOutcome, sanitizeClassToolChoices } = await import(classToolUrl);
+
+const bard = { slug: 'bard' };
+const incompleteBard = classToolOutcome(bard, { 'musical-instruments': ['Flauta', 'Flauta', 'Instrumento inexistente'] });
+assert.equal(incompleteBard.complete, false, 'Bardo não pode ficar completo sem três instrumentos válidos e distintos.');
+assert.deepEqual(incompleteBard.selected, ['Flauta']);
+assert.equal(incompleteBard.pending[0]?.remaining, 2);
+const completeBard = classToolOutcome(bard, { 'musical-instruments': ['Flauta', 'Lira', 'Tambor', 'Viola'] });
+assert.equal(completeBard.complete, true, 'Bardo com três escolhas válidas deve concluir a proficiência de ferramentas.');
+assert.deepEqual(completeBard.selected, ['Flauta', 'Lira', 'Tambor']);
+
+const rogue = classToolOutcome({ slug: 'rogue' }, {});
+assert.equal(rogue.complete, true);
+assert.ok(rogue.tools.includes('Ferramentas de Ladrão'), 'Ladino deve derivar Ferramentas de Ladrão como proficiência fixa.');
+
+const artificerInvalid = sanitizeClassToolChoices({ slug: 'artificer' }, { 'artisan-tools': ['Ferramentas de Funileiro', 'Ferramentas de Ferreiro'] });
+assert.deepEqual(artificerInvalid['artisan-tools'], ['Ferramentas de Ferreiro'], 'A escolha do Artífice não pode repetir Ferramentas de Funileiro, que já são fixas.');
+const artificer = classToolOutcome({ slug: 'artificer' }, artificerInvalid);
+assert.equal(artificer.complete, true);
+assert.ok(artificer.tools.includes('Ferramentas de Ladrão'));
+assert.ok(artificer.tools.includes('Ferramentas de Funileiro'));
+assert.ok(artificer.tools.includes('Ferramentas de Ferreiro'));
+
+console.log('OK · ferramentas de classe produzem escolhas, pendências e proficiências observáveis na ficha.');
