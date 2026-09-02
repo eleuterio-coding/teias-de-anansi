@@ -6,6 +6,7 @@ const matrix=read('dados/auditoria-normativa-especies-phb-2024.json');
 const aasimarPkg=read('dados/especies-pdf-phb-2024.json');
 const tiefling=read('dados/tiefling-variantes.json');
 const state=fs.readFileSync('scripts/character-builder/state.js','utf8');
+const registry=fs.readFileSync('scripts/catalog-registry.js','utf8');
 const catalogs=fs.readFileSync('scripts/character-builder/catalogs.js','utf8');
 const has=(text,...needles)=>{const normalized=String(text||'').toLocaleLowerCase('pt-BR');for(const n of needles)assert.ok(normalized.includes(String(n).toLocaleLowerCase('pt-BR')),`Texto não contém requisito: ${n}\n${text}`)};
 
@@ -15,8 +16,10 @@ assert.deepEqual(matrix.identidades,["Aasimar","Dragonborn","Dwarf","Elf","Gnome
 assert.equal(matrix.composicao_runtime.srd_5_2_1,9);
 assert.equal(matrix.composicao_runtime.arquivo_local_aasimar,1);
 
-assert.match(state,new RegExp(`PIN='${matrix.srd_pin}'`),'Runtime deve manter o SHA SRD auditado.');
-assert.match(state,/RAW24=`https:\/\/raw\.githubusercontent\.com\/5e-bits\/5e-database\/\$\{PIN\}\/src\/2024\/en`/,'RAW24 deve permanecer pinado ao commit auditado.');
+assert.ok(registry.includes(`FIVE_E_BITS_PIN='${matrix.srd_pin}'`),'Registro canônico deve manter o SHA SRD auditado.');
+assert.match(registry,/FIVE_E_BITS_2024=`https:\/\/raw\.githubusercontent\.com\/5e-bits\/5e-database\/\$\{FIVE_E_BITS_PIN\}\/src\/2024\/en`/,'Fonte 2024 deve permanecer pinada ao commit auditado.');
+assert.match(state,/PIN=FIVE_E_BITS_PIN/,'state.js deve derivar o PIN do registro canônico, sem duplicar autoridade.');
+assert.match(state,/RAW24=FIVE_E_BITS_2024/,'state.js deve derivar a fonte 2024 do registro canônico.');
 assert.match(catalogs,/5e-SRD-Species\.json/,'loadSpecies deve carregar as espécies SRD 5.2.1.');
 assert.match(catalogs,/especies-pdf-phb-2024\.json|SPFILES/,'Runtime deve carregar o complemento PHB local via SPFILES.');
 assert.match(catalogs,/abilityBonuses:\[\]/,'Espécies atuais não podem aplicar aumentos de atributo raciais.');
