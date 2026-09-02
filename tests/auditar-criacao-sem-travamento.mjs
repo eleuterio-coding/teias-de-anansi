@@ -12,19 +12,17 @@ const equipmentUi=text('scripts/character-builder/equipment-ownership-ui.js');
 const legacyEquipment=text('scripts/character-builder/active-equipment-ui.js');
 const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 
-const REV='20260828-character-builder-freeze1';
-const SKILL_REV='20260831-skill-checks1';
+const LEGACY_UI_REV='20260828-character-builder-freeze1';
 const RULES_REV='20260831-tasha-metamagic1';
 const WEALTH_REV='20260831-magic-rarity2';
-assert.ok(html.includes(`character-builder.js?v=${REV}`),'A página precisa invalidar o carregador antigo em cache.');
-assert.ok(loader.includes(`ui.js?v=${REV}`),'O núcleo da criação precisa usar a revisão anti-travamento.');
-assert.ok(loader.includes(`class-skill-ui.js?v=${SKILL_REV}`),'A etapa de perícias precisa invalidar a revisão anterior após mudança mecânica.');
-assert.ok(loader.includes(`equipment-ownership-ui.js?v=${REV}`),'Equipamento ativo precisa usar a revisão anti-travamento.');
+assert.ok(html.includes(`character-builder.js?v=${RULES_REV}`),'A página precisa invalidar o carregador antigo em cache usando a revisão normativa canônica.');
+assert.ok(loader.includes(`ui.js?v=${RULES_REV}`),'O núcleo da criação precisa usar a revisão normativa canônica do motor.');
+assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias precisa acompanhar a revisão normativa canônica.');
+assert.ok(loader.includes(`equipment-ownership-ui.js?v=${LEGACY_UI_REV}`),'Equipamento ativo precisa manter sua revisão anti-travamento própria.');
 assert.ok(loader.includes(`package-b-purchase-ui.js?v=${WEALTH_REV}`),'Carregador precisa invalidar a revisão antiga da etapa de compras/riqueza.');
 assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${WEALTH_REV}`),'Etapa de compras precisa invalidar a versão da loja anterior à correção de raridades.');
 for(const [label,source] of [['núcleo',core],['Mago',wizardUi],['equipamento',equipmentUi]]){
- const expected=label==='equipamento'?RULES_REV:REV;
- assert.ok(source.includes(`rules.js?v=${expected}`),`${label}: rules.js deve usar a revisão esperada do motor.`);
+ assert.ok(source.includes(`rules.js?v=${RULES_REV}`),`${label}: rules.js deve usar a revisão normativa canônica do motor.`);
 }
 assert.ok(classUi.includes(`rules.js?v=${RULES_REV}`),'Perícias devem carregar a revisão normativa atual de rules.js, que inclui a integração de testes de perícia.');
 assert.ok(classUi.includes('renderSkillChecks'),'A revisão dedicada de perícias precisa aplicar os valores mecânicos no preview.');
@@ -57,4 +55,4 @@ assert.equal(firstReads,spells.length,'Primeira indexação deve visitar cada ma
 for(let i=0;i<25;i++)wizardSubclassChoiceDefs(d);
 assert.equal(classReads,firstReads,'Chamadas repetidas de derive/choiceDefs não podem revarrer as 537 magias.');
 
-console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago; revisões mecânicas de perícias e riqueza isoladas e rastreadas.');
+console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago; revisão normativa canônica rastreada sem perder as revisões isoladas de riqueza/equipamento.');
