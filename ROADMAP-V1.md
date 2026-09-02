@@ -22,7 +22,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 12. Encontros e ferramentas do Mestre — ✅ Aceito
 13. Aventuras — ✅ Aceito
 14. Persistência definitiva e portabilidade — ✅ Aceito
-15. Usuários, colaboração e sincronização — Planejado
+15. Usuários, colaboração e sincronização — Bloqueado · provisionamento Firebase externo pendente
 16. Painel Geral — Planejado
 17. Configurações — Planejado
 18. Homologação, documentação e release final — Planejado
@@ -49,6 +49,8 @@ Exportação/importação, backup/restauração, schemas versionados, migraçõe
 
 ### 15. Usuários, colaboração e sincronização
 Identidade real, propriedade, convites, Mestre/Jogador/Observador, permissões e sincronização entre dispositivos. Não usar Supabase.
+
+Estado atual: cliente, papéis, projeções compartilhada/privada, convites, sincronização e Firestore Security Rules implementados em branch dedicada. O aceite permanece bloqueado até existir um projeto Firebase real com Google Authentication e Cloud Firestore provisionados, regras/índices publicados e homologação de sincronização entre dois contextos autenticados.
 
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
