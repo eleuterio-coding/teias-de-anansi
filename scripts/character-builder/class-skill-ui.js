@@ -1,5 +1,5 @@
 import{state,$,arr,SKILL_AB,esc,signed}from'./state.js';
-import{selected,derive}from'./rules.js?v=20260831-skill-checks1';
+import{selected,derive}from'./rules.js?v=20260831-tasha-metamagic1';
 import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
 import{initClassFeatureFeatUi}from'./class-feature-feat-ui.js';
 import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-subclass-mechanics2';
