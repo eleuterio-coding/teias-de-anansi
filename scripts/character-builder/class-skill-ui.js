@@ -1,6 +1,7 @@
 import{state,$,arr,SKILL_AB,esc,signed}from'./state.js';
 import{selected,derive}from'./rules.js?v=20260831-skill-checks1';
 import{initExpertiseCompanionUi}from'./expertise-companion-ui.js?v=20260827-expertise-companions1';
+import{initClassFeatureFeatUi}from'./class-feature-feat-ui.js';
 import{initSubclassMechanicsData}from'./subclass-mechanics-data.js?v=20260827-subclass-mechanics2';
 import{initBarbarianSubclassUi}from'./barbarian-subclass-ui.js?v=20260827-barbarian-subclasses1';
 import{initArtificerSubclassUi}from'./artificer-subclass-ui.js?v=20260827-artificer-subclasses1';
@@ -84,5 +85,5 @@ export function initClassSkillUi(){
  document.addEventListener('change',e=>{if(!box.contains(e.target))queueMicrotask(decorate)});
  for(const event of['hub:class-skills-changed','hub:abilities-context-changed','hub:progression-context-changed','hub:species-context-changed','hub:origin-context-changed','hub:class-context-changed'])document.addEventListener(event,()=>queueMicrotask(renderSkillChecks));
  initSubclassMechanicsData().then(()=>{initBarbarianSubclassUi();initArtificerSubclassUi();initBardSubclassUi();initDruidSubclassUi();initFighterSubclassUi();initMonkSubclassUi();initPaladinSubclassUi();initRangerSubclassUi();initRogueSubclassUi();initSorcererSubclassUi();initWarlockSubclassUi();initWizardSubclassUi()});
- initExpertiseCompanionUi();queueMicrotask(renderSkillChecks)
+ initClassFeatureFeatUi();initExpertiseCompanionUi();queueMicrotask(renderSkillChecks)
 }
