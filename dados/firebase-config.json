@@ -3,9 +3,14 @@
   "enabled": false,
   "provider": "firebase",
   "sdkVersion": "12.18.0",
+  "platform": "web-site-only",
+  "hosting": "github-pages",
+  "firebasePlan": "spark",
+  "billingForbidden": true,
+  "paymentMethodForbidden": true,
   "projectId": "",
   "apiKey": "",
   "authDomain": "",
   "appId": "",
-  "note": "Preencher com a configuração pública de um projeto Firebase, habilitar Google Authentication e publicar as Firestore Security Rules antes de ativar. Não adicionar credenciais administrativas ou segredos neste arquivo."
+  "note": "Configuração pública exclusiva do site. Usar apenas Firebase Spark sem faturamento/cartão, somente Authentication + Cloud Firestore. Não usar Firebase Hosting, Cloud Functions, SDK mobile, Service Account ou qualquer credencial administrativa."
 }
