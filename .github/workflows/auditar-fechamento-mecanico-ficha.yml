@@ -15,6 +15,7 @@ on:
       - 'tests/auditar-magic-item-state-bloco10.mjs'
       - 'tests/auditar-classificacao-itens-magicos-bloco10.mjs'
       - 'tests/auditar-magic-item-ui-bloco10.mjs'
+      - 'tests/auditar-cobertura-persistente-itens-magicos-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
   push:
     branches: [main]
@@ -30,6 +31,7 @@ on:
       - 'tests/auditar-magic-item-state-bloco10.mjs'
       - 'tests/auditar-classificacao-itens-magicos-bloco10.mjs'
       - 'tests/auditar-magic-item-ui-bloco10.mjs'
+      - 'tests/auditar-cobertura-persistente-itens-magicos-bloco10.mjs'
       - '.github/workflows/auditar-fechamento-mecanico-ficha.yml'
 
 permissions:
@@ -50,6 +52,7 @@ jobs:
           node --check tests/auditar-magic-item-state-bloco10.mjs
           node --check tests/auditar-classificacao-itens-magicos-bloco10.mjs
           node --check tests/auditar-magic-item-ui-bloco10.mjs
+          node --check tests/auditar-cobertura-persistente-itens-magicos-bloco10.mjs
           node --check scripts/character-sheet-magic-item-classification.js
           node --check scripts/character-sheet-magic-item-state.js
           node --check scripts/character-sheet-magic-item-ui.js
@@ -63,3 +66,5 @@ jobs:
         run: node tests/auditar-classificacao-itens-magicos-bloco10.mjs
       - name: 10I · Ponte de inventário e controles da Ficha
         run: node tests/auditar-magic-item-ui-bloco10.mjs
+      - name: 10J · Cobertura persistente integral dos itens mágicos
+        run: node tests/auditar-cobertura-persistente-itens-magicos-bloco10.mjs
