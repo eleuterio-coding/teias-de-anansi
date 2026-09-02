@@ -1,7 +1,7 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
 import{state}from'../scripts/character-builder/state.js';
-import{sanitizeInvocationSlots,invocationOutcome,invocationLimit,invocationEligibleOptions,invocationPrerequisiteResult}from'../scripts/character-builder/invocation-mechanics.js?v=20260831-tasha-metamagic1';
+import{sanitizeInvocationSlots,invocationOutcome,invocationLimit,invocationEligibleOptions,invocationPrerequisiteResult}from'../scripts/character-builder/invocation-mechanics.js?v=20260901-normative-v1';
 
 const data=JSON.parse(fs.readFileSync(new URL('../dados/invocacoes-bruxo-2024.json',import.meta.url),'utf8'));
 assert.equal(data.schema,'hub-rpg/invocacoes-bruxo/v1');assert.equal(data.itens.length,28);assert.equal(data.controle.quantidade,28);assert.equal(Object.keys(data.progressao).length,20);
@@ -57,8 +57,10 @@ assert.equal(clean.catalogReady,false);assert.equal(clean.slots[0].id,'pact-of-t
 state.catalogs.invocations=savedInvocations;state.catalogs.invocationProgression=savedProgression;
 
 const rules=fs.readFileSync(new URL('../scripts/character-builder/rules.js',import.meta.url),'utf8');
-const classUi=fs.readFileSync(new URL('../scripts/character-builder/class-skill-ui.js',import.meta.url),'utf8');
+const bootstrap=fs.readFileSync(new URL('../scripts/character-builder/subclass-mechanics-data.js',import.meta.url),'utf8');
 const invocationUi=fs.readFileSync(new URL('../scripts/character-builder/invocation-ui.js',import.meta.url),'utf8');
 const spellModule=fs.readFileSync(new URL('../scripts/character-builder/spells.js',import.meta.url),'utf8');
-assert.match(rules,/invocationOutcome/);assert.match(rules,/withSupplementalOriginFeats/);assert.match(rules,/tashaOriginFeatInstances/);assert.match(rules,/pactWeaponUsesCharisma/);assert.match(classUi,/initInvocationUi/);assert.match(invocationUi,/loadInvocations/);assert.match(spellModule,/damageType/);assert.match(spellModule,/attackSave/);
+assert.match(rules,/invocationOutcome/);assert.match(rules,/withSupplementalOriginFeats/);assert.match(rules,/pactWeaponUsesCharisma/);assert.match(rules,/sanitizeWarlockInvocations/);
+assert.match(bootstrap,/initInvocationUi/,'Bootstrap atual de mecânicas de classe precisa iniciar a UI de Invocações.');
+assert.match(invocationUi,/loadInvocations/);assert.match(spellModule,/damageType/);assert.match(spellModule,/attackSave/);
 console.log('Invocações do Bruxo 2024 validadas: 28/28, progressão 1–20, pré-requisitos, repetição, Pactos e Lessons of the First Ones integrados ao pipeline compartilhado.');
