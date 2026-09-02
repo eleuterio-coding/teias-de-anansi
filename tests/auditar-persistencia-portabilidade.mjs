@@ -49,8 +49,12 @@ restoreBackup(incomingPkg,{storage:undoStore,mode:'replace'});assert.equal(readP
 
 assert.equal(canonicalStringify({b:2,a:1}),canonicalStringify({a:1,b:2}));assert.equal(checksum({b:2,a:1}),checksum({a:1,b:2}));
 
-const scriptsRoot=new URL('../scripts/',import.meta.url),classified=new Set(STORAGE_REGISTRY.flatMap(x=>[x.key,...x.legacyKeys])),literals=new Set;
-function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js')){const source=fs.readFileSync(full,'utf8');for(const match of source.matchAll(/['"`](hub-rpg:[a-z0-9:_-]+)['"`]/gi))literals.add(match[1])}}}
-walk(scriptsRoot.pathname);const missing=[...literals].filter(key=>!classified.has(key)).sort();assert.deepEqual(missing,[],`Chaves localStorage sem classificação: ${missing.join(', ')}`);
+const scriptsRoot=new URL('../scripts/',import.meta.url),classified=new Set(STORAGE_REGISTRY.flatMap(x=>[x.key,...x.legacyKeys])),storageKeys=new Set;
+function collectStorageKeys(source){
+ for(const match of source.matchAll(/(?:localStorage|sessionStorage)\s*\.\s*(?:getItem|setItem|removeItem)\(\s*['"`](hub-rpg:[a-z0-9:_-]+)['"`]/gi))storageKeys.add(match[1]);
+ for(const match of source.matchAll(/\b(?:const|let|var)\s+([A-Za-z0-9_]*KEYS?)\s*=\s*([^;\n]+)/gi))for(const literal of match[2].matchAll(/['"`](hub-rpg:[a-z0-9:_-]+)['"`]/gi))storageKeys.add(literal[1]);
+}
+function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(entry.name.endsWith('.js'))collectStorageKeys(fs.readFileSync(full,'utf8'))}}
+walk(scriptsRoot.pathname);const missing=[...storageKeys].filter(key=>!classified.has(key)).sort();assert.deepEqual(missing,[],`Chaves de armazenamento sem classificação: ${missing.join(', ')}`);
 
 console.log('OK — Bloco 14: backup versionado, checksum, migração, mesclagem, restauração atômica, rollback e registro fail-closed de armazenamento.');
