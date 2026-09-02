@@ -11,6 +11,8 @@ on:
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
       - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
       - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
   push:
     branches: [main]
@@ -22,6 +24,8 @@ on:
       - 'tests/auditar-proveniencia-normativa.mjs'
       - 'tests/auditar-semantica-*.mjs'
       - 'tests/auditar-precedencia-*.mjs'
+      - 'tests/auditar-invocacoes-*.mjs'
+      - 'tests/auditar-metamagias-*.mjs'
       - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
 
 permissions:
@@ -43,6 +47,8 @@ jobs:
           node --check tests/auditar-semantica-especies-phb-2024.mjs
           node --check tests/auditar-semantica-antecedentes-phb-2024.mjs
           node --check tests/auditar-precedencia-tiefling.mjs
+          node --check tests/auditar-invocacoes-bruxo-2024.mjs
+          node --check tests/auditar-metamagias-feiticeiro-2024.mjs
       - name: 11A · Proveniência fail-closed
         run: node tests/auditar-proveniencia-normativa.mjs
       - name: 11B · Classes core 2024
@@ -55,3 +61,7 @@ jobs:
         run: node tests/auditar-semantica-antecedentes-phb-2024.mjs
       - name: 11C · Precedência Tiefling
         run: node tests/auditar-precedencia-tiefling.mjs
+      - name: 11B/11E · Invocações Místicas 2024
+        run: node tests/auditar-invocacoes-bruxo-2024.mjs
+      - name: 11B/11E · Metamagia 2024
+        run: node tests/auditar-metamagias-feiticeiro-2024.mjs

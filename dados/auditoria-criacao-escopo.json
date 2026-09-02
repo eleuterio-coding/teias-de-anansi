@@ -15,7 +15,7 @@
     "evidencia_e_bloqueio"
   ],
   "dominios": [
-    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json"],"runtime":"loadClasses"},
+    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json","dados/metamagias-feiticeiro-2024.json"],"runtime":"loadClasses + class feature mechanics"},
     {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json"],"runtime":"subclass-mechanics-data.js"},
     {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
     {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
@@ -33,6 +33,7 @@
   "testes_criticos": [
     "tests/auditar-escopo-criacao.mjs",
     "tests/auditar-cobertura-total-criacao.mjs",
+    "tests/auditar-proveniencia-normativa.mjs",
     "tests/auditar-subclasses-mecanicas.mjs",
     "tests/auditar-regras-casa.mjs",
     "tests/auditar-testes-pericia.mjs",
