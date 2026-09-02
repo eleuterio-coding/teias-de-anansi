@@ -131,7 +131,7 @@ console.log('OK · ferramentas de classe produzem escolhas, pendências e profic
 
 // 10D · Talento com escolha não pode existir apenas como texto/estado de UI.
 // Fighting Initiate (Archery) deve alterar o ataque derivado de uma arma à distância.
-const stateUrl = `${pathToFileURL(path.join(BUILDER, 'state.js')).href}?audit=block10-tasha`;
+const stateUrl = pathToFileURL(path.join(BUILDER, 'state.js')).href;
 const tashaUrl = `${pathToFileURL(path.join(BUILDER, 'tasha-feat-mechanics.js')).href}?audit=block10-tasha`;
 const { state } = await import(stateUrl);
 const { sanitizeTashaFeatChoices, applyTashaFeatEffects } = await import(tashaUrl);
