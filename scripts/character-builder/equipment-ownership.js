@@ -60,11 +60,16 @@ function classifyNamedItem(item,source='Equipamento inicial'){
  const armor=armorByName(name);if(armor)return{kind:fold(armor.categoria)==='escudo'?'shield':'armor',refId:armor.id,name:armor.nome,qty,source,data:armor};
  return{kind:'belonging',refId:null,name,qty,source,data:null}
 }
+function magicRefFromPurchaseId(id){
+ if(!String(id||'').startsWith('magic:'))return null;
+ const body=String(id).slice(6),cut=body.lastIndexOf(':');
+ return cut>0?body.slice(0,cut):body||null
+}
 function purchaseRow(id,qty,snapshot){
  const amount=Math.max(0,Math.floor(num(qty)));if(!amount)return null;
  if(id.startsWith('weapon:')){const refId=id.slice(7),weapon=state.catalogs.weapons.find(w=>w.id===refId);if(weapon)return{kind:'weapon',refId,name:weapon.nome,qty:amount,source:'Compra',data:weapon}}
  if(id.startsWith('armor:')){const refId=id.slice(6),armor=state.catalogs.armors.find(a=>a.id===refId);if(armor)return{kind:fold(armor.categoria)==='escudo'?'shield':'armor',refId,name:armor.nome,qty:amount,source:'Compra',data:armor}}
- if(snapshot?.name)return{kind:snapshot.kind||'belonging',refId:snapshot.refId||null,name:snapshot.name,qty:amount,source:'Compra',data:null,area:snapshot.area||'',category:snapshot.category||''};
+ if(snapshot?.name){const magicRef=magicRefFromPurchaseId(id),refId=snapshot.refId||magicRef||null,kind=magicRef?'magic':snapshot.kind||'belonging';return{kind,refId,name:snapshot.name,qty:amount,source:'Compra',data:null,area:snapshot.area||'',category:snapshot.category||''}}
  return null
 }
 function aggregate(rows){
