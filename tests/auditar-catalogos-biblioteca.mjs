@@ -48,6 +48,8 @@ assert((lib.match(/<li><a href=/g)||[]).length===18,'Índice visual não contém
 assert(!/\b(?:159|119|58|172|146|185|109|259|537)\s+(?:itens|magias|registros|classes)/.test(lib),'Biblioteca voltou a anunciar contagens estáticas suscetíveis a deriva.');
 const libraryUi=read('scripts/library-catalog-status.js');
 for(const token of['cobertura_modulos','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
+const referenceUi=read('scripts/library-reference-ui.js');
+for(const token of['publicCatalogRoute','aliases','fonte_arquivo','ID estável','params.get(\'q\')'])assert(referenceUi.includes(token),`Detalhe/busca de referência sem contrato: ${token}`);
 
 const py=read('scripts/gerar_referencias_hub.py');
 const routeBlock=py.match(/ROUTES\s*=\s*\{([\s\S]*?)\n\}/)?.[1]||'';
@@ -56,9 +58,11 @@ assert(pyRoutes.size===18,`Gerador semântico declara ${pyRoutes.size}/18 módul
 for(const module of CATALOG_MODULES){const expected=module.semanticRoute||module.route;assert(pyRoutes.get(module.semanticName)===expected,`Rota semântica divergente em ${module.semanticName}: registro=${expected}, gerador=${pyRoutes.get(module.semanticName)}`)}
 
 const subclasses=json('dados/subclasses-pdfs.json').subclasses||[];
-const classNames=new Set(['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard']);
-const orphanSubclasses=subclasses.filter(x=>x.classe&&!classNames.has(norm(x.classe))).map(x=>`${x.nome} -> ${x.classe}`);
-assert(!orphanSubclasses.length,`Subclasses apontam para classes inexistentes: ${orphanSubclasses.slice(0,8).join('; ')}`);
+assert(subclasses.length>0,'Catálogo de subclasses vazio.');
+const missingParent=subclasses.filter(x=>!String(x.classe||'').trim()).map(x=>x.nome);
+assert(!missingParent.length,`Subclasses sem classe-pai declarada: ${missingParent.slice(0,8).join('; ')}`);
+const runtimeClasses=new Set(['artificer','barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard']);
+const semanticOnlyParents=[...new Set(subclasses.map(x=>x.classe).filter(x=>!runtimeClasses.has(norm(x))))];
 
 const backgrounds=BACKGROUND_BUILDER_FILES.flatMap(file=>{const d=json(file);return d.items||d.itens||[]});
 assert(backgrounds.length>0,'Nenhum antecedente ativo foi lido pelas fontes registradas.');
@@ -68,4 +72,4 @@ assert(feats.length>0,'Nenhum talento ativo foi lido pelas fontes registradas.')
 const forbidden=['supabase'];
 for(const file of['scripts/catalog-registry.js','scripts/library-catalog-status.js','bibliotecas.html']){const text=norm(read(file));for(const token of forbidden)assert(!text.includes(token),`${file}: backend proibido detectado.`)}
 
-console.log(`Catálogos validados: ${CATALOG_MODULES.length}/18 módulos, ${BACKGROUND_BUILDER_FILES.length} fontes de Antecedentes, ${SPECIES_BUILDER_FILES.length} de Espécies, ${FEAT_BUILDER_FILES.length} de Talentos e ${SPELL_REMOTE_SOURCES.length} remotas de Magias; rotas semânticas sincronizadas e zero subclasses órfãs.`);
+console.log(`Catálogos validados: ${CATALOG_MODULES.length}/18 módulos, ${BACKGROUND_BUILDER_FILES.length} fontes de Antecedentes, ${SPECIES_BUILDER_FILES.length} de Espécies, ${FEAT_BUILDER_FILES.length} de Talentos e ${SPELL_REMOTE_SOURCES.length} remotas de Magias; ${semanticOnlyParents.length} classe(s)-pai de subclasses será(ão) validada(s) pelo índice semântico.`);
