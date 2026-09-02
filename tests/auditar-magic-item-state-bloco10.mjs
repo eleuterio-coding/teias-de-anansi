@@ -1,17 +1,20 @@
 import assert from'node:assert/strict';
-import{activeMagicItemUsages,applyMagicItemPersistentEffects,clearUnavailableMagicItemUsages,magicItemPersistentOutcome,magicItemUsage,setMagicItemUsage}from'../scripts/character-sheet-magic-item-state.js';
+import{activeMagicItemUsages,applyMagicItemPersistentEffects,clearUnavailableMagicItemUsages,magicItemPersistentOutcome,magicItemUsage,setMagicItemParameters,setMagicItemUsage,validateMagicItemParameters}from'../scripts/character-sheet-magic-item-state.js';
 
 const character={sheet:{},choices:{}};
 const amulet={kind:'magic-item',refId:'amulet-of-health',name:'Amulet of Health',qty:1,source:'Campanha'};
 const armor={kind:'magic-item',refId:'armor-plus-1',name:'Armor +1',magicBonus:1,qty:1,source:'Campanha'};
-const resistance={kind:'magic-item',refId:'armor-of-resistance',name:'Armor of Resistance',damageType:'Fogo',qty:1,source:'Campanha'};
+const resistance={kind:'magic-item',refId:'armor-of-resistance',name:'Armor of Resistance',qty:1,source:'Campanha'};
 const invulnerability={kind:'magic-item',refId:'armor-of-invulnerability',name:'Armor of Invulnerability',qty:1,source:'Campanha'};
-const base=[amulet,armor,resistance,invulnerability];
+const adamantine={kind:'magic-item',refId:'adamantine-armor',name:'Adamantine Armor',qty:1,source:'Campanha'};
+const proof={kind:'magic-item',refId:'amulet-of-proof-against-detection-and-location',name:'Amulet of Proof against Detection and Location',qty:1,source:'Campanha'};
+const vulnerability={kind:'magic-item',refId:'armor-of-vulnerability',name:'Armor of Vulnerability',qty:1,source:'Campanha'};
+const base=[amulet,armor,resistance,invulnerability,adamantine,proof,vulnerability];
 
 {
  const result=setMagicItemUsage(character,base,amulet,{equipped:true,attuned:true});
  assert.equal(result.ok,true,'10F · deve aceitar estado de uso para item possuído');
- assert.deepEqual(magicItemUsage(character,amulet),{key:'magic-item|ref:amulet-of-health',equipped:true,attuned:true},'10F · estado equipado/sintonizado deve persistir por chave estável');
+ assert.deepEqual(magicItemUsage(character,amulet),{key:'magic-item|ref:amulet-of-health',equipped:true,attuned:true,parameters:{}},'10F · estado equipado/sintonizado deve persistir por chave estável');
 }
 {
  const active=activeMagicItemUsages(character,base);
@@ -19,6 +22,7 @@ const base=[amulet,armor,resistance,invulnerability];
  assert.equal(active[0].row.refId,'amulet-of-health');
  assert.equal(active[0].equipped,true);
  assert.equal(active[0].attuned,true);
+ assert.deepEqual(active[0].parameters,{});
 }
 {
  const missing=setMagicItemUsage(character,base,{kind:'magic-item',refId:'ghost',name:'Ghost Item'},{equipped:true});
@@ -40,6 +44,9 @@ const base=[amulet,armor,resistance,invulnerability];
  assert.equal(derived.ac,17,'10G · armadura mágica +1 explicitamente parametrizada deve aumentar a CA em 1');
 }
 {
+ const configured=setMagicItemParameters(character,base,resistance,{damageType:'fogo'});
+ assert.equal(configured.ok,true,'10G · parâmetro legítimo deve ser persistido no estado do item');
+ assert.deepEqual(configured.parameters,{damageType:'Fogo'});
  setMagicItemUsage(character,base,resistance,{equipped:true,attuned:true});
  setMagicItemUsage(character,base,invulnerability,{equipped:true,attuned:true});
  const outcome=magicItemPersistentOutcome(character,base);
@@ -48,9 +55,13 @@ const base=[amulet,armor,resistance,invulnerability];
 {
  const unresolved={kind:'magic-item',refId:'armor-1-2-or-3',name:'Armor, +1, +2, or +3',qty:1,source:'Campanha'};
  const c={sheet:{},choices:{}};setMagicItemUsage(c,[unresolved],unresolved,{equipped:true});
- const outcome=magicItemPersistentOutcome(c,[unresolved]);
+ let outcome=magicItemPersistentOutcome(c,[unresolved]);
  assert.equal(outcome.acBonus,0,'10G · variante não informada não pode inventar bônus de CA');
  assert.equal(outcome.pending.length,1,'10G · variante normativa ausente deve permanecer fail-closed como pendência explícita');
+ const configured=setMagicItemParameters(c,[unresolved],unresolved,{magicBonus:3});
+ assert.equal(configured.ok,true);assert.deepEqual(configured.parameters,{magicBonus:3});
+ outcome=magicItemPersistentOutcome(c,[unresolved]);
+ assert.equal(outcome.acBonus,3,'10G · variante explicitamente escolhida deve produzir o bônus correspondente');
 }
 {
  const unresolved={kind:'magic-item',refId:'armor-of-resistance',name:'Armor of Resistance',qty:1,source:'Campanha'};
@@ -58,6 +69,28 @@ const base=[amulet,armor,resistance,invulnerability];
  const outcome=magicItemPersistentOutcome(c,[unresolved]);
  assert.equal(outcome.resistances.length,0,'10G · tipo de dano escolhido pelo Mestre não pode ser inferido');
  assert.equal(outcome.pending.length,1,'10G · escolha do Mestre ausente deve bloquear o efeito de forma explícita');
+ assert.equal(validateMagicItemParameters(unresolved,{damageType:'Cortante'}).ok,false,'10G · Armadura de Resistência não aceita tipo físico fora da tabela normativa');
+}
+{
+ const c={sheet:{},choices:{}};
+ setMagicItemUsage(c,[adamantine,proof],adamantine,{equipped:true});
+ setMagicItemUsage(c,[adamantine,proof],proof,{equipped:true,attuned:true});
+ const derived={scores:{Constituição:10},level:1,hp:8,ac:16};
+ applyMagicItemPersistentEffects(derived,c,[adamantine,proof]);
+ assert.equal(derived.magicItemFlags.criticalHitsBecomeNormal,true,'10G · Armadura de Adamantina deve expor a normalização de críticos como estado mecânico');
+ assert.equal(derived.magicItemFlags.divinationTargetingBlocked,true,'10G · amuleto de proteção deve expor bloqueio de alvo de Adivinhação');
+ assert.equal(derived.magicItemFlags.scryingSensorsBlocked,true,'10G · amuleto de proteção deve expor bloqueio de sensores de vidência');
+}
+{
+ const c={sheet:{},choices:{}};
+ setMagicItemUsage(c,[vulnerability],vulnerability,{equipped:true,attuned:true});
+ let outcome=magicItemPersistentOutcome(c,[vulnerability]);
+ assert.equal(outcome.pending.length,1,'10G · Armadura da Vulnerabilidade sem escolha explícita deve permanecer pendente');
+ assert.equal(setMagicItemParameters(c,[vulnerability],vulnerability,{damageType:'Fogo'}).ok,false,'10G · escolha inválida não deve ser persistida');
+ assert.equal(setMagicItemParameters(c,[vulnerability],vulnerability,{damageType:'Perfurante'}).ok,true,'10G · tipo físico válido deve ser aceito');
+ outcome=magicItemPersistentOutcome(c,[vulnerability]);
+ assert.deepEqual(outcome.resistances,['Perfurante']);
+ assert.deepEqual(new Set(outcome.vulnerabilities),new Set(['Concussão','Cortante']),'10G · os dois tipos físicos restantes devem virar vulnerabilidades estruturadas');
 }
 {
  setMagicItemUsage(character,base,amulet,{equipped:false,attuned:false});
@@ -71,4 +104,4 @@ const base=[amulet,armor,resistance,invulnerability];
  assert.equal(activeMagicItemUsages(c,[amulet]).length,0);
 }
 
-console.log('10F–10G · Estado e efeitos persistentes de itens mágicos: OK');
+console.log('10F–10G · Estado, parâmetros e efeitos persistentes de itens mágicos: OK');
