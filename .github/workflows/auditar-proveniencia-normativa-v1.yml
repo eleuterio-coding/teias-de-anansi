@@ -1,0 +1,41 @@
+name: Auditar proveniência normativa v1.0
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/auditoria-criacao-escopo.json'
+      - 'dados/auditoria-normativa-criacao.json'
+      - 'dados/fontes-normativas-criacao.json'
+      - 'dados/politica-compatibilidade-5e-5.5e.json'
+      - 'dados/**'
+      - 'tests/auditar-proveniencia-normativa.mjs'
+      - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'dados/auditoria-criacao-escopo.json'
+      - 'dados/auditoria-normativa-criacao.json'
+      - 'dados/fontes-normativas-criacao.json'
+      - 'dados/politica-compatibilidade-5e-5.5e.json'
+      - 'dados/**'
+      - 'tests/auditar-proveniencia-normativa.mjs'
+      - '.github/workflows/auditar-proveniencia-normativa-v1.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proveniencia-v1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe
+        run: node --check tests/auditar-proveniencia-normativa.mjs
+      - name: 11A · Revalidar proveniência normativa na main vigente
+        run: node tests/auditar-proveniencia-normativa.mjs
