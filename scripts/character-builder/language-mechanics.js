@@ -35,6 +35,7 @@ function subclassLanguageDefinitions(sub){
  if(name===fold('Storm Sorcery'))defs.push({key:'subclass:storm-sorcery:wind-speaker',label:`${sub.name} — Wind Speaker`,fixed:['Primordial'],choose:0,pool:[]});
  return defs
 }
+function featLanguageDefinitions(feats){const defs=[];for(const feat of feats){const name=fold(feat?.name);if(name===fold('Fey Teleportation'))defs.push({key:`feat:${feat.id}:fey-teleportation-sylvan`,label:`Fey Teleportation — Silvestre`,fixed:['Silvestre'],choose:0,pool:[]});if(name===fold('Prodigy'))defs.push({key:`feat:${feat.id}:prodigy-language`,label:`Prodigy — idioma`,fixed:[],choose:1,pool:ALL_LANGUAGES})}return defs}
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
 function backgroundLanguageDefinitions(bg){if(!bg)return[];const fixed=[],defs=[];for(const raw of arr(bg.languages)){const value=canonical(raw);if(!value)continue;const m=fold(value).match(/^(um|uma|dois|duas|tres|três|\d+).*escolh/);if(m)defs.push({key:`background:${bg.id}:languages-choice`,label:`${bg.name} — idiomas`,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});else fixed.push(value)}if(fixed.length)defs.push({key:`background:${bg.id}:languages-fixed`,label:`${bg.name} — idiomas`,fixed:uniq(fixed),choose:0,pool:[]});return defs}
 function appendTextSources(defs,sources){for(const[sourceKey,label,text]of sources)defs.push(...grantsFromText(sourceKey,label,text))}
@@ -46,7 +47,7 @@ export function languageGrantDefinitions(){
  const originSources=[];if(bg?.feature)originSources.push([`background:${bg.id}:feature`,`${bg.name} — característica`,bg.feature.text||bg.feature.description||'']);const stages=featStages();for(const feat of stages.origin)originSources.push([`feat:origin:${feat.id}`,`Talento de Origem — ${feat.name}`,feat.description||'']);appendTextSources(defs,originSources);
  const lineage=species?.lineages?.find(x=>x.name===state.c.choices?.species?.lineage)||null,speciesTraits=lineage?.replaceBaseTraits?arr(lineage.traits):[...arr(species?.traits),...arr(lineage?.traits)],raceSources=[];for(const t of speciesTraits)raceSources.push([`species:${species?.id||species?.name}:${keyPart(t.name)}`,`${species?.name||'Raça'} — ${t.name}`,t.text||t.description||'']);for(const feat of stages.species)raceSources.push([`feat:species:${feat.id}`,`Talento racial — ${feat.name}`,feat.description||'']);appendTextSources(defs,raceSources);
  const progressionSources=[];for(const feat of stages.progression)progressionSources.push([`feat:progression:${feat.id}`,`Talento de Progressão — ${feat.name}`,feat.description||'']);appendTextSources(defs,progressionSources);
- selectedFeatObjects();
+ defs.push(...featLanguageDefinitions(selectedFeatObjects()));
  const seen=new Set;return defs.filter(d=>d.choose||d.fixed.length).filter(d=>!seen.has(d.key)&&(seen.add(d.key),true))
 }
 export function sanitizeLanguageChoices(){
