@@ -1,3 +1,5 @@
+import'./feat-rules-xanathar-2017.js';
+
 export const TASHA_2020_FEAT_RULES={
  'Artificer Initiate':{},
  'Eldritch Adept':{},
