@@ -14,6 +14,7 @@ const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 
 const REV='20260828-character-builder-freeze1';
 const SKILL_REV='20260831-skill-checks1';
+const RULES_REV='20260831-tasha-metamagic1';
 const WEALTH_REV='20260831-magic-rarity2';
 assert.ok(html.includes(`character-builder.js?v=${REV}`),'A página precisa invalidar o carregador antigo em cache.');
 assert.ok(loader.includes(`ui.js?v=${REV}`),'O núcleo da criação precisa usar a revisão anti-travamento.');
@@ -22,9 +23,10 @@ assert.ok(loader.includes(`equipment-ownership-ui.js?v=${REV}`),'Equipamento ati
 assert.ok(loader.includes(`package-b-purchase-ui.js?v=${WEALTH_REV}`),'Carregador precisa invalidar a revisão antiga da etapa de compras/riqueza.');
 assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${WEALTH_REV}`),'Etapa de compras precisa invalidar a versão da loja anterior à correção de raridades.');
 for(const [label,source] of [['núcleo',core],['Mago',wizardUi],['equipamento',equipmentUi]]){
- assert.ok(source.includes(`rules.js?v=${REV}`),`${label}: rules.js deve permanecer na revisão anti-travamento.`);
+ const expected=label==='equipamento'?RULES_REV:REV;
+ assert.ok(source.includes(`rules.js?v=${expected}`),`${label}: rules.js deve usar a revisão esperada do motor.`);
 }
-assert.ok(classUi.includes(`rules.js?v=${SKILL_REV}`),'Perícias devem carregar a revisão de rules.js que contém a integração de testes de perícia.');
+assert.ok(classUi.includes(`rules.js?v=${RULES_REV}`),'Perícias devem carregar a revisão normativa atual de rules.js, que inclui a integração de testes de perícia.');
 assert.ok(classUi.includes('renderSkillChecks'),'A revisão dedicada de perícias precisa aplicar os valores mecânicos no preview.');
 
 for(const token of['ensureSpellIndex','spellCatalogRef','schoolLevelCache','spellByIdCache','sameChoiceState'])assert.ok(wizardMechanics.includes(token),`Cache do Mago ausente: ${token}`);
