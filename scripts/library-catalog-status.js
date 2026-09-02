@@ -1,4 +1,4 @@
-import{CATALOG_MODULES,CATALOG_BY_ROUTE,DATA_STAGES}from'./catalog-registry.js?v=20260901-catalog-registry1';
+import{CATALOG_MODULES,CATALOG_BY_ROUTE}from'./catalog-registry.js?v=20260901-catalog-registry1';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
@@ -6,7 +6,7 @@ const routeOf=href=>String(href||'').split('?')[0].split('#')[0].replace(/^\.\//
 const stageLabel=s=>({rascunho:'Rascunho',extraido:'Extraído',normalizado:'Normalizado',relacionado:'Relacionado',validado:'Validado',publicado:'Publicado'}[s]||s);
 let semanticIndex=null;
 
-function sourceSummary(module){const local=module.sources.filter(x=>x.local).length,remote=module.sources.length-local;return`${stageLabel(module.stage)} · ${local} fonte${local===1?'':'s'} local${local===1?'':'is'}${remote?` + ${remote} remota${remote===1?'':'s'}`:''}`}
+function sourceSummary(module){const local=module.sources.filter(x=>x.local).length,remote=module.sources.length-local,localText=`${local} ${local===1?'fonte local':'fontes locais'}`,remoteText=remote?` + ${remote} ${remote===1?'fonte remota':'fontes remotas'}`:'';return`${stageLabel(module.stage)} · ${localText}${remoteText}`}
 function coverageText(module){const n=Number(semanticIndex?.cobertura_modulos?.[module.semanticName]);return Number.isFinite(n)&&n>0?`${n} referências indexadas · ${stageLabel(module.stage)}`:sourceSummary(module)}
 function consumerBadges(module){const out=[];if(module.consumers.includes('construtor'))out.push('Criação');if(module.consumers.includes('ficha'))out.push('Ficha');return out}
 function decorateCards(){for(const li of document.querySelectorAll('.modulos li')){const a=li.querySelector('a'),module=CATALOG_BY_ROUTE[routeOf(a?.getAttribute('href'))];if(!module)continue;li.dataset.catalogId=module.id;li.dataset.catalogSearch=fold(`${module.publicName} ${module.name} ${module.semanticName}`);li.dataset.catalogRuntime=module.consumers.includes('construtor')||module.consumers.includes('ficha')?'runtime':'library';const count=li.querySelector('.contagem');if(count)count.textContent=coverageText(module);let badges=li.querySelector('.catalog-badges');if(!badges){badges=document.createElement('span');badges.className='catalog-badges';a.querySelector('.nome')?.appendChild(badges)}badges.innerHTML=consumerBadges(module).map(x=>`<span class="catalog-badge">${esc(x)}</span>`).join('')}}}
