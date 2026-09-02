@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'scripts/adventure-state.js'
+      - 'scripts/adventure-integrity.js'
+      - 'scripts/adventure-integrity-ui.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/campaign-table-adventure-ui.js'
       - 'scripts/campaign-list-ui.js'
@@ -25,6 +27,8 @@ jobs:
       - name: Validar sintaxe
         run: |
           node --check scripts/adventure-state.js
+          node --check scripts/adventure-integrity.js
+          node --check scripts/adventure-integrity-ui.js
           node --check scripts/adventure-ui.js
           node --check scripts/campaign-table-adventure-ui.js
           node --check scripts/campaign-list-ui.js
