@@ -7,12 +7,13 @@ const manifest=JSON.parse(await readFile('dados/itens-magicos/manifest.json','ut
 for(const chunk of manifest.chunks)items.push(...JSON.parse(await readFile(chunk,'utf8')));
 const defaults=id=>{
  const slug=String(id).split(':').pop();
- if(['armor-1-2-or-3','ammunition-1-2-or-3','weapon-1-2-or-3'].includes(slug))return{magicBonus:1};
- if(slug==='armor-of-resistance')return{damageType:'Fogo'};
+ if(['armor-1-2-or-3','ammunition-1-2-or-3','weapon-1-2-or-3','shield-1-2-or-3','wand-of-the-war-mage-1-2-or-3'].includes(slug))return{magicBonus:1};
+ if(['armor-of-resistance','ring-of-resistance','potion-of-resistance','dragon-scale-mail'].includes(slug))return{damageType:'Fogo'};
  if(slug==='armor-of-vulnerability')return{damageType:'Cortante'};
- if(slug==='potion-of-giant-strength')return{strengthScore:21};
+ if(['potion-of-giant-strength','belt-of-giant-strength'].includes(slug))return{strengthScore:21};
  if(slug==='carpet-of-flying')return{flyingSpeed:30};
  if(slug==='defender')return{acTransfer:0};
+ if(slug==='ioun-stone')return{variant:'Protection'};
  return{}
 };
 const unhandled=[];let audited=0;
