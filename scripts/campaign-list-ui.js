@@ -1,6 +1,6 @@
 import{CAMPAIGN_KEY,readCampaigns,writeCampaigns,createCampaign,updateCampaign,removeCampaign}from'./campaign-state.js?v=20260901-campaign1';
 import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20260902-adventures1';
-const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let campaigns=[];
 function persist(list){campaigns=writeCampaigns(list);render()}
 function statusLabel(status){return({active:'Ativa',paused:'Pausada',finished:'Encerrada'}[status]||status)}
