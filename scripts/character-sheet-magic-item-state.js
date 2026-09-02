@@ -11,7 +11,7 @@ const cleanDamageType=value=>DAMAGE_TYPES.find(type=>type.toLocaleLowerCase('pt-
 const magicBonus=(row,parameters={})=>{
  const explicit=Number(parameters.magicBonus??row?.magicBonus??row?.variantBonus);
  if([1,2,3].includes(explicit))return explicit;
- if(magicSlug(row)==='armor-1-2-or-3')return 0;
+ if(['armor-1-2-or-3','ammunition-1-2-or-3'].includes(magicSlug(row)))return 0;
  const text=`${row?.name||''} ${row?.refId||''}`;
  const match=text.match(/(?:\+|plus[- ]?)([123])\b/i);
  return match?Number(match[1]):0
@@ -44,9 +44,9 @@ export function activeMagicItemUsages(character,baseRows=[]){
 
 export function validateMagicItemParameters(item,input={}){
  const id=magicSlug(item),parameters={};
- if(id==='armor-1-2-or-3'){
+ if(id==='armor-1-2-or-3'||id==='ammunition-1-2-or-3'){
   const bonus=Number(input.magicBonus);
-  if(![1,2,3].includes(bonus))return{ok:false,reason:'Selecione explicitamente a variante +1, +2 ou +3 da armadura.'};
+  if(![1,2,3].includes(bonus))return{ok:false,reason:id==='armor-1-2-or-3'?'Selecione explicitamente a variante +1, +2 ou +3 da armadura.':'Selecione explicitamente a variante +1, +2 ou +3 da munição.'};
   parameters.magicBonus=bonus
  }
  if(id==='armor-of-resistance'){
@@ -93,7 +93,7 @@ export function clearUnavailableMagicItemUsages(character,baseRows=[]){
 }
 
 export function magicItemPersistentOutcome(character,baseRows=[]){
- const outcome={abilityMinimums:{},acBonus:0,resistances:[],immunities:[],vulnerabilities:[],flags:{},applied:[],pending:[]};
+ const outcome={abilityMinimums:{},acBonus:0,resistances:[],immunities:[],vulnerabilities:[],flags:{},conditionalAttackBonuses:[],conditionalDamageBonuses:[],applied:[],pending:[]};
  for(const usage of activeMagicItemUsages(character,baseRows)){
   const row=usage.row,id=magicSlug(row),parameters=usage.parameters||{};
   if(id==='amulet-of-health'){
@@ -115,6 +115,15 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
    const bonus=magicBonus(row,parameters);
    if(!bonus){outcome.pending.push({id,reason:'A variante +1/+2/+3 da armadura não está registrada no estado do item.'});continue}
    outcome.acBonus+=bonus;outcome.applied.push({id,effect:'ac-bonus',value:bonus});continue
+  }
+  if(id==='ammunition-1-2-or-3'||/^ammunition-(?:plus-)?[123]$/.test(id)){
+   if(!usage.equipped)continue;
+   const bonus=magicBonus(row,parameters);
+   if(!bonus){outcome.pending.push({id,reason:'A variante +1/+2/+3 da munição não está registrada no estado do item.'});continue}
+   const selector={kind:'magic-item',refId:row?.refId||id,key:usage.key};
+   outcome.conditionalAttackBonuses.push({...selector,value:bonus,scope:'attack-with-this-ammunition'});
+   outcome.conditionalDamageBonuses.push({...selector,value:bonus,scope:'damage-with-this-ammunition'});
+   outcome.applied.push({id,effect:'attack-and-damage-bonus',value:bonus,scope:'this-ammunition'});continue
   }
   if(id==='armor-of-resistance'){
    if(!(usage.equipped&&usage.attuned))continue;
