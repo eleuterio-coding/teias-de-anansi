@@ -1,0 +1,57 @@
+name: Auditar encontros e ferramentas do Mestre — Bloco 12
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'mesa.html'
+      - 'encounters.css'
+      - 'scripts/campaign-state.js'
+      - 'scripts/encounter-state.js'
+      - 'scripts/encounter-ui.js'
+      - 'scripts/monster-catalog.js'
+      - 'scripts/character-sheet-encounter-target.js'
+      - 'tests/auditar-encontros-mestre.mjs'
+      - '.github/workflows/auditar-encontros-mestre.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'ROADMAP-V1.md'
+      - 'mesa.html'
+      - 'encounters.css'
+      - 'scripts/campaign-state.js'
+      - 'scripts/encounter-state.js'
+      - 'scripts/encounter-ui.js'
+      - 'scripts/monster-catalog.js'
+      - 'scripts/character-sheet-encounter-target.js'
+      - 'tests/auditar-encontros-mestre.mjs'
+      - '.github/workflows/auditar-encontros-mestre.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  encontros-mestre:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/encounter-state.js
+          node --check scripts/encounter-ui.js
+          node --check scripts/monster-catalog.js
+          node --check scripts/character-sheet-encounter-target.js
+          node --check tests/auditar-encontros-mestre.mjs
+      - name: 12A–12H · Estado, iniciativa, criaturas, PV, alvos e recompensas
+        run: node tests/auditar-encontros-mestre.mjs
+      - name: 12I · Regressão Campanhas/Mesas
+        run: node tests/auditar-campanhas-mesas.mjs
+      - name: 12J · Regressão do motor de resolução
+        run: |
+          node tests/auditar-rolagens-resolucao.mjs
+          node tests/auditar-ui-resolucao-bloco11.mjs
+          node tests/auditar-modificadores-combate-bloco11.mjs
