@@ -34,13 +34,13 @@
       "id": "barbarian-core-feature-text-only",
       "dominio": "classes",
       "entidade": "barbarian",
-      "status": "lacuna_confirmada",
+      "status": "resolvida",
       "fontes": [
         "dados/classes-ptbr/barbaro.json",
-        "scripts/character-sheet-resource-rules.js",
-        "scripts/character-builder/rules.js"
+        "scripts/character-builder/rules.js",
+        "tests/auditar-barbarian-core-bloco10.mjs"
       ],
-      "caracteristicas_confirmadas_para_mecanizacao": [
+      "caracteristicas_mecanizadas": [
         "barbarian-unarmored-defense",
         "barbarian-extra-attack",
         "barbarian-fast-movement",
@@ -54,9 +54,8 @@
         "barbarian-relentless-rage",
         "barbarian-indomitable-might"
       ],
-      "problema": "O catálogo normativo expõe efeitos que alteram CA, número de ataques, deslocamento, iniciativa e atributos, mas a cobertura atual do runtime de classe não demonstra esses efeitos centrais na derivação da ficha.",
-      "proximo_passo": "Implementar barbarian-core-mechanics.js, integrar à derivação central e adicionar testes comportamentais para CA sem armadura, Ataque Extra, +10 ft de Movimento Rápido sem armadura pesada, vantagem de iniciativa e Campeão Primal."
+      "resolucao": "A derivação central agora aplica o núcleo mecânico do Bárbaro: fórmula de Defesa sem Armadura, duas investidas na ação Atacar, +10 ft de Movimento Rápido sem Armadura Pesada, Vantagem de Iniciativa e Campeão Primal com propagação para atributos, ataque, PV e CA. O gate 10E cobre os níveis 1, 5, 7 e 20, Armadura Pesada, Escudo e isolamento entre classes."
     }
   ],
-  "nota": "Este inventário registra lacunas confirmadas, não uma lista exaustiva. O Bloco 10 permanece não Aceito até que todos os domínios do escopo tenham classificação mecânica e zero lacuna conhecida/não classificada."
+  "nota": "Este inventário registra lacunas confirmadas e resoluções verificadas, não uma lista exaustiva. O Bloco 10 permanece não Aceito até que todos os domínios do escopo tenham classificação mecânica e zero lacuna conhecida/não classificada."
 }
