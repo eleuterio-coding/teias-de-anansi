@@ -1,0 +1,35 @@
+name: Auditar Aventuras — Bloco 13
+on:
+  pull_request:
+    paths:
+      - 'scripts/adventure-state.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/campaign-table-adventure-ui.js'
+      - 'aventuras.html'
+      - 'adventures.css'
+      - 'mesa.html'
+      - 'index.html'
+      - 'tests/auditar-aventuras.mjs'
+      - 'ROADMAP-V1.md'
+      - '.github/workflows/auditar-aventuras.yml'
+  workflow_dispatch:
+jobs:
+  aventuras:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/adventure-state.js
+          node --check scripts/adventure-ui.js
+          node --check scripts/campaign-table-adventure-ui.js
+          node --check tests/auditar-aventuras.mjs
+      - name: 13A–13H · Conteúdo narrativo, vínculos e condução
+        run: node tests/auditar-aventuras.mjs
+      - name: 13I · Regressão Campanhas/Mesas
+        run: node tests/auditar-campanhas-mesas.mjs
+      - name: 13J · Regressão Encontros
+        run: node tests/auditar-encontros-mestre.mjs
