@@ -63,14 +63,14 @@ jobs:
           count=0
           for test in tests/auditar-*.mjs; do
             case "$test" in
-              tests/auditar-escopo-criacao.mjs|tests/auditar-cobertura-total-criacao.mjs) continue ;;
+              tests/auditar-escopo-criacao.mjs|tests/auditar-cobertura-total-criacao.mjs|tests/auditar-colaboracao-provisionamento.mjs) continue ;;
             esac
             echo "=== $test ==="
             node "$test"
             count=$((count+1))
           done
           test "$count" -gt 0
-          echo "Suíte mecânica concluída: $count auditorias executadas."
+          echo "Suíte mecânica concluída: $count auditorias executadas. Gate externo de provisionamento é validado exclusivamente no workflow do bloco correspondente."
 
       - name: 05 · Políticas globais e consistência editorial
         shell: bash
