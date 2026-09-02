@@ -212,6 +212,26 @@ def html_docs(root):
             continue
         h = p.read_text(encoding="utf-8", errors="replace")
         seen = set()
+        if m == "Montarias e Veículos":
+            mount_pat = re.compile(
+                r'R\(\s*"([^"\n]+)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"\s*,\s*"([^"\n]*)"',
+                re.I,
+            )
+            for mm in mount_pat.finditer(h):
+                n, original, tipo, fonte, status, descricao = [x.strip() for x in mm.groups()]
+                k = norm(n)
+                if not k or k in seen:
+                    continue
+                seen.add(k)
+                yield p, {
+                    "nome": n,
+                    "original": original or None,
+                    "modulo": m,
+                    "tipo": tipo,
+                    "fonte": fonte,
+                    "status_fonte": status,
+                    "descricao": descricao,
+                }
         pats = [
             re.compile(r"\bnome\s*:\s*'([^'\n]{2,100})'", re.I),
             re.compile(r'\bnome\s*:\s*"([^"\n]{2,100})"', re.I),
@@ -227,12 +247,44 @@ def html_docs(root):
                     yield p, {"nome": n, "modulo": m, "descricao": "", "_html_catalog": True}
 
 
+def semantic_bugigangas(data):
+    fontes = data.get("fontes") if isinstance(data, dict) else {}
+    fontes = fontes if isinstance(fontes, dict) else {}
+    out = []
+    for item in data.get("itens", []) if isinstance(data, dict) else []:
+        if not isinstance(item, dict):
+            continue
+        descricao = str(item.get("descricao") or "").strip()
+        if not descricao:
+            continue
+        fonte = fontes.get(item.get("fonte"), {}) if isinstance(fontes, dict) else {}
+        fonte = fonte if isinstance(fonte, dict) else {}
+        source_id = str(item.get("id") or "").strip()
+        aliases_item = []
+        if item.get("rolagem"):
+            aliases_item.append(f"Bugiganga {item.get('rolagem')}")
+        out.append({
+            "id": f"bugiganga:{source_id}" if source_id else None,
+            "nome": descricao,
+            "modulo": "Bugigangas",
+            "tipo": fonte.get("tabela") or "Bugiganga",
+            "fonte": fonte.get("livro") or item.get("fonte") or "",
+            "descricao": descricao,
+            "aliases": aliases_item,
+        })
+    return {"itens_semanticos": out}
+
+
 def docs(root):
     for p in (root / "dados").rglob("*.json"):
         if p.name.startswith("referencias-hub-") or p.name == "referencias-regras-curadas.json":
             continue
         try:
-            yield p, json.loads(p.read_text(encoding="utf-8", errors="replace"))
+            data = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+            if p.name == "bugigangas-pdfs.json":
+                yield p, semantic_bugigangas(data)
+            else:
+                yield p, data
         except Exception:
             pass
     parts = sorted((root / "dados").glob("regras-dndbeyond-2024.part*.txt"))
