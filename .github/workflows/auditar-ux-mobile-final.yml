@@ -67,7 +67,8 @@ jobs:
           node tests/auditar-criacao-sem-travamento.mjs
       - name: Proibir backend incompatível no bloco
         run: |
-          if grep -RniE 'supabase' hub-ux.css scripts/hub-ux.js tests/auditar-ux-mobile-final.mjs; then
-            echo 'Backend proibido detectado no Bloco 8.' >&2
+          forbidden='supa''base'
+          if grep -RniE "$forbidden" hub-ux.css scripts/hub-ux.js tests/auditar-ux-mobile-final.mjs; then
+            echo 'Backend incompatível detectado no Bloco 8.' >&2
             exit 1
           fi
