@@ -60,4 +60,5 @@ if(typeof document!=='undefined'){
  import('./character-sheet-spellcasting-ui.js?v=20260901-rest1');
  import('./character-sheet-rest-ui.js?v=20260901-rest1');
  import('./character-sheet-magic-item-ui.js?v=20260902-magic-items2');
+ import('./character-sheet-resolution-ui.js?v=20260902-resolution1');
 }
