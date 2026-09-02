@@ -4,7 +4,7 @@
   "objetivo": "Nenhum conteúdo que possa alterar a criação ou a ficha de personagem pode permanecer sem classificação, integração, validação e teste.",
   "etapas_obrigatorias": ["inventario","integridade_sintatica","integridade_dados","rastreabilidade_runtime","aplicacao_mecanica","interacoes_cruzadas","cenarios_personagem","regressao","politicas_globais","evidencia_e_bloqueio"],
   "dominios": [
-    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json","dados/metamagias-feiticeiro-2024.json"],"runtime":"loadClasses + class feature mechanics"},
+    {"id":"classes","fontes":["dados/classes-base-2024.json","dados/classes-ptbr/*.json","dados/artificer-2025.json","dados/invocacoes-bruxo-2024.json","dados/metamagias-feiticeiro-2024.json"],"runtime":"loadClasses"},
     {"id":"subclasses","fontes":["dados/subclasses-pdfs.json","dados/subclasses-mecanicas-*.json","dados/precedencia-subclasses.json"],"runtime":"subclass-mechanics-data.js"},
     {"id":"especies","fontes":["dados/especies-*.json","dados/tiefling-variantes.json"],"runtime":"loadSpecies"},
     {"id":"antecedentes","fontes":["dados/antecedentes-*.json"],"runtime":"loadBackgrounds"},
