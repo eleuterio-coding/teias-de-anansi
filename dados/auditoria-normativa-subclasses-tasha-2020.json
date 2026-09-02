@@ -1,0 +1,49 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-subclasses-tasha-2020/v1",
+  "fonte_id": "tasha-2020",
+  "fonte": "Tasha's Cauldron of Everything (2020)",
+  "autoridade": "oficial_legado",
+  "ruleset": "5e",
+  "revisao": 2020,
+  "politica": "fail-closed",
+  "escopo": "subclasses não-Artificer publicadas em Tasha; Artificer é auditado pela linha Eberron/Forge 2025",
+  "quantidade_original_escopo": 26,
+  "quantidade_legado_unico_retido": 18,
+  "quantidade_substituida": 8,
+  "legado_unico": {
+    "Barbarian": {"niveis":[3,6,10,14],"subclasses":["Path of the Beast","Path of Wild Magic"]},
+    "Bard": {"niveis":[3,6,14],"subclasses":["College of Creation","College of Eloquence"]},
+    "Cleric": {"niveis":[1,2,6,8,17],"subclasses":["Order Domain","Peace Domain","Twilight Domain"]},
+    "Druid": {"niveis":[2,6,10,14],"subclasses":["Circle of Spores","Circle of Wildfire"]},
+    "Fighter": {"niveis":[3,7,10,15,18],"subclasses":["Rune Knight"]},
+    "Monk": {"niveis":[3,6,11,17],"subclasses":["Way of the Astral Self"]},
+    "Paladin": {"niveis":[3,7,15,20],"subclasses":["Oath of the Watchers"]},
+    "Ranger": {"niveis":[3,7,11,15],"subclasses":["Swarmkeeper"]},
+    "Rogue": {"niveis":[3,9,13,17],"subclasses":["Phantom"]},
+    "Warlock": {"niveis":[1,6,10,14],"subclasses":["The Fathomless","The Genie"]},
+    "Wizard": {"niveis":[2,6,10,14],"subclasses":["Bladesinging","Order of Scribes"]}
+  },
+  "substituidas_por_2024": [
+    {"classe":"Druid","nome_anterior":"Circle of Stars","nome_vigente":"Circle of the Stars"},
+    {"classe":"Fighter","nome_anterior":"Psi Warrior","nome_vigente":"Psi Warrior"},
+    {"classe":"Monk","nome_anterior":"Way of Mercy","nome_vigente":"Warrior of Mercy"},
+    {"classe":"Paladin","nome_anterior":"Oath of Glory","nome_vigente":"Oath of Glory"},
+    {"classe":"Ranger","nome_anterior":"Fey Wanderer","nome_vigente":"Fey Wanderer"},
+    {"classe":"Rogue","nome_anterior":"Soulknife","nome_vigente":"Soulknife"},
+    {"classe":"Sorcerer","nome_anterior":"Aberrant Mind","nome_vigente":"Aberrant Sorcery"},
+    {"classe":"Sorcerer","nome_anterior":"Clockwork Soul","nome_vigente":"Clockwork Sorcery"}
+  ],
+  "renomeadas": [
+    {"nome_anterior":"Circle of Stars","nome_vigente":"Circle of the Stars"},
+    {"nome_anterior":"Way of Mercy","nome_vigente":"Warrior of Mercy"},
+    {"nome_anterior":"Aberrant Mind","nome_vigente":"Aberrant Sorcery"},
+    {"nome_anterior":"Clockwork Soul","nome_vigente":"Clockwork Sorcery"}
+  ],
+  "criterio_fechamento": {
+    "legado_unico_ausente": 0,
+    "legado_substituido_reintroduzido": 0,
+    "substituicao_sem_alvo_vigente": 0,
+    "equivalencia_renomeada_nao_registrada": 0,
+    "fonte_legada_sobrepondo_fonte_atual": 0
+  }
+}

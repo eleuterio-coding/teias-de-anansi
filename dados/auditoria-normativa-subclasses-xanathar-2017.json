@@ -1,0 +1,39 @@
+{
+  "schema": "hub-rpg/auditoria-normativa-subclasses-xanathar-2017/v1",
+  "politica": "fail-closed",
+  "fonte_id": "xanathar-2017",
+  "fonte": "Xanathar's Guide to Everything (2017)",
+  "autoridade": "oficial_legado",
+  "ruleset": "5e",
+  "revisao": 2017,
+  "quantidade_original_escopo": 31,
+  "quantidade_legado_unico_retido": 27,
+  "quantidade_substituida": 4,
+  "legado_unico": {
+    "Barbarian": {"subclasses":["Path of the Ancestral Guardian","Path of the Storm Herald"],"niveis":[3,6,10,14]},
+    "Bard": {"subclasses":["College of Swords","College of Whispers"],"niveis":[3,6,14]},
+    "Cleric": {"subclasses":["Forge Domain","Grave Domain"],"niveis":[1,2,6,8,17]},
+    "Druid": {"subclasses":["Circle of Dreams","Circle of the Shepherd"],"niveis":[2,6,10,14]},
+    "Fighter": {"subclasses":["Arcane Archer","Cavalier","Samurai"],"niveis":[3,7,10,15,18]},
+    "Monk": {"subclasses":["Way of the Drunken Master","Way of the Kensei","Way of the Sun Soul"],"niveis":[3,6,11,17]},
+    "Paladin": {"subclasses":["Oath of Conquest","Oath of Redemption"],"niveis":[3,7,15,20]},
+    "Ranger": {"subclasses":["Horizon Walker","Monster Slayer"],"niveis":[3,7,11,15]},
+    "Rogue": {"subclasses":["Inquisitive","Mastermind","Scout","Swashbuckler"],"niveis":[3,9,13,17]},
+    "Sorcerer": {"subclasses":["Divine Soul","Shadow Magic","Storm Sorcery"],"niveis":[1,6,14,18]},
+    "Warlock": {"subclasses":["The Hexblade"],"niveis":[1,6,10,14]},
+    "Wizard": {"subclasses":["War Magic"],"niveis":[2,6,10,14]}
+  },
+  "substituidas_por_2024": [
+    {"classe":"Barbarian","nome_anterior":"Path of the Zealot","nome_vigente":"Path of the Zealot"},
+    {"classe":"Bard","nome_anterior":"College of Glamour","nome_vigente":"College of Glamour"},
+    {"classe":"Ranger","nome_anterior":"Gloom Stalker","nome_vigente":"Gloom Stalker"},
+    {"classe":"Warlock","nome_anterior":"The Celestial","nome_vigente":"Celestial Patron"}
+  ],
+  "renomeadas": [
+    {"classe":"Warlock","nome_anterior":"The Celestial","nome_vigente":"Celestial Patron"}
+  ],
+  "evidencia": {
+    "catalogo_oficial": "D&D Beyond — Xanathar's Guide to Everything, Character Options",
+    "criterio": "As quatro subclasses reimpressas/revisadas no PHB 2024 não permanecem disponíveis como opção legada equivalente no catálogo ativo; as outras 27 continuam como conteúdo oficial legado único."
+  }
+}

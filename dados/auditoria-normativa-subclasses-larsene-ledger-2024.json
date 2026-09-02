@@ -1,0 +1,38 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-subclasses/v1",
+  "etapa":"11B-11C",
+  "dominio":"subclasses",
+  "fonte_id":"larsene-ledger-2024",
+  "fonte":"L’Arsène’s Ledger of Treasure and Trinkets",
+  "autoridade":"terceiro_compativel",
+  "quantidade":7,
+  "identidades":[
+    {"nome":"Path of the Brewmaster","classe":"Barbarian","niveis":[3,6,10,14]},
+    {"nome":"College of Mixology","classe":"Bard","niveis":[3,6,14]},
+    {"nome":"Festivity Domain","classe":"Cleric","niveis":[1,2,6,8,17]},
+    {"nome":"Tavern Brawler","classe":"Fighter","niveis":[3,7,10,15,18]},
+    {"nome":"Way of the Artisan","classe":"Monk","niveis":[3,6,11,17]},
+    {"nome":"Charlatan","classe":"Rogue","niveis":[3,9,13,17]},
+    {"nome":"Swarmslinger","classe":"Tamer","niveis":[3,7,10,14]}
+  ],
+  "invariantes_de_proveniencia":[
+    "A fonte permanece terceiro_compativel.",
+    "L’Arsène não pode substituir identidades de fontes oficiais atuais ou legadas.",
+    "Seis subclasses pertencem a classes padrão e uma, Swarmslinger, pertence à classe Tamer.",
+    "Tamer não faz parte do conjunto de classes core carregado pelo Hub; Swarmslinger deve permanecer isolado até existir suporte explícito à classe Tamer."
+  ],
+  "confrontacao_publica":[
+    {"invariante":"7 subclasses no total","status":"confirmado_pelo_editor"},
+    {"invariante":"6 subclasses para classes padrão + 1 Swarmslinger para Tamer","status":"confirmado_pelo_editor"},
+    {"subclasse":"Tavern Brawler","classe":"Fighter","status":"confirmado_em_marketplaces"},
+    {"subclasse":"College of Mixology","classe":"Bard","status":"confirmado_em_marketplaces"},
+    {"subclasse":"Swarmslinger","classe":"Tamer","status":"confirmado_pelo_editor_e_marketplaces"}
+  ],
+  "fontes_verificacao":[
+    "Loot Tavern — L’Arsene’s Ledger of Treasures and Trinkets",
+    "Roll20 Marketplace — L’Arsene’s Ledger of Treasures and Trinkets",
+    "Fantasy Grounds / Steam — L'Arsene's Ledger of Treasures and Trinkets"
+  ],
+  "status":"estrutural_e_proveniencia_com_invariantes_publicos",
+  "observacao":"A semântica detalhada do livro fechado não é declarada como integralmente revisada. A auditoria garante identidade, progressão registrada, proveniência e isolamento da subclasse de Tamer no runtime atual."
+}

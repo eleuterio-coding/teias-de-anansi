@@ -1,0 +1,18 @@
+{
+  "schema":"hub-rpg/auditoria-normativa-antecedentes-legado/v1",
+  "politica":"fail-closed",
+  "autoridade":"oficial_legado",
+  "ruleset_fonte":"5e",
+  "compatibilidade_alvo":"5.5e",
+  "quantidade":2,
+  "antecedentes":[
+    {"nome_original":"Folk Hero","nome_runtime":"Herói do Povo","status":"legado-ativo-sem-equivalente-2024","pericias":["Lidar com Animais","Sobrevivência"],"ferramentas_fixas":["Veículos Terrestres"],"ferramenta_escolha":"Ferramentas de Artesão","caracteristica":"Hospitalidade Rústica","po_fonte":10},
+    {"nome_original":"Spy","nome_runtime":"Espião","status":"legado-ativo-sem-equivalente-2024","pericias":["Enganação","Furtividade"],"ferramentas_fixas":["Ferramentas de Ladrão"],"ferramenta_escolha":"Conjunto de Jogo","caracteristica":"Contato Criminal","po_fonte":15,"variante_de":"Criminal"}
+  ],
+  "adaptacao_5_5e_regra_casa": {
+    "atributos":"+2 em qualquer atributo e +1 em outro atributo diferente",
+    "talento_origem":"livre entre talentos de Origem",
+    "pacote_b_po":50,
+    "nota":"Atributos livres, Talento de Origem livre e Pacote B=50 PO são efeitos da política 5.5e/Regras da Casa do Hub; não são apresentados como conteúdo original dos antecedentes 2014."
+  }
+}
