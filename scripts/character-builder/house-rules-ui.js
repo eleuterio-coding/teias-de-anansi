@@ -1,5 +1,5 @@
 import{state,$,AB,arr,num,esc,fold}from'./state.js';
-import{applyHouseRules,derive,selected,HOUSE_ABILITY_LEVELS,initializeHouseBackgroundChoices}from'./rules.js?v=20260824-stage-isolation1';
+import{applyHouseRules,derive,selected,HOUSE_ABILITY_LEVELS,initializeHouseBackgroundChoices}from'./rules.js?v=20260831-tasha-metamagic1';
 
 let rendering=false,raf=0;
 const featById=id=>state.catalogs.feats.find(f=>f.id===id)||null;
