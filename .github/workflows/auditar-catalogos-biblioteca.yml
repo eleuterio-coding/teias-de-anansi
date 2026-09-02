@@ -5,8 +5,10 @@ on:
   pull_request:
     paths:
       - 'bibliotecas.html'
+      - 'referencia.html'
       - 'scripts/catalog-registry.js'
       - 'scripts/library-catalog-status.js'
+      - 'scripts/library-reference-ui.js'
       - 'scripts/character-builder/state.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/spells.js'
@@ -18,8 +20,10 @@ on:
     branches: [main]
     paths:
       - 'bibliotecas.html'
+      - 'referencia.html'
       - 'scripts/catalog-registry.js'
       - 'scripts/library-catalog-status.js'
+      - 'scripts/library-reference-ui.js'
       - 'scripts/character-builder/state.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/spells.js'
@@ -43,6 +47,7 @@ jobs:
         run: |
           node --check scripts/catalog-registry.js
           node --check scripts/library-catalog-status.js
+          node --check scripts/library-reference-ui.js
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/spells.js
           node --check tests/auditar-catalogos-biblioteca.mjs
@@ -55,18 +60,29 @@ jobs:
             --output /tmp/referencias-hub-index.json \
             --stubs /tmp/referencias-hub-stubs.json
           python - <<'PY'
-          import json
+          import json, unicodedata
           from pathlib import Path
+          def norm(v):
+              raw=unicodedata.normalize('NFD',str(v or ''))
+              return ''.join(c for c in raw if unicodedata.category(c)!='Mn').casefold().strip()
           d=json.loads(Path('/tmp/referencias-hub-index.json').read_text(encoding='utf-8'))
           if d.get('schema')!='hub-rpg.referencias.v3': raise RuntimeError('Schema semântico inesperado')
           if len(d.get('modulos',{}))!=18: raise RuntimeError('Índice não cobre 18 módulos')
           empty=[m for m,n in d.get('cobertura_modulos',{}).items() if int(n)<=0]
           if empty: raise RuntimeError('Módulos sem referências: '+', '.join(empty))
-          print(f"Índice semântico validado: {d['total_entidades']} entidades em 18/18 módulos.")
+          class_terms=set()
+          for row in d.get('entidades',[]):
+              if row.get('modulo')!='Classes': continue
+              for term in [row.get('nome'),row.get('original'),*(row.get('aliases') or [])]:
+                  if term: class_terms.add(norm(term))
+          subclasses=json.loads(Path('dados/subclasses-pdfs.json').read_text(encoding='utf-8')).get('subclasses',[])
+          unresolved=sorted({x.get('classe') for x in subclasses if x.get('classe') and norm(x.get('classe')) not in class_terms})
+          if unresolved: raise RuntimeError('Classes-pai de subclasses sem entidade/stub semântico: '+', '.join(unresolved))
+          print(f"Índice semântico validado: {d['total_entidades']} entidades em 18/18 módulos; {len(subclasses)} relações subclasse→classe resolvidas.")
           PY
       - name: Proibir backend incompatível no bloco
         run: |
-          if grep -RniE 'supabase' scripts/catalog-registry.js scripts/library-catalog-status.js bibliotecas.html; then
+          if grep -RniE 'supabase' scripts/catalog-registry.js scripts/library-catalog-status.js scripts/library-reference-ui.js bibliotecas.html referencia.html; then
             echo 'Backend proibido detectado no bloco de Biblioteca.' >&2
             exit 1
           fi
