@@ -1,0 +1,62 @@
+{
+  "schema": "hub-rpg/cobertura-mecanica-ficha/v1",
+  "bloco": 10,
+  "politica": "fail-closed",
+  "status": "em_implementacao",
+  "objetivo": "Nenhuma característica suportada pelo escopo v1.0 pode permanecer apenas como texto quando deveria alterar cálculo, recurso, condição, rolagem ou estado representável digitalmente.",
+  "regra_de_aceite": {
+    "lacunas_conhecidas": 0,
+    "lacunas_nao_classificadas": 0,
+    "testes_falhando": 0
+  },
+  "evidencias": [
+    {
+      "id": "magic-items-runtime-only-purchase",
+      "dominio": "itens_magicos",
+      "status": "lacuna_confirmada",
+      "fontes": [
+        "dados/itens-magicos/manifest.json",
+        "tests/auditar-itens-magicos-criacao.mjs",
+        "scripts/character-builder/wealth-purchase-ui.js",
+        "scripts/character-sheet-inventory-rules.js"
+      ],
+      "problema": "O escopo classifica itens mágicos como conteúdo ativo, mas os gates atuais demonstram catálogo, raridade, preço e movimentação de inventário; não demonstram aplicação dos efeitos dos itens equipados/sintonizados na ficha.",
+      "exemplos_mecanizaveis_confirmados": [
+        "Amulet of Health — Constituição 19 enquanto usado",
+        "Armor, +1, +2, or +3 — bônus de CA enquanto vestida",
+        "Armor of Resistance — resistência a dano enquanto vestida",
+        "Armor of Invulnerability — resistência e estado temporário de imunidade",
+        "Ammunition, +1, +2, or +3 — bônus em ataque e dano"
+      ],
+      "proximo_passo": "Criar estado estruturado de item mágico possuído/equipado/sintonizado e um runtime de efeitos consumido pela derivação da ficha antes de declarar o domínio coberto. Efeitos de resolução instantânea permanecem para o Bloco 11, mas seus estados, bônus e modificadores persistentes devem existir no Bloco 10."
+    },
+    {
+      "id": "barbarian-core-feature-text-only",
+      "dominio": "classes",
+      "entidade": "barbarian",
+      "status": "lacuna_confirmada",
+      "fontes": [
+        "dados/classes-ptbr/barbaro.json",
+        "scripts/character-sheet-resource-rules.js",
+        "scripts/character-builder/rules.js"
+      ],
+      "caracteristicas_confirmadas_para_mecanizacao": [
+        "barbarian-unarmored-defense",
+        "barbarian-extra-attack",
+        "barbarian-fast-movement",
+        "barbarian-feral-instinct",
+        "barbarian-primal-champion"
+      ],
+      "caracteristicas_com_resolucao_compartilhada_bloco_11": [
+        "barbarian-danger-sense",
+        "barbarian-reckless-attack",
+        "barbarian-brutal-strike",
+        "barbarian-relentless-rage",
+        "barbarian-indomitable-might"
+      ],
+      "problema": "O catálogo normativo expõe efeitos que alteram CA, número de ataques, deslocamento, iniciativa e atributos, mas a cobertura atual do runtime de classe não demonstra esses efeitos centrais na derivação da ficha.",
+      "proximo_passo": "Implementar barbarian-core-mechanics.js, integrar à derivação central e adicionar testes comportamentais para CA sem armadura, Ataque Extra, +10 ft de Movimento Rápido sem armadura pesada, vantagem de iniciativa e Campeão Primal."
+    }
+  ],
+  "nota": "Este inventário registra lacunas confirmadas, não uma lista exaustiva. O Bloco 10 permanece não Aceito até que todos os domínios do escopo tenham classificação mecânica e zero lacuna conhecida/não classificada."
+}
