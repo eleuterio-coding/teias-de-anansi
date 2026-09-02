@@ -2,7 +2,7 @@ import assert from'node:assert/strict';
 import fs from'node:fs';
 
 const read=path=>fs.readFileSync(path,'utf8');
-const pages=['index.html','personagens.html','lista-personagens.html','criacao-personagem.html','ficha-personagem.html','campanhas.html','mesa.html','sessoes.html','aventuras.html','bibliotecas.html'];
+const pages=['index.html','personagens.html','lista-personagens.html','criacao-personagem.html','ficha-personagem.html','campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','bibliotecas.html'];
 for(const page of pages){
  const html=read(page);
  assert.match(html,/<meta\s+name=["']viewport["']/i,`${page}: viewport responsivo ausente.`);
@@ -39,14 +39,15 @@ assert.ok(list.includes('Editar estrutura'),'Lista deve explicitar que o constru
 assert.ok(!/>Editar<\/a>/.test(list),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.ok(list.includes('Abra a Ficha Digital para jogar e administrar o personagem'),'Lista deve orientar o fluxo pós-criação.');
 
-for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso principal: ${href}`);
+for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','dados.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
 assert.equal((home.match(/aria-disabled="true"/g)||[]).length,3,'Somente áreas ainda não implementadas devem permanecer indisponíveis, sem links falsos.');
 assert.ok(home.includes('use a Criação de Personagem para montar a estrutura inicial'),'Início precisa explicar a separação Criação → Ficha.');
 
-for(const page of['campanhas.html','mesa.html','sessoes.html','aventuras.html','bibliotecas.html','personagens.html','lista-personagens.html']){
+for(const page of['campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','bibliotecas.html','personagens.html','lista-personagens.html']){
  const html=read(page);assert.ok(html.includes('hub-ux.css?v=20260901-ux-final1'),`${page}: CSS compartilhado de UX ausente.`);assert.ok(html.includes('scripts/hub-ux.js?v=20260901-ux-final1'),`${page}: comportamento compartilhado de UX ausente.`)
 }
 assert.match(read('mesa.html'),/role="status"\s+aria-live="polite"/,'Mesa deve anunciar seu estado de carregamento.');
 assert.match(read('aventuras.html'),/role="status"\s+aria-live="polite"/,'Aventuras deve anunciar seu estado de carregamento.');
+assert.match(read('dados.html'),/role="status"\s+aria-live="polite"/,'Dados e Backup deve anunciar feedback de restauração.');
 
-console.log('UX final validada: 10 superfícies responsivas, Etapas e navegação sticky mobile, acessibilidade, touch targets, hierarquia pós-criação e estados anunciáveis.');
+console.log('UX final validada: 11 superfícies responsivas, Etapas e navegação sticky mobile, acessibilidade, touch targets, hierarquia pós-criação e estados anunciáveis.');
