@@ -39,9 +39,6 @@ function importsOf(file) {
   for (const pattern of patterns) {
     for (const match of source.matchAll(pattern)) specs.push(match[1]);
   }
-  // character-builder.js registra extensões em uma tabela de strings e as
-  // importa em runtime. Essas entradas são parte explícita do grafo de carga,
-  // embora não apareçam sintaticamente como import('literal').
   if (path.resolve(file) === path.join(SCRIPTS, 'character-builder.js')) {
     for (const match of source.matchAll(/['"](\.\/character-builder\/[^'"]+\.js(?:\?[^'"]*)?)['"]/g)) specs.push(match[1]);
   }
@@ -107,8 +104,6 @@ if (missingCalls.length) {
 console.log(`OK · contratos centrais ativos: ${requiredRuntimeCalls.length}/${requiredRuntimeCalls.length}.`);
 
 // 10C · Teste comportamental puro das proficiências de ferramenta de classe.
-// Isso evita que o gate fique verde apenas porque class-tool-mechanics.js é
-// importado: escolhas, limites e proficiências fixas precisam produzir estado.
 const classToolUrl = `${pathToFileURL(path.join(BUILDER, 'class-tool-mechanics.js')).href}?audit=block10`;
 const { classToolOutcome, sanitizeClassToolChoices } = await import(classToolUrl);
 
@@ -132,5 +127,39 @@ assert.equal(artificer.complete, true);
 assert.ok(artificer.tools.includes('Ferramentas de Ladrão'));
 assert.ok(artificer.tools.includes('Ferramentas de Funileiro'));
 assert.ok(artificer.tools.includes('Ferramentas de Ferreiro'));
-
 console.log('OK · ferramentas de classe produzem escolhas, pendências e proficiências observáveis na ficha.');
+
+// 10D · Talento com escolha não pode existir apenas como texto/estado de UI.
+// Fighting Initiate (Archery) deve alterar o ataque derivado de uma arma à distância.
+const stateUrl = `${pathToFileURL(path.join(BUILDER, 'state.js')).href}?audit=block10-tasha`;
+const tashaUrl = `${pathToFileURL(path.join(BUILDER, 'tasha-feat-mechanics.js')).href}?audit=block10-tasha`;
+const { state } = await import(stateUrl);
+const { sanitizeTashaFeatChoices, applyTashaFeatEffects } = await import(tashaUrl);
+state.catalogs.classes = [{ id: 'fighter-audit', slug: 'fighter', featSlots: [4] }];
+state.catalogs.backgrounds = [];
+state.catalogs.feats = [{ id: 'fighting-initiate-audit', name: 'Fighting Initiate' }];
+state.catalogs.spells = [];
+state.catalogs.weapons = [];
+state.c = {
+  refs: { class: 'fighter-audit', background: null, species: null, subclass: null },
+  choices: {
+    class: { level: 4, skills: [], equipment: 'A' },
+    species: { traitChoices: {} },
+    feats: { 'slot-4-0': 'fighting-initiate-audit' },
+    featMechanics: {},
+    tashaFeatMechanics: { 'class:slot-4-0': { style: 'Archery' } },
+  },
+};
+const cleanTasha = sanitizeTashaFeatChoices();
+assert.equal(cleanTasha['class:slot-4-0']?.style, 'Archery', 'Fighting Initiate deve preservar um Estilo de Luta válido.');
+const rangedDerived = {
+  attack: 5,
+  weapon: { id: 'longbow-audit', categoria: 'Arma à distância' },
+  featMechanics: { combatFlags: [] },
+  fightingStyles: [],
+};
+applyTashaFeatEffects(rangedDerived);
+assert.equal(rangedDerived.attack, 7, 'Archery via Fighting Initiate deve somar +2 ao ataque à distância.');
+assert.ok(rangedDerived.fightingStyles.includes('Archery'));
+assert.ok(rangedDerived.featMechanics.combatFlags.includes('archery'));
+console.log('OK · talento de Tasha produz efeito mecânico observável na ficha derivada.');
