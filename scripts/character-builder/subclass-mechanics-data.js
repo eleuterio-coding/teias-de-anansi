@@ -1,4 +1,6 @@
 import{state,arr,fold,json}from'./state.js';
+import{initInvocationUi}from'./invocation-ui.js?v=20260901-normative-v1';
+import{initMetamagicUi}from'./metamagic-ui.js?v=20260901-normative-v1';
 
 const FILES=[
  'dados/subclasses-mecanicas-phb-2024.json',
@@ -11,6 +13,7 @@ const FILES=[
 ];
 let pending=null;
 export function initSubclassMechanicsData(){
+ initInvocationUi();initMetamagicUi();
  if(pending)return pending;
  pending=(async()=>{
   const[packs,loc]=await Promise.all([Promise.all(FILES.map(file=>json(file))),json('dados/localizacao-ptbr-subclasses.json').catch(()=>({}))]);
