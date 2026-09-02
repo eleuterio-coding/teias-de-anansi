@@ -1,0 +1,149 @@
+import{arr,num,fold,mod}from'./character-builder/state.js';
+
+const ABILITIES=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
+const HISTORY_LIMIT=100;
+const now=()=>new Date().toISOString();
+const cleanNumber=value=>Number.isFinite(Number(value))?Number(value):0;
+const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+const normalizeType=value=>String(value||'').trim();
+const same=(a,b)=>fold(a)===fold(b);
+const unique=values=>[...new Set(arr(values).map(normalizeType).filter(Boolean))];
+
+export function ensureResolutionState(character){
+ if(!character)return null;
+ character.sheet=character.sheet||{};
+ let root=character.sheet.resolution;
+ if(!root||typeof root!=='object'||Array.isArray(root))root={};
+ const target=root.target&&typeof root.target==='object'&&!Array.isArray(root.target)?root.target:{};
+ root.target={
+  name:String(target.name||''),
+  ac:Number(target.ac)>0?Number(target.ac):null,
+  saveModifier:Number.isFinite(Number(target.saveModifier))?Number(target.saveModifier):0,
+  resistances:unique(target.resistances),
+  immunities:unique(target.immunities),
+  vulnerabilities:unique(target.vulnerabilities)
+ };
+ root.history=arr(root.history).filter(Boolean).slice(-HISTORY_LIMIT);
+ root.selectedSpellId=String(root.selectedSpellId||'');
+ character.sheet.resolution=root;
+ return root
+}
+
+export function resolutionTarget(character){return ensureResolutionState(character)?.target||null}
+export function setResolutionTarget(character,input={}){
+ const root=ensureResolutionState(character);if(!root)return null;
+ root.target={
+  name:String(input.name??root.target.name??'').trim(),
+  ac:Number(input.ac)>0?Number(input.ac):null,
+  saveModifier:Number.isFinite(Number(input.saveModifier))?Number(input.saveModifier):0,
+  resistances:unique(input.resistances??root.target.resistances),
+  immunities:unique(input.immunities??root.target.immunities),
+  vulnerabilities:unique(input.vulnerabilities??root.target.vulnerabilities)
+ };
+ return root.target
+}
+export function setSelectedResolutionSpell(character,spellId){const root=ensureResolutionState(character);if(!root)return'';root.selectedSpellId=String(spellId||'');return root.selectedSpellId}
+export function recordResolution(character,result={}){
+ const root=ensureResolutionState(character);if(!root)return null;
+ const row={id:`res-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,at:now(),...result};
+ root.history=[...root.history,row].slice(-HISTORY_LIMIT);return row
+}
+export function resolutionHistory(character){return arr(ensureResolutionState(character)?.history)}
+
+export function randomDie(sides=20,rng=Math.random){
+ const size=Math.max(2,Math.floor(num(sides)||20)),raw=clamp(Number(rng()),0,0.999999999999);
+ return Math.floor(raw*size)+1
+}
+
+export function parseDiceExpression(value){
+ const source=String(value??'').trim().replace(/[−–—]/g,'-').replace(/\s+/g,'');
+ if(!source)return null;
+ const terms=[];let cursor=0;
+ const re=/([+-]?)(?:(\d*)d(\d+)|(\d+))/ig;let match;
+ while((match=re.exec(source))){
+  if(match.index!==cursor)return null;cursor=re.lastIndex;
+  const sign=match[1]==='-'?-1:1;
+  if(match[3]){const count=Math.max(1,Math.floor(num(match[2])||1)),sides=Math.floor(num(match[3]));if(sides<2||count>100)return null;terms.push({kind:'dice',sign,count,sides})}
+  else terms.push({kind:'flat',sign,value:Math.floor(num(match[4]))})
+ }
+ if(cursor!==source.length||!terms.length)return null;
+ return{source,terms}
+}
+
+export function extractDiceExpression(value){
+ const text=String(value??'');
+ const match=text.match(/\b\d*d\d+(?:\s*[+-]\s*(?:\d*d\d+|\d+))*/i);
+ return match?.[0]?.replace(/^d/i,'1d')||''
+}
+
+export function rollDiceExpression(value,{critical=false,rng=Math.random}={}){
+ const parsed=typeof value==='object'&&value?.terms?value:parseDiceExpression(value);if(!parsed)return{ok:false,total:0,reason:'Expressão de dados inválida.',expression:String(value||'')};
+ const rolls=[],terms=[];let total=0;
+ for(const term of parsed.terms){
+  if(term.kind==='flat'){const subtotal=term.sign*term.value;total+=subtotal;terms.push({...term,subtotal});continue}
+  const count=term.count*(critical?2:1),values=[];for(let i=0;i<count;i++)values.push(randomDie(term.sides,rng));const subtotal=term.sign*values.reduce((a,b)=>a+b,0);total+=subtotal;rolls.push(...values);terms.push({...term,count,rolls:values,subtotal})
+ }
+ return{ok:true,total,critical:!!critical,expression:parsed.source,terms,rolls}
+}
+
+export function rollD20({modifier=0,advantage=false,disadvantage=false,rng=Math.random}={}){
+ const adv=!!advantage,dis=!!disadvantage,mode=adv===dis?'normal':adv?'advantage':'disadvantage',first=randomDie(20,rng),second=mode==='normal'?null:randomDie(20,rng),natural=mode==='advantage'?Math.max(first,second):mode==='disadvantage'?Math.min(first,second):first,total=natural+cleanNumber(modifier);
+ return{mode,rolls:second==null?[first]:[first,second],natural,modifier:cleanNumber(modifier),total,natural20:natural===20,natural1:natural===1}
+}
+
+export function exhaustionD20Penalty(character){const level=clamp(Math.floor(num(character?.sheet?.runtime?.exhaustion)),0,6);return{level,penalty:-2*level}}
+export function skillCheckModifier(derived,character,skill){const row=derived?.skillChecks?.[skill];if(!row)return null;const exhaustion=exhaustionD20Penalty(character);return{skill,ability:row.ability,base:cleanNumber(row.value),global:cleanNumber(derived?.globalAbilityCheckBonus),exhaustion:exhaustion.penalty,total:cleanNumber(row.value)+cleanNumber(derived?.globalAbilityCheckBonus)+exhaustion.penalty}}
+export function abilityCheckModifier(derived,character,ability){if(!ABILITIES.includes(ability))return null;const exhaustion=exhaustionD20Penalty(character),jack=cleanNumber(derived?.jackOfAllTrades?.bonus);return{ability,base:mod(derived?.scores?.[ability]),jack,global:cleanNumber(derived?.globalAbilityCheckBonus),exhaustion:exhaustion.penalty,total:mod(derived?.scores?.[ability])+jack+cleanNumber(derived?.globalAbilityCheckBonus)+exhaustion.penalty}}
+export function savingThrowModifier(derived,character,ability){if(!ABILITIES.includes(ability))return null;const exhaustion=exhaustionD20Penalty(character),proficient=arr(derived?.saveProficiencies).includes(ability),proficiency=proficient?cleanNumber(derived?.pbonus):0;return{ability,base:mod(derived?.scores?.[ability]),proficient,proficiency,global:cleanNumber(derived?.globalSavingThrowBonus),exhaustion:exhaustion.penalty,total:mod(derived?.scores?.[ability])+proficiency+cleanNumber(derived?.globalSavingThrowBonus)+exhaustion.penalty}}
+
+function finishD20(kind,label,modifier,{dc=null,advantage=false,disadvantage=false,rng=Math.random}={}){
+ const roll=rollD20({modifier:modifier.total,advantage,disadvantage,rng}),target=Number(dc)>0?Number(dc):null;
+ return{kind,label,modifier,roll,dc:target,success:target==null?null:roll.total>=target}
+}
+export function resolveSkillCheck({derived,character,skill,dc=null,advantage=false,disadvantage=false,rng=Math.random}={}){const modifier=skillCheckModifier(derived,character,skill);return modifier?finishD20('skill-check',skill,modifier,{dc,advantage,disadvantage,rng}):{ok:false,kind:'skill-check',reason:'Perícia inválida.'}}
+export function resolveAbilityCheck({derived,character,ability,dc=null,advantage=false,disadvantage=false,rng=Math.random}={}){const modifier=abilityCheckModifier(derived,character,ability);return modifier?finishD20('ability-check',`Teste de ${ability}`,modifier,{dc,advantage,disadvantage,rng}):{ok:false,kind:'ability-check',reason:'Atributo inválido.'}}
+export function resolveSavingThrow({derived,character,ability,dc=null,advantage=false,disadvantage=false,rng=Math.random}={}){const modifier=savingThrowModifier(derived,character,ability);return modifier?finishD20('saving-throw',`Salvaguarda de ${ability}`,modifier,{dc,advantage,disadvantage,rng}):{ok:false,kind:'saving-throw',reason:'Atributo inválido.'}}
+export function resolveInitiative({derived,character,advantage=false,disadvantage=false,rng=Math.random}={}){const exhaustion=exhaustionD20Penalty(character),jack=cleanNumber(derived?.jackOfAllTrades?.bonus),modifier={base:cleanNumber(derived?.initiative),jack,global:cleanNumber(derived?.globalAbilityCheckBonus),exhaustion:exhaustion.penalty,total:cleanNumber(derived?.initiative)+jack+cleanNumber(derived?.globalAbilityCheckBonus)+exhaustion.penalty};return finishD20('initiative','Iniciativa',modifier,{advantage:advantage||!!derived?.initiativeAdvantage,disadvantage,rng})}
+
+export function applyDamageDefenses(amount,type,{resistances=[],immunities=[],vulnerabilities=[]}={}){
+ const raw=Math.max(0,Math.floor(cleanNumber(amount))),damageType=normalizeType(type),immune=arr(immunities).some(x=>same(x,damageType)),resistant=arr(resistances).some(x=>same(x,damageType)),vulnerable=arr(vulnerabilities).some(x=>same(x,damageType));
+ if(!damageType)return{raw,effective:raw,type:'',immune:false,resistant:false,vulnerable:false,multiplier:1};
+ if(immune)return{raw,effective:0,type:damageType,immune:true,resistant,vulnerable,multiplier:0};
+ if(resistant&&vulnerable)return{raw,effective:raw,type:damageType,immune:false,resistant:true,vulnerable:true,multiplier:1};
+ if(resistant)return{raw,effective:Math.floor(raw/2),type:damageType,immune:false,resistant:true,vulnerable:false,multiplier:.5};
+ if(vulnerable)return{raw,effective:raw*2,type:damageType,immune:false,resistant:false,vulnerable:true,multiplier:2};
+ return{raw,effective:raw,type:damageType,immune:false,resistant:false,vulnerable:false,multiplier:1}
+}
+
+function matchingMagicBonus(rows=[],weaponId){return arr(rows).filter(row=>!row?.refId||row.refId===weaponId||row.targetRefId===weaponId).reduce((sum,row)=>sum+cleanNumber(row.value),0)}
+export function weaponResolutionModifier(derived,profile,{manualAttackBonus=0,manualDamageBonus=0}={}){
+ const samePrimary=profile?.weapon?.id&&profile.weapon.id===derived?.weapon?.id,derivedDelta=samePrimary&&Number.isFinite(Number(derived?.attack))?cleanNumber(derived.attack)-cleanNumber(profile.baseAttack):0,magicAttack=matchingMagicBonus(derived?.magicItemWeaponBonuses?.attack,profile?.weapon?.id),magicDamage=matchingMagicBonus(derived?.magicItemWeaponBonuses?.damage,profile?.weapon?.id);
+ return{attack:cleanNumber(profile?.attack)+derivedDelta+magicAttack+cleanNumber(manualAttackBonus),damage:cleanNumber(profile?.abilityMod)+magicDamage+cleanNumber(manualDamageBonus),derivedDelta,magicAttack,magicDamage,manualAttack:cleanNumber(manualAttackBonus),manualDamage:cleanNumber(manualDamageBonus)}
+}
+
+export function resolveWeaponAttack({derived,profile,target={},advantage=false,disadvantage=false,manualAttackBonus=0,manualDamageBonus=0,suppressPositiveAbilityDamage=false,rng=Math.random}={}){
+ if(!profile?.available)return{ok:false,kind:'weapon-attack',reason:arr(profile?.unavailable).join(' ')||'Ataque indisponível.'};
+ const modifier=weaponResolutionModifier(derived,profile,{manualAttackBonus,manualDamageBonus}),hasDisadvantage=!!(disadvantage||profile.heavyDisadvantage||profile.statusDisadvantage),hasAdvantage=!!(advantage||profile.statusAdvantage),attackRoll=rollD20({modifier:modifier.attack,advantage:hasAdvantage,disadvantage:hasDisadvantage,rng}),targetAc=Number(target?.ac)>0?Number(target.ac):null,hit=attackRoll.natural1?false:attackRoll.natural20?true:targetAc==null?null:attackRoll.total>=targetAc,critical=attackRoll.natural20;
+ let damage=null;
+ if(hit===true){
+  const dice=rollDiceExpression(profile.damage,{critical,rng});
+  if(dice.ok){let abilityPart=cleanNumber(profile.abilityMod);if(suppressPositiveAbilityDamage&&abilityPart>0)abilityPart=0;const flat=abilityPart+(modifier.damage-cleanNumber(profile.abilityMod)),raw=Math.max(0,dice.total+flat),defense=applyDamageDefenses(raw,profile.damageType,target);damage={dice,flat,raw,...defense}}
+ }
+ if(hit===false&&profile.mastered&&same(profile.mastery,'Graze')){const raw=Math.max(0,cleanNumber(profile.abilityMod)),defense=applyDamageDefenses(raw,profile.damageType,target);damage={graze:true,dice:null,flat:raw,raw,...defense}}
+ return{ok:true,kind:'weapon-attack',weaponId:profile.weapon?.id||null,weaponName:profile.weapon?.nome||profile.weapon?.name||'Arma',attackModifier:modifier,targetAc,attackRoll,hit,critical,damage,mastery:profile.mastered?profile.mastery:null,toppleDc:profile.toppleDc||null}
+}
+
+export function spellAbilityProfile(derived,ability){const chosen=ABILITIES.includes(ability)?ability:derived?.klass?.spellAbility||derived?.speciesSpellAbility||null;if(!chosen||derived?.scores?.[chosen]==null)return null;const abilityModifier=mod(derived.scores[chosen]),pbonus=cleanNumber(derived.pbonus),spellAttackBonus=cleanNumber(derived?.magicItemFlags?.spellAttackBonus);return{ability:chosen,abilityModifier,pbonus,attack:abilityModifier+pbonus+spellAttackBonus,dc:8+abilityModifier+pbonus,spellAttackBonus}}
+export function resolveSpellAttack({derived,character,spell,ability,target={},advantage=false,disadvantage=false,manualAttackBonus=0,rng=Math.random}={}){
+ const profile=spellAbilityProfile(derived,ability);if(!profile)return{ok:false,kind:'spell-attack',reason:'Atributo de conjuração indisponível.'};const exhaustion=exhaustionD20Penalty(character),modifier=profile.attack+exhaustion.penalty+cleanNumber(manualAttackBonus),roll=rollD20({modifier,advantage,disadvantage,rng}),targetAc=Number(target?.ac)>0?Number(target.ac):null,hit=roll.natural1?false:roll.natural20?true:targetAc==null?null:roll.total>=targetAc;return{ok:true,kind:'spell-attack',spellId:spell?.id||null,spellName:spell?.name||'Magia',profile,modifier,roll,targetAc,hit,critical:roll.natural20}}
+export function resolveTargetSpellSave({derived,spell,ability,targetSaveModifier=0,targetAdvantage=false,targetDisadvantage=false,rng=Math.random}={}){const profile=spellAbilityProfile(derived,ability);if(!profile)return{ok:false,kind:'target-spell-save',reason:'Atributo de conjuração indisponível.'};const roll=rollD20({modifier:cleanNumber(targetSaveModifier),advantage:targetAdvantage,disadvantage:targetDisadvantage,rng});return{ok:true,kind:'target-spell-save',spellId:spell?.id||null,spellName:spell?.name||'Magia',profile,roll,dc:profile.dc,success:roll.total>=profile.dc}}
+export function spellEffectDice(spell){return extractDiceExpression(spell?.baseDamage||spell?.damage||spell?.effect||spell?.description||'')}
+export function spellDamageType(spell){if(spell?.damageType)return normalizeType(spell.damageType);const raw=String(spell?.damage||'');const pieces=raw.split('·').map(x=>x.trim()).filter(Boolean);return pieces.length>1?pieces[pieces.length-1]:''}
+export function resolveSpellDamage({spell,target={},critical=false,flatBonus=0,rng=Math.random}={}){const expression=spellEffectDice(spell);if(!expression)return{ok:false,kind:'spell-damage',reason:'A magia não possui expressão de dano estruturada no catálogo.'};const dice=rollDiceExpression(expression,{critical,rng});if(!dice.ok)return{ok:false,kind:'spell-damage',reason:dice.reason};const raw=Math.max(0,dice.total+cleanNumber(flatBonus)),type=spellDamageType(spell),defense=applyDamageDefenses(raw,type,target);return{ok:true,kind:'spell-damage',spellId:spell?.id||null,spellName:spell?.name||'Magia',dice,flatBonus:cleanNumber(flatBonus),raw,...defense}}
+
+export function ensureRuntimeHp(character,maxHp=0){if(!character)return null;character.sheet=character.sheet||{};const runtime=character.sheet.runtime&&typeof character.sheet.runtime==='object'&&!Array.isArray(character.sheet.runtime)?character.sheet.runtime:{};const max=Math.max(0,Math.floor(cleanNumber(maxHp)));if(runtime.currentHp==null)runtime.currentHp=max;runtime.currentHp=clamp(Math.floor(cleanNumber(runtime.currentHp)),0,max);runtime.tempHp=Math.max(0,Math.floor(cleanNumber(runtime.tempHp)));character.sheet.runtime=runtime;return runtime}
+export function applyCharacterDamage(character,maxHp,amount,{type='',resistances=[],immunities=[],vulnerabilities=[]}={}){const runtime=ensureRuntimeHp(character,maxHp);if(!runtime)return{ok:false,reason:'Personagem indisponível.'};const defense=applyDamageDefenses(amount,type,{resistances,immunities,vulnerabilities}),before={currentHp:runtime.currentHp,tempHp:runtime.tempHp},absorbed=Math.min(runtime.tempHp,defense.effective),remaining=defense.effective-absorbed;runtime.tempHp-=absorbed;runtime.currentHp=Math.max(0,runtime.currentHp-remaining);return{ok:true,kind:'character-damage',...defense,absorbedByTempHp:absorbed,before,after:{currentHp:runtime.currentHp,tempHp:runtime.tempHp}}}
+export function applyCharacterHealing(character,maxHp,amount){const runtime=ensureRuntimeHp(character,maxHp);if(!runtime)return{ok:false,reason:'Personagem indisponível.'};const healing=Math.max(0,Math.floor(cleanNumber(amount))),before=runtime.currentHp;runtime.currentHp=Math.min(Math.max(0,Math.floor(cleanNumber(maxHp))),runtime.currentHp+healing);return{ok:true,kind:'character-healing',rolled:healing,applied:runtime.currentHp-before,before,after:runtime.currentHp,maxHp:Math.max(0,Math.floor(cleanNumber(maxHp)))}}
+export function resolveAmount(value,{rng=Math.random}={}){const parsed=parseDiceExpression(value);if(parsed)return rollDiceExpression(parsed,{rng});const amount=Number(value);return Number.isFinite(amount)&&amount>=0?{ok:true,total:Math.floor(amount),expression:String(value),terms:[],rolls:[]}:{ok:false,total:0,reason:'Informe um número ou expressão de dados válida.'}}
+
+export const RESOLUTION_ABILITIES=Object.freeze([...ABILITIES]);
