@@ -4,11 +4,13 @@ on:
     paths:
       - 'scripts/storage-registry.js'
       - 'scripts/backup-engine.js'
+      - 'scripts/backup-relations.js'
       - 'scripts/backup-ui.js'
       - 'dados.html'
       - 'portabilidade.css'
       - 'index.html'
       - 'tests/auditar-persistencia-portabilidade.mjs'
+      - 'tests/auditar-persistencia-relacoes.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
       - 'ROADMAP-V1.md'
       - '.github/workflows/auditar-persistencia-portabilidade.yml'
@@ -25,13 +27,17 @@ jobs:
         run: |
           node --check scripts/storage-registry.js
           node --check scripts/backup-engine.js
+          node --check scripts/backup-relations.js
           node --check scripts/backup-ui.js
           node --check tests/auditar-persistencia-portabilidade.mjs
+          node --check tests/auditar-persistencia-relacoes.mjs
       - name: 14A–14K · Schemas, backup, migração, integridade e rollback
         run: node tests/auditar-persistencia-portabilidade.mjs
-      - name: 14L · Regressão UX e mobile
+      - name: 14L · Integridade dos vínculos portáteis
+        run: node tests/auditar-persistencia-relacoes.mjs
+      - name: 14M · Regressão UX e mobile
         run: node tests/auditar-ux-mobile-final.mjs
-      - name: 14M · Regressão Campanhas/Mesas
+      - name: 14N · Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
-      - name: 14N · Regressão Aventuras
+      - name: 14O · Regressão Aventuras
         run: node tests/auditar-aventuras.mjs
