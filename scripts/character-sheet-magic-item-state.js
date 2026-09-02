@@ -1,4 +1,5 @@
 import{applyCampaignInventoryRows,inventoryRowKey}from'./character-sheet-inventory-rules.js';
+import{applyGenericMagicItemPersistentContract}from'./character-sheet-magic-item-contracts.js?v=20260902-magic-items1';
 
 const bool=value=>value===true;
 const cleanKey=value=>String(value||'').trim();
@@ -52,24 +53,25 @@ export function activeMagicItemUsages(character,baseRows=[]){
 
 export function validateMagicItemParameters(item,input={}){
  const id=magicSlug(item),parameters={};
- if(['armor-1-2-or-3','ammunition-1-2-or-3','weapon-1-2-or-3'].includes(id)){
+ if(['armor-1-2-or-3','ammunition-1-2-or-3','weapon-1-2-or-3','shield-1-2-or-3','wand-of-the-war-mage-1-2-or-3'].includes(id)){
   const bonus=Number(input.magicBonus);
   if(![1,2,3].includes(bonus))return{ok:false,reason:'Selecione explicitamente a variante +1, +2 ou +3 do item mágico.'};
   parameters.magicBonus=bonus
  }
- if(id==='armor-of-resistance'){
+ if(['armor-of-resistance','ring-of-resistance','potion-of-resistance','dragon-scale-mail'].includes(id)){
   const damageType=cleanDamageType(input.damageType);
-  if(!damageType||PHYSICAL_DAMAGE_TYPES.includes(damageType))return{ok:false,reason:'Selecione um tipo de dano válido da tabela da Armadura de Resistência.'};
+  if(!damageType)return{ok:false,reason:'Selecione o tipo de dano da variante do item.'};
   parameters.damageType=damageType
  }
+ if(id==='armor-of-resistance'&&PHYSICAL_DAMAGE_TYPES.includes(parameters.damageType))return{ok:false,reason:'Selecione um tipo de dano válido da tabela da Armadura de Resistência.'};
  if(id==='armor-of-vulnerability'){
   const damageType=cleanDamageType(input.damageType);
   if(!damageType||!PHYSICAL_DAMAGE_TYPES.includes(damageType))return{ok:false,reason:'Selecione Concussão, Perfurante ou Cortante para a Armadura da Vulnerabilidade.'};
   parameters.damageType=damageType
  }
- if(id==='potion-of-giant-strength'){
+ if(['potion-of-giant-strength','belt-of-giant-strength'].includes(id)){
   const strengthScore=Number(input.strengthScore);
-  if(!GIANT_STRENGTH_SCORES.includes(strengthScore))return{ok:false,reason:'Selecione a variante da Poção de Força do Gigante (21, 23, 25, 27 ou 29 de Força).'};
+  if(!GIANT_STRENGTH_SCORES.includes(strengthScore))return{ok:false,reason:'Selecione a variante de Força do Gigante (21, 23, 25, 27 ou 29).'};
   parameters.strengthScore=strengthScore
  }
  if(id==='carpet-of-flying'){
@@ -81,6 +83,7 @@ export function validateMagicItemParameters(item,input={}){
   const acTransfer=Math.max(0,Math.min(3,Math.floor(Number(input.acTransfer)||0)));parameters.acTransfer=acTransfer
  }
  if(id==='oil-of-sharpness'&&input.targetRefId)parameters.targetRefId=String(input.targetRefId);
+ if(input.variant)parameters.variant=String(input.variant);
  return{ok:true,parameters}
 }
 
@@ -115,7 +118,7 @@ export function clearUnavailableMagicItemUsages(character,baseRows=[]){
 }
 
 export function magicItemPersistentOutcome(character,baseRows=[]){
- const outcome={abilityMinimums:{},abilityCheckBonus:0,savingThrowBonus:0,acBonus:0,speedBonus:0,flySpeed:0,mountSpeedBonus:0,resistances:[],immunities:[],vulnerabilities:[],flags:{},weaponAttackBonuses:[],weaponDamageBonuses:[],conditionalAttackBonuses:[],conditionalDamageBonuses:[],activeItems:[],applied:[],pending:[]};
+ const outcome={abilityMinimums:{},abilityCheckBonus:0,savingThrowBonus:0,acBonus:0,speedBonus:0,flySpeed:0,mountSpeedBonus:0,movementModes:{},resistances:[],immunities:[],vulnerabilities:[],flags:{},contracts:[],conditionalAcBonuses:[],weaponAttackBonuses:[],weaponDamageBonuses:[],conditionalAttackBonuses:[],conditionalDamageBonuses:[],activeItems:[],applied:[],pending:[]};
  for(const usage of activeMagicItemUsages(character,baseRows)){
   const row=usage.row,id=magicSlug(row),parameters=usage.parameters||{};
   outcome.activeItems.push({id,key:usage.key,equipped:usage.equipped,attuned:usage.attuned,active:usage.active,parameters});
@@ -133,28 +136,31 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
    outcome.flags.divinationTargetingBlocked=true;outcome.flags.scryingSensorsBlocked=true;
    outcome.applied.push({id,effect:'divination-protection',value:true});continue
   }
-  if(id==='armor-1-2-or-3'||/^armor-(?:plus-)?[123]$/.test(id)){
+  if(id==='armor-1-2-or-3'||/^armor-(?:plus-)?[123]$/.test(id)||id==='shield-1-2-or-3'){
    if(!usage.equipped)continue;
    const bonus=magicBonus(row,parameters);
-   if(!bonus){outcome.pending.push({id,reason:'A variante +1/+2/+3 da armadura não está registrada no estado do item.'});continue}
+   if(!bonus){outcome.pending.push({id,type:'parameter',reason:'A variante +1/+2/+3 da armadura ou escudo não está registrada no estado do item.'});continue}
    outcome.acBonus+=bonus;outcome.applied.push({id,effect:'ac-bonus',value:bonus});continue
   }
   if(id==='weapon-1-2-or-3'||/^weapon-(?:plus-)?[123]$/.test(id)){
    if(!usage.equipped)continue;
    const bonus=magicBonus(row,parameters);
-   if(!bonus){outcome.pending.push({id,reason:'A variante +1/+2/+3 da arma não está registrada no estado do item.'});continue}
-   const selector={kind:'magic-item',refId:row?.refId||id,key:usage.key,scope:'this-weapon'};
+   if(!bonus){outcome.pending.push({id,type:'parameter',reason:'A variante +1/+2/+3 da arma não está registrada no estado do item.'});continue}
+   const selector={kind:'magic-item',refId:parameters.targetRefId||row?.refId||id,key:usage.key,scope:'this-weapon'};
    outcome.weaponAttackBonuses.push({...selector,value:bonus});outcome.weaponDamageBonuses.push({...selector,value:bonus});
    outcome.applied.push({id,effect:'weapon-attack-and-damage-bonus',value:bonus});continue
   }
   if(id==='ammunition-1-2-or-3'||/^ammunition-(?:plus-)?[123]$/.test(id)){
    if(!usage.equipped)continue;
    const bonus=magicBonus(row,parameters);
-   if(!bonus){outcome.pending.push({id,reason:'A variante +1/+2/+3 da munição não está registrada no estado do item.'});continue}
+   if(!bonus){outcome.pending.push({id,type:'parameter',reason:'A variante +1/+2/+3 da munição não está registrada no estado do item.'});continue}
    const selector={kind:'magic-item',refId:row?.refId||id,key:usage.key};
    outcome.conditionalAttackBonuses.push({...selector,value:bonus,scope:'attack-with-this-ammunition'});
    outcome.conditionalDamageBonuses.push({...selector,value:bonus,scope:'damage-with-this-ammunition'});
    outcome.applied.push({id,effect:'attack-and-damage-bonus',value:bonus,scope:'this-ammunition'});continue
+  }
+  if(id==='wand-of-the-war-mage-1-2-or-3'){
+   if(!usage.attuned)continue;const bonus=magicBonus(row,parameters);if(!bonus){outcome.pending.push({id,type:'parameter',reason:'A variante +1/+2/+3 da varinha não está registrada.'});continue}outcome.flags.spellAttackBonus=Number(outcome.flags.spellAttackBonus||0)+bonus;outcome.applied.push({id,effect:'spell-attack-bonus',value:bonus});continue
   }
   if(id==='stone-of-good-luck-luckstone'){
    if(!usage.attuned)continue;
@@ -171,11 +177,9 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
    outcome.weaponAttackBonuses.push({...selector,value:2});outcome.weaponDamageBonuses.push({...selector,value:2});outcome.flags.scimitarOfSpeedBonusActionAttack=true;
    outcome.applied.push({id,effect:'weapon-attack-and-damage-bonus',value:2});continue
   }
-  if(id==='armor-of-resistance'){
-   if(!(usage.equipped&&usage.attuned))continue;
-   const damageType=cleanDamageType(parameters.damageType||row?.damageType||row?.magicDamageType);
-   if(!damageType||PHYSICAL_DAMAGE_TYPES.includes(damageType)){outcome.pending.push({id,reason:'O tipo de dano escolhido pelo Mestre ainda não está registrado no estado do item.'});continue}
-   outcome.resistances.push(damageType);outcome.applied.push({id,effect:'resistance',value:damageType});continue
+  if(['armor-of-resistance','ring-of-resistance','potion-of-resistance','dragon-scale-mail'].includes(id)){
+   if(!(usage.equipped||usage.attuned||usage.active))continue;const damageType=cleanDamageType(parameters.damageType||row?.damageType||row?.magicDamageType);
+   if(!damageType){outcome.pending.push({id,type:'parameter',reason:'O tipo de dano da variante ainda não está registrado no estado do item.'});continue}outcome.resistances.push(damageType);outcome.applied.push({id,effect:'resistance',value:damageType});continue
   }
   if(id==='armor-of-invulnerability'){
    if(!(usage.equipped&&usage.attuned))continue;
@@ -185,13 +189,13 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
   if(id==='armor-of-vulnerability'){
    if(!(usage.equipped&&usage.attuned))continue;
    const damageType=cleanDamageType(parameters.damageType||row?.damageType||row?.magicDamageType);
-   if(!damageType||!PHYSICAL_DAMAGE_TYPES.includes(damageType)){outcome.pending.push({id,reason:'O tipo de dano resistente da Armadura da Vulnerabilidade ainda não está registrado no estado do item.'});continue}
+   if(!damageType||!PHYSICAL_DAMAGE_TYPES.includes(damageType)){outcome.pending.push({id,type:'parameter',reason:'O tipo de dano resistente da Armadura da Vulnerabilidade ainda não está registrado no estado do item.'});continue}
    outcome.resistances.push(damageType);outcome.vulnerabilities.push(...PHYSICAL_DAMAGE_TYPES.filter(type=>type!==damageType));
    outcome.applied.push({id,effect:'resistance-and-vulnerability',value:{resistance:damageType,vulnerabilities:PHYSICAL_DAMAGE_TYPES.filter(type=>type!==damageType)}});continue
   }
   if(id==='carpet-of-flying'){
    if(!usage.active)continue;const speed=Number(parameters.flyingSpeed)||0;
-   if(!speed){outcome.pending.push({id,reason:'A variante de deslocamento do Tapete Voador não está registrada.'});continue}
+   if(!speed){outcome.pending.push({id,type:'parameter',reason:'A variante de deslocamento do Tapete Voador não está registrada.'});continue}
    outcome.flySpeed=Math.max(outcome.flySpeed,speed);outcome.flags.ridingFlyingCarpet=true;outcome.applied.push({id,effect:'fly-speed',value:speed});continue
   }
   if(id==='horseshoes-of-speed'){
@@ -203,9 +207,9 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
   if(id==='efficient-quiver'){
    if(!(usage.equipped||usage.active))continue;outcome.flags.efficientQuiverStorage=true;outcome.applied.push({id,effect:'structured-storage',value:true});continue
   }
-  if(id==='potion-of-giant-strength'){
-   if(!usage.active)continue;const score=Number(parameters.strengthScore)||0;
-   if(!score){outcome.pending.push({id,reason:'A variante de Força da poção ainda não está registrada.'});continue}
+  if(['potion-of-giant-strength','belt-of-giant-strength'].includes(id)){
+   if(!(usage.active||usage.attuned))continue;const score=Number(parameters.strengthScore)||0;
+   if(!score){outcome.pending.push({id,type:'parameter',reason:'A variante de Força do Gigante ainda não está registrada.'});continue}
    outcome.abilityMinimums.Força=Math.max(score,Number(outcome.abilityMinimums.Força||0));outcome.applied.push({id,effect:'strength-minimum',value:score});continue
   }
   if(id==='defender'){
@@ -230,6 +234,7 @@ export function magicItemPersistentOutcome(character,baseRows=[]){
   if(id==='potion-of-vitality'&&usage.active){outcome.flags.vitalityPotionActive=true;outcome.applied.push({id,effect:'vitality-active',value:true});continue}
   if(id==='staff-of-the-python'&&usage.active){outcome.flags.staffOfPythonTransformed=true;outcome.applied.push({id,effect:'staff-transformed',value:true});continue}
   if(needsActive(id)&&usage.active){outcome.flags[`magicItem:${id}:active`]=true;outcome.applied.push({id,effect:'active-state',value:true});continue}
+  if(applyGenericMagicItemPersistentContract(outcome,usage))continue
  }
  outcome.resistances=uniq(outcome.resistances);outcome.immunities=uniq(outcome.immunities);outcome.vulnerabilities=uniq(outcome.vulnerabilities);
  return outcome
@@ -249,7 +254,9 @@ export function applyMagicItemPersistentEffects(derived,character,baseRows=[]){
  derived.immunities=uniq([...(derived.immunities||[]),...outcome.immunities]);
  derived.vulnerabilities=uniq([...(derived.vulnerabilities||[]),...outcome.vulnerabilities]);
  derived.magicItemFlags={...(derived.magicItemFlags||{}),...outcome.flags};
- derived.magicItemMovement={flySpeed:outcome.flySpeed,mountSpeedBonus:outcome.mountSpeedBonus};
+ derived.magicItemMovement={flySpeed:outcome.flySpeed,mountSpeedBonus:outcome.mountSpeedBonus,...outcome.movementModes};
  derived.magicItemWeaponBonuses={attack:outcome.weaponAttackBonuses,damage:outcome.weaponDamageBonuses,conditionalAttack:outcome.conditionalAttackBonuses,conditionalDamage:outcome.conditionalDamageBonuses};
+ derived.magicItemConditionalAcBonuses=outcome.conditionalAcBonuses;
+ derived.magicItemContracts=outcome.contracts;
  derived.magicItemMechanics=outcome;return derived
 }
