@@ -6,6 +6,15 @@ Este arquivo é a autoridade do escopo de fechamento da v1.0. Os Blocos 1–8 en
 
 Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, suplementos ou funcionalidades adicionados depois do congelamento de escopo da v1.0 são expansões futuras e não reabrem a v1.0.
 
+## Regras de plataforma e custo da v1.0
+
+- O Hub de RPG é **somente um site web responsivo**, acessado pelo navegador e hospedado no GitHub Pages.
+- Não criar aplicativo Android, iOS ou desktop; não depender de APK, Play Store ou App Store.
+- Serviços externos usados pela v1.0 devem funcionar **sem cartão de crédito, sem método de pagamento e sem conta de faturamento**.
+- Para Firebase, usar apenas **Spark / No-cost**, sem Blaze, Firebase Hosting, Cloud Functions ou qualquer recurso que exija billing.
+- Se um serviço necessário passar a exigir pagamento/cartão, substituir o serviço em vez de ativar cobrança.
+- Não usar Supabase.
+
 ## Blocos
 
 1. Ficha Digital / Modo de Jogo — ✅ Aceito
@@ -22,7 +31,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 12. Encontros e ferramentas do Mestre — ✅ Aceito
 13. Aventuras — ✅ Aceito
 14. Persistência definitiva e portabilidade — ✅ Aceito
-15. Usuários, colaboração e sincronização — Planejado
+15. Usuários, colaboração e sincronização — Bloqueado · homologação real de login/sincronização pendente
 16. Painel Geral — Planejado
 17. Configurações — Planejado
 18. Homologação, documentação e release final — Planejado
@@ -48,7 +57,11 @@ Planejamento e condução de aventuras com capítulos/arcos, cenas, locais, NPCs
 Exportação/importação, backup/restauração, schemas versionados, migrações e proteção contra perda/corrupção. Trocar de dispositivo ou limpar navegador não pode significar perder a campanha.
 
 ### 15. Usuários, colaboração e sincronização
-Identidade real, propriedade, convites, Mestre/Jogador/Observador, permissões e sincronização entre dispositivos. Não usar Supabase.
+Identidade real, propriedade, Mestre/Jogador/Observador, permissões e sincronização entre dispositivos no **site web**, sem aplicativo e sem Supabase. A infraestrutura deve funcionar sem cartão/faturamento; no Firebase, somente plano Spark.
+
+Modelo adotado: acesso fechado administrado manualmente, com login visível por **usuário + senha**. O nome de usuário é convertido internamente para um identificador técnico `@teias.invalid` do Firebase Authentication; não há cadastro público, convite por e-mail ou confirmação de e-mail. O Firestore exige também um registro ativo em `authorizedUsers/{uid}`.
+
+Estado atual: projeto Firebase Spark real provisionado, Authentication por E-mail/senha habilitado, Cloud Firestore criado, regras e índice `memberships` publicados, primeiro administrador cadastrado e configuração pública Web ativada no branch. O aceite permanece bloqueado até homologação real do login, sincronização entre contextos e permissões de Mestre/Jogador/Observador.
 
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
