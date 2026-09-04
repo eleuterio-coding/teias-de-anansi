@@ -36,7 +36,7 @@ jobs:
           node --check scripts/collaboration-ui.js
           node --check tests/auditar-colaboracao-sync.mjs
           node --check tests/auditar-ux-mobile-final.mjs
-      - name: 15A–15Y · Identidade, papéis, privacidade, convites e sync
+      - name: 15A–15Y · Identidade, acesso administrado, papéis, privacidade e sync
         run: node tests/auditar-colaboracao-sync.mjs
       - name: Regressão UX e mobile
         run: node tests/auditar-ux-mobile-final.mjs
