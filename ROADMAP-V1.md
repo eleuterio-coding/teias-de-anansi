@@ -32,7 +32,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 13. Aventuras — ✅ Aceito
 14. Persistência definitiva e portabilidade — ✅ Aceito
 15. Usuários, colaboração e sincronização — ✅ Aceito
-16. Painel Geral — Planejado
+16. Painel Geral — ✅ Aceito
 17. Configurações — Planejado
 18. Homologação, documentação e release final — Planejado
 
@@ -65,6 +65,8 @@ Aceite: projeto Firebase Spark real provisionado; Authentication por E-mail/senh
 
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
+
+Aceite: nova superfície `painel.html` agrega o estado local persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`. A home expõe o Painel Geral e somente Configurações permanece indisponível. Auditoria dedicada do Bloco 16 e regressões UX/Campanhas/Persistência protegem o comportamento.
 
 ### 17. Configurações
 Preferências persistentes de usuário/Mestre, fontes e regras habilitadas, presets de Regras da Casa, ficha, acessibilidade e defaults de campanha.
