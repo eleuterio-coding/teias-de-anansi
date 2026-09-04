@@ -1,7 +1,13 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
 const config=JSON.parse(fs.readFileSync(new URL('../dados/firebase-config.json',import.meta.url),'utf8'));
-const required=['projectId','apiKey','authDomain','appId'],missing=required.filter(key=>!String(config[key]||'').trim());
+const required=['projectId','apiKey','authDomain','appId','usernameDomain'],missing=required.filter(key=>!String(config[key]||'').trim());
 assert.equal(config.enabled,true,'BLOQUEADO: Firebase ainda não está ativado em dados/firebase-config.json.');
 assert.deepEqual(missing,[],`BLOQUEADO: configuração Firebase incompleta: ${missing.join(', ')}.`);
-console.log(`OK — Bloco 15Z: provedor Firebase real configurado (${config.projectId}).`);
+assert.equal(config.firebasePlan,'spark','BLOQUEADO: o projeto deve permanecer no plano Spark / No-cost.');
+assert.equal(config.billingForbidden,true,'BLOQUEADO: faturamento deve permanecer proibido.');
+assert.equal(config.paymentMethodForbidden,true,'BLOQUEADO: cartão/método de pagamento deve permanecer proibido.');
+assert.equal(config.authMode,'username-password','BLOQUEADO: autenticação deve usar o modelo fechado por usuário e senha.');
+assert.equal(config.usernameDomain,'teias.invalid','BLOQUEADO: domínio técnico de usuário inesperado.');
+assert.equal(config.accountProvisioning,'admin-manual','BLOQUEADO: cadastro deve permanecer administrado manualmente.');
+console.log(`OK — Bloco 15Z: provedor Firebase real configurado (${config.projectId}) com login fechado por usuário e senha.`);
