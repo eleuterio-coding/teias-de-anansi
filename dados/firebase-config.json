@@ -1,6 +1,6 @@
 {
   "schema": "hub-rpg/firebase-config/v1",
-  "enabled": false,
+  "enabled": true,
   "provider": "firebase",
   "sdkVersion": "12.18.0",
   "platform": "web-site-only",
@@ -8,9 +8,14 @@
   "firebasePlan": "spark",
   "billingForbidden": true,
   "paymentMethodForbidden": true,
-  "projectId": "",
-  "apiKey": "",
-  "authDomain": "",
-  "appId": "",
-  "note": "Configuração pública exclusiva do site. Usar apenas Firebase Spark sem faturamento/cartão, somente Authentication + Cloud Firestore. Não usar Firebase Hosting, Cloud Functions, SDK mobile, Service Account ou qualquer credencial administrativa."
+  "authMode": "username-password",
+  "usernameDomain": "teias.invalid",
+  "accountProvisioning": "admin-manual",
+  "projectId": "teais-de-anansi",
+  "apiKey": "AIzaSyDZoe_XntJna_aE_uMDrwxFI5EykwdVM5M",
+  "authDomain": "teais-de-anansi.firebaseapp.com",
+  "appId": "1:900723445313:web:274b847b3f3145a76c40c0",
+  "storageBucket": "teais-de-anansi.firebasestorage.app",
+  "messagingSenderId": "900723445313",
+  "note": "Configuração pública exclusiva do site. Login fechado por usuário e senha; o nome de usuário é convertido internamente para um identificador técnico @teias.invalid. Cadastro e senha são administrados manualmente; não há confirmação de e-mail. Usar apenas Firebase Spark sem faturamento/cartão, somente Authentication + Cloud Firestore. Não usar Firebase Hosting, Cloud Functions, SDK mobile, Service Account ou qualquer credencial administrativa."
 }
