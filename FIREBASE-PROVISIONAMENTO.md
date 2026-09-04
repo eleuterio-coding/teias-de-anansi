@@ -37,6 +37,8 @@ Concluído no projeto Firebase Spark do Hub:
 5. Índice composto de `memberships` (`uid` crescente + `active` crescente, escopo `COLLECTION`) criado e ativado.
 6. Primeiro administrador criado manualmente e autorizado no Firestore.
 7. Configuração pública Web registrada em `dados/firebase-config.json` com `enabled: true`.
+8. Gate `15Z · Provedor real configurado` concluído com sucesso.
+9. Login administrativo real homologado no GitHub Pages, com leitura correta de `authorizedUsers` e reconhecimento do perfil Administrador.
 
 A criação futura de novas credenciais continua manual no Firebase Authentication. Depois disso, o administrador pode usar a página **Usuários e Colaboração** para autorizar o UID e vinculá-lo às Mesas.
 
@@ -57,4 +59,4 @@ Esses campos são configuração pública do cliente Firebase. Nunca commitar ch
 
 O workflow **Auditar usuários, colaboração e sincronização — Bloco 15** valida a arquitetura web-only, Spark/zero billing, autenticação `username-password`, ausência do fluxo de convite e configuração pública do provedor real.
 
-O gate `15Z · Provedor real configurado` confirma o provisionamento no repositório, mas o **Bloco 15 só pode ser aceito após homologação real do login e da sincronização em navegador**, incluindo permissões entre contextos autenticados.
+O Bloco 15 foi aceito após a homologação do login administrativo real. O responsável pelo projeto dispensou o teste manual adicional com uma conta não autorizada. A homologação E2E multiusuário completa permanece no escopo do **Bloco 18 — Homologação, documentação e release final**, sem reabrir o Bloco 15.
