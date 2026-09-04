@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><title>Painel Geral - Teias de Anansi</title><link rel="stylesheet" href="dashboard.css?v=20260904-dashboard1"><link rel="stylesheet" href="hub-ux.css?v=20260901-ux-final1"></head><body>
+<header class="top"><div><p class="eyebrow">Hub de RPG</p><h1>Painel Geral</h1><p class="muted">Visão consolidada de personagens, Mesas, sessões, pendências e atividade recente.</p></div><div class="actions"><a class="btn secondary" href="usuarios.html?v=20260904-collab3">Usuários / Sincronização</a><a class="btn secondary" href="index.html">Início</a></div></header>
+<main id="main-content">
+<p id="dashboard-status" class="mini" role="status" aria-live="polite">Carregando painel...</p>
+<section class="metrics" aria-label="Resumo do Hub"><div id="metric-characters" class="metric"></div><div id="metric-campaigns" class="metric"></div><div id="metric-sessions" class="metric"></div><div id="metric-pending" class="metric"></div></section>
+<section class="focus-grid" aria-label="Foco atual"><article id="character-in-play" class="focus-card"></article><article id="next-session" class="focus-card"></article></section>
+<section class="content-grid"><section class="panel"><div class="panel-head"><h2>Mesas</h2><a href="campanhas.html" class="mini">Ver todas</a></div><div id="campaign-dashboard-list" class="list"></div></section><section class="panel"><div class="panel-head"><h2>Pendências</h2><span class="mini">Ações detectadas pelo estado local</span></div><div id="pending-list" class="list"></div></section></section>
+<section class="panel"><div class="panel-head"><h2>Atividade recente</h2><span class="mini">Personagens, Mesas, sessões e aventuras</span></div><div id="activity-list" class="list"></div></section>
+</main><script type="module" src="scripts/hub-ux.js?v=20260901-ux-final1"></script><script type="module" src="scripts/dashboard-ui.js?v=20260904-dashboard1"></script></body></html>
