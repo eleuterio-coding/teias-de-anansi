@@ -2,8 +2,10 @@ const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 const at=v=>Date.parse(v||'')||0;
 const day=v=>{const s=text(v);const m=s.match(/^(\d{4}-\d{2}-\d{2})/);return m?m[1]:null};
+const localDay=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const hrefCharacter=id=>`ficha-personagem.html?id=${encodeURIComponent(id)}`;
 const hrefCampaign=id=>`mesa.html?id=${encodeURIComponent(id)}`;
+const hrefAdventure=campaignId=>`aventuras.html?campaign=${encodeURIComponent(campaignId||'')}`;
 
 export function characterSummary(character={}){
  const snaps=character.refSnapshots||{},refs=character.refs||{},level=Math.max(1,Number(character.choices?.class?.level)||1),className=text(snaps.class?.name)||text(refs.class),speciesName=text(snaps.species?.name)||text(refs.species),backgroundName=text(snaps.background?.name)||text(refs.background);
@@ -22,7 +24,7 @@ export function chooseCharacterInPlay(characters=[],campaigns=[]){
 }
 
 export function chooseNextSession(campaigns=[],now=new Date()){
- const today=now.toISOString().slice(0,10),planned=arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='planned').map(s=>({campaign:c,session:s,date:day(s.date)})));
+ const today=localDay(now),planned=arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='planned').map(s=>({campaign:c,session:s,date:day(s.date)})));
  const dated=planned.filter(x=>x.date&&x.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||Number(a.session.number||0)-Number(b.session.number||0));
  if(dated.length)return dated[0];
  const undated=planned.filter(x=>!x.date).sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt)||Number(a.session.number||0)-Number(b.session.number||0));
@@ -30,7 +32,7 @@ export function chooseNextSession(campaigns=[],now=new Date()){
 }
 
 function buildPending(characters,campaigns,adventures,now){
- const today=now.toISOString().slice(0,10),pending=[];
+ const today=localDay(now),pending=[];
  for(const c of arr(characters)){
   const summary=characterSummary(c);if(summary.complete)continue;
   const missing=[];if(!text(c.name))missing.push('nome');if(!text(c.refs?.class))missing.push('classe');if(!text(c.refs?.species))missing.push('espécie');if(!text(c.refs?.background))missing.push('antecedente');
@@ -44,7 +46,7 @@ function buildPending(characters,campaigns,adventures,now){
   }
   if(!hasActive&&!sessions.some(s=>s.status==='planned'))pending.push({kind:'campaign',title:campaign.name,detail:'Mesa ativa sem próxima sessão planejada.',href:hrefCampaign(campaign.id)})
  }
- for(const adventure of arr(adventures).filter(a=>a.status==='active'))if(!adventure.activeSceneId&&arr(adventure.scenes).some(s=>s.status==='planned'))pending.push({kind:'adventure',title:adventure.title,detail:'Aventura ativa sem uma cena em andamento.',href:`aventuras.html?campaignId=${encodeURIComponent(adventure.campaignId||'')}`});
+ for(const adventure of arr(adventures).filter(a=>a.status==='active'))if(!adventure.activeSceneId&&arr(adventure.scenes).some(s=>s.status==='planned'))pending.push({kind:'adventure',title:adventure.title,detail:'Aventura ativa sem uma cena em andamento.',href:hrefAdventure(adventure.campaignId)});
  return pending
 }
 
@@ -55,7 +57,7 @@ function buildActivity(characters,campaigns,adventures){
   rows.push({type:'campaign',title:c.name||'Mesa',detail:'Mesa atualizada',at:c.updatedAt,href:hrefCampaign(c.id)});
   for(const s of arr(c.sessions))rows.push({type:'session',title:s.title||`Sessão ${s.number||''}`,detail:`Sessão · ${c.name||'Mesa'}`,at:s.updatedAt,href:hrefCampaign(c.id)})
  }
- for(const a of arr(adventures))rows.push({type:'adventure',title:a.title||'Aventura',detail:'Aventura atualizada',at:a.updatedAt,href:`aventuras.html?campaignId=${encodeURIComponent(a.campaignId||'')}`});
+ for(const a of arr(adventures))rows.push({type:'adventure',title:a.title||'Aventura',detail:'Aventura atualizada',at:a.updatedAt,href:hrefAdventure(a.campaignId)});
  return rows.filter(x=>at(x.at)>0).sort((a,b)=>at(b.at)-at(a.at)).slice(0,8)
 }
 
