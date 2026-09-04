@@ -1,0 +1,35 @@
+name: Auditar Painel Geral — Bloco 16
+on:
+  pull_request:
+    paths:
+      - 'painel.html'
+      - 'dashboard.css'
+      - 'scripts/dashboard-state.js'
+      - 'scripts/dashboard-ui.js'
+      - 'index.html'
+      - 'tests/auditar-painel-geral.mjs'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - 'ROADMAP-V1.md'
+      - '.github/workflows/auditar-painel-geral.yml'
+  workflow_dispatch:
+jobs:
+  painel-geral:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/dashboard-state.js
+          node --check scripts/dashboard-ui.js
+          node --check tests/auditar-painel-geral.mjs
+      - name: Bloco 16 · Painel Geral
+        run: node tests/auditar-painel-geral.mjs
+      - name: Regressão UX
+        run: node tests/auditar-ux-mobile-final.mjs
+      - name: Regressão Campanhas/Mesas
+        run: node tests/auditar-campanhas-mesas.mjs
+      - name: Regressão persistência
+        run: node tests/auditar-persistencia-portabilidade.mjs
