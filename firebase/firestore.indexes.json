@@ -7,14 +7,6 @@
         {"fieldPath": "uid", "order": "ASCENDING"},
         {"fieldPath": "active", "order": "ASCENDING"}
       ]
-    },
-    {
-      "collectionGroup": "invites",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "invitedEmail", "order": "ASCENDING"},
-        {"fieldPath": "status", "order": "ASCENDING"}
-      ]
     }
   ],
   "fieldOverrides": []
