@@ -156,7 +156,7 @@ Depois de um `success` manual na `main`, o workflow `.github/workflows/finalizar
 2. a execução foi iniciada por `workflow_dispatch`;
 3. a execução ocorreu sobre a branch `main` do próprio repositório;
 4. a `main` continua exatamente no mesmo commit homologado pelo Firebase;
-5. a tag `v1.0.0` ainda não existe;
+5. a tag/release `v1.0.0` ainda não existe;
 6. o gate estrutural é reexecutado e permanece verde;
 7. o E2E local Desktop/Mobile é reexecutado e permanece verde.
 
@@ -165,9 +165,9 @@ Só então o finalizador:
 - promove `package.json` de `1.0.0-rc.1` para `1.0.0`;
 - registra o run Firebase aprovado em `docs/HOMOLOGACAO-V1.md`;
 - marca o Bloco 18 como **✅ Aceito** em `ROADMAP-V1.md`;
-- cria a tag anotada `v1.0.0`;
-- publica o GitHub Release **Teias de Anansi v1.0.0** usando `docs/RELEASE-NOTES-V1.0.0.md`.
+- grava o commit final de aceite na `main`;
+- cria a tag `v1.0.0` no mesmo commit ao publicar o GitHub Release **Teias de Anansi v1.0.0**, usando `docs/RELEASE-NOTES-V1.0.0.md`.
 
-Se a `main` mudar entre a homologação Firebase e o finalizador, a publicação falha fechada: é necessário rodar `Homologar Firebase real v1` novamente sobre o commit atual. O finalizador nunca força ou sobrescreve uma tag existente.
+A tag e o GitHub Release são criados pela mesma operação de publicação, reduzindo o risco de existir tag sem release. Se a `main` mudar entre a homologação Firebase e o finalizador, a publicação falha fechada: é necessário rodar `Homologar Firebase real v1` novamente sobre o commit atual. O finalizador nunca força ou sobrescreve uma tag/release existente.
 
 Até existir esse `success` real, a ausência dos Secrets continua sendo o único bloqueador técnico obrigatório conhecido do release.
