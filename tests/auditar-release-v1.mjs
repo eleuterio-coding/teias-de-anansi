@@ -37,7 +37,7 @@ for(const token of['Personagens','Campanhas','Dados / Backup','Usuários','Confi
 for(const token of['Criação de Personagem','Ficha Digital','Subir de Level','Backup','Colaboração'])assert.ok(manual.includes(token),`Manual sem fluxo: ${token}.`);
 for(const token of['localStorage','Firebase','GitHub Pages','Firestore','schema'])assert.ok(architecture.includes(token),`Arquitetura sem tópico: ${token}.`);
 for(const token of['Desktop','Mobile','Level 1','Level 20','multiusuário','recuperação','rede','Homologar Firebase real v1'])assert.ok(homologation.includes(token),`Plano de homologação sem critério: ${token}.`);
-for(const token of['#123','#94','#30','codex/bloco-1-ficha-modo-jogo','codex/bloco-16-painel-geral','Limpeza física executada','Branch técnica do Bloco 18'])assert.ok(branches.includes(token),`Auditoria de branches sem evidência final: ${token}.`);
+for(const token of['#123','#94','#30','#146','zero PRs abertos','codex/bloco-1-ficha-modo-jogo','codex/bloco-16-painel-geral','Limpeza física executada'])assert.ok(branches.includes(token),`Auditoria de branches sem evidência final: ${token}.`);
 for(const token of['v1.0.0','Ficha Digital','Level 20','Campanhas','Firebase','GitHub Pages'])assert.ok(releaseNotes.includes(token),`Notas de release sem tópico obrigatório: ${token}.`);
 
 const critical=[
