@@ -11,9 +11,9 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 - Regressões críticas dos Blocos 1–17: **aprovadas** pela suíte de cobertura total.
 - Harness Firebase multiusuário real: **implementado** em `e2e/collaboration-real.spec.js` e `.github/workflows/homologar-firebase-real.yml`.
 - Jogador E2E: **efêmero**; criado pelo próprio harness no Firebase Authentication, autorizado pelo Administrador como não administrador e removido no cleanup.
-- Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos dois GitHub Actions Secrets administrativos de teste**.
+- Evidência de execução Firebase multiusuário real: **aprovada** no run `33970930792`.
 - PRs/branches de release: **limpeza concluída**; zero PRs abertos e refs classificadas removidas.
-- Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.
+- Tag/release `v1.0.0`: **publicação autorizada** após aprovação de todos os gates obrigatórios.
 
 ## Evidências automatizadas observadas
 
@@ -45,6 +45,10 @@ Durante a homologação foram encontrados e corrigidos dois defeitos reais antes
 - chave `}` excedente em `scripts/character-sheet-rest-ui.js`, que causava erro sintático;
 - auditoria histórica do Bloco 16 ainda esperava Configurações indisponível depois do Bloco 17; o teste foi atualizado para exigir Painel e Configurações disponíveis no estado atual.
 
+### Firebase real — aceite final
+
+Execução final aprovada: `Homologar Firebase real v1`, run `33970930792`. O workflow concluiu com **success** usando o Administrador real e um Jogador E2E efêmero, liberando o encerramento do Bloco 18. Evidência: https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/33970930792
+
 ### Firebase real
 
 Execução histórica observada: workflow `Homologar Firebase real v1`, run `33961159721`.
@@ -69,7 +73,7 @@ Esses dois valores correspondem à conta Administradora já homologada no Bloco 
 | Painel Geral | Aprovado | Aprovado | superfície carrega e integra estado local |
 | Configurações | Aprovado | Aprovado | persistência, reload e preferências visuais |
 | Usuários sem provedor disponível | Aprovado | Aprovado | fail-closed e nenhuma liberação de acesso |
-| Firebase autenticado | Pendente por 2 Secrets administrativos | Jogador efêmero em contexto independente | duas identidades reais e papéis distintos na mesma Mesa |
+| Firebase autenticado | Aprovado | Aprovado | Administrador real + Jogador efêmero, Rules, projeção compartilhada e retomada de rede · run `33970930792` |
 
 ## Progressão Level 1 → Level 20
 
@@ -130,7 +134,7 @@ Critérios mínimos automatizados:
 
 ## Gate Firebase multiusuário real
 
-Este é o **único gate técnico obrigatório ainda não aprovado**. O harness exige no projeto Firebase Spark real:
+Este gate técnico obrigatório foi **aprovado na homologação final**. O harness exige no projeto Firebase Spark real:
 
 1. login da conta Administradora já autorizada;
 2. criação automática de uma segunda credencial efêmera no Firebase Authentication;
@@ -166,8 +170,6 @@ Estado administrativo final:
 
 Não resta housekeeping de PR/branch bloqueando a v1.0.
 
-## Sequência final para a tag
+## Fechamento final
 
-1. configurar `E2E_FIREBASE_ADMIN_USERNAME` e `E2E_FIREBASE_ADMIN_PASSWORD` nos GitHub Actions Secrets;
-2. executar manualmente `Homologar Firebase real v1` sobre a `main` até obter **success** real;
-3. após o success, o workflow `Finalizar release v1.0.0` revalida gate estrutural e E2E, registra a evidência, marca o Bloco 18 como aceito, promove a versão para `1.0.0` e publica tag + GitHub Release automaticamente.
+Todos os gates obrigatórios da v1.0 foram aprovados. O Bloco 18 está aceito e a publicação `v1.0.0` foi autorizada pelo run Firebase `33970930792`.

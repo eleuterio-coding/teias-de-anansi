@@ -34,7 +34,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 15. Usuários, colaboração e sincronização — ✅ Aceito
 16. Painel Geral — ✅ Aceito
 17. Configurações — ✅ Aceito
-18. Homologação, documentação e release final — 🟡 Em homologação final · gate Firebase real pendente por Secrets
+18. Homologação, documentação e release final — ✅ Aceito
 
 ## Critérios dos blocos restantes
 
@@ -76,7 +76,7 @@ Aceite: nova superfície `configuracoes.html` com estado versionado `hub-rpg:set
 ### 18. Homologação, documentação e release final
 E2E em navegador real e mobile, fluxos longos 1–20, campanhas, recuperação de dados, erros de rede, acessibilidade, desempenho, README/manual/arquitetura, limpeza de PRs/branches e release v1.0.
 
-Estado atual: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação e limpeza de PRs/branches foram concluídos. O único gate técnico obrigatório ainda sem evidência verde é `Homologar Firebase real v1`, que agora depende somente de dois GitHub Actions Secrets da conta Administradora já homologada (`E2E_FIREBASE_ADMIN_USERNAME` e `E2E_FIREBASE_ADMIN_PASSWORD`). O próprio harness cria, autoriza como não administrador e remove um Jogador E2E efêmero. A tag `v1.0.0` permanece proibida até esse gate executar com sucesso.
+Aceite: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação, limpeza de PRs/branches e homologação Firebase multiusuário real foram concluídos. O gate `Homologar Firebase real v1` foi aprovado no run `33970930792`. A v1.0 está encerrada e apta à publicação da tag `v1.0.0`.
 
 ## Política de escopo da v1.0
 
