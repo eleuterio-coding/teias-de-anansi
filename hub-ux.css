@@ -18,6 +18,17 @@ input[type="checkbox"],input[type="radio"]{min-width:20px;min-height:20px}
 .hub-home-card{display:block;border:1px solid #8885;border-radius:14px;padding:16px;text-decoration:none;background:#fff;color:#000;min-height:116px}
 .hub-home-card:hover{background:#f6f6f6}.hub-home-card strong{display:block;font-size:1.05rem;margin-bottom:4px}.hub-home-card span{display:block;color:#666}.hub-home-card.primary{border-color:#111}.hub-home-card[aria-disabled="true"]{opacity:.55;cursor:not-allowed}.hub-home-card[aria-disabled="true"] .hub-soon{margin-top:8px;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .hub-flow-note{border-left:3px solid #8888;padding:8px 0 8px 12px;color:#555}
+html[data-hub-font-scale="large"]{font-size:112.5%}
+html[data-hub-font-scale="xlarge"]{font-size:125%}
+html[data-hub-contrast="high"]{--hub-focus:#000}
+html[data-hub-contrast="high"] :where(.card,.hub-home-card,input,select,textarea,button,.btn,.section-nav a){border-color:#000!important}
+html[data-hub-sticky-sections="false"] .section-nav{position:static!important}
+html[data-hub-show-sources="false"] :where(.source,.section-source){display:none!important}
+html[data-hub-sheet-density="compact"] #sheet :where(.card,.hero){padding:10px}
+html[data-hub-sheet-density="compact"] #sheet :where(.row,.feature){padding-block:4px}
+html[data-hub-motion="reduce"]{scroll-behavior:auto}
+html[data-hub-motion="reduce"] .skip-link{transition:none}
+html[data-hub-motion="reduce"] *,html[data-hub-motion="reduce"] *::before,html[data-hub-motion="reduce"] *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 @media(max-width:760px){html{scroll-padding-top:64px}.section-nav{margin-inline:-14px;padding-inline:14px!important;border-bottom:1px solid #8883}.section-nav a{min-height:44px}.wizard-nav{margin-inline:-14px;padding-inline:14px!important;overflow-x:auto!important;overscroll-behavior-inline:contain;scrollbar-width:thin;-webkit-overflow-scrolling:touch}.hub-card-grid{grid-template-columns:1fr}:where(input,select,textarea){font-size:16px}.actions,.hero-actions,.row-actions{gap:10px}.actions>.btn,.hero-actions>.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center}}
 @media(max-width:520px){.actions[data-mobile-stack="true"],.hero-actions[data-mobile-stack="true"]{display:grid!important;grid-template-columns:1fr;width:100%}.actions[data-mobile-stack="true"]>*{width:100%;text-align:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.skip-link{transition:none}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
