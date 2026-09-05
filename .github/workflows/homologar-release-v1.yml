@@ -1,4 +1,4 @@
-name: Homologar release v1
+name: Homologar versão atual
 
 on:
   push:
@@ -8,17 +8,19 @@ on:
       - '**.css'
       - 'scripts/**'
       - 'dados/**'
+      - 'firebase/**'
       - 'e2e/**'
       - 'package.json'
       - 'playwright.config.js'
       - 'tests/auditar-release-v1.mjs'
+      - 'tests/auditar-colaboracao-*.mjs'
+      - 'tests/auditar-ux-mobile-final.mjs'
       - 'docs/**'
       - 'README.md'
       - 'ROADMAP-V1.md'
       - 'FIREBASE-PROVISIONAMENTO.md'
       - '.github/workflows/homologar-release-v1.yml'
       - '.github/workflows/homologar-firebase-real.yml'
-      - '.github/workflows/finalizar-release-v1.yml'
   pull_request:
   workflow_dispatch:
 
@@ -27,7 +29,7 @@ permissions:
 
 jobs:
   estrutural:
-    name: Gate estrutural do release
+    name: Gate estrutural da versão atual
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
