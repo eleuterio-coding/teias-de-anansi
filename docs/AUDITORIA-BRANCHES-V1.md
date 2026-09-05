@@ -12,11 +12,11 @@ A revisão de release encontrou três PRs históricos ainda abertos. Todos foram
 | #94 · Progressão de magias de conjuradores | `fix/spell-progression-all-casters-20260825` | Fechado sem merge. A `main` possui o motor vigente de progressão nível a nível e o Bloco 5 consolidou preparação/magias/descansos; mesclar a árvore antiga reintroduziria arquitetura paralela. |
 | #30 · Integração antiga de Antecedentes | `fix/antecedentes-integracao-ficha-20260821` | Fechado sem merge. O PR pertence ao carregador modular antigo e foi substituído pelo construtor integrado atual. |
 
-Depois dessas decisões, não há PR de release conhecido aguardando merge.
+Depois dessas decisões, não há PR histórico de release aguardando merge.
 
 ## Branches oficiais dos Blocos 1–16
 
-A consulta ao histórico de PRs comprova que as branches oficiais dos blocos abaixo foram efetivamente mescladas na `main`:
+A consulta ao histórico de PRs comprovou que as branches oficiais abaixo foram efetivamente mescladas na `main`:
 
 | Bloco | Branch | PR mesclado |
 | ---: | --- | ---: |
@@ -38,35 +38,34 @@ A consulta ao histórico de PRs comprova que as branches oficiais dos blocos aba
 | 15 · fechamento | `codex/bloco-15-fechamento` | #144 |
 | 16 | `codex/bloco-16-painel-geral` | #145 |
 
-Essas branches são **candidatas seguras à limpeza do ponto de vista de release**, pois seus PRs foram mesclados e os respectivos blocos foram aceitos. Uma comparação Git pode ainda reportar `diverged` quando o merge foi squash/rebase; isso não transforma a branch em trabalho pendente. Exemplo observado no Bloco 1: a branch conserva commits próprios enquanto a `main` já contém mais de uma centena de commits posteriores.
+O Bloco 17 foi aplicado diretamente à `main`; não houve branch oficial `codex/bloco-17-*`.
 
-O Bloco 17 foi aplicado diretamente à `main` durante sua implementação e aceite; não há uma branch `codex/bloco-17-*` na lista encontrada.
+## Limpeza física executada
 
-## Branches dos PRs superseded
+A exclusão física das refs classificadas como seguras foi executada em 2026-09-05 por GitHub Actions, com lista fechada de branches. Foram removidas:
 
-Também são candidatas a remoção, depois do fechamento explícito dos PRs:
-
+- branches oficiais `codex/bloco-*` dos Blocos 1–16, incluindo as duas branches do Bloco 15;
 - `audit/normativa-total-criacao` (#123);
 - `fix/spell-progression-all-casters-20260825` (#94);
 - `fix/antecedentes-integracao-ficha-20260821` (#30).
 
-Os commits permanecem alcançáveis pelo histórico dos PRs fechados mesmo depois de uma eventual exclusão das refs de branch, conforme o comportamento normal do GitHub para PRs existentes.
+Buscas posteriores por essas refs não retornaram resultados. Os commits históricos continuam alcançáveis pelos PRs/commits correspondentes.
+
+A branch técnica `codex/bloco-18-validar-gates` foi criada exclusivamente para tornar os workflows `pull_request` observáveis durante a homologação. Ela não contém funcionalidade de produto e deve ser removida após o encerramento do PR #146.
 
 ## Branches não classificadas
 
-O repositório contém numerosas branches históricas `agent/*`, `feature/*`, `fix/*`, `hotfix/*`, `audit/*`, `chore/*` e `codex/*` anteriores ao roadmap final. Elas **não foram classificadas automaticamente como descartáveis** apenas por idade ou prefixo.
+O repositório ainda contém branches históricas `agent/*`, `feature/*`, `fix/*`, `hotfix/*`, `audit/*`, `chore/*` e `codex/*` anteriores ao roadmap final. Elas **não foram classificadas automaticamente como descartáveis** apenas por idade ou prefixo.
 
 Política adotada para o release:
 
-1. branch associada a PR mesclado: candidata à remoção;
-2. branch associada a PR explicitamente fechado como superseded: candidata à remoção;
+1. branch associada a PR mesclado e bloco aceito: removível;
+2. branch associada a PR explicitamente fechado como superseded: removível;
 3. branch sem vínculo/evidência suficiente: preservar até revisão própria;
 4. nunca mover/forçar uma ref para “simular” exclusão.
 
-## Limitação operacional desta sessão
+## Estado final da limpeza administrativa
 
-O conector GitHub disponível permite pesquisar branches, comparar commits, criar branches e mover refs, mas **não expõe uma operação de exclusão de Git ref/branch**. Por isso nenhuma branch foi artificialmente movida, sobrescrita ou apagada nesta homologação.
+A limpeza obrigatória do roadmap v1 está **concluída** para as branches oficiais e para os três PRs superseded identificados. Branches não classificadas foram preservadas deliberadamente e não bloqueiam o release por ausência de evidência de descarte seguro.
 
-A limpeza lógica de release está concluída: PRs abertos foram resolvidos e as branches oficiais/superseded foram classificadas. A exclusão física das refs candidatas continua sendo uma ação administrativa do GitHub que deve ser executada apenas por uma ferramenta com suporte explícito a `delete ref`.
-
-Essa limitação não será mascarada como sucesso: o `ROADMAP-V1.md` só deve registrar o Bloco 18 como aceito quando os demais gates técnicos também tiverem evidência final.
+A única ref técnica ainda relacionada ao Bloco 18 é `codex/bloco-18-validar-gates`, que será eliminada junto do encerramento do PR técnico #146.
