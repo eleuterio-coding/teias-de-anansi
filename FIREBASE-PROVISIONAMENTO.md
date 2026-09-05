@@ -16,14 +16,14 @@ O Hub de RPG é **somente um site web responsivo**, hospedado no **GitHub Pages*
 
 ## Modelo de identidade adotado
 
-O acesso é **fechado e administrado manualmente**.
+O acesso do produto é **fechado e administrado manualmente**.
 
-- O administrador cria cada credencial em **Firebase Authentication → E-mail/senha**.
+- O administrador cria cada credencial normal em **Firebase Authentication → E-mail/senha**.
 - O usuário do Hub não informa e-mail real. Um nome como `rafael` é convertido internamente para `rafael@teias.invalid` apenas para satisfazer o formato exigido pelo Firebase Authentication.
 - `teias.invalid` é um identificador técnico; não precisa existir como serviço de e-mail.
-- Não existe cadastro público, convite por e-mail ou confirmação de e-mail.
+- Não existe UI de cadastro público, convite por e-mail ou confirmação de e-mail.
 - Senhas não são armazenadas no Firestore, no GitHub ou em `authorizedUsers`.
-- Depois de criar a credencial, o administrador autoriza o UID em `authorizedUsers/{uid}` com `username`, `active` e `isAdmin`.
+- Depois de criar uma credencial normal, o administrador autoriza o UID em `authorizedUsers/{uid}` com `username`, `active` e `isAdmin`.
 - O Firestore só libera os dados do Hub quando o usuário autenticado também existe em `authorizedUsers` e está com `active: true`.
 
 ## Estado do provisionamento real
@@ -31,7 +31,7 @@ O acesso é **fechado e administrado manualmente**.
 Concluído no projeto Firebase Spark do Hub:
 
 1. Projeto Firebase Spark criado e somente o site Web registrado.
-2. Authentication com **E-mail/senha** habilitado; login por link, Google e SMS/MFA não são requisitos.
+2. Authentication com **E-mail/senha** habilitado.
 3. Cloud Firestore Standard criado em modo de produção.
 4. `firebase/firestore.rules` publicadas com autorização fechada por `authorizedUsers`.
 5. Índice composto de `memberships` (`uid` crescente + `active` crescente, escopo `COLLECTION`) criado e ativado.
@@ -40,7 +40,7 @@ Concluído no projeto Firebase Spark do Hub:
 8. Gate `15Z · Provedor real configurado` concluído com sucesso.
 9. Login administrativo real homologado no GitHub Pages, com leitura correta de `authorizedUsers` e reconhecimento do perfil Administrador.
 
-A criação futura de novas credenciais continua manual no Firebase Authentication. Depois disso, o administrador pode usar a página **Usuários e Colaboração** para autorizar o UID e vinculá-lo às Mesas.
+A criação futura de usuários normais continua manual. Depois disso, o administrador pode usar a página **Usuários e Colaboração** para autorizar o UID e vinculá-lo às Mesas.
 
 ## Configuração pública
 
@@ -59,106 +59,97 @@ Esses campos são configuração pública do cliente Firebase. Nunca commitar ch
 
 O workflow **Auditar usuários, colaboração e sincronização — Bloco 15** valida a arquitetura web-only, Spark/zero billing, autenticação `username-password`, ausência do fluxo de convite e configuração pública do provedor real.
 
-O Bloco 15 foi aceito após a homologação do login administrativo real. O responsável pelo projeto dispensou o teste manual adicional com uma conta não autorizada. A homologação E2E multiusuário completa permanece no escopo do **Bloco 18 — Homologação, documentação e release final**, sem reabrir o Bloco 15.
+O Bloco 15 foi aceito após a homologação do login administrativo real. A homologação E2E multiusuário completa permanece no escopo do **Bloco 18 — Homologação, documentação e release final**, sem reabrir o Bloco 15.
 
 ---
 
 # Homologação Firebase real — Bloco 18
 
-Esta é a etapa final de release. O workflow é `.github/workflows/homologar-firebase-real.yml` e o cenário real está em `e2e/collaboration-real.spec.js`.
+A etapa final usa `.github/workflows/homologar-firebase-real.yml` e `e2e/collaboration-real.spec.js`.
 
-Uma execução observada em 2026-09-05 falhou corretamente no preflight porque os cinco GitHub Actions Secrets abaixo ainda não estavam configurados. Nenhum login ou acesso ao Firestore foi tentado nessa execução.
+Uma execução histórica em 2026-09-05 falhou corretamente no preflight antes de qualquer acesso ao Firebase porque o desenho inicial exigia cinco Secrets ainda ausentes. O gate foi posteriormente simplificado sem reduzir a cobertura.
 
-## 1. Preparar as duas identidades
+## 1. Única identidade que precisa existir previamente
 
-### Conta administradora
+Usar a conta Administradora já homologada no Bloco 15. Ela precisa continuar com:
 
-Usar a conta administrativa já homologada no Bloco 15. Ela precisa continuar com:
-
-- credencial ativa em Firebase Authentication;
+- credencial ativa no Firebase Authentication;
 - documento `authorizedUsers/{uid}` existente;
 - `active: true`;
 - `isAdmin: true`.
 
-O Secret usa **somente o nome de usuário do Hub**, sem `@teias.invalid`. O provider acrescenta o domínio técnico automaticamente.
+O username usado pelo Secret é apenas o nome do Hub, **sem `@teias.invalid`**. O provider acrescenta o domínio técnico automaticamente.
 
-### Conta de Jogador E2E
+## 2. Jogador E2E é automático
 
-Criar uma segunda credencial em **Firebase Authentication → Authentication → Users → Add user**.
+Não é mais necessário criar manualmente uma segunda conta, senha ou UID para o teste.
 
-Exemplo de formato técnico:
+A cada execução, o harness:
 
-- usuário do Hub: `e2e-player`;
-- e-mail técnico no Authentication: `e2e-player@teias.invalid`;
-- senha: definida manualmente e guardada apenas como Secret.
+1. gera username e senha aleatórios em memória;
+2. cria uma credencial efêmera no Firebase Authentication;
+3. obtém o UID criado;
+4. usa a sessão real do Administrador para registrar `authorizedUsers/{uid}` com `active: true` e `isAdmin: false`;
+5. cria a membership `player` da Mesa técnica;
+6. executa todas as verificações multiusuário;
+7. no cleanup, remove perfil, membership, autorização e a própria credencial efêmera.
 
-O nome de usuário deve obedecer ao contrato do Hub: letras minúsculas, números, ponto, hífen ou sublinhado, com até 64 caracteres.
+Essa criação técnica **não abre cadastro no produto**. O Hub continua sem UI de cadastro público. Além disso, uma credencial criada no Authentication não recebe acesso aos dados enquanto não possuir um `authorizedUsers/{uid}` ativo, preservando o modelo fail-closed.
 
-Depois de criar a credencial:
-
-1. copiar o **UID** exato mostrado no Firebase Authentication;
-2. autorizar esse UID pela página **Usuários e Colaboração** do Hub ou diretamente no Firestore;
-3. garantir que `authorizedUsers/{uid}` contenha:
-   - `username`: o mesmo nome usado antes de `@teias.invalid`;
-   - `active: true`;
-   - `isAdmin: false`.
-
-Não é necessário criar membership manualmente. O próprio teste administrativo vincula essa conta como `player` à Mesa técnica `__e2e_release_v1__`.
-
-## 2. Configurar GitHub Actions Secrets
+## 3. Configurar somente dois GitHub Actions Secrets
 
 No repositório GitHub:
 
 **Settings → Secrets and variables → Actions → Repository secrets**
 
-Criar exatamente estes cinco Secrets:
+Criar somente:
 
 | Secret | Valor |
 | --- | --- |
-| `E2E_FIREBASE_ADMIN_USERNAME` | nome do usuário administrador, sem `@teias.invalid` |
-| `E2E_FIREBASE_ADMIN_PASSWORD` | senha atual da conta administradora |
-| `E2E_FIREBASE_PLAYER_USERNAME` | nome do segundo usuário, sem `@teias.invalid` |
-| `E2E_FIREBASE_PLAYER_PASSWORD` | senha da segunda conta |
-| `E2E_FIREBASE_PLAYER_UID` | UID exato da segunda conta no Firebase Authentication |
+| `E2E_FIREBASE_ADMIN_USERNAME` | nome do usuário Administrador, sem `@teias.invalid` |
+| `E2E_FIREBASE_ADMIN_PASSWORD` | senha atual da conta Administradora |
+
+Não existem mais Secrets `E2E_FIREBASE_PLAYER_*` no contrato de release.
 
 Nunca colocar esses valores em commits, issues, PRs, fixtures, Markdown ou arquivos `.env` versionados.
 
-## 3. Executar o gate
+## 4. Executar o gate
 
 No GitHub:
 
 **Actions → Homologar Firebase real v1 → Run workflow → main → Run workflow**
 
-O workflow primeiro verifica se os cinco Secrets existem. Somente depois instala o Playwright e executa o cenário autenticado.
+O workflow verifica os dois Secrets administrativos antes de instalar/executar o Playwright. Se qualquer um estiver ausente, falha no preflight e não pode ser interpretado como aceite.
 
-## 4. O que o teste comprova
+## 5. O que o teste comprova
 
 Uma execução verde precisa provar, no Firebase Spark real:
 
-1. login do administrador e confirmação de `isAdmin: true`;
-2. publicação da Mesa técnica `__e2e_release_v1__`;
-3. criação da membership do segundo UID como `player`;
-4. leitura privada pelo Mestre;
-5. login do Jogador e confirmação de `isAdmin: false`;
-6. leitura apenas da projeção compartilhada pelo Jogador;
-7. handout oculto e pista oculta ausentes da projeção;
-8. tentativa do Jogador de gravar `/campaigns/{id}/private/*` bloqueada com `permission-denied`;
-9. alteração pelo Jogador apenas do `characterId` permitido da própria membership;
-10. perda e retomada de rede preservando o estado local e recuperando uma leitura compartilhada válida.
+1. login do Administrador e confirmação de `isAdmin: true`;
+2. criação real do Jogador efêmero;
+3. autorização temporária do Jogador como não administrador;
+4. publicação da Mesa técnica `__e2e_release_v1__`;
+5. membership do Jogador como `player`;
+6. leitura privada pelo Mestre;
+7. leitura apenas da projeção compartilhada pelo Jogador;
+8. handout oculto e pista oculta ausentes da projeção;
+9. escrita do Jogador em `/campaigns/{id}/private/*` bloqueada com `permission-denied`;
+10. alteração pelo Jogador apenas do `characterId` permitido da própria membership;
+11. perda e retomada de rede preservando estado local e recuperando leitura compartilhada válida;
+12. remoção dos registros e da identidade efêmera usados no teste.
 
-## 5. Critério de aceite e fechamento automático
+## 6. Critério de aceite e fechamento automático
 
-O Bloco 18 só pode ser marcado como **✅ Aceito** quando `Homologar Firebase real v1` terminar com **success** usando as duas identidades reais.
+O Bloco 18 só pode ser marcado como **✅ Aceito** quando `Homologar Firebase real v1` terminar com **success**.
 
-Depois de um `success` manual na `main`, o workflow `.github/workflows/finalizar-release-v1.yml` é disparado automaticamente por `workflow_run`. Ele só publica se todas as travas abaixo forem satisfeitas:
+Depois de um `success` manual na `main`, `.github/workflows/finalizar-release-v1.yml` é disparado automaticamente. Ele só publica se:
 
 1. o workflow Firebase terminou com `success`;
 2. a execução foi iniciada por `workflow_dispatch`;
-3. a execução ocorreu sobre a branch `main` do próprio repositório;
-4. a `main` continua exatamente no mesmo commit homologado pelo Firebase;
-5. a tag/release `v1.0.0` ainda não existe;
-6. o gate estrutural é reexecutado e permanece verde;
-7. o E2E local Desktop/Mobile é reexecutado e permanece verde.
+3. a execução ocorreu na `main` do próprio repositório;
+4. a `main` continua no mesmo commit homologado;
+5. tag/release `v1.0.0` ainda não existe;
+6. gate estrutural e E2E local são reexecutados e permanecem verdes.
 
 Só então o finalizador:
 
@@ -166,8 +157,8 @@ Só então o finalizador:
 - registra o run Firebase aprovado em `docs/HOMOLOGACAO-V1.md`;
 - marca o Bloco 18 como **✅ Aceito** em `ROADMAP-V1.md`;
 - grava o commit final de aceite na `main`;
-- cria a tag `v1.0.0` no mesmo commit ao publicar o GitHub Release **Teias de Anansi v1.0.0**, usando `docs/RELEASE-NOTES-V1.0.0.md`.
+- publica a tag `v1.0.0` e o GitHub Release **Teias de Anansi v1.0.0** usando `docs/RELEASE-NOTES-V1.0.0.md`.
 
-A tag e o GitHub Release são criados pela mesma operação de publicação, reduzindo o risco de existir tag sem release. Se a `main` mudar entre a homologação Firebase e o finalizador, a publicação falha fechada: é necessário rodar `Homologar Firebase real v1` novamente sobre o commit atual. O finalizador nunca força ou sobrescreve uma tag/release existente.
+Tag e GitHub Release são criados pela mesma operação de publicação. Se a `main` mudar entre homologação e finalização, o processo falha fechado e exige nova execução do gate Firebase.
 
-Até existir esse `success` real, a ausência dos Secrets continua sendo o único bloqueador técnico obrigatório conhecido do release.
+Até existir esse `success` real, os **dois Secrets administrativos** são o único bloqueador técnico obrigatório conhecido do release.
