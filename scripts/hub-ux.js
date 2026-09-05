@@ -1,3 +1,5 @@
+import{readSettings,applyUiPreferences}from'./settings-state.js?v=20260905-settings1';
+
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
 let observer=null,observedNav=null,observedSignature='';
@@ -6,9 +8,10 @@ const boundLinks=new WeakSet();
 function ensureStyles(){
  if(document.getElementById(STYLE_ID)||document.querySelector('link[href*="hub-ux.css"]'))return;
  const link=document.createElement('link');
- link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260901-ux-final1',import.meta.url).href;
+ link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260905-settings1',import.meta.url).href;
  document.head.appendChild(link)
 }
+function applyStoredPreferences(){applyUiPreferences(readSettings())}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
  if(!target)return null;if(!target.id)target.id='hub-main-content';
@@ -54,11 +57,12 @@ function enhanceStructureEditingCopy(){
  const edit=document.getElementById('edit-link');if(edit){edit.textContent='Editar estrutura';edit.title='Corrige escolhas estruturais da criação. PV, recursos, equipamento, magias, descansos e estado atual são administrados nesta ficha.'}
  for(const link of document.querySelectorAll('a[data-structure-edit]')){link.textContent='Editar estrutura';link.title='Use o construtor apenas para corrigir escolhas estruturais da criação.'}
 }
-function run(){ensureStyles();ensureSkipLink();enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
+function run(){ensureStyles();applyStoredPreferences();ensureSkipLink();enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 
 if(typeof document!=='undefined'){
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else queueMicrotask(run);
  document.addEventListener('hub-rpg:sheet-ready',()=>queueMicrotask(run));
+ document.addEventListener('hub-rpg:settings-changed',event=>applyUiPreferences(event.detail));
  const mo=new MutationObserver(()=>queueMicrotask(()=>{enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}));
  if(document.documentElement)mo.observe(document.documentElement,{childList:true,subtree:true})
 }
