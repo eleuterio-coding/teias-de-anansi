@@ -1,14 +1,26 @@
-name: Homologar Firebase real v1
+name: Homologar colaboração Firebase
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'dados/firebase-config.json'
+      - 'firebase/**'
+      - 'scripts/collaboration-model.js'
+      - 'scripts/collaboration-ui.js'
+      - 'scripts/collaboration-sync.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'usuarios.html'
+      - 'e2e/collaboration-real.spec.js'
+      - '.github/workflows/homologar-firebase-real.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: homologar-firebase-real-v1
-  cancel-in-progress: false
+  group: homologar-colaboracao-firebase
+  cancel-in-progress: true
 
 env:
   E2E_FIREBASE_ADMIN_USERNAME: ${{ secrets.E2E_FIREBASE_ADMIN_USERNAME }}
@@ -16,11 +28,11 @@ env:
 
 jobs:
   firebase-real:
-    name: Firebase multiusuário real · Mestre x Jogador efêmero
+    name: Firebase real · visibilidade Mestre x Jogador
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Exigir credenciais administrativas E2E reais
+      - name: Exigir somente a conta principal E2E
         shell: bash
         run: |
           missing=0
@@ -31,15 +43,19 @@ jobs:
             fi
           done
           if [ "$missing" -ne 0 ]; then
-            echo "O gate Firebase real exige somente a identidade administrativa já homologada. O Jogador E2E é criado e removido automaticamente pelo teste."
             exit 1
           fi
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Auditar contrato simples de colaboração
+        run: |
+          node tests/auditar-colaboracao-provisionamento.mjs
+          node tests/auditar-colaboracao-sync.mjs
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e:firebase
+      - name: Validar Firebase real com Mestre e Jogador efêmero
+        run: npm run test:e2e:firebase
       - name: Guardar relatório em caso de falha
         if: failure()
         uses: actions/upload-artifact@v4
