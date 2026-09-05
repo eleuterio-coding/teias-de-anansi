@@ -10,7 +10,8 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 - Fluxos locais de Configurações, criação de Mesa e backup/restauração: **aprovados** em navegador real.
 - Regressões críticas dos Blocos 1–17: **aprovadas** pela suíte de cobertura total.
 - Harness Firebase multiusuário real: **implementado** em `e2e/collaboration-real.spec.js` e `.github/workflows/homologar-firebase-real.yml`.
-- Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos cinco GitHub Actions Secrets de teste**.
+- Jogador E2E: **efêmero**; criado pelo próprio harness no Firebase Authentication, autorizado pelo Administrador como não administrador e removido no cleanup.
+- Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos dois GitHub Actions Secrets administrativos de teste**.
 - PRs/branches de release: **limpeza concluída**; zero PRs abertos e refs classificadas removidas.
 - Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.
 
@@ -18,16 +19,17 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 
 ### Gate normal de release
 
-Execução observada: workflow `Homologar release v1`, run `33961080122`.
+Execução atual de referência: workflow `Homologar release v1`, run `33966178050`.
 
 - `Gate estrutural do release`: **success**;
 - `E2E Chromium · desktop e mobile`: **success**;
-- Playwright: **10 passed, 2 skipped**;
-- os dois testes pulados são exclusivamente os dois projetos (Desktop/Mobile) do cenário Firebase real, que exige credenciais externas e possui workflow dedicado.
+- o gate normal executa o cenário Firebase real em modo skip quando as credenciais administrativas não estão disponíveis, porque a homologação autenticada possui workflow manual dedicado.
+
+O escopo de gatilho do workflow inclui também alterações no próprio finalizador, no workflow Firebase e no runbook de provisionamento, evitando que a infraestrutura de release seja modificada sem nova auditoria normal.
 
 ### Cobertura total
 
-Execução observada: workflow `Auditar cobertura total da criação`, run `33961080076`.
+Execução atual de referência: workflow `Auditar cobertura total da criação`, run `33966178057`.
 
 Resultado: **success** em todas as etapas:
 
@@ -45,17 +47,16 @@ Durante a homologação foram encontrados e corrigidos dois defeitos reais antes
 
 ### Firebase real
 
-Execução observada: workflow `Homologar Firebase real v1`, run `33961159721`.
+Execução histórica observada: workflow `Homologar Firebase real v1`, run `33961159721`.
 
-Resultado: **failure no preflight**, antes de qualquer login, leitura ou escrita Firebase. O job confirmou ausência de todos os cinco Secrets obrigatórios:
+Esse run falhou no preflight antes de qualquer login, leitura ou escrita Firebase porque, naquele momento, o primeiro desenho do gate exigia cinco Secrets e nenhum estava configurado. A falha não demonstrou defeito em Authentication, Firestore, Rules ou sincronização.
+
+Depois dessa execução, o gate foi simplificado sem reduzir a cobertura: o Jogador passou a ser criado e removido automaticamente pelo harness. O contrato atual exige somente:
 
 - `E2E_FIREBASE_ADMIN_USERNAME`
 - `E2E_FIREBASE_ADMIN_PASSWORD`
-- `E2E_FIREBASE_PLAYER_USERNAME`
-- `E2E_FIREBASE_PLAYER_PASSWORD`
-- `E2E_FIREBASE_PLAYER_UID`
 
-Essa falha não demonstra defeito em Authentication, Firestore, Rules ou sincronização; demonstra apenas que a execução autenticada não pode ocorrer sem as duas identidades de teste. O release permanece bloqueado até esse mesmo workflow executar verde com os Secrets configurados.
+Esses dois valores correspondem à conta Administradora já homologada no Bloco 15. Nenhuma senha de Jogador, username de Jogador ou UID de Jogador precisa ser previamente provisionado ou armazenado em Secrets.
 
 ## Matriz de homologação
 
@@ -68,7 +69,7 @@ Essa falha não demonstra defeito em Authentication, Firestore, Rules ou sincron
 | Painel Geral | Aprovado | Aprovado | superfície carrega e integra estado local |
 | Configurações | Aprovado | Aprovado | persistência, reload e preferências visuais |
 | Usuários sem provedor disponível | Aprovado | Aprovado | fail-closed e nenhuma liberação de acesso |
-| Firebase autenticado | Pendente por Secrets | Mesmo harness em contexto independente | duas identidades reais e papéis distintos na mesma Mesa |
+| Firebase autenticado | Pendente por 2 Secrets administrativos | Jogador efêmero em contexto independente | duas identidades reais e papéis distintos na mesma Mesa |
 
 ## Progressão Level 1 → Level 20
 
@@ -131,18 +132,22 @@ Critérios mínimos automatizados:
 
 Este é o **único gate técnico obrigatório ainda não aprovado**. O harness exige no projeto Firebase Spark real:
 
-1. uma conta administradora autorizada;
-2. uma segunda conta autorizada e não administradora;
-3. uma Campanha técnica reutilizável publicada pelo proprietário/Mestre;
-4. vínculo da segunda conta como `player`;
-5. dois contextos de navegador independentes;
-6. Mestre recebendo estado privado e Jogador apenas a projeção compartilhada;
-7. handout/pista ocultos ausentes da projeção do Jogador;
-8. escrita direta em `/campaigns/{id}/private/*` bloqueada pelas Firestore Rules;
-9. atualização permitida do `characterId` da própria membership;
-10. perda de rede e retomada sem corrupção do estado local, seguida de nova leitura remota válida.
+1. login da conta Administradora já autorizada;
+2. criação automática de uma segunda credencial efêmera no Firebase Authentication;
+3. autorização dessa identidade pelo Administrador com `active: true` e `isAdmin: false`;
+4. publicação de uma Campanha técnica reutilizável pelo proprietário/Mestre;
+5. vínculo da identidade efêmera como `player`;
+6. dois contextos de navegador independentes;
+7. Mestre recebendo estado privado e Jogador apenas a projeção compartilhada;
+8. handout/pista ocultos ausentes da projeção do Jogador;
+9. escrita direta em `/campaigns/{id}/private/*` bloqueada pelas Firestore Rules;
+10. atualização permitida do `characterId` da própria membership;
+11. perda de rede e retomada sem corrupção do estado local, seguida de nova leitura remota válida;
+12. cleanup da membership, perfil, autorização e credencial efêmera do Jogador.
 
-O workflow `Homologar Firebase real v1` possui preflight obrigatório. Senhas e usuários não ficam no repositório. Uma execução verde desse workflow é condição suficiente para encerrar este gate; uma falha por credenciais ausentes não pode ser reinterpretada como aceite.
+A criação automática da conta não abre cadastro no produto. O site continua sem UI de cadastro público, e uma credencial criada no Authentication permanece sem acesso aos dados enquanto não existir um `authorizedUsers/{uid}` ativo. O próprio teste usa o Administrador para conceder essa autorização temporária.
+
+O workflow `Homologar Firebase real v1` possui preflight obrigatório para os dois Secrets administrativos. Uma execução verde desse workflow é condição suficiente para encerrar este gate; uma falha por credenciais ausentes não pode ser reinterpretada como aceite.
 
 ## Branches, PRs e release
 
@@ -163,8 +168,6 @@ Não resta housekeeping de PR/branch bloqueando a v1.0.
 
 ## Sequência final para a tag
 
-1. configurar os cinco Secrets de teste no GitHub Actions;
-2. executar `Homologar Firebase real v1` até obter **success** real;
-3. registrar a evidência final neste documento;
-4. marcar o Bloco 18 como aceito no `ROADMAP-V1.md`;
-5. criar somente então a tag/release `v1.0.0`.
+1. configurar `E2E_FIREBASE_ADMIN_USERNAME` e `E2E_FIREBASE_ADMIN_PASSWORD` nos GitHub Actions Secrets;
+2. executar manualmente `Homologar Firebase real v1` sobre a `main` até obter **success** real;
+3. após o success, o workflow `Finalizar release v1.0.0` revalida gate estrutural e E2E, registra a evidência, marca o Bloco 18 como aceito, promove a versão para `1.0.0` e publica tag + GitHub Release automaticamente.
