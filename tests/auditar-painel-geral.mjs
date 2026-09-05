@@ -36,5 +36,6 @@ for(const id of['character-in-play','next-session','campaign-dashboard-list','pe
 for(const token of['readCharacters','readCampaigns','readAdventures','summarizeDashboard'])assert.ok(ui.includes(token),`UI do painel sem ${token}.`);
 assert.ok(css.includes('@media(max-width:820px)')&&css.includes('@media(max-width:520px)'),'Painel deve ser responsivo.');
 assert.ok(home.includes('href="painel.html'),'Início deve expor o Painel Geral.');
-assert.equal((home.match(/aria-disabled="true"/g)||[]).length,1,'Após o Bloco 16 somente Configurações deve permanecer indisponível.');
-console.log('OK — Bloco 16: Painel Geral agrega personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.');
+assert.ok(home.includes('href="configuracoes.html'),'Após o Bloco 17, Início deve expor Configurações.');
+assert.equal((home.match(/aria-disabled="true"/g)||[]).length,0,'Após o Bloco 17 nenhuma área principal deve permanecer indisponível.');
+console.log('OK — Bloco 16 preservado após o Bloco 17: Painel Geral agrega personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.');
