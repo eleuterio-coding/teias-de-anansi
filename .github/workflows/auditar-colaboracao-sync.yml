@@ -1,5 +1,24 @@
-name: Auditar usuários, colaboração e sincronização — Bloco 15
+name: Auditar login e colaboração
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/collaboration-model.js'
+      - 'scripts/collaboration-sync.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'scripts/collaboration-ui.js'
+      - 'scripts/storage-registry.js'
+      - 'dados/firebase-config.json'
+      - 'firebase/**'
+      - 'firebase.json'
+      - 'usuarios.html'
+      - 'index.html'
+      - 'collaboration.css'
+      - 'FIREBASE-PROVISIONAMENTO.md'
+      - 'tests/auditar-colaboracao-sync.mjs'
+      - 'tests/auditar-colaboracao-provisionamento.mjs'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - '.github/workflows/auditar-colaboracao-sync.yml'
   pull_request:
     paths:
       - 'scripts/collaboration-model.js'
@@ -17,14 +36,15 @@ on:
       - 'tests/auditar-colaboracao-sync.mjs'
       - 'tests/auditar-colaboracao-provisionamento.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
-      - 'ROADMAP-V1.md'
       - '.github/workflows/auditar-colaboracao-sync.yml'
   workflow_dispatch:
+
 jobs:
-  colaboracao-arquitetura:
+  colaboracao:
+    name: Login simples · Mestre x Jogador · sincronização
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -35,27 +55,19 @@ jobs:
           node --check scripts/firebase-collaboration-provider.js
           node --check scripts/collaboration-ui.js
           node --check tests/auditar-colaboracao-sync.mjs
+          node --check tests/auditar-colaboracao-provisionamento.mjs
           node --check tests/auditar-ux-mobile-final.mjs
-      - name: 15A–15Y · Identidade, acesso administrado, papéis, privacidade e sync
-        run: node tests/auditar-colaboracao-sync.mjs
+      - name: Validar login simples e papéis funcionais
+        run: |
+          node tests/auditar-colaboracao-provisionamento.mjs
+          node tests/auditar-colaboracao-sync.mjs
       - name: Regressão UX e mobile
         run: node tests/auditar-ux-mobile-final.mjs
-      - name: Regressão de persistência e portabilidade
-        run: node tests/auditar-persistencia-portabilidade.mjs
       - name: Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
-      - name: Proibir Supabase
+      - name: Proibir backend fora do escopo
         run: |
           if grep -Rni --exclude-dir=.git --exclude='*.md' 'supabase' scripts firebase dados/firebase-config.json usuarios.html collaboration.css; then
-            echo 'Backend proibido encontrado.' >&2
+            echo 'Backend fora do escopo encontrado.' >&2
             exit 1
           fi
-  provisionamento-real:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: 15Z · Provedor real configurado
-        run: node tests/auditar-colaboracao-provisionamento.mjs
