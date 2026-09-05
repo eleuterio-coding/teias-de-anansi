@@ -6,10 +6,10 @@ const env={
  adminPassword:process.env.E2E_FIREBASE_ADMIN_PASSWORD||''
 };
 const hasCredentials=Boolean(env.adminUsername&&env.adminPassword);
-const CAMPAIGN_ID='__e2e_release_v1__';
+const CAMPAIGN_ID='e2e-release-v1';
 const PRIVATE_MARK='E2E_PRIVATE_DO_NOT_SHARE';
 const SHARED_MARK='E2E_SHARED_OK';
-const CHARACTER_ID='__e2e_player_character__';
+const CHARACTER_ID='e2e-player-character';
 
 async function connect(page,username,password){
  await page.goto('/index.html');
@@ -114,7 +114,7 @@ test.describe('Firebase real · gate multiusuário v1',()=>{
     sharedNotes:SHARED_MARK,dmNotes:PRIVATE_MARK,members:[],sessions:[],createdAt:now,updatedAt:now
    };
    const adventures=[{
-    schema:'hub-rpg/adventure/v1',id:'__e2e_adventure__',campaignId:CAMPAIGN_ID,title:'Aventura E2E',status:'planned',summary:'Homologação',dmNotes:PRIVATE_MARK,
+    schema:'hub-rpg/adventure/v1',id:'e2e-adventure',campaignId:CAMPAIGN_ID,title:'Aventura E2E',status:'planned',summary:'Homologação',dmNotes:PRIVATE_MARK,
     handouts:[{id:'h-visible',title:'Visível',revealed:true,content:SHARED_MARK},{id:'h-hidden',title:'Oculto',revealed:false,content:PRIVATE_MARK}],
     clues:[{id:'c-visible',title:'Descoberta',status:'discovered',text:SHARED_MARK},{id:'c-hidden',title:'Oculta',status:'hidden',text:PRIVATE_MARK}],createdAt:now,updatedAt:now
    }];
