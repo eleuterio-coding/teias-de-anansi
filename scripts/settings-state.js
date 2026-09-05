@@ -10,7 +10,7 @@ export const SOURCE_AUTHORITIES=Object.freeze([
 
 export const HOUSE_RULE_PRESETS=Object.freeze([
  {id:'teias-v1',label:'Teias v1.0',description:'Pacote normativo congelado da v1.0, com as Regras da Casa validadas pelo Hub.'},
- {id:'mesa-personalizada',label:'Mesa personalizada',description:'Registra no perfil da Mesa quais Regras da Casa o Mestre pretende usar. Não reescreve personagens já existentes.'}
+ {id:'mesa-personalizada',label:'Mesa personalizada',description:'Permite registrar nas Configurações quais Regras da Casa o Mestre pretende usar como perfil preferido. Não reescreve personagens já existentes.'}
 ]);
 
 const FONT_SCALES=new Set(['normal','large','xlarge']);
@@ -97,13 +97,7 @@ export function campaignDefaultsFromSettings(input){
  return{
   dmName:settings.campaignDefaults.dmName,
   setting:settings.campaignDefaults.setting,
-  system:settings.campaignDefaults.system,
-  rulesProfile:{
-   preset:settings.houseRules.preset,
-   enabledHouseRules:[...settings.houseRules.enabled],
-   enabledSources:[...settings.sources.enabled],
-   capturedAt:new Date().toISOString()
-  }
+  system:settings.campaignDefaults.system
  }
 }
 
