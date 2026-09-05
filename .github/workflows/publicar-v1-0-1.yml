@@ -1,0 +1,71 @@
+name: Publicar v1.0.1
+
+on:
+  workflow_run:
+    workflows: ["Homologar colaboração Firebase"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicar-v1-0-1
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validar e publicar v1.0.1
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      HOMOLOGATED_SHA: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Confirmar que a homologação é da main atual
+        shell: bash
+        run: |
+          current="$(git rev-parse HEAD)"
+          if [ "$current" != "$HOMOLOGATED_SHA" ]; then
+            echo "::error::A main mudou após a homologação Firebase ($HOMOLOGATED_SHA -> $current)."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Confirmar versão
+        shell: bash
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          test "$version" = "1.0.1" || {
+            echo "::error::package.json deveria estar em 1.0.1; encontrado $version."
+            exit 1
+          }
+
+      - name: Gate estrutural final
+        run: node tests/auditar-release-v1.mjs
+
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: E2E final desktop e mobile
+        run: npm run test:e2e
+
+      - name: Publicar release v1.0.1
+        shell: bash
+        run: |
+          if gh release view v1.0.1 >/dev/null 2>&1; then
+            echo "v1.0.1 já publicada; nada a fazer."
+            exit 0
+          fi
+          gh release create v1.0.1 \
+            --target "$HOMOLOGATED_SHA" \
+            --title "Hub de RPG v1.0.1" \
+            --notes "Correção de escopo da v1.0: login simples por usuário e senha, colaboração funcional Mestre/Jogador e remoção do recurso de Backup. Homologação Firebase real, gate estrutural e E2E desktop/mobile concluídos antes da publicação."
