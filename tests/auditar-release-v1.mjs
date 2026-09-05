@@ -6,58 +6,55 @@ const root=new URL('../',import.meta.url);
 const read=path=>fs.readFileSync(new URL(path,root),'utf8');
 const exists=path=>fs.existsSync(new URL(path,root));
 
-for(const path of['README.md','ROADMAP-V1.md','docs/MANUAL.md','docs/ARQUITETURA.md','docs/HOMOLOGACAO-V1.md','docs/AUDITORIA-BRANCHES-V1.md','docs/RELEASE-NOTES-V1.0.0.md','package.json','playwright.config.js','e2e/hub.spec.js','e2e/collaboration-real.spec.js','.github/workflows/homologar-release-v1.yml','.github/workflows/homologar-firebase-real.yml','.github/workflows/finalizar-release-v1.yml']){
- assert.equal(exists(path),true,`Release v1 sem artefato obrigatório: ${path}`)
-}
+for(const path of['README.md','ROADMAP-V1.md','FIREBASE-PROVISIONAMENTO.md','docs/MANUAL.md','docs/ARQUITETURA.md','package.json','playwright.config.js','e2e/hub.spec.js','e2e/collaboration-real.spec.js','.github/workflows/homologar-release-v1.yml','.github/workflows/homologar-firebase-real.yml'])assert.equal(exists(path),true,`Versão atual sem artefato obrigatório: ${path}`);
+for(const removed of['dados.html','portabilidade.css','scripts/backup-engine.js','scripts/backup-relations.js','scripts/backup-ui.js','tests/auditar-persistencia-portabilidade.mjs','tests/auditar-persistencia-relacoes.mjs','.github/workflows/auditar-persistencia-portabilidade.yml','.github/workflows/finalizar-release-v1.yml'])assert.equal(exists(removed),false,`Artefato removido do escopo ainda existe: ${removed}`);
 
 const pkg=JSON.parse(read('package.json'));
-assert.ok(['1.0.0-rc.1','1.0.0'].includes(pkg.version),'Versão do fechamento v1 deve permanecer RC1 até a promoção final ou ser 1.0.0 após o aceite.');
-assert.ok(pkg.scripts?.['test:e2e'],'package.json deve expor test:e2e.');
-assert.ok(pkg.scripts?.['test:e2e:firebase'],'package.json deve expor o gate Firebase real.');
-assert.equal(pkg.devDependencies?.['@playwright/test'],'1.62.1','Playwright do gate deve permanecer pinado durante o fechamento da v1.');
+assert.equal(pkg.version,'1.0.1','A simplificação pós-v1.0.0 deve ser versionada como 1.0.1.');
+assert.ok(pkg.scripts?.['test:e2e']);
+assert.ok(pkg.scripts?.['test:e2e:firebase']);
+assert.equal(pkg.devDependencies?.['@playwright/test'],'1.62.1');
+
 const config=read('playwright.config.js'),e2e=read('e2e/hub.spec.js'),workflow=read('.github/workflows/homologar-release-v1.yml');
 for(const token of['desktop-chromium','mobile-chromium','webServer'])assert.ok(config.includes(token),`Config E2E sem ${token}.`);
-for(const token of['Configurações persistem','Nova Mesa consome defaults','backup completo sobrevive','Usuários mantém acesso fechado'])assert.ok(e2e.includes(token),`E2E sem cenário obrigatório: ${token}.`);
-assert.ok(workflow.includes('npm run test:e2e')&&workflow.includes('playwright install --with-deps chromium'),'Workflow não executa Chromium real.');
+for(const token of['Configurações persistem','Nova Mesa consome defaults','Usuários usa apenas nome de usuário e senha'])assert.ok(e2e.includes(token),`E2E sem cenário atual: ${token}.`);
+assert.equal(e2e.includes('dados.html'),false,'E2E não deve depender da antiga área de Backup.');
+assert.equal(e2e.toLowerCase().includes('backup completo'),false);
+assert.ok(workflow.includes('npm run test:e2e')&&workflow.includes('playwright install --with-deps chromium'),'Workflow deve executar Chromium real.');
 
 const firebaseE2e=read('e2e/collaboration-real.spec.js'),firebaseWorkflow=read('.github/workflows/homologar-firebase-real.yml');
-for(const token of['E2E_FIREBASE_ADMIN_USERNAME','createUserWithEmailAndPassword','upsertAuthorizedUser','deleteUser','browser.newContext','PRIVATE_MARK','setOffline(true)','permission-denied','characterId'])assert.ok(firebaseE2e.includes(token),`Gate Firebase real sem contrato: ${token}.`);
-for(const token of['workflow_dispatch','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','Exigir credenciais administrativas E2E reais','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase real sem ${token}.`);
-assert.equal(firebaseWorkflow.includes('E2E_FIREBASE_PLAYER_'),false,'Jogador E2E deve ser efêmero e não depender de Secrets próprios.');
-assert.equal(firebaseE2e.includes('E2E_FIREBASE_PLAYER_'),false,'Teste Firebase não deve depender de identidade de Jogador pré-provisionada.');
+for(const token of['E2E_FIREBASE_ADMIN_USERNAME','createUserWithEmailAndPassword','deleteUser','browser.newContext','PRIVATE_MARK','SHARED_MARK','setOffline(true)','characterId'])assert.ok(firebaseE2e.includes(token),`Gate Firebase real sem contrato: ${token}.`);
+for(const forbidden of['upsertAuthorizedUser','setAuthorizedUserActive','permission-denied','E2E_FIREBASE_PLAYER_'])assert.equal(firebaseE2e.includes(forbidden),false,`Gate Firebase ainda cobra segurança removida: ${forbidden}.`);
+for(const token of['workflow_dispatch','push:','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase sem ${token}.`);
 assert.equal(/password\s*[:=]\s*['"][^'"]+['"]/i.test(firebaseE2e),false,'Teste Firebase não pode conter senha literal.');
-assert.equal(firebaseWorkflow.includes('push:'),false,'Gate Firebase real não deve rodar automaticamente sem credenciais de homologação.');
-assert.equal(firebaseWorkflow.includes('pull_request:'),false,'Gate Firebase real não deve aceitar execução de PR com credenciais de homologação.');
 
-const finalizer=read('.github/workflows/finalizar-release-v1.yml');
-for(const token of['workflow_run','Homologar Firebase real v1','conclusion == \'success\'','head_branch == \'main\'','FIREBASE_HEAD_SHA','v1.0.0','gh release create'])assert.ok(finalizer.includes(token),`Finalizador v1 sem trava/ação: ${token}.`);
-assert.ok(finalizer.includes('node tests/auditar-release-v1.mjs')&&finalizer.includes('npm run test:e2e'),'Finalizador deve revalidar gate estrutural e E2E antes da tag.');
+const home=read('index.html'),users=read('usuarios.html'),provider=read('scripts/firebase-collaboration-provider.js'),rules=read('firebase/firestore.rules'),firebaseConfig=JSON.parse(read('dados/firebase-config.json'));
+assert.equal(home.includes('dados.html'),false,'Home não deve expor Backup.');
+assert.equal(users.includes('authorize-user-form'),false);
+assert.equal(users.includes('admin-tools'),false);
+assert.equal(users.includes('type="email"'),false,'Hub não deve pedir e-mail real.');
+assert.equal(provider.includes('authorizedUsers'),false);
+assert.equal(provider.includes('isAdmin'),false);
+assert.match(rules,/allow read, write: if request\.auth != null;/);
+assert.equal(rules.includes('authorizedUsers'),false);
+assert.equal(firebaseConfig.accountProvisioning,'firebase-console-manual');
+assert.equal(firebaseConfig.collaborationModel,'trusted-private');
+assert.equal(firebaseConfig.accessModel,'login-only');
+assert.equal(firebaseConfig.roleVisibility,'application');
 
-const readme=read('README.md'),manual=read('docs/MANUAL.md'),architecture=read('docs/ARQUITETURA.md'),homologation=read('docs/HOMOLOGACAO-V1.md'),branches=read('docs/AUDITORIA-BRANCHES-V1.md'),releaseNotes=read('docs/RELEASE-NOTES-V1.0.0.md');
-assert.ok(readme.length>1500,'README ainda está curto demais para release.');
-for(const token of['Personagens','Campanhas','Dados / Backup','Usuários','Configurações'])assert.ok(readme.includes(token),`README sem área principal: ${token}.`);
-for(const token of['Criação de Personagem','Ficha Digital','Subir de Level','Backup','Colaboração'])assert.ok(manual.includes(token),`Manual sem fluxo: ${token}.`);
-for(const token of['localStorage','Firebase','GitHub Pages','Firestore','schema'])assert.ok(architecture.includes(token),`Arquitetura sem tópico: ${token}.`);
-for(const token of['Desktop','Mobile','Level 1','Level 20','multiusuário','recuperação','rede','Homologar Firebase real v1'])assert.ok(homologation.includes(token),`Plano de homologação sem critério: ${token}.`);
-for(const token of['#123','#94','#30','#146','zero PRs abertos','codex/bloco-1-ficha-modo-jogo','codex/bloco-16-painel-geral','Limpeza física executada'])assert.ok(branches.includes(token),`Auditoria de branches sem evidência final: ${token}.`);
-for(const token of['v1.0.0','Ficha Digital','Level 20','Campanhas','Firebase','GitHub Pages'])assert.ok(releaseNotes.includes(token),`Notas de release sem tópico obrigatório: ${token}.`);
+const readme=read('README.md');
+for(const token of['Personagens','Campanhas / Mesas','Usuários','Configurações','Backup/exportação/restauração não fazem parte','Mestre','Jogador','v1.0.1'])assert.ok(readme.includes(token),`README sem decisão atual: ${token}.`);
 
 const critical=[
  'tests/auditar-progressao-level.mjs',
  'tests/auditar-campanhas-mesas.mjs',
  'tests/auditar-aventuras.mjs',
- 'tests/auditar-persistencia-portabilidade.mjs',
  'tests/auditar-colaboracao-provisionamento.mjs',
  'tests/auditar-colaboracao-sync.mjs',
  'tests/auditar-painel-geral.mjs',
  'tests/auditar-configuracoes.mjs',
  'tests/auditar-ux-mobile-final.mjs'
 ];
-for(const path of critical){
- assert.equal(exists(path),true,`Auditoria crítica ausente: ${path}`);
- execFileSync(process.execPath,[new URL(path,root).pathname],{stdio:'inherit'})
-}
+for(const path of critical){assert.equal(exists(path),true,`Auditoria crítica ausente: ${path}`);execFileSync(process.execPath,[new URL(path,root).pathname],{stdio:'inherit'})}
 
-const roadmap=read('ROADMAP-V1.md');
-assert.ok(roadmap.includes('18. Homologação, documentação e release final'),'Roadmap sem Bloco 18.');
-console.log('OK — gate estrutural do Bloco 18: documentação, E2E local, jogador Firebase efêmero, finalizador, auditoria de branches e regressões críticas presentes e verdes.');
+console.log('OK — gate v1.0.1: sem Backup, login simples, visibilidade Mestre/Jogador e regressões críticas validados.');
