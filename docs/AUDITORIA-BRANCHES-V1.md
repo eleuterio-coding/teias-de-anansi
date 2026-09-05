@@ -4,7 +4,7 @@ Data da revisão: 2026-09-05.
 
 ## Resultado executivo
 
-A revisão de release encontrou três PRs históricos ainda abertos. Todos foram analisados individualmente e fechados como **superseded**, sem merge cego:
+A revisão de release encontrou três PRs históricos abertos. Todos foram analisados individualmente e fechados como **superseded**, sem merge cego:
 
 | PR | Branch | Resultado |
 | --- | --- | --- |
@@ -12,7 +12,9 @@ A revisão de release encontrou três PRs históricos ainda abertos. Todos foram
 | #94 · Progressão de magias de conjuradores | `fix/spell-progression-all-casters-20260825` | Fechado sem merge. A `main` possui o motor vigente de progressão nível a nível e o Bloco 5 consolidou preparação/magias/descansos; mesclar a árvore antiga reintroduziria arquitetura paralela. |
 | #30 · Integração antiga de Antecedentes | `fix/antecedentes-integracao-ficha-20260821` | Fechado sem merge. O PR pertence ao carregador modular antigo e foi substituído pelo construtor integrado atual. |
 
-Depois dessas decisões, não há PR histórico de release aguardando merge.
+O PR técnico #146, criado apenas para observabilidade dos workflows do Bloco 18, também foi **fechado sem merge** depois que as evidências foram registradas na documentação oficial.
+
+A consulta final ao endpoint de PRs abertos retornou **zero PRs abertos**.
 
 ## Branches oficiais dos Blocos 1–16
 
@@ -47,15 +49,12 @@ A exclusão física das refs classificadas como seguras foi executada em 2026-09
 - branches oficiais `codex/bloco-*` dos Blocos 1–16, incluindo as duas branches do Bloco 15;
 - `audit/normativa-total-criacao` (#123);
 - `fix/spell-progression-all-casters-20260825` (#94);
-- `fix/antecedentes-integracao-ficha-20260821` (#30).
+- `fix/antecedentes-integracao-ficha-20260821` (#30);
+- `codex/bloco-18-validar-gates`, depois do fechamento sem merge do PR #146.
 
-Buscas posteriores por essas refs não retornaram resultados. Os commits históricos continuam alcançáveis pelos PRs/commits correspondentes.
+Buscas posteriores pelas refs removidas não retornaram resultados. Os commits históricos continuam alcançáveis pelos PRs/commits correspondentes.
 
-## Branch técnica do Bloco 18
-
-A branch `codex/bloco-18-validar-gates` e o PR #146 foram criados exclusivamente para tornar workflows `pull_request` observáveis durante a homologação. O PR contém apenas `docs/VALIDACAO-CI-BLOCO18.md`, sem alteração funcional. As evidências úteis já foram transcritas para a documentação oficial na `main`.
-
-Resultado definido: **fechar #146 sem merge e excluir a branch técnica**. O arquivo temporário não deve ser incorporado à `main`.
+O workflow temporário usado exclusivamente para excluir a branch técnica do Bloco 18 também foi removido da `main` depois de concluir a tarefa.
 
 ## Branches não classificadas
 
@@ -70,6 +69,12 @@ Política adotada para o release:
 
 ## Estado final da limpeza administrativa
 
-A limpeza obrigatória do roadmap v1 está **concluída** para as branches oficiais e para os três PRs superseded identificados. Branches não classificadas foram preservadas deliberadamente e não bloqueiam o release por ausência de evidência de descarte seguro.
+A limpeza obrigatória do roadmap v1 está **concluída**:
 
-Resta somente eliminar a ref técnica `codex/bloco-18-validar-gates` após o fechamento sem merge do PR #146; isso é housekeeping da própria homologação, não uma pendência funcional do produto.
+- zero PRs abertos;
+- branches oficiais dos Blocos 1–16 removidas;
+- branches dos três PRs superseded removidas;
+- branch técnica do PR #146 removida;
+- branches sem evidência suficiente preservadas deliberadamente.
+
+Não resta housekeeping de PR/branch bloqueando a v1.0.
