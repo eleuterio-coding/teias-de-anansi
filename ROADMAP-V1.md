@@ -34,7 +34,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 15. Usuários, colaboração e sincronização — ✅ Aceito
 16. Painel Geral — ✅ Aceito
 17. Configurações — ✅ Aceito
-18. Homologação, documentação e release final — Planejado
+18. Homologação, documentação e release final — 🟡 Em homologação final · gate Firebase real pendente por Secrets
 
 ## Critérios dos blocos restantes
 
@@ -66,7 +66,7 @@ Aceite: projeto Firebase Spark real provisionado; Authentication por E-mail/senh
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
 
-Aceite: nova superfície `painel.html` agrega o estado local persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`. A home expõe o Painel Geral e somente Configurações permanece indisponível. Auditoria dedicada do Bloco 16 e regressões UX/Campanhas/Persistência protegem o comportamento.
+Aceite: nova superfície `painel.html` agrega o estado local persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`. A home expõe o Painel Geral e Configurações foi incorporado no Bloco 17. Auditoria dedicada do Bloco 16 e regressões UX/Campanhas/Persistência protegem o comportamento.
 
 ### 17. Configurações
 Preferências persistentes de usuário/Mestre, fontes e regras habilitadas, presets de Regras da Casa, ficha, acessibilidade e defaults de campanha.
@@ -75,6 +75,8 @@ Aceite: nova superfície `configuracoes.html` com estado versionado `hub-rpg:set
 
 ### 18. Homologação, documentação e release final
 E2E em navegador real e mobile, fluxos longos 1–20, campanhas, recuperação de dados, erros de rede, acessibilidade, desempenho, README/manual/arquitetura, limpeza de PRs/branches e release v1.0.
+
+Estado atual: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação e limpeza de PRs/branches foram concluídos. O único gate técnico obrigatório ainda sem evidência verde é `Homologar Firebase real v1`, que depende dos cinco GitHub Actions Secrets de duas identidades reais de teste. A tag `v1.0.0` permanece proibida até esse gate executar com sucesso.
 
 ## Política de escopo da v1.0
 
