@@ -2,13 +2,13 @@ name: Homologar Firebase real v1
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - 'docs/VALIDACAO-CI-BLOCO18.md'
 
 permissions:
   contents: read
+
+concurrency:
+  group: homologar-firebase-real-v1
+  cancel-in-progress: false
 
 env:
   E2E_FIREBASE_ADMIN_USERNAME: ${{ secrets.E2E_FIREBASE_ADMIN_USERNAME }}
