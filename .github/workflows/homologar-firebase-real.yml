@@ -2,6 +2,10 @@ name: Homologar Firebase real v1
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/VALIDACAO-CI-BLOCO18.md'
 
 permissions:
   contents: read
