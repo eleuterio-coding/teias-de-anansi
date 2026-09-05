@@ -11,9 +11,7 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 - Regressões críticas dos Blocos 1–17: **aprovadas** pela suíte de cobertura total.
 - Harness Firebase multiusuário real: **implementado** em `e2e/collaboration-real.spec.js` e `.github/workflows/homologar-firebase-real.yml`.
 - Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos cinco GitHub Actions Secrets de teste**.
-- PRs históricos: **resolvidos**; #123, #94 e #30 foram fechados como superseded após análise individual.
-- Limpeza física das branches oficiais/superseded: **executada e verificada**; detalhes em `docs/AUDITORIA-BRANCHES-V1.md`.
-- PR técnico #146: **pronto para encerramento sem merge**; seu único arquivo é um artefato temporário de observabilidade e não deve entrar na `main`.
+- PRs/branches de release: **limpeza concluída**; zero PRs abertos e refs classificadas removidas.
 - Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.
 
 ## Evidências automatizadas observadas
@@ -131,7 +129,7 @@ Critérios mínimos automatizados:
 
 ## Gate Firebase multiusuário real
 
-Este é o único gate técnico obrigatório ainda não aprovado. O harness exige no projeto Firebase Spark real:
+Este é o **único gate técnico obrigatório ainda não aprovado**. O harness exige no projeto Firebase Spark real:
 
 1. uma conta administradora autorizada;
 2. uma segunda conta autorizada e não administradora;
@@ -148,19 +146,25 @@ O workflow `Homologar Firebase real v1` possui preflight obrigatório. Senhas e 
 
 ## Branches, PRs e release
 
-A auditoria está registrada em `docs/AUDITORIA-BRANCHES-V1.md`.
+A auditoria final está registrada em `docs/AUDITORIA-BRANCHES-V1.md`.
 
-- #123, #94 e #30 foram fechados como superseded;
-- branches oficiais dos Blocos 1–16 foram associadas aos PRs mesclados #129–#145;
-- branches oficiais e as três branches superseded foram fisicamente removidas;
-- branches históricas sem evidência de descarte seguro foram preservadas deliberadamente;
-- o PR técnico #146 existe apenas para observabilidade dos workflows e será fechado sem merge; sua branch técnica será removida em seguida.
+Estado administrativo final:
+
+- #123, #94 e #30 fechados como superseded;
+- PR técnico #146 fechado sem merge;
+- **zero PRs abertos**;
+- branches oficiais dos Blocos 1–16 removidas;
+- branches dos três PRs superseded removidas;
+- branch técnica `codex/bloco-18-validar-gates` removida;
+- workflow temporário de limpeza removido;
+- branches históricas sem evidência de descarte seguro preservadas deliberadamente.
+
+Não resta housekeeping de PR/branch bloqueando a v1.0.
 
 ## Sequência final para a tag
 
-1. manter o gate normal de release verde;
-2. configurar os cinco Secrets de teste no GitHub Actions;
-3. executar `Homologar Firebase real v1` até obter **success** real;
-4. registrar a evidência final neste documento;
-5. marcar o Bloco 18 como aceito no `ROADMAP-V1.md`;
-6. criar somente então a tag/release `v1.0.0`.
+1. configurar os cinco Secrets de teste no GitHub Actions;
+2. executar `Homologar Firebase real v1` até obter **success** real;
+3. registrar a evidência final neste documento;
+4. marcar o Bloco 18 como aceito no `ROADMAP-V1.md`;
+5. criar somente então a tag/release `v1.0.0`.
