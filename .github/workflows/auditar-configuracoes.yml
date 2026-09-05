@@ -1,5 +1,24 @@
 name: Auditar Configurações — Bloco 17
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'configuracoes.html'
+      - 'settings.css'
+      - 'scripts/settings-state.js'
+      - 'scripts/settings-ui.js'
+      - 'scripts/hub-ux.js'
+      - 'hub-ux.css'
+      - 'scripts/storage-registry.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'campanhas.html'
+      - 'index.html'
+      - 'tests/auditar-configuracoes.mjs'
+      - 'tests/auditar-persistencia-portabilidade.mjs'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - 'ROADMAP-V1.md'
+      - '.github/workflows/auditar-configuracoes.yml'
   pull_request:
     paths:
       - 'configuracoes.html'
