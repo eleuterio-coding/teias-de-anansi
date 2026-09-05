@@ -1,0 +1,43 @@
+name: Auditar Configurações — Bloco 17
+on:
+  pull_request:
+    paths:
+      - 'configuracoes.html'
+      - 'settings.css'
+      - 'scripts/settings-state.js'
+      - 'scripts/settings-ui.js'
+      - 'scripts/hub-ux.js'
+      - 'hub-ux.css'
+      - 'scripts/storage-registry.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'campanhas.html'
+      - 'index.html'
+      - 'tests/auditar-configuracoes.mjs'
+      - 'tests/auditar-persistencia-portabilidade.mjs'
+      - 'tests/auditar-ux-mobile-final.mjs'
+      - 'ROADMAP-V1.md'
+      - '.github/workflows/auditar-configuracoes.yml'
+  workflow_dispatch:
+jobs:
+  configuracoes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/settings-state.js
+          node --check scripts/settings-ui.js
+          node --check scripts/hub-ux.js
+          node --check scripts/campaign-list-ui.js
+          node --check tests/auditar-configuracoes.mjs
+      - name: Bloco 17 · Configurações
+        run: node tests/auditar-configuracoes.mjs
+      - name: Regressão UX
+        run: node tests/auditar-ux-mobile-final.mjs
+      - name: Regressão Campanhas/Mesas
+        run: node tests/auditar-campanhas-mesas.mjs
+      - name: Regressão persistência
+        run: node tests/auditar-persistencia-portabilidade.mjs
