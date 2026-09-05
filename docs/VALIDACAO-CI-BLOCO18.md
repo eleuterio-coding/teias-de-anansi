@@ -7,3 +7,5 @@ Este arquivo não altera runtime, regras, schemas, dados, Firebase ou critérios
 Revalidação disparada após a correção sintática de `scripts/character-sheet-rest-ui.js` identificada pela auditoria de cobertura total.
 
 Nova revalidação disparada após alinhar `tests/auditar-painel-geral.mjs` ao estado pós-Bloco 17, em que Configurações já está disponível e nenhuma área principal permanece desabilitada.
+
+Validação final disparada para tornar observável também o gate Firebase multiusuário real; ausência de qualquer Secret obrigatório deve falhar explicitamente no preflight.
