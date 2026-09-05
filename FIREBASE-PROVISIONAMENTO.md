@@ -55,8 +55,105 @@ Campos usados pelo site:
 
 Esses campos são configuração pública do cliente Firebase. Nunca commitar chave privada, JSON de Service Account, refresh token, senha ou credencial administrativa.
 
-## Validação
+## Validação do Bloco 15
 
 O workflow **Auditar usuários, colaboração e sincronização — Bloco 15** valida a arquitetura web-only, Spark/zero billing, autenticação `username-password`, ausência do fluxo de convite e configuração pública do provedor real.
 
 O Bloco 15 foi aceito após a homologação do login administrativo real. O responsável pelo projeto dispensou o teste manual adicional com uma conta não autorizada. A homologação E2E multiusuário completa permanece no escopo do **Bloco 18 — Homologação, documentação e release final**, sem reabrir o Bloco 15.
+
+---
+
+# Homologação Firebase real — Bloco 18
+
+Esta é a etapa final de release. O workflow é `.github/workflows/homologar-firebase-real.yml` e o cenário real está em `e2e/collaboration-real.spec.js`.
+
+Uma execução observada em 2026-09-05 falhou corretamente no preflight porque os cinco GitHub Actions Secrets abaixo ainda não estavam configurados. Nenhum login ou acesso ao Firestore foi tentado nessa execução.
+
+## 1. Preparar as duas identidades
+
+### Conta administradora
+
+Usar a conta administrativa já homologada no Bloco 15. Ela precisa continuar com:
+
+- credencial ativa em Firebase Authentication;
+- documento `authorizedUsers/{uid}` existente;
+- `active: true`;
+- `isAdmin: true`.
+
+O Secret usa **somente o nome de usuário do Hub**, sem `@teias.invalid`. O provider acrescenta o domínio técnico automaticamente.
+
+### Conta de Jogador E2E
+
+Criar uma segunda credencial em **Firebase Authentication → Authentication → Users → Add user**.
+
+Exemplo de formato técnico:
+
+- usuário do Hub: `e2e-player`;
+- e-mail técnico no Authentication: `e2e-player@teias.invalid`;
+- senha: definida manualmente e guardada apenas como Secret.
+
+O nome de usuário deve obedecer ao contrato do Hub: letras minúsculas, números, ponto, hífen ou sublinhado, com até 64 caracteres.
+
+Depois de criar a credencial:
+
+1. copiar o **UID** exato mostrado no Firebase Authentication;
+2. autorizar esse UID pela página **Usuários e Colaboração** do Hub ou diretamente no Firestore;
+3. garantir que `authorizedUsers/{uid}` contenha:
+   - `username`: o mesmo nome usado antes de `@teias.invalid`;
+   - `active: true`;
+   - `isAdmin: false`.
+
+Não é necessário criar membership manualmente. O próprio teste administrativo vincula essa conta como `player` à Mesa técnica `__e2e_release_v1__`.
+
+## 2. Configurar GitHub Actions Secrets
+
+No repositório GitHub:
+
+**Settings → Secrets and variables → Actions → Repository secrets**
+
+Criar exatamente estes cinco Secrets:
+
+| Secret | Valor |
+| --- | --- |
+| `E2E_FIREBASE_ADMIN_USERNAME` | nome do usuário administrador, sem `@teias.invalid` |
+| `E2E_FIREBASE_ADMIN_PASSWORD` | senha atual da conta administradora |
+| `E2E_FIREBASE_PLAYER_USERNAME` | nome do segundo usuário, sem `@teias.invalid` |
+| `E2E_FIREBASE_PLAYER_PASSWORD` | senha da segunda conta |
+| `E2E_FIREBASE_PLAYER_UID` | UID exato da segunda conta no Firebase Authentication |
+
+Nunca colocar esses valores em commits, issues, PRs, fixtures, Markdown ou arquivos `.env` versionados.
+
+## 3. Executar o gate
+
+No GitHub:
+
+**Actions → Homologar Firebase real v1 → Run workflow → main → Run workflow**
+
+O workflow primeiro verifica se os cinco Secrets existem. Somente depois instala o Playwright e executa o cenário autenticado.
+
+## 4. O que o teste comprova
+
+Uma execução verde precisa provar, no Firebase Spark real:
+
+1. login do administrador e confirmação de `isAdmin: true`;
+2. publicação da Mesa técnica `__e2e_release_v1__`;
+3. criação da membership do segundo UID como `player`;
+4. leitura privada pelo Mestre;
+5. login do Jogador e confirmação de `isAdmin: false`;
+6. leitura apenas da projeção compartilhada pelo Jogador;
+7. handout oculto e pista oculta ausentes da projeção;
+8. tentativa do Jogador de gravar `/campaigns/{id}/private/*` bloqueada com `permission-denied`;
+9. alteração pelo Jogador apenas do `characterId` permitido da própria membership;
+10. perda e retomada de rede preservando o estado local e recuperando uma leitura compartilhada válida.
+
+## 5. Critério de aceite
+
+O Bloco 18 só pode ser marcado como **✅ Aceito** quando `Homologar Firebase real v1` terminar com **success** usando as duas identidades reais.
+
+Depois desse success:
+
+1. registrar o run em `docs/HOMOLOGACAO-V1.md`;
+2. marcar o Bloco 18 como aceito em `ROADMAP-V1.md`;
+3. criar a tag/release `v1.0.0`.
+
+Até lá, a ausência dos Secrets é o único bloqueador técnico obrigatório conhecido do release.
