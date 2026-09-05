@@ -2,7 +2,7 @@ import assert from'node:assert/strict';
 import fs from'node:fs';
 
 const read=path=>fs.readFileSync(path,'utf8');
-const pages=['index.html','personagens.html','lista-personagens.html','criacao-personagem.html','ficha-personagem.html','campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','usuarios.html','painel.html','bibliotecas.html'];
+const pages=['index.html','personagens.html','lista-personagens.html','criacao-personagem.html','ficha-personagem.html','campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','usuarios.html','painel.html','bibliotecas.html','configuracoes.html'];
 for(const page of pages){
  const html=read(page);
  assert.match(html,/<meta\s+name=["']viewport["']/i,`${page}: viewport responsivo ausente.`);
@@ -27,8 +27,8 @@ assert.match(wizard,/@media\(max-width:1120px\)[\s\S]*overflow-x:auto!important/
 assert.ok(!wizard.includes('@media(max-width:420px){.wizard-nav{grid-template-columns:1fr!important}}'),'Etapas não podem ocupar sete linhas no celular.');
 assert.ok(wizard.includes("button.scrollIntoView({block:'nearest',inline:'center'})"),'Etapa ativa deve permanecer visível na faixa de navegação.');
 
-assert.ok(sheet.includes('hub-ux.css?v=20260901-ux-final1'),'Ficha precisa carregar o CSS final de UX diretamente.');
-assert.ok(sheet.includes('scripts/hub-ux.js?v=20260901-ux-final1'),'Ficha precisa carregar o comportamento final de UX diretamente.');
+assert.ok(sheet.includes('hub-ux.css?v='),'Ficha precisa carregar o CSS compartilhado de UX diretamente.');
+assert.ok(sheet.includes('scripts/hub-ux.js?v='),'Ficha precisa carregar o comportamento compartilhado de UX diretamente.');
 assert.ok(sheet.includes('>Editar estrutura</a>'),'Ficha deve nomear explicitamente a edição estrutural.');
 assert.ok(!sheet.includes('>Editar no construtor</a>'),'Ficha não deve sugerir o construtor como editor operacional.');
 assert.match(sheet,/id="save-status"[^>]*role="status"[^>]*aria-live="polite"/,'Feedback de salvamento deve ser uma live region.');
@@ -39,12 +39,12 @@ assert.ok(list.includes('Editar estrutura'),'Lista deve explicitar que o constru
 assert.ok(!/>Editar<\/a>/.test(list),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.ok(list.includes('Abra a Ficha Digital para jogar e administrar o personagem'),'Lista deve orientar o fluxo pós-criação.');
 
-for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','dados.html','usuarios.html','painel.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
-assert.equal((home.match(/aria-disabled="true"/g)||[]).length,1,'Após o Bloco 16, somente Configurações deve permanecer indisponível.');
+for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','dados.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
+assert.equal((home.match(/aria-disabled="true"/g)||[]).length,0,'Após o Bloco 17 nenhuma área planejada da home deve permanecer indisponível.');
 assert.ok(home.includes('use a Criação de Personagem para montar a estrutura inicial'),'Início precisa explicar a separação Criação → Ficha.');
 
-for(const page of['campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','usuarios.html','painel.html','bibliotecas.html','personagens.html','lista-personagens.html']){
- const html=read(page);assert.ok(html.includes('hub-ux.css?v=20260901-ux-final1'),`${page}: CSS compartilhado de UX ausente.`);assert.ok(html.includes('scripts/hub-ux.js?v=20260901-ux-final1'),`${page}: comportamento compartilhado de UX ausente.`)
+for(const page of['campanhas.html','mesa.html','sessoes.html','aventuras.html','dados.html','usuarios.html','painel.html','bibliotecas.html','personagens.html','lista-personagens.html','configuracoes.html']){
+ const html=read(page);assert.ok(html.includes('hub-ux.css?v='),`${page}: CSS compartilhado de UX ausente.`);assert.ok(html.includes('scripts/hub-ux.js?v='),`${page}: comportamento compartilhado de UX ausente.`)
 }
 assert.match(read('mesa.html'),/role="status"\s+aria-live="polite"/,'Mesa deve anunciar seu estado de carregamento.');
 assert.match(read('aventuras.html'),/role="status"\s+aria-live="polite"/,'Aventuras deve anunciar seu estado de carregamento.');
@@ -52,4 +52,4 @@ assert.match(read('dados.html'),/role="status"\s+aria-live="polite"/,'Dados e Ba
 assert.match(read('usuarios.html'),/role="status"\s+aria-live="polite"/,'Usuários e Colaboração deve anunciar feedback de sincronização.');
 assert.match(read('painel.html'),/role="status"\s+aria-live="polite"/,'Painel Geral deve anunciar seu estado de atualização.');
 
-console.log('UX final validada: 13 superfícies responsivas, Etapas e navegação sticky mobile, acessibilidade, touch targets, hierarquia pós-criação e estados anunciáveis.');
+console.log('UX final validada: 14 superfícies responsivas, Etapas e navegação sticky mobile, acessibilidade, touch targets, hierarquia pós-criação e estados anunciáveis.');
