@@ -14,6 +14,7 @@ on:
       - 'usuarios.html'
       - 'e2e/collaboration-real.spec.js'
       - '.github/workflows/homologar-firebase-real.yml'
+      - '.github/workflows/publicar-v1-0-1.yml'
 
 permissions:
   contents: read
