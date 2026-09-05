@@ -1,0 +1,64 @@
+name: Limpar branches obsoletas v1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cleanup-branches-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Excluir somente branches auditadas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Excluir refs classificadas como obsoletas
+        shell: bash
+        run: |
+          set -euo pipefail
+          branches=(
+            'codex/bloco-1-ficha-modo-jogo'
+            'codex/bloco-2-progressao-level'
+            'codex/bloco-3-inventario-economia'
+            'codex/bloco-4-combate-recursos'
+            'codex/bloco-5-magias-descansos'
+            'codex/bloco-6-campanhas-mesas'
+            'codex/bloco-7-biblioteca-dados'
+            'codex/bloco-8-ux-mobile-auditoria'
+            'codex/bloco-9-auditoria-normativa-total'
+            'codex/bloco-10-fechamento-mecanico-ficha'
+            'codex/bloco-11-rolagens-resolucao'
+            'codex/bloco-12-encontros-mestre'
+            'codex/bloco-13-aventuras'
+            'codex/bloco-14-persistencia-portabilidade'
+            'codex/bloco-15-usuarios-colaboracao'
+            'codex/bloco-15-fechamento'
+            'codex/bloco-16-painel-geral'
+            'audit/normativa-total-criacao'
+            'fix/spell-progression-all-casters-20260825'
+            'fix/antecedentes-integracao-ficha-20260821'
+          )
+          deleted=0
+          absent=0
+          {
+            echo '## Limpeza de branches auditadas'
+            echo
+            for branch in "${branches[@]}"; do
+              if git ls-remote --exit-code --heads origin "refs/heads/$branch" >/dev/null 2>&1; then
+                git push origin --delete "$branch"
+                echo "- ✅ excluída: \`$branch\`"
+                deleted=$((deleted+1))
+              else
+                echo "- ℹ️ já ausente: \`$branch\`"
+                absent=$((absent+1))
+              fi
+            done
+            echo
+            echo "Excluídas nesta execução: $deleted · já ausentes: $absent · total auditado: ${#branches[@]}"
+          } >> "$GITHUB_STEP_SUMMARY"
