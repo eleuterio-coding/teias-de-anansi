@@ -51,7 +51,11 @@ A exclusão física das refs classificadas como seguras foi executada em 2026-09
 
 Buscas posteriores por essas refs não retornaram resultados. Os commits históricos continuam alcançáveis pelos PRs/commits correspondentes.
 
-A branch técnica `codex/bloco-18-validar-gates` foi criada exclusivamente para tornar os workflows `pull_request` observáveis durante a homologação. Ela não contém funcionalidade de produto e deve ser removida após o encerramento do PR #146.
+## Branch técnica do Bloco 18
+
+A branch `codex/bloco-18-validar-gates` e o PR #146 foram criados exclusivamente para tornar workflows `pull_request` observáveis durante a homologação. O PR contém apenas `docs/VALIDACAO-CI-BLOCO18.md`, sem alteração funcional. As evidências úteis já foram transcritas para a documentação oficial na `main`.
+
+Resultado definido: **fechar #146 sem merge e excluir a branch técnica**. O arquivo temporário não deve ser incorporado à `main`.
 
 ## Branches não classificadas
 
@@ -68,4 +72,4 @@ Política adotada para o release:
 
 A limpeza obrigatória do roadmap v1 está **concluída** para as branches oficiais e para os três PRs superseded identificados. Branches não classificadas foram preservadas deliberadamente e não bloqueiam o release por ausência de evidência de descarte seguro.
 
-A única ref técnica ainda relacionada ao Bloco 18 é `codex/bloco-18-validar-gates`, que será eliminada junto do encerramento do PR técnico #146.
+Resta somente eliminar a ref técnica `codex/bloco-18-validar-gates` após o fechamento sem merge do PR #146; isso é housekeeping da própria homologação, não uma pendência funcional do produto.
