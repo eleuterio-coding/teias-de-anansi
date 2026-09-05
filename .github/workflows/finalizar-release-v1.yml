@@ -41,8 +41,12 @@ jobs:
             echo "::error::A main mudou após a homologação Firebase. Esperado $FIREBASE_HEAD_SHA, atual $CURRENT_SHA. Rode novamente Homologar Firebase real v1 sobre a main atual."
             exit 1
           fi
-          if git rev-parse -q --verify refs/tags/v1.0.0 >/dev/null; then
-            echo "::error::A tag v1.0.0 já existe. O finalizador não sobrescreve releases."
+          if git ls-remote --exit-code --tags origin refs/tags/v1.0.0 >/dev/null 2>&1; then
+            echo "::error::A tag v1.0.0 já existe. O finalizador não sobrescreve tags."
+            exit 1
+          fi
+          if gh release view v1.0.0 --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "::error::O GitHub Release v1.0.0 já existe."
             exit 1
           fi
 
@@ -68,7 +72,8 @@ jobs:
           import json, os, pathlib
 
           run_id = os.environ['FIREBASE_RUN_ID']
-          run_url = f"https://github.com/${{ github.repository }}/actions/runs/{run_id}"
+          repository = os.environ['GITHUB_REPOSITORY']
+          run_url = f"https://github.com/{repository}/actions/runs/{run_id}"
 
           package_path = pathlib.Path('package.json')
           package = json.loads(package_path.read_text(encoding='utf-8'))
@@ -124,19 +129,22 @@ jobs:
           hom_path.write_text(hom, encoding='utf-8')
           PY
 
-      - name: Commitar aceite, criar tag e publicar release
+      - name: Commitar aceite e publicar release
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package.json ROADMAP-V1.md docs/HOMOLOGACAO-V1.md
+          if git diff --cached --quiet; then
+            echo "::error::O finalizador não produziu alterações de aceite para versionar."
+            exit 1
+          fi
           git commit -m "release: aceitar Bloco 18 e finalizar v1.0.0"
-          git tag -a v1.0.0 -m "Teias de Anansi v1.0.0"
+          FINAL_SHA="$(git rev-parse HEAD)"
           git push origin HEAD:main
-          git push origin v1.0.0
           gh release create v1.0.0 \
             --repo "${GITHUB_REPOSITORY}" \
+            --target "$FINAL_SHA" \
             --title "Teias de Anansi v1.0.0" \
-            --notes-file docs/RELEASE-NOTES-V1.0.0.md \
-            --verify-tag
+            --notes-file docs/RELEASE-NOTES-V1.0.0.md
