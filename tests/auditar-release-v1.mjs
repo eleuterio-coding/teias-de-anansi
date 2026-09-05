@@ -21,8 +21,10 @@ for(const token of['Configurações persistem','Nova Mesa consome defaults','bac
 assert.ok(workflow.includes('npm run test:e2e')&&workflow.includes('playwright install --with-deps chromium'),'Workflow não executa Chromium real.');
 
 const firebaseE2e=read('e2e/collaboration-real.spec.js'),firebaseWorkflow=read('.github/workflows/homologar-firebase-real.yml');
-for(const token of['E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_PLAYER_UID','browser.newContext','PRIVATE_MARK','setOffline(true)','permission-denied','characterId'])assert.ok(firebaseE2e.includes(token),`Gate Firebase real sem contrato: ${token}.`);
-for(const token of['workflow_dispatch','E2E_FIREBASE_ADMIN_PASSWORD','E2E_FIREBASE_PLAYER_PASSWORD','Exigir credenciais E2E reais','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase real sem ${token}.`);
+for(const token of['E2E_FIREBASE_ADMIN_USERNAME','createUserWithEmailAndPassword','upsertAuthorizedUser','deleteUser','browser.newContext','PRIVATE_MARK','setOffline(true)','permission-denied','characterId'])assert.ok(firebaseE2e.includes(token),`Gate Firebase real sem contrato: ${token}.`);
+for(const token of['workflow_dispatch','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','Exigir credenciais administrativas E2E reais','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase real sem ${token}.`);
+assert.equal(firebaseWorkflow.includes('E2E_FIREBASE_PLAYER_'),false,'Jogador E2E deve ser efêmero e não depender de Secrets próprios.');
+assert.equal(firebaseE2e.includes('E2E_FIREBASE_PLAYER_'),false,'Teste Firebase não deve depender de identidade de Jogador pré-provisionada.');
 assert.equal(/password\s*[:=]\s*['"][^'"]+['"]/i.test(firebaseE2e),false,'Teste Firebase não pode conter senha literal.');
 assert.equal(firebaseWorkflow.includes('push:'),false,'Gate Firebase real não deve rodar automaticamente sem credenciais de homologação.');
 assert.equal(firebaseWorkflow.includes('pull_request:'),false,'Gate Firebase real não deve aceitar execução de PR com credenciais de homologação.');
@@ -58,4 +60,4 @@ for(const path of critical){
 
 const roadmap=read('ROADMAP-V1.md');
 assert.ok(roadmap.includes('18. Homologação, documentação e release final'),'Roadmap sem Bloco 18.');
-console.log('OK — gate estrutural do Bloco 18: documentação, E2E local, harness Firebase real, finalizador, auditoria de branches e regressões críticas presentes e verdes.');
+console.log('OK — gate estrutural do Bloco 18: documentação, E2E local, jogador Firebase efêmero, finalizador, auditoria de branches e regressões críticas presentes e verdes.');
