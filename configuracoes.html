@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Configurações - Teias de Anansi</title>
+<link rel="stylesheet" href="hub-ux.css?v=20260905-settings1">
+<link rel="stylesheet" href="settings.css?v=20260905-settings1">
+</head>
+<body>
+<p><a href="index.html?v=20260905-settings1">← Início</a></p>
+<header class="settings-hero"><p class="eyebrow">Hub de RPG</p><h1>Configurações</h1><p class="muted">Preferências persistentes do Hub. Alterações de acessibilidade e Ficha valem neste navegador; defaults de campanha são capturados quando uma nova Mesa é criada.</p></header>
+<main id="main-content" class="settings-grid">
+<section class="card"><h2>Perfil de uso</h2><label>Área padrão<select id="workspace"><option value="auto">Automático</option><option value="jogador">Jogador</option><option value="mestre">Mestre</option></select></label><p class="mini">Esta preferência identifica o modo de uso predominante sem alterar permissões reais de usuário ou Mesa.</p></section>
+<section class="card"><h2>Fontes habilitadas</h2><div id="source-options" class="choice-list"></div><p class="mini">A seleção compõe o perfil normativo padrão do Hub. O corpus da v1.0 permanece congelado e não é apagado.</p></section>
+<section class="card wide"><h2>Regras da Casa</h2><label>Preset padrão<select id="house-preset"></select></label><p id="preset-note" class="mini"></p><div id="house-rule-options" class="choice-list rule-list" hidden></div><p class="notice">O preset orienta o perfil normativo padrão do Hub. Ele não reescreve personagens ou campanhas existentes e não finge desativar mecânicas já materializadas em uma ficha.</p></section>
+<section class="card"><h2>Ficha digital</h2><label>Densidade<select id="sheet-density"><option value="comfortable">Confortável</option><option value="compact">Compacta</option></select></label><label class="toggle"><input id="show-sources" type="checkbox"> Exibir referências de fonte na Ficha</label><label class="toggle"><input id="sticky-sections" type="checkbox"> Manter navegação de seções fixa</label></section>
+<section class="card"><h2>Acessibilidade</h2><label>Tamanho do texto<select id="font-scale"><option value="normal">Normal</option><option value="large">Grande</option><option value="xlarge">Extra grande</option></select></label><label>Contraste<select id="contrast"><option value="standard">Padrão</option><option value="high">Alto contraste</option></select></label><label>Movimento<select id="motion"><option value="system">Seguir o sistema</option><option value="reduce">Reduzir animações</option></select></label></section>
+<section class="card wide"><h2>Defaults de campanha</h2><div class="form-grid"><label>Nome do Mestre<input id="default-dm" placeholder="Ex.: Rafael"></label><label>Cenário<input id="default-setting" placeholder="Ex.: Forgotten Realms"></label><label>Sistema<input id="default-system" placeholder="D&D 5.5e"></label></div><p class="mini">Esses valores preenchem automaticamente o formulário de Nova campanha; continuam editáveis antes da criação.</p></section>
+<section class="actions wide"><button id="save-settings" type="button">Salvar configurações</button><button id="reset-settings" class="secondary" type="button">Restaurar padrões</button><span id="settings-status" class="status-inline" role="status" aria-live="polite"></span></section>
+<section class="card wide technical"><h2>Persistência</h2><p class="mini">Chave local: <code id="storage-key"></code>. Preferências são classificadas como estado durável do Hub; personagens e Mesas existentes não são modificados ao salvar esta tela.</p></section>
+</main>
+<script type="module" src="scripts/hub-ux.js?v=20260905-settings1"></script>
+<script type="module" src="scripts/settings-ui.js?v=20260905-settings1"></script>
+</body>
+</html>
