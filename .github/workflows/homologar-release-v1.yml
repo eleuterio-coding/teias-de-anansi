@@ -15,7 +15,10 @@ on:
       - 'docs/**'
       - 'README.md'
       - 'ROADMAP-V1.md'
+      - 'FIREBASE-PROVISIONAMENTO.md'
       - '.github/workflows/homologar-release-v1.yml'
+      - '.github/workflows/homologar-firebase-real.yml'
+      - '.github/workflows/finalizar-release-v1.yml'
   pull_request:
   workflow_dispatch:
 
