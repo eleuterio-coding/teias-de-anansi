@@ -4,7 +4,7 @@ const pages=[
  ['/', 'Teias de Anansi'],
  ['/personagens.html','Personagens'],
  ['/campanhas.html','Campanhas / Mesas'],
- ['/dados.html','Dados e Backup'],
+ ['/usuarios.html','Usuários e Colaboração'],
  ['/painel.html','Painel Geral'],
  ['/configuracoes.html','Configurações']
 ];
@@ -12,17 +12,6 @@ const pages=[
 async function resetStorage(page){
  await page.goto('/index.html');
  await page.evaluate(()=>localStorage.clear());
-}
-
-async function portableSeed(page){
- const character={id:'pc-e2e',name:'Anansi E2E',ruleset:'5.5e',refs:{class:null,species:null,background:null,subclass:null},refSnapshots:{},baseAbilities:{'Força':10,'Destreza':10,'Constituição':10,'Inteligência':10,'Sabedoria':10,'Carisma':10},choices:{class:{level:1,skills:[],equipment:'A'},species:{size:null,lineage:null},background:{abilityMode:'2+1',plus2:null,plus1:null,plusOnes:[],equipment:'A',toolChoice:''},feats:{},equipment:{armor:null,shield:false,weapon:null},spells:{cantrips:[],leveled:[],arcanum:{},progression:null}},updatedAt:'2026-09-05T12:00:00.000Z'};
- const campaign={schema:'hub-rpg/campaign/v1',id:'cmp-e2e',name:'Mesa E2E',status:'active',system:'D&D 5.5e',setting:'Eberron',description:'Homologação',dmName:'Mestre E2E',members:[],sessions:[],createdAt:'2026-09-05T12:00:00.000Z',updatedAt:'2026-09-05T12:00:00.000Z'};
- const adventure={schema:'hub-rpg/adventure/v1',id:'adv-e2e',campaignId:'cmp-e2e',title:'Aventura E2E',status:'planned',chapters:[],scenes:[],locations:[],npcs:[],clues:[],handouts:[],treasures:[],createdAt:'2026-09-05T12:00:00.000Z',updatedAt:'2026-09-05T12:00:00.000Z'};
- await page.evaluate(({character,campaign,adventure})=>{
-  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([character]));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
-  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([adventure]));
- },{character,campaign,adventure});
 }
 
 test.beforeEach(async({page})=>{await resetStorage(page)});
@@ -84,43 +73,19 @@ test('Nova Mesa consome defaults sem persistir preset fictício',async({page})=>
  expect(Object.prototype.hasOwnProperty.call(stored[0],'housePreset')).toBe(false);
 });
 
-test('backup completo sobrevive a apagar estado e restaurar arquivo',async({page})=>{
- await portableSeed(page);
- await page.goto('/dados.html');
- await expect(page.locator('#portable-metrics')).toContainText('1');
- const downloadPromise=page.waitForEvent('download');
- await page.click('#export-backup');
- const download=await downloadPromise;
- expect(download.suggestedFilename()).toMatch(/^teias-de-anansi-backup-.*\.json$/);
- const path=await download.path();
- expect(path).toBeTruthy();
- await page.evaluate(()=>{
-  localStorage.removeItem('hub-rpg:characters:v4');
-  localStorage.removeItem('hub-rpg:campaigns:v1');
-  localStorage.removeItem('hub-rpg:adventures:v1');
- });
- await page.reload();
- await expect(page.locator('#portable-metrics')).toContainText('0');
- await page.setInputFiles('#backup-file',path);
- await expect(page.locator('#backup-preview')).toContainText('Backup válido');
- await page.selectOption('#restore-mode','replace');
- await page.fill('#replace-confirm-text','SUBSTITUIR');
- await page.click('#restore-backup');
- await expect(page.locator('#backup-feedback')).toContainText('Restauração concluída');
- const restored=await page.evaluate(()=>({
-  characters:JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]'),
-  campaigns:JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]'),
-  adventures:JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]')
- }));
- expect(restored.characters[0].name).toBe('Anansi E2E');
- expect(restored.campaigns[0].name).toBe('Mesa E2E');
- expect(restored.adventures[0].campaignId).toBe('cmp-e2e');
+test('Usuários usa apenas nome de usuário e senha',async({page})=>{
+ await page.goto('/usuarios.html');
+ await expect(page.locator('#login-username')).toHaveAttribute('type','text');
+ await expect(page.locator('#login-password')).toHaveAttribute('type','password');
+ await expect(page.locator('input[type="email"]')).toHaveCount(0);
+ await expect(page.locator('#authorize-user-form')).toHaveCount(0);
+ await expect(page.locator('#admin-tools')).toHaveCount(0);
 });
 
-test('Usuários mantém acesso fechado quando Firebase está indisponível',async({page})=>{
+test('Usuários falha de forma clara quando Firebase está indisponível',async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.goto('/usuarios.html');
  await expect(page.getByRole('heading',{name:/Usuários e Colaboração/i})).toBeVisible();
- await expect(page.locator('#provider-status')).toContainText('ainda não está conectado ao Firebase real');
+ await expect(page.locator('#provider-status')).toContainText('Firebase ainda não está conectado');
  await expect(page.locator('#login-form')).toBeHidden();
 });
