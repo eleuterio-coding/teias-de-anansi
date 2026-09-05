@@ -1,0 +1,54 @@
+name: Homologar release v1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+      - '**.css'
+      - 'scripts/**'
+      - 'dados/**'
+      - 'e2e/**'
+      - 'package.json'
+      - 'playwright.config.js'
+      - 'tests/auditar-release-v1.mjs'
+      - 'docs/**'
+      - 'README.md'
+      - 'ROADMAP-V1.md'
+      - '.github/workflows/homologar-release-v1.yml'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  estrutural:
+    name: Gate estrutural do release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/auditar-release-v1.mjs
+
+  navegador:
+    name: E2E Chromium · desktop e mobile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Guardar relatório em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
