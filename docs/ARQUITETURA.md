@@ -1,8 +1,10 @@
-# Arquitetura — Teias de Anansi v1.0
+# Arquitetura — Teias de Anansi v1
 
 ## Visão geral
 
 Teias de Anansi é um site web estático e responsivo hospedado no GitHub Pages. A aplicação não depende de backend próprio para os fluxos locais: HTML, CSS, módulos JavaScript e catálogos JSON são servidos diretamente pelo repositório. Persistência local e colaboração online são camadas separadas.
+
+A linha v1 foi encerrada na v1.0.0 e teve o escopo simplificado na v1.0.1: a área de Backup e a autorização/hardening adicional foram removidas. O modelo atual é **login simples + sincronização + visibilidade funcional Mestre/Jogador**.
 
 ## Superfícies principais
 
@@ -11,10 +13,11 @@ Teias de Anansi é um site web estático e responsivo hospedado no GitHub Pages.
 - `campanhas.html`, `mesa.html` e `sessoes.html`: Campanhas/Mesas e Sessões.
 - `aventuras.html`: planejamento narrativo.
 - `bibliotecas.html`: consulta aos catálogos normativos.
-- `dados.html`: exportação/importação e recuperação.
 - `usuarios.html`: identidade, Firebase e colaboração.
 - `painel.html`: agregação operacional.
 - `configuracoes.html`: preferências locais.
+
+A superfície `dados.html` e o motor específico de Backup/restauração não fazem parte do produto atual.
 
 ## Módulos de domínio
 
@@ -31,7 +34,9 @@ A camada local usa `localStorage` com chaves versionadas. Entre as principais:
 - `hub-rpg:adventures:v1`
 - `hub-rpg:settings:v1`
 
-O `scripts/storage-registry.js` classifica chaves duráveis, portáteis, transitórias e caches. Personagens, Campanhas e Aventuras compõem o estado portátil da v1. Configurações são estado durável local, mas permanecem fora do pacote de backup v1 para não alterar o schema e checksum já congelados no Bloco 14.
+O `scripts/storage-registry.js` classifica os estados locais usados pelo produto. A persistência local continua sendo a base dos fluxos do navegador; a sincronização Firebase é uma camada adicional para os estados cobertos pela colaboração.
+
+**Não existe Backup/exportação/restauração como função do produto atual.** Limpar manualmente o armazenamento local pode remover estados que ainda não estejam sincronizados online.
 
 ## Schemas e normalização
 
@@ -41,15 +46,10 @@ Os registros persistentes usam schema explícito e funções de sanitização/mi
 - campanha: `hub-rpg/campaign/v1`
 - aventura: `hub-rpg/adventure/v1`
 - configurações: `hub-rpg/settings/v1`
-- backup: `hub-rpg/backup/v1`
 
-A regra arquitetural é normalizar na leitura e na escrita. Dados legados são migrados para a forma corrente quando suportados, e relações entre entidades são verificadas no fluxo de backup/restauração.
+A regra arquitetural é normalizar na leitura e na escrita. Dados legados são migrados para a forma corrente quando suportados.
 
-## Backup e recuperação
-
-`scripts/backup-engine.js` lê somente os registros classificados como portáteis, normaliza os dados, cria manifesto e checksum FNV-1a e valida relações. A restauração opera em modo `merge` ou `replace`.
-
-Antes de gravar uma restauração, um snapshot local de recuperação é criado. Se a escrita ou a verificação posterior falhar, o armazenamento anterior é restaurado. A restauração só termina quando o estado relido corresponde ao alvo normalizado.
+O antigo schema `hub-rpg/backup/v1` pertence somente ao histórico da v1.0.0 e não integra o contrato atual.
 
 ## Configurações
 
@@ -61,28 +61,45 @@ O preset de Regras da Casa não é persistido como propriedade da Mesa enquanto 
 
 A colaboração usa Firebase Authentication e Cloud Firestore no plano Spark / No-cost. O site continua hospedado no GitHub Pages; não há Firebase Hosting nem Cloud Functions.
 
-O login visível é usuário + senha. O nome de usuário é normalizado e convertido internamente para um identificador técnico `@teias.invalid` usado pelo Firebase Authentication. A autorização efetiva exige também documento ativo em `authorizedUsers/{uid}`.
+O login visível é **usuário + senha**. O nome de usuário é normalizado e convertido internamente para um identificador técnico `@teias.invalid` usado pelo Firebase Authentication. Nenhum e-mail real é solicitado pelo Hub.
 
-`scripts/firebase-collaboration-provider.js` encapsula Authentication e Firestore. `scripts/collaboration-sync.js` orquestra sincronização, e `scripts/collaboration-model.js` define projeções e permissões de domínio.
+No modelo atual, **não existe `authorizedUsers`, `isAdmin` nem segunda camada de autorização**. Se a conta existe no Firebase Authentication e a senha está correta, ela pode iniciar sessão.
+
+`scripts/firebase-collaboration-provider.js` encapsula Authentication e Firestore. `scripts/collaboration-sync.js` orquestra sincronização, e `scripts/collaboration-model.js` define projeções e comportamento de domínio.
 
 ### Separação privado/compartilhado
 
-Campanhas possuem projeções distintas. Estado privado do Mestre inclui informações que jogadores não podem receber. A projeção compartilhada remove notas privadas, encontros privados, pistas ocultas e handouts ainda não revelados.
+Campanhas possuem projeções distintas. Estado privado do Mestre inclui informações que Jogadores/Observadores não devem receber pela interface. A projeção compartilhada remove notas privadas, pistas ocultas, handouts ainda não revelados e demais conteúdos exclusivos do Mestre.
 
-Papéis suportados: `dm`, `player` e `observer`. Firestore Rules reforçam as permissões no servidor; a UI não é tratada como fronteira de segurança.
+Papéis suportados: `dm`, `player` e `observer`.
+
+Essa separação é **funcional**, não uma fronteira de segurança. O projeto pressupõe participantes de confiança. As Firestore Rules atuais aceitam leitura e escrita para qualquer usuário autenticado:
+
+```text
+allow read, write: if request.auth != null;
+```
+
+A aplicação, e não as Rules, escolhe entre bundle privado e projeção compartilhada conforme o papel do participante na Mesa.
 
 ## Rede e falhas
 
-Fluxos locais devem continuar funcionais sem Firebase. A tela de Usuários informa indisponibilidade/configuração incompleta sem liberar cadastro público. Importações de catálogos possuem tratamento de erro e timeout onde necessário.
+Fluxos estritamente locais continuam utilizáveis quando o Firebase está indisponível. A sincronização online é uma camada adicional; falha remota não deve apagar o estado local existente.
 
-A sincronização online é uma camada adicional: falha de rede não deve corromper o estado local. Caches remotos são regeneráveis e não entram no backup portátil.
+A homologação Firebase real cobre perda e retomada de rede no fluxo de colaboração.
 
 ## Hospedagem e custo
 
-A aplicação v1 é exclusivamente web. GitHub Pages hospeda os arquivos estáticos. Firebase permanece no plano Spark. São proibidos recursos que exijam faturamento, cartão ou conta de billing. Também são proibidos Firebase Hosting, Cloud Functions e Supabase para a v1.
+A aplicação é exclusivamente web. GitHub Pages hospeda os arquivos estáticos. Firebase permanece no plano Spark. São proibidos recursos que exijam faturamento, cartão ou conta de billing. Também são proibidos Firebase Hosting, Cloud Functions e Supabase na linha v1.
 
 ## Testes e homologação
 
-As auditorias em `tests/*.mjs` verificam contratos normativos, mecânicos, persistência e integrações. O Bloco 18 acrescenta Playwright para E2E em Chromium real, com projetos Desktop e Mobile executados sobre um servidor HTTP local no GitHub Actions.
+As auditorias em `tests/*.mjs` verificam contratos normativos, mecânicos, persistência e integrações. Playwright executa E2E em Chromium Desktop e Mobile sobre servidor HTTP local no GitHub Actions.
 
-`tests/auditar-release-v1.mjs` é o gate estrutural: exige documentação, suíte E2E e regressões críticas dos blocos anteriores. O workflow `.github/workflows/homologar-release-v1.yml` executa esse gate e a automação de navegador antes do release final.
+`tests/auditar-release-v1.mjs` é o gate estrutural da linha v1. O workflow `.github/workflows/homologar-release-v1.yml` valida a versão atual em navegador. O workflow `.github/workflows/homologar-firebase-real.yml` executa a homologação Firebase real automaticamente quando a camada de colaboração muda.
+
+A v1.0.1 foi publicada somente após:
+
+- gate estrutural verde;
+- E2E Desktop/Mobile verde;
+- Firebase real verde com Mestre e Jogador efêmero;
+- confirmação de visão privada para Mestre e projeção compartilhada para Jogador.
