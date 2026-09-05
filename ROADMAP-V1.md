@@ -33,7 +33,7 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 14. Persistência definitiva e portabilidade — ✅ Aceito
 15. Usuários, colaboração e sincronização — ✅ Aceito
 16. Painel Geral — ✅ Aceito
-17. Configurações — Planejado
+17. Configurações — ✅ Aceito
 18. Homologação, documentação e release final — Planejado
 
 ## Critérios dos blocos restantes
@@ -70,6 +70,8 @@ Aceite: nova superfície `painel.html` agrega o estado local persistente de pers
 
 ### 17. Configurações
 Preferências persistentes de usuário/Mestre, fontes e regras habilitadas, presets de Regras da Casa, ficha, acessibilidade e defaults de campanha.
+
+Aceite: nova superfície `configuracoes.html` com estado versionado `hub-rpg:settings:v1`; preferências de perfil de uso, fontes normativas, presets de Regras da Casa, densidade e navegação da Ficha, tamanho de texto, contraste, redução de movimento e defaults de Mestre/cenário/sistema. A camada global de UX consome as preferências visuais e novas Mesas recebem os defaults configurados sem alterar retroativamente personagens ou Campanhas existentes. Configurações são estado durável local, classificado no registro de armazenamento e mantido fora do backup portátil v1 para preservar o schema/checksum já aceito do Bloco 14. O preset de Regras da Casa é uma preferência normativa local: enquanto `hub-rpg/campaign/v1` não possuir campo próprio, ele não é artificialmente persistido como perfil da Mesa nem usado para fingir que mecânicas já materializadas foram desativadas. Auditoria dedicada do Bloco 17 e regressões de UX, Campanhas e persistência protegem o comportamento; a validação isolada do Bloco 17 foi aprovada.
 
 ### 18. Homologação, documentação e release final
 E2E em navegador real e mobile, fluxos longos 1–20, campanhas, recuperação de dados, erros de rede, acessibilidade, desempenho, README/manual/arquitetura, limpeza de PRs/branches e release v1.0.
