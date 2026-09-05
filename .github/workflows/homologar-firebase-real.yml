@@ -1,0 +1,48 @@
+name: Homologar Firebase real v1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  E2E_FIREBASE_ADMIN_USERNAME: ${{ secrets.E2E_FIREBASE_ADMIN_USERNAME }}
+  E2E_FIREBASE_ADMIN_PASSWORD: ${{ secrets.E2E_FIREBASE_ADMIN_PASSWORD }}
+  E2E_FIREBASE_PLAYER_USERNAME: ${{ secrets.E2E_FIREBASE_PLAYER_USERNAME }}
+  E2E_FIREBASE_PLAYER_PASSWORD: ${{ secrets.E2E_FIREBASE_PLAYER_PASSWORD }}
+  E2E_FIREBASE_PLAYER_UID: ${{ secrets.E2E_FIREBASE_PLAYER_UID }}
+
+jobs:
+  firebase-real:
+    name: Firebase multiusuário real · Mestre x Jogador
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exigir credenciais E2E reais
+        shell: bash
+        run: |
+          missing=0
+          for name in E2E_FIREBASE_ADMIN_USERNAME E2E_FIREBASE_ADMIN_PASSWORD E2E_FIREBASE_PLAYER_USERNAME E2E_FIREBASE_PLAYER_PASSWORD E2E_FIREBASE_PLAYER_UID; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name não está configurado nos GitHub Actions Secrets."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "O gate Firebase real não pode ser aprovado sem duas identidades reais de teste."
+            exit 1
+          fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e:firebase
+      - name: Guardar relatório em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-firebase-real-report
+          path: playwright-report/
+          retention-days: 7
