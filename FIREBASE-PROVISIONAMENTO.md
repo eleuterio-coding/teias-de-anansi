@@ -146,14 +146,28 @@ Uma execução verde precisa provar, no Firebase Spark real:
 9. alteração pelo Jogador apenas do `characterId` permitido da própria membership;
 10. perda e retomada de rede preservando o estado local e recuperando uma leitura compartilhada válida.
 
-## 5. Critério de aceite
+## 5. Critério de aceite e fechamento automático
 
 O Bloco 18 só pode ser marcado como **✅ Aceito** quando `Homologar Firebase real v1` terminar com **success** usando as duas identidades reais.
 
-Depois desse success:
+Depois de um `success` manual na `main`, o workflow `.github/workflows/finalizar-release-v1.yml` é disparado automaticamente por `workflow_run`. Ele só publica se todas as travas abaixo forem satisfeitas:
 
-1. registrar o run em `docs/HOMOLOGACAO-V1.md`;
-2. marcar o Bloco 18 como aceito em `ROADMAP-V1.md`;
-3. criar a tag/release `v1.0.0`.
+1. o workflow Firebase terminou com `success`;
+2. a execução foi iniciada por `workflow_dispatch`;
+3. a execução ocorreu sobre a branch `main` do próprio repositório;
+4. a `main` continua exatamente no mesmo commit homologado pelo Firebase;
+5. a tag `v1.0.0` ainda não existe;
+6. o gate estrutural é reexecutado e permanece verde;
+7. o E2E local Desktop/Mobile é reexecutado e permanece verde.
 
-Até lá, a ausência dos Secrets é o único bloqueador técnico obrigatório conhecido do release.
+Só então o finalizador:
+
+- promove `package.json` de `1.0.0-rc.1` para `1.0.0`;
+- registra o run Firebase aprovado em `docs/HOMOLOGACAO-V1.md`;
+- marca o Bloco 18 como **✅ Aceito** em `ROADMAP-V1.md`;
+- cria a tag anotada `v1.0.0`;
+- publica o GitHub Release **Teias de Anansi v1.0.0** usando `docs/RELEASE-NOTES-V1.0.0.md`.
+
+Se a `main` mudar entre a homologação Firebase e o finalizador, a publicação falha fechada: é necessário rodar `Homologar Firebase real v1` novamente sobre o commit atual. O finalizador nunca força ou sobrescreve uma tag existente.
+
+Até existir esse `success` real, a ausência dos Secrets continua sendo o único bloqueador técnico obrigatório conhecido do release.
