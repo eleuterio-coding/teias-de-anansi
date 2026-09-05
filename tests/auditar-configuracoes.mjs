@@ -25,6 +25,7 @@ assert.equal(sanitized.sources.enabled.length,SOURCE_AUTHORITIES.length,'Fonte i
 const campaign=campaignDefaultsFromSettings(saved);
 assert.equal(campaign.dmName,'Anansi');
 assert.equal(campaign.setting,'Eberron');
+assert.equal('rulesProfile' in campaign,false,'Defaults de campanha não devem fingir persistir um perfil normativo que o schema da Mesa ainda não armazena.');
 
 const fakeRoot={dataset:{}};
 applyUiPreferences(saved,fakeRoot);
