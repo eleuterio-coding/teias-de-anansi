@@ -4,55 +4,98 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 
 ## Estado do Bloco 18
 
-- Gate estrutural/documental: automatizado por `tests/auditar-release-v1.mjs`.
-- E2E Chromium Desktop: automatizado por Playwright.
-- E2E Chromium Mobile: automatizado por Playwright.
-- Fluxos locais de Configurações, criação de Mesa e backup/restauração: automatizados em navegador real.
-- Regressões críticas dos Blocos 1–17: executadas pelo gate estrutural.
+- Gate estrutural/documental: **aprovado** em execução observável do workflow `Homologar release v1`.
+- E2E Chromium Desktop: **aprovado** por Playwright.
+- E2E Chromium Mobile: **aprovado** por Playwright.
+- Fluxos locais de Configurações, criação de Mesa e backup/restauração: **aprovados** em navegador real.
+- Regressões críticas dos Blocos 1–17: **aprovadas** pela suíte de cobertura total.
 - Harness Firebase multiusuário real: **implementado** em `e2e/collaboration-real.spec.js` e `.github/workflows/homologar-firebase-real.yml`.
-- Evidência de execução Firebase multiusuário real: **pendente** e continua bloqueando o release final.
-- PRs abertos históricos: **resolvidos**; #123, #94 e #30 foram fechados como superseded após análise individual.
-- Auditoria de branches: **concluída logicamente** em `docs/AUDITORIA-BRANCHES-V1.md`; branches oficiais dos Blocos 1–16 foram ligadas a PRs mesclados e classificadas como candidatas à limpeza. Exclusão física não foi executada porque o conector disponível não expõe `delete ref`.
-- Tag/release `v1.0.0`: **não publicar enquanto os gates de execução ainda estiverem pendentes**.
+- Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos cinco GitHub Actions Secrets de teste**.
+- PRs históricos: **resolvidos**; #123, #94 e #30 foram fechados como superseded após análise individual.
+- Limpeza física das branches oficiais/superseded: **executada e verificada**; detalhes em `docs/AUDITORIA-BRANCHES-V1.md`.
+- Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.
+
+## Evidências automatizadas observadas
+
+### Gate normal de release
+
+Execução observada: workflow `Homologar release v1`, run `33961080122`.
+
+- `Gate estrutural do release`: **success**;
+- `E2E Chromium · desktop e mobile`: **success**;
+- Playwright: **10 passed, 2 skipped**;
+- os dois testes pulados são exclusivamente os dois projetos (Desktop/Mobile) do cenário Firebase real, que exige credenciais externas e possui workflow dedicado.
+
+### Cobertura total
+
+Execução observada: workflow `Auditar cobertura total da criação`, run `33961080076`.
+
+Resultado: **success** em todas as etapas:
+
+1. inventário e integridade sintática;
+2. integridade completa dos dados;
+3. escopo fail-closed e rastreabilidade de runtime;
+4. aplicação mecânica, interações, cenários e regressão;
+5. políticas globais e consistência editorial;
+6. evidência verificável de cobertura.
+
+Durante a homologação foram encontrados e corrigidos dois defeitos reais antes do aceite automático:
+
+- chave `}` excedente em `scripts/character-sheet-rest-ui.js`, que causava erro sintático;
+- auditoria histórica do Bloco 16 ainda esperava Configurações indisponível depois do Bloco 17; o teste foi atualizado para exigir Painel e Configurações disponíveis no estado atual.
+
+### Firebase real
+
+Execução observada: workflow `Homologar Firebase real v1`, run `33961159721`.
+
+Resultado: **failure no preflight**, antes de qualquer login, leitura ou escrita Firebase. O job confirmou ausência de todos os cinco Secrets obrigatórios:
+
+- `E2E_FIREBASE_ADMIN_USERNAME`
+- `E2E_FIREBASE_ADMIN_PASSWORD`
+- `E2E_FIREBASE_PLAYER_USERNAME`
+- `E2E_FIREBASE_PLAYER_PASSWORD`
+- `E2E_FIREBASE_PLAYER_UID`
+
+Essa falha não demonstra defeito em Authentication, Firestore, Rules ou sincronização; demonstra apenas que a execução autenticada não pode ocorrer sem as duas identidades de teste. O release permanece bloqueado até esse mesmo workflow executar verde com os Secrets configurados.
 
 ## Matriz de homologação
 
-| Área | Desktop | Mobile | Evidência / critério |
+| Área | Desktop | Mobile | Estado |
 | --- | --- | --- | --- |
-| Home e navegação principal | Automático | Automático | Carregamento, heading principal e ausência de overflow horizontal |
-| Personagens | Automático | Automático | Superfície carrega sem erro JavaScript |
-| Campanhas / Mesas | Automático | Automático | Defaults, criação real e persistência do schema |
-| Dados / Backup | Automático | Automático | Exportação, remoção do estado e recuperação pelo arquivo baixado |
-| Painel Geral | Automático | Automático | Superfície carrega sem erro JavaScript |
-| Configurações | Automático | Automático | Persistência, reload e aplicação de preferências visuais |
-| Usuários sem provedor disponível | Automático | Automático | Falha fechada e nenhuma liberação de acesso |
-| Firebase autenticado | Harness pronto; execução pendente | Cobertura por dois contextos Chromium | Duas identidades reais e papéis distintos na mesma Mesa |
+| Home e navegação principal | Aprovado | Aprovado | sem overflow horizontal nas superfícies principais |
+| Personagens | Aprovado | Aprovado | superfície carrega sem erro JavaScript |
+| Campanhas / Mesas | Aprovado | Aprovado | defaults, criação real e persistência do schema |
+| Dados / Backup | Aprovado | Aprovado | exportação, remoção do estado e restauração do arquivo |
+| Painel Geral | Aprovado | Aprovado | superfície carrega e integra estado local |
+| Configurações | Aprovado | Aprovado | persistência, reload e preferências visuais |
+| Usuários sem provedor disponível | Aprovado | Aprovado | fail-closed e nenhuma liberação de acesso |
+| Firebase autenticado | Pendente por Secrets | Mesmo harness em contexto independente | duas identidades reais e papéis distintos na mesma Mesa |
 
 ## Progressão Level 1 → Level 20
 
-A progressão possui auditoria mecânica em `tests/auditar-progressao-level.mjs`. O fechamento do release combina duas evidências:
+A progressão possui auditoria mecânica em `tests/auditar-progressao-level.mjs`. O fechamento combina duas evidências:
 
-1. **Level 1 / criação:** criação e estado inicial seguem o schema atual, sem histórico artificial de progressão.
+1. **Level 1 / criação:** criação e estado inicial seguem o schema atual, sem histórico artificial de progressão;
 2. **Level 20 / limite:** a progressão é sequencial, não permite saltos e encerra no Level 20.
 
 O gate crítico executa a auditoria de progressão em cada homologação. A automação de navegador complementa, mas não substitui, os testes de regra.
 
 ## Campanhas, Sessões, Encontros e Aventuras
 
-Critérios obrigatórios:
+Critérios obrigatórios aprovados pelas auditorias mecânicas:
 
 - criação de Mesa usa defaults configurados sem modificar Mesas anteriores;
 - somente uma Sessão fica ativa por Mesa;
 - Sessão não termina com encontro ativo;
 - encontros preservam iniciativa, criaturas, PV, condições, turnos e recompensas;
 - Aventuras mantêm relações válidas com a campanha;
-- projeção compartilhada não contém material privado/oculto do Mestre.
+- projeção compartilhada não contém material privado/oculto do Mestre no contrato estático.
 
-As auditorias de Campanhas, Aventuras e Colaboração são chamadas pelo gate estrutural do release.
+A confirmação contra Firestore real para dois usuários permanece no gate autenticado final.
 
 ## Recuperação e corrupção de dados
 
-O cenário E2E automatizado:
+O cenário E2E aprovado:
 
 1. grava Personagem, Campanha e Aventura relacionados no armazenamento;
 2. exporta Backup pela interface;
@@ -67,75 +110,56 @@ A auditoria Node também cobre checksum, relações, snapshot de recuperação e
 
 ## Erros de rede
 
-A homologação exige comportamento seguro quando a rede ou o provedor online falham:
+A homologação local aprovada confirma que:
 
 - recursos estritamente locais continuam utilizáveis;
 - tela de Usuários não transforma falha de Firebase em cadastro ou sessão aberta;
 - estado local não é apagado por falha remota;
-- caches online continuam classificados como regeneráveis;
-- após uma sessão autenticada real, perda e retomada de rede preservam o estado local e recuperam leitura remota.
+- caches online continuam classificados como regeneráveis.
 
-O E2E local intercepta a configuração Firebase em cenário controlado para verificar fail-closed. O E2E Firebase real usa `BrowserContext.setOffline(true/false)`, mantém um marcador em `localStorage` e exige nova leitura compartilhada válida após a retomada.
+O harness Firebase real adiciona o requisito ainda pendente de perder e retomar rede depois de sessão autenticada, preservando estado local e recuperando leitura remota válida.
 
 ## Acessibilidade e responsividade
 
-Critérios mínimos do release:
+Critérios mínimos automatizados:
 
 - viewport Mobile sem overflow horizontal nas superfícies principais;
-- navegação e controles utilizáveis por teclado onde aplicável;
 - headings e regiões principais presentes;
-- mensagens dinâmicas importantes usam regiões de status/`aria-live` já previstas nas superfícies;
-- preferências de tamanho de texto, contraste e redução de movimento persistem e são aplicadas globalmente.
-
-## Desempenho
-
-A v1.0 é um site estático e evita dependência de bundler/runtime pesado para uso normal. O E2E trata erros JavaScript das superfícies principais como falha. Recursos externos não essenciais não podem impedir o carregamento dos fluxos locais.
-
-Uma regressão de desempenho relevante é qualquer alteração que torne criação, Ficha, Campanhas ou Painel impraticáveis em navegador móvel contemporâneo. Medidas quantitativas adicionais podem ser acrescentadas em versões futuras sem reabrir a v1.0.
+- preferências de tamanho de texto, contraste e redução de movimento persistem e são aplicadas globalmente;
+- erros JavaScript das superfícies principais tornam o E2E vermelho.
 
 ## Gate Firebase multiusuário real
 
-Este é o item que não pode ser simulado como aprovado. O harness implementado exige no projeto Firebase Spark real:
+Este é o único gate técnico obrigatório ainda não aprovado. O harness exige no projeto Firebase Spark real:
 
 1. uma conta administradora autorizada;
 2. uma segunda conta autorizada e não administradora;
 3. uma Campanha técnica reutilizável publicada pelo proprietário/Mestre;
 4. vínculo da segunda conta como `player`;
 5. dois contextos de navegador independentes;
-6. confirmação de que o Mestre recebe estado privado e o Jogador recebe apenas projeção compartilhada;
-7. confirmação de que handout/pista ocultos não aparecem na projeção do Jogador;
-8. tentativa direta de escrita em `/campaigns/{id}/private/*` bloqueada pelas Firestore Rules;
+6. Mestre recebendo estado privado e Jogador apenas a projeção compartilhada;
+7. handout/pista ocultos ausentes da projeção do Jogador;
+8. escrita direta em `/campaigns/{id}/private/*` bloqueada pelas Firestore Rules;
 9. atualização permitida do `characterId` da própria membership;
 10. perda de rede e retomada sem corrupção do estado local, seguida de nova leitura remota válida.
 
-O workflow manual `Homologar Firebase real v1` lê exclusivamente GitHub Actions Secrets:
-
-- `E2E_FIREBASE_ADMIN_USERNAME`
-- `E2E_FIREBASE_ADMIN_PASSWORD`
-- `E2E_FIREBASE_PLAYER_USERNAME`
-- `E2E_FIREBASE_PLAYER_PASSWORD`
-- `E2E_FIREBASE_PLAYER_UID`
-
-O workflow possui preflight obrigatório: se qualquer secret estiver ausente, o job falha antes de instalar/executar o teste. As senhas não ficam no repositório, nos fixtures nem neste documento.
-
-A existência do harness **não é evidência de execução**. Até existir uma execução real verde, este gate permanece pendente e `v1.0.0` continua bloqueado.
+O workflow `Homologar Firebase real v1` possui preflight obrigatório. Senhas e usuários não ficam no repositório. Uma execução verde desse workflow é condição suficiente para encerrar este gate; uma falha por credenciais ausentes não pode ser reinterpretada como aceite.
 
 ## Branches, PRs e release
 
 A auditoria está registrada em `docs/AUDITORIA-BRANCHES-V1.md`.
 
-- os três PRs abertos encontrados foram resolvidos explicitamente, sem merge cego;
-- as branches oficiais `codex/bloco-*` dos Blocos 1–16 correspondem a PRs mesclados (#129–#145; Bloco 15 usa #143 e #144);
-- branches dos PRs #123, #94 e #30 são superseded e candidatas à remoção;
-- branches sem evidência suficiente foram preservadas;
-- nenhuma ref foi forçada ou movida para fingir limpeza física;
-- a ferramenta GitHub disponível nesta sessão não expõe exclusão de refs, portanto a remoção física das branches candidatas não foi executada.
+- #123, #94 e #30 foram fechados como superseded;
+- branches oficiais dos Blocos 1–16 foram associadas aos PRs mesclados #129–#145;
+- branches oficiais e as três branches superseded foram fisicamente removidas;
+- branches históricas sem evidência de descarte seguro foram preservadas deliberadamente;
+- o PR técnico #146 existe apenas para observabilidade dos workflows e deve ser fechado sem merge; sua branch técnica deve ser removida em seguida.
 
 ## Sequência final para a tag
 
-1. confirmar execução verde do gate estrutural + E2E Desktop/Mobile no `main`;
-2. confirmar execução verde de `Homologar Firebase real v1` com as duas contas de teste;
-3. registrar as evidências finais neste documento;
-4. decidir/executar a exclusão física das branches candidatas por uma ferramenta com `delete ref`, se ela continuar sendo exigida como limpeza administrativa;
+1. manter o gate normal de release verde;
+2. configurar os cinco Secrets de teste no GitHub Actions;
+3. executar `Homologar Firebase real v1` até obter **success** real;
+4. registrar a evidência final neste documento;
 5. marcar o Bloco 18 como aceito no `ROADMAP-V1.md`;
-6. somente então criar a tag/release `v1.0.0`.
+6. criar somente então a tag/release `v1.0.0`.
