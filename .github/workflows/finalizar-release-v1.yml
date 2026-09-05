@@ -69,7 +69,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
-          import json, os, pathlib
+          import json, os, pathlib, re
 
           run_id = os.environ['FIREBASE_RUN_ID']
           repository = os.environ['GITHUB_REPOSITORY']
@@ -82,48 +82,74 @@ jobs:
 
           roadmap_path = pathlib.Path('ROADMAP-V1.md')
           roadmap = roadmap_path.read_text(encoding='utf-8')
-          roadmap = roadmap.replace(
-              '18. Homologação, documentação e release final — 🟡 Em homologação final · gate Firebase real pendente por Secrets',
-              '18. Homologação, documentação e release final — ✅ Aceito'
+          roadmap, count = re.subn(
+              r'^18\. Homologação, documentação e release final — .*$',
+              '18. Homologação, documentação e release final — ✅ Aceito',
+              roadmap,
+              count=1,
+              flags=re.M
           )
-          roadmap = roadmap.replace(
-              'Estado atual: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação e limpeza de PRs/branches foram concluídos. O único gate técnico obrigatório ainda sem evidência verde é `Homologar Firebase real v1`, que depende dos cinco GitHub Actions Secrets de duas identidades reais de teste. A tag `v1.0.0` permanece proibida até esse gate executar com sucesso.',
-              f'Aceite: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação, limpeza de PRs/branches e homologação Firebase multiusuário real foram concluídos. O gate `Homologar Firebase real v1` foi aprovado no run `{run_id}`. A v1.0 está encerrada e apta à publicação da tag `v1.0.0`.'
-          )
-          if '18. Homologação, documentação e release final — ✅ Aceito' not in roadmap:
-              raise SystemExit('Não foi possível materializar o aceite do Bloco 18 no ROADMAP-V1.md.')
+          if count != 1:
+              raise SystemExit('Não foi possível localizar o status do Bloco 18 no ROADMAP-V1.md.')
+          acceptance = f'Aceite: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação, limpeza de PRs/branches e homologação Firebase multiusuário real foram concluídos. O gate `Homologar Firebase real v1` foi aprovado no run `{run_id}`. A v1.0 está encerrada e apta à publicação da tag `v1.0.0`.'
+          if re.search(r'^Estado atual: gate estrutural,', roadmap, flags=re.M):
+              roadmap = re.sub(r'^Estado atual: gate estrutural,.*$', acceptance, roadmap, count=1, flags=re.M)
+          elif re.search(r'^Aceite: gate estrutural,', roadmap, flags=re.M):
+              roadmap = re.sub(r'^Aceite: gate estrutural,.*$', acceptance, roadmap, count=1, flags=re.M)
+          else:
+              raise SystemExit('Não foi possível localizar o resumo do Bloco 18 no ROADMAP-V1.md.')
           roadmap_path.write_text(roadmap, encoding='utf-8')
 
           hom_path = pathlib.Path('docs/HOMOLOGACAO-V1.md')
           hom = hom_path.read_text(encoding='utf-8')
-          hom = hom.replace(
-              '- Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos cinco GitHub Actions Secrets de teste**.',
-              f'- Evidência de execução Firebase multiusuário real: **aprovada** no run `{run_id}`.'
+          hom, evidence_count = re.subn(
+              r'^- Evidência de execução Firebase multiusuário real: .*$',
+              f'- Evidência de execução Firebase multiusuário real: **aprovada** no run `{run_id}`.',
+              hom,
+              count=1,
+              flags=re.M
           )
-          hom = hom.replace(
-              '- Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.',
-              '- Tag/release `v1.0.0`: **autorizada** após aprovação de todos os gates obrigatórios.'
+          hom, release_count = re.subn(
+              r'^- Tag/release `v1\.0\.0`: .*$',
+              '- Tag/release `v1.0.0`: **publicação autorizada** após aprovação de todos os gates obrigatórios.',
+              hom,
+              count=1,
+              flags=re.M
           )
-          hom = hom.replace(
-              '| Firebase autenticado | Pendente por Secrets | Mesmo harness em contexto independente | duas identidades reais e papéis distintos na mesma Mesa |',
-              f'| Firebase autenticado | Aprovado | Aprovado | duas identidades reais, Rules, projeção compartilhada e retomada de rede · run `{run_id}` |'
+          hom, matrix_count = re.subn(
+              r'^\| Firebase autenticado \|.*$',
+              f'| Firebase autenticado | Aprovado | Aprovado | Administrador real + Jogador efêmero, Rules, projeção compartilhada e retomada de rede · run `{run_id}` |',
+              hom,
+              count=1,
+              flags=re.M
           )
+          if not all([evidence_count, release_count, matrix_count]):
+              raise SystemExit('Não foi possível atualizar todas as evidências Firebase em HOMOLOGACAO-V1.md.')
+
           marker = '### Firebase real\n\n'
           final_block = (
               f'### Firebase real — aceite final\n\n'
               f'Execução final aprovada: `Homologar Firebase real v1`, run `{run_id}`. '
-              f'O workflow concluiu com **success** usando duas identidades reais e liberou o encerramento do Bloco 18. '
+              f'O workflow concluiu com **success** usando o Administrador real e um Jogador E2E efêmero, liberando o encerramento do Bloco 18. '
               f'Evidência: {run_url}\n\n'
           )
-          if final_block not in hom:
-              hom = hom.replace(marker, final_block + marker, 1)
+          hom = re.sub(r'### Firebase real — aceite final\n\n.*?(?=### Firebase real\n\n)', '', hom, count=1, flags=re.S)
+          if marker not in hom:
+              raise SystemExit('Seção Firebase real não encontrada em HOMOLOGACAO-V1.md.')
+          hom = hom.replace(marker, final_block + marker, 1)
           hom = hom.replace(
               'Este é o **único gate técnico obrigatório ainda não aprovado**.',
               'Este gate técnico obrigatório foi **aprovado na homologação final**.'
           )
-          old_sequence = '''## Sequência final para a tag\n\n1. configurar os cinco Secrets de teste no GitHub Actions;\n2. executar `Homologar Firebase real v1` até obter **success** real;\n3. registrar a evidência final neste documento;\n4. marcar o Bloco 18 como aceito no `ROADMAP-V1.md`;\n5. criar somente então a tag/release `v1.0.0`.'''
-          new_sequence = f'''## Fechamento final\n\nTodos os gates obrigatórios da v1.0 foram aprovados. O Bloco 18 está aceito e a publicação `v1.0.0` foi autorizada pelo run Firebase `{run_id}`.'''
-          hom = hom.replace(old_sequence, new_sequence)
+
+          closing = f'## Fechamento final\n\nTodos os gates obrigatórios da v1.0 foram aprovados. O Bloco 18 está aceito e a publicação `v1.0.0` foi autorizada pelo run Firebase `{run_id}`.'
+          if '## Sequência final para a tag' in hom:
+              hom = re.sub(r'## Sequência final para a tag\n.*\Z', closing + '\n', hom, count=1, flags=re.S)
+          elif '## Fechamento final' in hom:
+              hom = re.sub(r'## Fechamento final\n.*\Z', closing + '\n', hom, count=1, flags=re.S)
+          else:
+              raise SystemExit('Seção de fechamento não encontrada em HOMOLOGACAO-V1.md.')
+
           if f'run `{run_id}`' not in hom:
               raise SystemExit('Não foi possível registrar a evidência Firebase final em HOMOLOGACAO-V1.md.')
           hom_path.write_text(hom, encoding='utf-8')
