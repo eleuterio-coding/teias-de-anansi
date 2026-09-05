@@ -13,6 +13,7 @@ Este documento é o checklist de aceite do Bloco 18. Um item só pode ser marcad
 - Evidência de execução Firebase multiusuário real: **bloqueada exclusivamente por ausência dos cinco GitHub Actions Secrets de teste**.
 - PRs históricos: **resolvidos**; #123, #94 e #30 foram fechados como superseded após análise individual.
 - Limpeza física das branches oficiais/superseded: **executada e verificada**; detalhes em `docs/AUDITORIA-BRANCHES-V1.md`.
+- PR técnico #146: **pronto para encerramento sem merge**; seu único arquivo é um artefato temporário de observabilidade e não deve entrar na `main`.
 - Tag/release `v1.0.0`: **bloqueada somente até existir uma execução verde do gate Firebase real**.
 
 ## Evidências automatizadas observadas
@@ -153,7 +154,7 @@ A auditoria está registrada em `docs/AUDITORIA-BRANCHES-V1.md`.
 - branches oficiais dos Blocos 1–16 foram associadas aos PRs mesclados #129–#145;
 - branches oficiais e as três branches superseded foram fisicamente removidas;
 - branches históricas sem evidência de descarte seguro foram preservadas deliberadamente;
-- o PR técnico #146 existe apenas para observabilidade dos workflows e deve ser fechado sem merge; sua branch técnica deve ser removida em seguida.
+- o PR técnico #146 existe apenas para observabilidade dos workflows e será fechado sem merge; sua branch técnica será removida em seguida.
 
 ## Sequência final para a tag
 
