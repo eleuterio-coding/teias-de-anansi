@@ -1,19 +1,34 @@
-# Roadmap oficial de fechamento — Hub de RPG v1.0
+# Roadmap oficial de fechamento — Hub de RPG v1
 
-Este arquivo é a autoridade do escopo de fechamento da v1.0. Os Blocos 1–8 encerraram o roadmap funcional inicial; os Blocos 9–18 completam fidelidade normativa, resolução de jogo, ferramentas do Mestre, produto, persistência, colaboração e release.
+Este arquivo registra o fechamento da v1.0 e a correção de escopo consolidada na v1.0.1. Os Blocos 1–18 permanecem encerrados; a v1.0.1 não reabre o roadmap funcional, apenas substitui requisitos que deixaram de fazer sentido para um Hub pessoal e particular.
 
 ## Regra de encerramento
 
-Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, suplementos ou funcionalidades adicionados depois do congelamento de escopo da v1.0 são expansões futuras e não reabrem a v1.0.
+O Bloco 18 está aceito e a linha v1 está concluída. Conteúdo, livros, suplementos ou funcionalidades adicionados depois do congelamento de escopo entram em expansões futuras e não reabrem a v1.
 
-## Regras de plataforma e custo da v1.0
+## Regras de plataforma e custo
 
 - O Hub de RPG é **somente um site web responsivo**, acessado pelo navegador e hospedado no GitHub Pages.
 - Não criar aplicativo Android, iOS ou desktop; não depender de APK, Play Store ou App Store.
-- Serviços externos usados pela v1.0 devem funcionar **sem cartão de crédito, sem método de pagamento e sem conta de faturamento**.
+- Serviços externos devem funcionar **sem cartão de crédito, sem método de pagamento e sem conta de faturamento**.
 - Para Firebase, usar apenas **Spark / No-cost**, sem Blaze, Firebase Hosting, Cloud Functions ou qualquer recurso que exija billing.
 - Se um serviço necessário passar a exigir pagamento/cartão, substituir o serviço em vez de ativar cobrança.
 - Não usar Supabase.
+
+## Decisão de escopo consolidada na v1.0.1
+
+O Hub é um projeto pessoal, particular e destinado a poucas pessoas de confiança. Por decisão explícita do responsável pelo projeto:
+
+- **Backup/exportação/restauração não fazem parte do produto atual.**
+- Não existe objetivo de hardening contra participantes maliciosos.
+- O Firebase Authentication é a única barreira de entrada: contas são criadas manualmente pelo proprietário.
+- O login visível é apenas **usuário + senha**; nenhum e-mail real é necessário. O domínio `@teias.invalid` existe somente como identificador técnico interno do Firebase Authentication.
+- Não existe segunda lista de autorização (`authorizedUsers`), `isAdmin` ou papel administrativo global para liberar acesso.
+- A distinção **Mestre / Jogador / Observador permanece**, porque é necessária à experiência da Mesa.
+- Mestre recebe a visão privada; Jogador e Observador recebem a projeção compartilhada, que omite conteúdo ainda não revelado ou exclusivo do Mestre.
+- Essa diferença de visão é comportamento funcional da aplicação, não uma fronteira de segurança contra usuários maliciosos.
+
+A persistência normal e a sincronização Firebase continuam fazendo parte do produto. O que foi removido foi a área específica de Backup e a camada adicional de autorização/hardening.
 
 ## Blocos
 
@@ -30,19 +45,19 @@ Quando o Bloco 18 estiver aceito, a v1.0 está concluída. Conteúdo, livros, su
 11. Rolagens e resolução de jogo — ✅ Aceito
 12. Encontros e ferramentas do Mestre — ✅ Aceito
 13. Aventuras — ✅ Aceito
-14. Persistência definitiva e portabilidade — ✅ Aceito
-15. Usuários, colaboração e sincronização — ✅ Aceito
+14. Persistência definitiva — ✅ Aceito · escopo atualizado na v1.0.1
+15. Usuários, colaboração e sincronização — ✅ Aceito · escopo atualizado na v1.0.1
 16. Painel Geral — ✅ Aceito
 17. Configurações — ✅ Aceito
 18. Homologação, documentação e release final — ✅ Aceito
 
-## Critérios dos blocos restantes
+## Critérios consolidados
 
 ### 9. Auditoria normativa total
 Zero entidade sem revisão semântica; zero divergência normativa não justificada; zero precedência incorreta; zero override de Regra da Casa sem registro; zero divergência entre runtime e fonte validada; zero cenário crítico sem teste.
 
 ### 10. Fechamento mecânico total da Ficha
-Nenhuma característica suportada pelo escopo v1.0 pode permanecer apenas como texto quando deveria alterar cálculo, recurso, condição, rolagem ou estado representável digitalmente.
+Nenhuma característica suportada pelo escopo v1 pode permanecer apenas como texto quando deveria alterar cálculo, recurso, condição, rolagem ou estado representável digitalmente.
 
 ### 11. Rolagens e resolução de jogo
 Ataques, dano, crítico, testes, salvaguardas, cura, CDs, vantagem/desvantagem, resistências, vulnerabilidades, imunidades e modificadores principais resolvíveis pela ficha sem cálculo manual obrigatório.
@@ -53,31 +68,37 @@ Mestre capaz de conduzir encontro completo no Hub: iniciativa, criaturas, PV, co
 ### 13. Aventuras
 Planejamento e condução de aventuras com capítulos/arcos, cenas, locais, NPCs, encontros, pistas, handouts e tesouros ligados às Campanhas/Sessões.
 
-### 14. Persistência definitiva e portabilidade
-Exportação/importação, backup/restauração, schemas versionados, migrações e proteção contra perda/corrupção. Trocar de dispositivo ou limpar navegador não pode significar perder a campanha.
+### 14. Persistência definitiva
+Personagens, Campanhas, Aventuras e demais estados duráveis suportados usam schemas e chaves versionadas, normalização/migração quando aplicável e persistência local consistente. A sincronização online cobre os estados previstos pelo modelo de colaboração.
+
+**Histórico:** a v1.0.0 incluía exportação/importação, Backup/restauração, checksum e recuperação transacional como critério do bloco. Esses recursos foram deliberadamente removidos na v1.0.1 e não são mais requisito do produto.
 
 ### 15. Usuários, colaboração e sincronização
-Identidade real, propriedade, Mestre/Jogador/Observador, permissões e sincronização entre dispositivos no **site web**, sem aplicativo e sem Supabase. A infraestrutura deve funcionar sem cartão/faturamento; no Firebase, somente plano Spark.
+Identidade real no Firebase Authentication, login simples por usuário + senha e sincronização entre navegadores/dispositivos no **site web**, sem aplicativo e sem Supabase. A infraestrutura deve funcionar sem cartão/faturamento; no Firebase, somente plano Spark.
 
-Modelo adotado: acesso fechado administrado manualmente, com login visível por **usuário + senha**. O nome de usuário é convertido internamente para um identificador técnico `@teias.invalid` do Firebase Authentication; não há cadastro público, convite por e-mail ou confirmação de e-mail. O Firestore exige também um registro ativo em `authorizedUsers/{uid}`.
+Modelo atual: acesso fechado administrado manualmente pelo proprietário no Firebase Authentication. O nome de usuário é convertido internamente para um identificador técnico `@teias.invalid`; não há cadastro público, convite por e-mail, confirmação de e-mail ou segunda autorização no Firestore.
 
-Aceite: projeto Firebase Spark real provisionado; Authentication por E-mail/senha; Cloud Firestore; regras e índice `memberships` publicados; configuração pública Web ativa; gate 15Z verde; login administrativo real homologado no GitHub Pages com reconhecimento do registro `authorizedUsers` e perfil Administrador. O responsável pelo projeto dispensou a etapa manual adicional com conta não autorizada. A homologação E2E multiusuário completa permanece como verificação de release do Bloco 18 e não reabre o Bloco 15.
+Papéis de Mesa: `dm`, `player` e `observer`. A aplicação escolhe entre bundle privado e projeção compartilhada de acordo com o papel funcional do participante.
+
+Aceite atual: Authentication por E-mail/senha usado apenas como mecanismo técnico, Cloud Firestore, configuração Web ativa, login simples e E2E real Mestre/Jogador aprovados. O Firestore aceita leitura e escrita para qualquer usuário autenticado; isso é intencional para o grupo de confiança.
 
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
 
-Aceite: nova superfície `painel.html` agrega o estado local persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`. A home expõe o Painel Geral e Configurações foi incorporado no Bloco 17. Auditoria dedicada do Bloco 16 e regressões UX/Campanhas/Persistência protegem o comportamento.
+Aceite: `painel.html` agrega o estado persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`.
 
 ### 17. Configurações
 Preferências persistentes de usuário/Mestre, fontes e regras habilitadas, presets de Regras da Casa, ficha, acessibilidade e defaults de campanha.
 
-Aceite: nova superfície `configuracoes.html` com estado versionado `hub-rpg:settings:v1`; preferências de perfil de uso, fontes normativas, presets de Regras da Casa, densidade e navegação da Ficha, tamanho de texto, contraste, redução de movimento e defaults de Mestre/cenário/sistema. A camada global de UX consome as preferências visuais e novas Mesas recebem os defaults configurados sem alterar retroativamente personagens ou Campanhas existentes. Configurações são estado durável local, classificado no registro de armazenamento e mantido fora do backup portátil v1 para preservar o schema/checksum já aceito do Bloco 14. O preset de Regras da Casa é uma preferência normativa local: enquanto `hub-rpg/campaign/v1` não possuir campo próprio, ele não é artificialmente persistido como perfil da Mesa nem usado para fingir que mecânicas já materializadas foram desativadas. Auditoria dedicada do Bloco 17 e regressões de UX, Campanhas e persistência protegem o comportamento; a validação isolada do Bloco 17 foi aprovada.
+Aceite: `configuracoes.html` usa estado versionado `hub-rpg:settings:v1`; preferências de perfil de uso, fontes normativas, presets de Regras da Casa, densidade e navegação da Ficha, tamanho de texto, contraste, redução de movimento e defaults de Mestre/cenário/sistema. Configurações são estado durável local e não reescrevem retroativamente personagens ou Campanhas existentes.
 
 ### 18. Homologação, documentação e release final
-E2E em navegador real e mobile, fluxos longos 1–20, campanhas, recuperação de dados, erros de rede, acessibilidade, desempenho, README/manual/arquitetura, limpeza de PRs/branches e release v1.0.
+E2E em navegador real e mobile, fluxos longos 1–20, campanhas, acessibilidade, responsividade, documentação e release.
 
-Aceite: gate estrutural, cobertura total, E2E Chromium Desktop/Mobile, documentação, limpeza de PRs/branches e homologação Firebase multiusuário real foram concluídos. O gate `Homologar Firebase real v1` foi aprovado no run `33970930792`. A v1.0 está encerrada e apta à publicação da tag `v1.0.0`.
+Aceite original: v1.0.0 publicada após gate estrutural, cobertura total, E2E Chromium Desktop/Mobile e homologação Firebase real.
 
-## Política de escopo da v1.0
+Aceite consolidado da v1.0.1: o Firebase real foi novamente homologado após a simplificação de escopo. O teste confirmou login por usuário/senha, criação de Jogador efêmero, vínculo como `player`, visão privada para Mestre e apenas projeção compartilhada para Jogador. Gate estrutural e E2E Desktop/Mobile também passaram antes da publicação automática da `v1.0.1`.
+
+## Política de escopo da v1
 
 A lista de fontes normativas e conteúdos da v1.0 foi congelada no encerramento do Bloco 9. Novos suplementos posteriores ao congelamento entram em versão futura.
