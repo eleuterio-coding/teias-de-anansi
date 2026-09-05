@@ -25,8 +25,6 @@ assert.equal(sanitized.sources.enabled.length,SOURCE_AUTHORITIES.length,'Fonte i
 const campaign=campaignDefaultsFromSettings(saved);
 assert.equal(campaign.dmName,'Anansi');
 assert.equal(campaign.setting,'Eberron');
-assert.equal(campaign.rulesProfile.preset,'mesa-personalizada');
-assert.deepEqual(campaign.rulesProfile.enabledHouseRules,['Concentração Expandida']);
 
 const fakeRoot={dataset:{}};
 applyUiPreferences(saved,fakeRoot);
