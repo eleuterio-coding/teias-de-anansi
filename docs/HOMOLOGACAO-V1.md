@@ -1,20 +1,22 @@
 # Homologação — Teias de Anansi v1
 
-Este documento registra o fechamento da v1.0.0 e a re-homologação da simplificação publicada como v1.0.1.
+Este documento registra o fechamento da linha v1. A **v1.0.2 é a referência funcional atual**.
 
 ## Estado atual
 
 - Blocos 1–18: **aceitos**.
-- v1.0.0: **publicada** em 2026-09-05.
-- v1.0.1: **publicada** em 2026-09-05 como correção de escopo.
+- v1.0.0: publicada em 2026-09-05.
+- v1.0.1: publicada em 2026-09-05 como simplificação de escopo.
+- v1.0.2: **publicada em 2026-09-08** como consolidação do acesso por atribuição.
 - Gate estrutural da versão atual: **aprovado**.
 - E2E Chromium Desktop: **aprovado**.
 - E2E Chromium Mobile: **aprovado**.
-- Firebase real Mestre/Jogador: **aprovado** após publicação das Rules simplificadas.
-- Backup/restauração: **fora do produto atual** por decisão de escopo da v1.0.1.
-- Hardening contra usuários maliciosos: **fora do produto atual** por decisão de escopo da v1.0.1.
+- Cobertura total da criação/domínio: **aprovada**.
+- Firebase real Mestre/Jogador: **aprovado**.
+- GitHub Pages no commit homologado: **aprovado**.
+- Backup/restauração: **fora do produto atual**.
 
-## Escopo homologado na v1.0.1
+## Escopo homologado na v1.0.2
 
 O Hub é pessoal, particular e usado por poucas pessoas de confiança. O contrato atual é:
 
@@ -23,69 +25,95 @@ O Hub é pessoal, particular e usado por poucas pessoas de confiança. O contrat
 3. nenhum e-mail real necessário para o jogador;
 4. nenhuma segunda lista `authorizedUsers`;
 5. nenhum `isAdmin` ou papel administrativo global necessário para entrar;
-6. Firestore acessível a qualquer usuário autenticado;
-7. papéis `dm`, `player` e `observer` mantidos como comportamento funcional da Mesa;
-8. Mestre recebe bundle privado;
-9. Jogador/Observador recebem projeção compartilhada;
-10. notas privadas, pistas ocultas e handouts ainda não revelados não aparecem na projeção compartilhada.
+6. papéis `dm`, `player` e `observer` mantidos;
+7. Mestre administra Mesa, vínculos, Sessões e Aventuras;
+8. Jogador vê somente Campanhas/Mesas às quais está vinculado;
+9. Jogador vê somente Sessões em que seu personagem atribuído participa;
+10. Jogador vê somente Aventuras relacionadas a essas Sessões;
+11. notas privadas, pistas ocultas e handouts ainda não revelados não aparecem para Jogador;
+12. Jogador só pode alterar a própria ficha atribuída;
+13. Jogador não pode alterar Mesa, vínculo, Sessão ou Aventura;
+14. Bibliotecas permanecem acessíveis;
+15. o cache local é filtrado por UID para impedir mistura visual entre contas no mesmo navegador.
 
-Essa diferença de visão não é tratada como fronteira de segurança. O projeto pressupõe participantes autenticados de confiança.
+Essas permissões implementam o comportamento funcional Mestre/Jogador necessário ao Hub. O projeto continua sem objetivo de hardening para ambiente hostil.
 
-## Evidência Firebase real — v1.0.1
+## Evidência Firebase real — v1.0.2
 
 Workflow: `Homologar colaboração Firebase`.
 
-Run homologado: **`33972932056`**, attempt 2, conclusão **success**.
+Run homologado: **`34247492736`** — conclusão **success**.
 
-O teste real executou com a conta principal configurada nos Secrets e um Jogador efêmero criado pelo próprio harness. A execução aprovou:
+Commit homologado: **`c9bf6befd4a4214c475ceedb9bf8f4a851dedc10`**.
+
+O teste real executou com a conta principal configurada nos Secrets e um Jogador efêmero criado pelo harness. A execução aprovou:
 
 - login da conta principal por usuário/senha;
 - criação e login do Jogador efêmero;
-- criação automática do perfil do usuário após o primeiro login;
-- vínculo do Jogador à Mesa como `player`;
+- publicação da Mesa pelo Mestre;
+- vínculo do Jogador como `player` com personagem atribuído;
 - leitura da visão privada pelo Mestre;
-- leitura apenas da projeção compartilhada pelo Jogador;
-- omissão do conteúdo exclusivo do Mestre na projeção do Jogador;
+- leitura somente da visão compartilhada pelo Jogador;
+- recorte de Sessões por `participantCharacterIds`;
+- recorte de Aventuras conforme Sessões atribuídas;
+- omissão de conteúdo privado/oculto do Mestre;
+- bloqueio de alteração de Campanha pelo Jogador;
+- bloqueio de alteração de vínculo pelo Jogador;
+- bloqueio de leitura de ficha alheia;
+- gravação permitida da própria ficha atribuída;
 - perda e retomada de rede sem apagar o estado local;
 - cleanup da identidade técnica efêmera ao final.
 
-A execução só ficou verde depois que as Firestore Rules publicadas foram alinhadas ao contrato atual:
+## Gate local final — v1.0.2
 
-```text
-allow read, write: if request.auth != null;
-```
+Workflow: `Homologar versão atual`.
 
-## Gate final da v1.0.1
+Run homologado: **`34247492757`** — conclusão **success**.
 
-Após o sucesso do Firebase real, o workflow `Publicar v1.0.1` foi disparado automaticamente.
+A execução aprovou gate estrutural e E2E Chromium Desktop/Mobile no mesmo commit `c9bf6befd4a4214c475ceedb9bf8f4a851dedc10`.
 
-Run: **`33979568611`**.
+A auditoria ampla `Auditar cobertura total da criação` também concluiu com **success** no run **`34247492728`**.
+
+## Publicação da v1.0.2
+
+Após o sucesso do Firebase real, o workflow `Publicar v1.0.2` foi disparado automaticamente.
+
+Run: **`34247632130`** — conclusão **success**.
 
 Etapas aprovadas:
 
-1. confirmar que a homologação Firebase correspondia à `main` esperada;
-2. confirmar `package.json` na versão `1.0.1`;
+1. confirmar que a homologação correspondia à `main` atual;
+2. confirmar `package.json` na versão `1.0.2`;
 3. gate estrutural final;
 4. instalação das dependências;
 5. E2E final Chromium Desktop/Mobile;
-6. publicação da release `v1.0.1`.
+6. publicação da release `v1.0.2`.
 
 Resultado: **success**.
 
-Release publicada: **Hub de RPG v1.0.1**.
+Release publicada: **Hub de RPG v1.0.2**.
+
+Tag: **`v1.0.2`**.
+
+Release e tag apontam para o commit **`c9bf6befd4a4214c475ceedb9bf8f4a851dedc10`**.
+
+O deploy do GitHub Pages desse mesmo commit também concluiu com **success** no run **`34247492772`**.
 
 ## Matriz de homologação atual
 
 | Área | Desktop | Mobile | Estado |
 | --- | --- | --- | --- |
 | Home e navegação principal | Aprovado | Aprovado | superfícies principais sem erro JavaScript crítico |
-| Personagens / Criação / Ficha | Aprovado | Aprovado | fluxos principais e regressões cobertos |
-| Campanhas / Mesas | Aprovado | Aprovado | criação, estado e relações cobertos |
-| Aventuras | Aprovado | Aprovado | relações e projeção compartilhada cobertas |
-| Painel Geral | Aprovado | Aprovado | superfície e agregação operacional cobertas |
+| Personagens / Criação / Ficha | Aprovado | Aprovado | fluxo e regressões cobertos |
+| Campanhas / Mesas | Aprovado | Aprovado | somente Mesas atribuídas ao Jogador |
+| Sessões | Aprovado | Aprovado | recorte por personagem participante |
+| Aventuras | Aprovado | Aprovado | somente Aventuras derivadas das Sessões atribuídas |
+| Mesa do Jogador | Aprovado | Aprovado | leitura restrita; ferramentas do Mestre não carregam |
+| Bibliotecas | Aprovado | Aprovado | disponíveis ao Jogador |
+| Ficha do Jogador | Aprovado | Aprovado | apenas ficha atribuída visível/editável |
+| Painel Geral | Aprovado | Aprovado | superfície operacional coberta |
 | Configurações | Aprovado | Aprovado | persistência e preferências visuais cobertas |
-| Usuários e Colaboração | Aprovado | Aprovado | login simples e integração Firebase |
-| Firebase autenticado | Aprovado | Aprovado | Mestre privado + Jogador compartilhado · run `33972932056` |
+| Firebase autenticado | Aprovado | Aprovado | Mestre privado + acesso Jogador por atribuição |
 | Dados / Backup | Não se aplica | Não se aplica | recurso removido na v1.0.1 |
 
 ## Progressão Level 1 → Level 20
@@ -109,15 +137,16 @@ Critérios consolidados:
 - Sessão não termina com encontro ativo;
 - encontros preservam iniciativa, criaturas, PV, condições, turnos e recompensas;
 - Aventuras mantêm relações válidas com a campanha;
-- a projeção compartilhada não contém material privado/oculto do Mestre no contrato funcional da aplicação.
+- conteúdo exclusivo do Mestre permanece fora da visão do Jogador;
+- Jogador recebe somente conteúdo associado à participação da própria ficha.
 
 ## Persistência e sincronização
 
 A persistência local continua usando chaves e schemas versionados. A sincronização Firebase cobre os estados previstos pela Colaboração.
 
-A v1.0.1 **não possui Backup/exportação/restauração**. Os testes e gates específicos dessa funcionalidade foram removidos. Isso é uma decisão de produto, não uma pendência.
+A linha atual **não possui Backup/exportação/restauração**. Isso é uma decisão de produto, não uma pendência.
 
-Estados exclusivamente locais podem ser perdidos se o armazenamento do navegador for apagado antes de serem sincronizados. Esse risco é aceito para o escopo pessoal do Hub.
+O cache local da colaboração é associado ao UID da sessão para evitar mistura de conteúdo entre jogadores que usem o mesmo navegador.
 
 ## Rede
 
@@ -134,24 +163,23 @@ Critérios automatizados mantidos:
 - viewport Mobile sem overflow horizontal nas superfícies principais;
 - headings e regiões principais presentes;
 - preferências de tamanho de texto, contraste e redução de movimento persistem e são aplicadas globalmente;
-- erros JavaScript críticos das superfícies principais tornam o E2E vermelho.
+- elementos com `[hidden]` permanecem efetivamente ocultos em Desktop e Mobile;
+- erros JavaScript críticos tornam o E2E vermelho.
 
-## Histórico da v1.0.0
+## Histórico
 
-A v1.0.0 foi homologada com um desenho mais complexo que incluía:
+### v1.0.0
 
-- Backup/exportação/restauração;
-- `authorizedUsers`;
-- `isAdmin`;
-- Firestore Rules restritivas;
-- teste de bloqueio de acesso/escrita entre identidades.
+Incluía um desenho mais complexo com Backup/exportação/restauração, `authorizedUsers`, `isAdmin` e autorização adicional. Esse estado permanece preservado na tag/release `v1.0.0` apenas como histórico.
 
-Esse estado permanece preservado na tag/release `v1.0.0` como histórico. Ele **não descreve o produto atual**.
+### v1.0.1
 
-A v1.0.1 substituiu deliberadamente esse desenho por:
+Removeu Backup e a autorização administrativa global, consolidando login simples e colaboração para um grupo de confiança.
 
-**login simples + sincronização + separação funcional Mestre/Jogador para um grupo de confiança.**
+### v1.0.2
+
+Manteve a simplicidade do login, mas consolidou as permissões funcionais por atribuição: cada Jogador recebe apenas o que pertence à sua participação e só altera a própria ficha.
 
 ## Fechamento
 
-A linha v1 está encerrada. A v1.0.1 é a referência funcional atual do escopo simplificado e foi publicada após Firebase real, gate estrutural e E2E Desktop/Mobile verdes.
+A linha v1 está encerrada. **A v1.0.2 é a referência funcional atual** e foi publicada após Firebase real, gate estrutural, cobertura ampla, E2E Desktop/Mobile e GitHub Pages verdes no mesmo commit homologado.
