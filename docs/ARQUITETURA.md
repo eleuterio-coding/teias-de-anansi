@@ -4,7 +4,7 @@
 
 Teias de Anansi é um site web estático e responsivo hospedado no GitHub Pages. A aplicação não depende de backend próprio para os fluxos locais: HTML, CSS, módulos JavaScript e catálogos JSON são servidos diretamente pelo repositório. Persistência local e colaboração online são camadas separadas.
 
-A linha v1 foi encerrada na v1.0.0, simplificada na v1.0.1 e consolidada na **v1.0.2**, que é a referência funcional atual. O modelo atual é **login simples + sincronização + acesso por atribuição Mestre/Jogador**.
+A linha v1 foi encerrada na v1.0.0, simplificada na v1.0.1 e consolidada na **v1.0.2**, que é a referência funcional publicada. O modelo atual é **login simples + sincronização + acesso por atribuição Mestre/Jogador**.
 
 ## Superfícies principais
 
@@ -15,7 +15,7 @@ A linha v1 foi encerrada na v1.0.0, simplificada na v1.0.1 e consolidada na **v1
 - `bibliotecas.html`: consulta aos catálogos normativos.
 - `usuarios.html`: identidade, Firebase e colaboração.
 - `painel.html`: agregação operacional.
-- `configuracoes.html`: preferências locais.
+- `configuracoes.html`: preferências de uso, Ficha Digital e acessibilidade.
 
 A superfície `dados.html` e o motor específico de Backup/restauração não fazem parte do produto atual.
 
@@ -55,9 +55,29 @@ O antigo schema `hub-rpg/backup/v1` pertence somente ao histórico da v1.0.0 e n
 
 ## Configurações
 
-`scripts/settings-state.js` é a autoridade do schema de preferências. A camada global `hub-ux.js` lê preferências de acessibilidade e apresentação. A criação de uma nova Campanha consome apenas defaults compatíveis com o schema da campanha.
+`scripts/settings-state.js` mantém o schema local de preferências e `hub-ux.js` aplica as preferências visuais.
 
-O preset de Regras da Casa não é persistido como propriedade da Mesa enquanto `hub-rpg/campaign/v1` não possuir campo próprio. Essa separação impede uma configuração nominal sem efeito mecânico real.
+A interface de Configurações expõe somente:
+
+- perfil de uso;
+- densidade e apresentação da Ficha Digital;
+- preferências de acessibilidade.
+
+As seguintes decisões são invariantes do produto e **não são configuráveis**:
+
+- todas as fontes normativas suportadas ficam habilitadas;
+- todas as Regras da Casa consolidadas ficam habilitadas;
+- não há bloco de Persistência na UI;
+- não existem Defaults de campanha configuráveis;
+- **Rafael é sempre o Mestre** das Campanhas/Mesas.
+
+O schema mantém compatibilidade com estados antigos, mas `normalizeSettings()` força fontes completas, pacote `teias-v1` e `campaignDefaults.dmName = 'Rafael'`, impedindo que preferências antigas reintroduzam opções removidas.
+
+## Campanhas e Mestre fixo
+
+A criação de Campanha solicita nome, cenário e resumo. O Mestre não é solicitado: `campaign-list-ui.js` grava `dmName: 'Rafael'` e normaliza campanhas locais existentes ao abrir a lista. `campaign-table-router.js` repete essa normalização antes de carregar as ferramentas do Mestre.
+
+O campo técnico legado de Mestre não é exposto para edição na Mesa. Dessa forma, a UI e o estado operacional convergem para Rafael como Mestre único.
 
 ## Firebase e colaboração
 
