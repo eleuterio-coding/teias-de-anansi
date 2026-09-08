@@ -1,6 +1,6 @@
 # Roadmap oficial de fechamento — Hub de RPG v1
 
-Este arquivo registra o fechamento da linha v1. Os Blocos 1–18 permanecem encerrados. A **v1.0.2 é a referência funcional atual** da linha v1.
+Este arquivo registra o fechamento da linha v1. Os Blocos 1–18 permanecem encerrados. A **v1.0.2 é a referência funcional publicada** da linha v1.
 
 ## Regra de encerramento
 
@@ -43,6 +43,22 @@ A v1.0.2 manteve o cadastro simples, mas consolidou as permissões funcionais ne
 
 Essas restrições existem para implementar corretamente a experiência Mestre/Jogador do Hub. Elas não transformam o projeto em um sistema de segurança/hardening para ambiente hostil.
 
+### Simplificação atual de Configurações
+
+A área de Configurações foi reduzida ao que realmente precisa ser ajustável pelo usuário:
+
+- Perfil de uso;
+- Ficha Digital;
+- Acessibilidade.
+
+São invariantes, e não opções:
+
+- todas as fontes suportadas ficam sempre habilitadas;
+- todas as Regras da Casa consolidadas ficam sempre habilitadas;
+- não existe bloco de Persistência na interface;
+- não existem Defaults de campanha configuráveis;
+- **Rafael é sempre o Mestre** das Campanhas/Mesas.
+
 A persistência normal e a sincronização Firebase continuam fazendo parte do produto. O que permanece removido é a área específica de Backup e a antiga camada administrativa global.
 
 ## Blocos
@@ -63,7 +79,7 @@ A persistência normal e a sincronização Firebase continuam fazendo parte do p
 14. Persistência definitiva — ✅ Aceito · escopo consolidado na v1.0.1
 15. Usuários, colaboração e sincronização — ✅ Aceito · acesso por atribuição consolidado na v1.0.2
 16. Painel Geral — ✅ Aceito
-17. Configurações — ✅ Aceito
+17. Configurações — ✅ Aceito · simplificada para perfil, Ficha e acessibilidade
 18. Homologação, documentação e release final — ✅ Aceito · v1.0.2 homologada e publicada
 
 ## Critérios consolidados
@@ -103,9 +119,9 @@ Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pen
 Aceite: `painel.html` agrega o estado persistente de personagens, Campanhas/Sessões e Aventuras; destaca personagem vinculado a sessão ativa, resolve a próxima sessão planejada, lista Mesas por prioridade operacional, detecta pendências acionáveis e ordena atividade recente por `updatedAt`.
 
 ### 17. Configurações
-Preferências persistentes de usuário/Mestre, fontes e regras habilitadas, presets de Regras da Casa, ficha, acessibilidade e defaults de campanha.
+Configurações expõe apenas preferências realmente variáveis: perfil de uso, apresentação/navegação da Ficha e acessibilidade.
 
-Aceite: `configuracoes.html` usa estado versionado `hub-rpg:settings:v1`; preferências de perfil de uso, fontes normativas, presets de Regras da Casa, densidade e navegação da Ficha, tamanho de texto, contraste, redução de movimento e defaults de Mestre/cenário/sistema. Configurações são estado durável local e não reescrevem retroativamente personagens ou Campanhas existentes.
+Aceite atual: `configuracoes.html` não expõe Fontes habilitadas, Regras da Casa, Persistência ou Defaults de campanha. `settings-state.js` normaliza qualquer estado antigo para todas as fontes ativas, pacote `teias-v1` fixo e Mestre `Rafael`. A criação de Campanha não solicita Mestre e grava Rafael diretamente.
 
 ### 18. Homologação, documentação e release final
 E2E em navegador real e mobile, fluxos longos 1–20, campanhas, acessibilidade, responsividade, documentação e release.
@@ -120,4 +136,4 @@ Aceite consolidado da **v1.0.2**: homologação Firebase real de acesso por atri
 
 A lista de fontes normativas e conteúdos da v1.0 foi congelada no encerramento do Bloco 9. Novos suplementos posteriores ao congelamento entram em versão futura.
 
-**Estado final:** linha v1 encerrada; **v1.0.2 é a referência funcional atual**.
+**Estado:** linha v1 encerrada; **v1.0.2 permanece a referência funcional publicada**.
