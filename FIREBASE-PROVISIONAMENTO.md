@@ -11,20 +11,22 @@ O Hub é **somente um site web**, hospedado no **GitHub Pages**. O Firebase é u
 - Sem Supabase.
 - Sem requisito de cartão ou faturamento.
 
-## Modelo atual — v1.0.1
+## Modelo atual — v1.0.2
 
-O Hub é um projeto pessoal, particular, para poucas pessoas de confiança. Por isso o modelo foi simplificado deliberadamente.
+O Hub é um projeto pessoal, particular, para poucas pessoas de confiança.
 
-### Login
+A v1.0.1 removeu Backup e a autorização administrativa global. A v1.0.2 manteve o login simples e consolidou o **acesso por atribuição** necessário para que cada Jogador veja somente o conteúdo da própria participação.
+
+## Login
 
 O proprietário cria cada conta manualmente em **Firebase Authentication → E-mail/senha**.
 
 O jogador não precisa possuir ou informar um e-mail real. O Hub trabalha com:
 
-- **usuário**: por exemplo `rafael`;
+- **usuário**: por exemplo `gus`;
 - **senha**: definida ao criar a conta.
 
-Internamente, `rafael` vira `rafael@teias.invalid` apenas para satisfazer o formato exigido pelo Firebase Authentication. O domínio `teias.invalid` é técnico e não precisa receber mensagens.
+Internamente, `gus` vira `gus@teias.invalid` apenas para satisfazer o formato exigido pelo Firebase Authentication. O domínio `teias.invalid` é técnico e não precisa receber mensagens.
 
 Não existe no produto:
 
@@ -34,40 +36,51 @@ Não existe no produto:
 - recuperação por e-mail como requisito do Hub;
 - coleção `authorizedUsers` como segunda autorização;
 - bloqueio/reativação de contas dentro do Hub;
-- papel administrativo global para liberar acesso.
+- papel administrativo global para liberar entrada.
 
 **Se a conta existe no Firebase Authentication e a senha está correta, ela pode entrar.**
 
-### Mestre e Jogador
+## Mestre, Jogador e Observador
 
-A distinção Mestre/Jogador permanece porque é necessária para a experiência da Mesa.
-
-Depois do primeiro login, a conta aparece na área **Usuários e Colaboração** e pode ser vinculada a uma Mesa como:
+Os papéis suportados são:
 
 - `dm` — Mestre;
 - `player` — Jogador;
 - `observer` — Observador.
 
-A aplicação mantém duas representações da Mesa:
+O Mestre administra a Mesa e suas atribuições. Para Jogadores, a membership da Mesa associa a conta ao `characterId` correspondente.
 
-- **privada** — usada por proprietário/Mestre;
-- **compartilhada** — usada por Jogador/Observador.
+A aplicação mantém representação privada do Mestre e projeções compartilhadas para participantes. A projeção compartilhada omite conteúdo exclusivo do Mestre, como notas privadas, handouts não revelados e pistas ocultas.
 
-A projeção compartilhada omite conteúdo exclusivo do Mestre, como notas privadas, handouts não revelados e pistas ainda ocultas.
+## Acesso por atribuição — v1.0.2
 
-Essa separação é **comportamento funcional da aplicação**, não uma fronteira de segurança contra participantes maliciosos.
+O contrato atual é:
+
+- Jogador só vê Campanhas/Mesas às quais está vinculado;
+- Jogador só vê Sessões em que seu personagem atribuído participa;
+- Jogador só vê Aventuras relacionadas a essas Sessões;
+- Jogador não lê conteúdo privado do Mestre;
+- Jogador não altera Mesa, membership, Sessão ou Aventura;
+- Jogador só lê/escreve a própria ficha atribuída;
+- Bibliotecas permanecem disponíveis pela aplicação.
+
+Essas permissões são parte do funcionamento do Hub. O projeto continua sem objetivo de hardening para ambiente hostil.
 
 ## Firestore Rules atuais
 
-O arquivo versionado em `firebase/firestore.rules` implementa o modelo simples:
+O arquivo versionado em `firebase/firestore.rules` implementa o acesso por atribuição.
 
-```text
-allow read, write: if request.auth != null;
-```
+Em resumo:
 
-Portanto, o Firebase Authentication é a única barreira de entrada do banco. Isso é intencional para este projeto pessoal e para o grupo de confiança definido pelo proprietário.
+- perfis em `users/{uid}` são mantidos pela própria conta;
+- `campaigns/{campaignId}` é administrada por proprietário/Mestre;
+- `memberships` determinam o vínculo da conta com a Mesa;
+- `sessions` compartilhadas validam `participantCharacterIds` contra a ficha atribuída ao usuário;
+- `adventureViews` usam a mesma lógica de participação para leitura do Jogador;
+- `private` permanece exclusivo do Mestre;
+- `campaigns/{campaignId}/characters/{characterId}` só é acessível ao Jogador quando o `characterId` é o da própria membership.
 
-As Rules não substituem a lógica Mestre/Jogador do Hub; essa lógica fica no provider e nas projeções privada/compartilhada.
+As Rules não reintroduzem `authorizedUsers` nem `isAdmin`.
 
 ## Configuração pública do cliente
 
@@ -92,22 +105,44 @@ O teste real usa os Secrets já configurados:
 - `E2E_FIREBASE_ADMIN_USERNAME`
 - `E2E_FIREBASE_ADMIN_PASSWORD`
 
-O próprio teste cria um Jogador efêmero, faz o primeiro login, vincula esse usuário à Mesa como `player`, compara a visão do Mestre com a visão do Jogador e remove a identidade técnica ao terminar.
+O próprio teste cria um Jogador efêmero e valida o contrato completo da v1.0.2.
 
-Uma execução verde comprova o comportamento que interessa ao produto atual:
+Uma execução verde comprova:
 
 1. login por usuário e senha;
-2. criação automática do perfil após o primeiro login;
-3. vínculo do participante à Mesa;
-4. Mestre recebe o bundle privado;
-5. Jogador recebe o bundle compartilhado;
-6. conteúdo exclusivo do Mestre não aparece na projeção do Jogador;
-7. perda e retomada de rede não apagam o estado local.
+2. criação do Jogador técnico efêmero;
+3. publicação da Mesa pelo Mestre;
+4. vínculo como `player` com ficha atribuída;
+5. Mestre recebe a visão privada;
+6. Jogador recebe apenas a visão compartilhada atribuída;
+7. Sessões não atribuídas não aparecem;
+8. Aventuras não atribuídas não aparecem;
+9. conteúdo privado do Mestre é bloqueado;
+10. alteração de Campanha/vínculo pelo Jogador é bloqueada;
+11. ficha alheia é bloqueada;
+12. própria ficha atribuída pode ser salva;
+13. perda e retomada de rede preservam o fluxo;
+14. cleanup da identidade técnica efêmera ao final.
 
-O teste **não** exige mais bloqueio de escrita maliciosa no Firestore, `isAdmin`, `authorizedUsers` ou qualquer hardening equivalente.
+Homologação final da v1.0.2:
+
+- workflow: `Homologar colaboração Firebase`;
+- run: `34247492736`;
+- commit: `c9bf6befd4a4214c475ceedb9bf8f4a851dedc10`;
+- resultado: **success**.
 
 ## Histórico
 
-A `v1.0.0` foi publicada em 2026-09-05 usando o modelo anterior, que possuía `authorizedUsers`, regras mais restritivas e uma homologação de segurança multiusuário. Esse estado permanece registrado na tag/release `v1.0.0` apenas como histórico.
+### v1.0.0
 
-A `v1.0.1` simplifica esse desenho conforme a decisão atual do projeto: **login simples + colaboração entre pessoas de confiança + separação funcional Mestre/Jogador**.
+Usava `authorizedUsers`, `isAdmin`, regras mais complexas e Backup. Mantido apenas como histórico na tag/release `v1.0.0`.
+
+### v1.0.1
+
+Removeu Backup e a autorização administrativa global, adotando login simples.
+
+### v1.0.2
+
+Manteve o login simples e adicionou o recorte funcional por participação necessário para o uso real de Mestre/Jogador.
+
+**Versão de referência: v1.0.2.**
