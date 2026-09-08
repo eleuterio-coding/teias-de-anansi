@@ -1,3 +1,4 @@
+// Revalidação final da v1.0.2 após fechamento dos gates locais.
 import{test,expect}from'@playwright/test';
 import{randomBytes}from'node:crypto';
 
