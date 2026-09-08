@@ -1,3 +1,4 @@
+// v1.0.2 — acesso por participação e ficha atribuída.
 rules_version = '2';
 
 service cloud.firestore {
