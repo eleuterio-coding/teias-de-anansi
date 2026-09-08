@@ -44,7 +44,8 @@ assert.ok(listUi.includes("restricted?'':")&&listUi.includes('create-character-a
 for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
 assert.equal(home.includes('dados.html'),false,'A área de Backup não faz parte do produto atual.');
 assert.equal((home.match(/aria-disabled="true"/g)||[]).length,0,'Nenhuma área implementada da home deve permanecer indisponível.');
-assert.ok(home.includes('use a Criação de Personagem para montar a estrutura inicial'),'Início precisa explicar a separação Criação → Ficha.');
+assert.ok(home.includes('<strong>Personagens</strong>'),'Início deve manter acesso claro à área de Personagens.');
+assert.ok(!home.includes('Fluxo recomendado:'),'Início não deve reintroduzir o texto de fluxo recomendado removido.');
 
 for(const page of['campanhas.html','mesa.html','sessoes.html','aventuras.html','usuarios.html','painel.html','bibliotecas.html','personagens.html','lista-personagens.html','configuracoes.html']){
  const html=read(page);assert.ok(html.includes('hub-ux.css?v='),`${page}: CSS compartilhado de UX ausente.`);assert.ok(html.includes('scripts/hub-ux.js?v='),`${page}: comportamento compartilhado de UX ausente.`)
