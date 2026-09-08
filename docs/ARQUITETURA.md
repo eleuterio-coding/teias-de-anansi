@@ -4,7 +4,7 @@
 
 Teias de Anansi é um site web estático e responsivo hospedado no GitHub Pages. A aplicação não depende de backend próprio para os fluxos locais: HTML, CSS, módulos JavaScript e catálogos JSON são servidos diretamente pelo repositório. Persistência local e colaboração online são camadas separadas.
 
-A linha v1 foi encerrada na v1.0.0 e teve o escopo simplificado na v1.0.1: a área de Backup e a autorização/hardening adicional foram removidas. O modelo atual é **login simples + sincronização + visibilidade funcional Mestre/Jogador**.
+A linha v1 foi encerrada na v1.0.0, simplificada na v1.0.1 e consolidada na **v1.0.2**, que é a referência funcional atual. O modelo atual é **login simples + sincronização + acesso por atribuição Mestre/Jogador**.
 
 ## Superfícies principais
 
@@ -38,6 +38,8 @@ O `scripts/storage-registry.js` classifica os estados locais usados pelo produto
 
 **Não existe Backup/exportação/restauração como função do produto atual.** Limpar manualmente o armazenamento local pode remover estados que ainda não estejam sincronizados online.
 
+Na colaboração, o cache local é associado à identidade da sessão para evitar que conteúdo de um Jogador apareça para outro quando o mesmo navegador é reutilizado.
+
 ## Schemas e normalização
 
 Os registros persistentes usam schema explícito e funções de sanitização/migração. Exemplos:
@@ -63,23 +65,54 @@ A colaboração usa Firebase Authentication e Cloud Firestore no plano Spark / N
 
 O login visível é **usuário + senha**. O nome de usuário é normalizado e convertido internamente para um identificador técnico `@teias.invalid` usado pelo Firebase Authentication. Nenhum e-mail real é solicitado pelo Hub.
 
-No modelo atual, **não existe `authorizedUsers`, `isAdmin` nem segunda camada de autorização**. Se a conta existe no Firebase Authentication e a senha está correta, ela pode iniciar sessão.
+Não existe `authorizedUsers`, `isAdmin` nem uma segunda autorização administrativa global. Se a conta existe no Firebase Authentication e a senha está correta, ela pode iniciar sessão.
 
 `scripts/firebase-collaboration-provider.js` encapsula Authentication e Firestore. `scripts/collaboration-sync.js` orquestra sincronização, e `scripts/collaboration-model.js` define projeções e comportamento de domínio.
 
-### Separação privado/compartilhado
-
-Campanhas possuem projeções distintas. Estado privado do Mestre inclui informações que Jogadores/Observadores não devem receber pela interface. A projeção compartilhada remove notas privadas, pistas ocultas, handouts ainda não revelados e demais conteúdos exclusivos do Mestre.
+### Papéis e atribuição
 
 Papéis suportados: `dm`, `player` e `observer`.
 
-Essa separação é **funcional**, não uma fronteira de segurança. O projeto pressupõe participantes de confiança. As Firestore Rules atuais aceitam leitura e escrita para qualquer usuário autenticado:
+O Mestre administra a Mesa, os vínculos, Sessões e Aventuras. Para Jogadores, o acesso é derivado da participação:
 
-```text
-allow read, write: if request.auth != null;
-```
+- a membership associa o usuário a uma Campanha/Mesa;
+- a membership de Jogador pode conter o `characterId` atribuído;
+- Sessões compartilhadas usam `participantCharacterIds` para indicar quais personagens participam;
+- Aventuras visíveis ao Jogador são derivadas das Sessões associadas às cenas da Aventura;
+- a ficha atribuída é a única ficha da Mesa que o Jogador pode alterar.
 
-A aplicação, e não as Rules, escolhe entre bundle privado e projeção compartilhada conforme o papel do participante na Mesa.
+### Separação privado/compartilhado
+
+Campanhas possuem projeções distintas. Estado privado do Mestre inclui informações que Jogadores/Observadores não devem receber. A projeção compartilhada remove notas privadas, pistas ocultas, handouts ainda não revelados e demais conteúdos exclusivos do Mestre.
+
+A v1.0.2 também grava/consulta visões compartilhadas de Sessões e Aventuras de forma compatível com o recorte por personagem.
+
+### Firestore Rules
+
+As Rules atuais implementam as permissões funcionais do modelo de atribuição:
+
+- usuário autenticado pode manter o próprio perfil;
+- Mestre/proprietário pode administrar a Mesa;
+- Jogador só lê a Mesa à qual está vinculado;
+- Jogador só lê Sessões/Aventuras atribuídas à participação da própria ficha;
+- Jogador não altera Mesa, membership, Sessão ou Aventura;
+- Jogador só lê/escreve a ficha atribuída a ele;
+- conteúdo privado da Mesa permanece restrito ao Mestre.
+
+O objetivo dessas Rules é garantir o funcionamento correto da experiência Mestre/Jogador. O projeto continua pessoal e não persegue hardening para ambiente hostil.
+
+## Navegação do Jogador
+
+As superfícies normais também respeitam o modo da conta conectada:
+
+- `campanhas.html`: mostra somente Mesas atribuídas;
+- `sessoes.html`: mostra somente Sessões da participação do personagem;
+- `aventuras.html`: mostra somente Aventuras derivadas dessas Sessões;
+- `mesa.html`: carrega a visão de leitura do Jogador, sem ferramentas de Mestre;
+- `lista-personagens.html`: mostra somente a ficha atribuída;
+- `bibliotecas.html`: permanece disponível.
+
+O roteamento por papel evita carregar módulos de administração do Mestre na experiência do Jogador quando eles não são necessários.
 
 ## Rede e falhas
 
@@ -97,9 +130,14 @@ As auditorias em `tests/*.mjs` verificam contratos normativos, mecânicos, persi
 
 `tests/auditar-release-v1.mjs` é o gate estrutural da linha v1. O workflow `.github/workflows/homologar-release-v1.yml` valida a versão atual em navegador. O workflow `.github/workflows/homologar-firebase-real.yml` executa a homologação Firebase real automaticamente quando a camada de colaboração muda.
 
-A v1.0.1 foi publicada somente após:
+A **v1.0.2** foi publicada somente após:
 
 - gate estrutural verde;
+- cobertura total verde;
 - E2E Desktop/Mobile verde;
 - Firebase real verde com Mestre e Jogador efêmero;
-- confirmação de visão privada para Mestre e projeção compartilhada para Jogador.
+- confirmação de conteúdo privado exclusivo do Mestre;
+- confirmação de Sessões/Aventuras por atribuição;
+- confirmação de bloqueio de alteração de Mesa/vínculo pelo Jogador;
+- confirmação de edição da própria ficha;
+- deploy GitHub Pages verde no commit homologado.
