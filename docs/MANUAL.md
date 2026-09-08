@@ -1,6 +1,6 @@
 # Manual do Hub de RPG — Teias de Anansi v1
 
-Este manual descreve o uso atual do Hub na **v1.0.2**. O produto é um site web responsivo: os dados locais ficam no navegador e, quando o usuário está autenticado, a camada de Colaboração sincroniza os estados previstos pelo modelo online.
+Este manual descreve o uso atual do Hub. O produto é um site web responsivo: os dados locais ficam no navegador e, quando o usuário está autenticado, a camada de Colaboração sincroniza os estados previstos pelo modelo online.
 
 ## 1. Início e Painel Geral
 
@@ -20,13 +20,11 @@ Abra **Personagens → Criar Personagem**. A Criação de Personagem é organiza
 6. Equipamento.
 7. Revisão.
 
-O construtor aplica catálogos e Regras da Casa já consolidados na linha v1. A criação pode produzir personagens acima do Level 1 quando isso fizer parte da proposta inicial da Mesa, mas isso não equivale a registrar progressões pós-criação.
-
-Depois de concluir a estrutura inicial, use a Ficha Digital para jogar e administrar mudanças de estado.
+Todos os catálogos suportados e todas as Regras da Casa consolidadas no Hub ficam habilitados permanentemente; não existe seleção normativa em Configurações.
 
 ## 3. Ficha Digital e Modo de Jogo
 
-Em **Personagens → Abrir Fichas / Jogar**, escolha o personagem. A Ficha Digital é a autoridade de uso durante a campanha. Nela ficam atributos derivados, perícias, recursos, ataques, inventário, economia, magias, descansos, condições e progressão pós-criação.
+Em **Personagens → Abrir Fichas / Jogar**, escolha o personagem. A Ficha Digital administra atributos derivados, perícias, recursos, ataques, inventário, economia, magias, descansos, condições e progressão pós-criação.
 
 Quando a conta conectada é de Jogador, a Lista de Personagens mostra somente a ficha atribuída pelo Mestre. Essa ficha continua editável normalmente durante o jogo.
 
@@ -54,9 +52,9 @@ A progressão não reaplica equipamento inicial, não recria o orçamento de cri
 
 ### Mestre
 
-Abra **Campanhas / Mesas** para criar e administrar uma Mesa. O formulário aceita nome, Mestre, cenário e resumo. O sistema e os defaults de Mestre/cenário podem vir de Configurações e permanecem editáveis antes da criação.
+**Rafael é sempre o Mestre das Campanhas/Mesas.** Esse valor não é configurável e não é solicitado no formulário de Nova campanha.
 
-Dentro da Mesa, o Mestre administra participantes, personagens vinculados, contexto compartilhado e Sessões.
+Abra **Campanhas / Mesas** para criar e administrar uma Mesa. O formulário pede nome, cenário e resumo. Dentro da Mesa, o Mestre administra participantes, personagens vinculados, contexto compartilhado e Sessões.
 
 ### Jogador
 
@@ -84,7 +82,9 @@ O Jogador não altera a Aventura.
 
 ## 8. Bibliotecas
 
-As Bibliotecas expõem os catálogos congelados para a linha v1: regras, classes, espécies, antecedentes, talentos, equipamentos, magias e demais entidades suportadas. A precedência normativa foi consolidada no Bloco 9 e novas fontes posteriores ao congelamento pertencem a versões futuras.
+As Bibliotecas expõem os catálogos congelados para a linha v1: regras, classes, espécies, antecedentes, talentos, equipamentos, magias e demais entidades suportadas.
+
+**Todas as fontes suportadas e todas as Regras da Casa consolidadas ficam sempre habilitadas.** Não existe controle para ativar/desativar fontes ou Regras da Casa.
 
 **Bibliotecas permanecem disponíveis aos Jogadores.**
 
@@ -98,7 +98,7 @@ Não existe `authorizedUsers`, `isAdmin` ou uma segunda liberação administrati
 
 Os papéis de Mesa são:
 
-- **Mestre (`dm`)**: administra a Mesa e recebe a visão privada/completa.
+- **Mestre (`dm`)**: Rafael; administra a Mesa e recebe a visão privada/completa.
 - **Jogador (`player`)**: recebe apenas o conteúdo associado à sua participação e possui uma ficha atribuída.
 - **Observador (`observer`)**: recebe a visão compartilhada conforme o vínculo da Mesa, sem edição de ficha de Jogador.
 
@@ -116,8 +116,6 @@ O fluxo é controlado pelo Mestre:
 O Jogador não escolhe nem altera essas atribuições.
 
 ## 10. O que o Jogador pode e não pode alterar
-
-O contrato da v1.0.2 é simples:
 
 **Pode alterar:**
 
@@ -145,9 +143,18 @@ Quando o mesmo navegador é usado por contas diferentes, o Hub filtra o cache de
 
 ## 12. Configurações
 
-Configurações guarda preferências locais de perfil, fontes, preset de Regras da Casa, densidade da ficha, referências de fonte, navegação fixa, tamanho de texto, contraste, redução de movimento e defaults de campanha.
+Configurações expõe apenas:
 
-Alterar uma configuração não reescreve retroativamente personagens ou Mesas existentes. O preset de Regras da Casa é uma preferência normativa local e não é gravado artificialmente no schema atual da campanha.
+- **Perfil de uso**;
+- preferências da **Ficha Digital**;
+- **Acessibilidade**.
+
+Foram retirados da área de Configurações:
+
+- Fontes habilitadas — todas ficam sempre ativas;
+- Regras da Casa — todas as consolidadas ficam sempre ativas;
+- Persistência — não é uma opção de usuário;
+- Defaults de campanha — Rafael é sempre o Mestre e não há default configurável.
 
 ## 13. Troca de navegador ou dispositivo
 
@@ -168,5 +175,3 @@ Também são decisões deliberadas do produto atual:
 - manter as permissões de Mestre/Jogador apenas no nível necessário para entregar a experiência correta da Mesa.
 
 Novas fontes normativas após o congelamento da linha v1 são expansão futura.
-
-**Versão de referência deste manual: v1.0.2.**
