@@ -1,6 +1,6 @@
 # Manual do Hub de RPG — Teias de Anansi v1
 
-Este manual descreve o uso atual do Hub após a simplificação consolidada na v1.0.1. O produto é um site web responsivo: os dados locais ficam no navegador e, quando o usuário está autenticado, a camada de Colaboração sincroniza os estados previstos pelo modelo online.
+Este manual descreve o uso atual do Hub na **v1.0.2**. O produto é um site web responsivo: os dados locais ficam no navegador e, quando o usuário está autenticado, a camada de Colaboração sincroniza os estados previstos pelo modelo online.
 
 ## 1. Início e Painel Geral
 
@@ -28,6 +28,8 @@ Depois de concluir a estrutura inicial, use a Ficha Digital para jogar e adminis
 
 Em **Personagens → Abrir Fichas / Jogar**, escolha o personagem. A Ficha Digital é a autoridade de uso durante a campanha. Nela ficam atributos derivados, perícias, recursos, ataques, inventário, economia, magias, descansos, condições e progressão pós-criação.
 
+Quando a conta conectada é de Jogador, a Lista de Personagens mostra somente a ficha atribuída pelo Mestre. Essa ficha continua editável normalmente durante o jogo.
+
 ### Equipamento e ataques
 
 Armas são derivadas do inventário real do personagem. Armas Versáteis permanecem um único item com modos de uma ou duas mãos. O modo de duas mãos só fica disponível quando a segunda mão estiver livre. Propriedades e Maestria entram como mecânicas quando aplicáveis.
@@ -50,43 +52,88 @@ A progressão não reaplica equipamento inicial, não recria o orçamento de cri
 
 ## 5. Campanhas / Mesas
 
-Abra **Campanhas / Mesas** para criar uma Mesa. O formulário aceita nome, Mestre, cenário e resumo. O sistema e os defaults de Mestre/cenário podem vir de Configurações e permanecem editáveis antes da criação.
+### Mestre
 
-Dentro da Mesa é possível administrar participantes, personagens vinculados, contexto compartilhado e Sessões. Cada personagem deve manter relações consistentes com os participantes aos quais está vinculado.
+Abra **Campanhas / Mesas** para criar e administrar uma Mesa. O formulário aceita nome, Mestre, cenário e resumo. O sistema e os defaults de Mestre/cenário podem vir de Configurações e permanecem editáveis antes da criação.
 
-### Sessões e encontros
+Dentro da Mesa, o Mestre administra participantes, personagens vinculados, contexto compartilhado e Sessões.
 
-Sessões podem ser planejadas, iniciadas, concluídas ou canceladas. Apenas uma sessão permanece ativa por Mesa. Encontros pertencem à sessão e permitem iniciativa, criaturas, PV, condições, turnos e recompensas. Uma sessão com encontro ativo não pode ser concluída antes de finalizar esse encontro.
+### Jogador
 
-## 6. Aventuras
+O Jogador vê somente as **Campanhas/Mesas às quais sua conta foi vinculada**. Ele não cria, altera ou exclui a Mesa nem modifica o próprio vínculo.
 
-A área Aventuras organiza planejamento narrativo vinculado à campanha: capítulos/arcos, cenas, locais, NPCs, encontros, pistas, handouts e tesouros. Pistas e handouts possuem estados próprios, permitindo manter material oculto até sua revelação.
+A página da Mesa entra em modo de leitura para o Jogador e não carrega as ferramentas exclusivas do Mestre.
 
-Na Colaboração, a projeção compartilhada não inclui notas privadas do Mestre, pistas ocultas nem handouts ainda não revelados.
+## 6. Sessões e encontros
 
-## 7. Bibliotecas
+Sessões podem ser planejadas, iniciadas, concluídas ou canceladas pelo Mestre. Apenas uma Sessão permanece ativa por Mesa. Encontros pertencem à Sessão e permitem iniciativa, criaturas, PV, condições, turnos e recompensas. Uma Sessão com encontro ativo não pode ser concluída antes de finalizar esse encontro.
+
+Para Jogadores, a visibilidade é derivada da ficha atribuída: ele vê somente as **Sessões em que esse personagem está listado como participante**.
+
+O Jogador não altera a Sessão nem os vínculos de participação.
+
+## 7. Aventuras
+
+A área Aventuras organiza planejamento narrativo vinculado à Campanha: capítulos/arcos, cenas, locais, NPCs, encontros, pistas, handouts e tesouros.
+
+O Mestre administra as Aventuras. Para Jogadores, o Hub mostra somente as **Aventuras ligadas às Sessões das quais a ficha atribuída participa**.
+
+Mesmo dentro de uma Aventura visível, a visão do Jogador não inclui notas privadas do Mestre, pistas ocultas nem handouts ainda não revelados.
+
+O Jogador não altera a Aventura.
+
+## 8. Bibliotecas
 
 As Bibliotecas expõem os catálogos congelados para a linha v1: regras, classes, espécies, antecedentes, talentos, equipamentos, magias e demais entidades suportadas. A precedência normativa foi consolidada no Bloco 9 e novas fontes posteriores ao congelamento pertencem a versões futuras.
 
-## 8. Usuários e Colaboração
+**Bibliotecas permanecem disponíveis aos Jogadores.**
+
+## 9. Usuários e Colaboração
 
 A Colaboração usa acesso fechado por **usuário + senha**. As contas são criadas manualmente pelo proprietário no Firebase Authentication. Não existe cadastro público, convite por e-mail nem confirmação de e-mail.
 
-O Firebase Authentication exige tecnicamente um identificador em formato de e-mail. Por isso, um usuário como `rafael` é convertido internamente em `rafael@teias.invalid`. Esse identificador é apenas técnico; o Hub não solicita nem exibe e-mail real como credencial de uso.
+O Firebase Authentication exige tecnicamente um identificador em formato de e-mail. Por isso, um usuário como `gus` é cadastrado tecnicamente como `gus@teias.invalid`, mas no Hub usa apenas `gus` + senha.
 
-Se a conta existe no Firebase Authentication e a senha está correta, o usuário pode entrar. Não existe uma segunda coleção de autorização (`authorizedUsers`), `isAdmin` ou bloqueio administrativo dentro do Hub.
+Não existe `authorizedUsers`, `isAdmin` ou uma segunda liberação administrativa para entrar no Hub.
 
 Os papéis de Mesa são:
 
-- **Mestre (`dm`)**: recebe a visão privada/completa da Mesa.
-- **Jogador (`player`)**: recebe a projeção compartilhada e pode ter personagem vinculado à Mesa.
-- **Observador (`observer`)**: recebe a projeção compartilhada sem assumir personagem quando a Mesa assim estiver organizada.
+- **Mestre (`dm`)**: administra a Mesa e recebe a visão privada/completa.
+- **Jogador (`player`)**: recebe apenas o conteúdo associado à sua participação e possui uma ficha atribuída.
+- **Observador (`observer`)**: recebe a visão compartilhada conforme o vínculo da Mesa, sem edição de ficha de Jogador.
 
-A projeção compartilhada omite conteúdo exclusivo do Mestre, como notas privadas, pistas ocultas e handouts ainda não revelados.
+### Como atribuir um Jogador
 
-Essa diferença é um comportamento funcional do Hub para organizar a experiência da Mesa. O projeto é particular e pressupõe participantes de confiança; não existe objetivo de proteção contra um usuário autenticado que tente manipular diretamente o Firestore.
+O fluxo é controlado pelo Mestre:
 
-## 9. Sincronização
+1. a conta do Jogador já deve existir no Firebase Authentication;
+2. o Jogador entra no Hub pelo menos uma vez para que sua identidade seja conhecida pela colaboração;
+3. o Mestre vincula essa conta à Campanha/Mesa com papel `player`;
+4. o Mestre associa a ficha correta ao Jogador;
+5. nas Sessões, o Mestre define quais personagens participam;
+6. Aventuras visíveis são derivadas das Sessões associadas às cenas da Aventura.
+
+O Jogador não escolhe nem altera essas atribuições.
+
+## 10. O que o Jogador pode e não pode alterar
+
+O contrato da v1.0.2 é simples:
+
+**Pode alterar:**
+
+- somente a própria ficha atribuída.
+
+**Não pode alterar:**
+
+- Campanha/Mesa;
+- papel ou vínculo de participante;
+- Sessão;
+- participação em Sessão;
+- Aventura;
+- conteúdo privado do Mestre;
+- ficha de outro personagem.
+
+## 11. Sincronização
 
 A sincronização Firebase permite que os estados cobertos pela Colaboração sejam atualizados entre navegadores/dispositivos.
 
@@ -94,21 +141,21 @@ Use a área **Usuários e Colaboração** para entrar e sincronizar. O estado lo
 
 Se houver perda de conexão, os fluxos estritamente locais continuam disponíveis. Quando a rede retorna, a Colaboração pode voltar a consultar e sincronizar o Firestore.
 
-## 10. Configurações
+Quando o mesmo navegador é usado por contas diferentes, o Hub filtra o cache de colaboração pela identidade conectada para evitar que conteúdo de outro Jogador apareça na interface.
+
+## 12. Configurações
 
 Configurações guarda preferências locais de perfil, fontes, preset de Regras da Casa, densidade da ficha, referências de fonte, navegação fixa, tamanho de texto, contraste, redução de movimento e defaults de campanha.
 
 Alterar uma configuração não reescreve retroativamente personagens ou Mesas existentes. O preset de Regras da Casa é uma preferência normativa local e não é gravado artificialmente no schema atual da campanha.
 
-## 11. Troca de navegador ou dispositivo
+## 13. Troca de navegador ou dispositivo
 
 **Não existe Backup/exportação/restauração no produto atual.**
 
 Para estados cobertos pela Colaboração, entre com a mesma conta e use a sincronização Firebase. Estados que existirem apenas localmente não têm garantia de continuidade se o armazenamento do navegador for apagado antes de serem sincronizados.
 
-Por isso, a regra prática é simples: antes de limpar dados do navegador ou abandonar um dispositivo, sincronize os personagens/Mesas que deseja manter online.
-
-## 12. Limitações deliberadas da linha v1
+## 14. Limitações deliberadas da linha v1
 
 O Hub é somente web e permanece hospedado no GitHub Pages. Firebase é usado apenas no plano Spark / No-cost. Não há aplicativo Android/iOS/desktop, Firebase Hosting, Cloud Functions, Supabase ou dependência de faturamento.
 
@@ -117,7 +164,9 @@ Também são decisões deliberadas do produto atual:
 - não possuir área de Backup;
 - não possuir cadastro público;
 - não exigir e-mail real;
-- não possuir autorização administrativa paralela ao Firebase Authentication;
-- manter Mestre/Jogador/Observador como papéis funcionais de Mesa, não como camada de segurança contra participantes maliciosos.
+- não possuir autorização administrativa global paralela ao Firebase Authentication;
+- manter as permissões de Mestre/Jogador apenas no nível necessário para entregar a experiência correta da Mesa.
 
 Novas fontes normativas após o congelamento da linha v1 são expansão futura.
+
+**Versão de referência deste manual: v1.0.2.**
