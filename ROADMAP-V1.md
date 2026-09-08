@@ -1,6 +1,6 @@
 # Roadmap oficial de fechamento — Hub de RPG v1
 
-Este arquivo registra o fechamento da v1.0 e a correção de escopo consolidada na v1.0.1. Os Blocos 1–18 permanecem encerrados; a v1.0.1 não reabre o roadmap funcional, apenas substitui requisitos que deixaram de fazer sentido para um Hub pessoal e particular.
+Este arquivo registra o fechamento da linha v1. Os Blocos 1–18 permanecem encerrados. A **v1.0.2 é a referência funcional atual** da linha v1.
 
 ## Regra de encerramento
 
@@ -15,20 +15,35 @@ O Bloco 18 está aceito e a linha v1 está concluída. Conteúdo, livros, suplem
 - Se um serviço necessário passar a exigir pagamento/cartão, substituir o serviço em vez de ativar cobrança.
 - Não usar Supabase.
 
-## Decisão de escopo consolidada na v1.0.1
+## Decisões de escopo consolidadas
 
-O Hub é um projeto pessoal, particular e destinado a poucas pessoas de confiança. Por decisão explícita do responsável pelo projeto:
+O Hub é um projeto pessoal, particular e destinado a poucas pessoas de confiança.
+
+### v1.0.1 — simplificação
 
 - **Backup/exportação/restauração não fazem parte do produto atual.**
 - Não existe objetivo de hardening contra participantes maliciosos.
-- O Firebase Authentication é a única barreira de entrada: contas são criadas manualmente pelo proprietário.
 - O login visível é apenas **usuário + senha**; nenhum e-mail real é necessário. O domínio `@teias.invalid` existe somente como identificador técnico interno do Firebase Authentication.
-- Não existe segunda lista de autorização (`authorizedUsers`), `isAdmin` ou papel administrativo global para liberar acesso.
-- A distinção **Mestre / Jogador / Observador permanece**, porque é necessária à experiência da Mesa.
-- Mestre recebe a visão privada; Jogador e Observador recebem a projeção compartilhada, que omite conteúdo ainda não revelado ou exclusivo do Mestre.
-- Essa diferença de visão é comportamento funcional da aplicação, não uma fronteira de segurança contra usuários maliciosos.
+- Não existe segunda lista de autorização (`authorizedUsers`), `isAdmin` ou papel administrativo global para liberar entrada no Hub.
+- A distinção **Mestre / Jogador / Observador permanece**.
 
-A persistência normal e a sincronização Firebase continuam fazendo parte do produto. O que foi removido foi a área específica de Backup e a camada adicional de autorização/hardening.
+### v1.0.2 — acesso por atribuição
+
+A v1.0.2 manteve o cadastro simples, mas consolidou as permissões funcionais necessárias para o uso real da Mesa:
+
+- a conta precisa apenas existir no Firebase Authentication para fazer login;
+- Mestre administra vínculos, Mesa, Sessões e Aventuras;
+- Jogador vê somente as **Campanhas/Mesas às quais está vinculado**;
+- dentro da Mesa, vê somente as **Sessões das quais seu personagem atribuído participa**;
+- vê somente as **Aventuras relacionadas a essas Sessões**;
+- conteúdo privado, pistas ocultas e handouts não revelados continuam exclusivos do Mestre;
+- Jogador só pode alterar **a própria ficha atribuída**;
+- Jogador não pode alterar Mesa, vínculo, Sessão ou Aventura;
+- Bibliotecas continuam disponíveis ao Jogador.
+
+Essas restrições existem para implementar corretamente a experiência Mestre/Jogador do Hub. Elas não transformam o projeto em um sistema de segurança/hardening para ambiente hostil.
+
+A persistência normal e a sincronização Firebase continuam fazendo parte do produto. O que permanece removido é a área específica de Backup e a antiga camada administrativa global.
 
 ## Blocos
 
@@ -45,11 +60,11 @@ A persistência normal e a sincronização Firebase continuam fazendo parte do p
 11. Rolagens e resolução de jogo — ✅ Aceito
 12. Encontros e ferramentas do Mestre — ✅ Aceito
 13. Aventuras — ✅ Aceito
-14. Persistência definitiva — ✅ Aceito · escopo atualizado na v1.0.1
-15. Usuários, colaboração e sincronização — ✅ Aceito · escopo atualizado na v1.0.1
+14. Persistência definitiva — ✅ Aceito · escopo consolidado na v1.0.1
+15. Usuários, colaboração e sincronização — ✅ Aceito · acesso por atribuição consolidado na v1.0.2
 16. Painel Geral — ✅ Aceito
 17. Configurações — ✅ Aceito
-18. Homologação, documentação e release final — ✅ Aceito
+18. Homologação, documentação e release final — ✅ Aceito · v1.0.2 homologada e publicada
 
 ## Critérios consolidados
 
@@ -74,13 +89,13 @@ Personagens, Campanhas, Aventuras e demais estados duráveis suportados usam sch
 **Histórico:** a v1.0.0 incluía exportação/importação, Backup/restauração, checksum e recuperação transacional como critério do bloco. Esses recursos foram deliberadamente removidos na v1.0.1 e não são mais requisito do produto.
 
 ### 15. Usuários, colaboração e sincronização
-Identidade real no Firebase Authentication, login simples por usuário + senha e sincronização entre navegadores/dispositivos no **site web**, sem aplicativo e sem Supabase. A infraestrutura deve funcionar sem cartão/faturamento; no Firebase, somente plano Spark.
+Identidade no Firebase Authentication, login simples por usuário + senha e sincronização entre navegadores/dispositivos no **site web**, sem aplicativo e sem Supabase. A infraestrutura deve funcionar sem cartão/faturamento; no Firebase, somente plano Spark.
 
-Modelo atual: acesso fechado administrado manualmente pelo proprietário no Firebase Authentication. O nome de usuário é convertido internamente para um identificador técnico `@teias.invalid`; não há cadastro público, convite por e-mail, confirmação de e-mail ou segunda autorização no Firestore.
+Modelo atual: acesso fechado administrado manualmente pelo proprietário no Firebase Authentication. O nome de usuário é convertido internamente para um identificador técnico `@teias.invalid`; não há cadastro público, convite por e-mail, confirmação de e-mail ou segunda autorização global.
 
-Papéis de Mesa: `dm`, `player` e `observer`. A aplicação escolhe entre bundle privado e projeção compartilhada de acordo com o papel funcional do participante.
+Papéis de Mesa: `dm`, `player` e `observer`.
 
-Aceite atual: Authentication por E-mail/senha usado apenas como mecanismo técnico, Cloud Firestore, configuração Web ativa, login simples e E2E real Mestre/Jogador aprovados. O Firestore aceita leitura e escrita para qualquer usuário autenticado; isso é intencional para o grupo de confiança.
+Na v1.0.2, o Firestore e a aplicação aplicam o contrato de atribuição: Mestre administra a Mesa; Jogador recebe somente conteúdo associado à sua participação e só escreve a própria ficha atribuída. O cache local compartilhado por um mesmo navegador também é filtrado por UID para evitar mistura entre contas.
 
 ### 16. Painel Geral
 Dashboard real com personagens, Mesas, próxima sessão, personagem em jogo, pendências e atividade recente.
@@ -97,8 +112,12 @@ E2E em navegador real e mobile, fluxos longos 1–20, campanhas, acessibilidade,
 
 Aceite original: v1.0.0 publicada após gate estrutural, cobertura total, E2E Chromium Desktop/Mobile e homologação Firebase real.
 
-Aceite consolidado da v1.0.1: o Firebase real foi novamente homologado após a simplificação de escopo. O teste confirmou login por usuário/senha, criação de Jogador efêmero, vínculo como `player`, visão privada para Mestre e apenas projeção compartilhada para Jogador. Gate estrutural e E2E Desktop/Mobile também passaram antes da publicação automática da `v1.0.1`.
+Aceite da v1.0.1: simplificação de Backup/autorização global homologada e publicada.
+
+Aceite consolidado da **v1.0.2**: homologação Firebase real de acesso por atribuição, cobertura total, gate estrutural, E2E Desktop/Mobile e GitHub Pages aprovados no commit `c9bf6befd4a4214c475ceedb9bf8f4a851dedc10`; release e tag `v1.0.2` publicadas sobre esse mesmo commit.
 
 ## Política de escopo da v1
 
 A lista de fontes normativas e conteúdos da v1.0 foi congelada no encerramento do Bloco 9. Novos suplementos posteriores ao congelamento entram em versão futura.
+
+**Estado final:** linha v1 encerrada; **v1.0.2 é a referência funcional atual**.
