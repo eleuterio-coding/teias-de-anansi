@@ -1,6 +1,7 @@
 :root{--hub-focus:#111;--hub-sticky-offset:0px;--hub-touch:44px}
 html{scroll-behavior:smooth;scroll-padding-top:76px}
 body{overflow-wrap:anywhere}
+[hidden]{display:none!important}
 img,svg,canvas,video{max-width:100%;height:auto}
 pre,.table-wrap,[data-horizontal-scroll]{max-width:100%;overflow:auto}
 .skip-link{position:fixed;left:12px;top:12px;z-index:10000;transform:translateY(-160%);padding:10px 14px;border:2px solid #111;border-radius:8px;background:#fff!important;color:#000!important;text-decoration:none;font-weight:750;transition:transform .16s ease}
