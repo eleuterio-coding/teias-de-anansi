@@ -6,26 +6,30 @@ class MemoryStorage{constructor(){this.map=new Map}getItem(k){return this.map.ge
 const storage=new MemoryStorage(),defaults=defaultSettings();
 assert.equal(SETTINGS_KEY,'hub-rpg:settings:v1');
 assert.equal(defaults.schema,SETTINGS_SCHEMA);
-assert.equal(defaults.sources.enabled.length,SOURCE_AUTHORITIES.length);
+assert.equal(defaults.sources.enabled.length,SOURCE_AUTHORITIES.length,'Todas as fontes devem permanecer habilitadas.');
 assert.equal(defaults.houseRules.preset,'teias-v1');
-assert.ok(HOUSE_RULE_PRESETS.some(x=>x.id==='mesa-personalizada'));
+assert.equal(HOUSE_RULE_PRESETS.length,1,'Regras da Casa não devem possuir presets selecionáveis.');
+assert.equal(defaults.campaignDefaults.dmName,'Rafael');
 
-const saved=writeSettings({...defaults,workspace:'mestre',sheet:{density:'compact',showSources:false,stickySections:false},accessibility:{fontScale:'large',contrast:'high',motion:'reduce'},campaignDefaults:{dmName:'Anansi',setting:'Eberron',system:'D&D 5.5e'},houseRules:{preset:'mesa-personalizada',enabled:['Concentração Expandida']}},storage,{timestamp:false});
+const saved=writeSettings({...defaults,workspace:'mestre',sources:{enabled:[]},houseRules:{preset:'mesa-personalizada',enabled:['Regra isolada']},sheet:{density:'compact',showSources:false,stickySections:false},accessibility:{fontScale:'large',contrast:'high',motion:'reduce'},campaignDefaults:{dmName:'Outro Mestre',setting:'Eberron',system:'Outro sistema'}},storage,{timestamp:false});
 assert.equal(readSettings(storage).workspace,'mestre');
 assert.equal(saved.sheet.density,'compact');
 assert.equal(saved.accessibility.contrast,'high');
-assert.deepEqual(saved.houseRules.enabled,['Concentração Expandida']);
+assert.deepEqual(saved.sources.enabled,SOURCE_AUTHORITIES.map(x=>x.id),'Preferência antiga não pode desabilitar fontes.');
+assert.equal(saved.houseRules.preset,'teias-v1','Regras da Casa devem permanecer sempre no pacote Teias.');
+assert.deepEqual(saved.houseRules.enabled,[]);
+assert.deepEqual(saved.campaignDefaults,{dmName:'Rafael',setting:'',system:'D&D 5.5e'});
 
-const sanitized=normalizeSettings({workspace:'root',sources:{enabled:['inexistente']},accessibility:{fontScale:'gigante'},sheet:{density:'mínima'}});
+const sanitized=normalizeSettings({workspace:'root',sources:{enabled:['inexistente']},houseRules:{preset:'mesa-personalizada'},accessibility:{fontScale:'gigante'},sheet:{density:'mínima'},campaignDefaults:{dmName:'Anansi'}});
 assert.equal(sanitized.workspace,'auto');
 assert.equal(sanitized.accessibility.fontScale,'normal');
 assert.equal(sanitized.sheet.density,'comfortable');
-assert.equal(sanitized.sources.enabled.length,SOURCE_AUTHORITIES.length,'Fonte inválida não pode deixar o perfil sem fontes reconhecidas.');
+assert.deepEqual(sanitized.sources.enabled,SOURCE_AUTHORITIES.map(x=>x.id));
+assert.equal(sanitized.houseRules.preset,'teias-v1');
+assert.equal(sanitized.campaignDefaults.dmName,'Rafael');
 
 const campaign=campaignDefaultsFromSettings(saved);
-assert.equal(campaign.dmName,'Anansi');
-assert.equal(campaign.setting,'Eberron');
-assert.equal('rulesProfile' in campaign,false,'Defaults de campanha não devem fingir persistir um perfil normativo que o schema da Mesa ainda não armazena.');
+assert.deepEqual(campaign,{dmName:'Rafael',setting:'',system:'D&D 5.5e'});
 
 const fakeRoot={dataset:{}};
 applyUiPreferences(saved,fakeRoot);
@@ -46,16 +50,22 @@ const campaignsPage=fs.readFileSync(new URL('../campanhas.html',import.meta.url)
 const storageRegistry=fs.readFileSync(new URL('../scripts/storage-registry.js',import.meta.url),'utf8');
 const home=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 
-for(const id of['workspace','source-options','house-preset','house-rule-options','sheet-density','show-sources','sticky-sections','font-scale','contrast','motion','default-dm','default-setting','default-system','save-settings','reset-settings','settings-status'])assert.ok(page.includes(`id="${id}"`),`Configurações sem ${id}.`);
+for(const id of['workspace','sheet-density','show-sources','sticky-sections','font-scale','contrast','motion','save-settings','reset-settings','settings-status'])assert.ok(page.includes(`id="${id}"`),`Configurações sem ${id}.`);
+for(const id of['source-options','house-preset','house-rule-options','default-dm','default-setting','default-system','storage-key'])assert.ok(!page.includes(`id="${id}"`),`Configurações não deve expor ${id}.`);
+for(const text of['Fontes habilitadas','Regras da Casa','Defaults de campanha','Persistência'])assert.ok(!page.includes(text),`Configurações não deve exibir "${text}".`);
 for(const token of['readSettings','writeSettings','resetSettings','applyUiPreferences'])assert.ok(ui.includes(token),`UI de Configurações sem ${token}.`);
+for(const token of['loadHouseRules','renderSources','renderPreset','campaignDefaults'])assert.ok(!ui.includes(token),`UI simplificada ainda contém ${token}.`);
 assert.ok(ux.includes('readSettings')&&ux.includes('hub-rpg:settings-changed'),'UX global deve consumir preferências persistidas.');
 for(const token of['data-hub-font-scale','data-hub-contrast','data-hub-motion','data-hub-sheet-density','data-hub-sticky-sections','data-hub-show-sources'])assert.ok(css.includes(token),`CSS global sem preferência ${token}.`);
 assert.ok(settingsCss.includes('@media(max-width:760px)'),'Configurações devem ser responsivas.');
-assert.ok(campaigns.includes('campaignDefaultsFromSettings')&&campaigns.includes('applyDefaults'),'Nova Mesa deve consumir defaults persistidos.');
-assert.ok(campaignsPage.includes('campaign-defaults-note'),'Tela de Campanhas deve explicar os defaults ativos.');
-assert.ok(storageRegistry.includes("id:'settings'")&&storageRegistry.includes('SETTINGS_KEY'),'Chave de Configurações deve estar classificada no registro de armazenamento.');
+assert.ok(!campaigns.includes('campaignDefaultsFromSettings')&&!campaigns.includes('applyDefaults'),'Campanhas não devem depender de defaults configuráveis.');
+assert.ok(campaigns.includes("DM_NAME='Rafael'")&&campaigns.includes('dmName:DM_NAME'),'Nova Mesa deve gravar Rafael como Mestre.');
+assert.ok(!campaignsPage.includes('id="campaign-dm"')&&!campaignsPage.includes('campaign-defaults-note'),'Tela de Campanhas não deve pedir Mestre nem exibir defaults.');
+assert.ok(campaignsPage.includes('Mestre: Rafael'),'Tela de Campanhas deve informar o Mestre fixo.');
+assert.ok(storageRegistry.includes("id:'settings'")&&storageRegistry.includes('SETTINGS_KEY'),'Chave de Configurações deve permanecer classificada no registro de armazenamento.');
 assert.ok(home.includes('href="configuracoes.html'),'Início deve expor Configurações.');
-assert.equal((home.match(/aria-disabled="true"/g)||[]).length,0,'Após o Bloco 17 nenhuma área planejada da home deve permanecer desabilitada.');
-assert.ok(page.includes('não reescreve personagens'),'A UI deve deixar explícito que presets não alteram retroativamente fichas existentes.');
+assert.ok(!home.includes('Fluxo recomendado:'),'Home não deve exibir o texto de fluxo recomendado removido.');
+assert.ok(!home.includes('Preferências, fontes, Regras da Casa'),'Home não deve anunciar opções removidas de Configurações.');
+assert.equal((home.match(/aria-disabled="true"/g)||[]).length,0,'Nenhuma área da home deve permanecer desabilitada.');
 
-console.log('OK — Bloco 17: preferências persistentes, fontes, presets de Regras da Casa, Ficha, acessibilidade e defaults de campanha.');
+console.log('OK — Configurações simplificadas: fontes e Regras da Casa sempre ativas, sem Persistência/defaults e Mestre Rafael fixo.');
