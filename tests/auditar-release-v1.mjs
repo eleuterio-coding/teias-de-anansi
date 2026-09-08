@@ -17,7 +17,7 @@ assert.equal(pkg.devDependencies?.['@playwright/test'],'1.62.1');
 
 const config=read('playwright.config.js'),e2e=read('e2e/hub.spec.js'),playerE2e=read('e2e/player-visibility.spec.js'),workflow=read('.github/workflows/homologar-release-v1.yml');
 for(const token of['desktop-chromium','mobile-chromium','webServer'])assert.ok(config.includes(token),`Config E2E sem ${token}.`);
-for(const token of['Configurações persistem','Nova Mesa consome defaults','Usuários usa apenas nome de usuário e senha'])assert.ok(e2e.includes(token),`E2E sem cenário atual: ${token}.`);
+for(const token of['Configurações persistem preferências visuais e mantêm invariantes do Hub','Nova Mesa fixa Rafael como Mestre sem defaults configuráveis','Usuários usa apenas nome de usuário e senha'])assert.ok(e2e.includes(token),`E2E sem cenário atual: ${token}.`);
 for(const token of['Mesa do Gus','Sessão do Gus','Aventura do Gus','Ficha do Gus','bibliotecas.html','MESA SECRETA DO MESTRE','FICHA DE OUTRO JOGADOR'])assert.ok(playerE2e.includes(token),`E2E do Jogador sem cenário: ${token}.`);
 assert.equal(e2e.includes('dados.html'),false);
 assert.ok(workflow.includes('npm run test:e2e')&&workflow.includes('playwright install --with-deps chromium'));
