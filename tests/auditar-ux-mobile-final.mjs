@@ -9,7 +9,7 @@ for(const page of pages){
  assert.ok(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i.test(html),`${page}: zoom do usuário não pode ser bloqueado.`)
 }
 
-const css=read('hub-ux.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),home=read('index.html');
+const css=read('hub-ux.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),listUi=read('scripts/character-list-ui.js'),home=read('index.html');
 assert.match(css,/--hub-touch:44px/,'Alvo mínimo de toque precisa ser 44 px.');
 assert.match(css,/:focus-visible/,'Foco visível compartilhado ausente.');
 assert.match(css,/\.section-nav\{[^}]*position:sticky!important[^}]*overflow-x:auto!important/s,'Navegação de seções precisa permanecer sticky e rolável no mobile.');
@@ -34,10 +34,12 @@ assert.ok(!sheet.includes('>Editar no construtor</a>'),'Ficha não deve sugerir 
 assert.match(sheet,/id="save-status"[^>]*role="status"[^>]*aria-live="polite"/,'Feedback de salvamento deve ser uma live region.');
 assert.match(sheet,/id="load-warnings"[^>]*role="alert"[^>]*aria-live="assertive"/,'Falhas de carregamento precisam ser anunciadas.');
 
-assert.ok(list.includes('data-structure-edit'),'Lista deve distinguir a ação de edição estrutural.');
-assert.ok(list.includes('Editar estrutura'),'Lista deve explicitar que o construtor altera estrutura.');
-assert.ok(!/>Editar<\/a>/.test(list),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
+assert.ok(list.includes('scripts/character-list-ui.js'),'Lista deve delegar ações ao módulo atual.');
+assert.ok(listUi.includes('data-structure-edit'),'Lista deve distinguir a ação de edição estrutural.');
+assert.ok(listUi.includes('Editar estrutura'),'Lista deve explicitar que o construtor altera estrutura.');
+assert.ok(!/>Editar<\/a>/.test(list+listUi),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.ok(list.includes('Abra a Ficha Digital para jogar e administrar o personagem'),'Lista deve orientar o fluxo pós-criação.');
+assert.ok(listUi.includes("restricted?'':")&&listUi.includes('create-character-action'),'Modo Jogador deve ocultar criação, edição estrutural e exclusão.');
 
 for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
 assert.equal(home.includes('dados.html'),false,'A área de Backup não faz parte do produto atual.');
