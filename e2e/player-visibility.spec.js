@@ -10,29 +10,29 @@ test.beforeEach(async({page})=>{await page.addInitScript(({session,cache,localCa
 
 test('Jogador vê somente Campanha, Sessão, Aventura e ficha atribuídas',async({page})=>{
  await page.goto('/campanhas.html');
- await expect(page.getByText('Mesa do Gus')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Mesa do Gus'})).toBeVisible();
  await expect(page.getByText('MESA SECRETA DO MESTRE')).toHaveCount(0);
  await expect(page.locator('#campaign-create-card')).toBeHidden();
  await expect(page.getByRole('button',{name:'Excluir'})).toHaveCount(0);
 
  await page.goto('/sessoes.html');
- await expect(page.getByText('Sessão do Gus')).toBeVisible();
+ await expect(page.getByText('Sessão do Gus',{exact:true})).toBeVisible();
  await expect(page.getByText('SESSÃO SECRETA')).toHaveCount(0);
 
  await page.goto('/mesa.html?id=c-gus');
  await expect(page.getByText('Conteúdo atribuído a você.')).toBeVisible();
  await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
- await expect(page.getByText('Sessão do Gus')).toBeVisible();
- await expect(page.getByText('Aventura do Gus')).toBeVisible();
+ await expect(page.getByText('Sessão do Gus',{exact:true})).toBeVisible();
+ await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
  await expect(page.getByRole('button')).toHaveCount(0);
 
  await page.goto('/aventuras.html?campaign=c-gus');
- await expect(page.getByText('Aventura do Gus')).toBeVisible();
- await expect(page.getByText('PISTA VISÍVEL')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Aventura do Gus'})).toBeVisible();
+ await expect(page.getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
  await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
 
  await page.goto('/lista-personagens.html');
- await expect(page.getByText('Ficha do Gus')).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Ficha do Gus'})).toBeVisible();
  await expect(page.getByText('FICHA DE OUTRO JOGADOR')).toHaveCount(0);
  await expect(page.locator('#create-character-action')).toBeHidden();
  await expect(page.getByText('Editar estrutura')).toHaveCount(0);
