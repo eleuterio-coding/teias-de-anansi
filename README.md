@@ -12,7 +12,7 @@ O produto é **somente um site web**, hospedado no GitHub Pages. Não há aplica
 
 ### Personagens
 
-A área de Personagens reúne a Criação de Personagem e a Ficha Digital. O construtor organiza a criação em sete etapas. Depois da criação, a Ficha é a autoridade de jogo: progressão, recursos, ataques, inventário, economia, magias, descansos, condições e demais estados representáveis ficam nela.
+A área de Personagens reúne a Criação de Personagem e a Ficha Digital. O construtor organiza a criação em sete etapas. A Ficha Digital administra progressão, recursos, ataques, inventário, economia, magias, descansos, condições e demais estados representáveis.
 
 A progressão pós-criação é sequencial até o Level 20. Subir de Level não reaplica pacotes iniciais, não recria orçamento de criação e não concede riqueza automática por Level.
 
@@ -20,7 +20,7 @@ Quando a conta conectada é de Jogador, somente a **ficha atribuída pelo Mestre
 
 ### Campanhas / Mesas
 
-Campanhas armazenam Mestre, cenário, contexto compartilhado, participantes e Sessões. Sessões podem conter encontros com iniciativa, criaturas, PV, condições, turnos, recompensas e registro de resultado.
+Campanhas armazenam cenário, contexto compartilhado, participantes e Sessões. **Rafael é sempre o Mestre**; esse valor não é configurável. Sessões podem conter encontros com iniciativa, criaturas, PV, condições, turnos, recompensas e registro de resultado.
 
 Cada participante recebe um papel na Mesa: `dm`, `player` ou `observer`.
 
@@ -46,7 +46,7 @@ Jogadores não alteram Aventuras.
 
 ### Bibliotecas
 
-As Bibliotecas expõem os catálogos normativos do Hub. A precedência entre fontes, compatibilidade e overrides de Regras da Casa são auditados por testes dedicados.
+As Bibliotecas expõem os catálogos normativos do Hub. **Todas as fontes suportadas e todas as Regras da Casa consolidadas permanecem sempre habilitadas**; não existe seleção de fontes ou preset normativo em Configurações.
 
 **Bibliotecas permanecem disponíveis aos Jogadores.**
 
@@ -66,7 +66,9 @@ O Painel Geral agrega personagens, Mesas, próxima sessão, personagem em jogo, 
 
 ### Configurações
 
-Configurações guarda preferências locais de perfil, fontes habilitadas, preset de Regras da Casa, densidade da Ficha, referências de fonte, acessibilidade e defaults de campanha.
+Configurações expõe apenas preferências de **perfil de uso, Ficha Digital e acessibilidade**.
+
+Não existem controles de Fontes habilitadas, Regras da Casa, Persistência ou Defaults de campanha. Todas as fontes e Regras da Casa suportadas ficam sempre ativas, e Rafael é o Mestre fixo das Campanhas.
 
 ## Persistência
 
