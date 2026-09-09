@@ -20,7 +20,7 @@ test('Jogador vê somente Campanha, Sessão, Aventura e ficha atribuídas',async
  await expect(page.getByText('SESSÃO SECRETA')).toHaveCount(0);
 
  await page.goto('/mesa.html?id=c-gus');
- await expect(page.getByText('Conteúdo atribuído a você.')).toBeVisible();
+ await expect(page.getByText(/somente leitura/i).first()).toBeVisible();
  await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
  await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
