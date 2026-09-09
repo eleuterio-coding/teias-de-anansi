@@ -4,7 +4,7 @@ const pages=[
  ['/', 'Teias de Anansi'],
  ['/personagens.html','Personagens'],
  ['/campanhas.html','Campanhas / Mesas'],
- ['/usuarios.html','Usuários e Colaboração'],
+ ['/usuarios.html','Jogadores'],
  ['/painel.html','Painel Geral'],
  ['/configuracoes.html','Configurações']
 ];
@@ -76,6 +76,7 @@ test('Nova Mesa fixa Rafael como Mestre sem defaults configuráveis',async({page
 
 test('Usuários usa apenas nome de usuário e senha',async({page})=>{
  await page.goto('/usuarios.html');
+ await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
  await expect(page.locator('#login-username')).toHaveAttribute('type','text');
  await expect(page.locator('#login-password')).toHaveAttribute('type','password');
  await expect(page.locator('input[type="email"]')).toHaveCount(0);
@@ -86,7 +87,7 @@ test('Usuários usa apenas nome de usuário e senha',async({page})=>{
 test('Usuários falha de forma clara quando o acesso online está indisponível',async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.goto('/usuarios.html');
- await expect(page.getByRole('heading',{name:/Usuários e Colaboração/i})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
  await expect(page.locator('#provider-status')).toContainText('Acesso online indisponível');
  await expect(page.locator('#login-form')).toBeHidden();
 });
