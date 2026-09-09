@@ -4,7 +4,7 @@ export const CAMPAIGN_KEY='hub-rpg:campaigns:v1';
 export const CAMPAIGN_SCHEMA='hub-rpg/campaign/v1';
 const CAMPAIGN_STATUS=new Set(['active','paused','finished']);
 const SESSION_STATUS=new Set(['planned','active','completed','cancelled']);
-const MEMBER_ROLES=new Set(['dm','player','observer']);
+const MEMBER_ROLES=new Set(['dm','player']);
 const text=v=>String(v??'').trim();
 const arr=v=>Array.isArray(v)?v:[];
 const now=()=>new Date().toISOString();
