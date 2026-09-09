@@ -38,7 +38,8 @@ assert.ok(list.includes('scripts/character-list-ui.js'),'Lista deve delegar aç�
 assert.ok(listUi.includes('data-structure-edit'),'Lista deve distinguir a ação de edição estrutural.');
 assert.ok(listUi.includes('Editar estrutura'),'Lista deve explicitar que o construtor altera estrutura.');
 assert.ok(!/>Editar<\/a>/.test(list+listUi),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
-assert.ok(list.includes('Abra a Ficha Digital para jogar.')&&list.includes('somente a ficha atribuída pelo Mestre é exibida'),'Lista deve orientar o fluxo pós-criação e o recorte do Jogador.');
+assert.equal(list.includes('Abra a Ficha Digital para jogar.'),false,'Lista pós-criação não deve exibir ajuda contextual.');
+assert.equal(list.includes('somente a ficha atribuída pelo Mestre é exibida'),false,'Lista pós-criação não deve explicar o recorte de permissão.');
 assert.ok(listUi.includes("restricted?'':")&&listUi.includes('create-character-action'),'Modo Jogador deve ocultar criação, edição estrutural e exclusão.');
 
 for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
