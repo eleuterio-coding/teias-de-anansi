@@ -11,6 +11,7 @@ pre,.table-wrap,[data-horizontal-scroll]{max-width:100%;overflow:auto}
 :where(input:not([type="checkbox"]):not([type="radio"]),select){min-height:var(--hub-touch)}
 input[type="checkbox"],input[type="radio"]{min-width:20px;min-height:20px}
 :where(main,section,article,[id]){scroll-margin-top:84px}
+#sheet>section,#table-root>section,#adventure-root>section{content-visibility:auto;contain-intrinsic-size:auto 520px}
 .section-nav{position:sticky!important;top:var(--hub-sticky-offset)!important;z-index:45!important;display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;overscroll-behavior-inline:contain;scrollbar-width:thin;-webkit-overflow-scrolling:touch;padding:8px 2px!important;background:#fff!important}
 .section-nav a{flex:0 0 auto;display:inline-flex;align-items:center;white-space:nowrap}
 .section-nav a[aria-current="location"]{border-color:#111!important;box-shadow:inset 0 -2px 0 #111;font-weight:750}
