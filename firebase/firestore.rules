@@ -7,8 +7,12 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function loginEmail() {
+      return request.auth.token.email;
+    }
+
     function membershipId(campaignId) {
-      return campaignId + '_' + request.auth.uid;
+      return campaignId + '_' + loginEmail();
     }
 
     function membershipPath(campaignId) {
@@ -120,7 +124,7 @@ service cloud.firestore {
     match /memberships/{memberId} {
       allow read: if signedIn()
         && (
-          resource.data.uid == request.auth.uid
+          resource.data.email == loginEmail()
           || canManage(resource.data.campaignId)
         );
       allow create: if signedIn() && canManage(request.resource.data.campaignId);
