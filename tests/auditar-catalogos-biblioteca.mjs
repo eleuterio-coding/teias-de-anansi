@@ -43,11 +43,13 @@ assert(spells.includes('SPELL_REMOTE_SOURCES')&&spells.includes('SPELL_SOURCE_LO
 assert(!spells.includes("const BASE='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data'"),'Magias voltou a manter base remota paralela.');
 
 const lib=read('bibliotecas.html');
-assert(lib.includes('scripts/library-catalog-status.js?v=20260901-catalog-registry1'),'Índice da Biblioteca não carrega sincronização de catálogos.');
+assert(lib.includes('scripts/library-catalog-status.js?v=20260909-perf1'),'Índice da Biblioteca não carrega a UI otimizada de catálogos.');
 assert((lib.match(/<li><a href=/g)||[]).length===18,'Índice visual não contém exatamente 18 módulos.');
 assert(!/\b(?:159|119|58|172|146|185|109|259|537)\s+(?:itens|magias|registros|classes)/.test(lib),'Biblioteca voltou a anunciar contagens estáticas suscetíveis a deriva.');
 const libraryUi=read('scripts/library-catalog-status.js');
-for(const token of['cobertura_modulos','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
+for(const token of['cobertura_modulos','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope','ensureSemanticIndex'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
+assert(!libraryUi.includes("fetch('dados/referencias-hub-index.json',{cache:'no-store'})"),'Índice semântico não deve forçar novo download.');
+assert(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);\s*$/.test(libraryUi),'Biblioteca deve abrir sem baixar o índice semântico; a busca carrega o índice sob demanda.');
 const referenceUi=read('scripts/library-reference-ui.js');
 for(const token of['publicCatalogRoute','aliases','fonte_arquivo','ID estável','params.get(\'q\')'])assert(referenceUi.includes(token),`Detalhe/busca de referência sem contrato: ${token}`);
 
@@ -72,4 +74,4 @@ assert(feats.length>0,'Nenhum talento ativo foi lido pelas fontes registradas.')
 const forbidden=['supabase'];
 for(const file of['scripts/catalog-registry.js','scripts/library-catalog-status.js','bibliotecas.html']){const text=norm(read(file));for(const token of forbidden)assert(!text.includes(token),`${file}: backend proibido detectado.`)}
 
-console.log(`Catálogos validados: ${CATALOG_MODULES.length}/18 módulos, ${BACKGROUND_BUILDER_FILES.length} fontes de Antecedentes, ${SPECIES_BUILDER_FILES.length} de Espécies, ${FEAT_BUILDER_FILES.length} de Talentos e ${SPELL_REMOTE_SOURCES.length} remotas de Magias; ${semanticOnlyParents.length} classe(s)-pai de subclasses será(ão) validada(s) pelo índice semântico.`);
+console.log(`Catálogos validados: ${CATALOG_MODULES.length}/18 módulos, ${BACKGROUND_BUILDER_FILES.length} fontes de Antecedentes, ${SPECIES_BUILDER_FILES.length} de Espécies, ${FEAT_BUILDER_FILES.length} de Talentos e ${SPELL_REMOTE_SOURCES.length} remotas de Magias; ${semanticOnlyParents.length} classe(s)-pai de subclasses será(ão) validada(s) pelo índice semântico sob demanda.`);
