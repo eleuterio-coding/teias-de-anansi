@@ -11,6 +11,8 @@ function ensureStyles(){
  link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260909-perf1',import.meta.url).href;
  document.head.appendChild(link)
 }
+function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
+function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
 function applyStoredPreferences(){applyUiPreferences(readSettings())}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
@@ -65,6 +67,7 @@ function scheduleEnhancements(){
 function run(){ensureStyles();applyStoredPreferences();ensureSkipLink();enhanceDynamicUi()}
 
 if(typeof document!=='undefined'){
+ warmExternalOrigins();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else queueMicrotask(run);
  document.addEventListener('hub-rpg:sheet-ready',scheduleEnhancements);
  document.addEventListener('hub-rpg:settings-changed',event=>applyUiPreferences(event.detail));
