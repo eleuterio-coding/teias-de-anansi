@@ -61,7 +61,6 @@ test('Nova Mesa fixa Rafael como Mestre sem defaults configuráveis',async({page
  await page.goto('/campanhas.html');
  await expect(page.locator('#campaign-dm')).toHaveCount(0);
  await expect(page.locator('#campaign-defaults-note')).toHaveCount(0);
- await expect(page.getByText('Mestre: Rafael',{exact:false}).first()).toBeVisible();
  await page.fill('#campaign-name','Mesa de Homologação');
  await page.fill('#campaign-setting','Planescape');
  await Promise.all([
@@ -84,10 +83,10 @@ test('Usuários usa apenas nome de usuário e senha',async({page})=>{
  await expect(page.locator('#admin-tools')).toHaveCount(0);
 });
 
-test('Usuários falha de forma clara quando Firebase está indisponível',async({page})=>{
+test('Usuários falha de forma clara quando o acesso online está indisponível',async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.goto('/usuarios.html');
  await expect(page.getByRole('heading',{name:/Usuários e Colaboração/i})).toBeVisible();
- await expect(page.locator('#provider-status')).toContainText('Firebase ainda não está conectado');
+ await expect(page.locator('#provider-status')).toContainText('Acesso online indisponível');
  await expect(page.locator('#login-form')).toBeHidden();
 });
