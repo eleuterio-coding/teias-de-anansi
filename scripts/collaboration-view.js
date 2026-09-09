@@ -17,9 +17,9 @@ export function readCollaborationCache(storage=globalThis.localStorage){
 export function playerMode(storage=globalThis.localStorage){const s=readCollaborationSession(storage);return Boolean(s&&!s.isMaster)}
 export function sharedCampaignRows(storage=globalThis.localStorage){
  const session=readCollaborationSession(storage);if(!session||session.isMaster)return[];
- const allowed=new Map(arr(session.memberships).filter(m=>m?.active!==false&&text(m?.uid)===session.uid&&['player','observer'].includes(m?.role)&&text(m?.campaignId)).map(m=>[text(m.campaignId),m]));
+ const allowed=new Map(arr(session.memberships).filter(m=>m?.active!==false&&text(m?.uid)===session.uid&&m?.role==='player'&&text(m?.campaignId)).map(m=>[text(m.campaignId),m]));
  const cache=readCollaborationCache(storage);
- return Object.values(cache).filter(row=>{const membership=row?.membership,campaignId=text(membership?.campaignId||row?.payload?.campaign?.id),current=allowed.get(campaignId);return Boolean(current&&text(membership?.uid)===session.uid&&membership?.active!==false&&['player','observer'].includes(membership?.role)&&row?.payload?.campaign)}).map(row=>({campaign:row.payload.campaign,membership:allowed.get(text(row.membership.campaignId)),adventures:arr(row.payload.revealedAdventures),readOnly:true}))
+ return Object.values(cache).filter(row=>{const membership=row?.membership,campaignId=text(membership?.campaignId||row?.payload?.campaign?.id),current=allowed.get(campaignId);return Boolean(current&&text(membership?.uid)===session.uid&&membership?.active!==false&&membership?.role==='player'&&row?.payload?.campaign)}).map(row=>({campaign:row.payload.campaign,membership:allowed.get(text(row.membership.campaignId)),adventures:arr(row.payload.revealedAdventures),readOnly:true}))
 }
 export function sharedCampaignById(id,storage=globalThis.localStorage){return sharedCampaignRows(storage).find(row=>row.campaign.id===text(id))||null}
 export function sharedAdventures(storage=globalThis.localStorage){return sharedCampaignRows(storage).flatMap(row=>row.adventures.map(a=>({...a,campaignId:a.campaignId||row.campaign.id,campaignName:row.campaign.name,readOnly:true})))}
