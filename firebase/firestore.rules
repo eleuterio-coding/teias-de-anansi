@@ -1,4 +1,4 @@
-// v1.0.2 — acesso por participação e ficha atribuída; revalidação pós-gate.
+// Acesso do Hub: Rafael é o único Mestre; demais contas são Jogadores.
 rules_version = '2';
 
 service cloud.firestore {
@@ -39,23 +39,28 @@ service cloud.firestore {
         && get(campaignPath(campaignId)).data.ownerId == request.auth.uid;
     }
 
-    function isDm(campaignId) {
-      return isMember(campaignId) && memberRole(campaignId) == 'dm';
-    }
-
     function canManage(campaignId) {
-      return isOwner(campaignId) || isDm(campaignId);
+      return isOwner(campaignId);
     }
 
-    function assignedSharedRecord(campaignId, participantCharacterIds) {
-      return isMember(campaignId)
-        && (memberRole(campaignId) == 'player' || memberRole(campaignId) == 'observer')
-        && memberCharacterId(campaignId) != null
-        && memberCharacterId(campaignId) in participantCharacterIds;
+    function isPlayer(campaignId) {
+      return isMember(campaignId) && memberRole(campaignId) == 'player';
+    }
+
+    function assignedSession(campaignId, sessionId) {
+      return isPlayer(campaignId)
+        && 'sessionIds' in get(membershipPath(campaignId)).data
+        && sessionId in get(membershipPath(campaignId)).data.sessionIds;
+    }
+
+    function assignedAdventure(campaignId, adventureId) {
+      return isPlayer(campaignId)
+        && 'adventureIds' in get(membershipPath(campaignId)).data
+        && adventureId in get(membershipPath(campaignId)).data.adventureIds;
     }
 
     function linkedCharacter(campaignId, characterId) {
-      return isMember(campaignId)
+      return isPlayer(campaignId)
         && memberCharacterId(campaignId) == characterId;
     }
 
@@ -83,14 +88,12 @@ service cloud.firestore {
       }
 
       match /sessions/{sessionId} {
-        allow read: if canManage(campaignId)
-          || assignedSharedRecord(campaignId, resource.data.participantCharacterIds);
+        allow read: if canManage(campaignId) || assignedSession(campaignId, sessionId);
         allow create, update, delete: if canManage(campaignId);
       }
 
       match /adventureViews/{adventureId} {
-        allow read: if canManage(campaignId)
-          || assignedSharedRecord(campaignId, resource.data.participantCharacterIds);
+        allow read: if canManage(campaignId) || assignedAdventure(campaignId, adventureId);
         allow create, update, delete: if canManage(campaignId);
       }
 
@@ -102,17 +105,13 @@ service cloud.firestore {
         allow read: if canManage(campaignId) || linkedCharacter(campaignId, characterId);
         allow create, update: if canManage(campaignId)
           || (
-            isMember(campaignId)
-            && memberRole(campaignId) == 'player'
-            && memberCharacterId(campaignId) == characterId
+            linkedCharacter(campaignId, characterId)
             && request.resource.data.characterId == characterId
             && request.resource.data.ownerUid == request.auth.uid
           );
         allow delete: if canManage(campaignId)
           || (
-            isMember(campaignId)
-            && memberRole(campaignId) == 'player'
-            && memberCharacterId(campaignId) == characterId
+            linkedCharacter(campaignId, characterId)
             && resource.data.ownerUid == request.auth.uid
           );
       }
