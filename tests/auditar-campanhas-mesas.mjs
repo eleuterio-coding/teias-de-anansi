@@ -6,8 +6,8 @@ import{
 
 class MemoryStorage{constructor(){this.map=new Map}getItem(key){return this.map.has(key)?this.map.get(key):null}setItem(key,value){this.map.set(key,String(value))}}
 let list=[];
-let created=createCampaign(list,{name:'Mesa Um',dmName:'Ana',setting:'Eberron'});assert.equal(created.ok,true);list=created.list;const first=created.campaign;
-created=createCampaign(list,{name:'Mesa Dois',dmName:'Beto',setting:'Forgotten Realms'});list=created.list;const second=created.campaign;
+let created=createCampaign(list,{name:'Mesa Um',dmName:'Rafael',setting:'Eberron'});assert.equal(created.ok,true);list=created.list;const first=created.campaign;
+created=createCampaign(list,{name:'Mesa Dois',dmName:'Rafael',setting:'Forgotten Realms'});list=created.list;const second=created.campaign;
 assert.equal(list.length,2);
 let memberOne=addCampaignMember(list,first.id,{name:'Lia',role:'player'});assert.equal(memberOne.ok,true);list=memberOne.list;const m1=memberOne.member;
 let memberTwo=addCampaignMember(list,second.id,{name:'Lia',role:'player'});list=memberTwo.list;const m2=memberTwo.member;
@@ -29,7 +29,12 @@ const payload=JSON.stringify(roundtrip);for(const forbidden of['currentHp','spel
 const campaignState=fs.readFileSync(new URL('../scripts/campaign-state.js',import.meta.url),'utf8');const listUi=fs.readFileSync(new URL('../scripts/campaign-list-ui.js',import.meta.url),'utf8');const tableUi=fs.readFileSync(new URL('../scripts/campaign-table-ui.js',import.meta.url),'utf8');const sessionsUi=fs.readFileSync(new URL('../scripts/campaign-sessions-ui.js',import.meta.url),'utf8');const sheetUi=fs.readFileSync(new URL('../scripts/character-sheet-campaign-ui.js',import.meta.url),'utf8');const gameplay=fs.readFileSync(new URL('../scripts/character-sheet-gameplay-ui.js',import.meta.url),'utf8');const characterList=fs.readFileSync(new URL('../lista-personagens.html',import.meta.url),'utf8');const characterListUi=fs.readFileSync(new URL('../scripts/character-list-ui.js',import.meta.url),'utf8');const index=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 for(const file of['campanhas.html','mesa.html','sessoes.html'])assert.ok(fs.existsSync(new URL(`../${file}`,import.meta.url)),`Página ausente: ${file}`);
 for(const token of['hub-rpg:campaigns:v1','assignCharacterToMember','startCampaignSession','campaignContextForCharacter'])assert.ok(campaignState.includes(token),`Estado de campanha sem ${token}`);
-for(const token of['Elenco da Mesa','Contexto da Mesa','Planejar sessão','Notas do Mestre'])assert.ok(tableUi.includes(token),`Mesa sem ${token}`);
+for(const token of['Jogadores da Mesa','Contexto da Mesa','Planejar sessão','Notas do Mestre'])assert.ok(tableUi.includes(token),`Mesa sem ${token}`);
+assert.equal(tableUi.toLowerCase().includes('observer'),false,'Observador não pode existir na Mesa.');
+assert.equal(tableUi.includes('data-member-field="role"'),false,'Papel do jogador não é editável.');
+assert.equal(tableUi.includes('data-campaign-field="dmName"'),false,'Rafael não é um Mestre configurável.');
+assert.ok(tableUi.includes("role:'player'"),'Participante adicionado pela Mesa deve ser sempre Jogador.');
+assert.ok(listUi.includes("DM_NAME='Rafael'"),'Rafael deve ser o Mestre fixo das Campanhas.');
 assert.ok(listUi.includes('Campanhas / Mesas')||fs.readFileSync(new URL('../campanhas.html',import.meta.url),'utf8').includes('Campanhas / Mesas'));
 assert.ok(sessionsUi.includes('Abrir Mesa'),'Visão de sessões deve voltar à Mesa.');
 assert.ok(sheetUi.includes('sheet-campaign-context')&&sheetUi.includes('Abrir Mesa'),'Ficha deve mostrar contexto da campanha.');
@@ -38,4 +43,4 @@ assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.
 for(const token of['playerMode','assignedCharacterIds','allowed.has(c.id)','create-character-action'])assert.ok(characterListUi.includes(token),`Lista de personagens sem restrição por ficha atribuída: ${token}`);
 assert.ok(index.includes('href="campanhas.html')&&index.includes('href="sessoes.html'),'Início deve ativar Campanhas e Sessões.');
 assert.equal([campaignState,listUi,tableUi,sessionsUi,sheetUi,characterListUi].join('\n').toLowerCase().includes('supabase'),false);
-console.log('OK — Campanhas/Mesas preservam vínculos, sessões, contexto e a Lista de Personagens respeita a ficha atribuída.');
+console.log('OK — Rafael é Mestre fixo; Campanhas/Mesas usam apenas Jogadores, preservam vínculos e sessões, e a Lista de Personagens respeita a ficha atribuída.');
