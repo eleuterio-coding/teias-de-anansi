@@ -52,7 +52,7 @@ const home=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 
 for(const id of['workspace','sheet-density','show-sources','sticky-sections','font-scale','contrast','motion','save-settings','reset-settings','settings-status'])assert.ok(page.includes(`id="${id}"`),`Configurações sem ${id}.`);
 for(const id of['source-options','house-preset','house-rule-options','default-dm','default-setting','default-system','storage-key'])assert.ok(!page.includes(`id="${id}"`),`Configurações não deve expor ${id}.`);
-for(const text of['Fontes habilitadas','Regras da Casa','Defaults de campanha','Persistência'])assert.ok(!page.includes(text),`Configurações não deve exibir "${text}".`);
+for(const text of['Fontes habilitadas','Regras da Casa','Defaults de campanha','Persistência','Esta preferência identifica o modo de uso predominante'])assert.ok(!page.includes(text),`Configurações não deve exibir "${text}".`);
 for(const token of['readSettings','writeSettings','resetSettings','applyUiPreferences'])assert.ok(ui.includes(token),`UI de Configurações sem ${token}.`);
 for(const token of['loadHouseRules','renderSources','renderPreset','campaignDefaults'])assert.ok(!ui.includes(token),`UI simplificada ainda contém ${token}.`);
 assert.ok(ux.includes('readSettings')&&ux.includes('hub-rpg:settings-changed'),'UX global deve consumir preferências persistidas.');
@@ -61,7 +61,7 @@ assert.ok(settingsCss.includes('@media(max-width:760px)'),'Configurações devem
 assert.ok(!campaigns.includes('campaignDefaultsFromSettings')&&!campaigns.includes('applyDefaults'),'Campanhas não devem depender de defaults configuráveis.');
 assert.ok(campaigns.includes("DM_NAME='Rafael'")&&campaigns.includes('dmName:DM_NAME'),'Nova Mesa deve gravar Rafael como Mestre.');
 assert.ok(!campaignsPage.includes('id="campaign-dm"')&&!campaignsPage.includes('campaign-defaults-note'),'Tela de Campanhas não deve pedir Mestre nem exibir defaults.');
-assert.ok(campaignsPage.includes('Mestre: Rafael'),'Tela de Campanhas deve informar o Mestre fixo.');
+assert.equal(campaignsPage.includes('Mestre: Rafael'),false,'Tela de Campanhas não deve exibir explicação persistente sobre o Mestre fixo.');
 assert.ok(storageRegistry.includes("id:'settings'")&&storageRegistry.includes('SETTINGS_KEY'),'Chave de Configurações deve permanecer classificada no registro de armazenamento.');
 assert.ok(home.includes('href="configuracoes.html'),'Início deve expor Configurações.');
 assert.ok(!home.includes('Fluxo recomendado:'),'Home não deve exibir o texto de fluxo recomendado removido.');
