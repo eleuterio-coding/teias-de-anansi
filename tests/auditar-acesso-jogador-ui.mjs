@@ -23,7 +23,8 @@ const files={
 };
 for(const token of['playerMode','sharedCampaignRows'])assert.ok(files.campaigns.includes(token),`Lista de Campanhas sem ${token}`);
 assert.ok(files.campaigns.includes('Somente leitura'));
-assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('Conteúdo atribuído a você'));
+assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('somente leitura'));
+assert.equal(files.table.includes('Conteúdo atribuído a você'),false,'Mesa do Jogador não deve exibir tutorial de permissão.');
 assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma Sessão foi atribuída'));
 assert.ok(files.adventures.includes('sharedAdventures')&&files.adventures.includes('somente leitura'));
 assert.ok(files.characters.includes('assignedCharacterIds')&&files.characters.includes('Ficha atribuída'));
