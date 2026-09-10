@@ -1,12 +1,14 @@
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260910-realtime1';
 import{pullCollaborations}from'./collaboration-sync.js?v=20260910-realtime1';
 import{readCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260910-realtime1';
-import{readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
-import{readAdventures}from'./adventure-state.js?v=20260910-realtime1';
-import{read as readCharacters}from'./character-builder/state.js';
+import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
+import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
+import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
 
 const CHANGE_EVENT='hub-rpg:data-changed';
 const REMOTE_EVENT='hub-rpg:remote-updated';
+const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch');
+const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
 let provider=null,account=null,unsubscribeRemote=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),refreshPending=false;
 
@@ -26,6 +28,14 @@ function refreshPage(){
   setTimeout(()=>{if(refreshPending&&!editing())run()},2500)
  }else setTimeout(run,250)
 }
+function emitLocalChange(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;window.dispatchEvent(new CustomEvent(CHANGE_EVENT,{detail:{kind}}))}
+function installStorageBridge(){
+ if(typeof Storage==='undefined'||Storage.prototype[STORAGE_PATCH])return;
+ const original=Storage.prototype.setItem;
+ Object.defineProperty(Storage.prototype,STORAGE_PATCH,{value:true,configurable:false});
+ Storage.prototype.setItem=function(key,value){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=original.call(this,key,value);if(watched&&this===globalThis.localStorage&&before!==String(value))emitLocalChange(watched);return result}
+ window.addEventListener('storage',event=>{const kind=KIND_BY_KEY.get(String(event.key||''));if(kind&&event.newValue!==event.oldValue)emitLocalChange(kind)})
+}
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
  const before=fingerprint();
@@ -43,7 +53,7 @@ async function pushChanges(){
  try{
   if(session.isMaster){
    if(kinds.has('campaigns')||kinds.has('adventures')){
-    for(const campaign of readCampaigns())await provider.saveCampaignBundle(campaign,readAdventures().filter(a=>a.campaignId===campaign.id),readCharacters())
+    const adventures=readAdventures(),characters=readCharacters();for(const campaign of readCampaigns())await provider.saveCampaignBundle(campaign,adventures.filter(a=>a.campaignId===campaign.id),characters)
    }
    if(kinds.has('characters')){
     const characters=readCharacters(),campaigns=readCampaigns();
@@ -60,19 +70,11 @@ async function pushChanges(){
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,650)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;return}
- account=next;
- unsubscribeRemote?.();
- unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));
- await applyRemote()
+ account=next;unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
- startPromise=(async()=>{
-  const session=readCollaborationSession();if(!session)return null;
-  provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;
-  provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});
-  return provider
- })().catch(error=>{console.warn('[Hub realtime] inicialização:',error);startPromise=null;return null});
+ startPromise=(async()=>{const session=readCollaborationSession();if(!session)return null;installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);startPromise=null;return null});
  return startPromise
 }
 export function stopRealtime(){clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();unsubscribeRemote?.();unsubscribeRemote=null;provider=null;account=null;startPromise=null}
