@@ -19,6 +19,7 @@
     {"id":"regras","fontes":["dados/regras-*.json"],"runtime":"rules.js"},
     {"id":"localizacao","fontes":["dados/localizacao-*.json"],"runtime":"catalogs.js"}
   ],
+  "fontes_infraestrutura_runtime": ["dados/firebase-config.json"],
   "testes_criticos": ["tests/auditar-escopo-criacao.mjs","tests/auditar-cobertura-total-criacao.mjs","tests/auditar-proveniencia-normativa.mjs","tests/auditar-subclasses-mecanicas.mjs","tests/auditar-regras-casa.mjs","tests/auditar-testes-pericia.mjs","tests/auditar-ficha-pericias.mjs","tests/auditar-riqueza-criacao.mjs","tests/auditar-itens-magicos-criacao.mjs","tests/auditar-criacao-sem-travamento.mjs"],
   "excecoes_runtime": [
     {"arquivo":"scripts/character-builder/active-equipment-ui.js","tipo":"compatibilidade_cache","motivo":"Shim sem listeners mantido apenas para páginas antigas em cache; a interface vigente é equipment-ownership-ui.js.","requisito":"O inicializador deve permanecer no-op e o módulo não pode controlar o DOM ativo."},
