@@ -1,7 +1,7 @@
 import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20260909-player-access2';
 const CONFIG_URL='dados/firebase-config.json?v=20260905-membership-access1';
 const text=v=>String(v??'').trim(),now=()=>new Date().toISOString(),arr=v=>Array.isArray(v)?v:[],unique=v=>[...new Set(arr(v).map(text).filter(Boolean))];
-export async function loadFirebaseConfig(fetcher=fetch){const r=await fetcher(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw new Error(`Configuração Firebase indisponível (HTTP ${r.status}).`);const c=await r.json(),required=['projectId','apiKey','authDomain','appId','usernameDomain'];return{...c,configured:c.enabled===true&&c.authMode==='username-password'&&required.every(k=>text(c[k]))}}
+export async function loadFirebaseConfig(fetcher=fetch){const r=await fetcher(CONFIG_URL,{cache:'default'});if(!r.ok)throw new Error(`Configuração Firebase indisponível (HTTP ${r.status}).`);const c=await r.json(),required=['projectId','apiKey','authDomain','appId','usernameDomain'];return{...c,configured:c.enabled===true&&c.authMode==='username-password'&&required.every(k=>text(c[k]))}}
 async function sdk(version='12.18.0'){const base=`https://www.gstatic.com/firebasejs/${version}`;const[app,auth,firestore]=await Promise.all([import(`${base}/firebase-app.js`),import(`${base}/firebase-auth.js`),import(`${base}/firebase-firestore.js`)]);return{app,auth,firestore}}
 export async function createFirebaseCollaborationProvider({config=null}={}){
  const c=config||await loadFirebaseConfig();
@@ -20,6 +20,22 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
  const provider={configured:true,config:c,auth,db,
   onAuthChanged(cb){return lib.auth.onAuthStateChanged(auth,async firebaseUser=>{if(!firebaseUser){cb(null);return}try{cb(await provider.ensureProfile(firebaseUser))}catch{cb(accountFor(firebaseUser))}})},
   async currentUser(){return auth.currentUser?accountFor(auth.currentUser):null},
+  subscribeRealtime(onChange,onError=()=>{}){
+   const u=auth.currentUser;if(!u?.email)return()=>{};const account=accountFor(u),owner=normalizeUsername(c.ownerUsername||'rafael');let children=[];
+   const clearChildren=()=>{for(const stop of children)try{stop()}catch{}children=[]};
+   const signal=snapshot=>{if(snapshot?.metadata?.hasPendingWrites)return;onChange?.()};
+   const watchDoc=ref=>children.push(f.onSnapshot(ref,signal,onError));
+   const watchCollection=ref=>children.push(f.onSnapshot(ref,signal,onError));
+   let rootStop;
+   if(account.username===owner){
+    const q=f.query(f.collection(db,'campaigns'),f.where('ownerId','==',u.uid));
+    rootStop=f.onSnapshot(q,snapshot=>{clearChildren();for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'))}signal(snapshot)},onError)
+   }else{
+    const email=String(u.email).toLowerCase(),q=f.query(f.collection(db,'memberships'),f.where('email','==',email));
+    rootStop=f.onSnapshot(q,snapshot=>{clearChildren();const memberships=snapshot.docs.map(d=>normalizeMembership({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');for(const m of memberships){const cid=m.campaignId;watchDoc(f.doc(db,'campaigns',cid,'shared','state'));for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));if(m.characterId)watchDoc(f.doc(db,'campaigns',cid,'characters',m.characterId))}signal(snapshot)},onError)
+   }
+   return()=>{try{rootStop?.()}catch{}clearChildren()}
+  },
   async signInUsername({username,password}={}){const value=requireUsername(username);if(!text(password))throw new Error('Informe a senha.');let result;try{result=await lib.auth.signInWithEmailAndPassword(auth,technicalEmail(value),password)}catch(error){if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'].includes(error?.code))throw new Error('Usuário ou senha inválidos.');throw new Error('Não foi possível autenticar no Firebase. Tente novamente.')}try{return await provider.ensureProfile(result.user)}catch(error){await lib.auth.signOut(auth).catch(()=>{});if(['permission-denied','firestore/permission-denied'].includes(error?.code))throw new Error('Login realizado, mas as Firestore Rules publicadas ainda não correspondem à versão atual do Hub.');throw error}},
   async signOut(){await lib.auth.signOut(auth)},
   async ensureProfile(firebaseUser=auth.currentUser){const u=accountFor(firebaseUser);await f.setDoc(f.doc(db,'users',u.uid),{uid:u.uid,username:u.username,displayName:u.displayName,updatedAt:f.serverTimestamp()},{merge:true});return u},
