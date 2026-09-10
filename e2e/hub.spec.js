@@ -74,7 +74,7 @@ test('Nova Mesa fixa Rafael como Mestre sem defaults configuráveis',async({page
  expect(Object.prototype.hasOwnProperty.call(stored[0],'housePreset')).toBe(false);
 });
 
-test('Usuários usa apenas nome de usuário e senha',async({page})=>{
+test('Jogadores usa apenas nome de usuário e senha',async({page})=>{
  await page.goto('/usuarios.html');
  await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
  await expect(page.locator('#login-username')).toHaveAttribute('type','text');
@@ -84,7 +84,7 @@ test('Usuários usa apenas nome de usuário e senha',async({page})=>{
  await expect(page.locator('#admin-tools')).toHaveCount(0);
 });
 
-test('Usuários falha de forma clara quando o acesso online está indisponível',async({page})=>{
+test('Jogadores falha de forma clara quando o acesso online está indisponível',async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.goto('/usuarios.html');
  await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
