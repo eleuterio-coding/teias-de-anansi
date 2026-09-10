@@ -1,8 +1,9 @@
 import{test,expect}from'@playwright/test';
 
-const session={uid:'u-gus',username:'gus',isMaster:false,memberships:[{campaignId:'c-gus',uid:'u-gus',role:'player',characterId:'pc-gus',active:true}]};
+const membership={campaignId:'c-gus',uid:'u-gus',username:'gus',email:'gus@teias.invalid',displayName:'gus',role:'player',characterId:'pc-gus',sessionIds:['s-gus'],adventureIds:['a-gus'],active:true};
+const session={uid:'u-gus',username:'gus',isMaster:false,memberships:[membership]};
 const sharedCampaign={id:'c-gus',name:'Mesa do Gus',status:'active',system:'D&D 5.5e',setting:'Eberron',dmName:'Rafael',sharedNotes:'NOTA COMPARTILHADA GUS',members:[{id:'m-gus',name:'Gus',role:'player',characterId:'pc-gus',active:true}],sessions:[{id:'s-gus',number:1,title:'Sessão do Gus',status:'planned',summary:'RESUMO GUS',sharedNotes:'SESSÃO COMPARTILHADA',participantCharacterIds:['pc-gus']}],updatedAt:'2026-09-05T00:00:00Z'};
-const cache={schema:'hub-rpg/collaboration-cache/v1',campaigns:{'c-gus':{membership:session.memberships[0],payload:{campaign:sharedCampaign,revealedAdventures:[{id:'a-gus',campaignId:'c-gus',title:'Aventura do Gus',status:'active',summary:'AVENTURA COMPARTILHADA',clues:[{id:'clue',title:'Pista revelada',text:'PISTA VISÍVEL',status:'discovered'}],handouts:[]}]}}}};
+const cache={schema:'hub-rpg/collaboration-cache/v1',campaigns:{'c-gus':{membership,payload:{campaign:sharedCampaign,revealedAdventures:[{id:'a-gus',campaignId:'c-gus',title:'Aventura do Gus',status:'active',summary:'AVENTURA COMPARTILHADA',clues:[{id:'clue',title:'Pista revelada',text:'PISTA VISÍVEL',status:'discovered'}],handouts:[]}]}}}};
 const localCampaigns=[{id:'c-master',name:'MESA SECRETA DO MESTRE',sessions:[{id:'s-master',title:'SESSÃO SECRETA'}],members:[],status:'active',updatedAt:'2026-09-05T00:00:00Z'}];
 const localCharacters=[{id:'pc-gus',name:'Ficha do Gus',updatedAt:'2026-09-05T00:00:00Z'},{id:'pc-outro',name:'FICHA DE OUTRO JOGADOR',updatedAt:'2026-09-05T00:00:00Z'}];
 
