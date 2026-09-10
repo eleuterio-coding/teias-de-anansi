@@ -2,7 +2,8 @@ import{readSettings,applyUiPreferences}from'./settings-state.js?v=20260905-setti
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
-let observer=null,observedNav=null,observedSignature='',enhanceFrame=0;
+const COLLAB_SESSION_KEY='hub-rpg:collaboration-session:v1';
+let observer=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeModule=null,realtimeLoad=null;
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
@@ -14,6 +15,12 @@ function ensureStyles(){
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
 function applyStoredPreferences(){applyUiPreferences(readSettings())}
+async function setRealtime(active){
+ if(!active){realtimeModule?.stopRealtime?.();return}
+ if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260910-realtime1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
+ const module=await realtimeLoad;module?.startRealtime?.()
+}
+function bootstrapRealtime(){let active=false;try{active=Boolean(localStorage.getItem(COLLAB_SESSION_KEY))}catch{}setRealtime(active)}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
  if(!target)return null;if(!target.id)target.id='hub-main-content';
@@ -60,17 +67,15 @@ function enhanceStructureEditingCopy(){
  for(const link of document.querySelectorAll('a[data-structure-edit]'))if(link.textContent!=='Editar estrutura'){link.textContent='Editar estrutura';link.title='Use o construtor apenas para corrigir escolhas estruturais da criação.'}
 }
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
-function scheduleEnhancements(){
- if(enhanceFrame)return;
- enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi()})
-}
-function run(){ensureStyles();applyStoredPreferences();ensureSkipLink();enhanceDynamicUi()}
+function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi()})}
+function run(){ensureStyles();applyStoredPreferences();ensureSkipLink();enhanceDynamicUi();bootstrapRealtime()}
 
 if(typeof document!=='undefined'){
  warmExternalOrigins();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else queueMicrotask(run);
  document.addEventListener('hub-rpg:sheet-ready',scheduleEnhancements);
  document.addEventListener('hub-rpg:settings-changed',event=>applyUiPreferences(event.detail));
+ window.addEventListener('hub-rpg:collaboration-session-changed',event=>setRealtime(Boolean(event.detail)));
  const mo=new MutationObserver(records=>{if(records.some(record=>record.addedNodes.length||record.removedNodes.length))scheduleEnhancements()});
  if(document.documentElement)mo.observe(document.documentElement,{childList:true,subtree:true})
 }
