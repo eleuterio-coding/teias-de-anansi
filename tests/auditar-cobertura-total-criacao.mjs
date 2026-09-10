@@ -120,6 +120,11 @@ for(const domain of domains){
     for(const file of matches){JSON.parse(read(path.join(ROOT,file)));classifiedSources.add(file)}
   }
 }
+const infrastructureSources=new Set(Array.isArray(scope.fontes_infraestrutura_runtime)?scope.fontes_infraestrutura_runtime:[]);
+for(const file of infrastructureSources){
+  const p=path.join(ROOT,file);if(!exists(p))fail(`Fonte de infraestrutura ausente: ${file}`);
+  JSON.parse(read(p));
+}
 
 // O registro canônico é metadado compartilhado por Biblioteca, criação e Ficha. Apenas
 // fontes explicitamente marcadas `builder:true` são dependências de dados da criação.
@@ -138,7 +143,7 @@ for(const module of CATALOG_MODULES)for(const source of module.sources||[]){
 for(const ref of dataRefs){
   const p=path.join(ROOT,ref);if(!exists(p))fail(`Dependência local de dados ausente: ${ref}`);
   JSON.parse(read(p));
-  if(!classifiedSources.has(ref))fail(`Fonte usada pelo runtime sem classificação no manifesto: ${ref}`);
+  if(!classifiedSources.has(ref)&&!infrastructureSources.has(ref))fail(`Fonte usada pelo runtime sem classificação no manifesto: ${ref}`);
 }
 for(const ref of dynamicDataRefs){
   const prefix=ref.split('${',1)[0],suffix=ref.includes('}')?ref.slice(ref.lastIndexOf('}')+1):'';
@@ -164,6 +169,7 @@ const manifest={
   runtimeExceptions:exceptions,
   orphanMechanics:[],
   classifiedSources:[...classifiedSources].sort(),
+  runtimeInfrastructure:[...infrastructureSources].sort(),
   runtimeDataDependencies:[...dataRefs].sort(),
   dynamicRuntimeDataDependencies:[...dynamicDataRefs].sort(),
   auditTests,
