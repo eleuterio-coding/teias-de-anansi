@@ -26,6 +26,7 @@ on:
       - 'tests/auditar-colaboracao-sync.mjs'
       - 'tests/auditar-colaboracao-provisionamento.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
+      - 'tests/auditar-campanhas-mesas.mjs'
       - '.github/workflows/auditar-colaboracao-sync.yml'
   pull_request:
     paths:
@@ -52,6 +53,7 @@ on:
       - 'tests/auditar-colaboracao-sync.mjs'
       - 'tests/auditar-colaboracao-provisionamento.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
+      - 'tests/auditar-campanhas-mesas.mjs'
       - '.github/workflows/auditar-colaboracao-sync.yml'
   workflow_dispatch:
 
@@ -79,6 +81,7 @@ jobs:
           node --check tests/auditar-colaboracao-sync.mjs
           node --check tests/auditar-colaboracao-provisionamento.mjs
           node --check tests/auditar-ux-mobile-final.mjs
+          node --check tests/auditar-campanhas-mesas.mjs
       - name: Validar login simples e papéis funcionais
         run: |
           node tests/auditar-colaboracao-provisionamento.mjs
