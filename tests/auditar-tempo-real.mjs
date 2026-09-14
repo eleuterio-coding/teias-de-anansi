@@ -14,7 +14,7 @@ for(const token of['subscribeRealtime','onSnapshot','shared','sessions','adventu
 for(const token of['CAMPAIGN_KEY','ADVENTURE_KEY','CHARACTER_KEY','Storage.prototype.setItem','setTimeout(pushChanges,650)','setTimeout(()=>applyRemote(),180)','__HUB_REALTIME_APPLYING__','writeCollaborationSession','unsubscribeAuth','unsubscribeRemote'])assert.ok(realtime.includes(token),`Realtime sem proteção/fluxo: ${token}`);
 assert.equal(realtime.includes("window.addEventListener('storage'"),false,'Outra aba não deve reenviar mudanças já capturadas pela aba de origem.');
 assert.ok(sync.includes('listCampaignCharacters(membership.campaignId)'), 'Mestre precisa receber a ficha remota do Jogador.');
-assert.ok(ux.includes("import('./collaboration-realtime.js?v=20260910-realtime1')"),'UX global precisa iniciar realtime sob demanda.');
+assert.ok(ux.includes("import('./collaboration-realtime.js?v=20260914-login-context1')"),'UX global precisa iniciar realtime sob demanda pela revisão atual do login.');
 assert.ok(ux.includes('COLLAB_SESSION_KEY'),'Realtime só deve iniciar com sessão conectada.');
 assert.ok(users.includes('Tempo real'),'Tela Jogadores deve comunicar o modo automático.');
 assert.ok(users.includes('Atualizar agora'),'Sincronização manual deve permanecer apenas como fallback.');
