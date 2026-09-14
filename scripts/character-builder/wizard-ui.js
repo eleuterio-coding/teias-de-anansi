@@ -1,4 +1,5 @@
-import'../hub-ux.js?v=20260901-ux-final1';
+import'../hub-ux.js?v=20260914-party-visibility1';
+import{playerMode,canOpenCharacter,canEditCharacter}from'../collaboration-view.js?v=20260914-party-visibility1';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
 import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
@@ -16,6 +17,7 @@ const byId=id=>document.getElementById(id);
 const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
+function enforcePlayerEditAccess(){if(!playerMode())return true;const id=new URLSearchParams(location.search).get('id')||'';if(id&&canEditCharacter(id))return true;if(id&&canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-party-visibility1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-party-visibility1');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
@@ -53,5 +55,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){if(initialized)return;initialized=true;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;if(!enforcePlayerEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
