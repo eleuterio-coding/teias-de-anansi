@@ -15,13 +15,16 @@ function ensureStyles(){
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
 function applyStoredPreferences(){applyUiPreferences(readSettings())}
+function currentPage(){return location.pathname.split('/').pop()||'index.html'}
+function hasLoginSession(){try{const raw=JSON.parse(localStorage.getItem(COLLAB_SESSION_KEY)||'null');return Boolean(raw?.uid&&raw?.username)}catch{return false}}
+function enforceLogin(){const page=currentPage();if(page==='usuarios.html'||hasLoginSession())return true;const next=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',next);location.replace(login.href);return false}
 async function setRealtime(active){
  if(!active){realtimeModule?.stopRealtime?.();return}
- if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260914-party-visibility1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
+ if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260914-login-context1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
  const module=await realtimeLoad;module?.startRealtime?.()
 }
 function bootstrapRealtime(){let active=false;try{active=Boolean(localStorage.getItem(COLLAB_SESSION_KEY))}catch{}setRealtime(active)}
-function bootstrapPageAccess(){const page=location.pathname.split('/').pop()||'';if(page!=='ficha-personagem.html'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20260914-party-visibility1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
+function bootstrapPageAccess(){const page=currentPage();if(page!=='ficha-personagem.html'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20260914-login-context1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
  if(!target)return null;if(!target.id)target.id='hub-main-content';
@@ -69,7 +72,7 @@ function enhanceStructureEditingCopy(){
 }
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi()})}
-function run(){ensureStyles();applyStoredPreferences();ensureSkipLink();enhanceDynamicUi();bootstrapPageAccess();bootstrapRealtime()}
+function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;ensureSkipLink();enhanceDynamicUi();bootstrapPageAccess();bootstrapRealtime()}
 
 if(typeof document!=='undefined'){
  warmExternalOrigins();
