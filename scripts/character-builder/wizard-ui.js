@@ -19,7 +19,8 @@ const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
 function stampPlayerOwnership(){const session=readCollaborationSession();if(!session||session.isMaster||!state.c)return;state.c.ownerUid=session.uid;state.c.ownerUsername=session.username}
-function enforcePlayerEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}if(mode==='master')return true;const id=new URLSearchParams(location.search).get('id')||'';if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-login-context2&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-login-context2');return false}
+function enforcePlayerEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}if(mode==='master')return true;const id=new URLSearchParams(location.search).get('id')||'';// Sem id, a conta autenticada está criando uma ficha própria; a posse será gravada no clique em Salvar.
+if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-login-context2&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-login-context2');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
