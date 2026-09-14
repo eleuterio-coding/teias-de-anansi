@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Jogadores - Teias de Anansi</title><link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="stylesheet" href="collaboration.css?v=20260909-player-access2"><link rel="stylesheet" href="hub-ux.css?v=20260909-perf1"></head><body>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Jogadores - Teias de Anansi</title><link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="stylesheet" href="collaboration.css?v=20260914-player-first1"><link rel="stylesheet" href="hub-ux.css?v=20260909-perf1"></head><body>
 <header class="top"><div><p class="mini">Hub de RPG</p><h1>Jogadores</h1></div><a class="btn secondary" href="index.html?v=20260910-realtime1">Início</a></header>
 <main id="main-content">
 <div id="collab-feedback" class="status" role="status" aria-live="polite" hidden></div>
@@ -10,5 +10,27 @@
 <section class="card"><h2>Minhas Mesas</h2><div id="membership-list" class="list"></div></section>
 <section id="master-publish-tools" class="card" hidden><h2>Publicar Mesa</h2><div class="form-grid"><label class="wide">Mesa local<select id="publish-campaign"></select></label><div class="wide actions"><button id="publish-campaign-button" type="button">Publicar agora</button></div></div></section>
 </div>
-<section id="membership-tools" class="card" hidden><h2>Acessos dos jogadores</h2><div class="grid"><div><h3>Jogadores</h3><div id="known-user-list" class="list"></div></div><div><h3>Atribuir acesso</h3><form id="membership-form" class="form-grid"><label>Jogador<input id="membership-user" type="text" list="known-user-options" autocomplete="off" autocapitalize="none" spellcheck="false" required><datalist id="known-user-options"></datalist></label><label>Campanha<select id="membership-campaign"></select></label><label class="wide">Personagem atribuído<select id="membership-character"><option value="">— Sem personagem —</option></select></label><label class="wide">Sessões<select id="membership-sessions" multiple size="6"></select></label><label class="wide">Aventuras<select id="membership-adventures" multiple size="6"></select></label><div class="wide actions"><button type="submit">Salvar acessos</button></div></form></div></div></section>
-</main><script type="module" src="scripts/hub-ux.js?v=20260910-realtime1"></script><script type="module" src="scripts/collaboration-ui.js?v=20260910-realtime1"></script></body></html>
+<section id="membership-tools" class="card" hidden>
+<h2>Acessos dos jogadores</h2>
+<div class="player-access-grid">
+<div>
+<form id="player-select-form" class="player-picker"><label>Jogador<input id="membership-user" type="text" list="known-user-options" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><button type="submit">Selecionar</button></form><datalist id="known-user-options"></datalist>
+<div id="known-user-list" class="list"></div>
+</div>
+<div>
+<div id="player-access-empty" class="muted">Selecione um jogador.</div>
+<div id="player-access-editor" hidden>
+<div class="top"><h3 id="selected-player-title"></h3><span id="selected-player-summary" class="badge"></span></div>
+<div id="player-campaign-list" class="campaign-access-list"></div>
+<form id="membership-form" class="access-form" hidden>
+<input id="membership-campaign" type="hidden">
+<div class="top access-editor-header"><h3 id="campaign-access-title"></h3><span id="campaign-access-state" class="badge"></span></div>
+<label>Personagem atribuído<select id="membership-character"><option value="">— Sem personagem —</option></select></label>
+<div class="access-columns"><fieldset><legend>Sessões</legend><div id="membership-sessions" class="access-check-list"></div></fieldset><fieldset><legend>Aventuras</legend><div id="membership-adventures" class="access-check-list"></div></fieldset></div>
+<div class="actions"><button type="submit">Salvar acessos</button></div>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main><script type="module" src="scripts/hub-ux.js?v=20260910-realtime1"></script><script type="module" src="scripts/collaboration-ui.js?v=20260914-player-first1"></script></body></html>
