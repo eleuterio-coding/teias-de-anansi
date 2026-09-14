@@ -5,13 +5,21 @@ on:
     paths:
       - 'scripts/collaboration-model.js'
       - 'scripts/collaboration-sync.js'
+      - 'scripts/collaboration-view.js'
+      - 'scripts/collaboration-realtime.js'
       - 'scripts/firebase-collaboration-provider.js'
       - 'scripts/collaboration-ui.js'
+      - 'scripts/character-list-ui.js'
+      - 'scripts/character-sheet-access-ui.js'
+      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/hub-ux.js'
       - 'scripts/storage-registry.js'
       - 'dados/firebase-config.json'
       - 'firebase/**'
       - 'firebase.json'
       - 'usuarios.html'
+      - 'lista-personagens.html'
+      - 'ficha-personagem.html'
       - 'index.html'
       - 'collaboration.css'
       - 'FIREBASE-PROVISIONAMENTO.md'
@@ -23,13 +31,21 @@ on:
     paths:
       - 'scripts/collaboration-model.js'
       - 'scripts/collaboration-sync.js'
+      - 'scripts/collaboration-view.js'
+      - 'scripts/collaboration-realtime.js'
       - 'scripts/firebase-collaboration-provider.js'
       - 'scripts/collaboration-ui.js'
+      - 'scripts/character-list-ui.js'
+      - 'scripts/character-sheet-access-ui.js'
+      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/hub-ux.js'
       - 'scripts/storage-registry.js'
       - 'dados/firebase-config.json'
       - 'firebase/**'
       - 'firebase.json'
       - 'usuarios.html'
+      - 'lista-personagens.html'
+      - 'ficha-personagem.html'
       - 'index.html'
       - 'collaboration.css'
       - 'FIREBASE-PROVISIONAMENTO.md'
@@ -52,8 +68,14 @@ jobs:
         run: |
           node --check scripts/collaboration-model.js
           node --check scripts/collaboration-sync.js
+          node --check scripts/collaboration-view.js
+          node --check scripts/collaboration-realtime.js
           node --check scripts/firebase-collaboration-provider.js
           node --check scripts/collaboration-ui.js
+          node --check scripts/character-list-ui.js
+          node --check scripts/character-sheet-access-ui.js
+          node --check scripts/character-builder/wizard-ui.js
+          node --check scripts/hub-ux.js
           node --check tests/auditar-colaboracao-sync.mjs
           node --check tests/auditar-colaboracao-provisionamento.mjs
           node --check tests/auditar-ux-mobile-final.mjs
