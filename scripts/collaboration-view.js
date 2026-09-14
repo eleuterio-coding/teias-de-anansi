@@ -3,8 +3,10 @@ import{COLLAB_CACHE_KEY,COLLAB_SESSION_KEY}from'./storage-registry.js?v=20260905
 const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 const username=v=>text(v).toLowerCase();
+const CHARACTER_KEY='hub-rpg:characters:v4';
 const SESSION_EVENT='hub-rpg:collaboration-session-changed';
 function signalSession(value){if(typeof window!=='undefined'&&typeof CustomEvent!=='undefined')window.dispatchEvent(new CustomEvent(SESSION_EVENT,{detail:value||null}))}
+function localCharacters(storage=globalThis.localStorage){try{const rows=JSON.parse(storage?.getItem(CHARACTER_KEY)||'[]');return Array.isArray(rows)?rows:[]}catch{return[]}}
 
 export function readCollaborationSession(storage=globalThis.localStorage){
  try{const raw=JSON.parse(storage?.getItem(COLLAB_SESSION_KEY)||'null');if(!raw?.uid||!raw?.username)return null;return{schema:'hub-rpg/collaboration-session/v1',uid:text(raw.uid),username:username(raw.username),isMaster:raw.isMaster===true,memberships:arr(raw.memberships),updatedAt:text(raw.updatedAt)}}catch{return null}
@@ -33,6 +35,8 @@ export function sharedParticipants(campaignId,storage=globalThis.localStorage){r
 export function participantsForSession(campaignId,sessionId,storage=globalThis.localStorage){const sid=text(sessionId);return sharedParticipants(campaignId,storage).filter(p=>p.role==='dm'||arr(p.sessionIds).map(text).includes(sid))}
 export function participantsForAdventure(campaignId,adventureId,storage=globalThis.localStorage){const aid=text(adventureId);return sharedParticipants(campaignId,storage).filter(p=>p.role==='dm'||arr(p.adventureIds).map(text).includes(aid))}
 export function assignedCharacterIds(storage=globalThis.localStorage){return[...new Set(sharedCampaignRows(storage).map(row=>text(row.membership.characterId)).filter(Boolean))]}
-export function visibleCharacterIds(storage=globalThis.localStorage){return[...new Set(sharedCampaignRows(storage).flatMap(row=>arr(row.characterIds)).map(text).filter(Boolean))]}
+export function ownedCharacterIds(storage=globalThis.localStorage){const session=readCollaborationSession(storage);if(!session||session.isMaster)return[];return[...new Set(localCharacters(storage).filter(character=>text(character?.ownerUid)===session.uid||username(character?.ownerUsername)===session.username).map(character=>text(character?.id)).filter(Boolean))]}
+export function editableCharacterIds(storage=globalThis.localStorage){return[...new Set([...assignedCharacterIds(storage),...ownedCharacterIds(storage)])]}
+export function visibleCharacterIds(storage=globalThis.localStorage){return[...new Set([...sharedCampaignRows(storage).flatMap(row=>arr(row.characterIds)).map(text).filter(Boolean),...ownedCharacterIds(storage)])]}
 export function canOpenCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return visibleCharacterIds(storage).includes(text(characterId))}
-export function canEditCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return assignedCharacterIds(storage).includes(text(characterId))}
+export function canEditCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return editableCharacterIds(storage).includes(text(characterId))}
