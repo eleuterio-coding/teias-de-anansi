@@ -106,7 +106,7 @@ service cloud.firestore {
       }
 
       match /characters/{characterId} {
-        allow read: if canManage(campaignId) || linkedCharacter(campaignId, characterId);
+        allow read: if canManage(campaignId) || isMember(campaignId);
         allow create, update: if canManage(campaignId)
           || (
             linkedCharacter(campaignId, characterId)
