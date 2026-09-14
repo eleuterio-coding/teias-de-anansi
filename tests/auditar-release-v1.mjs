@@ -28,7 +28,7 @@ for(const forbidden of['upsertAuthorizedUser','setAuthorizedUserActive','E2E_FIR
 for(const token of['workflow_dispatch','push:','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase sem ${token}.`);
 assert.equal(/password\s*[:=]\s*['"][^'"]+['"]/i.test(firebaseE2e),false,'Teste Firebase não pode conter senha literal.');
 
-const home=read('index.html'),users=read('usuarios.html'),provider=read('scripts/firebase-collaboration-provider.js'),rules=read('firebase/firestore.rules'),firebaseConfig=JSON.parse(read('dados/firebase-config.json')),storageRegistry=read('scripts/storage-registry.js');
+const home=read('index.html'),users=read('usuarios.html'),provider=read('scripts/firebase-collaboration-provider.js'),rules=read('firebase/firestore.rules'),firebaseConfig=JSON.parse(read('dados/firebase-config.json')),storageRegistry=read('scripts/storage-registry.js'),view=read('scripts/collaboration-view.js'),hubUx=read('scripts/hub-ux.js');
 assert.equal(home.includes('dados.html'),false);
 assert.equal(users.includes('authorize-user-form'),false);
 assert.equal(users.includes('type="email"'),false);
@@ -40,9 +40,12 @@ for(const token of['isMember','canManage','isPlayer','assignedSession','assigned
 for(const forbidden of['isDm','assignedSharedRecord',"memberRole(campaignId) == 'observer'"])assert.equal(rules.includes(forbidden),false,`Rules ainda contêm papel/recorte antigo: ${forbidden}.`);
 assert.equal(rules.includes('allow read, write: if request.auth != null;'),false,'Acesso irrestrito da v1.0.1 deve permanecer removido.');
 assert.equal(rules.includes('authorizedUsers'),false);
+assert.ok(rules.includes('isMember(resource.data.campaignId)'),'Co-participantes devem ser visíveis apenas dentro da Campanha compartilhada.');
+assert.ok(view.includes('collaborationAccessMode')&&view.includes("'guest'")&&view.includes('sharedParticipants')&&view.includes('canEditCharacter'),'Visão colaborativa deve ser derivada da conta autenticada.');
+assert.ok(hubUx.includes('enforceLogin')&&hubUx.includes('COLLAB_SESSION_KEY'),'Hub deve exigir login antes do conteúdo colaborativo.');
 assert.equal(firebaseConfig.accountProvisioning,'firebase-console-manual');
 assert.equal(firebaseConfig.collaborationModel,'trusted-private');
-assert.equal(firebaseConfig.accessModel,'explicit-player-assignments');
+assert.equal(firebaseConfig.accessModel,'login-context-assignments');
 assert.equal(firebaseConfig.roleVisibility,'master-player-only');
 assert.deepEqual(firebaseConfig.playerUsernames,['gus','leo','bruno']);
 assert.equal(storageRegistry.includes('recovery-backup'),false,'Não pode restar registro técnico de Backup.');
@@ -53,4 +56,4 @@ for(const token of['Personagens','Campanhas / Mesas','Jogadores','Configuraçõe
 const critical=['tests/auditar-progressao-level.mjs','tests/auditar-campanhas-mesas.mjs','tests/auditar-aventuras.mjs','tests/auditar-colaboracao-provisionamento.mjs','tests/auditar-colaboracao-sync.mjs','tests/auditar-acesso-jogador-ui.mjs','tests/auditar-painel-geral.mjs','tests/auditar-configuracoes.mjs','tests/auditar-ux-mobile-final.mjs','tests/auditar-desempenho-ui.mjs','tests/auditar-tempo-real.mjs'];
 for(const path of critical){assert.equal(exists(path),true,`Auditoria crítica ausente: ${path}`);execFileSync(process.execPath,[new URL(path,root).pathname],{stdio:'inherit'})}
 
-console.log('OK — gate atual: login simples, Rafael + Jogadores, acessos explícitos, UI restrita, ficha própria, desempenho e tempo real validados.');
+console.log('OK — gate atual: login simples, Rafael como Mestre, visão por contexto compartilhado, edição própria, desempenho e tempo real validados.');
