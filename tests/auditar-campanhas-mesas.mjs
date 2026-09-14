@@ -40,7 +40,7 @@ assert.ok(sessionsUi.includes('Abrir Mesa'),'Visão de sessões deve voltar à M
 assert.ok(sheetUi.includes('sheet-campaign-context')&&sheetUi.includes('Abrir Mesa'),'Ficha deve mostrar contexto da campanha.');
 assert.ok(gameplay.includes("character-sheet-campaign-ui.js"),'Modo de Jogo deve carregar a integração de campanha.');
 assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.includes('Campanhas / Mesas'),'Lista de personagens deve integrar Mesas pela UI atual.');
-for(const token of['playerMode','assignedCharacterIds','visibleCharacterIds','visible.has(c.id)','create-character-action','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
+for(const token of['accessMode','assignedCharacterIds','visibleCharacterIds','visible.has(c.id)','create-character-action','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
 assert.ok(index.includes('href="campanhas.html')&&index.includes('href="sessoes.html'),'Início deve ativar Campanhas e Sessões.');
 assert.equal([campaignState,listUi,tableUi,sessionsUi,sheetUi,characterListUi].join('\n').toLowerCase().includes('supabase'),false);
 console.log('OK — Rafael é Mestre fixo; Campanhas/Mesas usam apenas Jogadores, preservam vínculos e sessões, e participantes veem as fichas da Campanha sem poder editar as dos demais.');
