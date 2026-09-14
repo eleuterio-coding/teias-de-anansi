@@ -17,7 +17,7 @@ assert.equal(cfg.ownerUsername,'rafael');
 assert.deepEqual(cfg.playerUsernames,['gus','leo','bruno']);
 assert.equal(cfg.accountProvisioning,'firebase-console-manual','As contas são criadas manualmente pelo proprietário no Firebase Authentication.');
 assert.equal(cfg.collaborationModel,'trusted-private','O Hub continua pessoal e usado por um pequeno grupo de confiança.');
-assert.equal(cfg.accessModel,'explicit-player-assignments','Campanhas, Sessões e Aventuras devem ser atribuídas explicitamente pelo Mestre.');
+assert.equal(cfg.accessModel,'login-context-assignments','A conta autenticada deve determinar Campanhas e os contextos de Sessão/Aventura disponíveis.');
 assert.equal(cfg.roleVisibility,'master-player-only','O Hub deve possuir apenas Mestre e Jogador.');
 assert.ok(cfg.projectId&&cfg.apiKey&&cfg.authDomain&&cfg.appId,'Configuração web Firebase deve estar materializada.');
 
@@ -27,14 +27,23 @@ for(const forbidden of['isDm','assignedSharedRecord',"== 'observer'"])assert.equ
 assert.match(rules,/match \/private\/\{documentId\}/,'Conteúdo privado do Mestre deve possuir regra própria.');
 assert.match(rules,/match \/sessions\/\{sessionId\}/,'Sessões compartilhadas devem ser documentos filtráveis.');
 assert.match(rules,/match \/adventureViews\/\{adventureId\}/,'Aventuras compartilhadas devem ser documentos filtráveis.');
+assert.ok(rules.includes('isMember(resource.data.campaignId)'),'Participantes devem poder enxergar os demais participantes da mesma Campanha.');
 assert.doesNotMatch(rules,/allow read, write: if request\.auth != null;/,'Não é permitido voltar ao acesso irrestrito para todo usuário autenticado.');
 assert.doesNotMatch(rules,/authorizedUsers|isAdmin\(/,'Não deve voltar a existir segunda autorização global ou papel Administrador.');
 
 const provider=fs.readFileSync('scripts/firebase-collaboration-provider.js','utf8');
 assert.match(provider,/signInWithEmailAndPassword/,'Login deve continuar usando Firebase Authentication.');
 assert.match(provider,/usernameDomain/,'O e-mail técnico deve continuar oculto atrás do nome de usuário.');
-for(const token of['sessionIds','adventureIds','fetchAssigned','saveCampaignCharacter','listCampaignCharacters'])assert.ok(provider.includes(token),`Provider sem atribuição obrigatória: ${token}`);
-assert.doesNotMatch(provider,/array-contains|assignedSharedRecord/,'Provider não deve voltar a inferir acesso de Sessão/Aventura pela ficha.');
+for(const token of['sessionIds','adventureIds','fetchAssigned','saveCampaignCharacter','listCampaignCharacters','listVisibleCampaignMemberships'])assert.ok(provider.includes(token),`Provider sem acesso por contexto: ${token}`);
+assert.ok(provider.includes("f.where('campaignId','==',cid)"),'Tempo real deve observar mudanças no elenco da Campanha.');
+assert.doesNotMatch(provider,/array-contains|assignedSharedRecord/,'Provider não deve inferir acesso de Sessão/Aventura apenas pela ficha.');
 assert.doesNotMatch(provider,/authorizedUsers|upsertAuthorizedUser|setAuthorizedUserActive/,'Não deve existir autorização paralela ao Firebase Authentication.');
 
-console.log('OK: login simples preservado; Rafael é Mestre único e Jogadores recebem Campanhas, Sessões, Aventuras e ficha por atribuição explícita.');
+const view=fs.readFileSync('scripts/collaboration-view.js','utf8');
+assert.ok(view.includes("'guest'")&&view.includes("'master'")&&view.includes("'player'"),'Acesso deve distinguir visitante, Mestre e Jogador.');
+assert.ok(view.includes('storage?.removeItem(COLLAB_CACHE_KEY)'),'Troca de login deve limpar o cache colaborativo da conta anterior.');
+
+const hubUx=fs.readFileSync('scripts/hub-ux.js','utf8');
+assert.ok(hubUx.includes('enforceLogin')&&hubUx.includes('usuarios.html')&&hubUx.includes('COLLAB_SESSION_KEY'),'Telas do Hub devem exigir sessão de login.');
+
+console.log('OK: login simples preservado; a conta autenticada define seus contextos, co-participantes e permissões de edição.');
