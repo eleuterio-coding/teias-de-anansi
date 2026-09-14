@@ -126,6 +126,7 @@ service cloud.firestore {
         && (
           resource.data.email == loginEmail()
           || canManage(resource.data.campaignId)
+          || isMember(resource.data.campaignId)
         );
       allow create: if signedIn() && canManage(request.resource.data.campaignId);
       allow update, delete: if signedIn() && canManage(resource.data.campaignId);
