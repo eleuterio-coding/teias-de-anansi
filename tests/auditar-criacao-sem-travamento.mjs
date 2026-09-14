@@ -15,9 +15,11 @@ const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 const LEGACY_UI_REV='20260828-character-builder-freeze1';
 const RULES_REV='20260831-tasha-metamagic1';
 const WEALTH_REV='20260831-magic-rarity2';
-assert.ok(html.includes(`character-builder.js?v=${RULES_REV}`),'A página precisa invalidar o carregador antigo em cache usando a revisão normativa canônica.');
+const PLAYER_CREATE_REV='20260914-player-create1';
+assert.ok(html.includes(`character-builder.js?v=${PLAYER_CREATE_REV}`),'A página precisa invalidar imediatamente o carregador após correções do fluxo de criação por jogador.');
 assert.ok(loader.includes(`ui.js?v=${RULES_REV}`),'O núcleo da criação precisa usar a revisão normativa canônica do motor.');
 assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias precisa acompanhar a revisão normativa canônica.');
+assert.ok(loader.includes(`wizard-ui.js?v=${PLAYER_CREATE_REV}`),'O controle de acesso da criação precisa usar a revisão atual do fluxo de jogador.');
 assert.ok(loader.includes(`equipment-ownership-ui.js?v=${LEGACY_UI_REV}`),'Equipamento ativo precisa manter sua revisão anti-travamento própria.');
 assert.ok(loader.includes(`package-b-purchase-ui.js?v=${WEALTH_REV}`),'Carregador precisa invalidar a revisão antiga da etapa de compras/riqueza.');
 assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${WEALTH_REV}`),'Etapa de compras precisa invalidar a versão da loja anterior à correção de raridades.');
@@ -55,4 +57,4 @@ assert.equal(firstReads,spells.length,'Primeira indexação deve visitar cada ma
 for(let i=0;i<25;i++)wizardSubclassChoiceDefs(d);
 assert.equal(classReads,firstReads,'Chamadas repetidas de derive/choiceDefs não podem revarrer as 537 magias.');
 
-console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago; revisão normativa canônica rastreada sem perder as revisões isoladas de riqueza/equipamento.');
+console.log('Criação validada sem regressão de cache, ping-pong de equipamento ou varredura repetida do catálogo do Mago; revisão normativa canônica rastreada sem perder a revisão do fluxo de jogador.');
