@@ -1,6 +1,6 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-login-context1';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260914-login-context1';
-import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260914-login-context1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-login-context2';
+import{pullCollaborations}from'./collaboration-sync.js?v=20260914-login-context2';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds}from'./collaboration-view.js?v=20260914-login-context2';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
@@ -63,9 +63,10 @@ async function pushChanges(){
     for(const campaign of campaigns){const linked=new Set((campaign.members||[]).map(m=>text(m.characterId)).filter(Boolean));for(const character of characters)if(linked.has(text(character.id)))await provider.saveCampaignCharacter(campaign.id,character)}
    }
   }else if(kinds.has('characters')){
-   const memberships=await provider.listMemberships(),characters=readCharacters();
+   const memberships=await provider.listMemberships(),characters=readCharacters(),editable=new Set(editableCharacterIds());
+   for(const character of characters)if(editable.has(text(character?.id)))await provider.saveOwnCharacter(character);
    for(const membership of memberships.filter(m=>m.role==='player'&&m.active!==false&&m.characterId)){
-    const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveOwnCharacter(character);await provider.saveCampaignCharacter(membership.campaignId,character)
+    const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
  }catch(error){console.warn('[Hub realtime] falha ao enviar atualização:',error)}
