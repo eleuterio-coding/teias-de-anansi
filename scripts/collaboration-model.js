@@ -7,6 +7,7 @@ export const COLLAB_PERMISSIONS=Object.freeze({
  'adventure:write':['dm'],
  'member:manage':['dm'],
  'character:read-linked':['dm','player'],
+ 'character:read-campaign':['dm','player'],
  'character:write-own':['player'],
  'handout:read':['dm','player']
 });
