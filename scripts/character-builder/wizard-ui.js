@@ -1,5 +1,5 @@
-import'../hub-ux.js?v=20260914-party-visibility1';
-import{playerMode,canOpenCharacter,canEditCharacter}from'../collaboration-view.js?v=20260914-party-visibility1';
+import'../hub-ux.js?v=20260914-login-context1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'../collaboration-view.js?v=20260914-login-context1';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
 import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
@@ -17,7 +17,7 @@ const byId=id=>document.getElementById(id);
 const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
-function enforcePlayerEditAccess(){if(!playerMode())return true;const id=new URLSearchParams(location.search).get('id')||'';if(id&&canEditCharacter(id))return true;if(id&&canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-party-visibility1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-party-visibility1');return false}
+function enforcePlayerEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}if(mode==='master')return true;const id=new URLSearchParams(location.search).get('id')||'';if(id&&canEditCharacter(id))return true;if(id&&canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-login-context1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-login-context1');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
