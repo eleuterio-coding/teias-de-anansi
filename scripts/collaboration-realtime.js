@@ -1,6 +1,6 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-party-visibility1';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260914-party-visibility1';
-import{readCollaborationSession,writeCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260914-party-visibility1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-login-context1';
+import{pullCollaborations}from'./collaboration-sync.js?v=20260914-login-context1';
+import{readCollaborationSession,writeCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260914-login-context1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
