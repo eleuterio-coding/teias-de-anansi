@@ -6,7 +6,7 @@ import{syncAll,publishLocalCampaign}from'./collaboration-sync.js?v=20260914-part
 import{writeCollaborationSession,clearCollaborationSession}from'./collaboration-view.js?v=20260914-party-visibility1';
 
 const $=id=>document.getElementById(id);
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const username=v=>String(v??'').trim().toLowerCase();
 
 let provider=null;
