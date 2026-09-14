@@ -1,6 +1,6 @@
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-login-context1';
 import{pullCollaborations}from'./collaboration-sync.js?v=20260914-login-context1';
-import{readCollaborationSession,writeCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260914-login-context1';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache}from'./collaboration-view.js?v=20260914-login-context1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
@@ -18,6 +18,7 @@ function cacheComparable(){
 }
 function fingerprint(){return JSON.stringify({campaigns:readCampaigns(),adventures:readAdventures(),characters:readCharacters(),cache:cacheComparable(),memberships:readCollaborationSession()?.memberships||[]})}
 function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
+function loginUrl(){const page=location.pathname.split('/').pop()||'index.html';if(page==='usuarios.html')return null;const target=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',target);return login.href}
 function refreshPage(){
  if(refreshPending)return;
  refreshPending=true;
@@ -71,7 +72,7 @@ async function pushChanges(){
 }
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,650)}
 async function bindAccount(next){
- if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;return}
+ if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
  account=next;unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
