@@ -16,7 +16,7 @@
   "playerUsernames": ["gus", "leo", "bruno"],
   "accountProvisioning": "firebase-console-manual",
   "collaborationModel": "trusted-private",
-  "accessModel": "explicit-player-assignments",
+  "accessModel": "login-context-assignments",
   "roleVisibility": "master-player-only",
   "projectId": "teais-de-anansi",
   "apiKey": "AIzaSyDZoe_XntJna_aE_uMDrwxFI5EykwdVM5M",
