@@ -14,8 +14,10 @@ assert.equal(cfg.paymentMethodForbidden,true);
 assert.equal(cfg.authMode,'username-password');
 assert.equal(cfg.usernameDomain,'teias.invalid');
 assert.equal(cfg.ownerUsername,'rafael');
-assert.deepEqual(cfg.playerUsernames,['gus','leo','bruno']);
-assert.equal(cfg.accountProvisioning,'firebase-console-manual','As contas são criadas manualmente pelo proprietário no Firebase Authentication.');
+assert.deepEqual(cfg.playerUsernames,['bruno','gustavo','leo','fernanda']);
+assert.deepEqual(cfg.playerAccounts.map(row=>row.username),['bruno','gustavo','leo','fernanda']);
+assert.equal(cfg.playerAccounts.find(row=>row.username==='gustavo')?.authUsername,'gus','Gustavo deve preservar compatibilidade com a conta histórica gus.');
+assert.equal(cfg.accountProvisioning,'master-ui','Rafael deve poder criar os logins individuais pela própria interface do Hub.');
 assert.equal(cfg.collaborationModel,'trusted-private','O Hub continua pessoal e usado por um pequeno grupo de confiança.');
 assert.equal(cfg.accessModel,'login-context-assignments','A conta autenticada deve determinar Campanhas e os contextos de Sessão/Aventura disponíveis.');
 assert.equal(cfg.roleVisibility,'master-player-only','O Hub deve possuir apenas Mestre e Jogador.');
@@ -33,8 +35,9 @@ assert.doesNotMatch(rules,/authorizedUsers|isAdmin\(/,'Não deve voltar a existi
 
 const provider=fs.readFileSync('scripts/firebase-collaboration-provider.js','utf8');
 assert.match(provider,/signInWithEmailAndPassword/,'Login deve continuar usando Firebase Authentication.');
+assert.match(provider,/createUserWithEmailAndPassword/,'Rafael deve conseguir provisionar os logins individuais dos jogadores.');
 assert.match(provider,/usernameDomain/,'O e-mail técnico deve continuar oculto atrás do nome de usuário.');
-for(const token of['sessionIds','adventureIds','fetchAssigned','saveCampaignCharacter','listCampaignCharacters','listVisibleCampaignMemberships'])assert.ok(provider.includes(token),`Provider sem acesso por contexto: ${token}`);
+for(const token of['createPlayerLogin','playerAccounts','sessionIds','adventureIds','fetchAssigned','saveCampaignCharacter','listCampaignCharacters','listVisibleCampaignMemberships'])assert.ok(provider.includes(token),`Provider sem acesso por contexto: ${token}`);
 assert.ok(provider.includes("f.where('campaignId','==',cid)"),'Tempo real deve observar mudanças no elenco da Campanha.');
 assert.doesNotMatch(provider,/array-contains|assignedSharedRecord/,'Provider não deve inferir acesso de Sessão/Aventura apenas pela ficha.');
 assert.doesNotMatch(provider,/authorizedUsers|upsertAuthorizedUser|setAuthorizedUserActive/,'Não deve existir autorização paralela ao Firebase Authentication.');
@@ -42,8 +45,13 @@ assert.doesNotMatch(provider,/authorizedUsers|upsertAuthorizedUser|setAuthorized
 const view=fs.readFileSync('scripts/collaboration-view.js','utf8');
 assert.ok(view.includes("'guest'")&&view.includes("'master'")&&view.includes("'player'"),'Acesso deve distinguir visitante, Mestre e Jogador.');
 assert.ok(view.includes('storage?.removeItem(COLLAB_CACHE_KEY)'),'Troca de login deve limpar o cache colaborativo da conta anterior.');
+assert.ok(view.includes('sharedCharacters'),'Jogadores devem receber as fichas compartilhadas que têm direito de visualizar.');
+
+const realtime=fs.readFileSync('scripts/collaboration-realtime.js','utf8');
+assert.ok(realtime.includes('persistAuthenticatedAccount'),'A sessão local deve ser reescrita a partir da conta realmente autenticada.');
+assert.ok(realtime.includes('characters:row?.characters'),'Mudanças no conteúdo das fichas compartilhadas devem participar do fingerprint do tempo real.');
 
 const hubUx=fs.readFileSync('scripts/hub-ux.js','utf8');
 assert.ok(hubUx.includes('enforceLogin')&&hubUx.includes('usuarios.html')&&hubUx.includes('COLLAB_SESSION_KEY'),'Telas do Hub devem exigir sessão de login.');
 
-console.log('OK: login simples preservado; a conta autenticada define seus contextos, co-participantes e permissões de edição.');
+console.log('OK: Rafael + Bruno, Gustavo, Léo e Fernanda possuem identidades próprias; a conta autenticada define contexto e mudanças autorizadas propagam em tempo real.');
