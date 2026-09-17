@@ -4,59 +4,84 @@ import{readCollaborationSession,writeCollaborationSession,clearCollaborationSess
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
+import{deleteRemoteCampaign,deleteRemoteOwnCharacter}from'./firebase-realtime-ops.js?v=20260917-global-realtime1';
 
 const CHANGE_EVENT='hub-rpg:data-changed';
 const REMOTE_EVENT='hub-rpg:remote-updated';
-const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch');
+const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
 const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
 let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),refreshPending=false;
+const pendingCampaignDeletes=new Set(),pendingCharacterDeletes=new Map();
 
 function cacheComparable(){
  const rows=readCollaborationCache(),playerCharacters=Object.fromEntries(playerCharacterIds().map(id=>[id,playerCharacterInfo(id)]));
  return{campaigns:Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[],characters:row?.characters||[]}])),playerCharacters}
 }
-function fingerprint(){return JSON.stringify({campaigns:readCampaigns(),adventures:readAdventures(),characters:readCharacters(),cache:cacheComparable(),memberships:readCollaborationSession()?.memberships||[]})}
+function snapshotState(){
+ let campaigns='',adventures='',characters='',session='',cache='';
+ try{campaigns=localStorage.getItem(CAMPAIGN_KEY)||'';adventures=localStorage.getItem(ADVENTURE_KEY)||'';characters=localStorage.getItem(CHARACTER_KEY)||'';session=JSON.stringify(readCollaborationSession()||null);cache=JSON.stringify(cacheComparable())}catch{}
+ return{campaigns,adventures,characters,session,cache}
+}
+function changedKinds(before,after){const kinds=[];for(const key of['campaigns','adventures','characters'])if(before[key]!==after[key])kinds.push(key);if(before.session!==after.session||before.cache!==after.cache)kinds.push('permissions');return[...new Set(kinds)]}
+function parseRows(raw){try{const rows=JSON.parse(raw||'[]');return Array.isArray(rows)?rows:[]}catch{return[]}}
+function captureRemovals(kind,beforeRaw,afterRaw){
+ if(globalThis.__HUB_REALTIME_APPLYING__)return;
+ const before=parseRows(beforeRaw),after=parseRows(afterRaw),afterIds=new Set(after.map(row=>text(row?.id)).filter(Boolean));
+ if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
+ if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCharacterDeletes.set(id,row)}
+}
 function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
 function loginUrl(){const page=location.pathname.split('/').pop()||'index.html';if(page==='usuarios.html')return null;const target=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',target);return login.href}
-function refreshPage(){
- if(refreshPending)return;
+function fallbackRefresh(detail){
+ if(detail?.handled||refreshPending)return;
  refreshPending=true;
- const run=()=>{refreshPending=false;if(document.visibilityState==='hidden')return;location.reload()};
+ const run=()=>{refreshPending=false;if(detail?.handled||document.visibilityState==='hidden')return;location.reload()};
  if(editing()){
-  const once=()=>{document.removeEventListener('focusout',once,true);setTimeout(run,250)};
+  const once=()=>{document.removeEventListener('focusout',once,true);setTimeout(run,100)};
   document.addEventListener('focusout',once,true);
-  setTimeout(()=>{if(refreshPending&&!editing())run()},2500)
- }else setTimeout(run,250)
+  setTimeout(()=>{if(refreshPending&&!editing())run()},1800)
+ }else setTimeout(run,350)
+}
+function emitRemote(kinds=[]){
+ let handled=false;
+ const detail={kinds:[...new Set(kinds)],at:new Date().toISOString(),claim(){handled=true},get handled(){return handled}};
+ window.dispatchEvent(new CustomEvent(REMOTE_EVENT,{detail}));
+ fallbackRefresh(detail)
 }
 function emitLocalChange(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;window.dispatchEvent(new CustomEvent(CHANGE_EVENT,{detail:{kind}}))}
 function installStorageBridge(){
  if(typeof Storage==='undefined'||Storage.prototype[STORAGE_PATCH])return;
- const original=Storage.prototype.setItem;
+ const originalSet=Storage.prototype.setItem,originalRemove=Storage.prototype.removeItem;
  Object.defineProperty(Storage.prototype,STORAGE_PATCH,{value:true,configurable:false});
- Storage.prototype.setItem=function(key,value){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=original.call(this,key,value);if(watched&&this===globalThis.localStorage&&before!==String(value))emitLocalChange(watched);return result}
+ Storage.prototype.setItem=function(key,value){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=originalSet.call(this,key,value);if(watched&&this===globalThis.localStorage&&before!==String(value)){captureRemovals(watched,before,String(value));emitLocalChange(watched)}return result};
+ Storage.prototype.removeItem=function(key){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=originalRemove.call(this,key);if(watched&&this===globalThis.localStorage&&before!=null){captureRemovals(watched,before,'[]');emitLocalChange(watched)}return result}
 }
 function persistAuthenticatedAccount(memberships=[]){if(!account||!provider)return null;const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase();return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships})}
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
- const before=fingerprint();
+ if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
+ const before=snapshotState();
  globalThis.__HUB_REALTIME_APPLYING__=true;
  try{
   const result=await pullCollaborations(provider);
   persistAuthenticatedAccount(result.memberships||[])
  }catch(error){console.warn('[Hub realtime] falha ao receber atualização:',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
- const after=fingerprint();
- if(before!==after){window.dispatchEvent(new CustomEvent(REMOTE_EVENT));refreshPage()}
+ const after=snapshotState(),kinds=changedKinds(before,after);
+ if(kinds.length)emitRemote(kinds)
 }
-function schedulePull(){clearTimeout(pullTimer);pullTimer=setTimeout(()=>applyRemote(),180)}
+function schedulePull(){clearTimeout(pullTimer);pullTimer=setTimeout(()=>applyRemote(),120)}
 async function pushChanges(){
- pushTimer=0;
+ clearTimeout(pushTimer);pushTimer=0;
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
  const kinds=new Set(pendingKinds);pendingKinds.clear();
+ const removedCampaigns=[...pendingCampaignDeletes];pendingCampaignDeletes.clear();
+ const removedCharacters=[...pendingCharacterDeletes.entries()];pendingCharacterDeletes.clear();
  const session=readCollaborationSession();if(!session)return;
  try{
   if(session.isMaster){
-   if(kinds.has('campaigns')||kinds.has('adventures')){
+   for(const id of removedCampaigns)await deleteRemoteCampaign(provider,id);
+   if(kinds.has('campaigns')||kinds.has('adventures')||removedCampaigns.length){
     const adventures=readAdventures(),characters=readCharacters();for(const campaign of readCampaigns())await provider.saveCampaignBundle(campaign,adventures.filter(a=>a.campaignId===campaign.id),characters)
    }
    if(kinds.has('characters')){
@@ -70,18 +95,22 @@ async function pushChanges(){
     const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
- }catch(error){console.warn('[Hub realtime] falha ao enviar atualização:',error)}
+  for(const[id,row]of removedCharacters){const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
+ }catch(error){
+  for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);
+  console.warn('[Hub realtime] falha ao enviar atualização:',error)
+ }
 }
-function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,650)}
+function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
  account=next;persistAuthenticatedAccount([]);unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
- startPromise=(async()=>{const session=readCollaborationSession();if(!session)return null;installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);startPromise=null;return null});
+ startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);startPromise=null;return null});
  return startPromise
 }
-export function stopRealtime(){clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;startPromise=null}
+export function stopRealtime(){clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;startPromise=null}
 
 if(typeof window!=='undefined')window.addEventListener(CHANGE_EVENT,event=>schedulePush(event.detail?.kind));
