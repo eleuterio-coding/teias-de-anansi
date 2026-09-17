@@ -1,5 +1,5 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-player-catalog1';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260917-player-catalog1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-global-realtime1';
+import{pullCollaborations}from'./collaboration-sync.js?v=20260917-global-realtime1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-player-catalog1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
@@ -86,6 +86,7 @@ async function pushChanges(){
    }
    if(kinds.has('characters')){
     const characters=readCharacters(),campaigns=readCampaigns();
+    for(const character of characters){const owns=text(character?.ownerUid)===text(session.uid)||text(character?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(character?.ownerUid)&&!text(character?.ownerUsername));if(owns)await provider.saveOwnCharacter(character)}
     for(const campaign of campaigns){const linked=new Set((campaign.members||[]).map(m=>text(m.characterId)).filter(Boolean));for(const character of characters)if(linked.has(text(character.id)))await provider.saveCampaignCharacter(campaign.id,character)}
    }
   }else if(kinds.has('characters')){
@@ -95,7 +96,7 @@ async function pushChanges(){
     const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
-  for(const[id,row]of removedCharacters){const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
+  for(const[id,row]of removedCharacters){const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(row?.ownerUid)&&!text(row?.ownerUsername)&&session.isMaster);if(owns)await deleteRemoteOwnCharacter(provider,id)}
  }catch(error){
   for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);
   console.warn('[Hub realtime] falha ao enviar atualização:',error)
