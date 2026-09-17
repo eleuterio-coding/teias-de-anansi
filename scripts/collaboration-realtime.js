@@ -1,6 +1,6 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260914-login-context2';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260914-login-context2';
-import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds}from'./collaboration-view.js?v=20260914-login-context2';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-account-realtime1';
+import{pullCollaborations}from'./collaboration-sync.js?v=20260917-account-realtime1';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds}from'./collaboration-view.js?v=20260917-account-realtime1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
@@ -14,7 +14,7 @@ let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,start
 
 function cacheComparable(){
  const rows=readCollaborationCache();
- return Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[]}]))
+ return Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[],characters:row?.characters||[]}]))
 }
 function fingerprint(){return JSON.stringify({campaigns:readCampaigns(),adventures:readAdventures(),characters:readCharacters(),cache:cacheComparable(),memberships:readCollaborationSession()?.memberships||[]})}
 function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
@@ -36,13 +36,14 @@ function installStorageBridge(){
  Object.defineProperty(Storage.prototype,STORAGE_PATCH,{value:true,configurable:false});
  Storage.prototype.setItem=function(key,value){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=original.call(this,key,value);if(watched&&this===globalThis.localStorage&&before!==String(value))emitLocalChange(watched);return result}
 }
+function persistAuthenticatedAccount(memberships=[]){if(!account||!provider)return null;const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase();return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships})}
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
- const before=fingerprint(),session=readCollaborationSession();
+ const before=fingerprint();
  globalThis.__HUB_REALTIME_APPLYING__=true;
  try{
   const result=await pullCollaborations(provider);
-  if(session)writeCollaborationSession({...session,memberships:result.memberships||[]});
+  persistAuthenticatedAccount(result.memberships||[])
  }catch(error){console.warn('[Hub realtime] falha ao receber atualização:',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
  const after=fingerprint();
  if(before!==after){window.dispatchEvent(new CustomEvent(REMOTE_EVENT));refreshPage()}
@@ -74,7 +75,7 @@ async function pushChanges(){
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,650)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
- account=next;unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
+ account=next;persistAuthenticatedAccount([]);unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
