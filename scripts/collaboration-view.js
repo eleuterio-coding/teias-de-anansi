@@ -7,6 +7,7 @@ const CHARACTER_KEY='hub-rpg:characters:v4';
 const SESSION_EVENT='hub-rpg:collaboration-session-changed';
 function signalSession(value){if(typeof window!=='undefined'&&typeof CustomEvent!=='undefined')window.dispatchEvent(new CustomEvent(SESSION_EVENT,{detail:value||null}))}
 function localCharacters(storage=globalThis.localStorage){try{const rows=JSON.parse(storage?.getItem(CHARACTER_KEY)||'[]');return Array.isArray(rows)?rows:[]}catch{return[]}}
+function rawCollaborationCache(storage=globalThis.localStorage){try{const raw=JSON.parse(storage?.getItem(COLLAB_CACHE_KEY)||'{}');return{campaigns:raw?.campaigns&&typeof raw.campaigns==='object'?raw.campaigns:{},playerCharacters:raw?.playerCharacters&&typeof raw.playerCharacters==='object'?raw.playerCharacters:{}}}catch{return{campaigns:{},playerCharacters:{}}}}
 
 export function readCollaborationSession(storage=globalThis.localStorage){
  try{const raw=JSON.parse(storage?.getItem(COLLAB_SESSION_KEY)||'null');if(!raw?.uid||!raw?.username)return null;return{schema:'hub-rpg/collaboration-session/v1',uid:text(raw.uid),username:username(raw.username),isMaster:raw.isMaster===true,memberships:arr(raw.memberships),updatedAt:text(raw.updatedAt)}}catch{return null}
@@ -16,9 +17,9 @@ export function writeCollaborationSession(value,storage=globalThis.localStorage)
  const clean={schema:'hub-rpg/collaboration-session/v1',uid:text(value.uid),username:username(value.username),isMaster:value.isMaster===true,memberships:arr(value.memberships),updatedAt:new Date().toISOString()};storage?.setItem(COLLAB_SESSION_KEY,JSON.stringify(clean));signalSession(clean);return clean
 }
 export function clearCollaborationSession(storage=globalThis.localStorage){storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null)}
-export function readCollaborationCache(storage=globalThis.localStorage){
- try{const raw=JSON.parse(storage?.getItem(COLLAB_CACHE_KEY)||'{}');return raw?.campaigns&&typeof raw.campaigns==='object'?raw.campaigns:{}}catch{return{}}
-}
+export function readCollaborationCache(storage=globalThis.localStorage){return rawCollaborationCache(storage).campaigns}
+export function playerCharacterInfo(characterId,storage=globalThis.localStorage){return rawCollaborationCache(storage).playerCharacters[text(characterId)]||null}
+export function playerCharacterIds(storage=globalThis.localStorage){return Object.keys(rawCollaborationCache(storage).playerCharacters)}
 export function collaborationAccessMode(storage=globalThis.localStorage){const s=readCollaborationSession(storage);return!s?'guest':s.isMaster?'master':'player'}
 export function authenticated(storage=globalThis.localStorage){return collaborationAccessMode(storage)!=='guest'}
 export function playerMode(storage=globalThis.localStorage){return collaborationAccessMode(storage)==='player'}
@@ -41,4 +42,4 @@ export function ownedCharacterIds(storage=globalThis.localStorage){const session
 export function editableCharacterIds(storage=globalThis.localStorage){return[...new Set([...assignedCharacterIds(storage),...ownedCharacterIds(storage)])]}
 export function visibleCharacterIds(storage=globalThis.localStorage){return[...new Set([...sharedCampaignRows(storage).flatMap(row=>arr(row.characterIds)).map(text).filter(Boolean),...sharedCharacters(storage).map(c=>text(c?.id)).filter(Boolean),...ownedCharacterIds(storage)])]}
 export function canOpenCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return visibleCharacterIds(storage).includes(text(characterId))}
-export function canEditCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return editableCharacterIds(storage).includes(text(characterId))}
+export function canEditCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master'){const info=playerCharacterInfo(characterId,storage);return !(info&&info.linked===false)}return editableCharacterIds(storage).includes(text(characterId))}
