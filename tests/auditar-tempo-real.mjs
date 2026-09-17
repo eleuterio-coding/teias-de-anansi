@@ -28,12 +28,12 @@ for(const token of['deleteRemoteCampaign','deleteRemoteOwnCharacter','revokeRemo
 assert.ok(collaborationUi.includes('revokeRemoteMembership')&&collaborationUi.includes('Remover acesso à Campanha'),'Mestre precisa conseguir revogar uma Campanha e propagar a remoção imediatamente.');
 assert.ok(sheet.includes('character-sheet-autosave.js?v=20260917-global-realtime1'),'Ficha precisa carregar autosave global.');
 for(const token of['input','change','queueSave','save-sheet','hub-rpg:remote-updated'])assert.ok(autosave.includes(token),`Autosave da ficha sem ${token}`);
-assert.ok(wizard.includes("hub-ux.js?v=20260917-global-realtime1"),'Criação de personagem precisa iniciar a camada global de realtime.');
+assert.ok(wizard.includes("hub-ux.js?v=20260917-player-personal-sync1"),'Criação de personagem precisa iniciar a camada global de realtime atual.');
 for(const [name,source] of Object.entries({campaignList,sessions,tableRouter,adventureRouter,characterList})){
  assert.ok(source.includes('hub-rpg:remote-updated'),`${name} não reage a mudanças remotas.`);
  assert.ok(source.includes('claim?.()'),`${name} não assume a atualização sem recarregar a página.`)
 }
-assert.ok(ux.includes("import('./collaboration-realtime.js?v=20260917-global-realtime1')"),'UX global precisa iniciar a revisão global do realtime.');
+assert.ok(ux.includes("import('./collaboration-realtime.js?v=20260917-player-personal-sync1')"),'UX global precisa iniciar a revisão atual do realtime.');
 assert.ok(ux.includes('COLLAB_SESSION_KEY'),'Realtime só deve iniciar com sessão conectada.');
 assert.ok(users.includes('Bruno')&&users.includes('Gustavo')&&users.includes('Léo')&&users.includes('Fernanda'),'Login precisa expor as quatro contas de jogadores.');
 assert.ok(users.includes('Atualizar agora'),'Sincronização manual pode permanecer como fallback, sem ser necessária ao fluxo normal.');
