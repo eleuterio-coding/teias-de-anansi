@@ -19,12 +19,14 @@ concurrency:
 
 env:
   FIREBASE_PROJECT_ID: teais-de-anansi
+  E2E_FIREBASE_ADMIN_USERNAME: ${{ secrets.E2E_FIREBASE_ADMIN_USERNAME }}
+  E2E_FIREBASE_ADMIN_PASSWORD: ${{ secrets.E2E_FIREBASE_ADMIN_PASSWORD }}
 
 jobs:
   validar-e-publicar:
-    name: Validar e publicar Security Rules
+    name: Validar, publicar e homologar Security Rules
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Baixar repositório
@@ -43,13 +45,19 @@ jobs:
           node tests/auditar-colaboracao-provisionamento.mjs
           node tests/auditar-colaboracao-sync.mjs
 
-      - name: Exigir credencial de deploy
+      - name: Exigir credenciais
         shell: bash
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: |
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "::error::O secret FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI não está configurado."
+          missing=0
+          for name in FIREBASE_SERVICE_ACCOUNT E2E_FIREBASE_ADMIN_USERNAME E2E_FIREBASE_ADMIN_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name não está configurado nos GitHub Actions Secrets."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
             exit 1
           fi
 
@@ -58,5 +66,19 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-firestore-rules-rest.mjs
 
+      - name: Instalar Chromium para homologação real
+        run: npx playwright install --with-deps chromium
+
+      - name: Homologar Firebase real · Mestre x Jogador
+        run: npm run test:e2e:firebase
+
+      - name: Guardar relatório em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-firestore-rules-report
+          path: playwright-report/
+          retention-days: 7
+
       - name: Confirmar publicação
-        run: echo "Firestore Security Rules publicadas no projeto $FIREBASE_PROJECT_ID."
+        run: echo "Firestore Security Rules publicadas e homologadas no projeto $FIREBASE_PROJECT_ID."
