@@ -25,6 +25,7 @@ on:
       - 'FIREBASE-PROVISIONAMENTO.md'
       - 'tests/auditar-colaboracao-sync.mjs'
       - 'tests/auditar-colaboracao-provisionamento.mjs'
+      - 'tests/auditar-ficha-realtime.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
       - 'tests/auditar-campanhas-mesas.mjs'
       - '.github/workflows/auditar-colaboracao-sync.yml'
@@ -52,6 +53,7 @@ on:
       - 'FIREBASE-PROVISIONAMENTO.md'
       - 'tests/auditar-colaboracao-sync.mjs'
       - 'tests/auditar-colaboracao-provisionamento.mjs'
+      - 'tests/auditar-ficha-realtime.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
       - 'tests/auditar-campanhas-mesas.mjs'
       - '.github/workflows/auditar-colaboracao-sync.yml'
@@ -80,12 +82,15 @@ jobs:
           node --check scripts/hub-ux.js
           node --check tests/auditar-colaboracao-sync.mjs
           node --check tests/auditar-colaboracao-provisionamento.mjs
+          node --check tests/auditar-ficha-realtime.mjs
           node --check tests/auditar-ux-mobile-final.mjs
           node --check tests/auditar-campanhas-mesas.mjs
       - name: Validar login simples e papéis funcionais
         run: |
           node tests/auditar-colaboracao-provisionamento.mjs
           node tests/auditar-colaboracao-sync.mjs
+      - name: Regressão de abertura da ficha
+        run: node tests/auditar-ficha-realtime.mjs
       - name: Regressão UX e mobile
         run: node tests/auditar-ux-mobile-final.mjs
       - name: Regressão Campanhas/Mesas
