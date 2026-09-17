@@ -1,10 +1,10 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-global-realtime1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-master-full-control1';
 import{pullCollaborations,syncOwnCharacters}from'./collaboration-sync.js?v=20260917-player-personal-sync1';
-import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-reload-loop-fix1';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-master-full-control1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
-import{deleteRemoteCampaign,deleteRemoteOwnCharacter}from'./firebase-realtime-ops.js?v=20260917-global-realtime1';
+import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter}from'./firebase-realtime-ops.js?v=20260917-master-full-control1';
 
 // A revisão 20260917-player-catalog1 foi substituída por 20260917-reload-loop-fix1 para impedir recarga circular ao abrir a ficha.
 const CHANGE_EVENT='hub-rpg:data-changed';
@@ -35,7 +35,7 @@ function captureRemovals(kind,beforeRaw,afterRaw){
  if(globalThis.__HUB_REALTIME_APPLYING__)return;
  const before=parseRows(beforeRaw),after=parseRows(afterRaw),afterIds=new Set(after.map(row=>text(row?.id)).filter(Boolean));
  if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
- if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCharacterDeletes.set(id,row)}
+ if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id)){const info=playerCharacterInfo(id);pendingCharacterDeletes.set(id,info?{...row,__managedOwner:info}:row)}}
 }
 function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
 function loginUrl(){const page=location.pathname.split('/').pop()||'index.html';if(page==='usuarios.html')return null;const target=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',target);return login.href}
@@ -103,7 +103,7 @@ async function pushChanges(){
    }
    if(kinds.has('characters')){
     const characters=readCharacters(),campaigns=readCampaigns();
-    for(const character of characters){const owns=text(character?.ownerUid)===text(session.uid)||text(character?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(character?.ownerUid)&&!text(character?.ownerUsername));if(owns)await provider.saveOwnCharacter(character)}
+    for(const character of characters){const ownerUid=text(character?.ownerUid),ownerName=text(character?.ownerUsername).toLowerCase(),foreign=Boolean(ownerUid&&ownerUid!==text(session.uid))||Boolean(ownerName&&ownerName!==text(session.username).toLowerCase());if(foreign)await provider.saveManagedPlayerCharacter(character);else await provider.saveOwnCharacter(character)}
     for(const campaign of campaigns){const linked=new Set((campaign.members||[]).map(m=>text(m.characterId)).filter(Boolean));for(const character of characters)if(linked.has(text(character.id)))await provider.saveCampaignCharacter(campaign.id,character)}
    }
   }else if(kinds.has('characters')){
@@ -113,7 +113,7 @@ async function pushChanges(){
     const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
-  for(const[id,row]of removedCharacters){const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(row?.ownerUid)&&!text(row?.ownerUsername)&&session.isMaster);if(owns)await deleteRemoteOwnCharacter(provider,id)}
+  for(const[id,row]of removedCharacters){const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),foreign=session.isMaster&&(Boolean(ownerUid&&ownerUid!==text(session.uid))||Boolean(ownerName&&ownerName!==text(session.username).toLowerCase()));if(foreign)await deleteRemoteManagedCharacter(provider,id,ownerUid);else{const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(row?.ownerUid)&&!text(row?.ownerUsername)&&session.isMaster);if(owns)await deleteRemoteOwnCharacter(provider,id)}}
  }catch(error){
   for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);
   console.warn('[Hub realtime] falha ao enviar atualização:',error)
