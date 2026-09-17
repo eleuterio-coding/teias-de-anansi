@@ -28,7 +28,7 @@ assert.ok(realtime.includes('sessionComparable()'),'Realtime deve comparar apena
 assert.equal(realtime.includes('persistAuthenticatedAccount([])'),false,'Bootstrap não pode zerar memberships antes do pull.');
 assert.ok(realtime.includes("collaboration-view.js?v=20260917-reload-loop-fix1"),'Realtime deve carregar a sessão idempotente sem cache antigo.');
 assert.ok(view.includes('sameSession(current,base)'),'Persistência da sessão deve ser idempotente.');
-assert.ok(hubUx.includes("collaboration-realtime.js?v=20260917-reload-loop-fix1"),'Hub deve carregar a revisão realtime sem loop.');
+assert.ok(hubUx.includes("collaboration-realtime.js?v=20260917-player-personal-sync1"),'Hub deve carregar a revisão realtime atual, preservando a correção anti-loop.');
 assert.ok(sheet.includes('scripts/hub-ux.js?v=20260917-reload-loop-fix1'),'Ficha deve forçar a revisão corrigida no navegador.');
 
 console.log('OK — abertura da ficha não transforma bootstrap/regravação de sessão em alteração remota e não entra em reload infinito.');
