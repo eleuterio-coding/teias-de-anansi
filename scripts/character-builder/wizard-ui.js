@@ -1,5 +1,5 @@
-import'../hub-ux.js?v=20260914-login-context1';
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260914-login-context1';
+import'../hub-ux.js?v=20260917-player-catalog1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-player-catalog1';
 import{state}from'./state.js';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
@@ -19,8 +19,8 @@ const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
 function stampPlayerOwnership(){const session=readCollaborationSession();if(!session||session.isMaster||!state.c)return;state.c.ownerUid=session.uid;state.c.ownerUsername=session.username}
-function enforcePlayerEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}if(mode==='master')return true;const id=new URLSearchParams(location.search).get('id')||'';// Sem id, a conta autenticada está criando uma ficha própria; a posse será gravada no clique em Salvar.
-if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260914-login-context2&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260914-login-context2');return false}
+function enforceCharacterEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}const id=new URLSearchParams(location.search).get('id')||'';// Sem id, a conta autenticada está criando uma ficha nova; Jogadores têm a posse gravada no clique em Salvar.
+if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260917-player-catalog1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260917-player-catalog1');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
@@ -59,5 +59,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(updateReviewState).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']})
 }
-export function initWizardUi(){if(initialized)return;initialized=true;if(!enforcePlayerEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;if(!enforceCharacterEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();
