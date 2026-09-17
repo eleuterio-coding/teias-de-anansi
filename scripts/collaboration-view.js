@@ -15,10 +15,10 @@ export function readCollaborationSession(storage=globalThis.localStorage){
  try{const raw=JSON.parse(storage?.getItem(COLLAB_SESSION_KEY)||'null');if(!raw?.uid||!raw?.username)return null;return{schema:'hub-rpg/collaboration-session/v1',uid:text(raw.uid),username:username(raw.username),isMaster:raw.isMaster===true,memberships:arr(raw.memberships),updatedAt:text(raw.updatedAt)}}catch{return null}
 }
 export function writeCollaborationSession(value,storage=globalThis.localStorage){
- if(!value){const current=readCollaborationSession(storage);if(!current)return null;storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null);return null}
+ if(!value){const current=readCollaborationSession(storage);storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);if(current)signalSession(null);return null}
  const base={schema:'hub-rpg/collaboration-session/v1',uid:text(value.uid),username:username(value.username),isMaster:value.isMaster===true,memberships:arr(value.memberships)},current=readCollaborationSession(storage);if(sameSession(current,base))return current;const clean={...base,updatedAt:new Date().toISOString()};storage?.setItem(COLLAB_SESSION_KEY,JSON.stringify(clean));signalSession(clean);return clean
 }
-export function clearCollaborationSession(storage=globalThis.localStorage){const current=readCollaborationSession(storage);if(!current)return;storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null)}
+export function clearCollaborationSession(storage=globalThis.localStorage){const current=readCollaborationSession(storage);storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);if(current)signalSession(null)}
 export function readCollaborationCache(storage=globalThis.localStorage){return rawCollaborationCache(storage).campaigns}
 export function playerCharacterInfo(characterId,storage=globalThis.localStorage){return rawCollaborationCache(storage).playerCharacters[text(characterId)]||null}
 export function playerCharacterIds(storage=globalThis.localStorage){return Object.keys(rawCollaborationCache(storage).playerCharacters)}
