@@ -48,7 +48,7 @@ service cloud.firestore {
     }
 
     function canManage(campaignId) {
-      return isOwner(campaignId);
+      return isHubMaster() || isOwner(campaignId);
     }
 
     function isPlayer(campaignId) {
@@ -74,11 +74,11 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read: if signedIn();
-      allow create, update, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
 
       match /characters/{characterId} {
         allow read: if signedIn() && (request.auth.uid == uid || isHubMaster());
-        allow create, update, delete: if signedIn() && request.auth.uid == uid;
+        allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
       }
     }
 
