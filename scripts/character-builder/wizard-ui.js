@@ -1,4 +1,4 @@
-import'../hub-ux.js?v=20260917-player-catalog1';
+import'../hub-ux.js?v=20260917-global-realtime1';
 import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-player-catalog1';
 import{state}from'./state.js';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
@@ -20,7 +20,7 @@ const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
 function stampPlayerOwnership(){const session=readCollaborationSession();if(!session||session.isMaster||!state.c)return;state.c.ownerUid=session.uid;state.c.ownerUsername=session.username}
 function enforceCharacterEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}const id=new URLSearchParams(location.search).get('id')||'';// Sem id, a conta autenticada está criando uma ficha nova; Jogadores têm a posse gravada no clique em Salvar.
-if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260917-player-catalog1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260917-player-catalog1');return false}
+if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260917-global-realtime1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260917-global-realtime1');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
