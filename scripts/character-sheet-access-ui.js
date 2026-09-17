@@ -1,4 +1,4 @@
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20260914-login-context1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20260917-account-realtime1';
 
 const id=new URLSearchParams(location.search).get('id')||'';
 const accessMode=collaborationAccessMode(),restricted=accessMode==='player',guest=accessMode==='guest';
