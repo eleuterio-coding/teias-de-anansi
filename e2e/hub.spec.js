@@ -11,12 +11,12 @@ const pages=[
 
 const masterSession={uid:'u-e2e-master',username:'rafael',isMaster:true,memberships:[]};
 
-async function resetStorage(page){
- await page.goto('/usuarios.html');
- await page.evaluate(session=>{localStorage.clear();localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(session))},masterSession);
-}
-
-test.beforeEach(async({page})=>{await resetStorage(page)});
+test.beforeEach(async({page})=>{
+ await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
+ await page.addInitScript(session=>{
+  if(!localStorage.getItem('hub-rpg:collaboration-session:v1'))localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(session));
+ },masterSession);
+});
 
 test('superfícies principais carregam sem overflow horizontal',async({page})=>{
  for(const[url,title]of pages){
