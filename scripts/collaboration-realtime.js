@@ -68,12 +68,11 @@ function persistAuthenticatedAccount(memberships=null){
  const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase(),current=readCollaborationSession(),sameAccount=current&&text(current.uid)===text(account.uid)&&text(current.username).toLowerCase()===text(account.username).toLowerCase(),effectiveMemberships=memberships==null?(sameAccount?(current.memberships||[]):[]):memberships;
  return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships:effectiveMemberships})
 }
-async function reconcilePersonalCharacters(){
+async function reconcilePersonalCharacters(memberships=null){
  if(!provider||!account)return;
  const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase();
  if(text(account.username).toLowerCase()===owner)return;
- globalThis.__HUB_REALTIME_APPLYING__=true;
- try{await syncOwnCharacters(provider)}catch(error){console.warn('[Hub realtime] falha ao reconciliar fichas pessoais:',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
+ await syncOwnCharacters(provider,{memberships})
 }
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
@@ -82,6 +81,7 @@ async function applyRemote(){
  globalThis.__HUB_REALTIME_APPLYING__=true;
  try{
   const result=await pullCollaborations(provider);
+  await reconcilePersonalCharacters(result.memberships||[]);
   persistAuthenticatedAccount(result.memberships||[])
  }catch(error){console.warn('[Hub realtime] falha ao receber atualização:',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
  const after=snapshotState(),kinds=changedKinds(before,after);
@@ -122,7 +122,7 @@ async function pushChanges(){
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
- account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote();await reconcilePersonalCharacters()
+ account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
