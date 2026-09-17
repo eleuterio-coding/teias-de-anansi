@@ -8,6 +8,7 @@ on:
       - 'firebase/firestore.rules'
       - 'firebase.json'
       - 'scripts/deploy-firestore-rules-rest.mjs'
+      - 'e2e/collaboration-real.spec.js'
       - '.github/workflows/deploy-firestore-rules.yml'
 
 permissions:
