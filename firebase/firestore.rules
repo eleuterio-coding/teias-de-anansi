@@ -11,6 +11,10 @@ service cloud.firestore {
       return request.auth.token.email;
     }
 
+    function isHubMaster() {
+      return signedIn() && loginEmail() == 'rafael@teias.invalid';
+    }
+
     function membershipId(campaignId) {
       return campaignId + '_' + loginEmail();
     }
@@ -73,7 +77,8 @@ service cloud.firestore {
       allow create, update, delete: if signedIn() && request.auth.uid == uid;
 
       match /characters/{characterId} {
-        allow read, create, update, delete: if signedIn() && request.auth.uid == uid;
+        allow read: if signedIn() && (request.auth.uid == uid || isHubMaster());
+        allow create, update, delete: if signedIn() && request.auth.uid == uid;
       }
     }
 
