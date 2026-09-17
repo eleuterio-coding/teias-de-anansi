@@ -141,6 +141,8 @@ async function cleanupPlayerIdentity(page, { username, password, uid }) {
       const db = f.getFirestore(app);
       const technicalEmail = `${username}@${config.usernameDomain}`;
       const result = await authLib.signInWithEmailAndPassword(auth, technicalEmail, password);
+      const chars = await f.getDocs(f.collection(db, 'users', uid, 'characters')).catch(() => null);
+      for (const row of chars?.docs || []) await f.deleteDoc(row.ref).catch(() => {});
       await f.deleteDoc(f.doc(db, 'users', uid)).catch(() => {});
       await authLib.deleteUser(result.user);
     } finally {
@@ -252,14 +254,18 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
           updatedAt: new Date(Date.now() + 1000).toISOString(),
         },
       })).resolves.toBeUndefined();
-      const afterMasterEdit = await providerCall(playerPage, 'ownCharacters');
-      expect(afterMasterEdit.find(row => row.id === PERSONAL_CHARACTER_ID)?.name).toBe('Ficha pessoal editada pelo Mestre');
+      await expect.poll(async () => {
+        const rows = await providerCall(playerPage, 'ownCharacters');
+        return rows.find(row => row.id === PERSONAL_CHARACTER_ID)?.name || '';
+      }, { timeout: 5000 }).toBe('Ficha pessoal editada pelo Mestre');
       await expect(providerCall(adminPage, 'deleteManagedPersonal', {
         characterId: PERSONAL_CHARACTER_ID,
         ownerUid: playerUid,
       })).resolves.toBe(true);
-      const afterMasterDelete = await providerCall(playerPage, 'ownCharacters');
-      expect(afterMasterDelete.some(row => row.id === PERSONAL_CHARACTER_ID)).toBe(false);
+      await expect.poll(async () => {
+        const rows = await providerCall(playerPage, 'ownCharacters');
+        return rows.some(row => row.id === PERSONAL_CHARACTER_ID);
+      }, { timeout: 5000 }).toBe(false);
 
       const adminBundle = await providerCall(adminPage, 'bundle', { campaignId: CAMPAIGN_ID });
       expect(adminBundle.mode).toBe('private');
