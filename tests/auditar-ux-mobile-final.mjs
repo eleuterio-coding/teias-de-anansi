@@ -40,7 +40,7 @@ assert.ok(listUi.includes('Editar estrutura'),'Lista deve explicitar que o const
 assert.ok(!/>Editar<\/a>/.test(list+listUi),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.equal(list.includes('Abra a Ficha Digital para jogar.'),false,'Lista pós-criação não deve exibir ajuda contextual.');
 assert.equal(list.includes('somente a ficha atribuída pelo Mestre é exibida'),false,'Lista pós-criação não deve explicar o recorte de permissão.');
-assert.ok(listUi.includes('hidden=guest')&&listUi.includes('(!restricted||isOwn)')&&listUi.includes('const remove=!restricted'),'Jogador autenticado deve criar personagem e editar apenas a própria estrutura, sem poder excluir fichas.');
+assert.ok(listUi.includes('hidden=guest')&&listUi.includes('canEditCharacter(c.id)')&&listUi.includes('const remove=!restricted&&!info')&&listUi.includes('ainda não vinculado'),'Jogador autenticado deve editar apenas fichas autorizadas; fichas pessoais de outros jogadores permanecem sem exclusão e o Mestre enxerga as ainda não vinculadas em leitura.');
 
 for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
 assert.equal(home.includes('dados.html'),false,'A área de Backup não faz parte do produto atual.');
