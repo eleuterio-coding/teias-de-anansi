@@ -11,12 +11,13 @@ async function deleteCollection(f,db,path){
  return snapshot.size
 }
 function requireProvider(provider){if(!provider?.configured||!provider?.db||!provider?.auth)throw new Error('Acesso online indisponível.');const user=provider.auth.currentUser;if(!user)throw new Error('Faça login.');return user}
-async function requireCampaignOwner(provider,campaignId){const user=requireProvider(provider),f=await firestore(provider.config?.sdkVersion||'12.18.0'),root=await f.getDoc(f.doc(provider.db,'campaigns',campaignId));if(!root.exists()||root.data()?.ownerId!==user.uid)throw new Error('Somente o Mestre pode alterar os acessos desta Campanha.');return{user,f}}
+function isMasterUser(provider,user){const owner=username(provider.config?.ownerUsername||'rafael'),emailUser=username(String(user?.email||'').split('@')[0]);return Boolean(owner&&emailUser===owner)}
+async function requireCampaignOwner(provider,campaignId){const user=requireProvider(provider),f=await firestore(provider.config?.sdkVersion||'12.18.0'),root=await f.getDoc(f.doc(provider.db,'campaigns',campaignId));if(!isMasterUser(provider,user)&&(!root.exists()||root.data()?.ownerId!==user.uid))throw new Error('Somente o Mestre pode alterar os acessos desta Campanha.');return{user,f}}
 export async function deleteRemoteCampaign(provider,campaignId){
  const user=requireProvider(provider),cid=text(campaignId);if(!cid)return false;
  const f=await firestore(provider.config?.sdkVersion||'12.18.0'),db=provider.db,root=f.doc(db,'campaigns',cid),rootSnap=await f.getDoc(root);
  if(!rootSnap.exists())return true;
- if(rootSnap.data()?.ownerId!==user.uid)throw new Error('Somente o Mestre pode excluir esta Campanha.');
+ if(!isMasterUser(provider,user)&&rootSnap.data()?.ownerId!==user.uid)throw new Error('Somente o Mestre pode excluir esta Campanha.');
  const membershipQuery=f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)),memberships=await f.getDocs(membershipQuery);
  await Promise.all(memberships.docs.map(row=>f.deleteDoc(row.ref)));
  for(const name of['shared','private','sessions','adventureViews','adventures','characters'])await deleteCollection(f,db,['campaigns',cid,name]);
@@ -29,6 +30,14 @@ export async function deleteRemoteOwnCharacter(provider,characterId){
  await f.deleteDoc(f.doc(db,'users',user.uid,'characters',id)).catch(()=>{});
  const memberships=typeof provider.listMemberships==='function'?await provider.listMemberships():[];
  for(const membership of memberships){if(text(membership?.characterId)!==id)continue;await f.deleteDoc(f.doc(db,'campaigns',text(membership.campaignId),'characters',id)).catch(()=>{})}
+ return true
+}
+export async function deleteRemoteManagedCharacter(provider,characterId,ownerUid){
+ const user=requireProvider(provider),id=text(characterId),uid=text(ownerUid);if(!id||!uid)return false;if(!isMasterUser(provider,user))throw new Error('Somente Rafael pode excluir fichas de outros jogadores.');
+ const f=await firestore(provider.config?.sdkVersion||'12.18.0'),db=provider.db;
+ await f.deleteDoc(f.doc(db,'users',uid,'characters',id)).catch(()=>{});
+ const q=f.query(f.collection(db,'memberships'),f.where('characterId','==',id)),memberships=await f.getDocs(q).catch(()=>null);
+ for(const row of memberships?.docs||[]){const cid=text(row.data()?.campaignId);if(cid)await f.deleteDoc(f.doc(db,'campaigns',cid,'characters',id)).catch(()=>{})}
  return true
 }
 export async function revokeRemoteMembership(provider,campaignId,playerUsername){
