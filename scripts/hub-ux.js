@@ -20,11 +20,11 @@ function hasLoginSession(){try{const raw=JSON.parse(localStorage.getItem(COLLAB_
 function enforceLogin(){const page=currentPage();if(page==='usuarios.html'||hasLoginSession())return true;const next=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',next);location.replace(login.href);return false}
 async function setRealtime(active){
  if(!active){realtimeModule?.stopRealtime?.();return}
- if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260917-player-personal-sync1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
+ if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260917-master-full-control1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
  const module=await realtimeLoad;module?.startRealtime?.()
 }
 function bootstrapRealtime(){let active=false;try{active=Boolean(localStorage.getItem(COLLAB_SESSION_KEY))}catch{}setRealtime(active)}
-function bootstrapPageAccess(){const page=currentPage();if(page!=='ficha-personagem.html'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20260917-player-catalog1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
+function bootstrapPageAccess(){const page=currentPage();if(page!=='ficha-personagem.html'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20260917-master-full-control1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
  if(!target)return null;if(!target.id)target.id='hub-main-content';
