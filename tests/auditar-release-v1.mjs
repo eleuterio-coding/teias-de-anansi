@@ -33,21 +33,23 @@ assert.equal(home.includes('dados.html'),false);
 assert.equal(users.includes('authorize-user-form'),false);
 assert.equal(users.includes('type="email"'),false);
 assert.equal(users.includes('membership-role'),false,'Observador/papel configurável não pode retornar.');
-for(const token of['membership-character','membership-sessions','membership-adventures','master-publish-tools','Tempo real'])assert.ok(users.includes(token),`Área Jogadores sem ${token}.`);
+for(const token of['membership-character','membership-sessions','membership-adventures','master-publish-tools','Atualizações','player-login-tools','Bruno','Gustavo','Léo','Fernanda'])assert.ok(users.includes(token),`Área Jogadores sem ${token}.`);
 assert.equal(provider.includes('authorizedUsers'),false);
 assert.equal(provider.includes('isAdmin'),false);
-for(const token of['isMember','canManage','isPlayer','assignedSession','assignedAdventure','linkedCharacter'])assert.ok(rules.includes(token),`Rules sem ${token}.`);
-for(const forbidden of['isDm','assignedSharedRecord',"memberRole(campaignId) == 'observer'"])assert.equal(rules.includes(forbidden),false,`Rules ainda contêm papel/recorte antigo: ${forbidden}.`);
+assert.ok(provider.includes('createPlayerLogin')&&provider.includes('createUserWithEmailAndPassword'),'Rafael deve conseguir criar os logins individuais dos jogadores pelo Hub.');
+for(const token of['isMember','canManage','isPlayer','assignedSession','assignedAdventure','linkedCharacter'])assert.ok(rules.includes(token),`Rules sem ${token}`);
+for(const forbidden of['isDm','assignedSharedRecord',"memberRole(campaignId) == 'observer'"])assert.equal(rules.includes(forbidden),false,`Rules ainda contêm papel/recorte antigo: ${forbidden}`);
 assert.equal(rules.includes('allow read, write: if request.auth != null;'),false,'Acesso irrestrito da v1.0.1 deve permanecer removido.');
 assert.equal(rules.includes('authorizedUsers'),false);
 assert.ok(rules.includes('isMember(resource.data.campaignId)'),'Co-participantes devem ser visíveis apenas dentro da Campanha compartilhada.');
-assert.ok(view.includes('collaborationAccessMode')&&view.includes("'guest'")&&view.includes('sharedParticipants')&&view.includes('canEditCharacter'),'Visão colaborativa deve ser derivada da conta autenticada.');
+assert.ok(view.includes('collaborationAccessMode')&&view.includes("'guest'")&&view.includes('sharedParticipants')&&view.includes('sharedCharacters')&&view.includes('canEditCharacter'),'Visão colaborativa deve ser derivada da conta autenticada.');
 assert.ok(hubUx.includes('enforceLogin')&&hubUx.includes('COLLAB_SESSION_KEY'),'Hub deve exigir login antes do conteúdo colaborativo.');
-assert.equal(firebaseConfig.accountProvisioning,'firebase-console-manual');
+assert.equal(firebaseConfig.accountProvisioning,'master-ui');
 assert.equal(firebaseConfig.collaborationModel,'trusted-private');
 assert.equal(firebaseConfig.accessModel,'login-context-assignments');
 assert.equal(firebaseConfig.roleVisibility,'master-player-only');
-assert.deepEqual(firebaseConfig.playerUsernames,['gus','leo','bruno']);
+assert.deepEqual(firebaseConfig.playerUsernames,['bruno','gustavo','leo','fernanda']);
+assert.equal(firebaseConfig.playerAccounts.find(row=>row.username==='gustavo')?.authUsername,'gus');
 assert.equal(storageRegistry.includes('recovery-backup'),false,'Não pode restar registro técnico de Backup.');
 
 const readme=read('README.md');
@@ -56,4 +58,4 @@ for(const token of['Personagens','Campanhas / Mesas','Jogadores','Configuraçõe
 const critical=['tests/auditar-progressao-level.mjs','tests/auditar-campanhas-mesas.mjs','tests/auditar-aventuras.mjs','tests/auditar-colaboracao-provisionamento.mjs','tests/auditar-colaboracao-sync.mjs','tests/auditar-acesso-jogador-ui.mjs','tests/auditar-painel-geral.mjs','tests/auditar-configuracoes.mjs','tests/auditar-ux-mobile-final.mjs','tests/auditar-desempenho-ui.mjs','tests/auditar-tempo-real.mjs'];
 for(const path of critical){assert.equal(exists(path),true,`Auditoria crítica ausente: ${path}`);execFileSync(process.execPath,[new URL(path,root).pathname],{stdio:'inherit'})}
 
-console.log('OK — gate atual: login simples, Rafael como Mestre, visão por contexto compartilhado, edição própria, desempenho e tempo real validados.');
+console.log('OK — gate atual: Rafael como Mestre, quatro logins individuais, visão por contexto compartilhado, edição própria, desempenho e tempo real validados.');
