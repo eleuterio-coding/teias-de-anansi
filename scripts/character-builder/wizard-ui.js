@@ -1,5 +1,5 @@
-import'../hub-ux.js?v=20260917-player-personal-sync1';
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-player-catalog1';
+import'../hub-ux.js?v=20260917-master-full-control1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-master-full-control1';
 import{state}from'./state.js';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
