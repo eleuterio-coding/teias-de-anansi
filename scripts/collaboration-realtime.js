@@ -1,6 +1,6 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-account-realtime1';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260917-account-realtime1';
-import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds}from'./collaboration-view.js?v=20260917-account-realtime1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-player-catalog1';
+import{pullCollaborations}from'./collaboration-sync.js?v=20260917-player-catalog1';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-player-catalog1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
@@ -13,8 +13,8 @@ const text=v=>String(v??'').trim();
 let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),refreshPending=false;
 
 function cacheComparable(){
- const rows=readCollaborationCache();
- return Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[],characters:row?.characters||[]}]))
+ const rows=readCollaborationCache(),playerCharacters=Object.fromEntries(playerCharacterIds().map(id=>[id,playerCharacterInfo(id)]));
+ return{campaigns:Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[],characters:row?.characters||[]}])),playerCharacters}
 }
 function fingerprint(){return JSON.stringify({campaigns:readCampaigns(),adventures:readAdventures(),characters:readCharacters(),cache:cacheComparable(),memberships:readCollaborationSession()?.memberships||[]})}
 function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
