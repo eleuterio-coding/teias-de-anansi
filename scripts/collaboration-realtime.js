@@ -6,6 +6,7 @@ import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtim
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
 import{deleteRemoteCampaign,deleteRemoteOwnCharacter}from'./firebase-realtime-ops.js?v=20260917-global-realtime1';
 
+// A revisão 20260917-player-catalog1 foi substituída por 20260917-reload-loop-fix1 para impedir recarga circular ao abrir a ficha.
 const CHANGE_EVENT='hub-rpg:data-changed';
 const REMOTE_EVENT='hub-rpg:remote-updated';
 const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
