@@ -6,7 +6,7 @@ async function sdk(version='12.18.0'){const base=`https://www.gstatic.com/fireba
 export async function createFirebaseCollaborationProvider({config=null}={}){
  const c=config||await loadFirebaseConfig();
  if(!c.configured)return{configured:false,reason:'Acesso online ainda não configurado.',config:c};
- const lib=await sdk(c.sdkVersion||'12.18.0'),firebaseOptions={apiKey:c.apiKey,authDomain:c.authDomain,projectId:c.projectId,appId:c.appId,storageBucket:c.storageBucket||undefined,messagingSenderId:c.messagingSenderId||undefined},app=lib.app.initializeApp(firebaseOptions),auth=lib.auth.getAuth(app),db=lib.firestore.getFirestore(app),f=lib.firestore;
+ const lib=await sdk(c.sdkVersion||'12.18.0'),firebaseOptions={apiKey:c.apiKey,authDomain:c.authDomain,projectId:c.projectId,appId:c.appId,storageBucket:c.storageBucket||undefined,messagingSenderId:c.messagingSenderId||undefined},app=lib.app.getApps().length?lib.app.getApp():lib.app.initializeApp(firebaseOptions),auth=lib.auth.getAuth(app),db=lib.firestore.getFirestore(app),f=lib.firestore;
  const ownerUsername=normalizeUsername(c.ownerUsername||'rafael');
  const playerAccounts=arr(c.playerAccounts).map(row=>({username:normalizeUsername(row?.username),displayName:text(row?.displayName)||text(row?.username),authUsername:normalizeUsername(row?.authUsername||row?.username)})).filter(row=>row.username);
  const ownerAccount={username:ownerUsername,displayName:text(c.ownerDisplayName)||'Rafael',authUsername:ownerUsername};
@@ -44,12 +44,12 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
    let rootStop;
    if(account.username===ownerUsername){
     const campaignsQuery=f.query(f.collection(db,'campaigns'),f.where('ownerId','==',u.uid));
-    const campaignsStop=f.onSnapshot(campaignsQuery,snapshot=>{clearChildren();for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError);
+    const campaignsStop=f.onSnapshot(campaignsQuery,snapshot=>{clearChildren();watchCollection(f.collection(db,'users',u.uid,'characters'));for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError);
     const usersStop=f.onSnapshot(f.collection(db,'users'),snapshot=>{clearPlayerChildren();for(const row of snapshot.docs){if(row.id===u.uid)continue;const data=row.data()||{},name=canonicalUsername(data.username);if(!playerAccounts.some(spec=>spec.username===name))continue;watchPlayerCollection(f.collection(db,'users',row.id,'characters'))}signal(snapshot)},onError);
     rootStop=()=>{try{campaignsStop()}catch{}try{usersStop()}catch{}}
    }else{
     const email=String(u.email).toLowerCase(),q=f.query(f.collection(db,'memberships'),f.where('email','==',email));
-    rootStop=f.onSnapshot(q,snapshot=>{clearChildren();const memberships=snapshot.docs.map(d=>normalizeMember({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');for(const m of memberships){const cid=m.campaignId;watchDoc(f.doc(db,'campaigns',cid,'shared','state'));for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError)
+    rootStop=f.onSnapshot(q,snapshot=>{clearChildren();watchCollection(f.collection(db,'users',u.uid,'characters'));const memberships=snapshot.docs.map(d=>normalizeMember({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');for(const m of memberships){const cid=m.campaignId;watchDoc(f.doc(db,'campaigns',cid,'shared','state'));for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError)
    }
    return()=>{try{rootStop?.()}catch{}clearChildren();clearPlayerChildren()}
   },
