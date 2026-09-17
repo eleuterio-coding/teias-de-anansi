@@ -2,7 +2,7 @@ import assert from'node:assert/strict';
 import fs from'node:fs';
 import path from'node:path';
 
-const ROOT=process.cwd(),RULES_REV='20260831-tasha-metamagic1',PAGE_REV='20260914-player-create1';
+const ROOT=process.cwd(),RULES_REV='20260831-tasha-metamagic1',PAGE_REV='20260917-player-personal-sync1';
 const files=[];
 function walk(dir){for(const entry of fs.readdirSync(path.join(ROOT,dir),{withFileTypes:true})){const rel=path.posix.join(dir,entry.name);if(entry.isDirectory())walk(rel);else if(entry.name.endsWith('.js'))files.push(rel)}}
 walk('scripts/character-builder');
