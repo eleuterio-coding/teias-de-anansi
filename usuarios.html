@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Jogadores - Teias de Anansi</title><link rel="preconnect" href="https://www.gstatic.com" crossorigin><link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin><link rel="preconnect" href="https://firestore.googleapis.com" crossorigin><link rel="stylesheet" href="collaboration.css?v=20260914-player-first1"><link rel="stylesheet" href="hub-ux.css?v=20260909-perf1"></head><body>
-<header class="top"><div><p class="mini">Hub de RPG</p><h1>Jogadores</h1></div><a class="btn secondary" href="index.html?v=20260914-login-context1">Início</a></header>
+<header class="top"><div><p class="mini">Hub de RPG</p><h1>Jogadores</h1></div><a class="btn secondary" href="index.html?v=20260917-account-realtime1">Início</a></header>
 <main id="main-content">
 <div id="collab-feedback" class="status" role="status" aria-live="polite" hidden></div>
 <div id="provider-status" class="status" role="status" aria-live="polite">Verificando acesso...</div>
-<section id="account-card" class="card" hidden><div class="top"><div><h2>Conta</h2><div id="account-state" class="muted">Não conectado.</div></div><button id="sign-out" type="button" class="secondary" hidden>Sair</button></div><form id="login-form" class="form-grid" autocomplete="on"><label>Usuário<input id="login-username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></label><label>Senha<input id="login-password" type="password" autocomplete="current-password" required></label><div class="wide actions"><button id="sign-in" type="submit">Entrar</button></div></form></section>
+<section id="account-card" class="card" hidden><div class="top"><div><h2>Conta</h2><div id="account-state" class="muted">Não conectado.</div></div><button id="sign-out" type="button" class="secondary" hidden>Sair</button></div><form id="login-form" class="form-grid" autocomplete="on"><label>Usuário<select id="login-username" autocomplete="username" required><option value="">Selecione</option><option value="rafael">Rafael</option><option value="bruno">Bruno</option><option value="gustavo">Gustavo</option><option value="leo">Léo</option><option value="fernanda">Fernanda</option></select></label><label>Senha<input id="login-password" type="password" autocomplete="current-password" required></label><div class="wide actions"><button id="sign-in" type="submit">Entrar</button></div></form></section>
 <div id="online-tools" hidden>
-<section class="card"><div class="top"><div><h2>Tempo real</h2><div id="sync-state" class="mini" role="status" aria-live="polite">Alterações são enviadas e recebidas automaticamente.</div></div><button id="sync-all" type="button">Atualizar agora</button></div></section>
+<section class="card"><div class="top"><div><h2>Atualizações</h2><div id="sync-state" class="mini" role="status" aria-live="polite">Conteúdo atualizado automaticamente.</div></div><button id="sync-all" type="button">Atualizar agora</button></div></section>
 <section class="card"><h2>Minhas Mesas</h2><div id="membership-list" class="list"></div></section>
+<section id="player-login-tools" class="card" hidden><h2>Logins dos jogadores</h2><form id="player-login-form" class="form-grid" autocomplete="off"><label>Jogador<select id="player-login-username" required><option value="">Selecione</option><option value="bruno">Bruno</option><option value="gustavo">Gustavo</option><option value="leo">Léo</option><option value="fernanda">Fernanda</option></select></label><label>Senha inicial<input id="player-login-password" type="password" autocomplete="new-password" minlength="6" required></label><div class="wide actions"><button type="submit">Criar login</button></div></form><div id="player-login-list" class="list"></div></section>
 <section id="master-publish-tools" class="card" hidden><h2>Publicar Mesa</h2><div class="form-grid"><label class="wide">Mesa local<select id="publish-campaign"></select></label><div class="wide actions"><button id="publish-campaign-button" type="button">Publicar agora</button></div></div></section>
 </div>
 <section id="membership-tools" class="card" hidden>
 <h2>Acessos dos jogadores</h2>
 <div class="player-access-grid">
 <div>
-<form id="player-select-form" class="player-picker"><label>Jogador<input id="membership-user" type="text" list="known-user-options" autocomplete="off" autocapitalize="none" spellcheck="false" required></label><button type="submit">Selecionar</button></form><datalist id="known-user-options"></datalist>
+<form id="player-select-form" class="player-picker"><label>Jogador<select id="membership-user" required><option value="">Selecione</option><option value="bruno">Bruno</option><option value="gustavo">Gustavo</option><option value="leo">Léo</option><option value="fernanda">Fernanda</option></select></label><button type="submit">Selecionar</button></form>
 <div id="known-user-list" class="list"></div>
 </div>
 <div>
@@ -33,4 +34,4 @@
 </div>
 </div>
 </section>
-</main><script type="module" src="scripts/hub-ux.js?v=20260914-login-context1"></script><script type="module" src="scripts/collaboration-ui.js?v=20260914-login-context1"></script></body></html>
+</main><script type="module" src="scripts/hub-ux.js?v=20260917-account-realtime1"></script><script type="module" src="scripts/collaboration-ui.js?v=20260917-account-realtime1"></script></body></html>
