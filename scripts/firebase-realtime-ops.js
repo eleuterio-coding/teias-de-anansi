@@ -1,4 +1,5 @@
 const text=value=>String(value??'').trim();
+const username=value=>text(value).toLowerCase();
 let firestorePromise=null;
 async function firestore(version='12.18.0'){
  if(!firestorePromise)firestorePromise=import(`https://www.gstatic.com/firebasejs/${version}/firebase-firestore.js`);
@@ -10,6 +11,7 @@ async function deleteCollection(f,db,path){
  return snapshot.size
 }
 function requireProvider(provider){if(!provider?.configured||!provider?.db||!provider?.auth)throw new Error('Acesso online indisponível.');const user=provider.auth.currentUser;if(!user)throw new Error('Faça login.');return user}
+async function requireCampaignOwner(provider,campaignId){const user=requireProvider(provider),f=await firestore(provider.config?.sdkVersion||'12.18.0'),root=await f.getDoc(f.doc(provider.db,'campaigns',campaignId));if(!root.exists()||root.data()?.ownerId!==user.uid)throw new Error('Somente o Mestre pode alterar os acessos desta Campanha.');return{user,f}}
 export async function deleteRemoteCampaign(provider,campaignId){
  const user=requireProvider(provider),cid=text(campaignId);if(!cid)return false;
  const f=await firestore(provider.config?.sdkVersion||'12.18.0'),db=provider.db,root=f.doc(db,'campaigns',cid),rootSnap=await f.getDoc(root);
@@ -27,5 +29,13 @@ export async function deleteRemoteOwnCharacter(provider,characterId){
  await f.deleteDoc(f.doc(db,'users',user.uid,'characters',id)).catch(()=>{});
  const memberships=typeof provider.listMemberships==='function'?await provider.listMemberships():[];
  for(const membership of memberships){if(text(membership?.characterId)!==id)continue;await f.deleteDoc(f.doc(db,'campaigns',text(membership.campaignId),'characters',id)).catch(()=>{})}
+ return true
+}
+export async function revokeRemoteMembership(provider,campaignId,playerUsername){
+ const cid=text(campaignId),target=username(playerUsername);if(!cid||!target)throw new Error('Selecione um jogador e uma Campanha.');
+ const{f}=await requireCampaignOwner(provider,cid),db=provider.db,q=f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)),snapshot=await f.getDocs(q),spec=(provider.config?.playerAccounts||[]).find(row=>username(row?.username)===target),authName=username(spec?.authUsername||target),domain=username(provider.config?.usernameDomain),targetEmail=domain?`${authName}@${domain}`:'';
+ const matches=snapshot.docs.filter(row=>{const data=row.data()||{};return username(data.username)===target||username(data.email)===targetEmail});
+ if(!matches.length)return false;
+ await Promise.all(matches.map(row=>f.deleteDoc(row.ref)));
  return true
 }
