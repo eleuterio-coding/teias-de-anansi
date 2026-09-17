@@ -1,4 +1,4 @@
-import'../hub-ux.js?v=20260917-global-realtime1';
+import'../hub-ux.js?v=20260917-player-personal-sync1';
 import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-player-catalog1';
 import{state}from'./state.js';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260824-wealth-by-level2';
