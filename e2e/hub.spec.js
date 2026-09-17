@@ -9,9 +9,11 @@ const pages=[
  ['/configuracoes.html','Configurações']
 ];
 
+const masterSession={uid:'u-e2e-master',username:'rafael',isMaster:true,memberships:[]};
+
 async function resetStorage(page){
- await page.goto('/index.html');
- await page.evaluate(()=>localStorage.clear());
+ await page.goto('/usuarios.html');
+ await page.evaluate(session=>{localStorage.clear();localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(session))},masterSession);
 }
 
 test.beforeEach(async({page})=>{await resetStorage(page)});
@@ -77,7 +79,8 @@ test('Nova Mesa fixa Rafael como Mestre sem defaults configuráveis',async({page
 test('Jogadores usa apenas nome de usuário e senha',async({page})=>{
  await page.goto('/usuarios.html');
  await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
- await expect(page.locator('#login-username')).toHaveAttribute('type','text');
+ await expect(page.locator('#login-username')).toHaveJSProperty('tagName','SELECT');
+ await expect(page.locator('#login-username option')).toHaveCount(6);
  await expect(page.locator('#login-password')).toHaveAttribute('type','password');
  await expect(page.locator('input[type="email"]')).toHaveCount(0);
  await expect(page.locator('#authorize-user-form')).toHaveCount(0);
