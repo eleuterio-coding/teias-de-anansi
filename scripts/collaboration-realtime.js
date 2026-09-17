@@ -1,5 +1,5 @@
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260917-global-realtime1';
-import{pullCollaborations}from'./collaboration-sync.js?v=20260917-global-realtime1';
+import{pullCollaborations,syncOwnCharacters}from'./collaboration-sync.js?v=20260917-player-personal-sync1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-reload-loop-fix1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
@@ -68,6 +68,13 @@ function persistAuthenticatedAccount(memberships=null){
  const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase(),current=readCollaborationSession(),sameAccount=current&&text(current.uid)===text(account.uid)&&text(current.username).toLowerCase()===text(account.username).toLowerCase(),effectiveMemberships=memberships==null?(sameAccount?(current.memberships||[]):[]):memberships;
  return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships:effectiveMemberships})
 }
+async function reconcilePersonalCharacters(){
+ if(!provider||!account)return;
+ const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase();
+ if(text(account.username).toLowerCase()===owner)return;
+ globalThis.__HUB_REALTIME_APPLYING__=true;
+ try{await syncOwnCharacters(provider)}catch(error){console.warn('[Hub realtime] falha ao reconciliar fichas pessoais:',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
+}
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
  if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
@@ -115,7 +122,7 @@ async function pushChanges(){
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
- account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
+ account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote();await reconcilePersonalCharacters()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
