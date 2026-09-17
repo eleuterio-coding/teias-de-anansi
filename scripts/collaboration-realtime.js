@@ -18,9 +18,14 @@ function cacheComparable(){
  const rows=readCollaborationCache(),playerCharacters=Object.fromEntries(playerCharacterIds().map(id=>[id,playerCharacterInfo(id)]));
  return{campaigns:Object.fromEntries(Object.entries(rows).map(([id,row])=>[id,{membership:row?.membership||null,payload:row?.payload||null,characterIds:row?.characterIds||[],characters:row?.characters||[]}])),playerCharacters}
 }
+function sessionComparable(){
+ const current=readCollaborationSession();
+ if(!current)return null;
+ return{uid:text(current.uid),username:text(current.username).toLowerCase(),isMaster:current.isMaster===true,memberships:Array.isArray(current.memberships)?current.memberships:[]}
+}
 function snapshotState(){
  let campaigns='',adventures='',characters='',session='',cache='';
- try{campaigns=localStorage.getItem(CAMPAIGN_KEY)||'';adventures=localStorage.getItem(ADVENTURE_KEY)||'';characters=localStorage.getItem(CHARACTER_KEY)||'';session=JSON.stringify(readCollaborationSession()||null);cache=JSON.stringify(cacheComparable())}catch{}
+ try{campaigns=localStorage.getItem(CAMPAIGN_KEY)||'';adventures=localStorage.getItem(ADVENTURE_KEY)||'';characters=localStorage.getItem(CHARACTER_KEY)||'';session=JSON.stringify(sessionComparable());cache=JSON.stringify(cacheComparable())}catch{}
  return{campaigns,adventures,characters,session,cache}
 }
 function changedKinds(before,after){const kinds=[];for(const key of['campaigns','adventures','characters'])if(before[key]!==after[key])kinds.push(key);if(before.session!==after.session||before.cache!==after.cache)kinds.push('permissions');return[...new Set(kinds)]}
@@ -57,7 +62,11 @@ function installStorageBridge(){
  Storage.prototype.setItem=function(key,value){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=originalSet.call(this,key,value);if(watched&&this===globalThis.localStorage&&before!==String(value)){captureRemovals(watched,before,String(value));emitLocalChange(watched)}return result};
  Storage.prototype.removeItem=function(key){const watched=KIND_BY_KEY.get(String(key)),before=watched&&this===globalThis.localStorage?this.getItem(key):null,result=originalRemove.call(this,key);if(watched&&this===globalThis.localStorage&&before!=null){captureRemovals(watched,before,'[]');emitLocalChange(watched)}return result}
 }
-function persistAuthenticatedAccount(memberships=[]){if(!account||!provider)return null;const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase();return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships})}
+function persistAuthenticatedAccount(memberships=null){
+ if(!account||!provider)return null;
+ const owner=text(provider.config?.ownerUsername||'rafael').toLowerCase(),current=readCollaborationSession(),sameAccount=current&&text(current.uid)===text(account.uid)&&text(current.username).toLowerCase()===text(account.username).toLowerCase(),effectiveMemberships=memberships==null?(sameAccount?(current.memberships||[]):[]):memberships;
+ return writeCollaborationSession({uid:account.uid,username:account.username,isMaster:text(account.username).toLowerCase()===owner,memberships:effectiveMemberships})
+}
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
  if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
@@ -105,7 +114,7 @@ async function pushChanges(){
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
- account=next;persistAuthenticatedAccount([]);unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
+ account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
