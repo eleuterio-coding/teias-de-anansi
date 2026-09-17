@@ -8,15 +8,17 @@ const SESSION_EVENT='hub-rpg:collaboration-session-changed';
 function signalSession(value){if(typeof window!=='undefined'&&typeof CustomEvent!=='undefined')window.dispatchEvent(new CustomEvent(SESSION_EVENT,{detail:value||null}))}
 function localCharacters(storage=globalThis.localStorage){try{const rows=JSON.parse(storage?.getItem(CHARACTER_KEY)||'[]');return Array.isArray(rows)?rows:[]}catch{return[]}}
 function rawCollaborationCache(storage=globalThis.localStorage){try{const raw=JSON.parse(storage?.getItem(COLLAB_CACHE_KEY)||'{}');return{campaigns:raw?.campaigns&&typeof raw.campaigns==='object'?raw.campaigns:{},playerCharacters:raw?.playerCharacters&&typeof raw.playerCharacters==='object'?raw.playerCharacters:{}}}catch{return{campaigns:{},playerCharacters:{}}}}
+function membershipSignature(value){return JSON.stringify(arr(value).map(row=>({...row,sessionIds:[...arr(row?.sessionIds)].map(text).filter(Boolean).sort(),adventureIds:[...arr(row?.adventureIds)].map(text).filter(Boolean).sort()})).sort((a,b)=>`${text(a?.campaignId)}|${username(a?.username)}|${text(a?.id)}`.localeCompare(`${text(b?.campaignId)}|${username(b?.username)}|${text(b?.id)}`)))}
+function sameSession(current,next){return Boolean(current&&current.uid===next.uid&&current.username===next.username&&current.isMaster===next.isMaster&&membershipSignature(current.memberships)===membershipSignature(next.memberships))}
 
 export function readCollaborationSession(storage=globalThis.localStorage){
  try{const raw=JSON.parse(storage?.getItem(COLLAB_SESSION_KEY)||'null');if(!raw?.uid||!raw?.username)return null;return{schema:'hub-rpg/collaboration-session/v1',uid:text(raw.uid),username:username(raw.username),isMaster:raw.isMaster===true,memberships:arr(raw.memberships),updatedAt:text(raw.updatedAt)}}catch{return null}
 }
 export function writeCollaborationSession(value,storage=globalThis.localStorage){
- if(!value){storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null);return null}
- const clean={schema:'hub-rpg/collaboration-session/v1',uid:text(value.uid),username:username(value.username),isMaster:value.isMaster===true,memberships:arr(value.memberships),updatedAt:new Date().toISOString()};storage?.setItem(COLLAB_SESSION_KEY,JSON.stringify(clean));signalSession(clean);return clean
+ if(!value){const current=readCollaborationSession(storage);if(!current)return null;storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null);return null}
+ const base={schema:'hub-rpg/collaboration-session/v1',uid:text(value.uid),username:username(value.username),isMaster:value.isMaster===true,memberships:arr(value.memberships)},current=readCollaborationSession(storage);if(sameSession(current,base))return current;const clean={...base,updatedAt:new Date().toISOString()};storage?.setItem(COLLAB_SESSION_KEY,JSON.stringify(clean));signalSession(clean);return clean
 }
-export function clearCollaborationSession(storage=globalThis.localStorage){storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null)}
+export function clearCollaborationSession(storage=globalThis.localStorage){const current=readCollaborationSession(storage);if(!current)return;storage?.removeItem(COLLAB_SESSION_KEY);storage?.removeItem(COLLAB_CACHE_KEY);signalSession(null)}
 export function readCollaborationCache(storage=globalThis.localStorage){return rawCollaborationCache(storage).campaigns}
 export function playerCharacterInfo(characterId,storage=globalThis.localStorage){return rawCollaborationCache(storage).playerCharacters[text(characterId)]||null}
 export function playerCharacterIds(storage=globalThis.localStorage){return Object.keys(rawCollaborationCache(storage).playerCharacters)}
