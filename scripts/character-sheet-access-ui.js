@@ -1,4 +1,4 @@
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20260917-player-catalog1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20260917-master-full-control1';
 
 const id=new URLSearchParams(location.search).get('id')||'';
 const accessMode=collaborationAccessMode(),guest=accessMode==='guest';
