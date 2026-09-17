@@ -36,6 +36,8 @@ export async function revokeRemoteMembership(provider,campaignId,playerUsername)
  const{f}=await requireCampaignOwner(provider,cid),db=provider.db,q=f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)),snapshot=await f.getDocs(q),spec=(provider.config?.playerAccounts||[]).find(row=>username(row?.username)===target),authName=username(spec?.authUsername||target),domain=username(provider.config?.usernameDomain),targetEmail=domain?`${authName}@${domain}`:'';
  const matches=snapshot.docs.filter(row=>{const data=row.data()||{};return username(data.username)===target||username(data.email)===targetEmail});
  if(!matches.length)return false;
+ const characterIds=[...new Set(matches.map(row=>text(row.data()?.characterId)).filter(Boolean))];
  await Promise.all(matches.map(row=>f.deleteDoc(row.ref)));
+ await Promise.all(characterIds.map(id=>f.deleteDoc(f.doc(db,'campaigns',cid,'characters',id)).catch(()=>{})));
  return true
 }
