@@ -13,8 +13,15 @@
   "authMode": "username-password",
   "usernameDomain": "teias.invalid",
   "ownerUsername": "rafael",
-  "playerUsernames": ["gus", "leo", "bruno"],
-  "accountProvisioning": "firebase-console-manual",
+  "ownerDisplayName": "Rafael",
+  "playerUsernames": ["bruno", "gustavo", "leo", "fernanda"],
+  "playerAccounts": [
+    {"username": "bruno", "displayName": "Bruno", "authUsername": "bruno"},
+    {"username": "gustavo", "displayName": "Gustavo", "authUsername": "gus"},
+    {"username": "leo", "displayName": "Léo", "authUsername": "leo"},
+    {"username": "fernanda", "displayName": "Fernanda", "authUsername": "fernanda"}
+  ],
+  "accountProvisioning": "master-ui",
   "collaborationModel": "trusted-private",
   "accessModel": "login-context-assignments",
   "roleVisibility": "master-player-only",
