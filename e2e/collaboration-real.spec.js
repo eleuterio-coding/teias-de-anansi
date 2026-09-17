@@ -13,6 +13,7 @@ const SHARED_MARK = 'E2E_SHARED_ASSIGNED_OK';
 const OTHER_MARK = 'E2E_SHARED_NOT_ASSIGNED';
 const CHARACTER_ID = 'e2e-player-character';
 const OTHER_CHARACTER_ID = 'e2e-other-character';
+const PERSONAL_CHARACTER_ID = 'e2e-player-personal-character';
 
 async function connect(page, username, password) {
   await page.goto('/index.html');
@@ -86,6 +87,14 @@ async function providerCall(page, operation, args = {}) {
       if (operation === 'memberships') return p.listMemberships();
       if (operation === 'saveCharacter') return p.saveCampaignCharacter(args.campaignId, args.character);
       if (operation === 'campaignCharacters') return p.listCampaignCharacters(args.campaignId);
+      if (operation === 'saveOwnPersonal') return p.saveOwnCharacter(args.character);
+      if (operation === 'ownCharacters') return p.listOwnCharacters();
+      if (operation === 'saveManagedPersonal') return p.saveManagedPlayerCharacter(args.character);
+      if (operation === 'deleteManagedPersonal') {
+        const url = new URL('/scripts/firebase-realtime-ops.js?v=master-full-control-e2e', location.origin).href;
+        const { deleteRemoteManagedCharacter } = await import(url);
+        return deleteRemoteManagedCharacter(p, args.characterId, args.ownerUid);
+      }
       throw new Error(`Operação E2E desconhecida: ${operation}`);
     }, { operation, args });
   } catch (error) {
@@ -227,6 +236,30 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
 
       const firstLogin = await connectEphemeralPlayer(playerPage, playerUsername, playerPassword);
       expect(firstLogin.uid).toBe(playerUid);
+
+      const personalCharacter = {
+        id: PERSONAL_CHARACTER_ID,
+        name: 'Ficha pessoal antes da edição do Mestre',
+        ownerUid: playerUid,
+        ownerUsername: playerUsername,
+        updatedAt: new Date().toISOString(),
+      };
+      await providerCall(playerPage, 'saveOwnPersonal', { character: personalCharacter });
+      await expect(providerCall(adminPage, 'saveManagedPersonal', {
+        character: {
+          ...personalCharacter,
+          name: 'Ficha pessoal editada pelo Mestre',
+          updatedAt: new Date(Date.now() + 1000).toISOString(),
+        },
+      })).resolves.toBeUndefined();
+      const afterMasterEdit = await providerCall(playerPage, 'ownCharacters');
+      expect(afterMasterEdit.find(row => row.id === PERSONAL_CHARACTER_ID)?.name).toBe('Ficha pessoal editada pelo Mestre');
+      await expect(providerCall(adminPage, 'deleteManagedPersonal', {
+        characterId: PERSONAL_CHARACTER_ID,
+        ownerUid: playerUid,
+      })).resolves.toBe(true);
+      const afterMasterDelete = await providerCall(playerPage, 'ownCharacters');
+      expect(afterMasterDelete.some(row => row.id === PERSONAL_CHARACTER_ID)).toBe(false);
 
       const adminBundle = await providerCall(adminPage, 'bundle', { campaignId: CAMPAIGN_ID });
       expect(adminBundle.mode).toBe('private');
