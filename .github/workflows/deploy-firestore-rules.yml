@@ -7,6 +7,7 @@ on:
     paths:
       - 'firebase/firestore.rules'
       - 'firebase.json'
+      - 'scripts/deploy-firestore-rules-rest.mjs'
       - '.github/workflows/deploy-firestore-rules.yml'
 
 permissions:
@@ -34,7 +35,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Instalar dependências
+      - name: Instalar dependências do projeto
         run: npm install --no-audit --no-fund
 
       - name: Auditar contrato de colaboração
@@ -52,21 +53,10 @@ jobs:
             exit 1
           fi
 
-      - name: Autenticar no Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
-          project_id: ${{ env.FIREBASE_PROJECT_ID }}
-          create_credentials_file: true
-          export_environment_variables: true
-
-      - name: Publicar Firestore Security Rules
-        run: >-
-          npx --yes firebase-tools@latest deploy
-          --only firestore:rules
-          --project "$FIREBASE_PROJECT_ID"
-          --non-interactive
-          --force
+      - name: Publicar Firestore Security Rules pela API oficial
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-firestore-rules-rest.mjs
 
       - name: Confirmar publicação
         run: echo "Firestore Security Rules publicadas no projeto $FIREBASE_PROJECT_ID."
