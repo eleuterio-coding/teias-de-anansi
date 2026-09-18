@@ -12,7 +12,7 @@ const REMOTE_EVENT='hub-rpg:remote-updated';
 const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
 const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
-let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),refreshPending=false;
+let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set();
 const pendingCampaignDeletes=new Set(),pendingCharacterDeletes=new Map();
 
 function cacheComparable(){
@@ -37,23 +37,10 @@ function captureRemovals(kind,beforeRaw,afterRaw){
  if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
  if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id)){const info=playerCharacterInfo(id);pendingCharacterDeletes.set(id,info?{...row,__managedOwner:info}:row)}}
 }
-function editing(){const el=document.activeElement;return Boolean(el&&el!==document.body&&(el.matches?.('input,textarea,select,[contenteditable="true"]')))}
-function loginUrl(){const page=location.pathname.split('/').pop()||'index.html';if(page==='usuarios.html')return null;const target=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',target);return login.href}
-function fallbackRefresh(detail){
- if(detail?.handled||refreshPending)return;
- refreshPending=true;
- const run=()=>{refreshPending=false;if(detail?.handled||document.visibilityState==='hidden')return;location.reload()};
- if(editing()){
-  const once=()=>{document.removeEventListener('focusout',once,true);setTimeout(run,100)};
-  document.addEventListener('focusout',once,true);
-  setTimeout(()=>{if(refreshPending&&!editing())run()},1800)
- }else setTimeout(run,350)
-}
 function emitRemote(kinds=[]){
  let handled=false;
  const detail={kinds:[...new Set(kinds)],at:new Date().toISOString(),claim(){handled=true},get handled(){return handled}};
- window.dispatchEvent(new CustomEvent(REMOTE_EVENT,{detail}));
- fallbackRefresh(detail)
+ window.dispatchEvent(new CustomEvent(REMOTE_EVENT,{detail}))
 }
 function emitLocalChange(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;window.dispatchEvent(new CustomEvent(CHANGE_EVENT,{detail:{kind}}))}
 function installStorageBridge(){
