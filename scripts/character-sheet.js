@@ -212,6 +212,24 @@ function renderSheet(d){
  renderHeader(d);renderCore(d);renderRuntime(d);renderCombat(d);renderFeatures(d);renderProficiencies(d);renderInventory(d)
 }
 
+function refreshSheetFromRemote(){
+ const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
+ if(!saved){
+  const status=$('save-status');if(status)status.textContent='Esta ficha foi removida.';
+  return
+ }
+ if(String(saved.updatedAt||'')===String(state.c?.updatedAt||''))return;
+ state.c=loadCharacter();
+ ensureSheetState();
+ sanitizeSelections();
+ const d=derive();
+ renderSheet(d);
+ if(!d.klass?.spellAbility||state.catalogs.spells.length)renderSpells(d);else renderSpellLoading(d);
+ showWarnings();
+ const status=$('save-status');if(status)status.textContent='Ficha atualizada em tempo real.';
+ document.dispatchEvent(new CustomEvent('hub-rpg:sheet-ready'))
+}
+
 async function init(){
  const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
  if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Personagem não encontrado.</strong><br>Abra a ficha a partir da Lista de Personagens.</div>';return}
@@ -226,6 +244,7 @@ async function init(){
  else{sanitizeSelections();d=derive();renderSpells(d)}
 
  bindFields();
+ window.addEventListener('hub-rpg:sheet-remote-refresh',refreshSheetFromRemote);
  showWarnings();
  $('loading').hidden=true;
  $('sheet').hidden=false;
