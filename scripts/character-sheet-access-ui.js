@@ -11,6 +11,24 @@ function deny(){
  if(sheet)sheet.hidden=true;
  if(loading){loading.hidden=false;loading.innerHTML=`<div class="status warning"><strong>Ficha indisponível.</strong><br>${guest?'Faça login para acessar esta ficha.':'Esta ficha não faz parte dos seus acessos.'}</div>`}
 }
+async function deleteAsMaster(){
+ if(accessMode!=='master'||!id)return;
+ if(!confirm('Excluir este personagem permanentemente?'))return;
+ const button=document.getElementById('master-delete-character');if(button){button.disabled=true;button.textContent='Excluindo...'}
+ try{
+  const module=await import('./character-admin-actions.js?v=20260918-master-delete1');
+  await module.deleteCharacterAsMaster(id);
+  location.href='lista-personagens.html?v=20260918-master-delete1'
+ }catch(error){
+  alert(error?.message||'Não foi possível excluir o personagem.');
+  if(button){button.disabled=false;button.textContent='Excluir personagem'}
+ }
+}
+function ensureMasterDelete(){
+ if(accessMode!=='master'||!canOpen||document.getElementById('master-delete-character'))return;
+ const actions=document.querySelector('#sheet .hero .actions');if(!actions)return;
+ const button=document.createElement('button');button.id='master-delete-character';button.type='button';button.className='btn danger';button.textContent='Excluir personagem';button.addEventListener('click',deleteAsMaster);actions.appendChild(button)
+}
 function readOnlyBadge(){
  const hero=document.querySelector('#sheet .hero'),actions=hero?.querySelector('.actions');
  if(!hero||document.getElementById('sheet-access-state'))return;
@@ -31,7 +49,7 @@ function lock(){
  for(const editable of sheet.querySelectorAll('[contenteditable]'))editable.setAttribute('contenteditable','false')
 }
 function watch(){if(observer||guest||!canOpen||canEdit)return;observer=new MutationObserver(()=>lock());const sheet=document.getElementById('sheet');if(sheet)observer.observe(sheet,{childList:true,subtree:true})}
-function apply(){lock();watch()}
+function apply(){lock();ensureMasterDelete();watch()}
 
 if(guest||!canOpen){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',deny,{once:true});else deny()}
 document.addEventListener('hub-rpg:sheet-ready',apply);
