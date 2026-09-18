@@ -4,7 +4,7 @@ import{readCollaborationSession,writeCollaborationSession,clearCollaborationSess
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260910-realtime1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260910-realtime1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
-import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter}from'./firebase-realtime-ops.js?v=20260917-master-full-control1';
+import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20260918-master-delete1';
 
 // A revisão 20260917-player-catalog1 foi substituída por 20260917-reload-loop-fix1 para impedir recarga circular ao abrir a ficha.
 const CHANGE_EVENT='hub-rpg:data-changed';
@@ -100,7 +100,7 @@ async function pushChanges(){
     const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
-  for(const[id,row]of removedCharacters){const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),foreign=session.isMaster&&(Boolean(ownerUid&&ownerUid!==text(session.uid))||Boolean(ownerName&&ownerName!==text(session.username).toLowerCase()));if(foreign)await deleteRemoteManagedCharacter(provider,id,ownerUid);else{const owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase()||(!text(row?.ownerUid)&&!text(row?.ownerUsername)&&session.isMaster);if(owns)await deleteRemoteOwnCharacter(provider,id)}}
+  for(const[id,row]of removedCharacters){if(session.isMaster){await deleteRemoteCharacterAsMaster(provider,id);continue}const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
  }catch(error){
   for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);
   console.warn('[Hub realtime] falha ao enviar atualização:',error)
