@@ -72,13 +72,22 @@ service cloud.firestore {
         && memberCharacterId(campaignId) == characterId;
     }
 
+    function characterDeleted(characterId) {
+      return exists(/databases/$(database)/documents/characterTombstones/$(characterId));
+    }
+
     match /users/{uid} {
       allow read: if signedIn();
       allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
 
       match /characters/{characterId} {
         allow read: if signedIn() && (request.auth.uid == uid || isHubMaster());
-        allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
+        allow create, update: if signedIn()
+          && (
+            isHubMaster()
+            || (request.auth.uid == uid && !characterDeleted(characterId))
+          );
+        allow delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
       }
     }
 
@@ -114,7 +123,8 @@ service cloud.firestore {
         allow read: if canManage(campaignId) || isMember(campaignId);
         allow create, update: if canManage(campaignId)
           || (
-            linkedCharacter(campaignId, characterId)
+            !characterDeleted(characterId)
+            && linkedCharacter(campaignId, characterId)
             && request.resource.data.characterId == characterId
             && request.resource.data.ownerUid == request.auth.uid
           );
@@ -124,6 +134,11 @@ service cloud.firestore {
             && resource.data.ownerUid == request.auth.uid
           );
       }
+    }
+
+    match /characterTombstones/{characterId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isHubMaster();
     }
 
     match /memberships/{memberId} {
