@@ -41,12 +41,8 @@ export async function deleteRemoteOwnCharacter(provider,characterId){
  return true
 }
 export async function deleteRemoteManagedCharacter(provider,characterId,ownerUid){
- const user=requireProvider(provider),id=text(characterId),uid=text(ownerUid);if(!id||!uid)return false;if(!isMasterUser(provider,user))throw new Error('Somente Rafael pode excluir fichas de outros jogadores.');
- const f=await firestore(provider.config?.sdkVersion||'12.18.0'),db=provider.db;
- await f.deleteDoc(f.doc(db,'users',uid,'characters',id)).catch(()=>{});
- const q=f.query(f.collection(db,'memberships'),f.where('characterId','==',id)),memberships=await f.getDocs(q).catch(()=>null);
- for(const row of memberships?.docs||[]){const cid=text(row.data()?.campaignId);if(cid)await f.deleteDoc(f.doc(db,'campaigns',cid,'characters',id)).catch(()=>{})}
- return true
+ void ownerUid;
+ return deleteRemoteCharacterAsMaster(provider,characterId)
 }
 export async function deleteRemoteCharacterAsMaster(provider,characterId){
  const user=requireProvider(provider),id=text(characterId);if(!id)return false;if(!isMasterUser(provider,user))throw new Error('Somente Rafael pode excluir qualquer personagem do Hub.');
