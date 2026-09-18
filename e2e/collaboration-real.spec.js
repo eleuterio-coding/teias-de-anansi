@@ -182,7 +182,7 @@ async function cleanupCampaign(page, { campaignId }) {
 test.describe('Firebase real · acessos explícitos do Jogador', () => {
   test.skip(!hasCredentials, 'Credenciais E2E da conta principal não estão disponíveis.');
 
-  test('Jogador lê fichas da Campanha, edita somente a própria e mantém acessos explícitos', async ({ browser }) => {
+  test('Mestre exclui qualquer personagem soberanamente e Jogador mantém apenas os acessos permitidos', async ({ browser }) => {
     const adminContext = await browser.newContext();
     const playerContext = await browser.newContext();
     const adminPage = await adminContext.newPage();
