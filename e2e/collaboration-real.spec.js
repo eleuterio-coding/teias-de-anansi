@@ -91,9 +91,19 @@ async function providerCall(page, operation, args = {}) {
       if (operation === 'ownCharacters') return p.listOwnCharacters();
       if (operation === 'saveManagedPersonal') return p.saveManagedPlayerCharacter(args.character);
       if (operation === 'deleteManagedPersonal') {
-        const url = new URL('/scripts/firebase-realtime-ops.js?v=master-full-control-e2e', location.origin).href;
+        const url = new URL('/scripts/firebase-realtime-ops.js?v=master-delete-e2e', location.origin).href;
         const { deleteRemoteManagedCharacter } = await import(url);
         return deleteRemoteManagedCharacter(p, args.characterId, args.ownerUid);
+      }
+      if (operation === 'deleteAnyCharacterAsMaster') {
+        const url = new URL('/scripts/firebase-realtime-ops.js?v=master-delete-e2e', location.origin).href;
+        const { deleteRemoteCharacterAsMaster } = await import(url);
+        return deleteRemoteCharacterAsMaster(p, args.characterId);
+      }
+      if (operation === 'clearTombstone') {
+        const version = p.config.sdkVersion || '12.18.0';
+        const f = await import(`https://www.gstatic.com/firebasejs/${version}/firebase-firestore.js`);
+        return f.deleteDoc(f.doc(p.db, 'characterTombstones', args.characterId));
       }
       throw new Error(`Operação E2E desconhecida: ${operation}`);
     }, { operation, args });
@@ -178,6 +188,7 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
     const adminPage = await adminContext.newPage();
     const playerPage = await playerContext.newPage();
     const suffix = `${Date.now().toString(36)}-${randomBytes(5).toString('hex')}`;
+    const personalCharacterId = `${PERSONAL_CHARACTER_ID}-${suffix}`;
     const playerUsername = `e2e-player-${suffix}`;
     const playerPassword = `E2E!${randomBytes(24).toString('base64url')}9a`;
     let playerUid = '';
@@ -240,7 +251,7 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
       expect(firstLogin.uid).toBe(playerUid);
 
       const personalCharacter = {
-        id: PERSONAL_CHARACTER_ID,
+        id: personalCharacterId,
         name: 'Ficha pessoal antes da edição do Mestre',
         ownerUid: playerUid,
         ownerUsername: playerUsername,
@@ -256,17 +267,8 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
       })).resolves.toBeUndefined();
       await expect.poll(async () => {
         const rows = await providerCall(playerPage, 'ownCharacters');
-        return rows.find(row => row.id === PERSONAL_CHARACTER_ID)?.name || '';
+        return rows.find(row => row.id === personalCharacterId)?.name || '';
       }, { timeout: 5000 }).toBe('Ficha pessoal editada pelo Mestre');
-      await expect(providerCall(adminPage, 'deleteManagedPersonal', {
-        characterId: PERSONAL_CHARACTER_ID,
-        ownerUid: playerUid,
-      })).resolves.toBe(true);
-      await expect.poll(async () => {
-        const rows = await providerCall(playerPage, 'ownCharacters');
-        return rows.some(row => row.id === PERSONAL_CHARACTER_ID);
-      }, { timeout: 5000 }).toBe(false);
-
       const adminBundle = await providerCall(adminPage, 'bundle', { campaignId: CAMPAIGN_ID });
       expect(adminBundle.mode).toBe('private');
       expect(JSON.stringify(adminBundle.payload)).toContain(PRIVATE_MARK);
@@ -312,8 +314,41 @@ test.describe('Firebase real · acessos explícitos do Jogador', () => {
       expect(own?.characterId).toBe(CHARACTER_ID);
       expect(own?.sessionIds).toEqual(['s-assigned']);
       expect(own?.adventureIds).toEqual(['a-assigned']);
+
+      await providerCall(adminPage, 'membership', {
+        campaignId: CAMPAIGN_ID,
+        username: playerUsername,
+        characterId: personalCharacterId,
+        sessionIds: ['s-assigned'],
+        adventureIds: ['a-assigned'],
+      });
+      await expect(providerCall(playerPage, 'saveCharacter', {
+        campaignId: CAMPAIGN_ID,
+        character: { ...personalCharacter, id: personalCharacterId, updatedAt: new Date().toISOString() },
+      })).resolves.toBeUndefined();
+
+      await expect(providerCall(adminPage, 'deleteAnyCharacterAsMaster', {
+        characterId: personalCharacterId,
+      })).resolves.toMatchObject({ deleted: true, characterId: personalCharacterId });
+
+      await expect.poll(async () => {
+        const rows = await providerCall(playerPage, 'ownCharacters');
+        return rows.some(row => row.id === personalCharacterId);
+      }, { timeout: 5000 }).toBe(false);
+      await expect.poll(async () => {
+        const rows = await providerCall(playerPage, 'memberships');
+        return rows.find(row => row.campaignId === CAMPAIGN_ID)?.characterId ?? null;
+      }, { timeout: 5000 }).toBe(null);
+      await expect.poll(async () => {
+        const rows = await providerCall(playerPage, 'campaignCharacters', { campaignId: CAMPAIGN_ID });
+        return rows.some(row => row.id === personalCharacterId);
+      }, { timeout: 5000 }).toBe(false);
+      await expect(providerCall(playerPage, 'saveOwnPersonal', {
+        character: { ...personalCharacter, id: personalCharacterId, updatedAt: new Date().toISOString() },
+      })).rejects.toThrow(/permission|insufficient|missing/i);
     } finally {
       await cleanupCampaign(adminPage, { campaignId: CAMPAIGN_ID });
+      await providerCall(adminPage, 'clearTombstone', { characterId: personalCharacterId }).catch(() => {});
       if (playerUid) await cleanupPlayerIdentity(playerPage, { username: playerUsername, password: playerPassword, uid: playerUid });
       await Promise.allSettled([adminContext.close(), playerContext.close()]);
     }
