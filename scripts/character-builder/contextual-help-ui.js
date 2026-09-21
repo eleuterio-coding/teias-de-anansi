@@ -121,7 +121,10 @@ function ensurePanel(select,kind){
  const label=select.closest('label')||select.parentElement;if(!label)return null;
  let panel=label.nextElementSibling;
  if(!panel?.matches?.('.context-help-panel')){panel=document.createElement('section');panel.className='context-help-panel';label.insertAdjacentElement('afterend',panel)}
- panel.dataset.contextKind=kind;panel.innerHTML=panelHtml(describe(resolve(kind,select.value),kind));panel.hidden=!select.value;return panel;
+ const key=[kind,select.value,level(),state.subclassMechanics?.applied||0].join('|');
+ panel.dataset.contextKind=kind;panel.hidden=!select.value;
+ if(panel.dataset.contextKey!==key){panel.dataset.contextKey=key;panel.innerHTML=panelHtml(describe(resolve(kind,select.value),kind))}
+ return panel;
 }
 function ensureBrowseButton(select,kind){
  if(!BROWSABLE.has(kind))return;
