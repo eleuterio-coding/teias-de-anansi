@@ -32,7 +32,7 @@
       [/<div class="nota"><strong>Localização PT-BR:<\/strong>[\s\S]*?<\/div>/gi,'']
     ]},
     antecedentes:{source:'dados/_module-source/antecedentes.html',rules:[
-      [/<p class="resumo">58 antecedentes e variantes de D&amp;D 5e\/5\.5e consolidados no catálogo e localizados para português brasileiro\.<\/p>/gi,''],
+      [/<p class="resumo">\d+ antecedentes e variantes de D&amp;D 5e\/5\.5e consolidados no catálogo e localizados para português brasileiro\.<\/p>/gi,''],
       [/<div class="nota"><strong>Precedência:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Escopo:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,''],
