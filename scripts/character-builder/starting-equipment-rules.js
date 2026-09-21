@@ -13,7 +13,7 @@ export const WEALTH_TIERS=Object.freeze({
 });
 
 const BACKGROUND_TIER_BY_NAME=Object.freeze({
- acolyte:'modesta',acolito:'modesta',artisan:'estavel',artesao:'estavel',charlatan:'regular',charlatao:'regular',criminal:'modesta',criminoso:'modesta',entertainer:'regular',artista:'regular',farmer:'modesta',fazendeiro:'modesta',guard:'regular',guarda:'regular',guide:'modesta',guia:'modesta',hermit:'precaria',eremita:'precaria',merchant:'prospera',mercador:'prospera',noble:'privilegiada',nobre:'privilegiada',sage:'modesta',sabio:'modesta',sailor:'regular',marinheiro:'regular',scribe:'estavel',escriba:'estavel',soldier:'regular',soldado:'regular',wayfarer:'precaria',viajante:'precaria'
+ acolyte:'modesta',acolito:'modesta',artisan:'estavel',artesao:'estavel',charlatan:'regular',charlatao:'regular',criminal:'modesta',criminoso:'modesta',entertainer:'regular',artista:'regular',farmer:'modesta',fazendeiro:'modesta',guard:'regular',guarda:'regular',guide:'modesta',guia:'modesta',hermit:'precaria',eremita:'precaria',merchant:'prospera',mercador:'prospera',noble:'privilegiada',nobre:'privilegiada',sage:'modesta',sabio:'modesta',sailor:'regular',marinheiro:'regular',scribe:'estavel',escriba:'estavel',soldier:'regular',soldado:'regular',wayfarer:'precaria',viajante:'precaria',urchin:'precaria',orfao:'precaria',outlander:'modesta',forasteiro:'modesta'
 });
 
 const CURRENCY_FACTORS_CP={
