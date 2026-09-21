@@ -1,5 +1,5 @@
 import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20260917-player-catalog1';
-import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260901-campaign1';
+import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260921-campaign-structure1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DM_NAME='Rafael';
 const params=new URLSearchParams(location.search),campaignId=params.get('id')||'';
