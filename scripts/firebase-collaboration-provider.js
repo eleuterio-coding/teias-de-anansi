@@ -1,4 +1,4 @@
-import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20260921-campaign-structure1';
+import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20260921-campaign-structure2';
 const CONFIG_URL='dados/firebase-config.json?v=20260917-player-catalog1';
 const text=v=>String(v??'').trim(),now=()=>new Date().toISOString(),arr=v=>Array.isArray(v)?v:[],unique=v=>[...new Set(arr(v).map(text).filter(Boolean))];
 export async function loadFirebaseConfig(fetcher=fetch){const r=await fetcher(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw new Error(`Configuração de acesso indisponível (HTTP ${r.status}).`);const c=await r.json(),required=['projectId','apiKey','authDomain','appId','usernameDomain'];return{...c,configured:c.enabled===true&&c.authMode==='username-password'&&required.every(k=>text(c[k]))}}
