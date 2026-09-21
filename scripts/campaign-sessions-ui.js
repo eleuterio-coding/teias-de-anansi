@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,allCampaignSessions}from'./campaign-state.js?v=20260901-campaign1';
+import{readCampaigns,allCampaignSessions}from'./campaign-state.js?v=20260921-campaign-structure1';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const statusLabel=s=>({planned:'Planejada',active:'Em jogo',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
