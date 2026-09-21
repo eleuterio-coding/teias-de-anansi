@@ -173,12 +173,6 @@
       "proveniencia": "item"
     },
     {
-      "padrao": "dados/antecedentes-legado-phb-2014.json",
-      "autoridade": "oficial_legado",
-      "fonte": "Player's Handbook (2014) — Urchin e Outlander",
-      "proveniencia": "arquivo"
-    },
-    {
       "padrao": "dados/antecedentes-pdf-forge-2025.json",
       "autoridade": "oficial_atual",
       "fonte": "Eberron: Forge of the Artificer (2025)",
