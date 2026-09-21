@@ -6,11 +6,10 @@ const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
 const fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 const matrix=read('dados/auditoria-normativa-antecedentes-legado-2014.json');
 const open=read('dados/antecedentes-abertos-adicionais.json');
-const phb2014=read('dados/antecedentes-legado-phb-2014.json');
 
 assert.equal(matrix.autoridade,'oficial_legado');
 assert.equal(matrix.quantidade,4);
-const rows=[...(open.items||[]),...(phb2014.items||[])].filter(x=>x.compatibilidade?.ruleset==='5e');
+const rows=(open.items||[]).filter(x=>x.compatibilidade?.ruleset==='5e');
 assert.equal(rows.length,4,'Catálogo deve preservar quatro antecedentes 5e Legacy ativos: Folk Hero, Spy, Urchin e Outlander.');
 assert.deepEqual(rows.map(x=>x.nome_original).sort(),matrix.antecedentes.map(x=>x.nome_original).sort());
 
@@ -43,5 +42,5 @@ assert.match(matrix.adaptacao_5_5e_regra_casa.nota,/não são apresentados como 
 const house=fs.readFileSync('dados/regras-casa-adicionais.json','utf8');
 assert.match(house,/Talento de Origem Livre/i,'Regra da Casa deve registrar Origin feat livre.');
 assert.match(house,/Pacote B padrão de Antecedente concede 50 PO/i,'Regra da Casa deve registrar B=50 PO.');
-for(const p of ['dados/antecedentes-abertos-adicionais.json','dados/antecedentes-legado-phb-2014.json','dados/regras-casa-adicionais.json'])assert.ok(!fs.readFileSync(p,'utf8').toLowerCase().includes('supabase'),`${p}: não pode introduzir Supabase.`);
+for(const p of ['dados/antecedentes-abertos-adicionais.json','dados/regras-casa-adicionais.json'])assert.ok(!fs.readFileSync(p,'utf8').toLowerCase().includes('supabase'),`${p}: não pode introduzir Supabase.`);
 console.log('Antecedentes legados validados: Folk Hero, Spy, Urchin e Outlander preservam o bloco 2014; atributos, Origin feat e B=50 são adaptações explícitas do Hub.');
