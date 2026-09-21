@@ -1,5 +1,5 @@
 import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260917-global-realtime1';
-import{readCampaigns}from'./campaign-state.js?v=20260921-campaign-structure1';
+import{readCampaigns}from'./campaign-state.js?v=20260921-campaign-structure2';
 import{readAdventures}from'./adventure-state.js?v=20260902-adventures1';
 import{read as readCharacters}from'./character-builder/state.js';
 import{syncAll,publishLocalCampaign}from'./collaboration-sync.js?v=20260917-global-realtime1';
