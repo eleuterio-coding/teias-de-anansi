@@ -1,5 +1,5 @@
 import{state}from'./character-builder/state.js';
-import{readCampaigns,findCampaignForCharacter}from'./campaign-state.js?v=20260921-campaign-structure1';
+import{readCampaigns,findCampaignForCharacter}from'./campaign-state.js?v=20260921-campaign-structure2';
 import{setResolutionTarget,resolutionTarget}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
 import{renderResolutionPanel}from'./character-sheet-resolution-ui.js?v=20260902-resolution1';
 import{spellSaveAbility,encounterSpellSaveModifier}from'./encounter-target-rules.js?v=20260902-encounters2';
