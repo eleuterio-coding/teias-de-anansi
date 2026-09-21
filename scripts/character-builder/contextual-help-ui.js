@@ -121,7 +121,8 @@ function ensurePanel(select,kind){
  const label=select.closest('label')||select.parentElement;if(!label)return null;
  let panel=label.nextElementSibling;
  if(!panel?.matches?.('.context-help-panel')){panel=document.createElement('section');panel.className='context-help-panel';label.insertAdjacentElement('afterend',panel)}
- const key=[kind,select.value,level(),state.subclassMechanics?.applied||0].join('|');
+ const contextExtra=kind==='background'?(state.c?.choices?.background?.originFeat||''):kind==='lineage'?(state.c?.choices?.species?.lineage||''):'';
+ const key=[kind,select.value,level(),state.subclassMechanics?.applied||0,contextExtra].join('|');
  panel.dataset.contextKind=kind;panel.hidden=!select.value;
  if(panel.dataset.contextKey!==key){panel.dataset.contextKey=key;panel.innerHTML=panelHtml(describe(resolve(kind,select.value),kind))}
  return panel;
@@ -195,7 +196,7 @@ function handleClick(e){
 }
 function handleChange(e){
  const compare=e.target.closest?.('[data-context-compare]');if(compare){if(compare.checked){if(browserCompare.size>=2){compare.checked=false;return}browserCompare.add(compare.dataset.contextCompare)}else browserCompare.delete(compare.dataset.contextCompare);renderBrowserList();renderBrowserDetail();return}
- const select=e.target.closest?.('select');if(select&&kindForSelect(select))queueMicrotask(()=>decorateSelect(select));
+ const select=e.target.closest?.('select');if(select&&kindForSelect(select))queueMicrotask(()=>decorateSelect(select));if(e.target?.id==='nivel')schedule();
 }
 export function initContextualHelpUi(){
  if(initialized)return;initialized=true;injectStyle();ensureDialog();
