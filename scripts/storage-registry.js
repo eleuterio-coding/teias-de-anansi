@@ -1,5 +1,5 @@
 import{KEY as CHARACTER_KEY,LEGACY_KEYS as CHARACTER_LEGACY_KEYS}from'./character-builder/state.js';
-import{CAMPAIGN_KEY}from'./campaign-state.js?v=20260921-campaign-structure1';
+import{CAMPAIGN_KEY}from'./campaign-state.js?v=20260921-campaign-structure2';
 import{ADVENTURE_KEY}from'./adventure-state.js?v=20260902-adventures1';
 import{SETTINGS_KEY,SETTINGS_SCHEMA}from'./settings-state.js?v=20260905-settings1';
 
