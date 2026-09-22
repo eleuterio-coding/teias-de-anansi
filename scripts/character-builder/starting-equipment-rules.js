@@ -2,15 +2,32 @@ import{state,arr,num,fold}from'./state.js';
 
 export const STANDARD_BACKGROUND_PACKAGE_B_GP=50;
 export const STANDARD_PACKAGE_B_GP=STANDARD_BACKGROUND_PACKAGE_B_GP;
-export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:25,3:75,4:150,5:650,6:1250,7:2000,8:3000,9:4000,10:5000,11:6500,12:8500,13:11000,14:13500,15:16000,16:18750,17:21500,18:24000,19:27000,20:30000});
+export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:30,3:80,4:160,5:675,6:1300,7:2075,8:3100,9:4150,10:5200,11:6750,12:8800,13:11400,14:14000,15:16600,16:19450,17:22300,18:24900,19:28000,20:31250});
 export const WEALTH_TIERS=Object.freeze({
  precaria:Object.freeze({id:'precaria',label:'Precária',multiplier:.90}),
  modesta:Object.freeze({id:'modesta',label:'Modesta',multiplier:.95}),
  regular:Object.freeze({id:'regular',label:'Regular',multiplier:1}),
- estavel:Object.freeze({id:'estavel',label:'Estável',multiplier:1.05}),
- prospera:Object.freeze({id:'prospera',label:'Próspera',multiplier:1.10}),
- privilegiada:Object.freeze({id:'privilegiada',label:'Privilegiada',multiplier:1.15})
+ estavel:Object.freeze({id:'estavel',label:'Estável',multiplier:1.06}),
+ prospera:Object.freeze({id:'prospera',label:'Próspera',multiplier:1.12}),
+ privilegiada:Object.freeze({id:'privilegiada',label:'Privilegiada',multiplier:1.18})
 });
+
+export const CLASS_WEALTH_MULTIPLIERS=Object.freeze({
+ barbarian:1.04,
+ bard:1.05,
+ cleric:1.05,
+ druid:1.03,
+ fighter:1.07,
+ monk:1.02,
+ paladin:1.07,
+ ranger:1.06,
+ rogue:1.05,
+ sorcerer:1.03,
+ warlock:1.04,
+ wizard:1.06,
+ artificer:1.07
+});
+const DEFAULT_CLASS_WEALTH_MULTIPLIER=1.03;
 
 const BACKGROUND_TIER_BY_NAME=Object.freeze({
  acolyte:'modesta',acolito:'modesta',artisan:'estavel',artesao:'estavel',charlatan:'regular',charlatao:'regular',criminal:'modesta',criminoso:'modesta',entertainer:'regular',artista:'regular',farmer:'modesta',fazendeiro:'modesta',guard:'regular',guarda:'regular',guide:'modesta',guia:'modesta',hermit:'precaria',eremita:'precaria',merchant:'prospera',mercador:'prospera',noble:'privilegiada',nobre:'privilegiada',sage:'modesta',sabio:'modesta',sailor:'regular',marinheiro:'regular',scribe:'estavel',escriba:'estavel',soldier:'regular',soldado:'regular',wayfarer:'precaria',viajante:'precaria',urchin:'precaria',orfao:'precaria',outlander:'modesta',forasteiro:'modesta'
@@ -87,6 +104,10 @@ const CLASS_ALIASES=Object.freeze({barbaro:'barbarian',bardo:'bard',clerigo:'cle
 const currentClass=()=>state.catalogs.classes.find(x=>x.id===state.c?.refs?.class)||null;
 const currentBackground=()=>state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null;
 function classKey(klass){const values=[klass?.slug,klass?.name,klass?.nome,klass?.originalName].map(fold).filter(Boolean);for(const value of values){if(CLASS_STARTING_PACKAGES[value])return value;if(CLASS_ALIASES[value])return CLASS_ALIASES[value]}return''}
+export function classWealthProfile(klass=currentClass()){
+ const id=classKey(klass),multiplier=CLASS_WEALTH_MULTIPLIERS[id]||DEFAULT_CLASS_WEALTH_MULTIPLIER;
+ return{id:id||'outra',label:klass?.name||klass?.nome||'Classe',multiplier}
+}
 function copyPackage(pkg){return pkg?{id:String(pkg.id||'A').toUpperCase(),itens:arr(pkg.itens).map(row=>({...row}))}:null}
 
 export function currencyFactorCp(name){return CURRENCY_FACTORS_CP[fold(name)]||0}
@@ -140,7 +161,7 @@ export function formatPhysicalItems(items){
 }
 export function clampCreationLevel(value){return Math.max(1,Math.min(20,num(value)||1))}
 export function wealthBaseGp(level){const l=clampCreationLevel(level);return l>=2?WEALTH_BY_LEVEL[l]||0:0}
-function adjustedWealthGp(base,profile){const percent=Math.round(num(profile?.multiplier)*100);return Math.round((base*percent)/100)}
+function adjustedWealthGp(base,backgroundProfile,classProfile){const bgPercent=Math.round(num(backgroundProfile?.multiplier||1)*100),classPercent=Math.round(num(classProfile?.multiplier||1)*100);return Math.round((base*bgPercent*classPercent)/10000)}
 function tierKey(value){const key=fold(value).replace(/[^a-z]/g,'');return WEALTH_TIERS[key]?key:''}
 export function backgroundWealthProfile(bg=currentBackground()){
  const explicit=tierKey(bg?.wealthTier||bg?.wealth_tier||bg?.faixaEconomica||bg?.faixa_economica);
@@ -149,12 +170,12 @@ export function backgroundWealthProfile(bg=currentBackground()){
  for(const name of names){const mapped=BACKGROUND_TIER_BY_NAME[name];if(mapped)return WEALTH_TIERS[mapped]}
  return WEALTH_TIERS.regular
 }
-export function wealthGp(level,bg=currentBackground()){
- const base=wealthBaseGp(level);if(!base)return 0;return adjustedWealthGp(base,backgroundWealthProfile(bg))
+export function wealthGp(level,bg=currentBackground(),klass=currentClass()){
+ const base=wealthBaseGp(level);if(!base)return 0;return adjustedWealthGp(base,backgroundWealthProfile(bg),classWealthProfile(klass))
 }
 export function creationBudgetBreakdown(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){
- const l=clampCreationLevel(level),resolvedClassChoice=String(classChoice||state.c?.choices?.class?.equipment||'A').toUpperCase(),resolvedBgChoice=String(bgChoice||'A').toUpperCase(),profile=backgroundWealthProfile(bg),baseWealthGp=wealthBaseGp(l),adjusted=l>=2?adjustedWealthGp(baseWealthGp,profile):0,classCp=classPackageCurrencyCp(klass,resolvedClassChoice),backgroundCp=packageCurrencyCp(bg,resolvedBgChoice),wealthCp=adjusted*100;
- return{level:l,classChoice:resolvedClassChoice,backgroundChoice:resolvedBgChoice,classCp,backgroundCp,baseWealthGp,wealthTier:profile.id,wealthTierLabel:profile.label,wealthMultiplier:profile.multiplier,adjustedWealthGp:adjusted,wealthCp,totalCp:classCp+backgroundCp+wealthCp}
+ const l=clampCreationLevel(level),resolvedClassChoice=String(classChoice||state.c?.choices?.class?.equipment||'A').toUpperCase(),resolvedBgChoice=String(bgChoice||'A').toUpperCase(),backgroundProfile=backgroundWealthProfile(bg),classProfile=classWealthProfile(klass),baseWealthGp=wealthBaseGp(l),adjusted=l>=2?adjustedWealthGp(baseWealthGp,backgroundProfile,classProfile):0,classCp=classPackageCurrencyCp(klass,resolvedClassChoice),backgroundCp=packageCurrencyCp(bg,resolvedBgChoice),wealthCp=adjusted*100,combinedMultiplier=Math.round(backgroundProfile.multiplier*classProfile.multiplier*10000)/10000;
+ return{level:l,classChoice:resolvedClassChoice,backgroundChoice:resolvedBgChoice,classCp,backgroundCp,baseWealthGp,wealthTier:backgroundProfile.id,wealthTierLabel:backgroundProfile.label,backgroundWealthMultiplier:backgroundProfile.multiplier,classWealthId:classProfile.id,classWealthLabel:classProfile.label,classWealthMultiplier:classProfile.multiplier,combinedWealthMultiplier:combinedMultiplier,wealthMultiplier:combinedMultiplier,adjustedWealthGp:adjusted,wealthCp,totalCp:classCp+backgroundCp+wealthCp}
 }
 export function creationBudgetCp(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){return creationBudgetBreakdown(bg,bgChoice,level,klass,classChoice).totalCp}
 export function creationPhysicalItems(bg=currentBackground(),bgChoice='A',level=1,klass=currentClass(),classChoice=null){
