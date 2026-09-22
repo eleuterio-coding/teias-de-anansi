@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Idiomas - Biblioteca - Teias de Anansi</title>
   <style>
@@ -94,7 +93,7 @@ async function iniciar() {
       'dados/idiomas-eberron.json?v=20260819-1043',
       'dados/idiomas-outros.json?v=20260819-1043'
     ];
-    const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'no-store'})));
+    const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
     if (falha) throw new Error(`HTTP ${falha.status}`);
     const grupos = await Promise.all(respostas.map(r => r.json()));
