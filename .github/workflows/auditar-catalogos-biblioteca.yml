@@ -64,6 +64,7 @@ jobs:
       - name: Auditar registro, fontes e relações
         run: node tests/auditar-catalogos-biblioteca.mjs
       - name: Auditar preços dos Itens Mágicos
+        if: always()
         run: node tests/auditar-precos-itens-magicos.mjs
       - name: Gerar índice semântico de controle
         run: |
