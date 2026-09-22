@@ -1,5 +1,5 @@
 import{state,fold}from'./state.js';
-import{WEALTH_TIERS,backgroundWealthProfile}from'./starting-equipment-rules.js?v=20260922-wealth-class1';
+import{WEALTH_TIERS,backgroundWealthProfile}from'./starting-equipment-rules.js?v=20260922-wealth-class2';
 
 const STANDARD_BACKGROUND_NAMES=new Set([
  'acolyte','acolito','artisan','artesao','charlatan','charlatao','criminal','criminoso',
