@@ -50,6 +50,18 @@ const libraryUi=read('scripts/library-catalog-status.js');
 for(const token of['cobertura_modulos','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope','ensureSemanticIndex'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
 assert(!libraryUi.includes("fetch('dados/referencias-hub-index.json',{cache:'no-store'})"),'Índice semântico não deve forçar novo download.');
 assert(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);\s*$/.test(libraryUi),'Biblioteca deve abrir sem baixar o índice semântico; a busca carrega o índice sob demanda.');
+const weaponsPage=read('armas.html');
+assert(weaponsPage.includes("dados/armas-catalogo.json?v=20260922-library-perf2"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
+assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
+assert(!/cache\s*:\s*['"]no-store['"]/.test(weaponsPage),'Biblioteca de Armas não deve ignorar o cache do navegador.');
+const weaponsCache=json('dados/armas-catalogo.json'),weaponsCore=json('dados/armas-srd.json'),weaponsManifest=json('dados/armas-pdfs-manifest.json');
+const canonicalWeapons=[...(weaponsCore.itens||[]),...(weaponsManifest.arquivos||[]).flatMap(row=>json(row.arquivo).itens||[])];
+assert((weaponsCache.itens||[]).length===canonicalWeapons.length,`Cache de Armas divergente das fontes: ${(weaponsCache.itens||[]).length}/${canonicalWeapons.length}`);
+const weaponKey=row=>`${row.fonte||''}::${row.id||row.nome_original||row.nome||''}`;
+assert(JSON.stringify((weaponsCache.itens||[]).map(weaponKey).sort())===JSON.stringify(canonicalWeapons.map(weaponKey).sort()),'Cache de Armas não representa exatamente os registros das fontes canônicas.');
+for(const module of CATALOG_MODULES){const html=read(module.route);assert(!/cache\s*:\s*['"]no-store['"]/.test(html),`${module.route}: Biblioteca não deve forçar no-store.`);assert(!/<meta[^>]+http-equiv=["']Cache-Control["'][^>]+no-cache/i.test(html),`${module.route}: documento não deve proibir cache estático.`)}
+assert(!/cache\s*:\s*['"]no-store['"]/.test(read('scripts/module-clean-loader.js')),'Carregador dos módulos não deve forçar no-store.');
+
 const referenceUi=read('scripts/library-reference-ui.js');
 for(const token of['publicCatalogRoute','aliases','fonte_arquivo','ID estável','params.get(\'q\')'])assert(referenceUi.includes(token),`Detalhe/busca de referência sem contrato: ${token}`);
 
