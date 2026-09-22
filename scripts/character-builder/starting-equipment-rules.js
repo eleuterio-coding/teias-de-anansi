@@ -2,32 +2,32 @@ import{state,arr,num,fold}from'./state.js';
 
 export const STANDARD_BACKGROUND_PACKAGE_B_GP=50;
 export const STANDARD_PACKAGE_B_GP=STANDARD_BACKGROUND_PACKAGE_B_GP;
-export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:35,3:95,4:190,5:800,6:1550,7:2450,8:3700,9:5000,10:6250,11:8100,12:10600,13:13750,14:16900,15:20000,16:23500,17:27000,18:30000,19:34000,20:38000});
+export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:40,3:110,4:220,5:900,6:1750,7:2800,8:4200,9:5700,10:7200,11:9300,12:12200,13:15800,14:19500,15:23000,16:27000,17:31000,18:34500,19:39000,20:44000});
 export const WEALTH_TIERS=Object.freeze({
- precaria:Object.freeze({id:'precaria',label:'Precária',multiplier:.94}),
- modesta:Object.freeze({id:'modesta',label:'Modesta',multiplier:.98}),
+ precaria:Object.freeze({id:'precaria',label:'Precária',multiplier:.96}),
+ modesta:Object.freeze({id:'modesta',label:'Modesta',multiplier:.99}),
  regular:Object.freeze({id:'regular',label:'Regular',multiplier:1}),
- estavel:Object.freeze({id:'estavel',label:'Estável',multiplier:1.08}),
- prospera:Object.freeze({id:'prospera',label:'Próspera',multiplier:1.15}),
- privilegiada:Object.freeze({id:'privilegiada',label:'Privilegiada',multiplier:1.22})
+ estavel:Object.freeze({id:'estavel',label:'Estável',multiplier:1.09}),
+ prospera:Object.freeze({id:'prospera',label:'Próspera',multiplier:1.17}),
+ privilegiada:Object.freeze({id:'privilegiada',label:'Privilegiada',multiplier:1.25})
 });
 
 export const CLASS_WEALTH_MULTIPLIERS=Object.freeze({
- barbarian:1.07,
- bard:1.08,
- cleric:1.08,
- druid:1.06,
- fighter:1.10,
- monk:1.05,
- paladin:1.10,
- ranger:1.09,
- rogue:1.08,
- sorcerer:1.06,
- warlock:1.07,
- wizard:1.09,
- artificer:1.10
+ barbarian:1.09,
+ bard:1.10,
+ cleric:1.10,
+ druid:1.08,
+ fighter:1.12,
+ monk:1.07,
+ paladin:1.12,
+ ranger:1.11,
+ rogue:1.10,
+ sorcerer:1.08,
+ warlock:1.09,
+ wizard:1.11,
+ artificer:1.12
 });
-const DEFAULT_CLASS_WEALTH_MULTIPLIER=1.05;
+const DEFAULT_CLASS_WEALTH_MULTIPLIER=1.07;
 
 const BACKGROUND_TIER_BY_NAME=Object.freeze({
  acolyte:'modesta',acolito:'modesta',artisan:'estavel',artesao:'estavel',charlatan:'regular',charlatao:'regular',criminal:'modesta',criminoso:'modesta',entertainer:'regular',artista:'regular',farmer:'modesta',fazendeiro:'modesta',guard:'regular',guarda:'regular',guide:'modesta',guia:'modesta',hermit:'precaria',eremita:'precaria',merchant:'prospera',mercador:'prospera',noble:'privilegiada',nobre:'privilegiada',sage:'modesta',sabio:'modesta',sailor:'regular',marinheiro:'regular',scribe:'estavel',escriba:'estavel',soldier:'regular',soldado:'regular',wayfarer:'precaria',viajante:'precaria',urchin:'precaria',orfao:'precaria',outlander:'modesta',forasteiro:'modesta'
