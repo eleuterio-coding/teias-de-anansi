@@ -1,6 +1,6 @@
 import{state,$,num,esc}from'./state.js';
 import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
-import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260828-wealth-background1';
+import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260922-wealth-class1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
 let rendering=false,scheduled=false,initialized=false;
@@ -21,7 +21,7 @@ function optionMarkup(options,current){return options.map(pkg=>`<option value="$
 function sanitizeChoice(options,value){const ids=options.map(pkg=>String(pkg.id).toUpperCase()),wanted=String(value||'A').toUpperCase();return ids.includes(wanted)?wanted:(ids[0]||'A')}
 function budgetSummary(breakdown,bg){
  const packageCp=breakdown.classCp+breakdown.backgroundCp,lines=[`<p class="mini"><strong>PO dos pacotes:</strong> ${esc(fmtGp(packageCp))} (${esc(fmtGp(breakdown.classCp))} da Classe + ${esc(fmtGp(breakdown.backgroundCp))} do Antecedente).</p>`];
- if(breakdown.level>=2){lines.push(`<p class="mini"><strong>Riqueza por Level:</strong> ${breakdown.baseWealthGp.toLocaleString('pt-BR')} PO × ${breakdown.wealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} (${esc(breakdown.wealthTierLabel)}${bg?` · ${esc(bg.name)}`:''}) = <strong>${breakdown.adjustedWealthGp.toLocaleString('pt-BR')} PO</strong>.</p>`)}
+ if(breakdown.level>=2){lines.push(`<p class="mini"><strong>Riqueza por Nível:</strong> ${breakdown.baseWealthGp.toLocaleString('pt-BR')} PO × ${breakdown.classWealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} (Classe · ${esc(breakdown.classWealthLabel)}) × ${breakdown.backgroundWealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} (Antecedente · ${esc(breakdown.wealthTierLabel)}${bg?` · ${esc(bg.name)}`:''}) = <strong>${breakdown.adjustedWealthGp.toLocaleString('pt-BR')} PO</strong>.</p>`)}
  lines.push(`<p class="mini"><strong>Total inicial para compras/saldo:</strong> ${esc(fmtGp(breakdown.totalCp))}.</p>`);
  return lines.join('')
 }
@@ -33,7 +33,7 @@ function render(){
   const l=level(),classState=state.c.choices.class||(state.c.choices.class={level:l,skills:[]}),bgState=state.c.choices.background||(state.c.choices.background={}),classOptions=classPackageOptions(klass),bgOptions=backgroundPackageOptions(bg);
   classState.equipment=sanitizeChoice(classOptions,classState.equipment);bgState.equipment=sanitizeChoice(bgOptions,bgState.equipment);
   const breakdown=creationBudgetBreakdown(bg,bgState.equipment,l,klass,classState.equipment),classControl=klass&&classOptions.length?`<label>Equipamento inicial da Classe<select id="class-eq-house">${optionMarkup(classOptions,classState.equipment)}</select></label>`:`<p class="muted">${klass?'Esta Classe ainda não possui opções de equipamento inicial cadastradas.':'Escolha a Classe para definir seu pacote inicial.'}</p>`,bgControl=bg&&bgOptions.length?`<label>Equipamento inicial do Antecedente<select id="bg-eq-house">${optionMarkup(bgOptions,bgState.equipment)}</select></label>`:`<p class="muted">${bg?'Este Antecedente ainda não possui opções de equipamento inicial cadastradas.':'Escolha o Antecedente para definir seu pacote inicial.'}</p>`;
-  const rule=l>=2?`Os pacotes da Classe e do Antecedente continuam valendo. A Riqueza por Level é adicional e recebe o modificador econômico do Antecedente; a Classe não multiplica essa riqueza.`:`No Level 1, Classe e Antecedente concedem seus pacotes normalmente. Pacotes com itens também podem conceder PO residual.`;
+  const rule=l>=2?`Os pacotes da Classe e do Antecedente continuam valendo. A Riqueza por Nível é adicional e agora recebe ajustes leves da Classe e da faixa econômica do Antecedente.`:`No nível 1, Classe e Antecedente concedem seus pacotes normalmente. Pacotes com itens também podem conceder PO residual.`;
   box.innerHTML=`<div data-standard-starting-equipment><div class="choice-grid">${classControl}${bgControl}</div><div class="starting-equipment-summary"><strong>Equipamento e PO inicial — Level ${l}</strong><p>${esc(rule)}</p>${budgetSummary(breakdown,bg)}</div><h4>Inventário inicial</h4>${inventorySummary()}</div>`
  }finally{rendering=false}
 }
