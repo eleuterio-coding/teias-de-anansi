@@ -1,5 +1,5 @@
 import{state,fold}from'./state.js';
-import{WEALTH_TIERS,backgroundWealthProfile}from'./starting-equipment-rules.js?v=20260922-wealth-class2';
+import{WEALTH_TIERS,backgroundWealthProfile}from'./starting-equipment-rules.js?v=20260922-wealth-class3';
 
 const STANDARD_BACKGROUND_NAMES=new Set([
  'acolyte','acolito','artisan','artesao','charlatan','charlatao','criminal','criminoso',
@@ -7,9 +7,8 @@ const STANDARD_BACKGROUND_NAMES=new Set([
  'merchant','mercador','noble','nobre','sage','sabio','sailor','marinheiro','scribe','escriba',
  'soldier','soldado','wayfarer','viajante','urchin','orfao','outlander','forasteiro'
 ]);
-const TIER_ORDER=['precaria','modesta','regular','estavel','prospera','privilegiada'];
-const TIER_IDS=new Set(TIER_ORDER);
-let initialized=false,lastBackgroundId=null,observer=null;
+const TIER_IDS=new Set(Object.keys(WEALTH_TIERS));
+let initialized=false;
 
 function currentBackground(){return state.catalogs.backgrounds.find(x=>x.id===state.c?.refs?.background)||null}
 function tierId(value){const key=fold(value).replace(/[^a-z]/g,'');return TIER_IDS.has(key)?key:''}
@@ -28,23 +27,14 @@ export function applyBackgroundWealthTier(bg=currentBackground()){
  const chosen=tierId(ch.wealthTier)||catalogTier(bg)||'regular';ch.wealthTier=chosen;bg.wealthTier=chosen;return backgroundWealthProfile(bg)
 }
 
-function fieldMarkup(bg,profile){
- if(isStandardWealthBackground(bg))return`<label id="bg-wealth-tier-field">Faixa econômica<input type="text" value="${profile.label} ×${profile.multiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}" readonly title="Classificação padrão definida pela Regra da Casa"></label>`;
- const options=TIER_ORDER.map(id=>WEALTH_TIERS[id]).map(t=>`<option value="${t.id}" ${t.id===profile.id?'selected':''}>${t.label} ×${t.multiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}</option>`).join('');
- return`<label id="bg-wealth-tier-field">Faixa econômica<select id="bg-wealth-tier">${options}</select><small class="muted">Antecedentes sem classificação padrão usam Regular; altere quando a história do personagem justificar outra condição econômica.</small></label>`
+function sync(){
+ const old=document.getElementById('bg-wealth-tier-field');if(old)old.remove();
+ applyBackgroundWealthTier()
 }
-function render(){
- const box=document.getElementById('antecedente-escolhas'),bg=currentBackground();if(!box||!bg)return;
- const profile=applyBackgroundWealthTier(bg),grid=box.querySelector('fieldset .choice-grid')||box.querySelector('.choice-grid');if(!profile||!grid)return;
- const old=document.getElementById('bg-wealth-tier-field');if(old)old.remove();grid.insertAdjacentHTML('beforeend',fieldMarkup(bg,profile));
- document.getElementById('bg-wealth-tier')?.addEventListener('change',event=>{const ch=choiceState(),selected=tierId(event.target.value)||'regular';if(!ch)return;ch.wealthTier=selected;ch.wealthTierBackgroundId=bg.id;bg.wealthTier=selected;document.dispatchEvent(new CustomEvent('hub:origin-context-changed',{detail:{characterId:state.c?.id||null,wealthTier:selected}}));document.dispatchEvent(new CustomEvent('hub:wealth-context-changed',{detail:{characterId:state.c?.id||null,wealthTier:selected}}))})
-}
-function scheduleRender(){queueMicrotask(()=>{const id=state.c?.refs?.background||null;if(id!==lastBackgroundId)lastBackgroundId=id;render()})}
-
 export function initBackgroundWealthTierUi(){
  if(initialized)return;initialized=true;
- const select=document.getElementById('antecedente'),box=document.getElementById('antecedente-escolhas');
- select?.addEventListener('change',scheduleRender);document.addEventListener('hub:origin-context-changed',scheduleRender);
- if(box){observer=new MutationObserver(()=>{if(!document.getElementById('bg-wealth-tier-field'))scheduleRender()});observer.observe(box,{childList:true,subtree:true})}
- scheduleRender()
+ document.getElementById('antecedente')?.addEventListener('change',()=>queueMicrotask(sync));
+ document.addEventListener('hub:origin-context-changed',()=>queueMicrotask(sync));
+ document.addEventListener('hub:new-character',()=>queueMicrotask(sync));
+ sync()
 }
