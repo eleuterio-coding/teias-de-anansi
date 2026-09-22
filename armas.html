@@ -61,7 +61,7 @@ function populate(id,values,labelFn=v=>v){const el=document.getElementById(id),b
   .then(r=>r.ok?r.json():null)
   .then(md=>{if(!md)return;(md.itens||[]).forEach(x=>MASTERY[x.nome]=x.conteudo?.descricao||'');if(CURRENT)renderDetail(CURRENT)})
   .catch(()=>{});
-}catch(e){const status=document.getElementById('status');status.hidden=false;status.className='nota';status.innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`}})();;['q','ruleset','categoria','natureza','fonte','maestria','statusf'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
+}catch(e){const status=document.getElementById('status');status.hidden=false;status.className='nota';status.innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`}})();['q','ruleset','categoria','natureza','fonte','maestria','statusf'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
 <style id="hub-force-light-theme">
 :root { color-scheme: only light !important; }
