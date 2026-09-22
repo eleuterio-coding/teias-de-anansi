@@ -81,7 +81,7 @@ assert(saneItems.length===14,`Entradas referenciais Sane esperadas: 14; encontro
 assert(saneItems.filter(x=>resolve(x).kind==='priced').length===13,'Das entradas referenciais Sane, 13 devem ser precificadas.');
 assert(saneItems.filter(x=>resolve(x).kind==='unpriced').length===1,'Das entradas referenciais Sane, 1 deve ser deliberadamente não precificada.');
 for(const item of saneItems){
-  assert(/não (?:foi|foram) inventad/i.test(item.descricao),`${item.nome_original}: entrada Sane deve declarar que mecânicas ausentes não foram inventadas.`);
+  assert(/(?:nenhum efeito foi inventado|não (?:foi|foram) inventad)/i.test(item.descricao),`${item.nome_original}: entrada Sane deve declarar que mecânicas ausentes não foram inventadas.`);
 }
 
 const html=read('itens-magicos.html');
