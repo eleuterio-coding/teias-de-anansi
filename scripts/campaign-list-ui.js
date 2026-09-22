@@ -1,5 +1,5 @@
-import{readCampaigns,writeCampaigns,createCampaign,updateCampaign,removeCampaign}from'./campaign-state.js?v=20260921-campaign-structure2';
-import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20260902-adventures1';
+import{readCampaigns,writeCampaigns,createCampaign,updateCampaign,removeCampaign}from'./campaign-state.js?v=20260922-adventure-workspace2';
+import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20260922-adventure-workspace2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DM_NAME='Rafael',SYSTEM_NAME='D&D 5.5e';
