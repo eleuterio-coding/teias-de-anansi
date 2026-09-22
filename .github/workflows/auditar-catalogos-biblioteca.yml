@@ -17,6 +17,7 @@ on:
       - 'scripts/character-builder/spells.js'
       - 'scripts/gerar_referencias_hub.py'
       - 'dados/**'
+      - 'cache/**'
       - 'tests/auditar-catalogos-biblioteca.mjs'
       - '.github/workflows/auditar-catalogos-biblioteca.yml'
   push:
@@ -35,6 +36,7 @@ on:
       - 'scripts/character-builder/spells.js'
       - 'scripts/gerar_referencias_hub.py'
       - 'dados/**'
+      - 'cache/**'
       - 'tests/auditar-catalogos-biblioteca.mjs'
       - '.github/workflows/auditar-catalogos-biblioteca.yml'
 
