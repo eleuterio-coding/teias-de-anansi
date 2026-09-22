@@ -19,6 +19,7 @@ on:
       - 'dados/**'
       - 'cache/**'
       - 'tests/auditar-catalogos-biblioteca.mjs'
+      - 'tests/auditar-precos-itens-magicos.mjs'
       - '.github/workflows/auditar-catalogos-biblioteca.yml'
   push:
     branches: [main]
@@ -59,8 +60,11 @@ jobs:
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/spells.js
           node --check tests/auditar-catalogos-biblioteca.mjs
+          node --check tests/auditar-precos-itens-magicos.mjs
       - name: Auditar registro, fontes e relações
         run: node tests/auditar-catalogos-biblioteca.mjs
+      - name: Auditar preços dos Itens Mágicos
+        run: node tests/auditar-precos-itens-magicos.mjs
       - name: Gerar índice semântico de controle
         run: |
           python - <<'PY'
