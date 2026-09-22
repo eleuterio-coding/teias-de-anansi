@@ -4,7 +4,7 @@ import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provide
 
 const text=value=>String(value??'').trim();
 const username=value=>text(value).toLowerCase();
-let initialized=false,providerPromise=null,renderToken=0;
+let initialized=false,providerPromise=null,renderToken=0,authWatchBound=false;
 
 function ensureProfile(){
  if(!state.c)return null;
@@ -13,7 +13,7 @@ function ensureProfile(){
  return state.c.sheet.profile
 }
 function provider(){
- if(!providerPromise)providerPromise=createFirebaseCollaborationProvider().catch(error=>{providerPromise=null;throw error});
+ if(!providerPromise)providerPromise=createFirebaseCollaborationProvider().then(remote=>{if(remote?.configured&&!authWatchBound){authWatchBound=true;remote.onAuthChanged(()=>queueMicrotask(renderAssignment))}return remote}).catch(error=>{providerPromise=null;throw error});
  return providerPromise
 }
 function esc(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
