@@ -62,7 +62,7 @@ jobs:
         run: node tests/auditar-barbarian-core-bloco10.mjs
       - name: 10F–10G · Estado persistente de itens mágicos
         run: node tests/auditar-magic-item-state-bloco10.mjs
-      - name: 10H · Classificação integral dos 259 itens mágicos
+      - name: 10H · Classificação integral do catálogo de itens mágicos
         run: node tests/auditar-classificacao-itens-magicos-bloco10.mjs
       - name: 10I · Ponte de inventário e controles da Ficha
         run: node tests/auditar-magic-item-ui-bloco10.mjs
