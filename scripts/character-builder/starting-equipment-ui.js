@@ -1,6 +1,6 @@
 import{state,$,num,esc}from'./state.js';
 import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
-import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260922-wealth-class2';
+import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260922-wealth-class3';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260828-wealth-background1';
 
 let rendering=false,scheduled=false,initialized=false;
@@ -21,7 +21,7 @@ function optionMarkup(options,current){return options.map(pkg=>`<option value="$
 function sanitizeChoice(options,value){const ids=options.map(pkg=>String(pkg.id).toUpperCase()),wanted=String(value||'A').toUpperCase();return ids.includes(wanted)?wanted:(ids[0]||'A')}
 function budgetSummary(breakdown,bg){
  const packageCp=breakdown.classCp+breakdown.backgroundCp,lines=[`<p class="mini"><strong>PO dos pacotes:</strong> ${esc(fmtGp(packageCp))} (${esc(fmtGp(breakdown.classCp))} da Classe + ${esc(fmtGp(breakdown.backgroundCp))} do Antecedente).</p>`];
- if(breakdown.level>=2){lines.push(`<p class="mini"><strong>Riqueza por Nível:</strong> ${breakdown.baseWealthGp.toLocaleString('pt-BR')} PO × ${breakdown.classWealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} (Classe · ${esc(breakdown.classWealthLabel)}) × ${breakdown.backgroundWealthMultiplier.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} (Antecedente · ${esc(breakdown.wealthTierLabel)}${bg?` · ${esc(bg.name)}`:''}) = <strong>${breakdown.adjustedWealthGp.toLocaleString('pt-BR')} PO</strong>.</p>`)}
+ if(breakdown.level>=2){lines.push(`<p class="mini"><strong>Riqueza por Nível:</strong> base de ${breakdown.baseWealthGp.toLocaleString('pt-BR')} PO → <strong>${breakdown.adjustedWealthGp.toLocaleString('pt-BR')} PO</strong> após os ajustes da criação.</p>`)}
  lines.push(`<p class="mini"><strong>Total inicial para compras/saldo:</strong> ${esc(fmtGp(breakdown.totalCp))}.</p>`);
  return lines.join('')
 }
