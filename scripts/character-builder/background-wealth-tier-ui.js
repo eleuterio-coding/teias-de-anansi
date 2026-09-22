@@ -5,7 +5,7 @@ const STANDARD_BACKGROUND_NAMES=new Set([
  'acolyte','acolito','artisan','artesao','charlatan','charlatao','criminal','criminoso',
  'entertainer','artista','farmer','fazendeiro','guard','guarda','guide','guia','hermit','eremita',
  'merchant','mercador','noble','nobre','sage','sabio','sailor','marinheiro','scribe','escriba',
- 'soldier','soldado','wayfarer','viajante'
+ 'soldier','soldado','wayfarer','viajante','urchin','orfao','outlander','forasteiro'
 ]);
 const TIER_ORDER=['precaria','modesta','regular','estavel','prospera','privilegiada'];
 const TIER_IDS=new Set(TIER_ORDER);
