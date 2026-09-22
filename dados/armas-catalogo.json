@@ -63,14 +63,6 @@
       "observacao": "Material demonstrativo ligado ao Xyleff Sualky Guidebook. Os próprios autores informam que os preços foram definidos para balancear regras de materiais e durabilidade. Não canonizar."
     }
   },
-  "regras_compartilhadas": {
-    "Adaptable": "Ao atacar, pode causar o tipo de dano normal da arma ou o tipo alternativo indicado entre parênteses.",
-    "Attached": "A arma não pode ser desarmada. Colocar ou retirar exige uma ação. A mão ainda pode segurar objetos, mas não pode atacar com a arma enquanto segura algo; usar outra arma nessa mão e testes de Prestidigitação/Sleight of Hand com ela sofrem Desvantagem.",
-    "Loud": "O disparo alerta criaturas que possam ouvir dentro do raio indicado; o alcance do som dobra em locais com eco e em meios onde o som se propaga mais rapidamente.",
-    "Pugilist": "Para criaturas que usam um dado em ataques desarmados, aumenta esse dado em um passo, até o máximo de d12, quando atacam desarmadas com a mão equipada.",
-    "Reload": "Após o número indicado de disparos, a arma precisa ser recarregada usando uma ação.",
-    "Thrown Versatility": "Quando usada para um ataque à distância arremessado, a arma usa o dano indicado entre parênteses em vez do dano corpo a corpo."
-  },
   "maestrias_demonstrativas": {
     "Bleed": "Ao acertar, o alvo faz salvaguarda de Constituição contra CD 8 + modificador de atributo do ataque + Bônus de Proficiência. Em falha, fica Sangrando e perde 3 PV no início de seus turnos; uma ação com teste de Sabedoria (Medicina) CD 12 ou uso apropriado de kit de curandeiro encerra o efeito. Criaturas sem sangue, como muitos mortos-vivos e constructos, são imunes.",
     "Disarm": "Quando uma criatura erra um ataque corpo a corpo com arma contra você, você pode usar sua reação para tentar desarmar a arma usada no ataque.",
@@ -2974,5 +2966,15 @@
       "fonte": "xyleff-weapons-pdf24-1",
       "descricao": "Registro demonstrativo da lista de armas de Xyleff. Não canonizar e não usar para substituir a versão oficial do mesmo nome."
     }
-  ]
+  ],
+  "regras_por_fonte": {
+    "larsene-ledger-pdf24": {
+      "Adaptable": "Ao atacar, pode causar o tipo de dano normal da arma ou o tipo alternativo indicado entre parênteses.",
+      "Attached": "A arma não pode ser desarmada. Colocar ou retirar exige uma ação. A mão ainda pode segurar objetos, mas não pode atacar com a arma enquanto segura algo; usar outra arma nessa mão e testes de Prestidigitação/Sleight of Hand com ela sofrem Desvantagem.",
+      "Loud": "O disparo alerta criaturas que possam ouvir dentro do raio indicado; o alcance do som dobra em locais com eco e em meios onde o som se propaga mais rapidamente.",
+      "Pugilist": "Para criaturas que usam um dado em ataques desarmados, aumenta esse dado em um passo, até o máximo de d12, quando atacam desarmadas com a mão equipada.",
+      "Reload": "Após o número indicado de disparos, a arma precisa ser recarregada usando uma ação.",
+      "Thrown Versatility": "Quando usada para um ataque à distância arremessado, a arma usa o dano indicado entre parênteses em vez do dano corpo a corpo."
+    }
+  }
 }
