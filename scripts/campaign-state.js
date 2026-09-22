@@ -51,4 +51,4 @@ export const updateCampaignNpc=(list,id,entityId,patch={})=>mutateCampaignEntity
 export const removeCampaignNpc=(list,id,entityId)=>mutateCampaignEntity(list,id,'npcs',entityId,{},true);
 export const addCampaignLocation=(list,id,data={})=>addCampaignEntity(list,id,'locations',data);
 export const updateCampaignLocation=(list,id,entityId,patch={})=>mutateCampaignEntity(list,id,'locations',entityId,patch);
-export const removeCampaignLocation=(list,id,entityId)=>mutateCampaignEntity(list,id,'locations',entityId,{},true);
+export function removeCampaignLocation(list,id,entityId){const result=mutateCampaignEntity(list,id,'locations',entityId,{},true);if(!result.ok)return result;for(const npc of result.campaign.npcs)if(npc.currentLocationId===text(entityId))npc.currentLocationId=null;result.campaign.updatedAt=now();return result}
