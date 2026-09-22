@@ -16,9 +16,10 @@ function provider(){
  if(!providerPromise)providerPromise=createFirebaseCollaborationProvider().catch(error=>{providerPromise=null;throw error});
  return providerPromise
 }
-function setOptions(select,rows,selectedUid=''){
- select.innerHTML='<option value="">Selecione o jogador</option>'+rows.map(row=>`<option value="${String(row.uid).replace(/"/g,'&quot;')}" data-username="${String(row.username).replace(/"/g,'&quot;')}">${String(row.displayName||row.username).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</option>`).join('');
- select.value=selectedUid||''
+function esc(value){return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
+function setOptions(select,rows,selected=null){
+ select.innerHTML='<option value="">Selecione o jogador</option>'+rows.map(row=>`<option value="${esc(row.displayName||row.username)}" data-uid="${esc(row.uid)}" data-username="${esc(row.username)}">${esc(row.displayName||row.username)}</option>`).join('');
+ select.value=selected?(selected.displayName||selected.username):''
 }
 function emitProfile(select){
  select.dispatchEvent(new Event('input',{bubbles:true}));
@@ -39,18 +40,18 @@ async function renderAssignment(){
    const current=await remote.currentUser().catch(()=>null),existing=username(state.c.ownerUsername),mine=username(session.username),account=current&&username(current.username)===mine?current:null,displayName=text(account?.displayName)||text((remote.playerAccounts?.()||[]).find(row=>username(row.username)===mine)?.displayName)||mine;
    if(!existing||existing===mine){state.c.ownerUid=session.uid;state.c.ownerUsername=mine;profile.player=displayName}
    const shownOwner=username(state.c.ownerUsername)||mine,shown=(remote.loginAccounts?.()||[]).find(row=>username(row.username)===shownOwner),label=text(shown?.displayName)||profile.player||shownOwner;
-   select.innerHTML=`<option value="${String(label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}">${String(label).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</option>`;
+   select.innerHTML=`<option value="${esc(label)}">${esc(label)}</option>`;
    select.value=label;select.disabled=true;profile.player=label;emitProfile(select);return
   }
   if(mode==='master'){
-   const owner=username(remote.config?.ownerUsername||'rafael'),users=(await remote.listUsers()).filter(row=>username(row.username)!==owner),selected=users.find(row=>text(row.uid)===text(state.c.ownerUid)||username(row.username)===username(state.c.ownerUsername));
-   setOptions(select,users,selected?.uid||'');select.disabled=false;
+   const owner=username(remote.config?.ownerUsername||'rafael'),configured=new Set((remote.playerAccounts?.()||[]).map(row=>username(row.username))),users=(await remote.listUsers()).filter(row=>username(row.username)!==owner&&configured.has(username(row.username))),selected=users.find(row=>text(row.uid)===text(state.c.ownerUid)||username(row.username)===username(state.c.ownerUsername));
+   setOptions(select,users,selected||null);select.disabled=false;
    if(selected){state.c.ownerUid=selected.uid;state.c.ownerUsername=username(selected.username);profile.player=selected.displayName||selected.username}else if(username(state.c.ownerUsername)===owner){state.c.ownerUid='';state.c.ownerUsername='';profile.player=''}
-   select.addEventListener('change',()=>{
-    const row=users.find(user=>text(user.uid)===text(select.value));
+   select.onchange=()=>{
+    const uid=text(select.selectedOptions?.[0]?.dataset?.uid),row=users.find(user=>text(user.uid)===uid);
     if(!row){state.c.ownerUid='';state.c.ownerUsername='';profile.player='';emitProfile(select);return}
     state.c.ownerUid=row.uid;state.c.ownerUsername=username(row.username);profile.player=row.displayName||row.username;emitProfile(select)
-   },{once:false});
+   };
    emitProfile(select)
   }
  }catch(error){
@@ -67,6 +68,7 @@ function guardMasterSave(event){
 }
 function bind(){
  document.getElementById('save')?.addEventListener('click',guardMasterSave,true);
+ document.getElementById('save-sheet')?.addEventListener('click',guardMasterSave,true);
  document.addEventListener('hub:new-character',()=>queueMicrotask(renderAssignment));
  document.addEventListener('hub-rpg:sheet-ready',()=>queueMicrotask(renderAssignment));
  window.addEventListener('hub-rpg:collaboration-session-changed',()=>queueMicrotask(renderAssignment))
