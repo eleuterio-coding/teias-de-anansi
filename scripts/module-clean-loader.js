@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260922-library-perf2';
+  const VERSION='20260923-native-languages1';
   const LAYOUT='biblioteca-light.css?v=20260827-library-layout2';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
