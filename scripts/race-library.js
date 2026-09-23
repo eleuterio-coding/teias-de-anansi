@@ -9,7 +9,7 @@ function lineageTraits(lineage){return arr(lineage?.traits)}
 function sourceLabel(lineage,species){return lineage?.source||species?.source||'Fonte não informada'}
 function statusLabel(row){return row?.ruleset==='5e'?'Legado 5e compatível':'5.5e / 2024'}
 function searchable(species){return fold([
- species.name,species.source,species.lineageLabel,...arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
+ species.name,species.source,species.lineageLabel,...(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
  ...arr(species.lineages).flatMap(l=>[l.name,...arr(l.aliases),l.source,...lineageTraits(l).flatMap(t=>[t.name,t.originalName,t.text])])
 ].filter(Boolean).join(' '))}
 function renderTrait(t){return`<article class="trait"><h4>${esc(t.name||t.originalName||'Traço')}</h4><p>${esc(t.text||'')}</p></article>`}
