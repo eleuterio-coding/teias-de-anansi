@@ -1,6 +1,6 @@
 import{state,blank,json,arr,fold,esc}from'./character-builder/state.js';
-import{loadSpecies}from'./character-builder/catalogs.js?v=20260923-race-language-field1';
-import{nativeLanguagesForSpecies}from'./species-language-rules.js?v=20260923-race-language-field1';
+import{loadSpecies}from'./character-builder/catalogs.js?v=20260923-race-language-field2';
+import{nativeLanguagesForSpecies}from'./species-language-rules.js?v=20260923-race-language-field2';
 
 const $=id=>document.getElementById(id);
 let DATA=[];
