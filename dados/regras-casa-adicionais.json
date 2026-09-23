@@ -269,6 +269,10 @@
           "texto": "As compras realizadas durante a criação são debitadas do total de PO disponível. Armas, armaduras, equipamento de aventura, ferramentas, montarias, veículos e itens mágicos adquiridos aparecem no inventário, e o saldo restante é atualizado automaticamente."
         },
         {
+          "titulo": "Idiomas Nativos Raciais",
+          "texto": "Os idiomas nativos concedidos pela Raça são automáticos e não consomem as duas escolhas de idiomas da criação do personagem. O idioma Comum só é automático quando constar entre os idiomas nativos daquela Raça; Raças cuja lista nativa não inclua Comum não o recebem por esta regra. Esta regra é independente do Level, da Faixa Econômica e do cálculo de Riqueza por Level."
+        },
+        {
           "titulo": "Valores por Level",
           "texto": "Level 1: —. Level 2: 25 PO. Level 3: 75 PO. Level 4: 150 PO. Level 5: 650 PO. Level 6: 1.250 PO. Level 7: 2.000 PO. Level 8: 3.000 PO. Level 9: 4.000 PO. Level 10: 5.000 PO. Level 11: 6.500 PO. Level 12: 8.500 PO. Level 13: 11.000 PO. Level 14: 13.500 PO. Level 15: 16.000 PO. Level 16: 18.750 PO. Level 17: 21.500 PO. Level 18: 24.000 PO. Level 19: 27.000 PO. Level 20: 30.000 PO."
         }
