@@ -1,7 +1,7 @@
 import'../hub-ux.js?v=20260917-master-full-control1';
 import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-master-full-control1';
 import{state}from'./state.js';
-import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260922-wealth-class3';
+import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260922-wealth-class4';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
 import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
 const STEPS=[
