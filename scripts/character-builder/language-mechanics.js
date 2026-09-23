@@ -1,5 +1,6 @@
 import{state,arr,num,fold,uniq}from'./state.js';
 import{selected,item}from'./rules.js';
+import{nativeLanguagesForSpecies}from'../species-language-rules.js';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Halfling','Orc'];
 export const RARE_LANGUAGES=['Abissal','Celestial','Fala Profunda','Druídico','Infernal','Primordial','Silvestre','Cant dos Ladrões','Subcomum'];
@@ -37,13 +38,14 @@ function subclassLanguageDefinitions(sub){
 }
 function featLanguageDefinitions(feats){const defs=[];for(const feat of feats){const name=fold(feat?.name);if(name===fold('Fey Teleportation'))defs.push({key:`feat:${feat.id}:fey-teleportation-sylvan`,label:`Fey Teleportation — Silvestre`,fixed:['Silvestre'],choose:0,pool:[]});if(name===fold('Prodigy'))defs.push({key:`feat:${feat.id}:prodigy-language`,label:`Prodigy — idioma`,fixed:[],choose:1,pool:ALL_LANGUAGES})}return defs}
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
+function speciesLanguageDefinitions(species){if(!species)return[];const fixed=nativeLanguagesForSpecies(species.name).map(canonical).filter(Boolean);return fixed.length?[{key:`species:${species.id||keyPart(species.name)}:native-languages`,label:`${species.name} — idiomas nativos`,fixed:uniq(fixed),choose:0,pool:[]}]:[]}
 function backgroundLanguageDefinitions(bg){if(!bg)return[];const fixed=[],defs=[];for(const raw of arr(bg.languages)){const value=canonical(raw);if(!value)continue;const m=fold(value).match(/^(um|uma|dois|duas|tres|três|\d+).*escolh/);if(m)defs.push({key:`background:${bg.id}:languages-choice`,label:`${bg.name} — idiomas`,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});else fixed.push(value)}if(fixed.length)defs.push({key:`background:${bg.id}:languages-fixed`,label:`${bg.name} — idiomas`,fixed:uniq(fixed),choose:0,pool:[]});return defs}
 function appendTextSources(defs,sources){for(const[sourceKey,label,text]of sources)defs.push(...grantsFromText(sourceKey,label,text))}
 export function languageGrantDefinitions(){
  ensureState();const{klass,species,bg,sub}=selected(),level=Math.max(1,Math.min(20,num(state.c.choices?.class?.level)||1)),defs=[];
  defs.push(...classLanguageDefinitions(klass,level),...subclassLanguageDefinitions(sub));
  const classSources=[];for(const f of arr(klass?.features).filter(x=>num(x.level)<=level&&!structuredClassFeature(klass,x)))classSources.push([`class:${klass.slug}:${keyPart(f.name)}`,`${klass.name} — ${f.name}`,f.text||f.description||'']);if(sub?.description)classSources.push([`subclass:${sub.id||sub.name}`,sub.name,sub.description]);appendTextSources(defs,classSources);
- defs.push({key:'core:languages',label:'Criação de Personagem',fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES},...backgroundLanguageDefinitions(bg));
+ defs.push(...speciesLanguageDefinitions(species),{key:'core:languages',label:'Criação de Personagem',fixed:[],choose:2,pool:STANDARD_LANGUAGES},...backgroundLanguageDefinitions(bg));
  const originSources=[];if(bg?.feature)originSources.push([`background:${bg.id}:feature`,`${bg.name} — característica`,bg.feature.text||bg.feature.description||'']);const stages=featStages();for(const feat of stages.origin)originSources.push([`feat:origin:${feat.id}`,`Talento de Origem — ${feat.name}`,feat.description||'']);appendTextSources(defs,originSources);
  const lineage=species?.lineages?.find(x=>x.name===state.c.choices?.species?.lineage)||null,speciesTraits=lineage?.replaceBaseTraits?arr(lineage.traits):[...arr(species?.traits),...arr(lineage?.traits)],raceSources=[];for(const t of speciesTraits)raceSources.push([`species:${species?.id||species?.name}:${keyPart(t.name)}`,`${species?.name||'Raça'} — ${t.name}`,t.text||t.description||'']);for(const feat of stages.species)raceSources.push([`feat:species:${feat.id}`,`Talento racial — ${feat.name}`,feat.description||'']);appendTextSources(defs,raceSources);
  const progressionSources=[];for(const feat of stages.progression)progressionSources.push([`feat:progression:${feat.id}`,`Talento de Progressão — ${feat.name}`,feat.description||'']);appendTextSources(defs,progressionSources);
