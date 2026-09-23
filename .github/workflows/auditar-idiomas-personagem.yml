@@ -59,6 +59,8 @@ jobs:
           ui=Path('scripts/character-builder/language-ui.js').read_text(encoding='utf-8')
           profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          species_rules=Path('scripts/species-language-rules.js').read_text(encoding='utf-8')
+          eberron_languages=Path('dados/idiomas-eberron.json').read_text(encoding='utf-8')
           required=[
               "fixed:[],choose:2,pool:CORE_LANGUAGE_CHOICES",
               'nativeLanguagesForSpecies',
@@ -81,6 +83,11 @@ jobs:
               raise RuntimeError('Prévia da ficha não aplica os idiomas efetivos.')
           if 'initLanguageUi' not in loader:
               raise RuntimeError('Loader não inicializa o módulo de idiomas.')
+          for token in ["[['Tortle'],['Comum','Aquan']]", "[['Harpia','Harpy'],['Comum','Harpy']]"]:
+              if token not in species_rules:
+                  raise RuntimeError('Idioma racial esperado ausente: '+token)
+          if '"nome": "Harpy"' not in eberron_languages or '"status": "Regra da Casa — exclusivo de Harpias"' not in eberron_languages:
+              raise RuntimeError('Idioma Harpy não está registrado como exclusivo de Harpias no catálogo.')
           if "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES" in mechanics:
               raise RuntimeError('Comum não deve ser concedido pelo núcleo; idiomas nativos vêm da raça.')
           print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
