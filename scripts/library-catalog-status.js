@@ -1,4 +1,4 @@
-import{CATALOG_MODULES,CATALOG_BY_ROUTE}from'./catalog-registry.js?v=20260901-catalog-registry1';
+import{CATALOG_MODULES,CATALOG_BY_ROUTE}from'./catalog-registry.js?v=20260923-native-languages1';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
