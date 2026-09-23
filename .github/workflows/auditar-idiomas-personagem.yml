@@ -60,7 +60,7 @@ jobs:
           profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           required=[
-              "fixed:[],choose:2,pool:STANDARD_LANGUAGES",
+              "fixed:[],choose:2,pool:CORE_LANGUAGE_CHOICES",
               'nativeLanguagesForSpecies',
               "klass.slug==='druid'&&level>=1",
               "fixed:['Druídico']",
