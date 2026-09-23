@@ -1,10 +1,10 @@
 import'../character-builder-level-guard.js?v=20260901-level-up1';
-import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260922-wealth-class3';
-import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260922-wealth-class3';
+import{initWealthPurchaseUi}from'./wealth-purchase-ui.js?v=20260922-wealth-class4';
+import{initStartingEquipmentUi}from'./starting-equipment-ui.js?v=20260922-wealth-class4';
 import{initStartingEquipmentReviewUi}from'./starting-equipment-review-ui.js?v=20260901-starting-equipment-review1';
 import{initOriginFeatSync}from'./origin-feat-sync.js?v=20260824-origin-feat-sync1';
 import{initSkilledFeatUi}from'./skilled-feat-ui.js?v=20260825-skilled-existing1';
-import{initBackgroundWealthTierUi}from'./background-wealth-tier-ui.js?v=20260922-wealth-class3';
+import{initBackgroundWealthTierUi}from'./background-wealth-tier-ui.js?v=20260922-wealth-class4';
 import{initPostCreationEconomyGuard}from'./post-creation-economy-guard.js?v=20260901-current-balance1';
 
 let purchaseCollapseGuardBound=false;
