@@ -1,6 +1,6 @@
 import{state,$,arr,num,esc}from'./state.js';
 import{derive}from'./rules.js';
-import{languageOutcome}from'./language-mechanics.js?v=20260923-harpy-aquan1';
+import{languageOutcome}from'./language-mechanics.js?v=20260923-race-language-field1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260826-equipment-ownership1';
 
 function ensureSheetState(){
