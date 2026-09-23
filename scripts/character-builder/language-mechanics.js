@@ -1,6 +1,6 @@
 import{state,arr,num,fold,uniq}from'./state.js';
 import{selected,item}from'./rules.js';
-import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-race-language-field1';
+import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-race-language-builder1';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Halfling','Orc'];
 export const RARE_LANGUAGES=['Abissal','Celestial','Fala Profunda','Druídico','Infernal','Primordial','Silvestre','Cant dos Ladrões','Subcomum'];
