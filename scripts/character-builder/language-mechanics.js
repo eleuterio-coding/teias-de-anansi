@@ -1,13 +1,13 @@
 import{state,arr,num,fold,uniq}from'./state.js';
 import{selected,item}from'./rules.js';
-import{nativeLanguagesForSpecies}from'../species-language-rules.js';
+import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-harpy-aquan1';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Halfling','Orc'];
 export const RARE_LANGUAGES=['Abissal','Celestial','Fala Profunda','Druídico','Infernal','Primordial','Silvestre','Cant dos Ladrões','Subcomum'];
 const ALL_LANGUAGES=[...STANDARD_LANGUAGES,...RARE_LANGUAGES];
 const CORE_LANGUAGE_CHOICES=['Comum',...STANDARD_LANGUAGES];
 const NUMBER_WORDS={one:1,two:2,three:3,um:1,uma:1,dois:2,duas:2,tres:3,três:3};
-const CANON={common:'Comum',comum:'Comum','common sign language':'Língua de Sinais Comum','lingua de sinais comum':'Língua de Sinais Comum',draconic:'Dracônico',draconico:'Dracônico',dwarvish:'Anão',anao:'Anão',elvish:'Élfico',elfico:'Élfico',giant:'Gigante',gigante:'Gigante',gnomish:'Gnômico',gnomico:'Gnômico',goblin:'Goblin',halfling:'Halfling',orc:'Orc',abyssal:'Abissal',abissal:'Abissal',celestial:'Celestial','deep speech':'Fala Profunda','fala profunda':'Fala Profunda',druidic:'Druídico',druidico:'Druídico',infernal:'Infernal',primordial:'Primordial',sylvan:'Silvestre',silvestre:'Silvestre',"thieves' cant":'Cant dos Ladrões','thieves’ cant':'Cant dos Ladrões','cant dos ladroes':'Cant dos Ladrões',undercommon:'Subcomum',subcomum:'Subcomum'};
+const CANON={common:'Comum',comum:'Comum','common sign language':'Língua de Sinais Comum','lingua de sinais comum':'Língua de Sinais Comum',draconic:'Dracônico',draconico:'Dracônico',dwarvish:'Anão',anao:'Anão',elvish:'Élfico',elfico:'Élfico',giant:'Gigante',gigante:'Gigante',gnomish:'Gnômico',gnomico:'Gnômico',goblin:'Goblin',halfling:'Halfling',orc:'Orc',abyssal:'Abissal',abissal:'Abissal',celestial:'Celestial','deep speech':'Fala Profunda','fala profunda':'Fala Profunda',druidic:'Druídico',druidico:'Druídico',infernal:'Infernal',primordial:'Primordial',sylvan:'Silvestre',silvestre:'Silvestre',"thieves' cant":'Cant dos Ladrões','thieves’ cant':'Cant dos Ladrões','cant dos ladroes':'Cant dos Ladrões',undercommon:'Subcomum',subcomum:'Subcomum',aquan:'Aquan',aquand:'Aquan',harpy:'Harpy'};
 const STRUCTURED_CLASS_LANGUAGE_FEATURES={druid:new Set(['druidic','druidico']),rogue:new Set(["thieves' cant",'thieves’ cant','cant dos ladroes']),ranger:new Set(['deft explorer','explorador habil'])};
 function canonical(v){const raw=String(v||'').trim();return CANON[fold(raw)]||raw}
 function countWord(v){const f=fold(v);return NUMBER_WORDS[f]||num(v)}
