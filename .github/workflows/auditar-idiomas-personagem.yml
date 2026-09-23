@@ -23,6 +23,7 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
+      - 'scripts/species-language-rules.js'
       - 'scripts/character-builder/profile-ui.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/rules.js'
