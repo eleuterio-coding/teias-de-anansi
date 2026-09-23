@@ -7,6 +7,7 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
+      - 'scripts/species-language-rules.js'
       - 'scripts/character-builder/profile-ui.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/rules.js'
@@ -45,6 +46,7 @@ jobs:
       - name: Validar JavaScript de idiomas
         run: |
           node --check scripts/character-builder/language-mechanics.js
+          node --check scripts/species-language-rules.js
           node --check scripts/character-builder/language-ui.js
           node --check scripts/character-builder/profile-ui.js
           node --check scripts/character-builder.js
@@ -57,7 +59,8 @@ jobs:
           profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
           required=[
-              "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES",
+              "fixed:[],choose:2,pool:STANDARD_LANGUAGES",
+              'nativeLanguagesForSpecies',
               "klass.slug==='druid'&&level>=1",
               "fixed:['Druídico']",
               "klass.slug==='rogue'&&level>=1",
@@ -77,5 +80,7 @@ jobs:
               raise RuntimeError('Prévia da ficha não aplica os idiomas efetivos.')
           if 'initLanguageUi' not in loader:
               raise RuntimeError('Loader não inicializa o módulo de idiomas.')
-          print('Idiomas validados: Comum + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
+          if "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES" in mechanics:
+              raise RuntimeError('Comum não deve ser concedido pelo núcleo; idiomas nativos vêm da raça.')
+          print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
           PY
