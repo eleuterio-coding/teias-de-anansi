@@ -1,6 +1,6 @@
 import{state,arr,num,fold,uniq}from'./state.js';
 import{selected,item}from'./rules.js';
-import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-harpy-aquan1';
+import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-race-language-field1';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Halfling','Orc'];
 export const RARE_LANGUAGES=['Abissal','Celestial','Fala Profunda','Druídico','Infernal','Primordial','Silvestre','Cant dos Ladrões','Subcomum'];
@@ -39,7 +39,7 @@ function subclassLanguageDefinitions(sub){
 }
 function featLanguageDefinitions(feats){const defs=[];for(const feat of feats){const name=fold(feat?.name);if(name===fold('Fey Teleportation'))defs.push({key:`feat:${feat.id}:fey-teleportation-sylvan`,label:`Fey Teleportation — Silvestre`,fixed:['Silvestre'],choose:0,pool:[]});if(name===fold('Prodigy'))defs.push({key:`feat:${feat.id}:prodigy-language`,label:`Prodigy — idioma`,fixed:[],choose:1,pool:ALL_LANGUAGES})}return defs}
 function structuredClassFeature(klass,feature){const names=STRUCTURED_CLASS_LANGUAGE_FEATURES[klass?.slug];return !!names&&names.has(fold(feature?.name))}
-function speciesLanguageDefinitions(species){if(!species)return[];const fixed=nativeLanguagesForSpecies(species.name).map(canonical).filter(Boolean);return fixed.length?[{key:`species:${species.id||keyPart(species.name)}:native-languages`,label:`${species.name} — idiomas nativos`,fixed:uniq(fixed),choose:0,pool:[]}]:[]}
+function speciesLanguageDefinitions(species){if(!species)return[];const native=arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name),fixed=native.map(canonical).filter(Boolean);return fixed.length?[{key:`species:${species.id||keyPart(species.name)}:native-languages`,label:`${species.name} — idiomas nativos`,fixed:uniq(fixed),choose:0,pool:[]}]:[]}
 function backgroundLanguageDefinitions(bg){if(!bg)return[];const fixed=[],defs=[];for(const raw of arr(bg.languages)){const value=canonical(raw);if(!value)continue;const m=fold(value).match(/^(um|uma|dois|duas|tres|três|\d+).*escolh/);if(m)defs.push({key:`background:${bg.id}:languages-choice`,label:`${bg.name} — idiomas`,fixed:[],choose:countWord(m[1]),pool:ALL_LANGUAGES});else fixed.push(value)}if(fixed.length)defs.push({key:`background:${bg.id}:languages-fixed`,label:`${bg.name} — idiomas`,fixed:uniq(fixed),choose:0,pool:[]});return defs}
 function appendTextSources(defs,sources){for(const[sourceKey,label,text]of sources)defs.push(...grantsFromText(sourceKey,label,text))}
 export function languageGrantDefinitions(){
