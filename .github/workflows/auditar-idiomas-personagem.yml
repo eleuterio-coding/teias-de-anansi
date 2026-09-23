@@ -62,6 +62,7 @@ jobs:
           ui=Path('scripts/character-builder/language-ui.js').read_text(encoding='utf-8')
           profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          creation_html=Path('criacao-personagem.html').read_text(encoding='utf-8')
           species_rules=Path('scripts/species-language-rules.js').read_text(encoding='utf-8')
           catalogs=Path('scripts/character-builder/catalogs.js').read_text(encoding='utf-8')
           race_library=Path('scripts/race-library.js').read_text(encoding='utf-8')
@@ -82,12 +83,16 @@ jobs:
               if token not in mechanics: raise RuntimeError('Contrato de idiomas ausente: '+token)
           if "'Comum'" in mechanics.split('export const STANDARD_LANGUAGES=',1)[1].split(';',1)[0]:
               raise RuntimeError('Comum não deve consumir uma das duas escolhas básicas.')
-          for token in ['initLanguageUi','hub:languages-changed','language-choice','Idiomas adicionais / observações']:
+          for token in ['initLanguageUi','hub:languages-changed','language-choice','Idiomas adicionais / observações','species-native-languages','Idiomas</legend>','Nativos:']:
               if token not in ui: raise RuntimeError('Interface de idiomas incompleta: '+token)
           if 'languageOutcome' not in profile or "row('Idiomas',languages())" not in profile:
               raise RuntimeError('Prévia da ficha não aplica os idiomas efetivos.')
           if 'initLanguageUi' not in loader:
               raise RuntimeError('Loader não inicializa o módulo de idiomas.')
+          if 'id="species-native-languages"' not in creation_html:
+              raise RuntimeError('Etapa Raça não possui área para exibir idiomas nativos.')
+          if 'race-language-builder1' not in loader:
+              raise RuntimeError('Criação de personagem não usa a versão atual das regras raciais de idiomas.')
           expected_species_languages=[
               "[['Aarakocra'],['Common','Primordial']]",
               "[['Aasimar'],['Common','Celestial']]",

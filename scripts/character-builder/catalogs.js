@@ -1,7 +1,7 @@
 import{state,arr,num,uniq,fold,slug,json,RAW24,RAW14,CLASS_SLUGS,LOCFILES,BGFILES,SPFILES,FEATFILES,ABKEY}from'./state.js';
 import{is55,isCompatible55,preferCurrent}from'./compatibility.js?v=20260823-character-builder26';
 import{organizeRaceVariants}from'./race-variants.js?v=20260824-race-variants1';
-import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-race-language-field2';
+import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20260923-race-language-builder1';
 
 function tr(v){if(v==null)return'';let s=String(v);for(const d of[state.G.classes,state.G.atributos,state.G.pericias,state.G.condicoes,state.G.danos,state.G.tamanhos,state.G.acoes,state.G.regras,state.G.armas,state.G.armaduras])for(const[k,val]of Object.entries(d||{}))s=s.replace(new RegExp(`\b${k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}\b`,'g'),val);return s.replace(/^Skill:\s*/i,'')}
 const SK={'animal handling':'Adestrar Animais','lidar com animais':'Adestrar Animais',acrobatics:'Acrobacia',arcana:'Arcanismo',athletics:'Atletismo',deception:'Enganação',history:'História',insight:'Intuição',intimidation:'Intimidação',investigation:'Investigação',medicine:'Medicina',nature:'Natureza',perception:'Percepção',performance:'Atuação',persuasion:'Persuasão',religion:'Religião','sleight of hand':'Prestidigitação',stealth:'Furtividade',survival:'Sobrevivência'};
