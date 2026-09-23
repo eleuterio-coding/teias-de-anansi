@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260923-race-language-field1';
+  const VERSION='20260923-race-language-field2';
   const LAYOUT='biblioteca-light.css?v=20260827-library-layout2';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
@@ -49,7 +49,7 @@
   async function load(){
     const c=cfg[key];
     if(!c)throw new Error('Módulo de limpeza inválido.');
-    const r=await fetch(`${c.source}?v=${VERSION}`,{cache:'default'});
+    const r=await fetch(`${c.source}?v=${VERSION}`,{cache:key==='raca'||key==='especies'?'no-store':'default'});
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     let html=await r.text();
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
