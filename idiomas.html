@@ -87,11 +87,11 @@ function render() {
 async function iniciar() {
   try {
     const urls = [
-      'dados/idiomas-core-standard.json?v=20260819-1043',
-      'dados/idiomas-core-rare.json?v=20260819-1043',
-      'dados/idiomas-forgotten-realms.json?v=20260819-1043',
-      'dados/idiomas-eberron.json?v=20260819-1043',
-      'dados/idiomas-outros.json?v=20260819-1043'
+      'dados/idiomas-core-standard.json?v=20260923-harpy-aquan1',
+      'dados/idiomas-core-rare.json?v=20260923-harpy-aquan1',
+      'dados/idiomas-forgotten-realms.json?v=20260923-harpy-aquan1',
+      'dados/idiomas-eberron.json?v=20260923-harpy-aquan1',
+      'dados/idiomas-outros.json?v=20260923-harpy-aquan1'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
