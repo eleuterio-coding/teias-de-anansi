@@ -1,5 +1,5 @@
 import{state,$,esc,fold}from'./state.js';
-import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js?v=20260923-race-language-field1';
+import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js?v=20260923-race-language-builder1';
 
 let queued=false;
 function ensureHost(){
@@ -9,10 +9,18 @@ function ensureHost(){
  let box=$('language-choices');if(!box){box=document.createElement('div');box.id='language-choices';box.className='full';label?.insertAdjacentElement('afterend',box)}
  return box
 }
+function ensureSpeciesHost(){return $('species-native-languages')}
 function optionList(pool,current,reserved){const currentKey=fold(current);return`<option value="">Selecione</option>`+pool.filter(x=>{const key=fold(x);return key===currentKey||!reserved.has(key)}).map(x=>`<option value="${esc(x)}" ${x===current?'selected':''}>${esc(x)}</option>`).join('')}
+function renderSpeciesLanguages(out){
+ const host=ensureSpeciesHost();if(!host)return;
+ const def=out.definitions.find(d=>String(d.key||'').startsWith('species:')&&String(d.key||'').endsWith(':native-languages'));
+ if(!def){host.innerHTML='<fieldset><legend>Idiomas</legend><p class="mini">Selecione uma raça para ver seus idiomas nativos.</p></fieldset>';return}
+ host.innerHTML=`<fieldset><legend>Idiomas</legend><p><strong>Nativos:</strong> ${def.fixed.map(x=>`<span class="pill">${esc(x)}</span>`).join(' ')||'—'}</p><p class="mini">Estes idiomas são concedidos automaticamente pela raça e não consomem as duas escolhas adicionais de idioma.</p></fieldset>`
+}
 function render(){
  queued=false;sanitizeLanguageChoices();const box=ensureHost();if(!box)return;
- const out=languageOutcome(),fixed=out.automatic.filter(x=>!Object.values(out.choices).includes(x)),reserved=new Set([...fixed,...Object.values(out.choices)].map(fold));let html='<fieldset><legend>Idiomas</legend>';
+ const out=languageOutcome();renderSpeciesLanguages(out);
+ const fixed=out.automatic.filter(x=>!Object.values(out.choices).includes(x)),reserved=new Set([...fixed,...Object.values(out.choices)].map(fold));let html='<fieldset><legend>Idiomas</legend>';
  if(fixed.length)html+=`<p><strong>Automáticos:</strong> ${fixed.map(x=>`<span class="pill">${esc(x)}</span>`).join(' ')}</p>`;
  for(const def of out.definitions){
   if(!def.choose)continue;
