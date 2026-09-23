@@ -7,6 +7,8 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
+      - 'scripts/species-language-rules.js'
+      - 'scripts/race-library.js'
       - 'scripts/character-builder/profile-ui.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/rules.js'
@@ -22,6 +24,7 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/language-mechanics.js'
       - 'scripts/character-builder/language-ui.js'
+      - 'scripts/species-language-rules.js'
       - 'scripts/character-builder/profile-ui.js'
       - 'scripts/character-builder/catalogs.js'
       - 'scripts/character-builder/rules.js'
@@ -45,6 +48,9 @@ jobs:
       - name: Validar JavaScript de idiomas
         run: |
           node --check scripts/character-builder/language-mechanics.js
+          node --check scripts/species-language-rules.js
+          node --check scripts/character-builder/catalogs.js
+          node --check scripts/race-library.js
           node --check scripts/character-builder/language-ui.js
           node --check scripts/character-builder/profile-ui.js
           node --check scripts/character-builder.js
@@ -56,8 +62,13 @@ jobs:
           ui=Path('scripts/character-builder/language-ui.js').read_text(encoding='utf-8')
           profile=Path('scripts/character-builder/profile-ui.js').read_text(encoding='utf-8')
           loader=Path('scripts/character-builder.js').read_text(encoding='utf-8')
+          species_rules=Path('scripts/species-language-rules.js').read_text(encoding='utf-8')
+          catalogs=Path('scripts/character-builder/catalogs.js').read_text(encoding='utf-8')
+          race_library=Path('scripts/race-library.js').read_text(encoding='utf-8')
+          eberron_languages=Path('dados/idiomas-eberron.json').read_text(encoding='utf-8')
           required=[
-              "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES",
+              "fixed:[],choose:2,pool:CORE_LANGUAGE_CHOICES",
+              'nativeLanguagesForSpecies',
               "klass.slug==='druid'&&level>=1",
               "fixed:['Druídico']",
               "klass.slug==='rogue'&&level>=1",
@@ -77,5 +88,63 @@ jobs:
               raise RuntimeError('Prévia da ficha não aplica os idiomas efetivos.')
           if 'initLanguageUi' not in loader:
               raise RuntimeError('Loader não inicializa o módulo de idiomas.')
-          print('Idiomas validados: Comum + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
+          expected_species_languages=[
+              "[['Aarakocra'],['Common','Primordial']]",
+              "[['Aasimar'],['Common','Celestial']]",
+              "[['Air Genasi'],['Common','Primordial']]",
+              "[['Anão','Dwarf'],['Common','Dwarvish']]",
+              "[['Bugbear'],['Common','Goblin']]",
+              "[['Centaur'],['Common','Sylvan']]",
+              "[['Draconato','Dragonborn'],['Common','Draconic']]",
+              "[['Earth Genasi'],['Common','Primordial']]",
+              "[['Elfo','Elf'],['Common','Elvish']]",
+              "[['Fairy'],['Sylvan']]",
+              "[['Firbolg'],['Common','Giant','Elvish']]",
+              "[['Fire Genasi'],['Common','Primordial']]",
+              "[['Forjado Bélico','Warforged'],['Common']]",
+              "[['Gárgula','Gargoyle'],['Common','Primordial']]",
+              "[['Githyanki'],['Common','Gith']]",
+              "[['Githzerai'],['Common','Gith']]",
+              "[['Gnoll'],['Common','Gnoll']]",
+              "[['Gnomo','Gnome'],['Common','Gnomish']]",
+              "[['Goblin'],['Common','Goblin']]",
+              "[['Golias','Goliath'],['Common','Giant']]",
+              "[['Halfling'],['Common','Halfling']]",
+              "[['Harengon'],['Common','Sylvan']]",
+              "[['Harpia','Harpy'],['Common','Harpy']]",
+              "[['Hobgoblin'],['Common','Goblin']]",
+              "[['Humano','Human'],['Common']]",
+              "[['Kalashtar'],['Common','Quori']]",
+              "[['Kenku'],['Common','Primordial']]",
+              "[['Khoravar'],['Common','Elvish']]",
+              "[['Kobold'],['Common','Draconic']]",
+              "[['Lizardfolk'],['Common','Draconic']]",
+              "[['Medusa'],['Common','Serpentine']]",
+              "[['Meio-Elfo','Half-Elf'],['Common','Elvish']]",
+              "[['Meio-Orc','Half-Orc'],['Common','Orc']]",
+              "[['Metamorfo','Changeling'],['Common']]",
+              "[['Minotaur','Minotauro'],['Common','Minotaur']]",
+              "[['Orc'],['Common','Orc']]",
+              "[['Satyr','Sátiro'],['Common','Sylvan']]",
+              "[['Tabaxi'],['Common']]",
+              "[['Tiefling'],['Common','Infernal']]",
+              "[['Tortle'],['Common','Aquan']]",
+              "[['Transmorfo','Shifter'],['Common']]",
+              "[['Triton'],['Common','Primordial']]",
+              "[['Water Genasi'],['Common','Primordial']]",
+              "[['Worg'],['Goblin']]",
+              "[['Yuan-ti','Yuan-Ti'],['Common','Serpentine']]",
+          ]
+          for token in expected_species_languages:
+              if token not in species_rules:
+                  raise RuntimeError('Idioma racial esperado ausente: '+token)
+          if 'species.nativeLanguages=nativeLanguagesForSpecies(species.name)' not in catalogs:
+              raise RuntimeError('Catálogo de raças não materializa o campo nativeLanguages.')
+          if '<strong>Idiomas</strong>' not in race_library:
+              raise RuntimeError('Módulo de Raças não exibe o campo Idiomas.')
+          if '"nome": "Harpy"' not in eberron_languages or '"status": "Regra da Casa — exclusivo de Harpias"' not in eberron_languages:
+              raise RuntimeError('Idioma Harpy não está registrado como exclusivo de Harpias no catálogo.')
+          if "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES" in mechanics:
+              raise RuntimeError('Comum não deve ser concedido pelo núcleo; idiomas nativos vêm da raça.')
+          print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
           PY
