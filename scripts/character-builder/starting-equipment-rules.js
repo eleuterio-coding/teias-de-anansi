@@ -2,7 +2,7 @@ import{state,arr,num,fold}from'./state.js';
 
 export const STANDARD_BACKGROUND_PACKAGE_B_GP=50;
 export const STANDARD_PACKAGE_B_GP=STANDARD_BACKGROUND_PACKAGE_B_GP;
-export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:40,3:110,4:220,5:900,6:1750,7:2800,8:4200,9:5700,10:7200,11:9300,12:12200,13:15800,14:19500,15:23000,16:27000,17:31000,18:34500,19:39000,20:44000});
+export const WEALTH_BY_LEVEL=Object.freeze({1:0,2:75,3:225,4:550,5:1700,6:3500,7:6000,8:9000,9:13000,10:18000,11:24000,12:32000,13:42000,14:54000,15:68000,16:85000,17:103000,18:120000,19:133000,20:145000});
 export const WEALTH_TIERS=Object.freeze({
  precaria:Object.freeze({id:'precaria',label:'Precária',multiplier:.96}),
  modesta:Object.freeze({id:'modesta',label:'Modesta',multiplier:.99}),
