@@ -208,15 +208,15 @@ function render(){
 }
 function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,objective=$('new-session-objective')?.value;
+ const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value;
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
-  const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,objective,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+  const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok)return feedback(result.reason,false);
   campaigns=writeCampaigns(result.list);location.href=detailHref(result.session)
  }else{
-  const result=createStandaloneSession(standalone,{title:title||undefined,date,objective});
+  const result=createStandaloneSession(standalone,{title:title||undefined,date});
   standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
