@@ -1,8 +1,8 @@
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260922-adventure-workspace2';
-import{readAdventures,writeAdventures}from'./adventure-state.js?v=20260922-adventure-workspace2';
-import{COLLAB_CACHE_KEY}from'./storage-registry.js?v=20260902-collab1';
-import{mergeNewest}from'./collaboration-model.js?v=20260922-adventure-workspace2';
+import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260924-session-scenes1';
+import{readAdventures,writeAdventures}from'./adventure-state.js?v=20260924-session-scenes1';
+import{COLLAB_CACHE_KEY}from'./storage-registry.js?v=20260924-session-scenes1';
+import{mergeNewest}from'./collaboration-model.js?v=20260924-session-scenes1';
 const arr=v=>Array.isArray(v)?v:[],now=()=>new Date().toISOString(),text=v=>String(v??'').trim(),username=v=>text(v).toLowerCase();
 function replaceRemote(localRows=[],remoteRows=[]){const map=new Map(arr(localRows).filter(row=>text(row?.id)).map(row=>[text(row.id),row]));for(const row of arr(remoteRows))if(text(row?.id))map.set(text(row.id),row);return[...map.values()]}
 function replaceCampaignScope(localRows=[],campaignId,remoteRows=[]){const cid=text(campaignId);return[...arr(localRows).filter(row=>text(row?.campaignId)!==cid),...arr(remoteRows)]}
