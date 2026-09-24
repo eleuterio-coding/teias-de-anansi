@@ -1,6 +1,6 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20260922-adventure-workspace2';
-import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20260922-adventure-workspace2';
+import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20260924-session-scenes1';
+import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20260924-session-scenes1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260921-campaign-structure2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
