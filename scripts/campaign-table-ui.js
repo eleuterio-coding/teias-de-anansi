@@ -37,7 +37,7 @@ function bindCampaignSaveButtons(){
   }else{
    campaigns=writeCampaigns(campaigns);campaign=campaignById(campaigns,campaignId)
   }
-  feedback('Etapa salva.',true)
+  render();feedback('Etapa salva.',true)
  }))
 }
 function bind(){updateTextFields();bindMembers();bindCampaignSaveButtons();$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commit(added.list,{message:'Jogador adicionado.'});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commit(linked.list,{message:linked.movedFrom?`Jogador adicionado e personagem movido de ${linked.movedFrom.campaignName}.`:'Jogador e personagem vinculados.'})})}
