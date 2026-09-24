@@ -5,12 +5,15 @@ import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-pla
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'';
+const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[];
 
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
+const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
+function detailHref(session){const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);q.set('id',session.id);return`sessoes.html?${q}`}
+
 
 function feedback(message,ok=true){
  const box=$('session-feedback');if(!box)return;
@@ -60,7 +63,7 @@ function removeSession(ref){
   if(!result.ok)return feedback(result.reason,false);
   standalone=writeStandaloneSessions(result.list)
  }
- reload();render();feedback('Sessão excluída.')
+ if(sessionId===ref.id){location.href=listHref();return}reload();render();feedback('Sessão excluída.')
 }
 function findMutableSession(ref){
  if(ref.source==='campaign')return campaigns.find(c=>c.id===ref.campaignId)?.sessions.find(s=>s.id===ref.id)||null;
@@ -143,6 +146,10 @@ function encounterSummary(session){
  const rows=session.encounters||[];
  return `<section class="session-subsection"><h4>Encontros</h4><div class="story-list">${rows.length?rows.map(e=>`<div class="campaign-reference-row"><div><strong>${esc(e.title)}</strong><div><span class="badge">${esc(e.status||'planned')}</span></div></div></div>`).join(''):'<div class="story-empty">Nenhum encontro registrado.</div>'}</div></section>`
 }
+function sessionListCard(s){
+ const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
+ return `<article class="session-card ${s.status==='active'?'active':''}"><div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions"><a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+}
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]);
  return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
@@ -180,15 +187,24 @@ function sessionCard(s,restricted=false){
 function render(){
  const restricted=playerMode();
  if(!restricted)reload();
- const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows),box=$('sessions-list'),createCard=$('session-create-card');
- if(createCard)createCard.hidden=restricted;
+ const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows),box=$('sessions-list'),createCard=$('session-create-card'),metrics=$('session-metrics');
  const select=$('new-session-adventure');
  if(select&&!restricted)select.innerHTML=adventureOptions(adventureFilter);
+ if(sessionId){
+  if(createCard)createCard.hidden=true;
+  if(metrics)metrics.hidden=true;
+  const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
+  if(!box)return;
+  box.innerHTML=selected?`<div class="row-actions" style="margin:14px 0"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>${sessionCard(selected,restricted)}`:`<div class="status warning">Sessão não encontrada.</div><div class="row-actions"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>`;
+  if(!restricted&&selected)bindSessionCards();
+  return
+ }
+ if(createCard)createCard.hidden=restricted;
+ if(metrics)metrics.hidden=false;
  const stats={planned:sessions.filter(s=>s.status==='planned').length,active:sessions.filter(s=>s.status==='active').length,completed:sessions.filter(s=>s.status==='completed').length};
- $('session-metrics').innerHTML=`<div class="metric"><span>Sessões</span><strong>${sessions.length}</strong></div><div class="metric"><span>Em andamento</span><strong>${stats.active}</strong></div><div class="metric"><span>Planejadas</span><strong>${stats.planned}</strong></div><div class="metric"><span>Concluídas</span><strong>${stats.completed}</strong></div>`;
+ if(metrics)metrics.innerHTML=`<div class="metric"><span>Sessões</span><strong>${sessions.length}</strong></div><div class="metric"><span>Em andamento</span><strong>${stats.active}</strong></div><div class="metric"><span>Planejadas</span><strong>${stats.planned}</strong></div><div class="metric"><span>Concluídas</span><strong>${stats.completed}</strong></div>`;
  if(!box)return;
- box.innerHTML=sessions.length?sessions.map(s=>sessionCard(s,restricted)).join(''):`<div class="empty">${restricted?'Nenhuma sessão foi atribuída à sua ficha.':'Nenhuma sessão registrada.'}</div>`;
- if(!restricted)bindSessionCards()
+ box.innerHTML=sessions.length?sessions.map(sessionListCard).join(''):`<div class="empty">${restricted?'Nenhuma sessão foi atribuída à sua ficha.':'Nenhuma sessão registrada.'}</div>`
 }
 function createSession(){
  if(playerMode())return;
@@ -198,10 +214,10 @@ function createSession(){
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
   const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,objective,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok)return feedback(result.reason,false);
-  campaigns=writeCampaigns(result.list);reload();render();location.hash=`session-${result.session.id}`;feedback('Sessão criada e vinculada à Aventura.')
+  campaigns=writeCampaigns(result.list);location.href=detailHref(result.session)
  }else{
   const result=createStandaloneSession(standalone,{title:title||undefined,date,objective});
-  standalone=writeStandaloneSessions(result.list);reload();render();location.hash=`session-${result.session.id}`;feedback('Sessão avulsa criada.')
+  standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
 function addAdventureSceneToSession(ref,adventureSceneId){
