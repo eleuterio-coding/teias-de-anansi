@@ -2,8 +2,9 @@ import{applyDamageDefenses}from'./character-sheet-resolution-rules.js?v=20260902
 
 export const ENCOUNTER_SCHEMA='hub-rpg/encounter/v1';
 export const ENCOUNTER_STATUS=Object.freeze(['planned','active','completed','cancelled']);
+export const ENCOUNTER_KINDS=Object.freeze(['combat','social','exploration','trap','puzzle','other']);
 export const COMBATANT_KINDS=Object.freeze(['character','monster','npc']);
-const STATUS=new Set(ENCOUNTER_STATUS),KINDS=new Set(COMBATANT_KINDS);
+const STATUS=new Set(ENCOUNTER_STATUS),ENCOUNTER_KIND_SET=new Set(ENCOUNTER_KINDS),KINDS=new Set(COMBATANT_KINDS);
 const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 const num=v=>Number.isFinite(Number(v))?Number(v):0;
@@ -22,7 +23,7 @@ export function sanitizeCombatant(row={}){
 export function sanitizeEncounter(row={},index=0){
  const combatants=arr(row.combatants).map(sanitizeCombatant),ids=new Set(combatants.map(c=>c.id)),status=STATUS.has(row.status)?row.status:'planned';let activeCombatantId=text(row.activeCombatantId)||null;if(!ids.has(activeCombatantId))activeCombatantId=null;
  const rewards=row.rewards&&typeof row.rewards==='object'&&!Array.isArray(row.rewards)?row.rewards:{};
- return{schema:ENCOUNTER_SCHEMA,id:text(row.id)||uid('encounter'),title:text(row.title)||`Encontro ${index+1}`,status,sessionSceneId:text(row.sessionSceneId)||null,round:Math.max(1,Math.floor(num(row.round)||1)),activeCombatantId,combatants,rewards:{xp:Math.max(0,Math.floor(num(rewards.xp))),coinsCp:Math.max(0,Math.floor(num(rewards.coinsCp))),items:String(rewards.items??''),notes:String(rewards.notes??'')},summary:String(row.summary??''),createdAt:text(row.createdAt)||now(),updatedAt:text(row.updatedAt)||now()}
+ return{schema:ENCOUNTER_SCHEMA,id:text(row.id)||uid('encounter'),title:text(row.title)||`Encontro ${index+1}`,kind:ENCOUNTER_KIND_SET.has(row.kind)?row.kind:'combat',status,sessionSceneId:text(row.sessionSceneId)||null,round:Math.max(1,Math.floor(num(row.round)||1)),activeCombatantId,combatants,rewards:{xp:Math.max(0,Math.floor(num(rewards.xp))),coinsCp:Math.max(0,Math.floor(num(rewards.coinsCp))),items:String(rewards.items??''),notes:String(rewards.notes??'')},summary:String(row.summary??''),createdAt:text(row.createdAt)||now(),updatedAt:text(row.updatedAt)||now()}
 }
 export function sanitizeEncounterList(rows=[]){return arr(rows).map(sanitizeEncounter)}
 export function sanitizeEncounterSessionFields(row={}){const encounters=sanitizeEncounterList(row.encounters);let activeEncounterId=text(row.activeEncounterId)||null;const active=encounters.filter(e=>e.status==='active');if(activeEncounterId&&!encounters.some(e=>e.id===activeEncounterId&&e.status==='active'))activeEncounterId=null;if(!activeEncounterId&&active.length)activeEncounterId=active[0].id;for(const encounter of encounters)if(encounter.status==='active'&&encounter.id!==activeEncounterId)encounter.status='planned';return{encounters,activeEncounterId}}
