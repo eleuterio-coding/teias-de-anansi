@@ -1,4 +1,4 @@
-import{readCampaigns,writeCampaigns,createCampaign,updateCampaign,removeCampaign}from'./campaign-state.js?v=20260922-adventure-workspace2';
+import{readCampaigns,writeCampaigns,createCampaign,updateCampaign,removeCampaign}from'./campaign-state.js?v=20260924-session-encounters1';
 import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20260922-adventure-workspace2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
