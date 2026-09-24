@@ -66,9 +66,17 @@ function findMutableSession(ref){
  if(ref.source==='campaign')return campaigns.find(c=>c.id===ref.campaignId)?.sessions.find(s=>s.id===ref.id)||null;
  return standalone.find(s=>s.id===ref.id)||null
 }
+function storeMutableSession(ref,session){
+ if(ref.source==='campaign'){
+  const result=updateCampaignSession(campaigns,ref.campaignId,ref.id,session);
+  if(!result.ok)return false;campaigns=writeCampaigns(result.list);return true
+ }
+ const result=updateStandaloneSession(standalone,ref.id,session);
+ if(!result.ok)return false;standalone=writeStandaloneSessions(result.list);return true
+}
 function persistMutableSession(ref,session,message='Sessão salva.'){
- if(ref.source==='campaign')return saveSession(ref,session,message);
- return saveSession(ref,session,message)
+ if(!storeMutableSession(ref,session))return feedback('Não foi possível salvar a Sessão.',false);
+ reload();render();if(message)feedback(message);return true
 }
 function adventureLabel(a){
  const c=campaignById(a.campaignId);return c?`${a.title} · ${c.name}`:a.title
@@ -196,8 +204,12 @@ function updateSceneLink(ref,sceneId,newAdventureSceneId){
   if(target.sessionId&&target.sessionSceneId&&(target.sessionId!==session.id||target.sessionSceneId!==scene.id)){
    const other=sessionRef(target.sessionId);
    if(other){
-    const otherSession=findMutableSession(other),otherScene=otherSession?.scenes.find(x=>x.id===target.sessionSceneId);
-    if(otherScene){otherScene.adventureSceneId=null;persistMutableSession(other,otherSession,'')}
+    if(other.id===ref.id){
+     const otherScene=session.scenes.find(x=>x.id===target.sessionSceneId);if(otherScene)otherScene.adventureSceneId=null
+    }else{
+     const otherSession=findMutableSession(other),otherScene=otherSession?.scenes.find(x=>x.id===target.sessionSceneId);
+     if(otherScene){otherScene.adventureSceneId=null;storeMutableSession(other,otherSession)}
+    }
    }
   }
   const result=updateAdventureEntity(adventures,adv.id,'scenes',target.id,{sessionId:session.id,sessionSceneId:scene.id});
