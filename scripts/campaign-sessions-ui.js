@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene}from'./campaign-state.js?v=20260924-session-scenes2';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene}from'./campaign-state.js?v=20260924-session-encounters1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260924-session-scenes2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 
@@ -315,3 +315,4 @@ function refreshFromRemote(event){event.detail?.claim?.();render()}
 $('create-session')?.addEventListener('click',createSession);
 reload();render();
 window.addEventListener('hub-rpg:remote-updated',refreshFromRemote);
+window.addEventListener('hub-rpg:sessions-local-updated',()=>{reload();render()});
