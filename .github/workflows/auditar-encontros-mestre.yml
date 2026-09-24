@@ -7,12 +7,19 @@ on:
       - 'ROADMAP-V1.md'
       - 'mesa.html'
       - 'encounters.css'
+      - 'combat.css'
+      - 'sessoes.html'
       - 'scripts/campaign-state.js'
+      - 'scripts/combat-state.js'
+      - 'scripts/session-combat-ui.js'
+      - 'scripts/session-encounter-ui.js'
+      - 'scripts/character-sheet.js'
       - 'scripts/encounter-state.js'
       - 'scripts/encounter-ui.js'
       - 'scripts/monster-catalog.js'
       - 'scripts/character-sheet-encounter-target.js'
       - 'tests/auditar-encontros-mestre.mjs'
+      - 'tests/auditar-controle-combate-sessao.mjs'
       - '.github/workflows/auditar-encontros-mestre.yml'
   push:
     branches: [main]
@@ -20,12 +27,19 @@ on:
       - 'ROADMAP-V1.md'
       - 'mesa.html'
       - 'encounters.css'
+      - 'combat.css'
+      - 'sessoes.html'
       - 'scripts/campaign-state.js'
+      - 'scripts/combat-state.js'
+      - 'scripts/session-combat-ui.js'
+      - 'scripts/session-encounter-ui.js'
+      - 'scripts/character-sheet.js'
       - 'scripts/encounter-state.js'
       - 'scripts/encounter-ui.js'
       - 'scripts/monster-catalog.js'
       - 'scripts/character-sheet-encounter-target.js'
       - 'tests/auditar-encontros-mestre.mjs'
+      - 'tests/auditar-controle-combate-sessao.mjs'
       - '.github/workflows/auditar-encontros-mestre.yml'
 
 permissions:
@@ -42,15 +56,22 @@ jobs:
       - name: Validar sintaxe
         run: |
           node --check scripts/encounter-state.js
+          node --check scripts/combat-state.js
+          node --check scripts/session-encounter-ui.js
+          node --check scripts/session-combat-ui.js
+          node --check scripts/character-sheet.js
+          node --check tests/auditar-controle-combate-sessao.mjs
           node --check scripts/encounter-ui.js
           node --check scripts/monster-catalog.js
           node --check scripts/character-sheet-encounter-target.js
           node --check tests/auditar-encontros-mestre.mjs
       - name: 12A–12H · Estado, iniciativa, criaturas, PV, alvos e recompensas
         run: node tests/auditar-encontros-mestre.mjs
-      - name: 12I · Regressão Campanhas/Mesas
+      - name: 12I · Controle de Combate por Sessão
+        run: node tests/auditar-controle-combate-sessao.mjs
+      - name: 12J · Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
-      - name: 12J · Regressão do motor de resolução
+      - name: 12K · Regressão do motor de resolução
         run: |
           node tests/auditar-rolagens-resolucao.mjs
           node tests/auditar-ui-resolucao-bloco11.mjs
