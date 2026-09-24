@@ -1,4 +1,4 @@
-import{sanitizeEncounterSessionFields}from'./encounter-state.js?v=20260902-encounters1';
+import{sanitizeEncounterSessionFields}from'./encounter-state.js?v=20260924-session-encounters1';
 
 export const CAMPAIGN_KEY='hub-rpg:campaigns:v1';
 export const CAMPAIGN_SCHEMA='hub-rpg/campaign/v1';
