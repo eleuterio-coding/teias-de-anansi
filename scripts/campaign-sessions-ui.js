@@ -1,6 +1,6 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene}from'./campaign-state.js?v=20260924-session-scenes1';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260924-session-scenes1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene}from'./campaign-state.js?v=20260924-session-scenes2';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260924-session-scenes2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 
 const $=id=>document.getElementById(id);
