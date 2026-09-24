@@ -89,6 +89,21 @@ function adventureSceneOptions(session,selected=''){
  if(!a)return'<option value="">— Sem cena de aventura —</option>';
  return `<option value="">— Sem vínculo —</option>${a.scenes.map(scene=>option(scene.id,scene.title,selected)).join('')}`
 }
+function availableAdventureScenes(session){
+ const a=adventureById(session.adventureId);if(!a)return[];
+ const alreadyHere=new Set((session.scenes||[]).map(s=>s.adventureSceneId).filter(Boolean));
+ return a.scenes.filter(scene=>!alreadyHere.has(scene.id)&&(!scene.sessionId||scene.sessionId===session.id&&!scene.sessionSceneId))
+}
+function adventureScenePickerOptions(session){
+ const a=adventureById(session.adventureId);if(!a)return'<option value="">— Sessão sem Aventura —</option>';
+ const alreadyHere=new Set((session.scenes||[]).map(s=>s.adventureSceneId).filter(Boolean));
+ const rows=a.scenes.map(scene=>{
+  const here=alreadyHere.has(scene.id),elsewhere=!!scene.sessionId&&scene.sessionId!==session.id,staleHere=scene.sessionId===session.id&&!!scene.sessionSceneId&&!here,disabled=here||elsewhere||staleHere;
+  const suffix=here?' · já adicionada':elsewhere?' · vinculada a outra Sessão':staleHere?' · já vinculada':'';return`<option value="${esc(scene.id)}" ${disabled?'disabled':''}>${esc(scene.title+suffix)}</option>`
+ });
+ const available=availableAdventureScenes(session);
+ return `<option value="">— Selecione uma Cena da Aventura —</option>${rows.join('')}${!available.length?'<option value="" disabled>— Nenhuma Cena disponível —</option>':''}`
+}
 function participantNames(session){
  const names=(session.participantCharacterIds||[]).map(id=>characters.find(c=>c.id===id)?.name).filter(Boolean);
  return names
@@ -154,7 +169,10 @@ function sessionCard(s,restricted=false){
  </div>
  <div class="session-subsection"><h4>Jogadores participantes</h4><p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></div>
  <div class="session-subsection"><h4>Personagens participantes</h4><div class="entity-checks">${characters.length?characters.map(c=>`<label><input type="checkbox" data-session-character="${esc(c.id)}" ${(s.participantCharacterIds||[]).includes(c.id)?'checked':''}>${esc(c.name||'Personagem')}</label>`).join(''):'<span class="mini">Nenhum personagem no Hub.</span>'}</div></div>
- <section class="session-subsection"><div class="top"><h4>Cenas</h4><button type="button" class="secondary" data-add-session-scene>Adicionar cena</button></div><div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div></section>
+ <section class="session-subsection"><div class="top"><h4>Cenas</h4></div>
+ ${adv?`<div class="form-grid two" style="margin:8px 0 10px"><label>Cena da Aventura<select data-adventure-scene-picker>${adventureScenePickerOptions(s)}</select></label><div style="align-self:end"><button type="button" data-add-adventure-scene ${availableAdventureScenes(s).length?'':'disabled'}>Adicionar cena da Aventura</button></div></div>`:'<p class="mini">Esta Sessão não está vinculada a uma Aventura. Você ainda pode criar Cenas próprias da Sessão.</p>'}
+ <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
+ <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div></section>
  ${encounterSummary(s)}
  `}</article>`
 }
@@ -184,6 +202,21 @@ function createSession(){
   const result=createStandaloneSession(standalone,{title:title||undefined,date,location,objective});
   standalone=writeStandaloneSessions(result.list);reload();render();location.hash=`session-${result.session.id}`;feedback('Sessão avulsa criada.')
  }
+}
+function addAdventureSceneToSession(ref,adventureSceneId){
+ const session=findMutableSession(ref),adv=adventureById(session?.adventureId);
+ if(!session||!adv)return feedback('Esta Sessão não possui Aventura vinculada.',false);
+ const target=adv.scenes.find(scene=>scene.id===adventureSceneId);
+ if(!target)return feedback('Selecione uma Cena da Aventura.',false);
+ if(session.scenes.some(scene=>scene.adventureSceneId===target.id))return feedback('Esta Cena da Aventura já está nesta Sessão.',false);
+ if(target.sessionId&&target.sessionId!==session.id)return feedback('Esta Cena da Aventura já está vinculada a outra Sessão.',false);
+ if(target.sessionSceneId&&target.sessionId===session.id)return feedback('Esta Cena da Aventura já possui vínculo com uma Cena desta Sessão.',false);
+ const result=addSessionScene(session,{title:target.title,status:target.status,adventureSceneId:target.id,locationId:target.locationId,npcIds:target.npcIds,missionIds:target.missionIds,clueIds:target.clueIds,handoutIds:target.handoutIds,treasureIds:target.treasureIds,description:target.description});
+ if(!result.ok)return feedback(result.reason,false);
+ const linked=updateAdventureEntity(adventures,adv.id,'scenes',target.id,{sessionId:session.id,sessionSceneId:result.scene.id});
+ if(!linked.ok){session.scenes=session.scenes.filter(scene=>scene.id!==result.scene.id);return feedback(linked.reason,false)}
+ adventures=writeAdventures(linked.list);
+ persistMutableSession(ref,session,'Cena da Aventura adicionada à Sessão.')
 }
 function updateSceneLink(ref,sceneId,newAdventureSceneId){
  const session=findMutableSession(ref);if(!session)return;
@@ -226,6 +259,9 @@ function bindSessionCards(){
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
   }));
   card.querySelector('[data-remove-session]')?.addEventListener('click',()=>{if(confirm('Excluir esta sessão?'))removeSession(ref)});
+  card.querySelector('[data-add-adventure-scene]')?.addEventListener('click',()=>{
+   const sceneId=card.querySelector('[data-adventure-scene-picker]')?.value||'';addAdventureSceneToSession(ref,sceneId)
+  });
   card.querySelector('[data-add-session-scene]')?.addEventListener('click',()=>{
    const session=findMutableSession(ref),result=addSessionScene(session,{title:`Cena ${(session?.scenes?.length||0)+1}`});if(!result.ok)return feedback(result.reason,false);persistMutableSession(ref,session,'Cena adicionada.')
   });
