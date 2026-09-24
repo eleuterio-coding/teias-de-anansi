@@ -160,7 +160,6 @@ function sessionCard(s,restricted=false){
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
   <label>Status<select data-session-field="status">${['planned','active','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
-  <label>Local<input data-session-field="location" value="${esc(s.location)}"></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
   <label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
@@ -191,15 +190,15 @@ function render(){
 }
 function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,location=$('new-session-location')?.value,objective=$('new-session-objective')?.value;
+ const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,objective=$('new-session-objective')?.value;
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
-  const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,location,objective,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+  const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,objective,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok)return feedback(result.reason,false);
   campaigns=writeCampaigns(result.list);reload();render();location.hash=`session-${result.session.id}`;feedback('Sessão criada e vinculada à Aventura.')
  }else{
-  const result=createStandaloneSession(standalone,{title:title||undefined,date,location,objective});
+  const result=createStandaloneSession(standalone,{title:title||undefined,date,objective});
   standalone=writeStandaloneSessions(result.list);reload();render();location.hash=`session-${result.session.id}`;feedback('Sessão avulsa criada.')
  }
 }
