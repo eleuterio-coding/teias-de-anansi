@@ -158,7 +158,7 @@ function sessionCard(s,restricted=false){
  <div class="form-grid two" style="margin-top:10px">
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
-  <label>Status<select data-session-field="status">${['planned','active','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
