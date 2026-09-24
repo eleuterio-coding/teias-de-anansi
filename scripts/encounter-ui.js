@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,campaignById,updateCampaignSession}from'./campaign-state.js?v=20260924-session-scenes2';
+import{readCampaigns,writeCampaigns,campaignById,updateCampaignSession}from'./campaign-state.js?v=20260924-session-encounters1';
 import{createEncounter,updateEncounter,removeEncounter,startEncounter,finishEncounter,cancelEncounter,addCharacterCombatant,addCreatureCombatant,updateCombatant,removeCombatant,setCombatantInitiative,nextEncounterTurn,previousEncounterTurn,applyEncounterDamage,applyEncounterHealing,setEncounterRewards,encounterSummary,creatureTargetForResolution}from'./encounter-state.js?v=20260924-session-encounters1';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 import{rollD20}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
