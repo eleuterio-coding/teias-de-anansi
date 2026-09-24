@@ -1,7 +1,7 @@
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260922-adventure-workspace2';
 import{pullCollaborations,syncOwnCharacters}from'./collaboration-sync.js?v=20260922-adventure-workspace2';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-master-full-control1';
-import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260924-session-scenes2';
+import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20260924-session-encounters1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20260924-session-scenes2';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
 import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20260918-master-delete1';
