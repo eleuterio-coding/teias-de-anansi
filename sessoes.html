@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sessões - Teias de Anansi</title><link rel="stylesheet" href="campaigns.css?v=20260921-session-hub1"><link rel="stylesheet" href="hub-ux.css?v=20260909-perf1"></head><body>
-<p><a href="index.html?v=20260917-global-realtime1">← Início</a></p><div class="top"><header><h1>Sessões</h1></header><div class="hero-actions"><a class="btn secondary" href="campanhas.html?v=20260917-global-realtime1">Campanhas</a><a class="btn secondary" href="lista-personagens.html?v=20260917-global-realtime1">Personagens</a></div></div>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sessões - Teias de Anansi</title><link rel="stylesheet" href="campaigns.css?v=20260924-session-scenes1"><link rel="stylesheet" href="adventures.css?v=20260922-adventure-workspace2"><link rel="stylesheet" href="hub-ux.css?v=20260909-perf1"></head><body>
+<p><a href="index.html?v=20260917-global-realtime1">← Início</a></p><div class="top"><header><h1>Sessões</h1></header><div class="hero-actions"><a class="btn secondary" href="campanhas.html?v=20260917-global-realtime1">Campanhas</a><a class="btn secondary" href="aventuras.html?v=20260922-adventure-workspace2">Aventuras</a><a class="btn secondary" href="lista-personagens.html?v=20260917-global-realtime1">Personagens</a></div></div>
 <main id="main-content">
 <section id="session-create-card" class="card" style="margin-top:14px">
 <h2>Nova sessão</h2>
 <div class="form-grid two">
-<label>Campanha<select id="new-session-campaign"></select></label>
+<label class="wide">Aventura vinculada<select id="new-session-adventure"><option value="">— Sem aventura —</option></select></label>
 <label>Data<input id="new-session-date" type="date"></label>
 <label class="wide">Título<input id="new-session-title"></label>
 <label>Local<input id="new-session-location"></label>
@@ -13,7 +13,8 @@
 </div>
 <div class="row-actions" style="margin-top:9px"><button id="create-session" type="button">Criar sessão</button></div>
 </section>
+<div id="session-feedback" class="status" hidden></div>
 <div id="session-metrics" class="metric-grid" style="margin:14px 0" aria-live="polite"></div>
 <div id="sessions-list" class="list" aria-live="polite"></div>
 </main>
-<script type="module" src="scripts/hub-ux.js?v=20260917-global-realtime1"></script><script type="module" src="scripts/campaign-sessions-ui.js?v=20260921-session-hub1"></script></body></html>
+<script type="module" src="scripts/hub-ux.js?v=20260917-global-realtime1"></script><script type="module" src="scripts/campaign-sessions-ui.js?v=20260924-session-scenes1"></script></body></html>
