@@ -1,5 +1,5 @@
 import{KEY as CHARACTER_KEY,LEGACY_KEYS as CHARACTER_LEGACY_KEYS}from'./character-builder/state.js';
-import{CAMPAIGN_KEY}from'./campaign-state.js?v=20260921-campaign-structure2';
+import{CAMPAIGN_KEY,STANDALONE_SESSION_KEY}from'./campaign-state.js?v=20260924-session-scenes1';
 import{ADVENTURE_KEY}from'./adventure-state.js?v=20260902-adventures1';
 import{SETTINGS_KEY,SETTINGS_SCHEMA}from'./settings-state.js?v=20260905-settings1';
 
@@ -8,7 +8,8 @@ export const COLLAB_CACHE_KEY='hub-rpg:collaboration-cache:v1';
 export const COLLAB_SESSION_KEY='hub-rpg:collaboration-session:v1';
 export const STORAGE_REGISTRY=Object.freeze([
  {id:'characters',key:CHARACTER_KEY,legacyKeys:[...CHARACTER_LEGACY_KEYS],scope:'durable',portable:false,schema:'hub-rpg/personagem/v4',label:'Personagens'},
- {id:'campaigns',key:CAMPAIGN_KEY,legacyKeys:[],scope:'durable',portable:false,schema:'hub-rpg/campaign/v1',label:'Campanhas e Sessões'},
+ {id:'campaigns',key:CAMPAIGN_KEY,legacyKeys:[],scope:'durable',portable:false,schema:'hub-rpg/campaign/v1',label:'Campanhas e Sessões vinculadas'},
+ {id:'sessions',key:STANDALONE_SESSION_KEY,legacyKeys:[],scope:'durable',portable:false,schema:'hub-rpg/session/v1',label:'Sessões avulsas'},
  {id:'adventures',key:ADVENTURE_KEY,legacyKeys:[],scope:'durable',portable:false,schema:'hub-rpg/adventure/v1',label:'Aventuras'},
  {id:'settings',key:SETTINGS_KEY,legacyKeys:[],scope:'durable',portable:false,schema:SETTINGS_SCHEMA,label:'Configurações locais'},
  {id:'encounter-target',key:ENCOUNTER_TARGET_KEY,legacyKeys:[],scope:'transient',portable:false,schema:null,label:'Alvo transitório de Encontro'},
