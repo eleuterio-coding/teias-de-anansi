@@ -136,7 +136,7 @@ function sceneCard(ref,scene){
  <label>Descrição / preparação<textarea data-session-scene-field="description">${esc(scene.description)}</textarea></label>
  <label>Notas do Mestre<textarea data-session-scene-field="notes">${esc(scene.notes)}</textarea></label>
  ${sceneReferenceHtml(session,scene)}
- <div class="row-actions"><button type="button" class="danger" data-remove-session-scene="${esc(scene.id)}">Excluir cena</button></div>
+ <div class="row-actions"><button type="button" data-save-session-scene>Salvar cena</button><button type="button" class="danger" data-remove-session-scene="${esc(scene.id)}">Excluir cena</button></div>
  </article>`
 }
 function encounterSummary(session){
@@ -166,12 +166,14 @@ function sessionCard(s,restricted=false){
   <label class="wide">Registro rápido de acontecimentos<textarea data-session-field="quickLog">${esc(s.quickLog)}</textarea></label>
   <label class="wide">Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
  </div>
+ <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar</button></div>
  <div class="session-subsection"><h4>Jogadores participantes</h4><p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></div>
- <div class="session-subsection"><h4>Personagens participantes</h4><div class="entity-checks">${characters.length?characters.map(c=>`<label><input type="checkbox" data-session-character="${esc(c.id)}" ${(s.participantCharacterIds||[]).includes(c.id)?'checked':''}>${esc(c.name||'Personagem')}</label>`).join(''):'<span class="mini">Nenhum personagem no Hub.</span>'}</div></div>
+ <div class="session-subsection"><h4>Personagens participantes</h4><div class="entity-checks">${characters.length?characters.map(c=>`<label><input type="checkbox" data-session-character="${esc(c.id)}" ${(s.participantCharacterIds||[]).includes(c.id)?'checked':''}>${esc(c.name||'Personagem')}</label>`).join(''):'<span class="mini">Nenhum personagem no Hub.</span>'}</div><div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-participants>Salvar</button></div></div>
  <section class="session-subsection"><div class="top"><h4>Cenas</h4></div>
  ${adv?`<div class="form-grid two" style="margin:8px 0 10px"><label>Cena da Aventura<select data-adventure-scene-picker>${adventureScenePickerOptions(s)}</select></label><div style="align-self:end"><button type="button" data-add-adventure-scene ${availableAdventureScenes(s).length?'':'disabled'}>Adicionar cena da Aventura</button></div></div>`:'<p class="mini">Esta Sessão não está vinculada a uma Aventura. Você ainda pode criar Cenas próprias da Sessão.</p>'}
  <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
- <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div></section>
+ <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div>
+ <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-scenes>Salvar</button></div></section>
  ${encounterSummary(s)}
  `}</article>`
 }
@@ -250,6 +252,31 @@ function updateSceneLink(ref,sceneId,newAdventureSceneId){
  scene.adventureSceneId=newAdventureSceneId||null;
  persistMutableSession(ref,session,'Cena vinculada.')
 }
+function saveSessionMainFromCard(ref,card){
+ const patch=Object.fromEntries([...card.querySelectorAll('[data-session-field]')].map(input=>[input.dataset.sessionField,input.value]));
+ saveSession(ref,patch,'Etapa salva.')
+}
+function saveSessionParticipantsFromCard(ref,card){
+ const participantCharacterIds=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);
+ saveSession(ref,{participantCharacterIds},'Participantes salvos.')
+}
+function applySceneFields(session,node){
+ const sceneId=node.dataset.sessionScene,patch={};
+ for(const input of node.querySelectorAll('[data-session-scene-field]'))patch[input.dataset.sessionSceneField]=input.type==='number'?Number(input.value):input.value;
+ return updateSessionScene(session,sceneId,patch)
+}
+function saveSessionSceneNode(ref,node){
+ const session=findMutableSession(ref),result=applySceneFields(session,node);
+ if(!result.ok)return feedback(result.reason,false);
+ persistMutableSession(ref,session,'Cena salva.')
+}
+function saveSessionScenesFromCard(ref,card){
+ const session=findMutableSession(ref);if(!session)return feedback('Sessão não encontrada.',false);
+ for(const node of card.querySelectorAll('[data-session-scene]')){
+  const result=applySceneFields(session,node);if(!result.ok)return feedback(result.reason,false)
+ }
+ persistMutableSession(ref,session,'Cenas salvas.')
+}
 function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
@@ -257,6 +284,9 @@ function bindSessionCards(){
   card.querySelectorAll('[data-session-character]').forEach(input=>input.addEventListener('change',()=>{
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
   }));
+  card.querySelector('[data-save-session-main]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionMainFromCard(ref,card)});
+  card.querySelector('[data-save-session-participants]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionParticipantsFromCard(ref,card)});
+  card.querySelector('[data-save-session-scenes]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionScenesFromCard(ref,card)});
   card.querySelector('[data-remove-session]')?.addEventListener('click',()=>{if(confirm('Excluir esta sessão?'))removeSession(ref)});
   card.querySelector('[data-add-adventure-scene]')?.addEventListener('click',()=>{
    const sceneId=card.querySelector('[data-adventure-scene-picker]')?.value||'';addAdventureSceneToSession(ref,sceneId)
@@ -270,6 +300,7 @@ function bindSessionCards(){
     const session=findMutableSession(ref),value=input.type==='number'?Number(input.value):input.value,result=updateSessionScene(session,sceneId,{[input.dataset.sessionSceneField]:value});
     if(!result.ok)return feedback(result.reason,false);persistMutableSession(ref,session,'Cena atualizada.')
    }));
+   node.querySelector('[data-save-session-scene]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionSceneNode(ref,node)});
    node.querySelector('[data-session-scene-adventure]')?.addEventListener('change',e=>updateSceneLink(ref,sceneId,e.target.value||null));
    node.querySelector('[data-remove-session-scene]')?.addEventListener('click',()=>{
     if(!confirm('Excluir esta cena da sessão?'))return;
