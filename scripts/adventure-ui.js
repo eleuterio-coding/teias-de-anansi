@@ -130,7 +130,7 @@ function saveAdventureSection(section){
  if(changedCampaign)campaigns=writeCampaigns(nextCampaigns);
  if(changedAdventure)adventures=writeAdventures(nextAdventures);
  else adventures=writeAdventures(adventures);
- feedback('Etapa salva.',true)
+ render();feedback('Etapa salva.',true)
 }
 function bindAdventureSaveButtons(){
  document.querySelectorAll('[data-save-adventure-section]').forEach(button=>button.addEventListener('pointerdown',event=>{
