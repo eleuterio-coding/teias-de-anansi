@@ -1,5 +1,5 @@
-import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20260924-session-scenes1';
-import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20260924-session-scenes1';
+import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20260924-session-scenes2';
+import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20260924-session-scenes2';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20260922-adventure-workspace2';
 const params=new URLSearchParams(location.search),campaignId=params.get('id')||'';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
