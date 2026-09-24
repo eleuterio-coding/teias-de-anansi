@@ -49,7 +49,7 @@ function renderCore(d){
 }
 
 function renderRuntime(d){
- const r=state.c.sheet.runtime;
+ const r=state.c.sheet.runtime;r.maxHp=d.hp;r.ac=d.ac;r.initiativeModifier=d.initiative;
  if(r.currentHp==null&&d.hp!=null)r.currentHp=d.hp;
  setInput('current-hp',r.currentHp);setInput('temp-hp',r.tempHp);
  $('max-hp').textContent=d.hp??'—';$('hit-dice').textContent=d.klass?`${d.level}d${d.klass.hitDie}`:'—';

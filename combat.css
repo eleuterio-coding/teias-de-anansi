@@ -1,0 +1,54 @@
+.session-combat-manager{margin-top:18px;border-top:2px solid var(--b);padding-top:16px}
+.combat-section-title,.combat-live-header,.combat-main-toolbar,.combatant-head,.combatant-actions,.combat-state-row,.combat-state-buttons,.combat-inline-controls,.combat-quantity-row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.combat-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.combat-empty-state{border:1px dashed #8886;border-radius:14px;padding:16px;margin-top:10px}
+.combat-empty-state>strong{display:block;margin-bottom:10px}
+.combat-create-grid{display:grid;grid-template-columns:minmax(180px,1fr) auto minmax(220px,1fr) auto;gap:8px;align-items:end}
+.combat-workspace{border:1px solid var(--b);border-radius:15px;padding:14px;background:var(--card,#fff);margin-top:10px}
+.combat-workspace.active{outline:2px solid #7c5cff44}
+.combat-live-header{align-items:flex-start}
+.combat-live-metrics{display:grid;grid-template-columns:repeat(4,minmax(90px,1fr));gap:7px;min-width:min(100%,430px)}
+.combat-live-metrics>div,.combat-master-stat,.combat-control-grid>div{border:1px solid #8884;border-radius:10px;padding:8px;background:var(--soft)}
+.combat-live-metrics span,.combat-master-stat span,.combat-control-grid>div>span{display:block;font-size:.69rem;text-transform:uppercase;color:var(--muted)}
+.combat-main-toolbar{justify-content:flex-start;margin:12px 0}
+.combat-layout{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;align-items:start}
+.combat-master-panel{position:sticky;top:12px;border:1px solid var(--b);border-radius:12px;padding:11px;background:var(--soft)}
+.combat-master-panel textarea{min-height:120px}
+.combat-master-stat{margin:7px 0}
+.session-combatant{border:1px solid #8884;border-radius:12px;padding:10px;background:var(--card,#fff)}
+.session-combatant.is-turn{outline:2px solid #7c5cff77}
+.session-combatant.defeated{opacity:.68}
+.combat-control-grid{display:grid;grid-template-columns:110px repeat(3,minmax(90px,1fr));gap:7px;align-items:end;margin-top:8px}
+.combat-control-grid label{margin:0}
+.combat-inline-controls{justify-content:flex-start;margin-top:8px}
+.combat-inline-controls label{min-width:100px;margin:0}
+.combat-inline-controls input,.combat-inline-controls select{margin:0}
+.combat-state-row{align-items:flex-start;margin-top:8px}
+.combat-state-buttons{justify-content:flex-end}
+.combat-condition-list{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.combat-condition{display:inline-flex;gap:4px;align-items:center;border:1px solid #8885;border-radius:999px;padding:3px 7px;font-size:.76rem}
+.combat-condition a{color:inherit;text-decoration:none}
+.combat-condition button{border:0;background:transparent;padding:0 2px;font-size:1rem;line-height:1;cursor:pointer}
+.combat-condition-add{display:grid;grid-template-columns:1.2fr 1.2fr 90px auto;gap:7px;align-items:end;margin-top:8px}
+.combat-condition-add label{margin:0}
+.combat-actions-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.combatant-notes{margin-top:8px}
+.combat-add-panel{border:1px dashed #8886;border-radius:12px;padding:10px;margin-top:10px}
+.combat-add-panel summary{cursor:pointer;font-weight:800}
+.combat-add-grid{display:grid;gap:12px;margin-top:10px}
+.combat-add-grid>div{border-top:1px solid #8883;padding-top:9px}
+.combat-quantity-row{justify-content:flex-start;align-items:end}
+.combat-quantity-row label{max-width:130px;margin:0}
+.combat-quantity-row label.check{max-width:none}
+.combat-finish-panel{border:2px solid #7c5cff55;border-radius:12px;padding:12px;margin-top:12px;background:var(--soft)}
+.combat-finish-panel[hidden]{display:none}
+.combat-history-section{margin-top:16px}
+.combat-history-card{border:1px solid var(--b);border-radius:12px;padding:10px;margin-top:8px}
+.combat-history-card.draft{border-style:dashed}
+.combat-history-card.cancelled{opacity:.7}
+.combat-history-units{display:flex;gap:5px;flex-wrap:wrap}
+.encounter-blueprint-list{display:grid;gap:6px}
+.encounter-blueprint-row{display:flex;gap:8px;justify-content:space-between;align-items:center;border:1px solid #8883;border-radius:9px;padding:8px}
+@media(max-width:980px){.combat-layout{grid-template-columns:1fr}.combat-master-panel{position:static}.combat-create-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.combat-live-metrics,.combat-control-grid,.combat-condition-add{grid-template-columns:1fr 1fr}.combat-create-grid{grid-template-columns:1fr}.combatant-head{align-items:flex-start}.combat-inline-controls{align-items:flex-end}}
+@media(max-width:520px){.combat-live-metrics,.combat-control-grid,.combat-condition-add{grid-template-columns:1fr}.combat-main-toolbar>button,.combat-state-buttons>button{flex:1 1 auto}.session-combatant{padding:9px}}
