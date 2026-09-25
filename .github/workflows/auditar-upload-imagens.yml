@@ -53,5 +53,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Auditar pipeline de imagens
         run: node tests/auditar-upload-imagens.mjs
+      - name: Compilar Security Rules no emulador
+        run: npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-teias-de-anansi "node -e \"console.log('Security Rules compiladas.')\""
