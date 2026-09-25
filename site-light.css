@@ -1,66 +1,71 @@
+
 :root {
-  color-scheme: only light !important;
+  color-scheme: only light;
 }
 
-html,
-body,
-body * {
+/*
+ * O Hub moderno usa um shell escuro próprio. O modo claro legado continua
+ * sendo aplicado às demais telas, especialmente aos módulos mecânicos e
+ * editoriais que ainda não migraram para o novo shell.
+ */
+body:not(.hub-shell-enabled),
+body:not(.hub-shell-enabled) * {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body *::before,
-body *::after {
+body:not(.hub-shell-enabled) *::before,
+body:not(.hub-shell-enabled) *::after {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-a,
-a:link,
-a:visited,
-a:hover,
-a:active,
-a:focus {
+body:not(.hub-shell-enabled) a,
+body:not(.hub-shell-enabled) a:link,
+body:not(.hub-shell-enabled) a:visited,
+body:not(.hub-shell-enabled) a:hover,
+body:not(.hub-shell-enabled) a:active,
+body:not(.hub-shell-enabled) a:focus {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
   background: #ffffff !important;
 }
 
-input,
-select,
-textarea,
-button,
-option,
-optgroup {
+body:not(.hub-shell-enabled) input,
+body:not(.hub-shell-enabled) select,
+body:not(.hub-shell-enabled) textarea,
+body:not(.hub-shell-enabled) button,
+body:not(.hub-shell-enabled) option,
+body:not(.hub-shell-enabled) optgroup {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-input::placeholder,
-textarea::placeholder {
+body:not(.hub-shell-enabled) input::placeholder,
+body:not(.hub-shell-enabled) textarea::placeholder {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
   opacity: .68;
 }
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus,
-button:hover,
-button:active {
+body:not(.hub-shell-enabled) input:focus,
+body:not(.hub-shell-enabled) select:focus,
+body:not(.hub-shell-enabled) textarea:focus,
+body:not(.hub-shell-enabled) button:focus,
+body:not(.hub-shell-enabled) button:hover,
+body:not(.hub-shell-enabled) button:active {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-svg text {
+body:not(.hub-shell-enabled) svg text {
   fill: #000000 !important;
 }
 
-::selection {
+body:not(.hub-shell-enabled) ::selection {
   background: #000000 !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
@@ -100,22 +105,31 @@ body:has(a[href^="bibliotecas.html"]) > :is(
   display: none !important;
 }
 
+html:has(body.hub-shell-enabled) {
+  color-scheme: dark !important;
+  background: #080d14 !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: only light !important;
+    color-scheme: only light;
   }
 
-  html,
-  body,
-  body *,
-  input,
-  select,
-  textarea,
-  button,
-  option,
-  optgroup {
+  body:not(.hub-shell-enabled),
+  body:not(.hub-shell-enabled) *,
+  body:not(.hub-shell-enabled) input,
+  body:not(.hub-shell-enabled) select,
+  body:not(.hub-shell-enabled) textarea,
+  body:not(.hub-shell-enabled) button,
+  body:not(.hub-shell-enabled) option,
+  body:not(.hub-shell-enabled) optgroup {
     background: #ffffff !important;
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
+  }
+
+  html:has(body.hub-shell-enabled) {
+    color-scheme: dark !important;
+    background: #080d14 !important;
   }
 }
