@@ -1,12 +1,13 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene}from'./campaign-state.js?v=20260924-session-encounters1';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260924-session-scenes2';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20260925-media1';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260925-media1';
+import{uploadImage,deleteImage,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media1';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
-let campaigns=[],standalone=[],adventures=[],characters=[];
+let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null;
 
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
@@ -53,7 +54,7 @@ function saveSession(ref,patch,message='Sessão salva.'){
  reload();render();feedback(message);return true
 }
 function removeSession(ref){
- if(!ref)return;
+ if(!ref)return;const media=findMutableSession(ref)?.coverImage;
  if(ref.source==='campaign'){
   const result=removeCampaignSession(campaigns,ref.campaignId,ref.id);
   if(!result.ok)return feedback(result.reason,false);
@@ -63,7 +64,7 @@ function removeSession(ref){
   if(!result.ok)return feedback(result.reason,false);
   standalone=writeStandaloneSessions(result.list)
  }
- if(sessionId===ref.id){location.href=listHref();return}reload();render();feedback('Sessão excluída.')
+ if(media?.id)deleteImage(media).catch(()=>{});if(sessionId===ref.id){location.href=listHref();return}reload();render();feedback('Sessão excluída.')
 }
 function findMutableSession(ref){
  if(ref.source==='campaign')return campaigns.find(c=>c.id===ref.campaignId)?.sessions.find(s=>s.id===ref.id)||null;
@@ -147,13 +148,13 @@ function encounterSummary(session){
  return `<section class="session-subsection"><h4>Encontros</h4><div class="story-list">${rows.length?rows.map(e=>`<div class="campaign-reference-row"><div><strong>${esc(e.title)}</strong><div><span class="badge">${esc(e.status||'planned')}</span></div></div></div>`).join(''):'<div class="story-empty">Nenhum encontro registrado.</div>'}</div></section>`
 }
 function sessionListCard(s){
- const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
- return `<article class="session-card ${s.status==='active'?'active':''}"><div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions"><a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+ const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length,cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover session-cover-thumb',alt:''});
+ return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions"><a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
 }
 function sessionCard(s,restricted=false){
- const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]);
+ const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
  return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
- <div class="session-head"><div>
+ ${restricted?cover:''}<div class="session-head"><div>
   <h3>${esc(s.title)}</h3>
   <div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
  </div><div class="row-actions">${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
@@ -163,6 +164,7 @@ function sessionCard(s,restricted=false){
   ${participants.length?`<p class="mini">Personagens: ${esc(participants.join(', '))}</p>`:''}
  `:`
  <div class="form-grid two" style="margin-top:10px">
+   <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
   ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
@@ -196,7 +198,7 @@ function render(){
   const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
   if(!box)return;
   box.innerHTML=selected?`<div class="row-actions" style="margin:14px 0"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>${sessionCard(selected,restricted)}`:`<div class="status warning">Sessão não encontrada.</div><div class="row-actions"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>`;
-  if(!restricted&&selected)bindSessionCards();
+  if(!restricted&&selected)bindSessionCards();hydrateMediaImages(box).catch(()=>{});
   return
  }
  if(createCard)createCard.hidden=restricted;
@@ -204,19 +206,21 @@ function render(){
  const stats={planned:sessions.filter(s=>s.status==='planned').length,active:sessions.filter(s=>s.status==='active').length,completed:sessions.filter(s=>s.status==='completed').length};
  if(metrics)metrics.innerHTML=`<div class="metric"><span>Sessões</span><strong>${sessions.length}</strong></div><div class="metric"><span>Em andamento</span><strong>${stats.active}</strong></div><div class="metric"><span>Planejadas</span><strong>${stats.planned}</strong></div><div class="metric"><span>Concluídas</span><strong>${stats.completed}</strong></div>`;
  if(!box)return;
- box.innerHTML=sessions.length?sessions.map(sessionListCard).join(''):`<div class="empty">${restricted?'Nenhuma sessão foi atribuída à sua ficha.':'Nenhuma sessão registrada.'}</div>`
+ box.innerHTML=sessions.length?sessions.map(sessionListCard).join(''):`<div class="empty">${restricted?'Nenhuma sessão foi atribuída à sua ficha.':'Nenhuma sessão registrada.'}</div>`;hydrateMediaImages(box).catch(()=>{})
 }
-function createSession(){
+async function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value;
+ const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
-  const result=addCampaignSession(campaigns,campaign.id,{adventureId:adv.id,title:title||undefined,date,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
-  if(!result.ok)return feedback(result.reason,false);
+  let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
+  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+  if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);location.href=detailHref(result.session)
  }else{
-  const result=createStandaloneSession(standalone,{title:title||undefined,date});
+  let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
+  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,coverImage});
   standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
@@ -296,6 +300,7 @@ function saveSessionScenesFromCard(ref,card){
 function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
+  const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});if(!saveSession(ref,{coverImage:media,coverImageUrl:''},'Imagem salva.')){deleteImage(media).catch(()=>{});throw new Error('Não foi possível atualizar a Sessão.')}if(previous?.id&&previous.id!==media.id)deleteImage(previous).catch(()=>{})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;if(!saveSession(ref,{coverImage:null,coverImageUrl:''},'Imagem removida.'))throw new Error('Não foi possível atualizar a Sessão.');if(previous?.id)deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.value})));
   card.querySelectorAll('[data-session-character]').forEach(input=>input.addEventListener('change',()=>{
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
@@ -328,6 +333,7 @@ function bindSessionCards(){
  })
 }
 function refreshFromRemote(event){event.detail?.claim?.();render()}
+const newCoverHolder=$('new-session-cover-picker');if(newCoverHolder){newCoverHolder.innerHTML=imagePickerHtml({});bindImagePicker(newCoverHolder.querySelector('[data-image-picker]'),{onSelect:async file=>{pendingSessionCoverFile=file},onRemove:async()=>{pendingSessionCoverFile=null},onError:error=>feedback(error?.message||'Não foi possível usar a imagem.',false)})}
 $('create-session')?.addEventListener('click',createSession);
 reload();render();
 window.addEventListener('hub-rpg:remote-updated',refreshFromRemote);
