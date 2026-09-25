@@ -22,7 +22,7 @@ const media=read('scripts/image-media.js');
 assert.match(media,/export async function optimizeImage/);
 assert.match(media,/export async function uploadImage/);
 assert.match(media,/export async function persistCampaignMediaState/);
-assert.match(media,/saveCampaignBundle\(campaign,adventures,characters\)/);
+assert.match(media,/saveCampaignMediaState\(\{campaign,adventures,entityType:type,entityId:targetId\}\)/);
 assert.match(media,/export async function hydrateMediaImages/);
 assert.match(media,/MAX_OUTPUT_BYTES=1800000/);
 assert.match(media,/image\/webp/);
@@ -40,7 +40,7 @@ assert.match(collaboration,/coverImage:mediaRef\(session\.coverImage\)/);
 assert.match(collaboration,/coverImage:mediaRef\(adventure\.coverImage\)/);
 
 const provider=read('scripts/firebase-collaboration-provider.js');
-for(const method of ['saveMedia','readMedia','deleteMedia'])assert.match(provider,new RegExp(`async ${method}\\(`));
+for(const method of ['saveCampaignMediaState','saveMedia','readMedia','deleteMedia'])assert.match(provider,new RegExp(`async ${method}\\(`));
 assert.match(provider,/480\*1024/);
 assert.match(provider,/Bytes\.fromUint8Array/);
 assert.match(provider,/getDocFromServer/);
@@ -66,8 +66,8 @@ assert.doesNotMatch(campanhas,/id="campaign-cover" type="url"/);
 
 const campaignList=read('scripts/campaign-list-ui.js'),campaignTable=read('scripts/campaign-table-ui.js'),adventureUi=read('scripts/adventure-ui.js'),sessionUi=read('scripts/campaign-sessions-ui.js');
 for(const [name,source] of [['Campanhas',campaignList],['Mesa',campaignTable],['Aventuras',adventureUi],['Sessões',sessionUi]])assert.match(source,/persistCampaignMediaState/,`${name} deve persistir o vínculo da imagem remotamente antes de concluir.`);
-assert.ok(campaignTable.indexOf('persistCampaignMediaState(campaignId)')<campaignTable.indexOf('deleteImage(previous)'),'A capa anterior da Campanha só pode ser apagada após persistir a nova referência.');
-assert.ok(adventureUi.indexOf('persistCampaignMediaState(a.campaignId)')<adventureUi.indexOf('deleteImage(previous)'),'A capa anterior da Aventura só pode ser apagada após persistir a nova referência.');
+assert.ok(campaignTable.indexOf("persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})")<campaignTable.indexOf('deleteImage(previous)'),'A capa anterior da Campanha só pode ser apagada após persistir a nova referência.');
+assert.ok(adventureUi.indexOf("persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})")<adventureUi.indexOf('deleteImage(previous)'),'A capa anterior da Aventura só pode ser apagada após persistir a nova referência.');
 
 const sessoes=read('sessoes.html');
 assert.match(sessoes,/id="new-session-cover-picker"/);
