@@ -95,8 +95,8 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
    if(typeof auth.authStateReady==='function')await auth.authStateReady();
    if(!auth.currentUser)throw new Error('Faça login para abrir imagens.');
    const id=text(mediaId);if(!id)return null;
-   const metaRef=f.doc(db,'media',id),metaSnap=await f.getDoc(metaRef);if(!metaSnap.exists()||metaSnap.data()?.status!=='ready')return null;
-   const meta=metaSnap.data(),snap=await f.getDocs(f.collection(metaRef,'chunks')),parts=snap.docs.map(row=>row.data()).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)),total=parts.reduce((sum,row)=>sum+(Number(row.size)||row.bytes?.toUint8Array?.().byteLength||0),0),bytes=new Uint8Array(total);let offset=0;
+   const metaRef=f.doc(db,'media',id),metaSnap=typeof f.getDocFromServer==='function'?await f.getDocFromServer(metaRef):await f.getDoc(metaRef);if(!metaSnap.exists()||metaSnap.data()?.status!=='ready')return null;
+   const meta=metaSnap.data(),chunksRef=f.collection(metaRef,'chunks'),snap=typeof f.getDocsFromServer==='function'?await f.getDocsFromServer(chunksRef):await f.getDocs(chunksRef),parts=snap.docs.map(row=>row.data()).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)),total=parts.reduce((sum,row)=>sum+(Number(row.size)||row.bytes?.toUint8Array?.().byteLength||0),0),bytes=new Uint8Array(total);let offset=0;
    for(const row of parts){const part=row.bytes?.toUint8Array?.()||new Uint8Array;bytes.set(part,offset);offset+=part.byteLength}
    return{...meta,bytes}
   },
