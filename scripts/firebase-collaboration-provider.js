@@ -72,6 +72,27 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async getCampaignBundle(campaignId){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const cid=text(campaignId),membership=await campaignRole(cid,u),root=await f.getDoc(f.doc(db,'campaigns',cid));if(!root.exists())return null;const ownerId=root.data().ownerId;if(ownerId===u.uid){const[p,participants]=await Promise.all([f.getDoc(f.doc(db,'campaigns',cid,'private','state')),campaignMemberships(cid)]);return{mode:'private',ownerId,membership,participants,payload:p.exists()?p.data().payload:null}}if(!membership?.active||membership.role!=='player')throw new Error('Esta conta não participa desta Campanha.');const s=await f.getDoc(f.doc(db,'campaigns',cid,'shared','state')),core=s.exists()?s.data().payload:null;if(!core)return{mode:'shared',ownerId,membership,payload:null};const[sessions,visibleAdventures,participants]=await Promise.all([fetchAssigned(f.collection(db,'campaigns',cid,'sessions'),membership.sessionIds),fetchAssigned(f.collection(db,'campaigns',cid,'adventureViews'),membership.adventureIds),campaignMemberships(cid).catch(()=>[membership])]);return{mode:'shared',ownerId,membership,payload:collaborationMemberBundle(core,sessions,visibleAdventures,participants)}},
   async listMemberships(){const u=auth.currentUser;if(!u?.email)return[];const q=f.query(f.collection(db,'memberships'),f.where('email','==',String(u.email).toLowerCase()),f.where('active','==',true));const snap=await f.getDocs(q);return snap.docs.map(d=>normalizeMember({...d.data(),id:d.id}))},
   async saveCampaignCharacter(campaignId,character){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const account=accountFor(u),cid=text(campaignId),charId=text(character?.id);if(!cid||!charId)throw new Error('Mesa ou personagem inválido.');const manager=await canManageCampaign(cid,u.uid),membership=await campaignRole(cid,u);if(!manager&&!(membership?.active&&membership.role==='player'&&membership.characterId===charId))throw new Error('Você só pode alterar a ficha atribuída a você nesta Mesa.');const charRef=f.doc(db,'campaigns',cid,'characters',charId),old=await f.getDoc(charRef),ownerUid=manager?(text(character.ownerUid)||text(old.data()?.ownerUid)||u.uid):u.uid,ownerName=manager?canonicalUsername(character.ownerUsername||old.data()?.ownerUsername||account.username):account.username,payload={...character,ownerUid,ownerUsername:ownerName};await f.setDoc(charRef,{characterId:charId,ownerUid,ownerUsername:ownerName,payload,updatedAt:payload.updatedAt||now(),serverUpdatedAt:f.serverTimestamp()},{merge:true})},
+  async saveCampaignMediaState({campaign,adventures=[],entityType='campaign',entityId=null}={}){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   const u=auth.currentUser;if(!u)throw new Error('Faça login para sincronizar a imagem.');
+   const account=accountFor(u),cid=text(campaign?.id),type=text(entityType),eid=text(entityId)||cid,allowed=new Set(['campaign','adventure','session']);
+   if(!cid||!allowed.has(type)||!eid)throw new Error('Campanha ou entidade inválida para sincronização da imagem.');
+   const manager=await canManageCampaign(cid,u.uid);if(!manager)throw new Error('Você não pode alterar imagens desta Campanha.');
+   const cref=f.doc(db,'campaigns',cid),root=await f.getDoc(cref),ownerId=text(root.data()?.ownerId)||u.uid,batch=f.writeBatch(db),updatedAt=campaign.updatedAt||now();
+   batch.set(cref,{id:cid,ownerId,name:campaign.name||'',updatedAt,serverUpdatedAt:f.serverTimestamp()},{merge:true});
+   if(account.username===ownerUsername)batch.set(membershipRef(cid,u.email),{id:membershipId(cid,u.email),campaignId:cid,uid:u.uid,username:account.username,email:String(u.email||'').toLowerCase(),role:'dm',characterId:null,sessionIds:[],adventureIds:[],displayName:'Rafael',active:true,updatedAt:now()},{merge:true});
+   batch.set(f.doc(db,'campaigns',cid,'private','state'),{payload:{campaign,adventures:arr(adventures).filter(row=>text(row?.campaignId)===cid)},updatedAt,serverUpdatedAt:f.serverTimestamp()},{merge:false});
+   if(type==='campaign'){
+    batch.set(f.doc(db,'campaigns',cid,'shared','state'),{payload:{campaign:campaignSharedCoreProjection(campaign)},updatedAt,serverUpdatedAt:f.serverTimestamp()},{merge:false})
+   }else if(type==='adventure'){
+    const adventure=arr(adventures).find(row=>text(row?.id)===eid&&text(row?.campaignId)===cid);if(!adventure)throw new Error('Aventura vinculada à imagem não encontrada.');
+    const record=adventureSharedRecord(adventure,campaign);batch.set(f.doc(db,'campaigns',cid,'adventureViews',eid),{id:eid,payload:record.payload,updatedAt:adventure.updatedAt||updatedAt,serverUpdatedAt:f.serverTimestamp()},{merge:false})
+   }else{
+    const session=arr(campaign.sessions).find(row=>text(row?.id)===eid);if(!session)throw new Error('Sessão vinculada à imagem não encontrada.');
+    const payload=sessionSharedProjection(session);batch.set(f.doc(db,'campaigns',cid,'sessions',eid),{id:eid,payload,updatedAt:session.updatedAt||updatedAt,serverUpdatedAt:f.serverTimestamp()},{merge:false})
+   }
+   await batch.commit();return{campaignId:cid,entityType:type,entityId:eid}
+  },
   async saveMedia({campaignId=null,entityType,entityId,mime='image/webp',width=0,height=0,size=0,bytes=null}={}){
    if(typeof auth.authStateReady==='function')await auth.authStateReady();
    const u=auth.currentUser;if(!u)throw new Error('Faça login para salvar imagens.');
