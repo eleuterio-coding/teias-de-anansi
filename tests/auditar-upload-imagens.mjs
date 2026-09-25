@@ -47,6 +47,8 @@ assert.match(rules,/match \/media\/\{mediaId\}/);
 assert.match(rules,/match \/chunks\/\{chunkId\}/);
 assert.match(rules,/assignedAdventure\(data\.campaignId, data\.entityId\)/);
 assert.match(rules,/assignedSession\(data\.campaignId, data\.entityId\)/);
+assert.match(rules,/request\.resource\.data\.ownerId == request\.auth\.uid/);
+assert.doesNotMatch(rules,/allow create:[\s\S]{0,500}canManage\(request\.resource\.data\.campaignId\)/);
 
 const campanhas=read('campanhas.html');
 assert.match(campanhas,/id="campaign-cover-picker"/);
