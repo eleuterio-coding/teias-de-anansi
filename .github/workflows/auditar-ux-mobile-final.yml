@@ -16,6 +16,8 @@ on:
       - 'campaigns.css'
       - 'hub-ux.css'
       - 'scripts/hub-ux.js'
+      - 'scripts/app-shell.js'
+      - 'site-light.css'
       - 'scripts/character-builder/wizard-ui.js'
       - 'scripts/character-sheet-gameplay-state.js'
       - 'tests/auditar-ux-mobile-final.mjs'
@@ -54,6 +56,7 @@ jobs:
       - name: Validar sintaxe da camada UX
         run: |
           node --check scripts/hub-ux.js
+          node --check scripts/app-shell.js
           node --check scripts/character-builder/wizard-ui.js
           node --check scripts/character-sheet-gameplay-state.js
           node --check tests/auditar-ux-mobile-final.mjs
