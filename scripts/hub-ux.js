@@ -1,4 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20260905-settings1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20260925-shell1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
@@ -9,7 +10,7 @@ const boundLinks=new WeakSet();
 function ensureStyles(){
  if(document.getElementById(STYLE_ID)||document.querySelector('link[href*="hub-ux.css"]'))return;
  const link=document.createElement('link');
- link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260909-perf1',import.meta.url).href;
+ link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260925-shell1',import.meta.url).href;
  document.head.appendChild(link)
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
@@ -71,8 +72,8 @@ function enhanceStructureEditingCopy(){
  for(const link of document.querySelectorAll('a[data-structure-edit]'))if(link.textContent!=='Editar estrutura'){link.textContent='Editar estrutura';link.title='Use o construtor apenas para corrigir escolhas estruturais da criação.'}
 }
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
-function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi()})}
-function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;ensureSkipLink();enhanceDynamicUi();bootstrapPageAccess();bootstrapRealtime()}
+function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}
+function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initAppShell();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
 
 if(typeof document!=='undefined'){
  warmExternalOrigins();
