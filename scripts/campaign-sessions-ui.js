@@ -63,7 +63,7 @@ async function saveSessionCoverPersistent(ref,patch,{previous=null,newMedia=null
  const before=campaigns,result=updateCampaignSession(campaigns,ref.campaignId,ref.id,patch);
  if(!result.ok){if(newMedia)await deleteImage(newMedia).catch(()=>{});throw new Error(result.reason)}
  campaigns=writeCampaigns(result.list);
- try{await persistCampaignMediaState(ref.campaignId)}
+ try{await persistCampaignMediaState(ref.campaignId,{entityType:'session',entityId:ref.id})}
  catch(error){
   campaigns=writeCampaigns(before);reload();render();if(newMedia)await deleteImage(newMedia).catch(()=>{});
   throw new Error('A imagem não pôde ser sincronizada. A versão anterior foi preservada.')
@@ -237,7 +237,7 @@ async function createSession(){
   const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
-  try{await persistCampaignMediaState(campaign.id)}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
+  try{await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
   location.href=detailHref(result.session)
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
