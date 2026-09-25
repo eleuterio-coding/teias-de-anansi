@@ -146,3 +146,13 @@ Removeu Backup e a autorização administrativa global, adotando login simples.
 Manteve o login simples e adicionou o recorte funcional por participação necessário para o uso real de Mestre/Jogador.
 
 **Versão de referência: v1.0.2.**
+
+
+## Imagens do Hub
+
+- O Hub mantém a política **Spark / sem cartão / sem faturamento**.
+- Cloud Storage não é habilitado para este fluxo.
+- Capas enviadas pelo usuário são redimensionadas no navegador, convertidas para WebP e limitadas a 1,8 MB.
+- Os bytes são armazenados no Cloud Firestore em `media/{mediaId}/chunks/{chunkId}`; Campanhas, Aventuras e Sessões guardam apenas uma referência pequena à mídia.
+- As Security Rules aplicam a mesma visibilidade da entidade: capa de Campanha para membros, capa de Aventura para jogadores atribuídos e capa de Sessão para jogadores atribuídos.
+- URLs antigas de capa continuam sendo lidas como fallback, mas a interface nova trabalha somente com seleção de arquivo.

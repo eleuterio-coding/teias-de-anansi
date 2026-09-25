@@ -1,4 +1,4 @@
-import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20260924-session-scenes2';
+import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20260925-media1';
 const CONFIG_URL='dados/firebase-config.json?v=20260917-player-catalog1';
 const text=v=>String(v??'').trim(),now=()=>new Date().toISOString(),arr=v=>Array.isArray(v)?v:[],unique=v=>[...new Set(arr(v).map(text).filter(Boolean))];
 export async function loadFirebaseConfig(fetcher=fetch){const r=await fetcher(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw new Error(`Configuração de acesso indisponível (HTTP ${r.status}).`);const c=await r.json(),required=['projectId','apiKey','authDomain','appId','usernameDomain'];return{...c,configured:c.enabled===true&&c.authMode==='username-password'&&required.every(k=>text(c[k]))}}
@@ -72,6 +72,40 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async getCampaignBundle(campaignId){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const cid=text(campaignId),membership=await campaignRole(cid,u),root=await f.getDoc(f.doc(db,'campaigns',cid));if(!root.exists())return null;const ownerId=root.data().ownerId;if(ownerId===u.uid){const[p,participants]=await Promise.all([f.getDoc(f.doc(db,'campaigns',cid,'private','state')),campaignMemberships(cid)]);return{mode:'private',ownerId,membership,participants,payload:p.exists()?p.data().payload:null}}if(!membership?.active||membership.role!=='player')throw new Error('Esta conta não participa desta Campanha.');const s=await f.getDoc(f.doc(db,'campaigns',cid,'shared','state')),core=s.exists()?s.data().payload:null;if(!core)return{mode:'shared',ownerId,membership,payload:null};const[sessions,visibleAdventures,participants]=await Promise.all([fetchAssigned(f.collection(db,'campaigns',cid,'sessions'),membership.sessionIds),fetchAssigned(f.collection(db,'campaigns',cid,'adventureViews'),membership.adventureIds),campaignMemberships(cid).catch(()=>[membership])]);return{mode:'shared',ownerId,membership,payload:collaborationMemberBundle(core,sessions,visibleAdventures,participants)}},
   async listMemberships(){const u=auth.currentUser;if(!u?.email)return[];const q=f.query(f.collection(db,'memberships'),f.where('email','==',String(u.email).toLowerCase()),f.where('active','==',true));const snap=await f.getDocs(q);return snap.docs.map(d=>normalizeMember({...d.data(),id:d.id}))},
   async saveCampaignCharacter(campaignId,character){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const account=accountFor(u),cid=text(campaignId),charId=text(character?.id);if(!cid||!charId)throw new Error('Mesa ou personagem inválido.');const manager=await canManageCampaign(cid,u.uid),membership=await campaignRole(cid,u);if(!manager&&!(membership?.active&&membership.role==='player'&&membership.characterId===charId))throw new Error('Você só pode alterar a ficha atribuída a você nesta Mesa.');const charRef=f.doc(db,'campaigns',cid,'characters',charId),old=await f.getDoc(charRef),ownerUid=manager?(text(character.ownerUid)||text(old.data()?.ownerUid)||u.uid):u.uid,ownerName=manager?canonicalUsername(character.ownerUsername||old.data()?.ownerUsername||account.username):account.username,payload={...character,ownerUid,ownerUsername:ownerName};await f.setDoc(charRef,{characterId:charId,ownerUid,ownerUsername:ownerName,payload,updatedAt:payload.updatedAt||now(),serverUpdatedAt:f.serverTimestamp()},{merge:true})},
+  async saveMedia({campaignId=null,entityType,entityId,mime='image/webp',width=0,height=0,size=0,bytes=null}={}){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   const u=auth.currentUser;if(!u)throw new Error('Faça login para salvar imagens.');
+   const type=text(entityType),eid=text(entityId),allowed=new Set(['campaign','adventure','session']),payloadBytes=bytes instanceof Uint8Array?bytes:null;
+   if(!allowed.has(type)||!eid||!payloadBytes?.byteLength)throw new Error('Imagem ou destino inválido.');
+   if(mime!=='image/webp'||payloadBytes.byteLength>1800000)throw new Error('A imagem preparada ultrapassou o limite do Hub.');
+   const mediaId=globalThis.crypto?.randomUUID?.()||`media-${Date.now()}-${Math.random().toString(36).slice(2,9)}`,chunkSize=480*1024,chunkCount=Math.ceil(payloadBytes.byteLength/chunkSize),account=accountFor(u),metaRef=f.doc(db,'media',mediaId),chunksRef=f.collection(metaRef,'chunks'),createdAt=now(),meta={id:mediaId,ownerId:u.uid,ownerUsername:account.username,campaignId:text(campaignId)||null,entityType:type,entityId:eid,mime,width:Math.max(1,Math.floor(Number(width)||1)),height:Math.max(1,Math.floor(Number(height)||1)),size:payloadBytes.byteLength,chunkCount,status:'uploading',createdAt,updatedAt:createdAt};
+   try{
+    await f.setDoc(metaRef,{...meta,serverUpdatedAt:f.serverTimestamp()},{merge:false});
+    const batch=f.writeBatch(db);
+    for(let i=0;i<chunkCount;i++){const part=payloadBytes.slice(i*chunkSize,Math.min(payloadBytes.byteLength,(i+1)*chunkSize));batch.set(f.doc(chunksRef,String(i).padStart(3,'0')),{order:i,size:part.byteLength,bytes:f.Bytes.fromUint8Array(part)},{merge:false})}
+    await batch.commit();
+    await f.updateDoc(metaRef,{status:'ready',updatedAt:now(),serverUpdatedAt:f.serverTimestamp()});
+    return{id:mediaId,campaignId:meta.campaignId,entityType:type,entityId:eid,mime,width:meta.width,height:meta.height,size:meta.size}
+   }catch(error){
+    try{const snap=await f.getDocs(chunksRef),cleanup=f.writeBatch(db);for(const row of snap.docs)cleanup.delete(row.ref);cleanup.delete(metaRef);await cleanup.commit()}catch{}
+    throw new Error('Não foi possível salvar a imagem agora.')
+   }
+  },
+  async readMedia(mediaId){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   if(!auth.currentUser)throw new Error('Faça login para abrir imagens.');
+   const id=text(mediaId);if(!id)return null;
+   const metaRef=f.doc(db,'media',id),metaSnap=await f.getDoc(metaRef);if(!metaSnap.exists()||metaSnap.data()?.status!=='ready')return null;
+   const meta=metaSnap.data(),snap=await f.getDocs(f.collection(metaRef,'chunks')),parts=snap.docs.map(row=>row.data()).sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)),total=parts.reduce((sum,row)=>sum+(Number(row.size)||row.bytes?.toUint8Array?.().byteLength||0),0),bytes=new Uint8Array(total);let offset=0;
+   for(const row of parts){const part=row.bytes?.toUint8Array?.()||new Uint8Array;bytes.set(part,offset);offset+=part.byteLength}
+   return{...meta,bytes}
+  },
+  async deleteMedia(mediaId){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   if(!auth.currentUser)return;
+   const id=text(mediaId);if(!id)return;
+   const metaRef=f.doc(db,'media',id),snap=await f.getDocs(f.collection(metaRef,'chunks')),batch=f.writeBatch(db);for(const row of snap.docs)batch.delete(row.ref);batch.delete(metaRef);await batch.commit()
+  },
   async listCampaignCharacters(campaignId){const u=auth.currentUser;if(!u)return[];const cid=text(campaignId),manager=await canManageCampaign(cid,u.uid),membership=manager?null:await campaignRole(cid,u);if(!manager&&!(membership?.active&&membership.role==='player'))return[];const snap=await f.getDocs(f.collection(db,'campaigns',cid,'characters'));return snap.docs.map(d=>{const data=d.data()||{};return normalizeCharacterOwner(data.payload,data.ownerUid,data.ownerUsername)}).filter(Boolean)}
  };
  return provider

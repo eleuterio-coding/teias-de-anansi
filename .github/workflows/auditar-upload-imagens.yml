@@ -1,0 +1,63 @@
+name: Auditar upload de imagens
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/image-media.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/adventure-state.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/collaboration-model.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'firebase/firestore.rules'
+      - 'campanhas.html'
+      - 'aventuras.html'
+      - 'sessoes.html'
+      - 'tests/auditar-upload-imagens.mjs'
+      - '.github/workflows/auditar-upload-imagens.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/image-media.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/adventure-state.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/collaboration-model.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'firebase/firestore.rules'
+      - 'campanhas.html'
+      - 'aventuras.html'
+      - 'sessoes.html'
+      - 'tests/auditar-upload-imagens.mjs'
+      - '.github/workflows/auditar-upload-imagens.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  imagens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Auditar pipeline de imagens
+        run: node tests/auditar-upload-imagens.mjs
+      - name: Compilar Security Rules no emulador
+        run: npx --yes firebase-tools@latest emulators:exec --only firestore --project demo-teias-de-anansi "node -e \"console.log('Security Rules compiladas.')\""

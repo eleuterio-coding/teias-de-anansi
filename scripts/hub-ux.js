@@ -20,7 +20,7 @@ function hasLoginSession(){try{const raw=JSON.parse(localStorage.getItem(COLLAB_
 function enforceLogin(){const page=currentPage();if(page==='usuarios.html'||hasLoginSession())return true;const next=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',next);location.replace(login.href);return false}
 async function setRealtime(active){
  if(!active){realtimeModule?.stopRealtime?.();return}
- if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260918-master-delete1&adventure=20260922-adventure-workspace2').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
+ if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20260918-master-delete1&media=20260925-media1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
  const module=await realtimeLoad;module?.startRealtime?.()
 }
 function bootstrapRealtime(){let active=false;try{active=Boolean(localStorage.getItem(COLLAB_SESSION_KEY))}catch{}setRealtime(active)}
