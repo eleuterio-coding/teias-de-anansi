@@ -76,6 +76,62 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/characterTombstones/$(characterId));
     }
 
+    function ownsMedia(data) {
+      return signedIn() && data.ownerId == request.auth.uid;
+    }
+
+    function canReadMedia(data) {
+      return ownsMedia(data)
+        || (
+          data.campaignId != null
+          && (
+            canManage(data.campaignId)
+            || (data.entityType == 'campaign' && isMember(data.campaignId))
+            || (data.entityType == 'adventure' && assignedAdventure(data.campaignId, data.entityId))
+            || (data.entityType == 'session' && assignedSession(data.campaignId, data.entityId))
+          )
+        );
+    }
+
+    match /media/{mediaId} {
+      allow read: if canReadMedia(resource.data);
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.entityType in ['campaign', 'adventure', 'session']
+        && request.resource.data.mime == 'image/webp'
+        && request.resource.data.size > 0
+        && request.resource.data.size <= 1800000
+        && (
+          request.resource.data.campaignId == null
+          || canManage(request.resource.data.campaignId)
+        );
+      allow update: if ownsMedia(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.campaignId == resource.data.campaignId
+        && request.resource.data.entityType == resource.data.entityType
+        && request.resource.data.entityId == resource.data.entityId
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
+      allow delete: if ownsMedia(resource.data)
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
+
+      match /chunks/{chunkId} {
+        allow read: if exists(/databases/$(database)/documents/media/$(mediaId))
+          && canReadMedia(get(/databases/$(database)/documents/media/$(mediaId)).data);
+        allow create, update, delete: if exists(/databases/$(database)/documents/media/$(mediaId))
+          && ownsMedia(get(/databases/$(database)/documents/media/$(mediaId)).data)
+          && (
+            get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId == null
+            || canManage(get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId)
+          );
+      }
+    }
+
     match /users/{uid} {
       allow read: if signedIn();
       allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
