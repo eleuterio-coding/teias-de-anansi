@@ -105,7 +105,12 @@ function localPreview(root,file){
  const old=root.__hubPreviewUrl;if(old)URL.revokeObjectURL(old);
  const url=URL.createObjectURL(file);root.__hubPreviewUrl=url;
  const img=document.createElement('img');img.src=url;img.alt='';
- preview.replaceChildren(img)
+ preview.replaceChildren(img);root.querySelector('[data-image-remove]')?.removeAttribute('hidden')
+}
+function clearLocalPreview(root){
+ const old=root.__hubPreviewUrl;if(old){URL.revokeObjectURL(old);root.__hubPreviewUrl=''}
+ const preview=root.querySelector('[data-image-dropzone]');if(preview){const empty=document.createElement('span');empty.className='image-picker-empty';empty.dataset.imageEmpty='';empty.textContent='Sem imagem';preview.replaceChildren(empty)}
+ root.querySelector('[data-image-remove]')?.setAttribute('hidden','')
 }
 export function bindImagePicker(root,{onSelect=async()=>{},onRemove=async()=>{},onError=()=>{}}={}){
  if(!root||root.dataset.imagePickerBound==='1')return()=>{};
@@ -115,15 +120,15 @@ export function bindImagePicker(root,{onSelect=async()=>{},onRemove=async()=>{},
  const setStatus=value=>{if(status)status.textContent=value||''};
  const choose=async file=>{
   if(!file)return;
-  localPreview(root,file);setBusy(true);setStatus('Preparando imagem...');
-  try{await onSelect(file);setStatus('Imagem pronta.')}catch(error){setStatus(error?.message||'Não foi possível usar esta imagem.');onError(error)}finally{setBusy(false)}
+  const previous=drop?.innerHTML||'';localPreview(root,file);setBusy(true);setStatus('Preparando imagem...');
+  try{await onSelect(file);setStatus('Imagem pronta.')}catch(error){if(drop)drop.innerHTML=previous;setStatus(error?.message||'Não foi possível usar esta imagem.');onError(error)}finally{setBusy(false)}
  };
  input?.addEventListener('change',()=>{const file=input.files?.[0];if(file)choose(file)});
  drop?.addEventListener('click',event=>{if(event.target.closest('button,label,input,a'))return;input?.click()});
  for(const name of['dragenter','dragover'])drop?.addEventListener(name,event=>{event.preventDefault();root.classList.add('dragging')});
  for(const name of['dragleave','drop'])drop?.addEventListener(name,event=>{event.preventDefault();root.classList.remove('dragging')});
  drop?.addEventListener('drop',event=>{const file=[...(event.dataTransfer?.files||[])].find(item=>item.type.startsWith('image/'));if(file)choose(file)});
- remove?.addEventListener('click',async()=>{setBusy(true);setStatus('Removendo imagem...');try{await onRemove();setStatus('Imagem removida.')}catch(error){setStatus(error?.message||'Não foi possível remover a imagem.');onError(error)}finally{setBusy(false)}});
+ remove?.addEventListener('click',async()=>{setBusy(true);setStatus('Removendo imagem...');try{await onRemove();clearLocalPreview(root);setStatus('Imagem removida.')}catch(error){setStatus(error?.message||'Não foi possível remover a imagem.');onError(error)}finally{setBusy(false)}});
  return()=>{if(root.__hubPreviewUrl)URL.revokeObjectURL(root.__hubPreviewUrl)}
 }
 export async function hydrateMediaImages(root=document){
