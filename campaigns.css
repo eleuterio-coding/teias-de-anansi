@@ -5,3 +5,18 @@
 .pre-wrap{white-space:pre-wrap;margin-bottom:0}
 
 .campaign-card-main{display:flex;gap:12px;align-items:flex-start;min-width:0}.campaign-card-main>div{min-width:0}.campaign-card-main p{margin:.35rem 0}@media(max-width:600px){.campaign-card-main{width:100%}}
+
+
+/* Upload de imagens */
+.image-picker{margin-top:7px}
+.image-picker-preview{min-height:170px;max-height:420px;border:1px dashed currentColor;border-radius:14px;display:grid;place-items:center;overflow:hidden;cursor:pointer}
+.image-picker-preview img{display:block;width:100%;height:auto;max-height:420px;object-fit:cover}
+.image-picker-empty{opacity:.62;padding:36px 16px;text-align:center}
+.image-picker-actions{margin-top:8px;align-items:center}
+.image-picker-button{cursor:pointer}
+.image-picker-status{min-height:1.3em;margin-top:5px}
+.image-picker.dragging .image-picker-preview{outline:2px solid currentColor;outline-offset:2px}
+.image-picker.busy{opacity:.72;pointer-events:none}
+.campaign-cover-image,.session-cover{display:block;width:100%;max-height:420px;object-fit:cover;border-radius:14px}
+.session-cover-thumb{height:150px;max-height:150px;margin-bottom:10px}
+@media(max-width:700px){.image-picker-preview{min-height:140px}.campaign-cover-image,.session-cover{max-height:320px}.session-cover-thumb{height:120px}}
