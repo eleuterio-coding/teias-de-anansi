@@ -14,6 +14,8 @@ for(const parameter of['magicBonus','damageType','strengthScore','flyingSpeed','
 assert.ok(ui.includes('setMagicItemUsage'),'10I · UI deve persistir estado pela API canônica');
 assert.ok(ui.includes('classifyMagicItemResponsibility'),'10I · UI deve respeitar fronteira Bloco 10/11 do catálogo congelado');
 assert.ok(ui.includes('Resolução · Bloco 11'),'10I · efeito instantâneo precisa ser delegado de forma explícita, não silenciosa');
+assert.ok(ui.includes('Referência · sem mecânica'),'10I · entrada Sane sem regra reproduzida precisa ser distinguida de efeitos de resolução');
+assert.ok(ui.includes('nenhum efeito é aplicado automaticamente pela Ficha nem delegado ao Bloco 11'),'10I · entrada Sane de referência não pode receber mecânica inventada nem ser delegada indevidamente');
 assert.ok(state.includes('globalAbilityCheckBonus')&&state.includes('globalSavingThrowBonus'),'10I · bônus persistentes globais precisam chegar ao estado derivado');
 assert.ok(state.includes('magicItemMovement')&&state.includes('magicItemWeaponBonuses'),'10I · movimento e modificadores de arma precisam permanecer estruturados para consumo mecânico');
 assert.ok(!/supabase/i.test(`${ui}\n${sheet}\n${ownership}\n${state}`),'10I · Bloco 10 não pode introduzir Supabase');
