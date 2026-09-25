@@ -48,7 +48,9 @@ assert.match(rules,/match \/chunks\/\{chunkId\}/);
 assert.match(rules,/assignedAdventure\(data\.campaignId, data\.entityId\)/);
 assert.match(rules,/assignedSession\(data\.campaignId, data\.entityId\)/);
 assert.match(rules,/request\.resource\.data\.ownerId == request\.auth\.uid/);
-assert.doesNotMatch(rules,/allow create:[\s\S]{0,500}canManage\(request\.resource\.data\.campaignId\)/);
+const mediaRules=rules.slice(rules.indexOf('match /media/{mediaId}'),rules.indexOf('match /users/{uid}'));
+assert.ok(mediaRules.includes('allow create: if signedIn()'));
+assert.equal(mediaRules.includes('canManage(request.resource.data.campaignId)'),false,'Upload local não pode depender de Campanha já publicada.');
 
 const campanhas=read('campanhas.html');
 assert.match(campanhas,/id="campaign-cover-picker"/);
