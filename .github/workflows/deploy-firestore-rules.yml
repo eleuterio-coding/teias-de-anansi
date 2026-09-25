@@ -45,6 +45,7 @@ jobs:
         run: |
           node tests/auditar-colaboracao-provisionamento.mjs
           node tests/auditar-colaboracao-sync.mjs
+          node tests/auditar-upload-imagens.mjs
 
       - name: Exigir credenciais
         shell: bash
