@@ -1,7 +1,7 @@
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20260925-media1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260925-media1';
-import{uploadImage,deleteImage,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media1';
+import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20260917-player-catalog1';
 
 const $=id=>document.getElementById(id);
@@ -52,6 +52,25 @@ function saveSession(ref,patch,message='Sessão salva.'){
   standalone=writeStandaloneSessions(result.list)
  }
  reload();render();feedback(message);return true
+}
+async function saveSessionCoverPersistent(ref,patch,{previous=null,newMedia=null,message='Imagem salva e sincronizada.'}={}){
+ if(!ref)return false;
+ if(ref.source!=='campaign'){
+  if(!saveSession(ref,patch,message)){if(newMedia)await deleteImage(newMedia).catch(()=>{});return false}
+  if(previous?.id&&previous.id!==newMedia?.id)await deleteImage(previous).catch(()=>{});
+  return true
+ }
+ const before=campaigns,result=updateCampaignSession(campaigns,ref.campaignId,ref.id,patch);
+ if(!result.ok){if(newMedia)await deleteImage(newMedia).catch(()=>{});throw new Error(result.reason)}
+ campaigns=writeCampaigns(result.list);
+ try{await persistCampaignMediaState(ref.campaignId)}
+ catch(error){
+  campaigns=writeCampaigns(before);reload();render();if(newMedia)await deleteImage(newMedia).catch(()=>{});
+  throw new Error('A imagem não pôde ser sincronizada. A versão anterior foi preservada.')
+ }
+ reload();render();feedback(message);
+ if(previous?.id&&previous.id!==newMedia?.id)await deleteImage(previous).catch(()=>{});
+ return true
 }
 function removeSession(ref){
  if(!ref)return;const media=findMutableSession(ref)?.coverImage;
@@ -214,10 +233,12 @@ async function createSession(){
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
-  let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
+  const before=campaigns;let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
   const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
-  campaigns=writeCampaigns(result.list);location.href=detailHref(result.session)
+  campaigns=writeCampaigns(result.list);
+  try{await persistCampaignMediaState(campaign.id)}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
+  location.href=detailHref(result.session)
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
   const result=createStandaloneSession(standalone,{id,title:title||undefined,date,coverImage});
@@ -300,7 +321,7 @@ function saveSessionScenesFromCard(ref,card){
 function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
-  const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});if(!saveSession(ref,{coverImage:media,coverImageUrl:''},'Imagem salva.')){deleteImage(media).catch(()=>{});throw new Error('Não foi possível atualizar a Sessão.')}if(previous?.id&&previous.id!==media.id)deleteImage(previous).catch(()=>{})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;if(!saveSession(ref,{coverImage:null,coverImageUrl:''},'Imagem removida.'))throw new Error('Não foi possível atualizar a Sessão.');if(previous?.id)deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
+  const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});await saveSessionCoverPersistent(ref,{coverImage:media,coverImageUrl:''},{previous,newMedia:media,message:'Imagem salva e sincronizada.'})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;await saveSessionCoverPersistent(ref,{coverImage:null,coverImageUrl:''},{previous,message:'Imagem removida e sincronizada.'})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.value})));
   card.querySelectorAll('[data-session-character]').forEach(input=>input.addEventListener('change',()=>{
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
