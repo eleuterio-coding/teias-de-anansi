@@ -53,6 +53,7 @@ jobs:
         run: |
           node tests/auditar-colaboracao-provisionamento.mjs
           node tests/auditar-colaboracao-sync.mjs
+          node tests/auditar-upload-imagens.mjs
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Validar Firebase real com Mestre e Jogador efêmero
