@@ -1,7 +1,7 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
 import{
- createCombat,createCombatFromEncounter,addCombatant,addCombatants,startCombat,nextCombatTurn,addCondition,applyCombatDamage,finishCombat,sanitizeCombatSessionFields
+ createCombat,createCombatFromEncounter,addCombatant,addCombatants,startCombat,nextCombatTurn,addCondition,applyCombatDamage,finishCombat,sanitizeCombatSessionFields,reorderCombatant,reorderCombatantTo,sortCombatInitiative,initiativeOrder
 }from'../scripts/combat-state.js';
 import{sanitizeSession}from'../scripts/campaign-state.js';
 
@@ -11,6 +11,7 @@ addCombatant(from.combat,{kind:'character',characterId:'pc1',name:'Lyra',ac:16,m
 from.combat.combatants.find(c=>c.kind==='monster').initiative=12;
 const started=startCombat(session,from.combat.id);assert.equal(started.ok,true);assert.equal(session.activeCombatId,from.combat.id);assert.equal(started.combat.status,'active');assert.equal(started.combat.activeCombatantId,started.combat.combatants.find(c=>c.name==='Lyra').id);
 const lyra=started.combat.combatants.find(c=>c.name==='Lyra');assert.equal(lyra.reactionAvailable,true,'Reação restaura no início do turno.');
+const goblinBeforeOrder=started.combat.combatants.find(c=>c.name==='Goblin');let reordered=reorderCombatantTo(started.combat,goblinBeforeOrder.id,lyra.id,'before');assert.equal(reordered.ok,true);assert.equal(started.combat.manualInitiativeOrder,true,'Arrastar deve ativar ordem manual.');assert.equal(initiativeOrder(started.combat)[0].name,'Goblin','Ordem manual deve aceitar monstro antes de iniciativa maior.');let manualTurn=nextCombatTurn(started.combat);assert.equal(manualTurn.combatant.name,'Goblin','Próximo turno deve respeitar ordem manual persistida.');reordered=reorderCombatant(started.combat,lyra.id,-1);assert.equal(reordered.ok,true);assert.equal(initiativeOrder(started.combat)[0].name,'Lyra','Botão subir deve ser alternativa ao drag and drop.');sortCombatInitiative(started.combat);assert.equal(started.combat.manualInitiativeOrder,false);assert.equal(initiativeOrder(started.combat)[0].name,'Lyra','Ordenar pela iniciativa deve restaurar a ordem numérica.');started.combat.activeCombatantId=lyra.id;started.combat.round=1;
 addCondition(started.combat,lyra.id,{name:'Envenenado',duration:'rounds',remainingRounds:2});
 let turn=nextCombatTurn(started.combat);assert.equal(turn.combatant.name,'Goblin');turn=nextCombatTurn(started.combat);assert.equal(turn.round,2);assert.equal(started.combat.combatants.find(c=>c.id===lyra.id).conditions[0].remainingRounds,1,'Condições por rodada devem decrementar ao fechar a rodada.');
 const goblin=started.combat.combatants.find(c=>c.name==='Goblin');const damage=applyCombatDamage(started.combat,goblin.id,3,{automaticDefenses:false});assert.equal(damage.ok,true);assert.equal(goblin.currentHp,4);assert.equal(session.encounters[0].combatants[0].currentHp,7,'Dano do Combate não pode alterar o blueprint do Encontro.');
@@ -23,9 +24,11 @@ const quick={id:'s2',encounters:[],scenes:[]};const q=createCombat(quick,{title:
 const ui=fs.readFileSync(new URL('../scripts/session-combat-ui.js',import.meta.url),'utf8');
 const encounterUi=fs.readFileSync(new URL('../scripts/session-encounter-ui.js',import.meta.url),'utf8');
 const sessionHtml=fs.readFileSync(new URL('../sessoes.html',import.meta.url),'utf8');
-for(const token of['CONTROLE DE COMBATE','Criar combate rápido','Criar a partir do Encontro','Próximo turno','Concentração','Reação','Adicionar condição','Iniciativa em grupo','Finalizar combate','Histórico'])assert.ok(ui.includes(token),'Controle de combate sem '+token);
+const combatCss=fs.readFileSync(new URL('../combat.css',import.meta.url),'utf8');
+for(const token of['CONTROLE DE COMBATE','Criar combate rápido','Criar a partir do Encontro','Próximo turno','Concentração','Reação','Adicionar condição','Iniciativa em grupo','Finalizar combate','Histórico','Personagem','Inic.','Ordenar pela iniciativa','data-drag-handle','data-move-combatant'])assert.ok(ui.includes(token),'Controle de combate sem '+token);
 assert.ok(encounterUi.includes('Participantes previstos'),'Encontro deve permanecer como preparação.');
 assert.equal(encounterUi.includes('Próximo turno'),false,'Encontro não deve continuar executando turnos.');
 assert.ok(sessionHtml.includes('combat.css'),'Sessões devem carregar o CSS de combate.');
 assert.ok(sessionHtml.includes('session-combat-ui.js'),'Sessões devem carregar o módulo de combate.');
+for(const token of['combat-initiative-table','combat-table-header','combat-drag-handle','drop-before','drop-after'])assert.ok(combatCss.includes(token),'Tabela de iniciativa sem estilo '+token);
 console.log('OK — Sessão separa Encontro e Combate, preserva histórico e executa turnos/condições/PV.');
