@@ -1,5 +1,5 @@
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20260924-session-scenes2';
-import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media1';
+import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
 const params=new URLSearchParams(location.search),requestedCampaign=params.get('campaign')||'',requestedAdventure=params.get('id')||'';
@@ -14,5 +14,5 @@ function readOnly(){
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20260922-adventure-workspace2');await import('./adventure-ui.js?v=20260925-media1')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20260922-adventure-workspace2');await import('./adventure-ui.js?v=20260925-media2')}
 start();

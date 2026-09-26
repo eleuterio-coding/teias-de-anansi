@@ -102,7 +102,11 @@ service cloud.firestore {
         && request.resource.data.size > 0
         && request.resource.data.size <= 1800000
         && request.resource.data.entityId is string
-        && request.resource.data.entityId.size() > 0;
+        && request.resource.data.entityId.size() > 0
+        && (
+          request.resource.data.campaignId == null
+          || canManage(request.resource.data.campaignId)
+        );
       allow update: if ownsMedia(resource.data)
         && request.resource.data.ownerId == resource.data.ownerId
         && request.resource.data.campaignId == resource.data.campaignId
@@ -110,14 +114,26 @@ service cloud.firestore {
         && request.resource.data.entityId == resource.data.entityId
         && request.resource.data.mime == 'image/webp'
         && request.resource.data.size > 0
-        && request.resource.data.size <= 1800000;
-      allow delete: if ownsMedia(resource.data);
+        && request.resource.data.size <= 1800000
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
+      allow delete: if ownsMedia(resource.data)
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
 
       match /chunks/{chunkId} {
         allow read: if exists(/databases/$(database)/documents/media/$(mediaId))
           && canReadMedia(get(/databases/$(database)/documents/media/$(mediaId)).data);
         allow create, update, delete: if exists(/databases/$(database)/documents/media/$(mediaId))
-          && ownsMedia(get(/databases/$(database)/documents/media/$(mediaId)).data);
+          && ownsMedia(get(/databases/$(database)/documents/media/$(mediaId)).data)
+          && (
+            get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId == null
+            || canManage(get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId)
+          );
       }
     }
 

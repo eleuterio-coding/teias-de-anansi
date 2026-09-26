@@ -1,4 +1,6 @@
-import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
+import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media2';
+import{readCampaigns}from'./campaign-state.js?v=20260925-media1';
+import{readAdventures}from'./adventure-state.js?v=20260925-media1';
 
 const MAX_INPUT_BYTES=20*1024*1024;
 const MAX_OUTPUT_BYTES=1800000;
@@ -75,6 +77,14 @@ export async function optimizeImage(file){
 export async function uploadImage({campaignId=null,entityType,entityId,file}={}){
  const optimized=await optimizeImage(file),bytes=new Uint8Array(await optimized.blob.arrayBuffer()),p=await provider();
  return p.saveMedia({campaignId,entityType,entityId,mime:optimized.mime,width:optimized.width,height:optimized.height,size:bytes.byteLength,bytes})
+}
+export async function persistCampaignMediaState(campaignId,{entityType='campaign',entityId=null}={}){
+ const id=text(campaignId),type=text(entityType),targetId=text(entityId)||id;if(!id||!targetId)throw new Error('Entidade inválida para sincronização da imagem.');
+ const campaign=readCampaigns().find(row=>text(row?.id)===id);
+ if(!campaign)throw new Error('A Campanha vinculada à imagem não foi encontrada.');
+ const adventures=readAdventures().filter(row=>text(row?.campaignId)===id),p=await provider();
+ await p.saveCampaignMediaState({campaign,adventures,entityType:type,entityId:targetId});
+ return true
 }
 export async function deleteImage(media){
  const id=text(media?.id);if(!id)return;
