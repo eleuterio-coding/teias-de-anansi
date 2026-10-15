@@ -1,0 +1,32 @@
+name: Auditar layout unificado do Hub
+on:
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'hub-layout.css'
+      - 'hub-ux.css'
+      - 'biblioteca-light.css'
+      - 'scripts/app-shell.js'
+      - 'scripts/hub-ux.js'
+      - 'scripts/module-clean-loader.js'
+      - 'tests/auditar-layout-unificado.mjs'
+  push:
+    branches: [main]
+    paths:
+      - 'hub-layout.css'
+      - 'hub-ux.css'
+      - 'biblioteca-light.css'
+      - 'scripts/app-shell.js'
+      - 'scripts/hub-ux.js'
+      - 'scripts/module-clean-loader.js'
+      - 'tests/auditar-layout-unificado.mjs'
+jobs:
+  cobertura-visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar cobertura, cache e isolamento do layout
+        run: node tests/auditar-layout-unificado.mjs
