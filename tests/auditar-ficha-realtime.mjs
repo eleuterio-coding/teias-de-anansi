@@ -29,7 +29,7 @@ assert.equal(realtime.includes('persistAuthenticatedAccount([])'),false,'Bootstr
 assert.ok(realtime.includes("collaboration-view.js?v=20260917-master-full-control1"),'Realtime deve carregar a sessão idempotente sem cache antigo.');
 assert.ok(view.includes('sameSession(current,base)'),'Persistência da sessão deve ser idempotente.');
 assert.ok(hubUx.includes("collaboration-realtime.js?v=20260918-master-delete1"),'Hub deve carregar a revisão realtime atual, preservando a correção anti-loop.');
-assert.ok(sheet.includes('scripts/hub-ux.js?v=20260918-master-delete1'),'Ficha deve forçar a revisão corrigida no navegador.');
+assert.ok(sheet.includes('scripts/hub-ux.js?v=20261015-unified-layout1'),'Ficha deve forçar a revisão corrigida no navegador.');
 const autosave=fs.readFileSync(new URL('../scripts/character-sheet-autosave.js',import.meta.url),'utf8');
 const sheetJs=fs.readFileSync(new URL('../scripts/character-sheet.js',import.meta.url),'utf8');
 assert.equal(realtime.includes('location.reload'),false,'Realtime global não pode recarregar a página.');
