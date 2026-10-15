@@ -10,6 +10,7 @@ on:
       - 'scripts/hub-ux.js'
       - 'scripts/module-clean-loader.js'
       - 'tests/auditar-layout-unificado.mjs'
+      - 'scripts/normalizar_tema_modulos.py'
   push:
     branches: [main]
     paths:
@@ -28,5 +29,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validar normalizador idempotente da Biblioteca
+        run: |
+          python3 scripts/normalizar_tema_modulos.py
+          git diff --exit-code -- '*.html'
       - name: Verificar cobertura, cache e isolamento do layout
         run: node tests/auditar-layout-unificado.mjs
