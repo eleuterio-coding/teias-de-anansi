@@ -1,5 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20260905-settings1';
-import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20260925-shell1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261015-unified-layout1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
@@ -8,9 +8,11 @@ let observer=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeM
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
+ if(!document.getElementById('hub-layout-styles')){const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='hub-layout-styles';sheet.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;document.head.appendChild(sheet)}
+
  if(document.getElementById(STYLE_ID)||document.querySelector('link[href*="hub-ux.css"]'))return;
  const link=document.createElement('link');
- link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260925-shell1',import.meta.url).href;
+ link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20261015-unified-layout1',import.meta.url).href;
  document.head.appendChild(link)
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
