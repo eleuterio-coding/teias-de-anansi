@@ -1,0 +1,37 @@
+name: Validar layout real no navegador
+on:
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'hub-layout.css'
+      - 'hub-ux.css'
+      - 'biblioteca-light.css'
+      - 'scripts/app-shell.js'
+      - 'scripts/hub-ux.js'
+      - 'scripts/module-clean-loader.js'
+      - 'e2e/layout-unificado.spec.js'
+      - '.github/workflows/validar-layout-navegador.yml'
+  workflow_dispatch:
+jobs:
+  playwright-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Auditar interface em desktop e celular
+        run: npx playwright test e2e/layout-unificado.spec.js --project=desktop-chromium --project=mobile-chromium
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: layout-unificado-playwright
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
