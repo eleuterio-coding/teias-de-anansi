@@ -28,6 +28,10 @@ assert.match(shell,/LIBRARY_PAGES\.has\(page\)\&\&item\.page==="bibliotecas\.htm
 assert.match(ux,new RegExp('hub-layout\\.css\\?v='+version));
 assert.match(ux,/Editar Ficha/);
 assert.doesNotMatch(ux,/Editar estrutura/);
+const normalizer=read('scripts/normalizar_tema_modulos.py');
+assert.ok(!normalizer.includes("STYLE ="),'Normalizador não pode injetar CSS global em catálogos');
+assert.ok(normalizer.includes('normalized != html'),'Normalizador deve ser idempotente');
+assert.ok(normalizer.includes('if MARKER in html'),'Normalizador deve bloquear temas globais antigos');
 assert.match(layout,/--hub-reader-bg/);
 assert.match(layout,/--hub-topbar-height/);
 assert.match(layout,/hub-mobile-nav-toggle\{display:none!important\}/);
