@@ -1,5 +1,7 @@
 
-const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html"]);
+const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
+const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
+const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",label:"Início",icon:"home"},
@@ -34,7 +36,7 @@ function icon(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="current
 function currentPage(){return location.pathname.split("/").pop()||"index.html"}
 function shellEligible(){return SHELL_PAGES.has(currentPage())}
 function pageLabel(page){page=page||currentPage();return PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
-function pageMatches(item,page){page=page||currentPage();return item.page===page||(item.aliases||[]).includes(page)||(page==="mesa.html"&&item.page==="campanhas.html")}
+function pageMatches(item,page){page=page||currentPage();return item.page===page||(item.aliases||[]).includes(page)||(page==="mesa.html"&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
 function readRecents(){try{const rows=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");return Array.isArray(rows)?rows:[]}catch{return[]}}
 function rememberCurrent(label){
  const page=currentPage();if(!shellEligible()||page==="index.html")return;
@@ -139,7 +141,7 @@ export function initAppShell(){
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
  frame.appendChild(buildTopbar());frame.appendChild(content);shell.appendChild(sidebar);shell.appendChild(frame);
  document.body.insertBefore(shell,document.body.firstChild);movable.forEach(function(node){content.appendChild(node)});
- document.body.classList.add("hub-shell-enabled");buildCommand();bindShell();renderRecents();updateAppShellContext()
+ document.body.classList.add("hub-shell-enabled");if(LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");buildCommand();bindShell();renderRecents();updateAppShellContext()
 }
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
