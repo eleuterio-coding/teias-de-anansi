@@ -103,6 +103,41 @@ body.hub-shell-enabled.hub-content-light .hub-app-content .hub-home-card{
 body.hub-shell-enabled.hub-content-light .hub-app-content :where(.modulos a,.dash-row):hover{
   background:#eef5fb!important;
 }
+/* O CSS dos catálogos antigos define text-fill no body; não pode vazar
+   para o menu escuro, especialmente no Chrome/Android. */
+body.hub-shell-enabled .hub-sidebar,
+body.hub-shell-enabled .hub-global-topbar,
+body.hub-shell-enabled .hub-command-backdrop,
+body.hub-shell-enabled .hub-command{
+  -webkit-text-fill-color:currentColor!important;
+}
+/* Login isolado: mesma linguagem visual, sem exibir dados do Hub antes da autenticação. */
+body.hub-login-page{
+  background:var(--hub-reader-bg)!important;color:var(--hub-reader-ink)!important;
+  min-height:100dvh;
+}
+body.hub-login-page .top{
+  padding:16px 20px;border:1px solid var(--hub-reader-border);
+  border-radius:var(--hub-panel-radius);background:var(--hub-reader-paper)!important;
+}
+body.hub-login-page :where(.card,.row,.status){
+  background:var(--hub-reader-paper)!important;
+  color:var(--hub-reader-ink)!important;border-color:var(--hub-reader-border)!important;
+}
+body.hub-login-page :where(input,select,textarea){
+  min-height:44px;border-radius:var(--hub-control-radius);
+  background:#fff;color:var(--hub-reader-ink);border:1px solid #bdcad9;
+}
+body.hub-login-page :where(button,.btn):not(.secondary){
+  min-height:44px;background:#136eac;color:#fff;border-color:#136eac;
+}
+body.hub-login-page :where(button.secondary,.btn.secondary){
+  background:#fff;color:#223e57;border-color:#bdcad9;
+}
+body.hub-login-page :where(button,input,select,textarea):focus-visible{
+  outline:2px solid #136eac;outline-offset:2px;
+}
+
 /* A barra superior, busca e menu pertencem sempre ao tema escuro do Hub. */
 body.hub-shell-enabled .hub-global-topbar{margin:0!important}
 body.hub-shell-enabled .hub-command-backdrop,
