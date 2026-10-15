@@ -8,12 +8,16 @@ let observer=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeM
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
- if(!document.getElementById('hub-layout-styles')){const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.id='hub-layout-styles';sheet.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;document.head.appendChild(sheet)}
-
- if(document.getElementById(STYLE_ID)||document.querySelector('link[href*="hub-ux.css"]'))return;
- const link=document.createElement('link');
- link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20261015-unified-layout1',import.meta.url).href;
- document.head.appendChild(link)
+ if(!document.getElementById(STYLE_ID)&&!document.querySelector('link[href*="hub-ux.css"]')){
+  const base=document.createElement('link');base.id=STYLE_ID;base.rel='stylesheet';
+  base.href=new URL('../hub-ux.css?v=20261015-unified-layout1',import.meta.url).href;
+  document.head.appendChild(base);
+ }
+ if(!document.getElementById('hub-layout-styles')){
+  const layout=document.createElement('link');layout.id='hub-layout-styles';layout.rel='stylesheet';
+  layout.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;
+  document.head.appendChild(layout);
+ }
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
