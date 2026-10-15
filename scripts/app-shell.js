@@ -4,7 +4,7 @@ const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"
 const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
- {page:"painel.html",label:"Início",icon:"home"},
+ {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
  {page:"campanhas.html",label:"Campanhas",icon:"campaign"},
  {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
  {page:"aventuras.html",label:"Aventuras",icon:"map"},
@@ -84,7 +84,9 @@ function buildSidebar(){
  const spacer=document.createElement("div");spacer.className="hub-sidebar-spacer";aside.appendChild(spacer);
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
- secondary.innerHTML='<a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a><a class="hub-nav-link" href="usuarios.html">'+icon("player")+'<span>Jogadores</span></a>';aside.appendChild(secondary);
+ secondary.innerHTML='<a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a><a class="hub-nav-link" href="usuarios.html">'+icon("player")+'<span>Jogadores</span></a>';
+ if(currentPage()==="configuracoes.html")secondary.querySelector('a[href="configuracoes.html"]')?.setAttribute("aria-current","page");
+ aside.appendChild(secondary);
  return aside
 }
 function buildTopbar(){
