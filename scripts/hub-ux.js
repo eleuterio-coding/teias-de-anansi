@@ -1,5 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20260905-settings1';
-import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20260925-shell1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261015-unified-layout1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
@@ -8,10 +8,16 @@ let observer=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeM
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
- if(document.getElementById(STYLE_ID)||document.querySelector('link[href*="hub-ux.css"]'))return;
- const link=document.createElement('link');
- link.id=STYLE_ID;link.rel='stylesheet';link.href=new URL('../hub-ux.css?v=20260925-shell1',import.meta.url).href;
- document.head.appendChild(link)
+ if(!document.getElementById(STYLE_ID)&&!document.querySelector('link[href*="hub-ux.css"]')){
+  const base=document.createElement('link');base.id=STYLE_ID;base.rel='stylesheet';
+  base.href=new URL('../hub-ux.css?v=20261015-unified-layout1',import.meta.url).href;
+  document.head.appendChild(base);
+ }
+ if(!document.getElementById('hub-layout-styles')){
+  const layout=document.createElement('link');layout.id='hub-layout-styles';layout.rel='stylesheet';
+  layout.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;
+  document.head.appendChild(layout);
+ }
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
@@ -68,8 +74,11 @@ function enhanceTouchGroups(){
  for(const group of document.querySelectorAll('.hero .actions,.top .actions,.hero-actions,.pc .actions'))if(group.dataset.mobileStack!=='true')group.dataset.mobileStack='true'
 }
 function enhanceStructureEditingCopy(){
- const edit=document.getElementById('edit-link');if(edit&&edit.textContent!=='Editar estrutura'){edit.textContent='Editar estrutura';edit.title='Corrige escolhas estruturais da criação. PV, recursos, equipamento, magias, descansos e estado atual são administrados nesta ficha.'}
- for(const link of document.querySelectorAll('a[data-structure-edit]'))if(link.textContent!=='Editar estrutura'){link.textContent='Editar estrutura';link.title='Use o construtor apenas para corrigir escolhas estruturais da criação.'}
+ const edit=document.getElementById('edit-link');
+ if(edit&&edit.textContent.trim()!=='Editar Ficha')edit.textContent='Editar Ficha';
+ for(const link of document.querySelectorAll('a[data-structure-edit]')){
+  if(link.textContent.trim()!=='Editar Ficha')link.textContent='Editar Ficha';
+ }
 }
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}

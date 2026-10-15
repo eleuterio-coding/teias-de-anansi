@@ -28,24 +28,26 @@ body {
 
 body,
 button,
-input,
-select,
-textarea {
+body:not(.hub-shell-enabled) :is(input,select,textarea),
+body.hub-shell-enabled .hub-app-content :is(input,select,textarea) {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
-body * {
+body:not(.hub-shell-enabled) *,
+body.hub-shell-enabled .hub-app-content * {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body *::before,
-body *::after {
+body:not(.hub-shell-enabled) *::before,
+body:not(.hub-shell-enabled) *::after,
+body.hub-shell-enabled .hub-app-content *::before,
+body.hub-shell-enabled .hub-app-content *::after {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-header { margin: 0 0 18px !important; }
+body:not(.hub-shell-enabled) header,body.hub-shell-enabled .hub-app-content header { margin: 0 0 18px !important; }
 h1 { margin: 8px 0 18px !important; font-size: clamp(1.8rem, 4vw, 2.35rem) !important; line-height: 1.12 !important; }
 h2 { line-height: 1.2 !important; }
 
@@ -54,24 +56,16 @@ body > nav:first-child {
   margin-top: 0 !important;
 }
 
-a,
-a:link,
-a:visited,
-a:hover,
-a:active,
-a:focus {
+body:not(.hub-shell-enabled) :is(a,a:link,a:visited,a:hover,a:active,a:focus),
+body.hub-shell-enabled .hub-app-content :is(a,a:link,a:visited,a:hover,a:active,a:focus) {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-a:hover { text-decoration-thickness: 2px; }
+body:not(.hub-shell-enabled) a:hover,body.hub-shell-enabled .hub-app-content a:hover { text-decoration-thickness: 2px; }
 
-input,
-select,
-textarea,
-button,
-option,
-optgroup {
+body:not(.hub-shell-enabled) :is(input,select,textarea,button,option,optgroup),
+body.hub-shell-enabled .hub-app-content :is(input,select,textarea,button,option,optgroup) {
   background: #ffffff !important;
   background-color: #ffffff !important;
   color: #000000 !important;
@@ -88,9 +82,11 @@ textarea {
   padding: 10px 12px !important;
 }
 
-button { border-color: #bdbdbd !important; }
-input::placeholder,
-textarea::placeholder { color: #555555 !important; -webkit-text-fill-color: #555555 !important; opacity: 1 !important; }
+body:not(.hub-shell-enabled) button,body.hub-shell-enabled .hub-app-content button { border-color: #bdbdbd !important; }
+body:not(.hub-shell-enabled) input::placeholder,
+body:not(.hub-shell-enabled) textarea::placeholder,
+body.hub-shell-enabled .hub-app-content input::placeholder,
+body.hub-shell-enabled .hub-app-content textarea::placeholder { color: #555555 !important; -webkit-text-fill-color: #555555 !important; opacity: 1 !important; }
 
 .muted,
 .resumo,
@@ -168,7 +164,8 @@ th { background: #f7f7f7 !important; font-weight: 700 !important; }
 svg text { fill: #000000 !important; }
 
 /* Estados de foco acessíveis */
-:focus-visible {
+body:not(.hub-shell-enabled) :focus-visible,
+body.hub-shell-enabled .hub-app-content :focus-visible {
   outline: 2px solid #000000 !important;
   outline-offset: 2px !important;
 }
