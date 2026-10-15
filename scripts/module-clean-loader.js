@@ -55,7 +55,7 @@
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
     html=applySharedLayout(html);
     // O módulo mantém seus catálogos; navegação e estilo são compartilhados com o Hub.
-    html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261015-unified-layout1"><\\/script></body>');
+    html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261015-unified-layout1"></script></body>');
     if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script></body>`);
     document.open();
     document.write(html);
