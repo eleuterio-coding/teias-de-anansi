@@ -1,0 +1,126 @@
+/* Hub de RPG — camada única de composição visual.
+   A navegação usa o tema do produto; áreas de leitura e edição preservam
+   o contraste claro dos catálogos e fichas, sem contaminar o shell. */
+:root {
+  --hub-space-1:4px;--hub-space-2:8px;--hub-space-3:12px;--hub-space-4:16px;
+  --hub-space-5:24px;--hub-space-6:32px;
+  --hub-control-radius:10px;--hub-panel-radius:14px;
+  --hub-reader-bg:#f4f7fb;--hub-reader-paper:#fff;--hub-reader-ink:#172638;
+  --hub-reader-border:#d5dee9;--hub-reader-muted:#516379;
+}
+body.hub-shell-enabled .hub-app-content{min-width:0}
+body.hub-shell-enabled .hub-app-content :where(.card,.panel,.focus-card,.metric,.campaign-card,.session-card){
+  transition:border-color .14s ease;
+}
+body.hub-shell-enabled .hub-app-content :where(button,.btn,select,input,textarea){
+  font-family:inherit;
+}
+body.hub-shell-enabled .hub-app-content :where(button,.btn,.button-link){
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  max-width:100%;padding:9px 13px;line-height:1.3;
+}
+body.hub-shell-enabled .hub-app-content :where(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+  min-width:0;max-width:100%;
+}
+body.hub-shell-enabled .hub-app-content :where(.top,.actions,.hero-actions,.row-actions,.panel-head){
+  gap:12px;
+}
+body.hub-shell-enabled .hub-app-content :where(h1,h2,h3){text-wrap:balance}
+body.hub-shell-enabled .hub-app-content :where(.table-wrap,[data-horizontal-scroll]){
+  overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch
+}
+body.hub-shell-enabled .hub-app-content :where(table){max-width:100%}
+body.hub-shell-enabled .hub-app-content :where(.card,.panel){min-width:0}
+body.hub-shell-enabled .hub-app-content :where(.status,.empty,[role="status"]){overflow-wrap:anywhere}
+
+/* Leitura, Biblioteca, fichas e criação: mesmo contêiner, tipografia e controles. */
+body.hub-shell-enabled.hub-content-light .hub-app-content{
+  background:var(--hub-reader-bg)!important;color:var(--hub-reader-ink)!important;
+  max-width:1560px;min-height:calc(100vh - var(--hub-topbar-height));
+  padding:28px clamp(14px,2.4vw,36px) 48px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(h1,h2,h3,h4,h5,h6){
+  color:var(--hub-reader-ink)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.muted,.mini,.eyebrow,.contagem,small){
+  color:var(--hub-reader-muted)!important;-webkit-text-fill-color:var(--hub-reader-muted)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.card,.panel,.metric,.focus-card,.campaign-card,.member-row,.session-card,.dash-row,.hero,.sheet,.wizard-shell,.item,.subclasse,.painel,.box,.stat,details,.modulos li){
+  background:var(--hub-reader-paper)!important;color:var(--hub-reader-ink)!important;
+  border-color:var(--hub-reader-border)!important;box-shadow:0 1px 2px rgba(24,43,64,.04)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(input,select,textarea){
+  color:var(--hub-reader-ink)!important;background:#fff!important;
+  border:1px solid #bdcad9!important;border-radius:var(--hub-control-radius)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(input,textarea)::placeholder{
+  color:#697a8d!important;-webkit-text-fill-color:#697a8d!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(input,select,textarea):focus{
+  border-color:#1979be!important;outline:2px solid rgba(25,121,190,.24)!important;
+  outline-offset:1px;box-shadow:none!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(button:not(.secondary):not(.danger),.btn:not(.secondary):not(.danger)){
+  background:#136eac!important;border-color:#136eac!important;color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(button.secondary,.btn.secondary){
+  background:#fff!important;border-color:#bdcad9!important;color:#223e57!important;
+  -webkit-text-fill-color:#223e57!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(button.danger,.btn.danger){
+  background:#fff2f2!important;color:#a12b2b!important;border-color:#e8b1b1!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.badge,.tag,.pill){
+  background:#edf3f9!important;border-color:#d2deeb!important;color:#31506d!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.status,.loading,.empty){
+  background:#fff!important;color:var(--hub-reader-ink)!important;border-color:var(--hub-reader-border)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.section-nav,.wizard-nav){
+  top:var(--hub-topbar-height)!important;background:var(--hub-reader-bg)!important;
+  border-bottom:1px solid var(--hub-reader-border);
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .section-nav a{
+  background:#fff!important;color:#31506d!important;border-color:#c9d7e4!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .section-nav a[aria-current="location"]{
+  color:#0b609a!important;border-color:#1979be!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .wizard-nav button:not(.is-active){
+  background:#fff!important;color:#254159!important;border-color:var(--hub-reader-border)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .wizard-nav button.is-active{
+  background:#136eac!important;color:#fff!important;border-color:#136eac!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .wizard-nav button:not(.is-active) span{
+  color:#516379!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a,
+body.hub-shell-enabled.hub-content-light .hub-app-content .hub-home-card{
+  background:#fff!important;color:var(--hub-reader-ink)!important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :where(.modulos a,.dash-row):hover{
+  background:#eef5fb!important;
+}
+/* A barra superior, busca e menu pertencem sempre ao tema escuro do Hub. */
+body.hub-shell-enabled .hub-global-topbar{margin:0!important}
+body.hub-shell-enabled .hub-command-backdrop,
+body.hub-shell-enabled .hub-command{color:var(--hub-text)!important}
+body.hub-shell-enabled .hub-command-input{background:transparent!important;color:var(--hub-text)!important}
+body.hub-shell-enabled .hub-sidebar :where(a,button),
+body.hub-shell-enabled .hub-global-topbar :where(a,button){
+  -webkit-text-fill-color:currentColor!important;
+}
+body.hub-shell-enabled :where(.hub-icon-button,.hub-topbar-primary,.hub-nav-search):focus-visible{
+  outline:2px solid var(--hub-accent-2)!important;outline-offset:2px!important;
+}
+@media(max-width:760px){
+  body.hub-shell-enabled.hub-content-light .hub-app-content{padding:18px 14px 34px}
+  body.hub-shell-enabled .hub-app-content :where(.actions,.row-actions,.hero-actions){flex-wrap:wrap}
+  body.hub-shell-enabled.hub-content-light .hub-app-content :where(.section-nav,.wizard-nav){top:58px!important}
+}
+@media(max-width:520px){
+  body.hub-shell-enabled .hub-app-content :where(.form-grid,.step-grid,.grid.three){min-width:0}
+  body.hub-shell-enabled .hub-app-content :where(button,.btn){white-space:normal}
+}
