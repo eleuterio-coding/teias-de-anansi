@@ -70,8 +70,11 @@ function enhanceTouchGroups(){
  for(const group of document.querySelectorAll('.hero .actions,.top .actions,.hero-actions,.pc .actions'))if(group.dataset.mobileStack!=='true')group.dataset.mobileStack='true'
 }
 function enhanceStructureEditingCopy(){
- const edit=document.getElementById('edit-link');if(edit&&edit.textContent!=='Editar estrutura'){edit.textContent='Editar estrutura';edit.title='Corrige escolhas estruturais da criação. PV, recursos, equipamento, magias, descansos e estado atual são administrados nesta ficha.'}
- for(const link of document.querySelectorAll('a[data-structure-edit]'))if(link.textContent!=='Editar estrutura'){link.textContent='Editar estrutura';link.title='Use o construtor apenas para corrigir escolhas estruturais da criação.'}
+ const edit=document.getElementById('edit-link');
+ if(edit&&edit.textContent.trim()!=='Editar Ficha')edit.textContent='Editar Ficha';
+ for(const link of document.querySelectorAll('a[data-structure-edit]')){
+  if(link.textContent.trim()!=='Editar Ficha')link.textContent='Editar Ficha';
+ }
 }
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}
