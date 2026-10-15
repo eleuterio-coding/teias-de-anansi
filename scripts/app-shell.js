@@ -141,7 +141,7 @@ export function initAppShell(){
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
  frame.appendChild(buildTopbar());frame.appendChild(content);shell.appendChild(sidebar);shell.appendChild(frame);
  document.body.insertBefore(shell,document.body.firstChild);movable.forEach(function(node){content.appendChild(node)});
- document.body.classList.add("hub-shell-enabled");if(LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");buildCommand();bindShell();renderRecents();updateAppShellContext()
+ document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");buildCommand();bindShell();renderRecents();updateAppShellContext()
 }
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
