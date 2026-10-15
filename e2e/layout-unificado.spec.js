@@ -31,6 +31,8 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
   for (const [path,menu,reader] of surfaces) {
     await test.step(path,async () => {
       await page.goto(path,{waitUntil:'domcontentloaded'});
+      // O deploy injeta site-light.css em todas as páginas. Validar também essa composição.
+      await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
       await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
       await expect(page.locator('.hub-global-topbar')).toBeVisible();
       await expect(page.locator('.hub-sidebar')).toHaveCount(1);
@@ -91,10 +93,21 @@ test('menu responsivo pode abrir, navegar e fechar',async ({page},testInfo)=>{
 
 test('tela de jogadores permanece independente do shell sem perder o design',async({page})=>{
   await page.goto('/usuarios.html');
+  await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
   await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
   await expect(page.locator('body')).toHaveClass(/hub-login-page/);
   await expect(page.locator('.hub-app-shell')).toHaveCount(0);
   await expect(page.locator('#login-username')).toHaveCount(1);
   const bg=await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor);
   expect(bg).toBe('rgb(244, 247, 251)');
+});
+
+test('menu de etapas permanece sticky acima do conteúdo da criação', async ({page},testInfo) => {
+  await page.goto('/criacao-personagem.html');
+  await expect(page.locator('.hub-app-shell')).toBeVisible();
+  const nav=page.locator('#wizard-nav');
+  await expect(nav).toBeVisible();
+  const css=await nav.evaluate(el=>({position:getComputedStyle(el).position,top:getComputedStyle(el).top}));
+  expect(css.position).toBe('sticky');
+  expect(parseFloat(css.top)).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?58:64);
 });

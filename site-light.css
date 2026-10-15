@@ -8,64 +8,64 @@
  * sendo aplicado às demais telas, especialmente aos módulos mecânicos e
  * editoriais que ainda não migraram para o novo shell.
  */
-body:not(.hub-shell-enabled),
-body:not(.hub-shell-enabled) * {
+body:not(.hub-shell-enabled):not(.hub-login-page),
+body:not(.hub-shell-enabled):not(.hub-login-page) * {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body:not(.hub-shell-enabled) *::before,
-body:not(.hub-shell-enabled) *::after {
+body:not(.hub-shell-enabled):not(.hub-login-page) *::before,
+body:not(.hub-shell-enabled):not(.hub-login-page) *::after {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body:not(.hub-shell-enabled) a,
-body:not(.hub-shell-enabled) a:link,
-body:not(.hub-shell-enabled) a:visited,
-body:not(.hub-shell-enabled) a:hover,
-body:not(.hub-shell-enabled) a:active,
-body:not(.hub-shell-enabled) a:focus {
+body:not(.hub-shell-enabled):not(.hub-login-page) a,
+body:not(.hub-shell-enabled):not(.hub-login-page) a:link,
+body:not(.hub-shell-enabled):not(.hub-login-page) a:visited,
+body:not(.hub-shell-enabled):not(.hub-login-page) a:hover,
+body:not(.hub-shell-enabled):not(.hub-login-page) a:active,
+body:not(.hub-shell-enabled):not(.hub-login-page) a:focus {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
   background: #ffffff !important;
 }
 
-body:not(.hub-shell-enabled) input,
-body:not(.hub-shell-enabled) select,
-body:not(.hub-shell-enabled) textarea,
-body:not(.hub-shell-enabled) button,
-body:not(.hub-shell-enabled) option,
-body:not(.hub-shell-enabled) optgroup {
+body:not(.hub-shell-enabled):not(.hub-login-page) input,
+body:not(.hub-shell-enabled):not(.hub-login-page) select,
+body:not(.hub-shell-enabled):not(.hub-login-page) textarea,
+body:not(.hub-shell-enabled):not(.hub-login-page) button,
+body:not(.hub-shell-enabled):not(.hub-login-page) option,
+body:not(.hub-shell-enabled):not(.hub-login-page) optgroup {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body:not(.hub-shell-enabled) input::placeholder,
-body:not(.hub-shell-enabled) textarea::placeholder {
+body:not(.hub-shell-enabled):not(.hub-login-page) input::placeholder,
+body:not(.hub-shell-enabled):not(.hub-login-page) textarea::placeholder {
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
   opacity: .68;
 }
 
-body:not(.hub-shell-enabled) input:focus,
-body:not(.hub-shell-enabled) select:focus,
-body:not(.hub-shell-enabled) textarea:focus,
-body:not(.hub-shell-enabled) button:focus,
-body:not(.hub-shell-enabled) button:hover,
-body:not(.hub-shell-enabled) button:active {
+body:not(.hub-shell-enabled):not(.hub-login-page) input:focus,
+body:not(.hub-shell-enabled):not(.hub-login-page) select:focus,
+body:not(.hub-shell-enabled):not(.hub-login-page) textarea:focus,
+body:not(.hub-shell-enabled):not(.hub-login-page) button:focus,
+body:not(.hub-shell-enabled):not(.hub-login-page) button:hover,
+body:not(.hub-shell-enabled):not(.hub-login-page) button:active {
   background: #ffffff !important;
   color: #000000 !important;
   -webkit-text-fill-color: #000000 !important;
 }
 
-body:not(.hub-shell-enabled) svg text {
+body:not(.hub-shell-enabled):not(.hub-login-page) svg text {
   fill: #000000 !important;
 }
 
-body:not(.hub-shell-enabled) ::selection {
+body:not(.hub-shell-enabled):not(.hub-login-page) ::selection {
   background: #000000 !important;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
@@ -115,14 +115,14 @@ html:has(body.hub-shell-enabled) {
     color-scheme: only light;
   }
 
-  body:not(.hub-shell-enabled),
-  body:not(.hub-shell-enabled) *,
-  body:not(.hub-shell-enabled) input,
-  body:not(.hub-shell-enabled) select,
-  body:not(.hub-shell-enabled) textarea,
-  body:not(.hub-shell-enabled) button,
-  body:not(.hub-shell-enabled) option,
-  body:not(.hub-shell-enabled) optgroup {
+  body:not(.hub-shell-enabled):not(.hub-login-page),
+  body:not(.hub-shell-enabled):not(.hub-login-page) *,
+  body:not(.hub-shell-enabled):not(.hub-login-page) input,
+  body:not(.hub-shell-enabled):not(.hub-login-page) select,
+  body:not(.hub-shell-enabled):not(.hub-login-page) textarea,
+  body:not(.hub-shell-enabled):not(.hub-login-page) button,
+  body:not(.hub-shell-enabled):not(.hub-login-page) option,
+  body:not(.hub-shell-enabled):not(.hub-login-page) optgroup {
     background: #ffffff !important;
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;

@@ -159,3 +159,8 @@ body.hub-shell-enabled :where(.hub-icon-button,.hub-topbar-primary,.hub-nav-sear
   body.hub-shell-enabled .hub-app-content :where(.form-grid,.step-grid,.grid.three){min-width:0}
   body.hub-shell-enabled .hub-app-content :where(button,.btn){white-space:normal}
 }
+
+/* Não exibir o gatilho móvel em telas de desktop: .hub-icon-button define display em outra regra. */
+@media (min-width:761px){
+  body.hub-shell-enabled .hub-global-topbar .hub-mobile-nav-toggle{display:none!important}
+}

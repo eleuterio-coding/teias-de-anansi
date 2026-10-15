@@ -30,6 +30,8 @@ assert.match(ux,/Editar Ficha/);
 assert.doesNotMatch(ux,/Editar estrutura/);
 assert.match(layout,/--hub-reader-bg/);
 assert.match(layout,/--hub-topbar-height/);
+assert.match(layout,/hub-mobile-nav-toggle\{display:none!important\}/);
+assert.match(read('site-light.css'),/body:not\(\.hub-shell-enabled\):not\(\.hub-login-page\)/);
 assert.match(layout,/@media\(max-width:760px\)/);
 assert.match(library,/body:not\(\.hub-shell-enabled\) \*/);
 assert.match(library,/body\.hub-shell-enabled \.hub-app-content \*/);
