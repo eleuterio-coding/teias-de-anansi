@@ -1,5 +1,5 @@
 import{read,write}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20260924-session-combat1';
+import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{createCombat,createCombatFromEncounter,updateCombat,removeCombat,startCombat,finishCombat,cancelCombat,addCombatant,addCombatants,updateCombatant,removeCombatant,setCombatantInitiative,setGroupInitiative,nextCombatTurn,previousCombatTurn,addCondition,removeCondition,setConcentration,setReactionAvailable,applyCombatDamage,applyCombatHealing,setTemporaryHp,combatSummary,initiativeOrder,reorderCombatant,reorderCombatantTo,sortCombatInitiative}from'./combat-state.js?v=20260925-initiative-table1';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 import{rollD20}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
