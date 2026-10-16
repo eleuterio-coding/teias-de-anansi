@@ -350,3 +350,9 @@ body.hub-shell-enabled .badge.finished,body.hub-shell-enabled .badge.completed{b
 body.hub-shell-enabled .badge.cancelled{background:#41292c!important;color:#ffacac!important;border-color:#ac595d!important}
 body.hub-shell-enabled .badge.archived{background:#30343b!important;color:#b9bdc8!important;border-color:#727989!important}
 body.hub-shell-enabled .badge.next{background:#203d53!important;color:#91dcf5!important;border-color:#478cb7!important}
+
+/* Explicit, readable parent relationships on campaign adventure and session cards. */
+body.hub-shell-enabled .campaign-relationship{display:block;color:#c6b5ff!important;font-size:.8rem;font-weight:600;margin:4px 0 6px}
+body.hub-shell-enabled .campaign-relationship strong{color:#e2d8ff}
+body.hub-shell-enabled .badge.relation-campaign{background:rgba(143,103,239,.15)!important;color:#c9b6ff!important;border-color:rgba(143,103,239,.42)!important}
+body.hub-shell-enabled .badge.relation-adventure{background:rgba(35,170,210,.14)!important;color:#89dbee!important;border-color:rgba(35,170,210,.4)!important}
