@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Início · Painel Geral - Teias de Anansi</title><link rel="stylesheet" href="dashboard.css?v=20261016-dashboard2"><link rel="stylesheet" href="hub-ux.css?v=20260925-shell1"></head><body>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Início · Painel Geral - Teias de Anansi</title><link rel="stylesheet" href="dashboard.css?v=20261016-dashboard3"><link rel="stylesheet" href="hub-ux.css?v=20260925-shell1"></head><body>
 <header class="top"><div><p class="eyebrow">Início</p><h1>Painel Geral</h1></div></header>
 <main id="main-content">
 <p class="sr-only" role="status" aria-live="polite">Painel Geral carregado.</p>
@@ -9,9 +9,13 @@
   <section class="panel dashboard-card"><div class="panel-head"><div><p class="card-kicker">Sessões</p><h2>Sessões existentes</h2></div><a href="sessoes.html" class="mini">Ver todas</a></div><div id="session-dashboard-list" class="dashboard-list"></div></section>
 </section>
 <section class="dashboard-context" aria-label="Contexto atual">
-  <article id="next-session" class="focus-card"></article>
-  <article id="current-campaign" class="focus-card"></article>
-  <article id="current-adventure" class="focus-card"></article>
-  <article id="current-session" class="focus-card"></article>
+  <div class="dashboard-context-column dashboard-context-column--sessions">
+    <article id="next-session" class="focus-card"></article>
+    <article id="current-session" class="focus-card focus-card--current-session"></article>
+  </div>
+  <div class="dashboard-context-column dashboard-context-column--campaign">
+    <article id="current-campaign" class="focus-card"></article>
+    <article id="current-adventure" class="focus-card"></article>
+  </div>
 </section>
 </main><script type="module" src="scripts/hub-ux.js?v=20261015-unified-layout1"></script><script type="module" src="scripts/dashboard-ui.js?v=20261016-dashboard2"></script></body></html>

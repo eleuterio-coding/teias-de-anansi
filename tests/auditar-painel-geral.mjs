@@ -34,6 +34,11 @@ assert.equal(dash.currentSession.session.id,'s1');
 
 const page=fs.readFileSync(new URL('../painel.html',import.meta.url),'utf8'),ui=fs.readFileSync(new URL('../scripts/dashboard-ui.js',import.meta.url),'utf8'),css=fs.readFileSync(new URL('../dashboard.css',import.meta.url),'utf8'),home=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 for(const id of['campaign-dashboard-list','adventure-dashboard-list','session-dashboard-list','next-session','current-campaign','current-adventure','current-session'])assert.ok(page.includes(`id="${id}"`),`Painel sem ${id}.`);
+assert.match(page,/dashboard-context-column--sessions[\s\S]*id="next-session"[\s\S]*id="current-session"/,'Próxima Sessão e Sessão atual devem permanecer na mesma coluna.');
+assert.match(page,/dashboard-context-column--campaign[\s\S]*id="current-campaign"[\s\S]*id="current-adventure"/,'Campanha atual e Aventura atual devem permanecer na mesma coluna.');
+assert.ok(page.includes('id="current-session" class="focus-card focus-card--current-session"'),'Sessão atual deve usar a variante visual ampliada.');
+assert.match(css,/\.dashboard-context-column--sessions\{[^}]*grid-template-rows:minmax\(160px,auto\) minmax\(260px,1fr\)/,'Coluna de sessões deve reservar mais altura para a Sessão atual.');
+assert.match(css,/\.focus-card--current-session\{min-height:260px\}/,'Card da Sessão atual deve ser maior que o da Próxima Sessão.');
 for(const forbidden of['character-in-play','dashboard-status','pending-list','activity-list','href="usuarios.html','>Início</a>'])assert.ok(!page.includes(forbidden),`Painel ainda contém elemento removido: ${forbidden}`);
 assert.ok(!ui.includes('Nenhum personagem em jogo agora'),'Painel não deve mais exibir estado de personagem em jogo.');
 assert.ok(!ui.includes('Atualizado às'),'Painel não deve mais exibir horário de atualização.');
