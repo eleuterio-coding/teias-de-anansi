@@ -1,6 +1,6 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20260925-media1';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260925-media1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261016-current-status2';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261016-current-status2';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
 
@@ -229,19 +229,19 @@ function render(){
 }
 async function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
+ const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),newStatus=$('new-session-status')?.value||'planned',title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
   const before=campaigns;let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
   try{await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
   location.href=detailHref(result.session)
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,coverImage});
+  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,status:newStatus,coverImage});
   standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
