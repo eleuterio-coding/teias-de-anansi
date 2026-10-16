@@ -67,16 +67,16 @@ export function chooseCurrentAdventure(adventures=[],currentCampaign=null,curren
  return active.sort((a,b)=>Number(Boolean(b.activeSceneId))-Number(Boolean(a.activeSceneId))||at(b.updatedAt)-at(a.updatedAt))[0]||null
 }
 
-function orderedCampaigns(campaigns=[]){return[...arr(campaigns)].sort((a,b)=>({current:0,active:1,planned:2,paused:3,finished:4}[a.status]??4)-({active:0,planned:1,paused:2,finished:3}[b.status]??4)||at(b.updatedAt)-at(a.updatedAt))}
-function orderedAdventures(adventures=[]){return[...arr(adventures)].sort((a,b)=>({current:0,active:1,planned:2,paused:3,completed:4,archived:5}[a.status]??5)-({active:0,planned:1,paused:2,completed:3,archived:4}[b.status]??5)||at(b.updatedAt)-at(a.updatedAt))}
+function orderedCampaigns(campaigns=[]){return[...arr(campaigns)].sort((a,b)=>({current:0,active:1,planned:2,paused:3,finished:4}[a.status]??5)-({current:0,active:1,planned:2,paused:3,finished:4}[b.status]??5)||at(b.updatedAt)-at(a.updatedAt))}
+function orderedAdventures(adventures=[]){return[...arr(adventures)].sort((a,b)=>({current:0,active:1,planned:2,paused:3,completed:4,archived:5}[a.status]??6)-({current:0,active:1,planned:2,paused:3,completed:4,archived:5}[b.status]??6)||at(b.updatedAt)-at(a.updatedAt))}
 function allSessions(campaigns=[],standaloneSessions=[]){
  const campaignSessions=arr(campaigns).flatMap(c=>arr(c.sessions).map(s=>({campaignId:c.id,campaignName:c.name,standalone:false,...s,href:hrefSession(c.id,s.id)})));
  const standalone=arr(standaloneSessions).map(s=>({campaignId:null,campaignName:'Sessão avulsa',standalone:true,...s,href:hrefSession(null,s.id)}));
- return [...campaignSessions,...standalone].sort((a,b)=>({current:0,active:1,planned:2,completed:3,cancelled:4}[a.status]??4)-({active:0,planned:1,completed:2,cancelled:3}[b.status]??4)||String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||Number(b.number||0)-Number(a.number||0))
+ return [...campaignSessions,...standalone].sort((a,b)=>({current:0,active:1,planned:2,completed:3,cancelled:4}[a.status]??5)-({current:0,active:1,planned:2,completed:3,cancelled:4}[b.status]??5)||String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||Number(b.number||0)-Number(a.number||0))
 }
 
 export function summarizeDashboard({characters=[],campaigns=[],adventures=[],standaloneSessions=[],now=new Date()}={}){
- const camps=orderedCampaigns(campaigns),advs=orderedAdventures(adventures),sessions=allSessions(camps,standaloneSessions),currentSession=chooseCurrentSession(camps,standaloneSessions),currentCampaign=chooseCurrentCampaign(camps,currentSession),currentAdventure=chooseCurrentAdventure(advs,currentCampaign,currentSession),nextSession=chooseNextSession(camps,now,standaloneSessions);
+ const camps=orderedCampaigns(campaigns),advs=orderedAdventures(adventures),sessions=allSessions(camps,standaloneSessions).map(s=>({...s,adventureName:advs.find(a=>a.id===s.adventureId)?.title||'Sem Aventura vinculada'})),currentSession=chooseCurrentSession(camps,standaloneSessions),currentCampaign=chooseCurrentCampaign(camps,currentSession),currentAdventure=chooseCurrentAdventure(advs,currentCampaign,currentSession),nextSession=chooseNextSession(camps,now,standaloneSessions);
  return{
   metrics:{campaigns:camps.length,adventures:advs.length,sessions:sessions.length},
   campaigns:camps.map(c=>({...c,href:hrefCampaign(c.id)})),
