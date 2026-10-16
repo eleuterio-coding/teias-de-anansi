@@ -44,7 +44,10 @@ function rememberCurrent(label){
  const next=[{href:href,label:clean,page:page}].concat(readRecents().filter(function(row){return row&&row.href!==href})).slice(0,4);
  try{localStorage.setItem(RECENT_KEY,JSON.stringify(next))}catch{}
 }
+function previewActive(){try{return Boolean(JSON.parse(localStorage.getItem("hub-rpg:master-preview:v1")||"null")?.username)}catch{return false}}
+function masterSession(){try{return JSON.parse(localStorage.getItem("hub-rpg:collaboration-session:v1")||"null")}catch{return null}}
 function contextualAction(){
+ if(previewActive())return null;
  const page=currentPage(),params=new URLSearchParams(location.search);
  if(page==="campanhas.html")return{label:"Nova campanha",href:"#campaign-create-card"};
  if(page==="sessoes.html")return{label:"Nova sessão",href:"#session-create-card"};
@@ -91,6 +94,7 @@ function buildTopbar(){
  const crumb=document.createElement("div");crumb.className="hub-breadcrumb";crumb.setAttribute("aria-label","Localização");
  crumb.innerHTML='<span>HUB</span><span class="hub-breadcrumb-sep">/</span><strong data-hub-context-title>'+esc(pageLabel())+"</strong>";left.appendChild(crumb);header.appendChild(left);
  const actions=document.createElement("div");actions.className="hub-topbar-actions";
+ const session=masterSession();if(session?.isMaster){const tools=document.createElement("div");tools.className="hub-master-tools";tools.dataset.hubMasterTools="";tools.hidden=true;tools.innerHTML='<span class="hub-master-tools-title">Mestre</span><label class="hub-master-control"><span>Usuário</span><select data-hub-preview-user aria-label="Visualizar o Hub como usuário"><option value="">Mestre</option></select></label><label class="hub-master-control"><span>Layout</span><select data-hub-layout-select aria-label="Selecionar layout do Hub"><option value="default">Padrão</option></select></label>';actions.appendChild(tools)}
  const search=document.createElement("button");search.type="button";search.className="hub-icon-button";search.dataset.hubCommandOpen="";search.setAttribute("aria-label","Buscar");search.innerHTML=icon("search");actions.appendChild(search);
  const action=contextualAction();if(action){const a=document.createElement("a");a.className="hub-topbar-primary";a.href=action.href;a.innerHTML=icon("plus")+"<span>"+esc(action.label)+"</span>";actions.appendChild(a)}
  header.appendChild(actions);return header
@@ -138,7 +142,7 @@ export function initAppShell(){
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
  frame.appendChild(buildTopbar());frame.appendChild(content);shell.appendChild(sidebar);shell.appendChild(frame);
  document.body.insertBefore(shell,document.body.firstChild);movable.forEach(function(node){content.appendChild(node)});
- document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");buildCommand();bindShell();renderRecents();updateAppShellContext()
+ document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");if(previewActive())document.body.classList.add("hub-master-preview");buildCommand();bindShell();renderRecents();updateAppShellContext();if(masterSession()?.isMaster)import("./master-tools.js?v=20261016-master-preview1").then(module=>module.initMasterTools?.()).catch(error=>console.warn("[Hub Mestre] topo:",error))
 }
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
