@@ -1,5 +1,8 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
+import{createCampaign,updateCampaign,updateCampaignSession,sanitizeCampaign,sanitizeSession}from'../scripts/campaign-state.js';
+import{createAdventure,updateAdventure,sanitizeAdventure}from'../scripts/adventure-state.js';
+
 import{chooseNextSession,chooseCurrentSession,chooseCurrentCampaign,chooseCurrentAdventure,summarizeDashboard}from'../scripts/dashboard-state.js';
 
 const campaigns=[
@@ -57,4 +60,42 @@ const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-pages.yml',imp
 assert.match(semanticJs,/if\(\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\)===\'painel\.html\'\)return;/,'Painel Geral deve impedir links semânticos mesmo se o script for carregado.');
 assert.ok(deploy.includes("if path.name == 'painel.html':"),'Deploy não deve injetar resolutor de verbetes no Painel Geral.');
 assert.ok(page.includes('href="campanhas.html"')&&page.includes('href="aventuras.html"')&&page.includes('href="sessoes.html"'),'Links operacionais dos cards devem permanecer.');
+
+const statusCampaigns=[
+ {id:'c-old',name:'Campanha antiga',status:'active',updatedAt:'2026-09-01T00:00:00Z',sessions:[{id:'s-old',title:'Antiga',status:'active',updatedAt:'2026-09-01T10:00:00Z'}]},
+ {id:'c-new',name:'Reinos de Prata',status:'planned',updatedAt:'2026-09-02T00:00:00Z',sessions:[{id:'s-new',title:'O Encontro',status:'planned',adventureId:'a-new',updatedAt:'2026-09-02T10:00:00Z'}]}
+];
+assert.equal(sanitizeCampaign(statusCampaigns[1]).status,'planned');
+assert.equal(sanitizeCampaign({status:'current'}).status,'current');
+assert.equal(sanitizeSession({status:'current'}).status,'current');
+assert.equal(sanitizeAdventure({status:'current'}).status,'current');
+let edited=updateCampaign(statusCampaigns,'c-new',{status:'current'});
+assert.equal(edited.ok,true);
+const updatedSession=updateCampaignSession(edited.list,'c-new','s-new',{status:'current'});
+assert.equal(updatedSession.ok,true);
+edited=updatedSession;
+const oldAdventure={id:'a-old',campaignId:'c-old',title:'Aventura antiga',status:'active',updatedAt:'2026-09-01T09:00:00Z'};
+const newAdventure={id:'a-new',campaignId:'c-new',title:'As Rainhas',status:'planned',updatedAt:'2026-09-02T11:00:00Z'};
+const setAdventure=updateAdventure([oldAdventure,newAdventure],'a-new',{status:'current'});
+assert.equal(setAdventure.ok,true);
+const statusDash=summarizeDashboard({campaigns:edited.list,adventures:setAdventure.list});
+assert.equal(statusDash.currentCampaign.id,'c-new','A Campanha marcada como Atual precisa vencer a Campanha em andamento.');
+assert.equal(statusDash.currentSession.session.id,'s-new','A Sessão marcada como Atual precisa vencer a Sessão em andamento.');
+assert.equal(statusDash.currentAdventure.id,'a-new','A Aventura marcada como Atual precisa vencer a Aventura em andamento.');
+assert.equal(statusDash.sessions.find(s=>s.id==='s-new').campaignName,'Reinos de Prata');
+assert.equal(statusDash.sessions.find(s=>s.id==='s-new').adventureName,'As Rainhas');
+assert.equal(statusDash.sessions[0].id,'s-new','Listas do Painel devem priorizar o status Atual.');
+assert.equal(statusDash.adventures[0].id,'a-new');
+assert.equal(statusDash.campaigns[0].id,'c-new');
+const anotherCurrent=updateCampaign(edited.list,'c-old',{status:'current'});
+assert.equal(anotherCurrent.list.filter(c=>c.status==='current').length,1,'Uma única Campanha deve ter o status Atual.');
+const createdCurrentAdventure=createAdventure(setAdventure.list,{id:'a-third',campaignId:'c-new',title:'Nova',status:'current'});
+assert.equal(createdCurrentAdventure.list.filter(a=>a.status==='current').length,1,'Uma única Aventura deve ter o status Atual.');
+for(const heading of ['Lista de Campanhas','Lista de Aventuras','Lista de Sessões'])assert.ok(page.includes(heading),'Faltou o título '+heading);
+for(const token of ['relationChip','Campanha','Aventura','statusKey','adventureName'])assert.ok(ui.includes(token),'Painel precisa identificar explicitamente os vínculos e status: '+token);
+const semanticCSS=fs.readFileSync(new URL('../hub-ux.css',import.meta.url),'utf8');
+for(const status of ['current','planned','active','paused','completed','cancelled','archived'])assert.ok(semanticCSS.includes('.badge.'+status),'Faltou cor do status '+status);
+const sessionsView=fs.readFileSync(new URL('../scripts/campaign-sessions-ui.js',import.meta.url),'utf8');
+assert.ok(sessionsView.includes('Campanha: ')&&sessionsView.includes('Aventura: '),'Sessões precisam mostrar explicitamente seus vínculos.');
+
 console.log('OK — Painel Geral prioriza Campanhas, Aventuras, Sessões, próxima Sessão e contexto atual.');
