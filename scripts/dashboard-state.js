@@ -28,6 +28,8 @@ export function chooseNextSession(campaigns=[],now=new Date(),standaloneSessions
   ...arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='planned').map(s=>({campaign:c,session:s,date:day(s.date),standalone:false}))),
   ...arr(standaloneSessions).filter(s=>s.status==='planned').map(s=>({campaign:null,session:s,date:day(s.date),standalone:true}))
  ];
+ const explicitlyNext=[...arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='next').map(s=>({campaign:c,session:s,date:day(s.date),standalone:false}))),...arr(standaloneSessions).filter(s=>s.status==='next').map(s=>({campaign:null,session:s,date:day(s.date),standalone:true}))].sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt));
+ if(explicitlyNext.length)return explicitlyNext[0];
  const dated=planned.filter(x=>x.date&&x.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||Number(a.session.number||0)-Number(b.session.number||0));
  if(dated.length)return dated[0];
  const undated=planned.filter(x=>!x.date).sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt)||Number(a.session.number||0)-Number(b.session.number||0));
@@ -72,7 +74,7 @@ function orderedAdventures(adventures=[]){return[...arr(adventures)].sort((a,b)=
 function allSessions(campaigns=[],standaloneSessions=[]){
  const campaignSessions=arr(campaigns).flatMap(c=>arr(c.sessions).map(s=>({campaignId:c.id,campaignName:c.name,standalone:false,...s,href:hrefSession(c.id,s.id)})));
  const standalone=arr(standaloneSessions).map(s=>({campaignId:null,campaignName:'Sessão avulsa',standalone:true,...s,href:hrefSession(null,s.id)}));
- return [...campaignSessions,...standalone].sort((a,b)=>({current:0,active:1,planned:2,completed:3,cancelled:4}[a.status]??5)-({current:0,active:1,planned:2,completed:3,cancelled:4}[b.status]??5)||String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||Number(b.number||0)-Number(a.number||0))
+ return [...campaignSessions,...standalone].sort((a,b)=>({current:0,active:1,next:2,planned:3,completed:4,cancelled:5}[a.status]??5)-({current:0,active:1,planned:2,completed:3,cancelled:4}[b.status]??5)||String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||Number(b.number||0)-Number(a.number||0))
 }
 
 export function summarizeDashboard({characters=[],campaigns=[],adventures=[],standaloneSessions=[],now=new Date()}={}){
