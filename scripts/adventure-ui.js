@@ -135,7 +135,7 @@ function saveAdventureSection(section){
  render();feedback('Etapa salva.',true)
 }
 function bindAdventureSaveButtons(){
- document.querySelectorAll('[data-save-adventure-section]').forEach(button=>button.addEventListener('pointerdown',event=>{
+ document.querySelectorAll('[data-save-adventure-section]').forEach(button=>button.addEventListener('click',event=>{
   event.preventDefault();const section=button.closest('section');if(section)saveAdventureSection(section)
  }))
 }
