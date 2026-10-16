@@ -6,6 +6,7 @@ class MemoryStorage{constructor(){this.map=new Map}getItem(k){return this.map.ge
 const storage=new MemoryStorage(),defaults=defaultSettings();
 assert.equal(SETTINGS_KEY,'hub-rpg:settings:v1');
 assert.equal(defaults.schema,SETTINGS_SCHEMA);
+assert.equal(defaults.layout,'default');
 assert.equal(defaults.sources.enabled.length,SOURCE_AUTHORITIES.length,'Todas as fontes devem permanecer habilitadas.');
 assert.equal(defaults.houseRules.preset,'teias-v1');
 assert.equal(HOUSE_RULE_PRESETS.length,1,'Regras da Casa não devem possuir presets selecionáveis.');
@@ -13,6 +14,7 @@ assert.equal(defaults.campaignDefaults.dmName,'Rafael');
 
 const saved=writeSettings({...defaults,workspace:'mestre',sources:{enabled:[]},houseRules:{preset:'mesa-personalizada',enabled:['Regra isolada']},sheet:{density:'compact',showSources:false,stickySections:false},accessibility:{fontScale:'large',contrast:'high',motion:'reduce'},campaignDefaults:{dmName:'Outro Mestre',setting:'Eberron',system:'Outro sistema'}},storage,{timestamp:false});
 assert.equal(readSettings(storage).workspace,'mestre');
+assert.equal(readSettings(storage).layout,'default');
 assert.equal(saved.sheet.density,'compact');
 assert.equal(saved.accessibility.contrast,'high');
 assert.deepEqual(saved.sources.enabled,SOURCE_AUTHORITIES.map(x=>x.id),'Preferência antiga não pode desabilitar fontes.');
@@ -33,6 +35,7 @@ assert.deepEqual(campaign,{dmName:'Rafael',setting:'',system:'D&D 5.5e'});
 
 const fakeRoot={dataset:{}};
 applyUiPreferences(saved,fakeRoot);
+assert.equal(fakeRoot.dataset.hubLayout,'default');
 assert.equal(fakeRoot.dataset.hubFontScale,'large');
 assert.equal(fakeRoot.dataset.hubContrast,'high');
 assert.equal(fakeRoot.dataset.hubMotion,'reduce');

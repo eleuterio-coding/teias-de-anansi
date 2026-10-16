@@ -1,6 +1,6 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
-import{readCollaborationSession,sharedCampaignRows,sharedAdventures,sharedParticipants,participantsForSession,participantsForAdventure,assignedCharacterIds,ownedCharacterIds,editableCharacterIds,visibleCharacterIds,canOpenCharacter,canEditCharacter,collaborationAccessMode}from'../scripts/collaboration-view.js';
+import{readCollaborationSession,readMasterPreview,masterPreviewMode,sharedCampaignRows,sharedAdventures,sharedParticipants,participantsForSession,participantsForAdventure,assignedCharacterIds,ownedCharacterIds,editableCharacterIds,visibleCharacterIds,canOpenCharacter,canEditCharacter,collaborationAccessMode}from'../scripts/collaboration-view.js';
 
 const memory=new Map();
 const storage={getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)};
@@ -42,6 +42,19 @@ assert.equal(canEditCharacter('pc-gus',storage),true);
 assert.equal(canEditCharacter('pc-leo',storage),false,'Jogador não pode editar ficha alheia.');
 assert.equal(canOpenCharacter('pc-leo-2',storage),false,'Jogador de outra Campanha não deve vazar para a conta atual.');
 
+const previewMemory=new Map(),previewStorage={getItem:k=>previewMemory.get(k)||null,setItem:(k,v)=>previewMemory.set(k,v),removeItem:k=>previewMemory.delete(k)};
+previewStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'u-master',username:'rafael',isMaster:true,memberships:[]}));
+previewStorage.setItem('hub-rpg:master-preview:v1',JSON.stringify({uid:'u-gus',username:'gus',displayName:'Gus',memberships:[{campaignId:'c1',username:'gus',role:'player',characterId:'pc-gus',sessionIds:['s1'],adventureIds:['a1'],active:true}]}));
+previewStorage.setItem('hub-rpg:characters:v4',JSON.stringify([{id:'pc-gus',ownerUid:'u-gus',ownerUsername:'gus'},{id:'pc-leo',ownerUid:'u-leo',ownerUsername:'leo'}]));
+previewStorage.setItem('hub-rpg:master-preview-cache:v1',JSON.stringify({campaigns:{c1:{membership:{campaignId:'c1',username:'gus',role:'player',characterId:'pc-gus',sessionIds:['s1'],adventureIds:['a1'],active:true},payload:{campaign:{id:'c1',name:'Mesa Gus',members:[],sessions:[{id:'s1'}]},participants:[],revealedAdventures:[{id:'a1',campaignId:'c1',title:'Aventura Gus'}]},characterIds:['pc-gus','pc-leo'],characters:[{id:'pc-gus',ownerUid:'u-gus',ownerUsername:'gus'},{id:'pc-leo',ownerUid:'u-leo',ownerUsername:'leo'}]}}}));
+assert.equal(readCollaborationSession(previewStorage).isMaster,true,'A conta autenticada deve continuar sendo a do Mestre.');
+assert.equal(masterPreviewMode(previewStorage),true);
+assert.equal(readMasterPreview(previewStorage).username,'gus');
+assert.equal(collaborationAccessMode(previewStorage),'player','A visão efetiva do Mestre deve usar as permissões do usuário selecionado.');
+assert.deepEqual(sharedCampaignRows(previewStorage).map(r=>r.campaign.id),['c1']);
+assert.equal(canOpenCharacter('pc-gus',previewStorage),true);
+assert.equal(canEditCharacter('pc-gus',previewStorage),false,'Visualização do Mestre deve ser somente leitura, mesmo para a ficha própria do usuário simulado.');
+
 const guest=new Map(),guestStorage={getItem:k=>guest.get(k)||null,setItem:(k,v)=>guest.set(k,v),removeItem:k=>guest.delete(k)};
 assert.equal(collaborationAccessMode(guestStorage),'guest');
 assert.equal(canOpenCharacter('pc-gus',guestStorage),false);
@@ -59,13 +72,15 @@ const files={
  realtime:fs.readFileSync(new URL('../scripts/collaboration-realtime.js',import.meta.url),'utf8'),
  hubUx:fs.readFileSync(new URL('../scripts/hub-ux.js',import.meta.url),'utf8'),
  mesa:fs.readFileSync(new URL('../mesa.html',import.meta.url),'utf8'),
- adventurePage:fs.readFileSync(new URL('../aventuras.html',import.meta.url),'utf8')
+ adventurePage:fs.readFileSync(new URL('../aventuras.html',import.meta.url),'utf8'),
+ appShell:fs.readFileSync(new URL('../scripts/app-shell.js',import.meta.url),'utf8'),
+ masterTools:fs.readFileSync(new URL('../scripts/master-tools.js',import.meta.url),'utf8')
 };
 for(const token of['playerMode','sharedCampaignRows'])assert.ok(files.campaigns.includes(token),`Lista de Campanhas sem ${token}`);
 assert.ok(files.campaigns.includes('Somente leitura'));
 assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('somente leitura'));
 assert.equal(files.table.includes('Conteúdo atribuído a você'),false,'Mesa do Jogador não deve exibir tutorial de permissão.');
-assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma Sessão foi atribuída'));
+assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma sessão foi atribuída'));
 assert.ok(files.adventures.includes('sharedAdventures')&&files.adventures.includes('somente leitura'));
 assert.ok(files.characters.includes('editableCharacterIds')&&files.characters.includes('Seu personagem')&&files.characters.includes('Outro jogador')&&files.characters.includes('hidden=guest'));
 assert.ok(files.sheetAccess.includes('canOpenCharacter')&&files.sheetAccess.includes('canEditCharacter')&&files.sheetAccess.includes('Somente leitura'));
@@ -73,6 +88,8 @@ assert.ok(files.wizard.includes('if(!id)return true')&&files.wizard.includes('st
 assert.ok(files.sync.includes('ownerUid')&&files.sync.includes('ownerUsername')&&files.sync.includes('isPlayerAccount(account,provider)'),'Sincronização deve reconhecer personagem próprio ainda não atribuído.');
 assert.ok(files.realtime.includes('editableCharacterIds')&&files.realtime.includes('saveOwnCharacter'),'Tempo real deve persistir personagens editáveis da própria conta.');
 assert.ok(files.hubUx.includes('enforceLogin')&&files.hubUx.includes('usuarios.html'));
+assert.ok(files.appShell.includes('data-hub-preview-user')&&files.appShell.includes('data-hub-layout-select'),'Topo do Mestre deve expor seleção de usuário e de layout.');
+assert.ok(files.masterTools.includes('writeMasterPreview')&&files.masterTools.includes('listCampaignMemberships'),'Visualização do Mestre deve reconstruir o recorte de acesso do usuário selecionado.');
 assert.equal(files.mesa.includes('encounter-ui.js'),false,'Mesa não deve carregar ferramentas do Mestre diretamente; o router decide.');
 assert.equal(files.adventurePage.includes('adventure-ui.js'),false,'Aventuras não deve carregar editor do Mestre diretamente; o router decide.');
 console.log('OK — login define a visão; Jogador cria e edita a própria ficha, lê co-participantes do mesmo contexto e não edita conteúdo alheio.');

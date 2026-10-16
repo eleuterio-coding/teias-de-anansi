@@ -1,4 +1,4 @@
-import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20260917-player-catalog1';
+import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20261016-master-preview1';
 import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260925-media1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

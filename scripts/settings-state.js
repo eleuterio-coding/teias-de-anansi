@@ -17,6 +17,7 @@ const CONTRASTS=new Set(['standard','high']);
 const MOTIONS=new Set(['system','reduce']);
 const DENSITIES=new Set(['comfortable','compact']);
 const WORKSPACES=new Set(['auto','jogador','mestre']);
+const LAYOUTS=new Set(['default']);
 const text=v=>String(v??'').trim();
 const clone=v=>v==null?v:JSON.parse(JSON.stringify(v));
 const bool=(v,fallback)=>typeof v==='boolean'?v:fallback;
@@ -26,6 +27,7 @@ export function defaultSettings(){
  return{
   schema:SETTINGS_SCHEMA,
   workspace:'auto',
+  layout:'default',
   sources:{enabled:[...ALL_SOURCES]},
   houseRules:{preset:'teias-v1',enabled:[]},
   sheet:{density:'comfortable',showSources:true,stickySections:true},
@@ -42,6 +44,7 @@ export function normalizeSettings(input={}){
  return{
   schema:SETTINGS_SCHEMA,
   workspace:WORKSPACES.has(source.workspace)?source.workspace:base.workspace,
+  layout:LAYOUTS.has(source.layout)?source.layout:base.layout,
   sources:{enabled:[...ALL_SOURCES]},
   houseRules:{preset:'teias-v1',enabled:[]},
   sheet:{
@@ -86,6 +89,7 @@ export function campaignDefaultsFromSettings(){
 export function applyUiPreferences(input,root=globalThis.document?.documentElement){
  const settings=normalizeSettings(input);
  if(!root)return settings;
+ root.dataset.hubLayout=settings.layout;
  root.dataset.hubFontScale=settings.accessibility.fontScale;
  root.dataset.hubContrast=settings.accessibility.contrast;
  root.dataset.hubMotion=settings.accessibility.motion;

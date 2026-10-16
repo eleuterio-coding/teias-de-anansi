@@ -42,7 +42,9 @@ assert.match(css,/\.focus-card--current-session\{min-height:260px\}/,'Card da Se
 for(const forbidden of['character-in-play','dashboard-status','pending-list','activity-list','href="usuarios.html','>Início</a>'])assert.ok(!page.includes(forbidden),`Painel ainda contém elemento removido: ${forbidden}`);
 assert.ok(!ui.includes('Nenhum personagem em jogo agora'),'Painel não deve mais exibir estado de personagem em jogo.');
 assert.ok(!ui.includes('Atualizado às'),'Painel não deve mais exibir horário de atualização.');
-for(const token of['readCampaigns','readAdventures','readStandaloneSessions','summarizeDashboard'])assert.ok(ui.includes(token),`UI do painel sem ${token}.`);
+for(const token of['readCampaigns','readAdventures','readStandaloneSessions','summarizeDashboard','imageElementHtml','hydrateMediaImages','playerMode','sharedCampaignRows'])assert.ok(ui.includes(token),`UI do painel sem ${token}.`);
+assert.ok(ui.includes('coverImage')&&ui.includes('coverImageUrl'),'Painel deve consumir as capas salvas de Campanhas, Aventuras e Sessões.');
+assert.ok(css.includes('.dashboard-row-cover')&&css.includes('.focus-card-cover'),'Painel deve possuir estilos para capas nas listas e nos cards de contexto.');
 assert.ok(css.includes('@media(max-width:820px)')&&css.includes('@media(max-width:520px)'),'Painel deve ser responsivo.');
 assert.ok(home.includes('href="painel.html'),'Início deve expor o Painel Geral.');
 console.log('OK — Painel Geral prioriza Campanhas, Aventuras, Sessões, próxima Sessão e contexto atual.');
