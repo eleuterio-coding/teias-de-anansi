@@ -5,7 +5,7 @@ export const CAMPAIGN_KEY='hub-rpg:campaigns:v1';
 export const CAMPAIGN_SCHEMA='hub-rpg/campaign/v1';
 export const STANDALONE_SESSION_KEY='hub-rpg:sessions:v1';
 const CAMPAIGN_STATUS=new Set(['planned','current','active','paused','finished']);
-const SESSION_STATUS=new Set(['planned','current','active','completed','cancelled']);
+const SESSION_STATUS=new Set(['planned','next','current','active','completed','cancelled']);
 const SESSION_SCENE_STATUS=new Set(['planned','active','completed','skipped']);
 const MEMBER_ROLES=new Set(['dm','player']);
 const text=v=>String(v??'').trim();
