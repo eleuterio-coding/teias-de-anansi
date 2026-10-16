@@ -10,6 +10,7 @@ const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 const username=v=>text(v).toLowerCase();
 const unique=rows=>[...new Set(arr(rows).map(text).filter(Boolean))];
+const esc=v=>String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 
 function localFallbackMemberships(target){
  const name=username(target),campaigns=readCampaigns(),adventures=readAdventures(),rows=[];
@@ -94,7 +95,7 @@ async function activatePreview(target,users,provider){
 }
 export async function initMasterTools(){
  const session=readCollaborationSession(),root=document.querySelector('[data-hub-master-tools]');if(!session?.isMaster||!root)return;
- const userSelect=root.querySelector('[data-hub-preview-user]'),layoutSelect=root.querySelector('[data-hub-layout-select]');
+ const userSelect=root.querySelector('[data-hub-preview-user]'),layoutSelect=root.querySelector('[data-hub-layout-select]');root.hidden=false;
  const remote=await providerData(),master=username(session.username),map=new Map();
  for(const row of[...(remote?.users||[]),...knownLocalUsers()]){
   const name=username(row.username);if(!name||name===master)continue;
@@ -102,7 +103,7 @@ export async function initMasterTools(){
  }
  const users=[...map.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR')),preview=readMasterPreview();
  if(userSelect){
-  userSelect.innerHTML='<option value="">Mestre</option>'+users.map(row=>`<option value="${row.username}">${row.displayName}</option>`).join('');
+  userSelect.innerHTML='<option value="">Mestre</option>'+users.map(row=>`<option value="${esc(row.username)}">${esc(row.displayName)}</option>`).join('');
   userSelect.value=preview?.username||'';
   userSelect.addEventListener('change',()=>activatePreview(userSelect.value,users,remote?.provider))
  }
@@ -110,5 +111,4 @@ export async function initMasterTools(){
   const settings=readSettings();layoutSelect.value=settings.layout||'default';
   layoutSelect.addEventListener('change',()=>{const current=readSettings();writeSettings({...current,layout:layoutSelect.value})})
  }
- root.hidden=false
 }
