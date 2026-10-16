@@ -1,5 +1,5 @@
-import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20260901-campaign1';
-import{readAdventures}from'./adventure-state.js?v=20260902-adventures1';
+import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-current-status2';
+import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{summarizeDashboard}from'./dashboard-state.js?v=20261016-current-status2';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';

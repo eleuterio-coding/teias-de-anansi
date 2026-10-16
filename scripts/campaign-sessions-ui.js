@@ -1,6 +1,6 @@
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261016-current-status2';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260925-media1';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261016-current-status2';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
 
@@ -168,14 +168,14 @@ function encounterSummary(session){
 }
 function sessionListCard(s){
  const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length,cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover session-cover-thumb',alt:''});
- return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+ return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge relation-campaign">Campanha: ${esc(s.campaignName||'Sem Campanha')}</span><span class="badge relation-adventure">Aventura: ${adv?esc(adv.title):'Sem Aventura vinculada'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
 }
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
  return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
  ${restricted?cover:''}<div class="session-head"><div>
   <h3>${esc(s.title)}</h3>
-  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
+  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge relation-campaign">Campanha: ${esc(s.campaignName||'Sem Campanha')}</span><span class="badge relation-adventure">Aventura: ${adv?esc(adv.title):'Sem Aventura vinculada'}</span></div>
  </div><div class="row-actions">${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
  ${restricted?`
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
