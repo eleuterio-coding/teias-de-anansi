@@ -1,0 +1,43 @@
+name: Validar NPCs e editor da Campanha
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/npc-list-ui.js'
+      - 'scripts/app-shell.js'
+      - 'npcs.html'
+      - 'campaigns.css'
+      - 'e2e/npcs-campaign-editor.spec.js'
+      - '.github/workflows/validar-npcs-campanha.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/npc-list-ui.js'
+      - 'scripts/app-shell.js'
+      - 'npcs.html'
+      - 'campaigns.css'
+      - 'e2e/npcs-campaign-editor.spec.js'
+      - '.github/workflows/validar-npcs-campanha.yml'
+permissions:
+  contents: read
+jobs:
+  npcs-campanha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Auditar NPCs e edição de Campanha
+        run: npx playwright test e2e/npcs-campaign-editor.spec.js
