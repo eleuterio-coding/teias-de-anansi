@@ -7,7 +7,7 @@ if(creatingNpc){
   document.title='Criação de NPC - Teias de Anansi';
   document.querySelector('h1')?.replaceChildren(document.createTextNode('Criação de NPC'));
   const link=document.querySelector('body > p > a');if(link){link.href='npcs.html';link.textContent='← NPCs'}
-  const profile=document.getElementById('profile-player')?.closest('label');if(profile)profile.hidden=true;
+  const profile=document.getElementById('profile-player')?.closest('label');if(profile){profile.hidden=true;profile.style.display='none'}
   const save=document.getElementById('save');if(save)save.textContent='Salvar NPC';
   const listing=document.querySelector('.wizard-footer a.button-link');if(listing)listing.href='npcs.html';
  }
@@ -56,7 +56,7 @@ async function preloadMainMenus(){
 
 async function start(){
   const menuPromise=preloadMainMenus();let core;
-  try{core=await import('./character-builder/ui.js?v=20260831-tasha-metamagic1');if(typeof core.init!=='function')throw new Error('O módulo principal não exporta init().');const corePromise=core.init();showBuilder();await corePromise;showBuilder()}
+  try{core=await import('./character-builder/ui.js?v=20261016-npcs1');if(typeof core.init!=='function')throw new Error('O módulo principal não exporta init().');const corePromise=core.init();showBuilder();await corePromise;showBuilder()}
   catch(error){warn('Falha ao iniciar o núcleo da Criação de Personagem.',error);const payload=await menuPromise;restoreMenus(payload);return}
   const payload=await menuPromise;restoreMenus(payload);
   const extensions=[['./character-builder/ability-score-ui.js?v=20260824-ability-budget4','initAbilityScoreUi'],['./character-builder/spell-selection-ui.js?v=20260824-character-builder28','initSpellSelectionUi'],['./character-builder/spell-swap-ui.js?v=20260825-spell-swap-visible1','initSpellSwapUi'],['./character-builder/spell-quota-ui.js?v=20260824-character-builder28','initSpellQuotaUi'],['./character-builder/profile-ui.js?v=20260923-race-language-builder1','initCharacterProfileUi'],...(creatingNpc?[]:[['./character-player-assignment-ui.js?v=20260922-character-player1','initCharacterPlayerAssignmentUi']]),['./character-builder/species-trait-ui.js?v=20260824-character-builder30','initSpeciesTraitUi'],['./character-builder/tiefling-ui.js?v=20260824-race-variants1','initTieflingUi'],['./character-builder/species-selection-refinement-ui.js?v=20260824-race-choice1','initSpeciesSelectionRefinementUi'],['./character-builder/class-skill-ui.js?v=20260831-tasha-metamagic1','initClassSkillUi'],['./character-builder/feat-ui.js?v=20260824-character-builder28','initFeatUi'],['./character-builder/house-rules-ui.js?v=20260923-gaming-set1','initHouseRulesUi'],['./character-builder/house-feat-prereq-ui.js?v=20260824-house-feat-prereq1','initHouseFeatPrereqUi'],['./character-builder/language-ui.js?v=20260923-race-language-builder1','initLanguageUi'],['./character-builder/package-b-purchase-ui.js?v=20260923-wealth-collapse1','initPackageBPurchaseUi'],['./character-builder/equipment-ownership-ui.js?v=20260828-character-builder-freeze1','initEquipmentOwnershipUi'],['./character-builder/contextual-help-ui.js?v=20260922-context-help1','initContextualHelpUi'],['./character-builder/wizard-ui.js?v=20260923-wealth-collapse1','initWizardUi']];
