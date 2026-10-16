@@ -99,3 +99,30 @@ test('Painel Geral não transforma textos em links de verbetes',async({page})=>{
  await expect(page.locator('#campaign-dashboard-list .dash-row').first()).toHaveAttribute('href',/mesa\.html\?id=/);
  await expect(page.locator('.panel-head a[href="campanhas.html"]')).toHaveCount(1);
 });
+
+
+test('current status and explicit Campaign/Adventure relationships are visible in overview cards',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/painel.html');
+ await page.evaluate(()=>{
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([
+   {id:'campaign-old',name:'Campanha Antiga',status:'active',sessions:[{id:'session-old',title:'Sessão Antiga',status:'active'}]},
+   {id:'campaign-silver',name:'Reinos de Prata',status:'current',sessions:[{id:'session-queens',number:1,title:'Encontro das Rainhas',status:'current',adventureId:'adventure-queens',date:'2026-10-16'}]}
+  ]));
+  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([
+   {id:'adventure-queens',campaignId:'campaign-silver',title:'As Rainhas',status:'current',scenes:[]}
+  ]));
+ });
+ await page.reload();
+ await expect(page.locator('#current-campaign h2')).toContainText('Reinos de Prata');
+ await expect(page.locator('#current-adventure h2')).toContainText('As Rainhas');
+ await expect(page.locator('#current-session h2')).toContainText('Encontro das Rainhas');
+ await expect(page.locator('#adventure-dashboard-list .relationship-chip')).toContainText('Campanha: Reinos de Prata');
+ await expect(page.locator('#session-dashboard-list .relation-campaign')).toContainText('Campanha: Reinos de Prata');
+ await expect(page.locator('#session-dashboard-list .relation-adventure')).toContainText('Aventura: As Rainhas');
+ for(const id of ['campaign-dashboard-list','adventure-dashboard-list','session-dashboard-list']){
+  await expect(page.locator('#'+id+' .badge.current').first()).toHaveText('Atual');
+ }
+ await expect(page.locator('#current-adventure .focus-card-copy')).toContainText('Campanha: Reinos de Prata');
+ await expect(page.locator('#current-session .focus-card-copy')).toContainText('Aventura: As Rainhas');
+});
