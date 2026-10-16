@@ -84,3 +84,16 @@ test('a collection with more rows than the screen uses item pagination',async({p
  expect(dimensions.visibleRows).toBeGreaterThan(0);
  expect(dimensions.innerScroll).toBe('hidden');
 });
+
+test('Painel Geral não transforma textos em links de verbetes',async({page})=>{
+ await page.goto('/painel.html');
+ await expect(page.locator('#campaign-dashboard-list .dash-row')).toHaveCount(17);
+ let indexRequests=0;
+ await page.route('**/dados/referencias-hub-index.json*',route=>{indexRequests++;return route.abort()});
+ // A proteção deve funcionar até se o script global for carregado por engano.
+ await page.addScriptTag({url:'/scripts/referencias-hub.js'});
+ await expect(page.locator('a.hub-ref')).toHaveCount(0);
+ expect(indexRequests).toBe(0);
+ await expect(page.locator('#campaign-dashboard-list .dash-row').first()).toHaveAttribute('href',/mesa\.html\?id=/);
+ await expect(page.locator('.panel-head a[href="campanhas.html"]')).toHaveCount(1);
+});
