@@ -106,7 +106,7 @@ function buildCommand(){
 }
 function commandItems(){
  const base=NAV_ITEMS.map(function(item){return{label:item.label,href:item.page,kind:"Área",icon:item.icon}});
- base.push({label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"},{label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
+ base.push({label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(!previewActive())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
  readRecents().slice(0,4).forEach(function(row){base.push({label:row.label,href:row.href,kind:"Recente",icon:row.page==="mesa.html"?"campaign":"star"})});
  document.querySelectorAll('.section-nav a[href^="#"]').forEach(function(link){base.push({label:link.textContent.trim(),href:link.getAttribute("href"),kind:"Nesta página",icon:"chevron"})});
  const seen=new Set();return base.filter(function(item){const key=item.href+"|"+item.label;if(seen.has(key))return false;seen.add(key);return true})
