@@ -6,6 +6,7 @@ import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const campaignStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída'}[s]||s);
 const adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s);
+const countLabel=(value,singular,plural)=>`${value} ${value===1?singular:plural}`;
 const sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const fmtDate=v=>{if(!v)return'Sem data';const d=String(v).slice(0,10),m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[3]}/${m[2]}/${m[1]}`:String(v)};
 
@@ -14,7 +15,7 @@ function row({href,title,detail,status,statusKey='',relations=[],media=null,lega
  const image=imageElementHtml(media,legacyUrl,{className:'dashboard-row-cover',alt:''});
  return '<a class="dash-row '+(image?'has-cover':'')+'" href="'+esc(href)+'">'+image+'<div class="dash-row-copy"><strong>'+esc(title)+'</strong><div class="mini">'+esc(detail)+'</div>'+(relations.length?'<div class="card-relations">'+relations.map(r=>relationChip(r.kind,r.value)).join('')+'</div>':'')+'</div><div class="row-meta"><span class="badge '+esc(statusKey)+'">'+esc(status)+'</span></div></a>'
 }
-function renderCampaigns(rows){$('campaign-dashboard-list').innerHTML=rows.length?rows.map(c=>row({href:c.href,title:c.name,detail:[c.setting||c.system,((c.sessions||[]).length)+' sessão(ões)'].filter(Boolean).join(' · '),status:campaignStatus(c.status),statusKey:c.status,media:c.coverImage,legacyUrl:c.coverImageUrl})).join(''):'<div class="empty">Nenhuma Campanha criada.</div>'}
+function renderCampaigns(rows){$('campaign-dashboard-list').innerHTML=rows.length?rows.map(c=>row({href:c.href,title:c.name,detail:[c.setting||c.system,countLabel((c.sessions||[]).length,'sessão','sessões')].filter(Boolean).join(' · '),status:campaignStatus(c.status),statusKey:c.status,media:c.coverImage,legacyUrl:c.coverImageUrl})).join(''):'<div class="empty">Nenhuma Campanha criada.</div>'}
 function renderAdventures(rows){$('adventure-dashboard-list').innerHTML=rows.length?rows.map(a=>row({href:a.href,title:a.title,detail:[a.type==='oneshot'?'One-shot':a.arc].filter(Boolean).join(' · '),status:adventureStatus(a.status),statusKey:a.status,relations:[{kind:'Campanha',value:a.campaignName||'Sem Campanha'}],media:a.coverImage,legacyUrl:a.coverImageUrl})).join(''):'<div class="empty">Nenhuma Aventura criada.</div>'}
 function renderSessions(rows){$('session-dashboard-list').innerHTML=rows.length?rows.map(s=>row({href:s.href,title:s.title,detail:'',status:sessionStatus(s.status),statusKey:s.status,relations:[{kind:'Campanha',value:s.campaignName||'Sem Campanha'},{kind:'Aventura',value:s.adventureName||'Sem Aventura vinculada'}],media:s.coverImage,legacyUrl:s.coverImageUrl})).join(''):'<div class="empty">Nenhuma Sessão criada.</div>'}
 function focusCard(id,{badge,title,subtitle,meta,href,button='Abrir',media=null,legacyUrl='',status=''}={},emptyTitle){
