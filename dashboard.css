@@ -326,3 +326,24 @@ body.dashboard-page[data-dashboard-mode="single"] .dashboard-context-column {
     height: var(--focus-media-size);
   }
 }
+
+/* O botão Abrir estende sua área clicável por todo o card.
+   Usa o link real: acessível com teclado e sem navegação JS duplicada. */
+body.dashboard-page .dashboard-context .focus-card:has(> a.btn) {
+  position: relative;
+  cursor: pointer;
+}
+body.dashboard-page .dashboard-context .focus-card > a.btn {
+  position: static;
+}
+body.dashboard-page .dashboard-context .focus-card > a.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  cursor: pointer;
+}
+body.dashboard-page .dashboard-context .focus-card:has(> a.btn):is(:hover, :focus-within) {
+  outline: 1px solid var(--focus-accent, #38bdf8);
+  outline-offset: -1px;
+}
