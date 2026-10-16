@@ -87,3 +87,73 @@ test('personagem ocupado não pode ser selecionado por outro jogador',async({pag
  expect(members.find(m=>m.id==='m1').characterId).toBe('pc-fernanda');
  expect(members.find(m=>m.id==='m2').characterId).toBe('pc-bruno');
 });
+
+
+test('selecionar personagem preserva o scroll, o foco e o elemento do seletor',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const select=page.locator('[data-member-row="m2"] [data-member-character]');
+ await select.scrollIntoViewIfNeeded();
+ await select.focus();
+ const before=await page.evaluate(()=>{
+  const node=document.querySelector('[data-member-row="m2"] [data-member-character]');
+  window.__rosterSelectBefore=node;
+  window.__rosterSectionBefore=document.getElementById('jogadores');
+  return{scroll:window.scrollY,top:node.getBoundingClientRect().top}
+ });
+ await select.selectOption('pc-bruno');
+ await expect(select).toHaveValue('pc-bruno');
+ const after=await page.evaluate(()=>{
+  const node=document.querySelector('[data-member-row="m2"] [data-member-character]');
+  return{
+   scroll:window.scrollY,top:node.getBoundingClientRect().top,
+   selectPreserved:node===window.__rosterSelectBefore,
+   sectionPreserved:document.getElementById('jogadores')===window.__rosterSectionBefore,
+   focused:document.activeElement===node
+  }
+ });
+ expect(after.selectPreserved).toBe(true);
+ expect(after.sectionPreserved).toBe(true);
+ expect(after.focused).toBe(true);
+ expect(Math.abs(after.scroll-before.scroll)).toBeLessThanOrEqual(1);
+ expect(Math.abs(after.top-before.top)).toBeLessThanOrEqual(1);
+});
+
+test('salvar não reconstrói a Mesa e aviso de sucesso não altera a rolagem',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const button=page.locator('#jogadores [data-save-campaign-section]');
+ await button.scrollIntoViewIfNeeded();
+ const before=await page.evaluate(()=>{
+  window.__stableRoster=document.getElementById('jogadores');
+  window.__stableSelect=document.querySelector('[data-member-row="m1"] [data-member-character]');
+  return{scroll:window.scrollY,top:window.__stableRoster.getBoundingClientRect().top}
+ });
+ await button.click();
+ await expect(page.locator('#table-feedback')).toContainText('Etapa salva.');
+ await expect(page.locator('#hub-save-notice')).toBeVisible();
+ const after=await page.evaluate(()=>({
+  scroll:window.scrollY,top:document.getElementById('jogadores').getBoundingClientRect().top,
+  sectionPreserved:document.getElementById('jogadores')===window.__stableRoster,
+  selectPreserved:document.querySelector('[data-member-row="m1"] [data-member-character]')===window.__stableSelect
+ }));
+ expect(after.sectionPreserved).toBe(true);
+ expect(after.selectPreserved).toBe(true);
+ expect(Math.abs(after.scroll-before.scroll)).toBeLessThanOrEqual(1);
+ expect(Math.abs(after.top-before.top)).toBeLessThanOrEqual(1);
+});
+
+test('campos e botões da mesma linha ficam precisamente alinhados no desktop',async({page})=>{
+ await page.setViewportSize({width:1500,height:950});
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const results=await page.locator('#jogadores .roster-player').evaluateAll(rows=>rows.map(row=>{
+  const top=selector=>row.querySelector(selector).getBoundingClientRect().top;
+  return{
+   avatar:top('.roster-avatar'),user:top('[data-member-user]'),
+   character:top('[data-member-character]'),open:top('.roster-open-button'),
+   remove:top('[data-remove-member]')
+  }
+ }));
+ expect(results).toHaveLength(2);
+ for(const row of results)for(const key of ['avatar','character','open','remove']){
+  expect(Math.abs(row[key]-row.user),`Alinhamento de ${key}`).toBeLessThanOrEqual(2);
+ }
+});
