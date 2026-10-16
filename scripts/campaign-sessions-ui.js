@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20260925-media1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261016-current-status2';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
@@ -9,7 +9,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null;
 
-const statusLabel=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
+const statusLabel=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
 const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
@@ -168,14 +168,14 @@ function encounterSummary(session){
 }
 function sessionListCard(s){
  const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length,cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover session-cover-thumb',alt:''});
- return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+ return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
 }
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
  return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
  ${restricted?cover:''}<div class="session-head"><div>
   <h3>${esc(s.title)}</h3>
-  <div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
+  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
  </div><div class="row-actions">${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
  ${restricted?`
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
@@ -186,7 +186,7 @@ function sessionCard(s,restricted=false){
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
-  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
@@ -229,19 +229,19 @@ function render(){
 }
 async function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
+ const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),newStatus=$('new-session-status')?.value||'planned',title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
  if(adv){
   const campaign=campaignById(adv.campaignId);
   if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
   const before=campaigns;let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
   try{await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
   location.href=detailHref(result.session)
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,coverImage});
+  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,status:newStatus,coverImage});
   standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
