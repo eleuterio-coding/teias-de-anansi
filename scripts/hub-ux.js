@@ -89,7 +89,7 @@ function saveControl(node){
  const button=node?.closest?.('button,input[type="submit"],[role="button"]');
  if(!button||button.disabled)return false;
  const label=String(button.textContent||button.value||button.getAttribute('aria-label')||'').trim();
- return /^salvar(?:\\b|$)|^gravar(?:\\b|$)|^salve(?:\\b|$)/i.test(label)
+ return /^salvar(?:\b|$)|^gravar(?:\b|$)|^salve(?:\b|$)/i.test(label)
   ||['save-sheet','save-character','save-campaign'].includes(button.id);
 }
 function markSaveIntent(event){
@@ -120,7 +120,7 @@ function statusSaveFeedback(region){
  const message=String(region.textContent||'').trim().slice(0,220);
  if(!message)return false;
  const fail=region.classList.contains('warning')||/não foi possível|não pôde|falha(?: ao)?|erro (?:ao|para)|não salvo|não salvou/i.test(message);
- const success=/\\bsalv(?:a|as|o|os|ou)\\b|\\bsincronizad[oa]s?\\b|\\batualizad[oa]s?\\b|\\bgravado\\b|\\bregistrado\\b/i.test(message);
+ const success=/\bsalv(?:a|as|o|os|ou)\b|\bsincronizad[oa]s?\b|\batualizad[oa]s?\b|\bgravado\b|\bregistrado\b/i.test(message);
  if(!fail&&!success)return false;
  showSaveNotice(message,{ok:!fail});saveIntentAt=0;return true
 }
