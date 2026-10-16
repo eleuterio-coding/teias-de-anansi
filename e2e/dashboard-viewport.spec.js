@@ -12,7 +12,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.session));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(data.campaigns));
+  if(!new URLSearchParams(location.search).has('currentStatusFixture'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(data.campaigns));
  },{session,campaigns});
 });
 
@@ -103,7 +103,7 @@ test('Painel Geral não transforma textos em links de verbetes',async({page})=>{
 
 test('current status and explicit Campaign/Adventure relationships are visible in overview cards',async({page})=>{
  await page.setViewportSize({width:1440,height:900});
- await page.goto('/painel.html');
+ await page.goto('/painel.html?currentStatusFixture=1');
  await page.evaluate(()=>{
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([
    {id:'campaign-old',name:'Campanha Antiga',status:'active',sessions:[{id:'session-old',title:'Sessão Antiga',status:'active'}]},
