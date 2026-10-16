@@ -42,7 +42,8 @@ function knownLocalUsers(){
 async function providerData(){
  try{
   const config=await loadFirebaseConfig();if(!config.configured)return null;
-  const provider=await createFirebaseCollaborationProvider({config}),account=await provider.currentUser();
+  const provider=await createFirebaseCollaborationProvider({config});let account=await provider.currentUser();
+  if(!account)account=await new Promise(resolve=>{let settled=false,off=null;const done=value=>{if(settled)return;settled=true;try{off?.()}catch{}resolve(value)};off=provider.onAuthChanged(value=>done(value));setTimeout(()=>done(null),1800)});
   if(!account)return null;
   const users=await provider.listUsers();
   return{provider,users}
