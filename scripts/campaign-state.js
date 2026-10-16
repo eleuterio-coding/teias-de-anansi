@@ -37,7 +37,29 @@ export function findCampaignForCharacter(list=[],characterId){const id=text(char
 export function addCampaignMember(list=[],campaignId,data={}){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const member=sanitizeMember({...data,id:data.id||campaignUid('member')});campaign.members.push(member);campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,member}}
 export function updateCampaignMember(list=[],campaignId,memberId,patch={}){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const index=campaign.members.findIndex(m=>m.id===text(memberId));if(index<0)return{ok:false,reason:'Participante não encontrado.',list:arr(list).map(sanitizeCampaign)};campaign.members[index]=sanitizeMember({...campaign.members[index],...patch,id:campaign.members[index].id});campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,member:campaign.members[index]}}
 export function removeCampaignMember(list=[],campaignId,memberId){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const before=campaign.members.length;campaign.members=campaign.members.filter(m=>m.id!==text(memberId));if(campaign.members.length===before)return{ok:false,reason:'Participante não encontrado.',list:arr(list).map(sanitizeCampaign)};campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign}}
-export function assignCharacterToMember(list=[],campaignId,memberId,characterId){const targetCampaignId=text(campaignId),targetMemberId=text(memberId),charId=text(characterId);if(!charId)return{ok:false,reason:'Selecione um personagem.',list:arr(list).map(sanitizeCampaign)};const clean=arr(list).map(sanitizeCampaign),target=clean.find(c=>c.id===targetCampaignId),member=target?.members.find(m=>m.id===targetMemberId);if(!target||!member)return{ok:false,reason:'Mesa ou participante não encontrado.',list:clean};let movedFrom=null;for(const campaign of clean)for(const row of campaign.members)if(row.characterId===charId){if(campaign.id!==targetCampaignId||row.id!==targetMemberId)movedFrom={campaignId:campaign.id,campaignName:campaign.name,memberId:row.id};row.characterId=null;campaign.updatedAt=now()}member.characterId=charId;target.updatedAt=now();return{ok:true,list:clean,campaign:target,member,movedFrom}}
+export function assignCharacterToMember(list=[],campaignId,memberId,characterId){
+ const targetCampaignId=text(campaignId),targetMemberId=text(memberId),charId=text(characterId);
+ if(!charId)return{ok:false,reason:'Selecione um personagem.',list:arr(list).map(sanitizeCampaign)};
+ const clean=arr(list).map(sanitizeCampaign),target=clean.find(c=>c.id===targetCampaignId);
+ const member=target?.members.find(m=>m.id===targetMemberId);
+ if(!target||!member)return{ok:false,reason:'Mesa ou participante não encontrado.',list:clean};
+ const owner=text(member.username||member.name).toLowerCase();
+ // Um personagem nunca pode estar associado a dois jogadores diferentes.
+ // Transferências entre campanhas do MESMO jogador continuam permitidas.
+ const conflict=clean.some(c=>c.members.some(row=>{
+  if(row.characterId!==charId||(c.id===targetCampaignId&&row.id===targetMemberId))return false;
+  const otherOwner=text(row.username||row.name).toLowerCase();
+  return c.id===targetCampaignId||!owner||!otherOwner||otherOwner!==owner
+ }));
+ if(conflict)return{ok:false,reason:'Este personagem já está atribuído a outro jogador. Desvincule-o primeiro.',list:clean};
+ let movedFrom=null;
+ for(const campaign of clean)for(const row of campaign.members)if(row.characterId===charId){
+  if(campaign.id!==targetCampaignId||row.id!==targetMemberId)movedFrom={campaignId:campaign.id,campaignName:campaign.name,memberId:row.id};
+  row.characterId=null;campaign.updatedAt=now()
+ }
+ member.characterId=charId;target.updatedAt=now();
+ return{ok:true,list:clean,campaign:target,member,movedFrom}
+}
 export function unassignCharacterFromMember(list=[],campaignId,memberId){return updateCampaignMember(list,campaignId,memberId,{characterId:null})}
 export function addCampaignSession(list=[],campaignId,data={}){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const maxNumber=campaign.sessions.reduce((m,s)=>Math.max(m,s.number),0),session=sanitizeSession({...data,id:data.id||campaignUid('session'),number:data.number||maxNumber+1,createdAt:now(),updatedAt:now()},maxNumber);if(session.status==='current')for(const old of campaign.sessions)if(old.status==='current')old.status='planned';campaign.sessions.push(session);campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,session}}
 export function updateCampaignSession(list=[],campaignId,sessionId,patch={}){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const index=campaign.sessions.findIndex(s=>s.id===text(sessionId));if(index<0)return{ok:false,reason:'Sessão não encontrada.',list:arr(list).map(sanitizeCampaign)};campaign.sessions[index]=sanitizeSession({...campaign.sessions[index],...patch,id:campaign.sessions[index].id,createdAt:campaign.sessions[index].createdAt,updatedAt:now()},index);if(campaign.activeSessionId===campaign.sessions[index].id&&campaign.sessions[index].status!=='active')campaign.activeSessionId=null;if(campaign.sessions[index].status==='current')for(const other of campaign.sessions)if(other.id!==campaign.sessions[index].id&&other.status==='current')other.status='planned';campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,session:campaign.sessions[index]}}
