@@ -80,7 +80,7 @@ function previewCache(targetRows,byCampaign){
   const visibleAdventures=adventures.filter(a=>a.campaignId===campaign.id&&adventureIds.has(text(a.id))).map(a=>revealedAdventureProjection(a,campaign));
   const participants=byCampaign.get(campaign.id)||[];
   const payload=collaborationMemberBundle({campaign:campaignSharedCoreProjection(campaign)},sessions,visibleAdventures,participants);
-  const linkedIds=new Set(arr(campaign.members).map(m=>text(m.characterId)).filter(Boolean));
+  const linkedIds=new Set([...arr(campaign.members).map(m=>text(m.characterId)),...arr(participants).map(m=>text(m.characterId)),text(membership.characterId)].filter(Boolean));
   const linkedCharacters=characters.filter(c=>linkedIds.has(text(c.id)));
   rows[campaign.id]={membership,payload,characterIds:linkedCharacters.map(c=>text(c.id)),characters:linkedCharacters,updatedAt:new Date().toISOString()}
  }
