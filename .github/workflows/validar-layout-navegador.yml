@@ -5,6 +5,9 @@ on:
       - '**/*.html'
       - 'hub-layout.css'
       - 'hub-ux.css'
+      - 'dashboard.css'
+      - 'scripts/dashboard-ui.js'
+      - 'e2e/dashboard-viewport.spec.js'
       - 'biblioteca-light.css'
       - 'scripts/app-shell.js'
       - 'scripts/hub-ux.js'
@@ -26,7 +29,7 @@ jobs:
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
       - name: Auditar interface em desktop e celular
-        run: npx playwright test e2e/layout-unificado.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/layout-unificado.spec.js e2e/dashboard-viewport.spec.js --project=desktop-chromium --project=mobile-chromium
       - uses: actions/upload-artifact@v4
         if: always()
         with:
