@@ -9,7 +9,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null;
 
-const statusLabel=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
+const statusLabel=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
 const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
@@ -168,7 +168,7 @@ function encounterSummary(session){
 }
 function sessionListCard(s){
  const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length,cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover session-cover-thumb',alt:''});
- return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+ return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${s.status==='active'?'active':''}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="hub-parent-link"><span>Campanha</span><strong>${esc(s.campaignName||campaignById(s.campaignId)?.name||"Sem campanha")}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||"Sem aventura")}</strong></span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
 }
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
@@ -186,7 +186,7 @@ function sessionCard(s,restricted=false){
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
-  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
