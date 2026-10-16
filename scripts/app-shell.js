@@ -75,16 +75,11 @@ function buildSidebar(){
  const brand=document.createElement("a");brand.className="hub-brand";brand.href="painel.html";brand.setAttribute("aria-label","Ir para o início do Hub");
  brand.innerHTML='<span class="hub-brand-mark"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2 21 11 30 16 21 21 16 30 11 21 2 16 11 11Z" fill="currentColor" opacity=".28"/><path d="M16 5v22M5 16h22M10 10l12 12M22 10 10 22" stroke="currentColor" stroke-width="1.6"/></svg></span><strong>HUB</strong>';
  aside.appendChild(brand);
- const search=document.createElement("button");search.type="button";search.className="hub-nav-search";search.dataset.hubCommandOpen="";
- search.innerHTML=icon("search")+'<span>Buscar</span><kbd class="hub-kbd">Ctrl K</kbd>';aside.appendChild(search);
  const nav=document.createElement("nav");nav.className="hub-nav";nav.setAttribute("aria-label","Navegação principal");NAV_ITEMS.forEach(function(item){nav.appendChild(makeLink(item))});aside.appendChild(nav);
- const divider1=document.createElement("div");divider1.className="hub-sidebar-divider";aside.appendChild(divider1);
- const sectionTitle=document.createElement("div");sectionTitle.className="hub-sidebar-section-title";sectionTitle.innerHTML="<span>Recentes</span>";aside.appendChild(sectionTitle);
- const recents=document.createElement("div");recents.className="hub-recent-list";recents.dataset.hubRecents="";aside.appendChild(recents);
  const spacer=document.createElement("div");spacer.className="hub-sidebar-spacer";aside.appendChild(spacer);
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
- secondary.innerHTML='<a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a><a class="hub-nav-link" href="usuarios.html">'+icon("player")+'<span>Jogadores</span></a>';
+ secondary.innerHTML='<a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
  if(currentPage()==="configuracoes.html")secondary.querySelector('a[href="configuracoes.html"]')?.setAttribute("aria-current","page");
  aside.appendChild(secondary);
  return aside
