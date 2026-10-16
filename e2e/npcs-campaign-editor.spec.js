@@ -5,7 +5,7 @@ const master={uid:'u-e2e-master',username:'rafael',isMaster:true,memberships:[]}
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.addInitScript(data=>{
-  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.master));
+  if(!localStorage.getItem('hub-rpg:collaboration-session:v1'))localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.master));
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([data.npc]));
  },{master,campaign,npc});
