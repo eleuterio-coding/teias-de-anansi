@@ -1,4 +1,4 @@
-import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-current-status2';
+import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{summarizeDashboard}from'./dashboard-state.js?v=20261016-next-only2';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
