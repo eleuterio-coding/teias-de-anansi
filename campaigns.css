@@ -153,13 +153,13 @@
   padding:7px;
   border:1px solid rgba(148,173,195,.44);
   border-radius:8px;
-  background:rgba(12,20,30,.76);
+  background:rgba(12,20,30,.58);
   -webkit-backdrop-filter:blur(12px);
   backdrop-filter:blur(12px);
   box-shadow:0 12px 26px rgba(0,0,0,.27)
 }
 #campaign-list .campaign-status-option{
-  --option-bg:rgba(40,56,70,.58);
+  --option-bg:rgba(40,56,70,.38);
   --option-color:#dfebf4;
   --option-border:rgba(166,183,201,.25);
   display:flex;align-items:center;justify-content:space-between;gap:12px;
@@ -173,19 +173,19 @@
   transition:border-color .15s ease,background-color .15s ease
 }
 #campaign-list .campaign-status-option.status-current{
-  --option-bg:rgba(25,65,103,.59);--option-color:#9cdbff;--option-border:rgba(108,196,255,.40)
+  --option-bg:rgba(25,65,103,.38);--option-color:#9cdbff;--option-border:rgba(108,196,255,.40)
 }
 #campaign-list .campaign-status-option.status-active{
-  --option-bg:rgba(18,79,51,.59);--option-color:#91f3b9;--option-border:rgba(92,230,157,.38)
+  --option-bg:rgba(18,79,51,.38);--option-color:#91f3b9;--option-border:rgba(92,230,157,.38)
 }
 #campaign-list .campaign-status-option.status-planned{
-  --option-bg:rgba(89,60,22,.59);--option-color:#ffcf85;--option-border:rgba(255,198,98,.40)
+  --option-bg:rgba(89,60,22,.38);--option-color:#ffcf85;--option-border:rgba(255,198,98,.40)
 }
 #campaign-list .campaign-status-option.status-paused{
-  --option-bg:rgba(78,51,109,.59);--option-color:#e0baff;--option-border:rgba(209,160,255,.40)
+  --option-bg:rgba(78,51,109,.38);--option-color:#e0baff;--option-border:rgba(209,160,255,.40)
 }
 #campaign-list .campaign-status-option.status-finished{
-  --option-bg:rgba(52,70,86,.60);--option-color:#caddf0;--option-border:rgba(163,190,211,.40)
+  --option-bg:rgba(52,70,86,.40);--option-color:#caddf0;--option-border:rgba(163,190,211,.40)
 }
 #campaign-list .campaign-status-option[aria-pressed="true"]::after{
   content:"✓";font-size:.84rem;font-weight:800
