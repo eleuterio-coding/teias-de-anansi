@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1.0">
+ <title>Nova campanha - Teias de Anansi</title>
+ <link rel="stylesheet" href="campaigns.css?v=20261016-campaign-workspace2">
+ <link rel="stylesheet" href="hub-ux.css?v=20261016-breadcrumbs2">
+</head>
+<body>
+ <div class="top"><header><h1>Nova campanha</h1></header></div>
+ <main id="main-content">
+  <section id="campaign-create-card" class="card campaign-create-panel" aria-labelledby="campaign-create-title">
+   <h2 id="campaign-create-title">Criar campanha</h2>
+   <form id="campaign-create-form">
+    <div class="form-grid two">
+     <label>Nome da campanha<input id="campaign-name" name="name" autocomplete="off" required maxlength="120"></label>
+     <label>Status<select id="campaign-status" name="status">
+      <option value="planned">Planejada</option>
+      <option value="current">Atual</option>
+      <option value="active">Em andamento</option>
+      <option value="paused">Pausada</option>
+      <option value="finished">Concluída</option>
+     </select></label>
+     <div class="wide"><strong>Imagem/capa</strong><div id="campaign-cover-picker"></div></div>
+     <label class="wide">Descrição curta<textarea id="campaign-description" name="description" maxlength="500"></textarea></label>
+    </div>
+    <p id="storage-note" class="mini" role="status" aria-live="polite"></p>
+    <div class="row-actions campaign-create-actions">
+     <button id="create-campaign" type="submit">Salvar campanha</button>
+     <a class="btn secondary" href="campanhas.html">Cancelar</a>
+    </div>
+   </form>
+  </section>
+ </main>
+ <script type="module" src="scripts/hub-ux.js?v=20261016-breadcrumbs2"></script>
+ <script type="module" src="scripts/campaign-create-ui.js?v=20261016-campaign-workspace2"></script>
+</body>
+</html>
