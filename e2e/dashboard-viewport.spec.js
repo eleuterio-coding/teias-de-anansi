@@ -118,8 +118,8 @@ test('current status and explicit Campaign/Adventure relationships are visible i
  await expect(page.locator('#current-adventure h2')).toContainText('As Rainhas');
  await expect(page.locator('#current-session h2')).toContainText('Encontro das Rainhas');
  await expect(page.locator('#adventure-dashboard-list .relationship-chip')).toContainText('Campanha: Reinos de Prata');
- await expect(page.locator('#session-dashboard-list .relation-campaign')).toContainText('Campanha: Reinos de Prata');
- await expect(page.locator('#session-dashboard-list .relation-adventure')).toContainText('Aventura: As Rainhas');
+ await expect(page.locator('#session-dashboard-list .relation-campaign').first()).toContainText('Campanha: Reinos de Prata');
+ await expect(page.locator('#session-dashboard-list .relation-adventure').first()).toContainText('Aventura: As Rainhas');
  for(const id of ['campaign-dashboard-list','adventure-dashboard-list','session-dashboard-list']){
   await expect(page.locator('#'+id+' .badge.current').first()).toHaveText('Atual');
  }
