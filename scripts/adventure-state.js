@@ -1,6 +1,6 @@
 export const ADVENTURE_KEY='hub-rpg:adventures:v1';
 export const ADVENTURE_SCHEMA='hub-rpg/adventure/v2';
-export const ADVENTURE_STATUS=Object.freeze(['planned','active','paused','completed','archived']);
+export const ADVENTURE_STATUS=Object.freeze(['planned','current','active','paused','completed','archived']);
 export const ADVENTURE_TYPES=Object.freeze(['main','side','oneshot','secondary']);
 export const SCENE_STATUS=Object.freeze(['planned','active','completed','skipped']);
 export const CLUE_STATUS=Object.freeze(['hidden','discovered','resolved']);
