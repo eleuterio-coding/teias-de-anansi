@@ -1,5 +1,5 @@
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20260925-media1';
+import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures,writeAdventures}from'./adventure-state.js?v=20260925-media1';
 import{COLLAB_CACHE_KEY}from'./storage-registry.js?v=20260924-session-scenes2';
 import{mergeNewest}from'./collaboration-model.js?v=20260925-media1';
