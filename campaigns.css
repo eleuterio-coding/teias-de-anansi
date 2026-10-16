@@ -288,23 +288,20 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 .roster-section .roster-player :is(select,input),
 .roster-section .roster-add-fields select{width:100%;min-width:0;margin-top:6px}
 .roster-section .roster-player-character{min-width:0}
-.roster-section .roster-sheet-link{
- display:inline-flex;align-items:center;gap:5px;min-height:24px;
- margin-top:4px;color:var(--hub-accent-2,#1864aa)!important;
- text-decoration:none;font-size:.78rem;font-weight:650
-}
-.roster-section .roster-sheet-link:hover{text-decoration:underline}
 .roster-section .roster-player-actions{
  display:flex;align-items:flex-end;justify-content:flex-end;flex-wrap:nowrap;
  gap:8px;margin:0;padding:0;white-space:nowrap
 }
-.roster-section .roster-player-actions button{min-width:82px}
-.roster-section .roster-player-notes{
- grid-column:1/-1;padding:10px 12px;
- border-left:3px solid var(--hub-accent,#338ed7);border-radius:5px;
- background:var(--hub-surface-2,#f3f4f6);white-space:pre-wrap;
- font-size:.84rem;color:var(--hub-text-2,inherit)
+.roster-section .roster-player-actions :is(.roster-open-button,button[data-remove-member]){
+ display:inline-flex;align-items:center;justify-content:center;
+ min-width:92px;min-height:44px;padding:9px 13px;
+ border-radius:8px;font-size:.85rem;font-weight:600;
+ text-decoration:none;white-space:nowrap
 }
+.roster-section .roster-player-actions .roster-open-button:disabled{
+ opacity:.42;cursor:not-allowed
+}
+
 .roster-section .roster-add-panel{
  display:grid;gap:12px;margin-top:16px;padding:16px;
  border:1px dashed var(--hub-border,#8885);border-radius:12px;
