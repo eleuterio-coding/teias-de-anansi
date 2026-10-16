@@ -1,4 +1,4 @@
-import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20260924-session-scenes2';
+import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
