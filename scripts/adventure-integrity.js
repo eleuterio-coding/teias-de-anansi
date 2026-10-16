@@ -1,5 +1,5 @@
 import{sanitizeAdventure}from'./adventure-state.js?v=20261016-current-status2';
-import{sanitizeCampaign}from'./campaign-state.js?v=20261016-current-status2';
+import{sanitizeCampaign}from'./campaign-state.js?v=20261016-campaign-geography1';
 const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 export function migrateLegacyAdventureEntities(list=[],campaign=null){
