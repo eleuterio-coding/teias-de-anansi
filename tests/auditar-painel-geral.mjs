@@ -96,6 +96,6 @@ for(const token of ['relationChip','Campanha','Aventura','statusKey','adventureN
 const semanticCSS=fs.readFileSync(new URL('../hub-ux.css',import.meta.url),'utf8');
 for(const status of ['current','planned','active','paused','completed','cancelled','archived'])assert.ok(semanticCSS.includes('.badge.'+status),'Faltou cor do status '+status);
 const sessionsView=fs.readFileSync(new URL('../scripts/campaign-sessions-ui.js',import.meta.url),'utf8');
-assert.ok(sessionsView.includes('Campanha: ')&&sessionsView.includes('Aventura: '),'Sessões precisam mostrar explicitamente seus vínculos.');
+assert.ok(sessionsView.includes('hub-parent-link')&&sessionsView.includes('Campanha</span>')&&sessionsView.includes('Aventura</span>'),'Sessões precisam mostrar o tipo de vínculo e o nome de cada Campanha e Aventura.');
 
 console.log('OK — Painel Geral prioriza Campanhas, Aventuras, Sessões, próxima Sessão e contexto atual.');
