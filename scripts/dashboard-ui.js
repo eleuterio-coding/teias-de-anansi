@@ -6,7 +6,7 @@ import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const campaignStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída'}[s]||s);
 const adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s);
-const sessionStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
+const sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const fmtDate=v=>{if(!v)return'Sem data';const d=String(v).slice(0,10),m=d.match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[3]}/${m[2]}/${m[1]}`:String(v)};
 
 function relationChip(kind,value){return '<span class="relationship-chip '+(kind==='Campanha'?'relation-campaign':'relation-adventure')+'"><span class="relation-label">'+esc(kind)+':</span> <strong>'+esc(value||'Sem vínculo')+'</strong></span>'}
