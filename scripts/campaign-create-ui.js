@@ -21,6 +21,9 @@ async function create(event){
   const result=createCampaign(before,{
    id,name,system:SYSTEM_NAME,dmName:DM_NAME,
    status:$('campaign-status')?.value||'planned',
+   setting:$('campaign-setting')?.value.trim()||'',
+   worldPlane:$('campaign-world-plane')?.value.trim()||'',
+   mainRegion:$('campaign-main-region')?.value.trim()||'',
    coverImage:media,coverImageUrl:'',
    description:$('campaign-description')?.value||''
   });
