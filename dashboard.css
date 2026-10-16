@@ -147,3 +147,12 @@ body.dashboard-page[data-dashboard-mode="single"] .focus-card .btn{
 .dashboard-page .relationship-chip,.dashboard-page .relation-campaign,.dashboard-page .relation-adventure{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;color:var(--muted);font-size:.78rem;line-height:1.4}
 .dashboard-page .relationship-chip .relation-label{font-weight:400;opacity:1}
 .dashboard-page .relationship-chip strong{font-weight:600;color:inherit}
+
+/* Títulos dos quatro cards de contexto, no padrão das listas do Painel Geral. */
+.dashboard-page .focus-card{position:relative;padding-top:58px}
+.dashboard-page .focus-card-heading{position:absolute;top:12px;left:14px;right:14px;min-width:0}
+.dashboard-page .focus-card-heading .card-kicker{margin:0;font-size:.73rem;line-height:1.1}
+.dashboard-page .focus-card-heading h3{margin:3px 0 0;font-size:clamp(.95rem,1.25vw,1.1rem);line-height:1.2;font-weight:700}
+body.dashboard-page.hub-shell-enabled .focus-card{padding-top:53px}
+body.dashboard-page.hub-shell-enabled .focus-card-heading{top:10px;left:12px;right:12px}
+.dashboard-page .focus-card-empty{min-width:0}
