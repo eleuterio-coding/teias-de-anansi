@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261016-current-status2';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
