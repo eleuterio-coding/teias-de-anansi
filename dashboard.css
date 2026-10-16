@@ -166,7 +166,7 @@ body.dashboard-page .dashboard-context-title {
   line-height: 1.15;
   font-weight: 750;
   letter-spacing: -.02em;
-  border-bottom: 1px solid var(--hub-border, rgba(148,163,184,.18));
+  border-bottom: none;
 }
 body.dashboard-page.hub-shell-enabled .dashboard-context-title {
   font-size: clamp(1.2rem, 2vw, 1.65rem); /* Mesmo tamanho de Painel Geral */
