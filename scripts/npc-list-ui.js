@@ -3,6 +3,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const box=document.getElementById('npc-list');
 function render(){
  if(!npcMasterAuthorized()){location.replace('personagens.html');return}
+ document.getElementById('main-content').hidden=false;
  const rows=[...readNpcs()].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'pt-BR'));
  box.innerHTML=rows.length?rows.map(npc=>{
   const subclass=npc.refSnapshots?.subclass?.name,klass=npc.refSnapshots?.class?.name;
