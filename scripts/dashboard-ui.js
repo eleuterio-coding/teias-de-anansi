@@ -27,5 +27,106 @@ function renderContext(summary){
  const current=summary.currentSession;
  focusCard('current-session',current?{badge:'Sessão atual',title:current.session.title,subtitle:current.campaign?.name||'Sessão avulsa',meta:[fmtDate(current.session.date),sessionStatus(current.session.status)].join(' · '),href:current.href,button:'Abrir Sessão',media:current.session.coverImage,legacyUrl:current.session.coverImageUrl}:{badge:'Sessão atual'},'Nenhuma Sessão atual')
 }
-function init(){const restricted=playerMode(),campaigns=restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns(),adventures=restricted?sharedAdventures():readAdventures(),standaloneSessions=restricted?[]:readStandaloneSessions(),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);hydrateMediaImages(document).catch(()=>{})}
+
+const DASHBOARD_TILES=[
+ {selector:'.dashboard-collections > .dashboard-card:nth-child(1)',label:'Campanhas',kind:'collections'},
+ {selector:'.dashboard-collections > .dashboard-card:nth-child(2)',label:'Aventuras',kind:'collections'},
+ {selector:'.dashboard-collections > .dashboard-card:nth-child(3)',label:'Sessões',kind:'collections'},
+ {selector:'#current-session',label:'Sessão atual',kind:'context'},
+ {selector:'#next-session',label:'Próxima sessão',kind:'context'},
+ {selector:'#current-campaign',label:'Campanha atual',kind:'context'},
+ {selector:'#current-adventure',label:'Aventura atual',kind:'context'}
+];
+const listPages=new WeakMap();
+let viewportMode='',viewportPage=0,viewportFrame=0;
+function setupCollectionPagers(){
+ document.querySelectorAll('.dashboard-card .dashboard-list').forEach(list=>{
+  if(list.nextElementSibling?.classList.contains('dashboard-list-pager'))return;
+  const pager=document.createElement('nav');
+  pager.className='dashboard-list-pager';
+  pager.setAttribute('aria-label','Páginas de '+(list.closest('.dashboard-card')?.querySelector('h2')?.textContent||'cards'));
+  pager.innerHTML='<button type="button" data-list-prev aria-label="Itens anteriores">‹</button><span aria-live="polite"></span><button type="button" data-list-next aria-label="Próximos itens">›</button>';
+  pager.hidden=true;list.after(pager);
+  const state={page:0,capacity:1};listPages.set(list,state);
+  pager.querySelector('[data-list-prev]').addEventListener('click',()=>{state.page=Math.max(0,state.page-1);updateCollectionPager(list)});
+  pager.querySelector('[data-list-next]').addEventListener('click',()=>{state.page++;updateCollectionPager(list)});
+ });
+}
+function updateCollectionPager(list){
+ const pager=list.nextElementSibling,rows=[...list.querySelectorAll('.dash-row')],state=listPages.get(list);
+ if(!pager||!state)return;
+ if(!rows.length){pager.hidden=true;return}
+ // Inactive dashboard pages are not measurable. Recompute on activation.
+ if(list.closest('[hidden]'))return;
+ rows.forEach(item=>{item.hidden=false});
+ // Reserve the controls before measuring available card height.
+ pager.hidden=rows.length<2;
+ const gap=parseFloat(getComputedStyle(list).gap)||7;
+ const rowHeight=Math.max(60,...rows.map(item=>item.getBoundingClientRect().height));
+ const capacity=Math.max(1,Math.floor((list.clientHeight+gap)/(rowHeight+gap)));
+ state.capacity=capacity;
+ if(rows.length<=capacity){
+  state.page=0;pager.hidden=true;return;
+ }
+ pager.hidden=false;
+ const total=Math.ceil(rows.length/capacity);
+ state.page=Math.max(0,Math.min(total-1,state.page));
+ const start=state.page*capacity;
+ rows.forEach((item,index)=>{item.hidden=index<start||index>=start+capacity});
+ pager.querySelector('[data-list-prev]').disabled=state.page===0;
+ pager.querySelector('[data-list-next]').disabled=state.page===total-1;
+ pager.querySelector('[aria-live]').textContent=(state.page+1)+' / '+total;
+}
+function dashboardPagesFor(mode){
+ if(mode==='full')return[{label:'Painel Geral',indexes:[0,1,2,3,4,5,6]}];
+ if(mode==='group')return[
+  {label:'Campanhas, Aventuras e Sessões',indexes:[0,1,2]},
+  {label:'Contexto atual',indexes:[3,4,5,6]}
+ ];
+ return DASHBOARD_TILES.map((tile,index)=>({label:tile.label,indexes:[index]}));
+}
+function updateDashboardViewport(){
+ const content=document.querySelector('.hub-app-content');
+ const width=content?.clientWidth||window.innerWidth,height=window.innerHeight;
+ // The full seven-card view is only used when both axes allow legible cards.
+ const mode=width>=1000&&height>=720?'full':width>=680&&height>=550?'group':'single';
+ if(mode!==viewportMode){viewportMode=mode;viewportPage=0}
+ document.body.dataset.dashboardMode=mode;
+ const pages=dashboardPagesFor(mode);
+ viewportPage=Math.min(viewportPage,pages.length-1);
+ const active=new Set(pages[viewportPage].indexes);
+ const collections=document.querySelector('.dashboard-collections'),context=document.querySelector('.dashboard-context');
+ collections.hidden=![0,1,2].some(index=>active.has(index));
+ context.hidden=![3,4,5,6].some(index=>active.has(index));
+ DASHBOARD_TILES.forEach((tile,index)=>{
+  const el=document.querySelector(tile.selector);if(el)el.hidden=!active.has(index)
+ });
+ document.querySelectorAll('.dashboard-context-column').forEach(column=>{
+  column.hidden=![...column.querySelectorAll('.focus-card')].some(card=>!card.hidden)
+ });
+ const pager=$('dashboard-pagination');
+ pager.hidden=pages.length===1;
+ $('dashboard-page-status').textContent='Página '+(viewportPage+1)+' de '+pages.length+' · '+pages[viewportPage].label;
+ pager.querySelector('[data-dashboard-previous]').disabled=viewportPage===0;
+ pager.querySelector('[data-dashboard-next]').disabled=viewportPage===pages.length-1;
+ document.querySelectorAll('.dashboard-list').forEach(updateCollectionPager);
+}
+function scheduleDashboardViewport(){
+ if(viewportFrame)cancelAnimationFrame(viewportFrame);
+ viewportFrame=requestAnimationFrame(()=>{viewportFrame=0;updateDashboardViewport()});
+}
+function initDashboardViewport(){
+ setupCollectionPagers();
+ $('dashboard-pagination').querySelector('[data-dashboard-previous]').addEventListener('click',()=>{
+  viewportPage=Math.max(0,viewportPage-1);scheduleDashboardViewport()
+ });
+ $('dashboard-pagination').querySelector('[data-dashboard-next]').addEventListener('click',()=>{
+  viewportPage++;scheduleDashboardViewport()
+ });
+ window.addEventListener('resize',scheduleDashboardViewport,{passive:true});
+ document.fonts?.ready?.then(scheduleDashboardViewport);
+ scheduleDashboardViewport();
+}
+
+function init(){const restricted=playerMode(),campaigns=restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns(),adventures=restricted?sharedAdventures():readAdventures(),standaloneSessions=restricted?[]:readStandaloneSessions(),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);initDashboardViewport();hydrateMediaImages(document).then(scheduleDashboardViewport).catch(()=>{})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
