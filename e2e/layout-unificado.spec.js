@@ -36,6 +36,9 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
       await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
       await expect(page.locator('.hub-global-topbar')).toBeVisible();
       await expect(page.locator('.hub-sidebar')).toHaveCount(1);
+      await expect(page.locator('.hub-sidebar [data-hub-command-open]')).toHaveCount(0);
+      await expect(page.locator('.hub-sidebar .hub-sidebar-section-title')).toHaveCount(0);
+      await expect(page.locator('.hub-sidebar a[href="usuarios.html"]')).toHaveCount(0);
       await expect(page.locator('.hub-nav-link[aria-current="page"]').filter({hasText:menu}).first()).toHaveCount(1);
       await expect(page.locator('body')).toHaveClass(/hub-shell-enabled/);
       if (reader) await expect(page.locator('body')).toHaveClass(/hub-content-light/);
