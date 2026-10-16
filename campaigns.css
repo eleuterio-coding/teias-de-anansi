@@ -98,7 +98,7 @@
   display:inline-flex;align-items:center;
   max-width:calc(100% - 24px);
   min-height:32px;
-  overflow:hidden;
+  overflow:visible;
   border:1px solid var(--status-border);
   border-radius:7px;
   color:var(--status-ink);
@@ -122,37 +122,90 @@
 #campaign-list .campaign-card-status.status-finished{
   --status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0
 }
-#campaign-list .campaign-card-status select.campaign-status-select{
-  width:auto;max-width:100%;
-  min-height:30px;height:30px;
-  padding:3px 30px 3px 10px;
-  margin:0;
+
+/* Menu desenhado pelo Hub: mantém transparência com o menu aberto e fechado. */
+#campaign-list .campaign-status-disclosure{position:relative;min-width:0}
+#campaign-list .campaign-status-trigger{
+  display:inline-flex;justify-content:space-between;align-items:center;gap:9px;
+  min-height:30px;padding:5px 10px;
+  list-style:none;
   border:0;border-radius:6px;
-  box-shadow:none;
-  outline-offset:1px;
-  font:650 .76rem/1.3 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  color:var(--status-ink);
   background:transparent;
-  appearance:none;-webkit-appearance:none;
-  cursor:pointer
+  color:var(--status-ink);
+  font:650 .76rem/1.3 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  cursor:pointer;user-select:none;white-space:nowrap
 }
-#campaign-list .campaign-card-status select.campaign-status-select option{
-  background:#12202f;color:#edf4fa
+#campaign-list .campaign-status-trigger::-webkit-details-marker{display:none}
+#campaign-list .campaign-status-trigger::marker{content:""}
+#campaign-list .campaign-status-chevron{
+  width:6px;height:6px;flex:0 0 6px;
+  border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+  transform:translateY(-2px) rotate(45deg);
+  transition:transform .15s ease
 }
-#campaign-list .campaign-card-status:has(select)::after{
-  content:"";
-  position:absolute;right:11px;top:50%;
-  width:6px;height:6px;
-  border-right:1.5px solid currentColor;
-  border-bottom:1.5px solid currentColor;
-  transform:translateY(-70%) rotate(45deg);
-  pointer-events:none
+#campaign-list .campaign-status-disclosure[open] .campaign-status-chevron{
+  transform:translateY(1px) rotate(225deg)
+}
+#campaign-list .campaign-status-menu{
+  position:absolute;right:-1px;top:calc(100% + 8px);z-index:40;
+  display:grid;gap:5px;
+  min-width:185px;width:max-content;max-width:min(235px,calc(100vw - 48px));
+  padding:7px;
+  border:1px solid rgba(148,173,195,.44);
+  border-radius:8px;
+  background:rgba(12,20,30,.76);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  box-shadow:0 12px 26px rgba(0,0,0,.27)
+}
+#campaign-list .campaign-status-option{
+  --option-bg:rgba(40,56,70,.58);
+  --option-color:#dfebf4;
+  --option-border:rgba(166,183,201,.25);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-height:34px;padding:7px 10px;
+  border:1px solid var(--option-border);
+  border-radius:6px;
+  background:var(--option-bg);
+  color:var(--option-color);
+  font:650 .78rem/1.3 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  text-align:left;cursor:pointer;
+  transition:border-color .15s ease,background-color .15s ease
+}
+#campaign-list .campaign-status-option.status-current{
+  --option-bg:rgba(25,65,103,.59);--option-color:#9cdbff;--option-border:rgba(108,196,255,.40)
+}
+#campaign-list .campaign-status-option.status-active{
+  --option-bg:rgba(18,79,51,.59);--option-color:#91f3b9;--option-border:rgba(92,230,157,.38)
+}
+#campaign-list .campaign-status-option.status-planned{
+  --option-bg:rgba(89,60,22,.59);--option-color:#ffcf85;--option-border:rgba(255,198,98,.40)
+}
+#campaign-list .campaign-status-option.status-paused{
+  --option-bg:rgba(78,51,109,.59);--option-color:#e0baff;--option-border:rgba(209,160,255,.40)
+}
+#campaign-list .campaign-status-option.status-finished{
+  --option-bg:rgba(52,70,86,.60);--option-color:#caddf0;--option-border:rgba(163,190,211,.40)
+}
+#campaign-list .campaign-status-option[aria-pressed="true"]::after{
+  content:"✓";font-size:.84rem;font-weight:800
+}
+#campaign-list .campaign-status-option:is(:hover,:focus-visible){
+  border-color:var(--option-color);
+  filter:brightness(1.15)
+}
+#campaign-list .campaign-status-trigger:focus-visible,
+#campaign-list .campaign-status-option:focus-visible{
+  outline:2px solid var(--status-ink,#9cdbff);outline-offset:2px
+}
+#campaign-list .campaign-card:has(.campaign-status-disclosure[open]){
+  z-index:15;overflow:visible
 }
 #campaign-list .campaign-card-status .campaign-status-value{
   display:block;padding:7px 10px;
   font:650 .76rem/1.3 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
-#campaign-list .campaign-card-status:has(select):is(:hover,:focus-within){
+#campaign-list .campaign-card-status:has(.campaign-status-disclosure):is(:hover,:focus-within){
   border-color:var(--status-ink);
   box-shadow:0 0 0 2px rgba(255,255,255,.09)
 }
