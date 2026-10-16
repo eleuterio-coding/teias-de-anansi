@@ -261,7 +261,7 @@ body.hub-shell-enabled #campaign-list .campaign-card-status .campaign-status-tri
   border-radius:6px!important
 }
 body.hub-shell-enabled #campaign-list .campaign-status-menu{
-  background:rgba(12,20,30,.76)!important
+  background:rgba(12,20,30,.58)!important
 }
 body.hub-shell-enabled #campaign-list button.campaign-status-option{
   min-height:34px!important;height:auto!important;
