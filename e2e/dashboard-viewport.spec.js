@@ -51,6 +51,8 @@ test('card fitting and viewport-aware pages on desktop, notebook and phone',asyn
  await checkBounds(page,'group',3);
  await expect(page.locator('#dashboard-page-status')).toContainText('Página 1 de 2');
  await page.locator('[data-dashboard-next]').click();
+ await expect(page.locator('#current-session')).toBeVisible();
+ await expect(page.locator('#next-session')).toBeVisible();
  await checkBounds(page,'group',4);
  await expect(page.locator('#dashboard-page-status')).toContainText('Página 2 de 2');
  await page.setViewportSize({width:390,height:844});
