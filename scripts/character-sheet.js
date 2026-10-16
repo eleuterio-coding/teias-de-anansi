@@ -234,7 +234,7 @@ async function init(){
  if(npcMode()&&!npcMasterAuthorized()){location.replace('personagens.html');return}
  if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));document.getElementById('profile-player')?.closest('label')?.setAttribute('hidden','')}
  const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
- if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Personagem não encontrado.</strong><br>Abra a ficha a partir da Lista de Personagens.</div>';return}
+ if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada.</strong></div>';return}
  state.c=loadCharacter();
  ensureSheetState();
 
