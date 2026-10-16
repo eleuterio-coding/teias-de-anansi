@@ -32,6 +32,7 @@ async function create(event){
   note('Salvando campanha...');
   try{await persistCampaignMediaState(id,{entityType:'campaign',entityId:id})}
   catch(error){writeCampaigns(before);if(media)await deleteImage(media).catch(()=>{});throw error}
+  try{sessionStorage.setItem('hub-rpg:pending-save-notice','Campanha criada e salva.')}catch{}
   location.assign('mesa.html?id='+encodeURIComponent(id))
  }catch(error){note(error?.message||'Não foi possível salvar a campanha.')}
  finally{creating=false;if(button)button.disabled=false}
