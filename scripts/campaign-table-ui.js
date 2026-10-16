@@ -37,7 +37,7 @@ function memberRow(m){
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}">
   <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><label>Jogador<select data-member-user aria-label="Jogador: ${esc(name)}">${participantMemberOptions(m)}</select></label></div>
   <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
-  <div class="row-actions roster-player-actions">${linked?`<a class="btn secondary roster-open-button" href="ficha-personagem.html?id=${encodeURIComponent(linked.id)}" aria-label="Abrir ficha de ${esc(linked.name||'personagem')}">Abrir</a>`:`<button type="button" class="secondary roster-open-button" disabled aria-label="Abrir ficha - personagem não vinculado">Abrir</button>`}<button type="button" class="danger" data-remove-member="${esc(m.id)}">Remover</button></div>
+  <div class="row-actions roster-player-actions">${rosterOpenButton(linked)}<button type="button" class="danger" data-remove-member="${esc(m.id)}">Remover</button></div>
  </article>`
 }
 function rosterHtml(){return`<section id="jogadores" class="card roster-section">
@@ -47,35 +47,99 @@ function rosterHtml(){return`<section id="jogadores" class="card roster-section"
   <div class="roster-add-fields"><label>Jogador<select id="new-member-user">${participantOptions()}</select></label><label>Personagem<select id="new-member-character">${characterOptions('')}</select></label></div>
   <div class="row-actions roster-add-actions"><button id="add-member" type="button">Adicionar jogador</button><button type="button" class="secondary" data-save-campaign-section>Salvar</button></div>
  </div></section>`}
+
+function rosterOpenButton(linked){
+ return linked
+  ?`<a class="btn secondary roster-open-button" href="ficha-personagem.html?id=${encodeURIComponent(linked.id)}" aria-label="Abrir ficha de ${esc(linked.name||'personagem')}">Abrir</a>`
+  :'<button type="button" class="secondary roster-open-button" disabled aria-label="Abrir ficha - personagem não vinculado">Abrir</button>';
+}
+/* Atualiza apenas os controles afetados. A seção e seu foco nunca são
+   desmontados ao salvar ou trocar a seleção de personagem. */
+function syncRosterControls({rebuildRows=false}={}){
+ const list=$('member-list');
+ if(!list)return;
+ if(rebuildRows){
+  list.innerHTML=campaign.members.length?campaign.members.map(memberRow).join(''):'<div class="empty">Nenhum jogador adicionado.</div>';
+  bindMembers();
+ }
+ for(const row of list.querySelectorAll('[data-member-row]')){
+  const member=campaign.members.find(m=>m.id===row.dataset.memberRow);
+  if(!member)continue;
+  const name=member.name||member.username||'Jogador';
+  const user=row.querySelector('[data-member-user]');
+  if(user)user.value=String(member.username||member.name||'').trim().toLowerCase();
+  const avatar=row.querySelector('.roster-avatar');
+  if(avatar)avatar.textContent=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
+  const characterSelect=row.querySelector('[data-member-character]');
+  if(characterSelect){
+   characterSelect.innerHTML=characterOptions(member.characterId,member.id,member.username||member.name);
+   characterSelect.setAttribute('aria-label',`Personagem de ${name}`);
+  }
+  const linked=characters.find(c=>c.id===member.characterId);
+  const open=row.querySelector('.roster-open-button');
+  if(open)open.outerHTML=rosterOpenButton(linked);
+ }
+ const count=document.querySelector('#jogadores .roster-count');
+ if(count)count.textContent=`${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}`;
+ const userPicker=$('new-member-user');
+ if(userPicker){
+  const current=userPicker.value;
+  userPicker.innerHTML=participantOptions();
+  if([...userPicker.options].some(o=>o.value===current))userPicker.value=current;
+ }
+ const characterPicker=$('new-member-character');
+ if(characterPicker){
+  const current=characterPicker.value;
+  characterPicker.innerHTML=characterOptions('',null,userPicker?.value||'');
+  if([...characterPicker.options].some(o=>o.value===current))characterPicker.value=current;
+ }
+ const refs=document.querySelector('#personagens .list');
+ if(refs){
+  const scratch=document.createElement('div');
+  scratch.innerHTML=referenceSectionsHtml();
+  const next=scratch.querySelector('#personagens .list');
+  if(next)refs.innerHTML=next.innerHTML;
+ }
+ const heroPlayers=document.querySelector('.campaign-product-meta .badge:nth-child(2)');
+ if(heroPlayers)heroPlayers.textContent=`${campaign.members.length} jogador(es)`;
+ const countLinked=document.querySelector('.campaign-product-summary .metric:nth-child(2) strong');
+ if(countLinked)countLinked.textContent=String(campaign.members.filter(m=>m.characterId).length);
+}
+function commitRoster(list,message,{rebuildRows=false}={}){
+ commit(list,{rerender:false,message});
+ syncRosterControls({rebuildRows});
+}
 function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Mesa.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
 function sessionCard(s){const participants=s.participantCharacterIds.map(id=>characters.find(c=>c.id===id)?.name||id).filter(Boolean);return`<article class="session-card ${s.status==='active'?'active':''}" data-session-row="${esc(s.id)}"><div class="session-head"><div><h3>Sessão ${s.number} · ${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><div class="row-actions">${['planned','next'].includes(s.status)?`<button type="button" data-start-session="${esc(s.id)}">Iniciar sessão</button>`:''}${s.status==='active'?`<button type="button" data-finish-session="${esc(s.id)}">Concluir sessão</button>`:''}${!['completed','cancelled'].includes(s.status)?`<button type="button" class="secondary" data-cancel-session="${esc(s.id)}">Cancelar</button>`:''}<button type="button" class="danger" data-remove-session="${esc(s.id)}">Excluir</button></div></div><div class="form-grid two" style="margin-top:10px"><label>Título<input data-session-field="title" value="${esc(s.title)}"></label><label>Data<input data-session-field="date" type="date" value="${esc(s.date)}"></label><label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>`<option value="${v}" ${s.status===v?'selected':''}>${esc(sessionStatus(v))}</option>`).join('')}</select></label><label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label><label class="wide">Resumo / recap<textarea data-session-field="summary">${esc(s.summary)}</textarea></label><label class="wide">Notas compartilhadas<textarea data-session-field="sharedNotes">${esc(s.sharedNotes)}</textarea></label><label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label><div class="wide"><strong>Personagens participantes</strong><div data-session-participants style="margin-top:5px">${participantChecks(s)}</div></div></div>${participants.length?`<p class="mini">Registrados: ${esc(participants.join(', '))}</p>`:''}</article>`}
 function sessionsHtml(){const sessions=[...campaign.sessions].sort((a,b)=>b.number-a.number);return`<section id="sessoes" class="card"><div class="top"><div><h2>Sessões da campanha</h2></div><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}">Planejar sessão</a></div><div class="list">${sessions.length?sessions.map(s=>`<article class="campaign-reference-row"><div><strong>Sessão ${s.number} · ${esc(s.title)}</strong><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(s.id)}">Abrir</a></article>`).join(''):'<div class="empty">Nenhuma sessão atrelada a esta campanha.</div>'}</div></section>`}
 function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}<nav class='section-nav'><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#personagens'>Personagens</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#missoes'>Missões</a><a href='#notas-mestre'>Notas</a><a href='#materiais'>Materiais</a><a href='#linha-tempo'>Linha do tempo</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}
-function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:['status','name','coverImageUrl'].includes(field),message:'Mesa salva automaticamente.'}),eventName==='input'?350:0)})})}
+function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:false,message:'Mesa salva automaticamente.'}),eventName==='input'?350:0)})})}
 function bindMembers(){
- document.querySelectorAll('[data-member-row]').forEach(row=>{
+ const list=$('member-list');
+ if(!list)return;
+ list.querySelectorAll('[data-member-row]').forEach(row=>{
   const id=row.dataset.memberRow;
   row.querySelector('[data-member-user]')?.addEventListener('change',event=>{
    const participant=hubParticipants.find(p=>p.username===event.target.value);
-   if(!participant)return;
+   if(!participant){syncRosterControls();return feedback('Selecione um jogador.',false)}
    const duplicate=campaign.members.some(m=>m.id!==id&&String(m.username||m.name||'').trim().toLowerCase()===participant.username);
-   if(duplicate){render();return feedback('Este jogador já participa da campanha.',false)}
+   if(duplicate){syncRosterControls();return feedback('Este jogador já participa da campanha.',false)}
    const result=updateCampaignMember(campaigns,campaignId,id,{username:participant.username,name:participant.displayName,role:'player'});
-   if(!result.ok){render();return feedback(result.reason,false)}
-   commit(result.list,{message:'Jogador atualizado.'})
+   if(!result.ok){syncRosterControls();return feedback(result.reason,false)}
+   commitRoster(result.list,'Jogador atualizado.')
   });
   row.querySelector('[data-member-character]')?.addEventListener('change',event=>{
    const value=event.target.value;
    const result=value?assignCharacterToMember(campaigns,campaignId,id,value):unassignCharacterFromMember(campaigns,campaignId,id);
-   if(!result.ok){render();return feedback(result.reason,false)}
-   commit(result.list,{message:result.movedFrom?`Personagem movido de ${result.movedFrom.campaignName} para esta Mesa.`:'Vínculo de personagem atualizado.'})
+   if(!result.ok){syncRosterControls();return feedback(result.reason,false)}
+   commitRoster(result.list,result.movedFrom?`Personagem movido de ${result.movedFrom.campaignName} para esta Mesa.`:'Vínculo de personagem atualizado.')
   })
  });
- document.querySelectorAll('[data-remove-member]').forEach(button=>button.addEventListener('click',()=>{
+ list.querySelectorAll('[data-remove-member]').forEach(button=>button.addEventListener('click',()=>{
   if(!confirm('Remover este jogador da Mesa? A ficha vinculada não será excluída.'))return;
   const result=removeCampaignMember(campaigns,campaignId,button.dataset.removeMember);
   if(!result.ok)return feedback(result.reason,false);
-  commit(result.list,{message:'Jogador removido.'})
+  commitRoster(result.list,'Jogador removido.',{rebuildRows:true})
  }))
 }
 function bindSessions(){document.querySelectorAll('[data-session-row]').forEach(row=>{const id=row.dataset.sessionRow;row.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>{const result=updateCampaignSession(campaigns,campaignId,id,{[input.dataset.sessionField]:input.value});if(result.ok)commit(result.list,{rerender:false,message:'Sessão salva.'})}));row.querySelectorAll('[data-session-participant]').forEach(input=>input.addEventListener('change',()=>{const ids=[...row.querySelectorAll('[data-session-participant]:checked')].map(el=>el.dataset.sessionParticipant),result=updateCampaignSession(campaigns,campaignId,id,{participantCharacterIds:ids});if(result.ok)commit(result.list,{rerender:false,message:'Participantes da sessão atualizados.'})}))});document.querySelectorAll('[data-start-session]').forEach(button=>button.addEventListener('click',()=>{const result=startCampaignSession(campaigns,campaignId,button.dataset.startSession);if(!result.ok)return feedback(result.reason,false);commit(result.list,{message:'Sessão iniciada.'})}));document.querySelectorAll('[data-finish-session]').forEach(button=>button.addEventListener('click',()=>{const result=finishCampaignSession(campaigns,campaignId,button.dataset.finishSession);if(result.ok)commit(result.list,{message:'Sessão concluída.'})}));document.querySelectorAll('[data-cancel-session]').forEach(button=>button.addEventListener('click',()=>{const result=cancelCampaignSession(campaigns,campaignId,button.dataset.cancelSession);if(result.ok)commit(result.list,{message:'Sessão cancelada.'})}));document.querySelectorAll('[data-remove-session]').forEach(button=>button.addEventListener('click',()=>{if(!confirm('Excluir esta sessão da campanha?'))return;const result=removeCampaignSession(campaigns,campaignId,button.dataset.removeSession);if(result.ok)commit(result.list,{message:'Sessão excluída.'})}))}
@@ -83,18 +147,20 @@ function bindCampaignCover(){const picker=document.querySelector('#campanha [dat
 function bindCampaignSaveButtons(){
  document.querySelectorAll('[data-save-campaign-section]').forEach(button=>button.addEventListener('click',event=>{
   event.preventDefault();clearTimeout(saveTimer);
-  const section=button.closest('section'),fields=[...(section?.querySelectorAll('[data-campaign-field]')||[])],patch={};
-  for(const input of fields)patch[input.dataset.campaignField]=input.value;
+  const section=button.closest('section');
+  if(!section)return;
+  const patch={};
+  for(const input of section.querySelectorAll('[data-campaign-field]'))patch[input.dataset.campaignField]=input.value;
   if(Object.keys(patch).length){
    const result=updateCampaign(campaigns,campaignId,patch);
    if(!result.ok)return feedback(result.reason,false);
-   campaigns=writeCampaigns(result.list);campaign=campaignById(campaigns,campaignId);
+   commit(result.list,{rerender:false,message:'Etapa salva.'});
   }else{
-   campaigns=writeCampaigns(campaigns);campaign=campaignById(campaigns,campaignId)
+   commit(campaigns,{rerender:false,message:'Etapa salva.'})
   }
-  render();feedback('Etapa salva.',true)
  }))
 }
-function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commit(added.list,{message:'Jogador adicionado.'});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commit(linked.list,{message:linked.movedFrom?`Jogador adicionado e personagem movido de ${linked.movedFrom.campaignName}.`:'Jogador e personagem vinculados.'})})}
+
+function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,linked.movedFrom?`Jogador adicionado e personagem movido de ${linked.movedFrom.campaignName}.`:'Jogador e personagem vinculados.',{rebuildRows:true})})}
 async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username)}catch{hubParticipants=[]}render()}
 init();
