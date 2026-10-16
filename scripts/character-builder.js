@@ -2,7 +2,7 @@ const creatingNpc=new URLSearchParams(location.search).get('npc')==='1';
 if(creatingNpc){
  const session=JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1')||'null');
  const preview=JSON.parse(localStorage.getItem('hub-rpg:master-preview:v1')||'null');
- if(!session?.isMaster||preview?.username)location.replace('personagens.html');
+ if(!session?.isMaster||preview?.username){document.getElementById('builder')?.setAttribute('hidden','');location.replace('personagens.html')}
  else{
   document.title='Criação de NPC - Teias de Anansi';
   document.querySelector('h1')?.replaceChildren(document.createTextNode('Criação de NPC'));
