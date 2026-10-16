@@ -88,7 +88,8 @@ body.dashboard-page.hub-shell-enabled :is(.dashboard-pagination,.dashboard-list-
   text-align:center;min-width:0
 }
 body.dashboard-page[data-dashboard-mode="full"] #main-content{
-  grid-template-rows:minmax(0,.9fr) minmax(0,1.1fr)
+  grid-template-rows:minmax(0,.9fr) minmax(0,1.1fr);
+  row-gap:clamp(20px,3vh,30px)
 }
 body.dashboard-page[data-dashboard-mode="full"] .dashboard-collections{grid-row:1}
 body.dashboard-page[data-dashboard-mode="full"] .dashboard-context{grid-row:2}
