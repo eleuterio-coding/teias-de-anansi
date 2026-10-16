@@ -327,23 +327,62 @@ body.dashboard-page[data-dashboard-mode="single"] .dashboard-context-column {
   }
 }
 
-/* O botão Abrir estende sua área clicável por todo o card.
-   Usa o link real: acessível com teclado e sem navegação JS duplicada. */
-body.dashboard-page .dashboard-context .focus-card:has(> a.btn) {
-  position: relative;
+/* Apenas a linha de conteúdo (imagem, dados e botão) funciona como link.
+   Cabeçalho e espaço externo permanecem fora da área interativa. */
+body.dashboard-page .dashboard-context .focus-card-content-link {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: var(--focus-media-size) minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  padding: 2px;
+  border-radius: 9px;
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
 }
-body.dashboard-page .dashboard-context .focus-card > a.btn {
-  position: static;
+body.dashboard-page .dashboard-context .focus-card-content-link > .focus-card-cover {
+  grid-column: 1;
+  grid-row: 1;
 }
-body.dashboard-page .dashboard-context .focus-card > a.btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  cursor: pointer;
+body.dashboard-page .dashboard-context .focus-card-content-link > .focus-card-copy {
+  grid-column: 2;
+  grid-row: 1;
 }
-body.dashboard-page .dashboard-context .focus-card:has(> a.btn):is(:hover, :focus-within) {
-  outline: 1px solid var(--focus-accent, #38bdf8);
-  outline-offset: -1px;
+body.dashboard-page .dashboard-context .focus-card:not(.has-cover) .focus-card-content-link > .focus-card-copy {
+  grid-column: 1 / 3;
+}
+body.dashboard-page .dashboard-context .focus-card-content-link > .btn,
+body.dashboard-page.hub-shell-enabled .dashboard-context .focus-card-content-link > .btn {
+  grid-column: 3;
+  grid-row: 1;
+  width: auto;
+  max-width: 142px;
+  min-width: 0;
+  margin: 0;
+  pointer-events: none;
+}
+body.dashboard-page .dashboard-context .focus-card-content-link:is(:hover, :focus-visible) {
+  outline: 2px solid var(--focus-accent, #38bdf8);
+  outline-offset: 2px;
+}
+body.dashboard-page .dashboard-context .focus-card-content-link:hover {
+  background: rgba(148, 163, 184, .04);
+}
+@media(max-width:560px) {
+  body.dashboard-page .dashboard-context .focus-card-content-link {
+    grid-template-columns: var(--focus-media-size) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  body.dashboard-page .dashboard-context .focus-card-content-link > .btn,
+  body.dashboard-page.hub-shell-enabled .dashboard-context .focus-card-content-link > .btn {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
 }
