@@ -24,16 +24,11 @@ export function chooseCharacterInPlay(characters=[],campaigns=[]){
 }
 
 export function chooseNextSession(campaigns=[],now=new Date(),standaloneSessions=[]){
- const today=localDay(now),planned=[
-  ...arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='planned').map(s=>({campaign:c,session:s,date:day(s.date),standalone:false}))),
-  ...arr(standaloneSessions).filter(s=>s.status==='planned').map(s=>({campaign:null,session:s,date:day(s.date),standalone:true}))
- ];
- const explicitlyNext=[...arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='next').map(s=>({campaign:c,session:s,date:day(s.date),standalone:false}))),...arr(standaloneSessions).filter(s=>s.status==='next').map(s=>({campaign:null,session:s,date:day(s.date),standalone:true}))].sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt));
- if(explicitlyNext.length)return explicitlyNext[0];
- const dated=planned.filter(x=>x.date&&x.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||Number(a.session.number||0)-Number(b.session.number||0));
- if(dated.length)return dated[0];
- const undated=planned.filter(x=>!x.date).sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt)||Number(a.session.number||0)-Number(b.session.number||0));
- return undated[0]||null
+ const explicitlyNext=[
+  ...arr(campaigns).filter(c=>c.status!=='finished').flatMap(c=>arr(c.sessions).filter(s=>s.status==='next').map(s=>({campaign:c,session:s,date:day(s.date),standalone:false}))),
+  ...arr(standaloneSessions).filter(s=>s.status==='next').map(s=>({campaign:null,session:s,date:day(s.date),standalone:true}))
+ ].sort((a,b)=>at(b.session.updatedAt)-at(a.session.updatedAt));
+ return explicitlyNext[0]||null
 }
 
 export function chooseCurrentSession(campaigns=[],standaloneSessions=[]){
