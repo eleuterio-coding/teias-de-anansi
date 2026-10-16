@@ -16,19 +16,23 @@ function card(c){
  const players=(c.members||[]).length,characters=(c.members||[]).filter(m=>m.characterId).length;
  const cover=imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const counts=[amount(players,'jogador','jogadores'),amount(characters,'personagem','personagens'),amount(sessions.length,'sessão','sessões')].join(' · ');
+ const status=CAMPAIGN_STATUSES.includes(c.status)?c.status:'planned';
+ const statusControl=readOnly
+  ?`<span class="campaign-status-value" aria-label="Status da campanha: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
+  :`<select class="campaign-status-select" data-campaign-status="${esc(c.id)}" aria-label="Status da campanha ${esc(c.name)}" title="Alterar status de ${esc(c.name)}">
+    ${CAMPAIGN_STATUSES.map(value=>`<option value="${value}" ${status===value?'selected':''}>${esc(statusLabel(value))}</option>`).join('')}
+   </select>`;
  return `<article class="campaign-card" data-campaign-card="${esc(c.id)}">
+  <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
    <h2>${esc(c.name)}</h2>
-   <div><span class="badge ${esc(c.status)}">${esc(statusLabel(c.status))}</span>${readOnly?'<span class="badge">Somente leitura</span>':''}</div>
+   ${readOnly?'<span class="badge">Somente leitura</span>':''}
    ${c.description?`<p>${esc(c.description)}</p>`:''}
    <p class="mini">${esc(counts)}${active?` · <strong>Em andamento: ${esc(active.title)}</strong>`:''}</p>
   </div></div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="mesa.html?id=${encodeURIComponent(c.id)}">Abrir</a>
-   ${readOnly?'':`<select class="campaign-status-select" data-campaign-status="${esc(c.id)}" aria-label="Definir status da campanha ${esc(c.name)}">
-    <option value="" selected disabled>Definir status</option>
-    ${CAMPAIGN_STATUSES.map(value=>`<option value="${value}">${esc(statusLabel(value))}</option>`).join('')}
-   </select><button type="button" class="danger" data-delete="${esc(c.id)}">Excluir</button>`}
+   ${readOnly?'':`<button type="button" class="danger" data-delete="${esc(c.id)}">Excluir</button>`}
   </div>
  </article>`
 }
@@ -58,11 +62,13 @@ function render(){
  if(readOnly){hydrateMediaImages(box).catch(()=>{});return}
  box.querySelector('#open-campaign-create')?.addEventListener('click',()=>setCreateOpen(true));
  box.querySelectorAll('[data-campaign-status]').forEach(select=>select.addEventListener('change',()=>{
-  const status=select.value;
-  if(!CAMPAIGN_STATUSES.includes(status))return;
-  const result=updateCampaign(campaigns,select.dataset.campaignStatus,{status});
+  const status=select.value,campaignId=select.dataset.campaignStatus;
+  const previous=campaigns.find(row=>row.id===campaignId)?.status||'planned';
+  if(!CAMPAIGN_STATUSES.includes(status)){select.value=previous;return}
+  if(status===previous)return;
+  const result=updateCampaign(campaigns,campaignId,{status});
   if(result.ok)persist(result.list);
-  else {select.value='';const note=$('storage-note');if(note)note.textContent=result.reason||'Não foi possível alterar o status.'}
+  else {select.value=previous;const note=$('storage-note');if(note)note.textContent=result.reason||'Não foi possível alterar o status.'}
  }));
  box.querySelectorAll('[data-delete]').forEach(button=>button.addEventListener('click',()=>{
   if(!confirm('Excluir esta campanha? Os personagens não serão excluídos. As aventuras vinculadas a esta campanha também serão removidas.'))return;
