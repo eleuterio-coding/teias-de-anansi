@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Painel Geral - Teias de Anansi</title><link rel="stylesheet" href="dashboard.css?v=20260904-dashboard1"><link rel="stylesheet" href="hub-ux.css?v=20260925-shell1"></head><body>
-<header class="top"><div><p class="eyebrow">Hub de RPG</p><h1>Painel Geral</h1></div><div class="actions"><a class="btn secondary" href="usuarios.html?v=20260909-player-access2">Jogadores</a><a class="btn secondary" href="index.html?v=20260909-perf1">Início</a></div></header>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Início · Painel Geral - Teias de Anansi</title><link rel="stylesheet" href="dashboard.css?v=20261016-dashboard2"><link rel="stylesheet" href="hub-ux.css?v=20260925-shell1"></head><body>
+<header class="top"><div><p class="eyebrow">Início</p><h1>Painel Geral</h1></div></header>
 <main id="main-content">
-<p id="dashboard-status" class="mini" role="status" aria-live="polite">Carregando painel...</p>
-<section class="metrics" aria-label="Resumo do Hub"><div id="metric-characters" class="metric"></div><div id="metric-campaigns" class="metric"></div><div id="metric-sessions" class="metric"></div><div id="metric-pending" class="metric"></div></section>
-<section class="focus-grid" aria-label="Foco atual"><article id="character-in-play" class="focus-card"></article><article id="next-session" class="focus-card"></article></section>
-<section class="content-grid"><section class="panel"><div class="panel-head"><h2>Mesas</h2><a href="campanhas.html?v=20260909-perf1" class="mini">Ver todas</a></div><div id="campaign-dashboard-list" class="list"></div></section><section class="panel"><div class="panel-head"><h2>Pendências</h2></div><div id="pending-list" class="list"></div></section></section>
-<section class="panel"><div class="panel-head"><h2>Atividade recente</h2></div><div id="activity-list" class="list"></div></section>
-</main><script type="module" src="scripts/hub-ux.js?v=20261015-unified-layout1"></script><script type="module" src="scripts/dashboard-ui.js?v=20260908-ui-copy1"></script></body></html>
+<section class="dashboard-collections" aria-label="Conteúdo do Hub">
+  <section class="panel dashboard-card"><div class="panel-head"><div><p class="card-kicker">Campanhas</p><h2>Campanhas existentes</h2></div><a href="campanhas.html" class="mini">Ver todas</a></div><div id="campaign-dashboard-list" class="dashboard-list"></div></section>
+  <section class="panel dashboard-card"><div class="panel-head"><div><p class="card-kicker">Aventuras</p><h2>Aventuras existentes</h2></div><a href="aventuras.html" class="mini">Ver todas</a></div><div id="adventure-dashboard-list" class="dashboard-list"></div></section>
+  <section class="panel dashboard-card"><div class="panel-head"><div><p class="card-kicker">Sessões</p><h2>Sessões existentes</h2></div><a href="sessoes.html" class="mini">Ver todas</a></div><div id="session-dashboard-list" class="dashboard-list"></div></section>
+</section>
+<section class="dashboard-context" aria-label="Contexto atual">
+  <article id="next-session" class="focus-card"></article>
+  <article id="current-campaign" class="focus-card"></article>
+  <article id="current-adventure" class="focus-card"></article>
+  <article id="current-session" class="focus-card"></article>
+</section>
+</main><script type="module" src="scripts/hub-ux.js?v=20261015-unified-layout1"></script><script type="module" src="scripts/dashboard-ui.js?v=20261016-dashboard2"></script></body></html>
