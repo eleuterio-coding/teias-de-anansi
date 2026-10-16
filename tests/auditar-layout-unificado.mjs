@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const read = path => fs.readFileSync(path, 'utf8');
-const version = '20261015-unified-layout1';
+const version = '20261016-menu-cachefix2';
+const layoutVersion = '20261015-unified-layout1';
 const standardPages = [
   'index.html','painel.html','campanhas.html','mesa.html','sessoes.html',
   'aventuras.html','personagens.html','lista-personagens.html','bibliotecas.html',
@@ -31,7 +32,8 @@ assert.match(shell,/data-hub-preview-user/,'Shell deve expor seleção de usuár
 assert.match(shell,/data-hub-layout-select/,'Shell deve expor seleção de layout para o Mestre.');
 assert.match(read('hub-ux.css'),/\.hub-master-tools/,'Topo deve estilizar a área exclusiva do Mestre.');
 assert.match(shell,/LIBRARY_PAGES\.has\(page\)\&\&item\.page==="bibliotecas\.html"/);
-assert.match(ux,new RegExp('hub-layout\\.css\\?v='+version));
+assert.match(ux,new RegExp('hub-layout\\.css\\?v='+layoutVersion));
+assert.ok(ux.includes('app-shell.js?v=20261016-menu-cachefix2'),'Importação do menu precisa invalidar o cache do módulo antigo.');
 assert.match(ux,/Editar Ficha/);
 assert.doesNotMatch(ux,/Editar estrutura/);
 const normalizer=read('scripts/normalizar_tema_modulos.py');
@@ -65,7 +67,7 @@ for(const file of wrappedPages) {
  assert.ok(shell.includes('"'+file+'"'),file+' não consta na navegação');
 }
 assert.match(loader,/html=applySharedLayout\(html\);/);
-assert.match(loader,/hub-ux\.js\?v=20261015-unified-layout1/);
+assert.match(loader,/hub-ux\.js\?v=20261016-menu-cachefix2/);
 assert.ok(loader.indexOf('html=applySharedLayout(html);') < loader.indexOf('document.write(html);'));
 
 console.log('OK: 12 áreas principais, 15 módulos diretos e 5 módulos renderizados cobertos pelo layout comum.');
