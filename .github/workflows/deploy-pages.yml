@@ -242,7 +242,7 @@ jobs:
           print(f'Política 5e/5.5e preparada em {len(pages)} páginas da Biblioteca/suporte.')
           PY
 
-      - name: Inject global semantic references in every page
+      - name: Inject semantic references (except Dashboard)
         shell: bash
         run: |
           python <<'PY'
@@ -260,6 +260,9 @@ jobs:
           tag = '<script data-hub-referencias="1" src="scripts/referencias-hub.js?v=20260819-refs3"></script>\n'
 
           for path in Path('.').glob('*.html'):
+              # O Painel Geral exibe cards e navegação, sem links automáticos de verbetes.
+              if path.name == 'painel.html':
+                  continue
               html = path.read_text(encoding='utf-8')
               if marker not in html:
                   if '</body>' not in html:
