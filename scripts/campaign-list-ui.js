@@ -75,9 +75,56 @@ function render(){
  }));
  hydrateMediaImages(box).catch(()=>{})
 }
-async function create(){if(readOnly)return;const name=$('campaign-name')?.value.trim();if(!name)return;const id=campaignUid(),note=$('storage-note'),before=campaigns;let media=null;try{if(pendingCoverFile){if(note)note.textContent='Salvando imagem...';media=await uploadImage({campaignId:id,entityType:'campaign',entityId:id,file:pendingCoverFile})}const result=createCampaign(campaigns,{id,name,system:SYSTEM_NAME,dmName:DM_NAME,status:$('campaign-status')?.value||'planned',coverImage:media,coverImageUrl:'',description:$('campaign-description')?.value});if(!result.ok)throw new Error(result.reason||'Não foi possível criar a Campanha.');campaigns=writeCampaigns(result.list);if(note)note.textContent='Sincronizando campanha...';try{await persistCampaignMediaState(id,{entityType:'campaign',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(media)await deleteImage(media).catch(()=>{});throw error}location.href=`mesa.html?id=${encodeURIComponent(id)}`}catch(error){if(note)note.textContent=error?.message||'Não foi possível salvar a campanha e a imagem.'}}
+let creatingCampaign=false;
+async function create(){
+ if(readOnly||creatingCampaign)return;
+ const nameInput=$('campaign-name'),name=nameInput?.value.trim();
+ if(!name){nameInput?.focus();const note=$('storage-note');if(note)note.textContent='Informe o nome da campanha.';return}
+ const id=campaignUid(),note=$('storage-note'),before=campaigns,button=$('create-campaign');let media=null;
+ creatingCampaign=true;if(button)button.disabled=true;
+ try{
+  if(pendingCoverFile){if(note)note.textContent='Salvando imagem...';media=await uploadImage({campaignId:id,entityType:'campaign',entityId:id,file:pendingCoverFile})}
+  const result=createCampaign(campaigns,{id,name,system:SYSTEM_NAME,dmName:DM_NAME,status:$('campaign-status')?.value||'planned',coverImage:media,coverImageUrl:'',description:$('campaign-description')?.value});
+  if(!result.ok)throw new Error(result.reason||'Não foi possível criar a Campanha.');
+  campaigns=writeCampaigns(result.list);
+  if(note)note.textContent='Sincronizando campanha...';
+  try{await persistCampaignMediaState(id,{entityType:'campaign',entityId:id})}
+  catch(error){campaigns=writeCampaigns(before);if(media)await deleteImage(media).catch(()=>{});throw error}
+  location.href=`mesa.html?id=${encodeURIComponent(id)}`
+ }catch(error){if(note)note.textContent=error?.message||'Não foi possível salvar a campanha e a imagem.'}
+ finally{creatingCampaign=false;if(button)button.disabled=false}
+}
 function normalizeLocalCampaigns(){const list=readCampaigns();if(!list.some(c=>c.dmName!==DM_NAME))return list;return writeCampaigns(list.map(c=>c.dmName===DM_NAME?c:{...c,dmName:DM_NAME}))}
-function loadVisibleCampaigns(){readOnly=playerMode();campaigns=(readOnly?sharedCampaignRows().map(row=>row.campaign):normalizeLocalCampaigns()).filter(row=>row.id!=='e2e-explicit-player-access');const createCard=$('campaign-create-card');if(createCard)createCard.hidden=readOnly;const note=$('storage-note');if(note)note.textContent=readOnly?'Somente leitura.':''}
+function loadVisibleCampaigns(){readOnly=playerMode();campaigns=(readOnly?sharedCampaignRows().map(row=>row.campaign):normalizeLocalCampaigns()).filter(row=>row.id!=='e2e-explicit-player-access');const createCard=$('campaign-create-card');if(createCard&&readOnly)createCard.hidden=true;const note=$('storage-note');if(note)note.textContent=readOnly?'Somente leitura.':''}
 function refreshFromRemote(event){event.detail?.claim?.();loadVisibleCampaigns();render()}
-function init(){loadVisibleCampaigns();if(!readOnly){const holder=$('campaign-cover-picker');if(holder){holder.innerHTML=imagePickerHtml({});bindImagePicker(holder.querySelector('[data-image-picker]'),{onSelect:async file=>{pendingCoverFile=file},onRemove:async()=>{pendingCoverFile=null},onError:error=>{const note=$('storage-note');if(note)note.textContent=error?.message||'Não foi possível usar esta imagem.'}})}$('create-campaign')?.addEventListener('click',create);$('campaign-name')?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();create()}})}render();window.addEventListener('hub-rpg:remote-updated',refreshFromRemote)}
+function setupCoverPicker(){
+ const holder=$('campaign-cover-picker');if(!holder)return;
+ holder.innerHTML=imagePickerHtml({});
+ bindImagePicker(holder.querySelector('[data-image-picker]'),{
+  onSelect:async file=>{pendingCoverFile=file},
+  onRemove:async()=>{pendingCoverFile=null},
+  onError:error=>{const note=$('storage-note');if(note)note.textContent=error?.message||'Não foi possível usar esta imagem.'}
+ })
+}
+function cancelCreate(){
+ if(creatingCampaign)return;
+ pendingCoverFile=null;
+ if($('campaign-name'))$('campaign-name').value='';
+ if($('campaign-description'))$('campaign-description').value='';
+ if($('campaign-status'))$('campaign-status').value='planned';
+ setupCoverPicker();
+ setCreateOpen(false)
+}
+function init(){
+ loadVisibleCampaigns();
+ if(!readOnly){
+  setupCoverPicker();
+  $('create-campaign')?.addEventListener('click',create);
+  $('cancel-campaign-create')?.addEventListener('click',cancelCreate);
+  $('close-campaign-create')?.addEventListener('click',cancelCreate);
+  $('campaign-name')?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();create()}})
+ }
+ render();
+ window.addEventListener('hub-rpg:remote-updated',refreshFromRemote)
+}
 init();
