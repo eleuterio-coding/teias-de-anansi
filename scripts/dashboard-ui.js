@@ -1,6 +1,6 @@
 import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-current-status2';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
-import{summarizeDashboard}from'./dashboard-state.js?v=20261016-next1';
+import{summarizeDashboard}from'./dashboard-state.js?v=20261016-next-only2';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
