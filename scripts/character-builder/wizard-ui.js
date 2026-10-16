@@ -1,5 +1,5 @@
 import'../hub-ux.js?v=20260917-master-full-control1';
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession}from'../collaboration-view.js?v=20260917-master-full-control1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession,masterPreviewMode}from'../collaboration-view.js?v=20261016-master-preview1';
 import{state}from'./state.js';
 import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260923-wealth-collapse1';
 import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
@@ -19,7 +19,7 @@ const panels=()=>[...document.querySelectorAll('[data-wizard-panel]')];
 const buttons=()=>[...document.querySelectorAll('[data-wizard-step]')];
 const hashFor=id=>`#etapa-${id}`;
 function stampPlayerOwnership(){const session=readCollaborationSession();if(!session||session.isMaster||!state.c)return;state.c.ownerUid=session.uid;state.c.ownerUsername=session.username}
-function enforceCharacterEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}const id=new URLSearchParams(location.search).get('id')||'';// Sem id, a conta autenticada está criando uma ficha nova; Jogadores têm a posse gravada no clique em Salvar.
+function enforceCharacterEditAccess(){const mode=collaborationAccessMode();if(mode==='guest'){location.replace('usuarios.html?next=criacao-personagem.html');return false}const id=new URLSearchParams(location.search).get('id')||'';if(masterPreviewMode()){if(id&&canOpenCharacter(id))location.replace(`ficha-personagem.html?v=20261016-master-preview1&id=${encodeURIComponent(id)}`);else location.replace('lista-personagens.html?v=20261016-master-preview1');return false}// Sem id, a conta autenticada está criando uma ficha nova; Jogadores têm a posse gravada no clique em Salvar.
 if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){location.replace(`ficha-personagem.html?v=20260917-global-realtime1&id=${encodeURIComponent(id)}`);return false}location.replace('lista-personagens.html?v=20260917-global-realtime1');return false}
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
