@@ -6,9 +6,9 @@ const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
  {page:"campanhas.html",label:"Campanhas",icon:"campaign"},
- {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
  {page:"aventuras.html",label:"Aventuras",icon:"map"},
  {page:"sessoes.html",label:"Sessões",icon:"calendar"},
+ {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
  {page:"bibliotecas.html",label:"Biblioteca",icon:"library"}
 ];
 const PAGE_LABELS={
