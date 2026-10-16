@@ -78,7 +78,7 @@ for(const token of['playerMode','sharedCampaignRows'])assert.ok(files.campaigns.
 assert.ok(files.campaigns.includes('Somente leitura'));
 assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('somente leitura'));
 assert.equal(files.table.includes('Conteúdo atribuído a você'),false,'Mesa do Jogador não deve exibir tutorial de permissão.');
-assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma Sessão foi atribuída'));
+assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma sessão foi atribuída'));
 assert.ok(files.adventures.includes('sharedAdventures')&&files.adventures.includes('somente leitura'));
 assert.ok(files.characters.includes('editableCharacterIds')&&files.characters.includes('Seu personagem')&&files.characters.includes('Outro jogador')&&files.characters.includes('hidden=guest'));
 assert.ok(files.sheetAccess.includes('canOpenCharacter')&&files.sheetAccess.includes('canEditCharacter')&&files.sheetAccess.includes('Somente leitura'));
