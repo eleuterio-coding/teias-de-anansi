@@ -24,7 +24,7 @@ function focusCard(id,{badge,title,subtitle,meta,href,button='Abrir',media=null,
  if(!title){el.classList.remove('has-cover');el.innerHTML=`${heading}<div class="focus-card-empty"><p>${esc(emptyTitle)}</p></div>`;return}
  const image=imageElementHtml(media,legacyUrl,{className:'focus-card-cover',alt:''});
  el.classList.toggle('has-cover',Boolean(image));
- el.innerHTML=`${heading}${image}<div class="focus-card-copy"><h3 class="focus-card-name">${esc(title)}</h3>${subtitle?`<p>${esc(subtitle)}</p>`:''}${meta?`<p class="mini">${esc(meta)}</p>`:''}</div><a class="btn" href="${esc(href)}">${esc(button)}</a>`
+ el.innerHTML=`${heading}<a class="focus-card-content-link" href="${esc(href)}" aria-label="${esc(button)}: ${esc(title)}">${image}<div class="focus-card-copy"><h3 class="focus-card-name">${esc(title)}</h3>${subtitle?`<p>${esc(subtitle)}</p>`:''}${meta?`<p class="mini">${esc(meta)}</p>`:''}</div><span class="btn" aria-hidden="true">${esc(button)}</span></a>`
 }
 
 function renderContext(summary){
