@@ -1,7 +1,7 @@
 
 const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
 const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
-const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
+const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
@@ -12,7 +12,7 @@ const NAV_ITEMS=[
  {page:"bibliotecas.html",label:"Biblioteca",icon:"library"}
 ];
 const PAGE_LABELS={
- "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","mesa.html":"Campanha",
+ "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","nova-campanha.html":"Nova campanha","mesa.html":"Campanha",
  "sessoes.html":"Sessões","aventuras.html":"Aventuras","personagens.html":"Personagens",
  "lista-personagens.html":"Personagens","bibliotecas.html":"Biblioteca","configuracoes.html":"Configurações"
 };
@@ -36,7 +36,7 @@ function icon(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="current
 function currentPage(){return location.pathname.split("/").pop()||"index.html"}
 function shellEligible(){return SHELL_PAGES.has(currentPage())}
 function pageLabel(page){page=page||currentPage();return PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
-function pageMatches(item,page){page=page||currentPage();return item.page===page||(item.aliases||[]).includes(page)||(page==="mesa.html"&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
+function pageMatches(item,page){page=page||currentPage();return item.page===page||(item.aliases||[]).includes(page)||((page==="mesa.html"||page==="nova-campanha.html")&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
 function readRecents(){try{const rows=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");return Array.isArray(rows)?rows:[]}catch{return[]}}
 function rememberCurrent(label){
  const page=currentPage();if(!shellEligible()||page==="index.html")return;
@@ -87,12 +87,38 @@ function buildSidebar(){
  aside.appendChild(secondary);
  return aside
 }
+function breadcrumbTrail(label){
+ const page=currentPage();
+ const start=[{label:"Início",href:"painel.html"}];
+ if(page==="painel.html"||page==="index.html")return[{label:"Início"}];
+ const sections={
+  "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
+  "personagens.html":"Personagens","lista-personagens.html":"Personagens",
+  "bibliotecas.html":"Biblioteca","configuracoes.html":"Configurações"
+ };
+ if(sections[page])return[...start,{label:sections[page]}];
+ if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
+ if(page==="mesa.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:label&&label!=="Campanhas"?label:"Campanha"}];
+ if(LIBRARY_PAGES.has(page))return[...start,{label:"Biblioteca",href:"bibliotecas.html"},{label:label||pageLabel(page)}];
+ if(CHARACTER_PAGES.has(page))return[...start,{label:"Personagens",href:"personagens.html"},{label:label||pageLabel(page)}];
+ return[...start,{label:label||pageLabel(page)}]
+}
+function renderBreadcrumb(label){
+ const crumb=document.querySelector(".hub-breadcrumb");if(!crumb)return;
+ const trail=breadcrumbTrail(label);
+ crumb.innerHTML='<ol class="hub-breadcrumb-list">'+trail.map((part,index)=>{
+  const current=index===trail.length-1;
+  return '<li class="hub-breadcrumb-item">'+(current
+   ?'<span aria-current="page">'+esc(part.label)+'</span>'
+   :'<a href="'+esc(part.href)+'">'+esc(part.label)+'</a>')+'</li>'
+ }).join('')+'</ol>'
+}
 function buildTopbar(){
  const header=document.createElement("header");header.className="hub-global-topbar";
  const left=document.createElement("div");left.className="hub-topbar-left";
  const toggle=document.createElement("button");toggle.type="button";toggle.className="hub-icon-button hub-mobile-nav-toggle";toggle.dataset.hubMobileMenu="";toggle.setAttribute("aria-label","Abrir menu");toggle.innerHTML=icon("menu");left.appendChild(toggle);
- const crumb=document.createElement("div");crumb.className="hub-breadcrumb";crumb.setAttribute("aria-label","Localização");
- crumb.innerHTML='<span>HUB</span><span class="hub-breadcrumb-sep">/</span><strong data-hub-context-title>'+esc(pageLabel())+"</strong>";left.appendChild(crumb);header.appendChild(left);
+ const crumb=document.createElement("nav");crumb.className="hub-breadcrumb";crumb.setAttribute("aria-label","Trilha de navegação");
+ left.appendChild(crumb);header.appendChild(left);
  const actions=document.createElement("div");actions.className="hub-topbar-actions";
  const session=masterSession();if(session?.isMaster){const tools=document.createElement("div");tools.className="hub-master-tools";tools.dataset.hubMasterTools="";tools.hidden=true;tools.innerHTML='<span class="hub-master-tools-title">Mestre</span><label class="hub-master-control"><span>Usuário</span><select data-hub-preview-user aria-label="Visualizar o Hub como usuário"><option value="">Mestre</option></select></label><label class="hub-master-control"><span>Layout</span><select data-hub-layout-select aria-label="Selecionar layout do Hub"><option value="default">Padrão</option></select></label>';actions.appendChild(tools)}
  const search=document.createElement("button");search.type="button";search.className="hub-icon-button";search.dataset.hubCommandOpen="";search.setAttribute("aria-label","Buscar");search.innerHTML=icon("search");actions.appendChild(search);
@@ -147,6 +173,6 @@ export function initAppShell(){
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
  const content=shell.querySelector("[data-hub-app-content]"),heading=content?content.querySelector("h1"):null,fallback=pageLabel(),label=((heading&&heading.textContent)||fallback).trim();
- const title=shell.querySelector("[data-hub-context-title]");if(title&&title.textContent!==label)title.textContent=label;
+ renderBreadcrumb(label);
  rememberCurrent(label);renderRecents()
 }
