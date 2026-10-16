@@ -20,9 +20,14 @@ function card(c){
  const status=CAMPAIGN_STATUSES.includes(c.status)?c.status:'planned';
  const statusControl=readOnly
   ?`<span class="campaign-status-value" aria-label="Status da campanha: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
-  :`<select class="campaign-status-select" data-campaign-status="${esc(c.id)}" aria-label="Status da campanha ${esc(c.name)}" title="Alterar status de ${esc(c.name)}">
-    ${CAMPAIGN_STATUSES.map(value=>`<option value="${value}" ${status===value?'selected':''}>${esc(statusLabel(value))}</option>`).join('')}
-   </select>`;
+  :`<details class="campaign-status-disclosure" data-status-disclosure="${esc(c.id)}">
+     <summary class="campaign-status-trigger" data-campaign-status-trigger="${esc(c.id)}" aria-label="Alterar status da campanha ${esc(c.name)}: ${esc(statusLabel(status))}">
+      <span>${esc(statusLabel(status))}</span><span class="campaign-status-chevron" aria-hidden="true"></span>
+     </summary>
+     <div class="campaign-status-menu" role="group" aria-label="Escolher status da campanha ${esc(c.name)}">
+      ${CAMPAIGN_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-campaign-status="${esc(c.id)}" data-next-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
+     </div>
+    </details>`;
  return `<article class="campaign-card" data-campaign-card="${esc(c.id)}">
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
@@ -47,14 +52,22 @@ function render(){
   ? `<div class="list campaign-list-grid">${ordered.map(card).join('')}${readOnly?'':createTile()}</div>`
   : '<div class="empty">Nenhuma campanha atribuída.</div>';
  if(readOnly){hydrateMediaImages(box).catch(()=>{});return}
- box.querySelectorAll('[data-campaign-status]').forEach(select=>select.addEventListener('change',()=>{
-  const status=select.value,campaignId=select.dataset.campaignStatus;
+ box.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
+  if(!disclosure.open)return;
+  box.querySelectorAll('[data-status-disclosure][open]').forEach(other=>{if(other!==disclosure)other.open=false})
+ }));
+ box.querySelectorAll('[data-next-status]').forEach(button=>button.addEventListener('click',()=>{
+  const status=button.dataset.nextStatus,campaignId=button.dataset.campaignStatus;
   const previous=campaigns.find(row=>row.id===campaignId)?.status||'planned';
-  if(!CAMPAIGN_STATUSES.includes(status)){select.value=previous;return}
-  if(status===previous)return;
+  if(!CAMPAIGN_STATUSES.includes(status))return;
+  if(status===previous){button.closest('details')?.removeAttribute('open');return}
   const result=updateCampaign(campaigns,campaignId,{status});
-  if(result.ok)persist(result.list);
-  else {select.value=previous;const note=$('storage-note');if(note)note.textContent=result.reason||'Não foi possível alterar o status.'}
+  if(result.ok){
+   persist(result.list);
+   [...box.querySelectorAll('[data-campaign-status-trigger]')].find(item=>item.dataset.campaignStatusTrigger===campaignId)?.focus()
+  }else{
+   const note=$('storage-note');if(note)note.textContent=result.reason||'Não foi possível alterar o status.'
+  }
  }));
  box.querySelectorAll('[data-delete]').forEach(button=>button.addEventListener('click',()=>{
   if(!confirm('Excluir esta campanha? Os personagens não serão excluídos. As aventuras vinculadas a esta campanha também serão removidas.'))return;
@@ -84,6 +97,16 @@ function refreshFromRemote(event){event.detail?.claim?.();loadVisibleCampaigns()
 function init(){
  loadVisibleCampaigns();
  render();
+ document.addEventListener('pointerdown',event=>{
+  if(event.target.closest?.('[data-status-disclosure]'))return;
+  document.querySelectorAll('#campaign-list [data-status-disclosure][open]').forEach(item=>item.open=false)
+ });
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape')return;
+  const open=document.querySelector('#campaign-list [data-status-disclosure][open]');
+  if(!open)return;
+  open.open=false;open.querySelector('summary')?.focus();event.stopPropagation()
+ });
  window.addEventListener('hub-rpg:remote-updated',refreshFromRemote)
 }
 init();
