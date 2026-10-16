@@ -67,7 +67,7 @@ for(const file of wrappedPages) {
  assert.ok(shell.includes('"'+file+'"'),file+' não consta na navegação');
 }
 assert.match(loader,/html=applySharedLayout\(html\);/);
-assert.match(loader,/hub-ux\.js\?v=20261016-menu-cachefix2/);
+assert.match(loader,/hub-ux\.js\?v=20261016-current-status3/);
 assert.ok(loader.indexOf('html=applySharedLayout(html);') < loader.indexOf('document.write(html);'));
 
 console.log('OK: 12 áreas principais, 15 módulos diretos e 5 módulos renderizados cobertos pelo layout comum.');
