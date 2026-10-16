@@ -106,6 +106,9 @@ function breadcrumbTrail(label){
 function renderBreadcrumb(label){
  const crumb=document.querySelector(".hub-breadcrumb");if(!crumb)return;
  const trail=breadcrumbTrail(label);
+ const signature=trail.map(part=>(part.href||'')+'|'+part.label).join('>');
+ if(crumb.dataset.breadcrumbSignature===signature)return;
+ crumb.dataset.breadcrumbSignature=signature;
  crumb.innerHTML='<ol class="hub-breadcrumb-list">'+trail.map((part,index)=>{
   const current=index===trail.length-1;
   return '<li class="hub-breadcrumb-item">'+(current
