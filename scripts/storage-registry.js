@@ -7,6 +7,7 @@ export const ENCOUNTER_TARGET_KEY='hub-rpg:encounter-target:v1';
 export const COLLAB_CACHE_KEY='hub-rpg:collaboration-cache:v1';
 export const COLLAB_SESSION_KEY='hub-rpg:collaboration-session:v1';
 export const MASTER_PREVIEW_KEY='hub-rpg:master-preview:v1';
+export const MASTER_PREVIEW_CACHE_KEY='hub-rpg:master-preview-cache:v1';
 export const STORAGE_REGISTRY=Object.freeze([
  {id:'characters',key:CHARACTER_KEY,legacyKeys:[...CHARACTER_LEGACY_KEYS],scope:'durable',portable:false,schema:'hub-rpg/personagem/v4',label:'Personagens'},
  {id:'campaigns',key:CAMPAIGN_KEY,legacyKeys:[],scope:'durable',portable:false,schema:'hub-rpg/campaign/v1',label:'Campanhas e Sessões vinculadas'},
@@ -16,7 +17,8 @@ export const STORAGE_REGISTRY=Object.freeze([
  {id:'encounter-target',key:ENCOUNTER_TARGET_KEY,legacyKeys:[],scope:'transient',portable:false,schema:null,label:'Alvo transitório de Encontro'},
  {id:'collaboration-cache',key:COLLAB_CACHE_KEY,legacyKeys:[],scope:'cache',portable:false,schema:'hub-rpg/collaboration-cache/v1',label:'Cache regenerável da colaboração remota'},
  {id:'collaboration-session',key:COLLAB_SESSION_KEY,legacyKeys:[],scope:'transient',portable:false,schema:'hub-rpg/collaboration-session/v1',label:'Conta conectada da colaboração'},
- {id:'master-preview',key:MASTER_PREVIEW_KEY,legacyKeys:[],scope:'transient',portable:false,schema:'hub-rpg/master-preview/v1',label:'Visualização temporária do Mestre'}
+ {id:'master-preview',key:MASTER_PREVIEW_KEY,legacyKeys:[],scope:'transient',portable:false,schema:'hub-rpg/master-preview/v1',label:'Visualização temporária do Mestre'},
+ {id:'master-preview-cache',key:MASTER_PREVIEW_CACHE_KEY,legacyKeys:[],scope:'cache',portable:false,schema:'hub-rpg/master-preview-cache/v1',label:'Cache da visualização temporária do Mestre'}
 ]);
 export const PORTABLE_STORAGE=[];
 export const TRANSIENT_STORAGE=STORAGE_REGISTRY.filter(row=>row.scope==='transient');
