@@ -133,5 +133,6 @@ function initDashboardViewport(){
  scheduleDashboardViewport();
 }
 
-function init(){const restricted=playerMode(),campaigns=restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns(),adventures=restricted?sharedAdventures():readAdventures(),standaloneSessions=restricted?[]:readStandaloneSessions(),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);initDashboardViewport();hydrateMediaImages(document).then(scheduleDashboardViewport).catch(()=>{})}
+const isE2EFixtureCampaign=c=>c?.id==='e2e-explicit-player-access';
+function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);initDashboardViewport();hydrateMediaImages(document).then(scheduleDashboardViewport).catch(()=>{})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
