@@ -10,7 +10,7 @@ const boundLinks=new WeakSet();
 function ensureStyles(){
  if(!document.getElementById(STYLE_ID)&&!document.querySelector('link[href*="hub-ux.css"]')){
   const base=document.createElement('link');base.id=STYLE_ID;base.rel='stylesheet';
-  base.href=new URL('../hub-ux.css?v=20261016-current-status2',import.meta.url).href;
+  base.href=new URL('../hub-ux.css?v=20261016-status-corners1',import.meta.url).href;
   document.head.appendChild(base);
  }
  if(!document.getElementById('hub-layout-styles')){
