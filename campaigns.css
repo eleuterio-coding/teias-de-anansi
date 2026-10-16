@@ -23,3 +23,6 @@
 
 /* Status e hierarquia editorial dos cards */
 .badge.current,.badge[data-status='current']{background:#e0e7ff!important;color:#3730a3!important;border:1px solid #a5b4fc!important}.badge.planned{background:#e5e7eb!important;color:#374151!important}.badge.active{background:#dcfce7!important;color:#166534!important}.badge.paused{background:#fef3c7!important;color:#92400e!important}.badge.finished,.badge.completed{background:#dbeafe!important;color:#1e40af!important}.badge.cancelled,.badge.archived{background:#fee2e2!important;color:#991b1b!important}.hub-parent-link{display:inline-flex;align-items:center;gap:6px;margin:5px 9px 5px 0;padding:5px 9px;border:1px solid #cbd5e1;border-radius:7px;background:#f8fafc;color:#0f172a;font-size:.88rem}.hub-parent-link>span{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.035em;color:#64748b}.hub-parent-link strong,.hub-parent-link a{font-weight:750;color:#1d4ed8}
+
+/* Próxima sessão: status próprio, distinto de Atual e Planejada */
+.badge.next{background:#dff5fd!important;color:#075985!important;border:1px solid #7dd3fc!important}
