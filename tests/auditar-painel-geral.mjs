@@ -47,4 +47,9 @@ assert.ok(ui.includes('coverImage')&&ui.includes('coverImageUrl'),'Painel deve c
 assert.ok(css.includes('.dashboard-row-cover')&&css.includes('.focus-card-cover'),'Painel deve possuir estilos para capas nas listas e nos cards de contexto.');
 assert.ok(css.includes('@media(max-width:820px)')&&css.includes('@media(max-width:520px)'),'Painel deve ser responsivo.');
 assert.ok(home.includes('href="painel.html'),'Início deve expor o Painel Geral.');
+assert.ok(page.includes('class="dashboard-page"'),'Painel deve habilitar a configuração específica da janela.');
+assert.ok(page.includes('id="dashboard-pagination"'),'Painel deve oferecer navegação paginada.');
+assert.ok(css.includes('Dashboard viewport-fit')&&css.includes('overflow:hidden'),'Painel deve restringir a grade à janela.');
+assert.ok(css.includes('grid-template-rows:minmax(0,1fr) auto'),'Modo paginado deve reservar área para controles.');
+for(const token of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor','requestAnimationFrame','window.addEventListener'])assert.ok(ui.includes(token),'Painel sem ajuste responsivo: '+token);
 console.log('OK — Painel Geral prioriza Campanhas, Aventuras, Sessões, próxima Sessão e contexto atual.');
