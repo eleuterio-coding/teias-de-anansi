@@ -22,7 +22,7 @@ function feedback(message,ok=true){
  clearTimeout(feedback.timer);feedback.timer=setTimeout(()=>box.hidden=true,3000)
 }
 function reload(){
- campaigns=readCampaigns();standalone=readStandaloneSessions();adventures=readAdventures();characters=read()
+ campaigns=readCampaigns().filter(c=>c.id!=='e2e-explicit-player-access');standalone=readStandaloneSessions().filter(s=>s.campaignId!=='e2e-explicit-player-access');adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access');characters=read()
 }
 function sharedSessions(){
  return sharedCampaignRows().flatMap(row=>(row.campaign.sessions||[]).map(s=>({...s,source:'campaign',campaignId:row.campaign.id,campaignName:row.campaign.name,assignedCharacterId:row.membership.characterId})))
