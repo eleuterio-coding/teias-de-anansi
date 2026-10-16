@@ -28,7 +28,7 @@ function card(c){
       ${CAMPAIGN_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-campaign-status="${esc(c.id)}" data-next-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
      </div>
     </details>`;
- return `<article class="campaign-card" data-campaign-card="${esc(c.id)}">
+ return `<article class="campaign-card" data-campaign-card="${esc(c.id)}"><a class="campaign-card-stretched-link" href="mesa.html?id=${encodeURIComponent(c.id)}" aria-label="Abrir campanha ${esc(c.name)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
    <h2>${esc(c.name)}</h2>

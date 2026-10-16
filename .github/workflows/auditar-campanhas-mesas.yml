@@ -19,6 +19,7 @@ on:
       - 'index.html'
       - 'campaigns.css'
       - 'tests/auditar-campanhas-mesas.mjs'
+      - 'tests/auditar-vinculo-unico-mesa.mjs'
       - '.github/workflows/auditar-campanhas-mesas.yml'
   push:
     branches: [main]
@@ -38,6 +39,7 @@ on:
       - 'index.html'
       - 'campaigns.css'
       - 'tests/auditar-campanhas-mesas.mjs'
+      - 'tests/auditar-vinculo-unico-mesa.mjs'
       - '.github/workflows/auditar-campanhas-mesas.yml'
 
 permissions:
@@ -61,8 +63,11 @@ jobs:
           node --check scripts/character-list-campaign-ui.js
           node --check scripts/character-sheet-gameplay-ui.js
           node --check tests/auditar-campanhas-mesas.mjs
+          node --check tests/auditar-vinculo-unico-mesa.mjs
       - name: Auditar Campanhas e Mesas
-        run: node tests/auditar-campanhas-mesas.mjs
+        run: |
+          node tests/auditar-campanhas-mesas.mjs
+          node tests/auditar-vinculo-unico-mesa.mjs
       - name: Proibir Supabase no bloco
         run: |
           if grep -RniE 'supabase' scripts/campaign-state.js scripts/campaign-list-ui.js scripts/campaign-table-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet-campaign-ui.js scripts/character-list-campaign-ui.js campanhas.html mesa.html sessoes.html campaigns.css; then

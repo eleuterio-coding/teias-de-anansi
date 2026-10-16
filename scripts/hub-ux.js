@@ -80,9 +80,80 @@ function enhanceStructureEditingCopy(){
   if(link.textContent.trim()!=='Editar Ficha')link.textContent='Editar Ficha';
  }
 }
+
+/* Confirmação visual centralizada. A mensagem de sucesso só é exibida
+   depois de o fluxo da página informar que concluiu o salvamento. */
+const SAVE_STATUS_SELECTOR='#table-feedback,#adventure-feedback,#session-feedback,#save-status,#game-save-state,#storage-note,#resultado,.status,[role="status"],[role="alert"]';
+let saveIntentAt=0,saveNoticeTimer=0,saveFeedbackReady=false;
+function saveControl(node){
+ const button=node?.closest?.('button,input[type="submit"],[role="button"]');
+ if(!button||button.disabled)return false;
+ const label=String(button.textContent||button.value||button.getAttribute('aria-label')||'').trim();
+ return /^salvar(?:\b|$)|^gravar(?:\b|$)|^salve(?:\b|$)/i.test(label)
+  ||['save-sheet','save-character','save-campaign'].includes(button.id);
+}
+function markSaveIntent(event){
+ if(!saveControl(event.target))return;
+ if(event.type==='keydown'&&!['Enter',' '].includes(event.key))return;
+ if(event.type==='click'&&Date.now()-saveIntentAt<300)return;
+ saveIntentAt=Date.now()
+}
+function showSaveNotice(message,{ok=true}={}){
+ let root=document.getElementById('hub-save-notice');
+ if(!root){
+  root=document.createElement('div');root.id='hub-save-notice';root.setAttribute('role','status');root.setAttribute('aria-live','polite');root.setAttribute('aria-atomic','true');
+  root.innerHTML='<span class="hub-save-icon" aria-hidden="true"></span><div class="hub-save-copy"><strong class="hub-save-title"></strong><span class="hub-save-detail"></span></div><button type="button" class="hub-save-close" aria-label="Fechar confirmação">×</button>';
+  root.querySelector('.hub-save-close').addEventListener('click',()=>{root.hidden=true;clearTimeout(saveNoticeTimer)});
+  document.body.appendChild(root)
+ }
+ root.dataset.outcome=ok?'success':'error';
+ root.querySelector('.hub-save-icon').textContent=ok?'✓':'!';
+ root.querySelector('.hub-save-title').textContent=ok?'Alterações salvas':'Não foi possível salvar';
+ root.querySelector('.hub-save-detail').textContent=String(message|| (ok?'Salvamento concluído.':'Verifique o aviso na página.'));
+ root.setAttribute('role',ok?'status':'alert');
+ root.setAttribute('aria-live',ok?'polite':'assertive');
+ root.hidden=false;
+ clearTimeout(saveNoticeTimer);saveNoticeTimer=setTimeout(()=>root.hidden=true,4200)
+}
+function statusSaveFeedback(region){
+ if(!region?.isConnected||region.id==='hub-save-notice'||region.closest('#hub-save-notice')||region.hidden||region.closest('[hidden]'))return false;
+ const message=String(region.textContent||'').trim().slice(0,220);
+ if(!message)return false;
+ const fail=region.classList.contains('warning')||/não foi possível|não pôde|falha(?: ao)?|erro (?:ao|para)|não salvo|não salvou/i.test(message);
+ const success=/\bsalv(?:a|as|o|os|ou)\b|\bsincronizad[oa]s?\b|\batualizad[oa]s?\b|\bgravado\b|\bregistrado\b/i.test(message);
+ if(!fail&&!success)return false;
+ showSaveNotice(message,{ok:!fail});saveIntentAt=0;return true
+}
+function initSaveFeedback(){
+ if(saveFeedbackReady)return;saveFeedbackReady=true;
+ document.addEventListener('pointerdown',markSaveIntent,true);
+ document.addEventListener('click',markSaveIntent,true);
+ document.addEventListener('keydown',markSaveIntent,true);
+ document.addEventListener('hub-rpg:save-feedback',event=>{
+  const detail=event.detail||{};showSaveNotice(detail.message,{ok:detail.ok!==false});
+  saveIntentAt=0
+ });
+ const pending=sessionStorage.getItem('hub-rpg:pending-save-notice');
+ if(pending){sessionStorage.removeItem('hub-rpg:pending-save-notice');showSaveNotice(pending)}
+ new MutationObserver(records=>{
+  if(!saveIntentAt||Date.now()-saveIntentAt>15000)return;
+  const regions=new Set();
+  for(const record of records){
+   const nodes=[record.target,...record.addedNodes];
+   for(const node of nodes){
+    const element=node.nodeType===1?node:node.parentElement;
+    if(!element||element.id==='hub-save-notice'||element.closest?.('#hub-save-notice'))continue;
+    if(element.matches?.(SAVE_STATUS_SELECTOR))regions.add(element);
+    const ancestor=element.closest?.(SAVE_STATUS_SELECTOR);if(ancestor)regions.add(ancestor);
+    if(node.nodeType===1)for(const child of node.querySelectorAll(SAVE_STATUS_SELECTOR))regions.add(child)
+   }
+  }
+  for(const region of regions)if(statusSaveFeedback(region))break
+ }).observe(document.body,{subtree:true,childList:true,characterData:true})
+}
 function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}
-function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initAppShell();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
+function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initSaveFeedback();initAppShell();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
 
 if(typeof document!=='undefined'){
  warmExternalOrigins();
