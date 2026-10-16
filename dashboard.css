@@ -89,7 +89,7 @@ body.dashboard-page.hub-shell-enabled :is(.dashboard-pagination,.dashboard-list-
 }
 body.dashboard-page[data-dashboard-mode="full"] #main-content{
   grid-template-rows:minmax(0,.9fr) minmax(0,1.1fr);
-  row-gap:10px
+  row-gap:8px
 }
 body.dashboard-page[data-dashboard-mode="full"] .dashboard-collections{grid-row:1}
 body.dashboard-page[data-dashboard-mode="full"] .dashboard-context{grid-row:2}
@@ -154,7 +154,7 @@ body.dashboard-page[data-dashboard-mode="single"] .focus-card .btn{
 body.dashboard-page .dashboard-context,
 body.dashboard-page.hub-shell-enabled .dashboard-context {
   box-sizing: border-box;
-  padding-top: 12px;
+  padding-top: 6px;
 }
 
 /* Contexto Atual: cabeçalho de seção e quatro cards uniformes. */
