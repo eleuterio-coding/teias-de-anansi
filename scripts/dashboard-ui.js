@@ -17,20 +17,26 @@ function row({href,title,detail,status,statusKey='',relations=[],media=null,lega
 function renderCampaigns(rows){$('campaign-dashboard-list').innerHTML=rows.length?rows.map(c=>row({href:c.href,title:c.name,detail:[c.setting||c.system,((c.sessions||[]).length)+' sessão(ões)'].filter(Boolean).join(' · '),status:campaignStatus(c.status),statusKey:c.status,media:c.coverImage,legacyUrl:c.coverImageUrl})).join(''):'<div class="empty">Nenhuma Campanha criada.</div>'}
 function renderAdventures(rows){$('adventure-dashboard-list').innerHTML=rows.length?rows.map(a=>row({href:a.href,title:a.title,detail:[a.type==='oneshot'?'One-shot':a.arc].filter(Boolean).join(' · '),status:adventureStatus(a.status),statusKey:a.status,relations:[{kind:'Campanha',value:a.campaignName||'Sem Campanha'}],media:a.coverImage,legacyUrl:a.coverImageUrl})).join(''):'<div class="empty">Nenhuma Aventura criada.</div>'}
 function renderSessions(rows){$('session-dashboard-list').innerHTML=rows.length?rows.map(s=>row({href:s.href,title:s.title,detail:'',status:sessionStatus(s.status),statusKey:s.status,relations:[{kind:'Campanha',value:s.campaignName||'Sem Campanha'},{kind:'Aventura',value:s.adventureName||'Sem Aventura vinculada'}],media:s.coverImage,legacyUrl:s.coverImageUrl})).join(''):'<div class="empty">Nenhuma Sessão criada.</div>'}
+function focusHeading(badge){
+ const category=badge.includes('sessão')?'Sessões':badge.includes('Campanha')?'Campanhas':'Aventuras';
+ return `<header class="focus-card-heading"><p class="card-kicker">${esc(category)}</p><h3>${esc(badge)}</h3></header>`
+}
 function focusCard(id,{badge,title,subtitle,meta,href,button='Abrir',media=null,legacyUrl=''}={},emptyTitle){
  const el=$(id);if(!el)return;
- if(!title){el.innerHTML=`<div><span class="badge">${esc(badge)}</span><h2>${esc(emptyTitle)}</h2></div>`;return}
- const image=imageElementHtml(media,legacyUrl,{className:'focus-card-cover',alt:''});el.classList.toggle('has-cover',Boolean(image));el.innerHTML=`${image}<div class="focus-card-copy"><span class="badge ${badge==='Próxima sessão'?'next':'live'}">${esc(badge)}</span><h2>${esc(title)}</h2>${subtitle?`<p>${esc(subtitle)}</p>`:''}${meta?`<p class="mini">${esc(meta)}</p>`:''}</div><a class="btn" href="${esc(href)}">${esc(button)}</a>`
+ const heading=focusHeading(badge);
+ if(!title){el.classList.remove('has-cover');el.innerHTML=`${heading}<div class="focus-card-empty"><h2>${esc(emptyTitle)}</h2></div>`;return}
+ const image=imageElementHtml(media,legacyUrl,{className:'focus-card-cover',alt:''});el.classList.toggle('has-cover',Boolean(image));el.innerHTML=`${heading}${image}<div class="focus-card-copy"><span class="badge ${badge==='Próxima sessão'?'next':'live'}">${esc(badge)}</span><h2>${esc(title)}</h2>${subtitle?`<p>${esc(subtitle)}</p>`:''}${meta?`<p class="mini">${esc(meta)}</p>`:''}</div><a class="btn" href="${esc(href)}">${esc(button)}</a>`
 }
+
 function renderContext(summary){
  const next=summary.nextSession;
  focusCard('next-session',next?{badge:'Próxima sessão',title:next.session.title,subtitle:'Campanha: '+(next.campaign?.name||'Sem Campanha'),meta:['Aventura: '+(summary.adventures.find(a=>a.id===next.session.adventureId)?.title||'Sem Aventura vinculada'),fmtDate(next.session.date)].join(' · '),href:next.campaign?`sessoes.html?campaign=${encodeURIComponent(next.campaign.id)}&id=${encodeURIComponent(next.session.id)}`:`sessoes.html?id=${encodeURIComponent(next.session.id)}`,button:'Abrir Sessão',media:next.session.coverImage,legacyUrl:next.session.coverImageUrl}:{badge:'Próxima sessão'},'Nenhuma próxima Sessão');
  const campaign=summary.currentCampaign;
  focusCard('current-campaign',campaign?{badge:'Campanha atual',title:campaign.name,subtitle:campaign.setting||campaign.system,meta:campaignStatus(campaign.status),href:campaign.href,button:'Abrir Campanha',media:campaign.coverImage,legacyUrl:campaign.coverImageUrl}:{badge:'Campanha atual'},'Nenhuma Campanha atual');
  const adventure=summary.currentAdventure;
- focusCard('current-adventure',adventure?{badge:'Aventura atual',title:adventure.title,subtitle:'Campanha: '+(adventure.campaignName||'Sem Campanha'),meta:adventureStatus(adventure.status),href:adventure.href,button:'Abrir Aventura',media:adventure.coverImage,legacyUrl:adventure.coverImageUrl}:{badge:'Aventura atual'},'Nenhuma Aventura atual');
+ focusCard('current-adventure',adventure?{badge:'Aventura atual',title:adventure.title,subtitle:'Campanha: '+(adventure.campaignName||'Sem Campanha'),meta:adventure.status==='current'?'':adventureStatus(adventure.status),href:adventure.href,button:'Abrir Aventura',media:adventure.coverImage,legacyUrl:adventure.coverImageUrl}:{badge:'Aventura atual'},'Nenhuma Aventura atual');
  const current=summary.currentSession;
- focusCard('current-session',current?{badge:'Sessão atual',title:current.session.title,subtitle:'Campanha: '+(current.campaign?.name||'Sem Campanha'),meta:['Aventura: '+(summary.adventures.find(a=>a.id===current.session.adventureId)?.title||'Sem Aventura vinculada'),fmtDate(current.session.date),sessionStatus(current.session.status)].join(' · '),href:current.href,button:'Abrir Sessão',media:current.session.coverImage,legacyUrl:current.session.coverImageUrl}:{badge:'Sessão atual'},'Nenhuma Sessão atual')
+ focusCard('current-session',current?{badge:'Sessão atual',title:current.session.title,subtitle:'Campanha: '+(current.campaign?.name||'Sem Campanha'),meta:['Aventura: '+(summary.adventures.find(a=>a.id===current.session.adventureId)?.title||'Sem Aventura vinculada'),fmtDate(current.session.date)].join(' · '),href:current.href,button:'Abrir Sessão',media:current.session.coverImage,legacyUrl:current.session.coverImageUrl}:{badge:'Sessão atual'},'Nenhuma Sessão atual')
 }
 
 const DASHBOARD_TILES=[
