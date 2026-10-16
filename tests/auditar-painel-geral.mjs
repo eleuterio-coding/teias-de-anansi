@@ -52,4 +52,9 @@ assert.ok(page.includes('id="dashboard-pagination"'),'Painel deve oferecer naveg
 assert.ok(css.includes('Dashboard viewport-fit')&&css.includes('overflow:hidden'),'Painel deve restringir a grade à janela.');
 assert.ok(css.includes('grid-template-rows:minmax(0,1fr) auto'),'Modo paginado deve reservar área para controles.');
 for(const token of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor','requestAnimationFrame','window.addEventListener'])assert.ok(ui.includes(token),'Painel sem ajuste responsivo: '+token);
+const semanticJs=fs.readFileSync(new URL('../scripts/referencias-hub.js',import.meta.url),'utf8');
+const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-pages.yml',import.meta.url),'utf8');
+assert.match(semanticJs,/if\(\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\)===\'painel\.html\'\)return;/,'Painel Geral deve impedir links semânticos mesmo se o script for carregado.');
+assert.ok(deploy.includes("if path.name == 'painel.html':"),'Deploy não deve injetar resolutor de verbetes no Painel Geral.');
+assert.ok(page.includes('href="campanhas.html"')&&page.includes('href="aventuras.html"')&&page.includes('href="sessoes.html"'),'Links operacionais dos cards devem permanecer.');
 console.log('OK — Painel Geral prioriza Campanhas, Aventuras, Sessões, próxima Sessão e contexto atual.');
