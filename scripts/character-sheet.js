@@ -232,7 +232,7 @@ function refreshSheetFromRemote(){
 
 async function init(){
  if(npcMode()&&!npcMasterAuthorized()){location.replace('personagens.html');return}
- if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));document.getElementById('profile-player')?.closest('label')?.setAttribute('hidden','')}
+ if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));(()=>{const p=document.getElementById('profile-player')?.closest('label');if(p){p.hidden=true;p.style.display='none'}})()}
  const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
  if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada.</strong></div>';return}
  state.c=loadCharacter();
