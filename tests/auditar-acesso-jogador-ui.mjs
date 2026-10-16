@@ -72,7 +72,9 @@ const files={
  realtime:fs.readFileSync(new URL('../scripts/collaboration-realtime.js',import.meta.url),'utf8'),
  hubUx:fs.readFileSync(new URL('../scripts/hub-ux.js',import.meta.url),'utf8'),
  mesa:fs.readFileSync(new URL('../mesa.html',import.meta.url),'utf8'),
- adventurePage:fs.readFileSync(new URL('../aventuras.html',import.meta.url),'utf8')
+ adventurePage:fs.readFileSync(new URL('../aventuras.html',import.meta.url),'utf8'),
+ appShell:fs.readFileSync(new URL('../scripts/app-shell.js',import.meta.url),'utf8'),
+ masterTools:fs.readFileSync(new URL('../scripts/master-tools.js',import.meta.url),'utf8')
 };
 for(const token of['playerMode','sharedCampaignRows'])assert.ok(files.campaigns.includes(token),`Lista de Campanhas sem ${token}`);
 assert.ok(files.campaigns.includes('Somente leitura'));
