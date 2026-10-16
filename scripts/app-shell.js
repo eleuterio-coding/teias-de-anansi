@@ -49,7 +49,7 @@ function masterSession(){try{return JSON.parse(localStorage.getItem("hub-rpg:col
 function contextualAction(){
  if(previewActive())return null;
  const page=currentPage(),params=new URLSearchParams(location.search);
- if(page==="campanhas.html")return{label:"Nova campanha",href:"#campaign-create-card"};
+ 
  if(page==="sessoes.html")return{label:"Nova sessão",href:"#session-create-card"};
  if(page==="lista-personagens.html"||page==="personagens.html")return{label:"Novo personagem",href:"criacao-personagem.html"};
  if(page==="mesa.html")return{label:"Nova sessão",href:"sessoes.html?campaign="+encodeURIComponent(params.get("id")||"")};
