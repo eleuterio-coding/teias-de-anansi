@@ -25,7 +25,7 @@ for (const file of directModules) {
 for (const file of wrappedModules) {
   if (!fs.existsSync(file)) throw new Error(`Wrapper ausente: ${file}`);
   const html = fs.readFileSync(file, 'utf8');
-  if (!html.includes('module-clean-loader.js?v=20261015-unified-layout1')) {
+  if (!html.includes('module-clean-loader.js?v=20261016-current-status3')) {
     throw new Error(`Wrapper usando carregador visual antigo: ${file}`);
   }
 }

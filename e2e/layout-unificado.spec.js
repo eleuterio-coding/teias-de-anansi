@@ -34,7 +34,7 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
       // O deploy injeta site-light.css em todas as páginas. Validar também essa composição.
       await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
       await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
-      await expect(page.locator('script[src*="scripts/hub-ux.js?v=20261016-menu-cachefix2"]')).toHaveCount(1);
+      await expect(page.locator('script[src*="scripts/hub-ux.js?v=20261016-current-status3"]')).toHaveCount(1);
       await expect(page.locator('.hub-global-topbar')).toBeVisible();
       await expect(page.locator('[data-hub-master-tools]')).toBeVisible();
       await expect(page.locator('[data-hub-preview-user]')).toHaveCount(1);

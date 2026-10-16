@@ -1,6 +1,6 @@
-import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20260924-session-encounters1';
-import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20260924-session-scenes2';
-import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20260922-adventure-workspace2';
+import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20261016-current-status2';
+import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20261016-current-status2';
+import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 const params=new URLSearchParams(location.search),campaignId=params.get('id')||'';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function canonicalAdventures(){const campaigns=readCampaigns(),campaign=campaignById(campaigns,campaignId),current=readAdventures(),reconciled=reconcileAdventureCampaignRefs(current,campaign);if(reconciled.changed){writeAdventures(reconciled.list);if(reconciled.campaign)writeCampaigns(campaigns.map(row=>row.id===campaignId?reconciled.campaign:row))}return reconciled.list}
