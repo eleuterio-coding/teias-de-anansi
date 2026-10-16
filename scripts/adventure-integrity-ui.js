@@ -1,4 +1,4 @@
-import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures,writeAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 const campaignId=new URLSearchParams(location.search).get('campaign')||'';
