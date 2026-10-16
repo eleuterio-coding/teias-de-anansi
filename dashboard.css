@@ -149,6 +149,14 @@ body.dashboard-page[data-dashboard-mode="single"] .focus-card .btn{
 .dashboard-page .relationship-chip .relation-label{font-weight:400;opacity:1}
 .dashboard-page .relationship-chip strong{font-weight:600;color:inherit}
 
+/* Separação visível acima de Contexto Atual em todos os modos do painel.
+   O padding interno preserva a área do grid e não depende do modo full. */
+body.dashboard-page .dashboard-context,
+body.dashboard-page.hub-shell-enabled .dashboard-context {
+  box-sizing: border-box;
+  padding-top: clamp(26px, 3.2vh, 38px);
+}
+
 /* Contexto Atual: cabeçalho de seção e quatro cards uniformes. */
 body.dashboard-page .dashboard-context,
 body.dashboard-page.hub-shell-enabled .dashboard-context {
