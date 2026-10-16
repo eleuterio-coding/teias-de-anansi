@@ -179,7 +179,7 @@ body.hub-shell-enabled :where(.btn.danger,button.danger,.danger){
 }
 body.hub-shell-enabled .badge{
  background:#131f2c!important;color:#aebdcd!important;border-color:#314459!important;
- padding:4px 8px;border-radius:999px
+ padding:4px 8px;border-radius:7px
 }
 body.hub-shell-enabled .badge.active,
 body.hub-shell-enabled .badge.live{background:var(--hub-green-soft)!important;color:#72e7a6!important;border-color:rgba(54,215,124,.35)!important}
