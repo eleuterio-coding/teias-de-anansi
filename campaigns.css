@@ -63,7 +63,7 @@
   padding:9px 10px;min-height:42px;font-size:.84rem
 }
 
-#campaign-list button.campaign-create-tile{
+#campaign-list .campaign-create-tile{
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   gap:12px;min-height:290px;padding:22px;
   border:2px dashed #9aaabc;border-radius:14px;
@@ -161,3 +161,17 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 @media(max-width:500px){
   body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-right:0;margin-top:38px}
 }
+
+/* Ações apenas nos extremos; criação de campanha em página dedicada. */
+#campaign-list .campaign-card-actions>a.btn{margin-right:auto}
+#campaign-list .campaign-card-actions>button[data-delete]{margin-left:auto}
+#campaign-list a.campaign-create-tile{text-decoration:none;box-sizing:border-box}
+#campaign-list a.campaign-create-tile:focus-visible{
+ outline:2px solid #338ed7;outline-offset:3px
+}
+.campaign-create-panel{
+ width:100%;max-width:960px;
+ margin:0 auto;
+}
+.campaign-create-panel #campaign-create-form{display:grid;gap:6px}
+.campaign-create-panel #storage-note:empty{display:none}
