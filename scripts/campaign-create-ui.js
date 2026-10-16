@@ -1,4 +1,4 @@
-import{readCampaigns,writeCampaigns,createCampaign,campaignUid}from'./campaign-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,createCampaign,campaignUid}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20260925-media2';
 import{playerMode}from'./collaboration-view.js?v=20261016-master-preview1';
 const $=id=>document.getElementById(id);
