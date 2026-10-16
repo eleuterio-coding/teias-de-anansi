@@ -44,32 +44,35 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   save(patch,{message});
   refresh(id)
  };
- document.querySelectorAll('#npcs,#locais,#missoes,#linha-tempo').forEach(section=>{
-  section.addEventListener('click',event=>{
-   const target=event.target.closest('button');if(!target)return;
-   const c=getCampaign();
-   if(target.matches('[data-add-npc]')){
-    const id=document.getElementById('campaign-npc-picker')?.value;
-    if(!id||!getNpcs().some(n=>n.id===id))return feedback('Selecione um NPC cadastrado.',false);
-    persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])]},'npcs','NPC adicionado.');
-   }else if(target.matches('[data-del-npc]')){
-    persist({importantNpcIds:(c.importantNpcIds||[]).filter(id=>id!==target.dataset.delNpc)},'npcs','NPC removido.');
-   }else if(target.matches('[data-add-line]')){
-    const field=target.dataset.addLine,input=section.querySelector('[data-new-line]'),value=clean(input?.value);
-    if(!value)return;
-    persist({[field]:[...entries(c[field]),value].join('\n')},sectionFor(field),'Registro adicionado.');
-   }else if(target.matches('[data-del-line]')){
-    const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
-    persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.');
-   }else if(target.matches('[data-move-line]')){
-    const values=entries(c.timeline),index=Number(target.dataset.moveLine),next=index+Number(target.dataset.direction);
-    if(next<0||next>=values.length)return;
-    [values[index],values[next]]=[values[next],values[index]];
-    persist({timeline:values.join('\n')},'linha-tempo','Linha do tempo reorganizada.');
-   }
-  });
-  section.addEventListener('keydown',event=>{
-   if(event.target.matches('[data-new-line]')&&event.key==='Enter'){event.preventDefault();section.querySelector('[data-add-line]')?.click()}
-  })
+ const root=document.querySelector('.campaign-sections');if(!root)return;
+ root.addEventListener('click',event=>{
+  const section=event.target.closest('#npcs,#locais,#missoes,#linha-tempo');if(!section)return;
+  const target=event.target.closest('button');if(!target)return;
+  const c=getCampaign();
+  if(target.matches('[data-add-npc]')){
+   const id=section.querySelector('#campaign-npc-picker')?.value;
+   if(!id||!getNpcs().some(n=>n.id===id))return feedback('Selecione um NPC cadastrado.',false);
+   persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])]},'npcs','NPC adicionado.');
+  }else if(target.matches('[data-del-npc]')){
+   persist({importantNpcIds:(c.importantNpcIds||[]).filter(id=>id!==target.dataset.delNpc)},'npcs','NPC removido.');
+  }else if(target.matches('[data-add-line]')){
+   const field=target.dataset.addLine,input=section.querySelector('[data-new-line]'),value=clean(input?.value);
+   if(!value)return;
+   persist({[field]:[...entries(c[field]),value].join('\\n')},sectionFor(field),'Registro adicionado.');
+  }else if(target.matches('[data-del-line]')){
+   const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
+   persist({[field]:values.join('\\n')},sectionFor(field),'Registro removido.');
+  }else if(target.matches('[data-move-line]')){
+   const values=entries(c.timeline),index=Number(target.dataset.moveLine),next=index+Number(target.dataset.direction);
+   if(next<0||next>=values.length)return;
+   [values[index],values[next]]=[values[next],values[index]];
+   persist({timeline:values.join('\\n')},'linha-tempo','Linha do tempo reorganizada.');
+  }
+ });
+ root.addEventListener('keydown',event=>{
+  const section=event.target.closest('#npcs,#locais,#missoes,#linha-tempo');
+  if(section&&event.target.matches('[data-new-line]')&&event.key==='Enter'){
+   event.preventDefault();section.querySelector('[data-add-line]')?.click()
+  }
  });
 }
