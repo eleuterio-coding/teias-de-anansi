@@ -74,6 +74,7 @@ function bind(){
  window.addEventListener('hub-rpg:collaboration-session-changed',()=>queueMicrotask(renderAssignment))
 }
 export function initCharacterPlayerAssignmentUi(){
+ if(new URLSearchParams(location.search).get('npc')==='1')return;
  if(initialized)return;initialized=true;bind();queueMicrotask(renderAssignment)
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initCharacterPlayerAssignmentUi,{once:true});else initCharacterPlayerAssignmentUi();
