@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const read = path => fs.readFileSync(path, 'utf8');
-const version = '20261016-menu-cachefix2';
+const version = '20261016-current-status3';
 const layoutVersion = '20261015-unified-layout1';
 const standardPages = [
   'index.html','painel.html','campanhas.html','mesa.html','sessoes.html',
