@@ -23,7 +23,9 @@ const loader = read('scripts/module-clean-loader.js');
 
 assert.match(shell,/const LIBRARY_PAGES=new Set/);
 assert.match(shell,/const CHARACTER_PAGES=new Set/);
-assert.match(shell,/\{page:"sessoes\\.html",label:"Sessões",icon:"calendar"\},\s*\{page:"personagens\\.html",aliases:\["lista-personagens\\.html"\],label:"Personagens",icon:"users"\}/,'Menu lateral deve mostrar Personagens imediatamente após Sessões.');
+const navDeclaration=shell.split('const NAV_ITEMS=[')[1]?.split('];')[0]||'';
+const navOrder=[...navDeclaration.matchAll(/\{page:"([^"]+)"/g)].map(match=>match[1]);
+assert.deepEqual(navOrder,['painel.html','campanhas.html','aventuras.html','sessoes.html','personagens.html','bibliotecas.html'],'Menu lateral deve mostrar Personagens imediatamente após Sessões.');
 assert.match(shell,/hub-content-light/);
 assert.match(shell,/data-hub-preview-user/,'Shell deve expor seleção de usuário para o Mestre.');
 assert.match(shell,/data-hub-layout-select/,'Shell deve expor seleção de layout para o Mestre.');
