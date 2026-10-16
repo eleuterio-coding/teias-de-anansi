@@ -50,3 +50,20 @@ test('jogador não vê NPCs e não pode acessar a biblioteca',async({page})=>{
  await expect(page).toHaveURL(/personagens\.html/);
  await expect(page.locator('.hub-nav-link', {hasText:'NPCs'})).toHaveCount(0);
 });
+
+
+test('Mestre cria NPC pelo mesmo construtor de personagens, sem atribuição a jogador',async({page})=>{
+ await page.goto('/criacao-personagem.html?npc=1');
+ await expect(page.getByRole('heading',{name:'Criação de NPC'})).toBeVisible();
+ await expect(page.locator('#profile-player').locator('xpath=..')).toBeHidden();
+ await page.locator('[data-wizard-step="origem"]').click();
+ await page.locator('#nome').fill('NPC de Validação');
+ await page.locator('#save').click();
+ await expect(page.locator('#save-status')).toContainText('Salvo');
+ const stored=await page.evaluate(()=>({
+  npcs:JSON.parse(localStorage.getItem('hub-rpg:npcs:v1')||'[]'),
+  pcs:JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]')
+ }));
+ expect(stored.npcs.some(n=>n.name==='NPC de Validação')).toBe(true);
+ expect(stored.pcs.some(n=>n.name==='NPC de Validação')).toBe(false);
+});
