@@ -141,3 +141,9 @@ body.dashboard-page[data-dashboard-mode="single"] .focus-card .btn{
 .dashboard-page .relationship-chip strong{font-size:inherit;font-weight:400;display:inline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dashboard-page .relation-campaign{color:#90a9cd;background:none;border:0}
 .dashboard-page .relation-adventure{color:#90a9cd;background:none;border:0}
+
+/* Vínculos em texto neutro, como a informação secundária dos cards de Campanhas. */
+.dashboard-page .card-relations{gap:3px 12px;margin-top:3px}
+.dashboard-page .relationship-chip,.dashboard-page .relation-campaign,.dashboard-page .relation-adventure{background:transparent;border:0;border-radius:0;box-shadow:none;padding:0;color:var(--muted);font-size:.78rem;line-height:1.4}
+.dashboard-page .relationship-chip .relation-label{font-weight:400;opacity:1}
+.dashboard-page .relationship-chip strong{font-weight:600;color:inherit}
