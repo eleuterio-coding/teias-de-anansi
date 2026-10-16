@@ -228,3 +228,101 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 }
 .campaign-create-panel #campaign-create-form{display:grid;gap:6px}
 .campaign-create-panel #storage-note:empty{display:none}
+
+
+/* UX dos cards de campanha: toda a superfície abre a campanha, sem
+   interceptar o seletor de status nem os botões Abrir/Excluir. */
+#campaign-list .campaign-card:not(.campaign-create-tile){
+ cursor:pointer;
+ transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease
+}
+#campaign-list .campaign-card:not(.campaign-create-tile):hover{
+ border-color:var(--hub-accent,#338ed7);
+ box-shadow:0 10px 28px rgba(0,0,0,.16);
+ transform:translateY(-2px)
+}
+#campaign-list .campaign-card-stretched-link{
+ position:absolute;inset:0;z-index:1;
+ display:block;border-radius:inherit;text-decoration:none
+}
+#campaign-list .campaign-card-stretched-link:focus-visible{
+ outline:3px solid var(--hub-focus,#338ed7)!important;outline-offset:3px!important
+}
+#campaign-list .campaign-card-actions{position:relative;z-index:2}
+#campaign-list .campaign-card-status{z-index:4}
+@media(prefers-reduced-motion:reduce){
+ #campaign-list .campaign-card:not(.campaign-create-tile){transition:none}
+ #campaign-list .campaign-card:not(.campaign-create-tile):hover{transform:none}
+}
+
+/* Jogadores da Mesa: controles alinhados, legíveis e com ações independentes. */
+.roster-section{display:grid;gap:0}
+.roster-section .roster-heading{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ flex-wrap:wrap;margin-bottom:14px
+}
+.roster-section .roster-heading h2{margin:0}
+.roster-section .roster-count{
+ display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;
+ border:1px solid var(--hub-border,#8885);background:var(--hub-surface-2,#f3f4f6);
+ color:var(--hub-text-2,inherit);font-size:.78rem;font-weight:700
+}
+.roster-section .roster-list{gap:9px}
+.roster-section .roster-player{
+ display:grid;grid-template-columns:minmax(210px,.9fr) minmax(240px,1.15fr) auto;
+ gap:16px;align-items:center;min-width:0;padding:14px 16px;
+ border:1px solid var(--hub-border,#8885);border-radius:12px;
+ background:var(--hub-bg-raised,#fff)
+}
+.roster-section .roster-player-identity{
+ display:grid;grid-template-columns:42px minmax(0,1fr);gap:12px;
+ align-items:center;min-width:0
+}
+.roster-section .roster-avatar{
+ display:grid;place-items:center;width:42px;height:42px;border-radius:12px;
+ border:1px solid rgba(94,162,242,.35);
+ background:rgba(47,156,255,.13);color:var(--hub-accent-2,#1976bf);
+ font-weight:800;font-size:1rem;line-height:1
+}
+.roster-section .roster-player label,.roster-section .roster-add-fields label{min-width:0}
+.roster-section .roster-player :is(select,input),
+.roster-section .roster-add-fields select{width:100%;min-width:0;margin-top:6px}
+.roster-section .roster-player-character{min-width:0}
+.roster-section .roster-sheet-link{
+ display:inline-flex;align-items:center;gap:5px;min-height:24px;
+ margin-top:4px;color:var(--hub-accent-2,#1864aa)!important;
+ text-decoration:none;font-size:.78rem;font-weight:650
+}
+.roster-section .roster-sheet-link:hover{text-decoration:underline}
+.roster-section .roster-player-actions{
+ display:flex;align-items:flex-end;justify-content:flex-end;flex-wrap:nowrap;
+ gap:8px;margin:0;padding:0;white-space:nowrap
+}
+.roster-section .roster-player-actions button{min-width:82px}
+.roster-section .roster-player-notes{
+ grid-column:1/-1;padding:10px 12px;
+ border-left:3px solid var(--hub-accent,#338ed7);border-radius:5px;
+ background:var(--hub-surface-2,#f3f4f6);white-space:pre-wrap;
+ font-size:.84rem;color:var(--hub-text-2,inherit)
+}
+.roster-section .roster-add-panel{
+ display:grid;gap:12px;margin-top:16px;padding:16px;
+ border:1px dashed var(--hub-border,#8885);border-radius:12px;
+ background:var(--hub-surface-2,#f7f8fa)
+}
+.roster-section .roster-add-panel h3{margin:0;font-size:.98rem}
+.roster-section .roster-add-fields{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
+}
+.roster-section .roster-add-actions{display:flex;align-items:center;gap:9px;margin:0}
+.roster-section .roster-add-actions button{min-height:44px}
+@media(max-width:1100px){
+ .roster-section .roster-player{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+ .roster-section .roster-player-actions{grid-column:1/-1;justify-content:flex-end}
+}
+@media(max-width:620px){
+ .roster-section .roster-player{grid-template-columns:minmax(0,1fr);gap:12px;padding:13px}
+ .roster-section .roster-player-actions{grid-column:auto;justify-content:flex-start}
+ .roster-section .roster-add-fields{grid-template-columns:minmax(0,1fr)}
+ .roster-section .roster-add-panel{padding:13px}
+}
