@@ -9,7 +9,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null;
 
-const statusLabel=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
+const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
 const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
@@ -186,7 +186,7 @@ function sessionCard(s,restricted=false){
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
-  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
