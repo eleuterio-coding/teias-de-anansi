@@ -58,15 +58,15 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-add-line]')){
    const field=target.dataset.addLine,input=section.querySelector('[data-new-line]'),value=clean(input?.value);
    if(!value)return;
-   persist({[field]:[...entries(c[field]),value].join('\\n')},sectionFor(field),'Registro adicionado.');
+   persist({[field]:[...entries(c[field]),value].join('\n')},sectionFor(field),'Registro adicionado.');
   }else if(target.matches('[data-del-line]')){
    const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
-   persist({[field]:values.join('\\n')},sectionFor(field),'Registro removido.');
+   persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.');
   }else if(target.matches('[data-move-line]')){
    const values=entries(c.timeline),index=Number(target.dataset.moveLine),next=index+Number(target.dataset.direction);
    if(next<0||next>=values.length)return;
    [values[index],values[next]]=[values[next],values[index]];
-   persist({timeline:values.join('\\n')},'linha-tempo','Linha do tempo reorganizada.');
+   persist({timeline:values.join('\n')},'linha-tempo','Linha do tempo reorganizada.');
   }
  });
  root.addEventListener('keydown',event=>{
