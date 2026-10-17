@@ -498,3 +498,57 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  #table-root .campaign-flow-actions{width:100%}
  .npc-library-card{flex-direction:column;align-items:stretch}
 }
+
+
+/* Próxima sessão: área prioritária da Campanha, acima do restante do editor. */
+#table-root #proxima-sessao.campaign-next-highlight{
+ display:flex;align-items:center;justify-content:space-between;gap:20px;
+ min-width:0;margin:18px 0 16px;padding:24px 26px;
+ border:1px solid rgba(66,161,246,.46);border-left:4px solid var(--hub-accent,#329dff);
+ border-radius:15px;
+ background:linear-gradient(110deg,rgba(37,116,199,.16),rgba(40,112,179,.07) 55%,transparent),var(--hub-surface,#101923);
+ box-shadow:0 8px 26px rgba(3,13,29,.12)
+}
+#table-root .campaign-next-content{display:grid;justify-items:start;gap:7px;min-width:0}
+#table-root .campaign-next-kicker{
+ color:var(--hub-accent-2,#86c5ff);font-size:.69rem;font-weight:850;
+ letter-spacing:.12em
+}
+#table-root #proxima-sessao-titulo{
+ margin:0;font-size:clamp(1.13rem,1.65vw,1.42rem);
+ line-height:1.2;font-weight:780
+}
+#table-root .campaign-next-name{
+ margin:2px 0 4px;
+ font-size:clamp(1.2rem,2vw,1.65rem);
+ font-weight:770;line-height:1.3;overflow-wrap:anywhere
+}
+#table-root .campaign-next-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:3px}
+#table-root .campaign-next-status{
+ display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;
+ border:1px solid rgba(87,169,248,.4);border-radius:100px;
+ background:rgba(54,134,217,.17);color:var(--hub-accent-2,#92ccff);
+ font-size:.79rem;font-weight:750
+}
+#table-root .campaign-next-date{
+ display:inline-flex;align-items:center;gap:7px;
+ color:var(--hub-text-2,#a7b7c9);font-size:.87rem;font-weight:650
+}
+#table-root .campaign-next-date svg{
+ width:16px;height:16px;fill:none;stroke:currentColor;
+ stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round
+}
+#table-root .campaign-next-empty{margin:6px 0 0;color:var(--hub-text-2,#a7b7c9)}
+#table-root .campaign-next-action{
+ display:inline-flex;justify-content:center;align-items:center;gap:10px;
+ flex:none;min-height:46px;padding:11px 18px;
+ border:1px solid var(--hub-accent,#329dff);border-radius:10px;
+ background:var(--hub-accent,#288eef);color:#fff;
+ font-size:.92rem;font-weight:750;white-space:nowrap;text-decoration:none
+}
+#table-root .campaign-next-action:hover{filter:brightness(1.12)}
+#table-root .campaign-next-action:focus-visible{outline:3px solid var(--hub-focus,#8dd5ff);outline-offset:3px}
+@media(max-width:710px){
+ #table-root #proxima-sessao.campaign-next-highlight{flex-direction:column;align-items:stretch;padding:20px}
+ #table-root .campaign-next-action{width:100%}
+}
