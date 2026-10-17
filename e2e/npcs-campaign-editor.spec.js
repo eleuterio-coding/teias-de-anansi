@@ -6,8 +6,8 @@ test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.addInitScript(data=>{
   if(!localStorage.getItem('hub-rpg:collaboration-session:v1'))localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.master));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
-  localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([data.npc]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:npcs:v1'))localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([data.npc]));
  },{master,campaign,npc});
 });
 test('NPCs existem sob Personagens no menu do Mestre',async({page})=>{
@@ -53,10 +53,10 @@ test('jogador não vê NPCs e não pode acessar a biblioteca',async({page})=>{
 
 
 test('Mestre cria NPC pelo mesmo construtor de personagens, sem atribuição a jogador',async({page})=>{
- await page.goto('/criacao-personagem.html?npc=1');
+ await page.goto('/criacao-personagem.html?npc=1#etapa-origem');
  await expect(page.getByRole('heading',{name:'Criação de NPC'})).toBeVisible();
  await expect(page.locator('#profile-player').locator('xpath=..')).toBeHidden();
- await page.locator('[data-wizard-step="origem"]').click();
+ await expect(page.locator('#nome')).toBeVisible({timeout:30000});
  await page.locator('#nome').fill('NPC de Validação');
  await page.locator('#save').click();
  await expect(page.locator('#save-status')).toContainText('Salvo');
