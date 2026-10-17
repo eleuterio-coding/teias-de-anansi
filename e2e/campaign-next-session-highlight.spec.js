@@ -16,7 +16,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.session));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
  },{session,campaign:pending});
 });
 test('seleção e data da próxima sessão são consistentes',()=>{
