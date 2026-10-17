@@ -1,0 +1,40 @@
+name: Validar próxima sessão da Campanha
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-next-session-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'campaigns.css'
+      - 'mesa.html'
+      - 'e2e/campaign-next-session-highlight.spec.js'
+      - '.github/workflows/validar-proxima-sessao.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-next-session-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'campaigns.css'
+      - 'mesa.html'
+      - 'e2e/campaign-next-session-highlight.spec.js'
+      - '.github/workflows/validar-proxima-sessao.yml'
+permissions:
+  contents: read
+jobs:
+  proxima-sessao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe dos controladores
+        run: |
+          node --check scripts/campaign-next-session-ui.js
+          node --check scripts/campaign-table-ui.js
+          node --check scripts/campaign-table-router.js
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Validar cartões e abertura de sessões
+        run: npx playwright test e2e/campaign-next-session-highlight.spec.js
