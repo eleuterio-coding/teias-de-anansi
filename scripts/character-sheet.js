@@ -1,4 +1,4 @@
-import{state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
+import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{loadSpells}from'./character-builder/spells.js';
 import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js';
@@ -35,7 +35,7 @@ function getFeatObjects(d){const selected=Object.values(state.c.choices?.feats||
 function renderHeader(d){
  $('pc-name').textContent=state.c.name||'Personagem sem nome';
  $('pc-subtitle').textContent=[d.klass?`${d.klass.name} ${d.level}`:null,d.sub?.name,d.species?.name,state.c.choices?.species?.lineage,d.bg?.name].filter(Boolean).join(' · ');
- $('edit-link').href=`criacao-personagem.html?id=${encodeURIComponent(state.c.id)}`;
+ $('edit-link').href=`criacao-personagem.html?${npcMode()?'npc=1&':''}id=${encodeURIComponent(state.c.id)}`;
  const p=state.c.sheet.profile;
  setInput('profile-player',p.player);setInput('profile-age',p.age);setInput('profile-gender',p.gender);setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
 }
@@ -231,8 +231,10 @@ function refreshSheetFromRemote(){
 }
 
 async function init(){
+ if(npcMode()&&!npcMasterAuthorized()){location.replace('personagens.html');return}
+ if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));(()=>{const p=document.getElementById('profile-player')?.closest('label');if(p){p.hidden=true;p.style.display='none'}})()}
  const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
- if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Personagem não encontrado.</strong><br>Abra a ficha a partir da Lista de Personagens.</div>';return}
+ if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada.</strong></div>';return}
  state.c=loadCharacter();
  ensureSheetState();
 

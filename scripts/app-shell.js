@@ -1,7 +1,7 @@
 
 const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
 const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
-const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
+const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","bibliotecas.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
@@ -9,12 +9,13 @@ const NAV_ITEMS=[
  {page:"aventuras.html",label:"Aventuras",icon:"map"},
  {page:"sessoes.html",label:"Sessões",icon:"calendar"},
  {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
+ {page:"npcs.html",label:"NPCs",icon:"player",masterOnly:true},
  {page:"bibliotecas.html",label:"Biblioteca",icon:"library"}
 ];
 const PAGE_LABELS={
  "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","nova-campanha.html":"Nova campanha","mesa.html":"Campanha",
  "sessoes.html":"Sessões","aventuras.html":"Aventuras","personagens.html":"Personagens",
- "lista-personagens.html":"Personagens","bibliotecas.html":"Biblioteca","configuracoes.html":"Configurações"
+ "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","configuracoes.html":"Configurações"
 };
 const ICONS={
  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
@@ -36,7 +37,7 @@ function icon(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="current
 function currentPage(){return location.pathname.split("/").pop()||"index.html"}
 function shellEligible(){return SHELL_PAGES.has(currentPage())}
 function pageLabel(page){page=page||currentPage();return PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
-function pageMatches(item,page){page=page||currentPage();return item.page===page||(item.aliases||[]).includes(page)||((page==="mesa.html"||page==="nova-campanha.html")&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
+function pageMatches(item,page){page=page||currentPage();if(item.page==="npcs.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return true;if(item.page==="personagens.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return false;return item.page===page||(item.aliases||[]).includes(page)||((page==="mesa.html"||page==="nova-campanha.html")&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
 function readRecents(){try{const rows=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");return Array.isArray(rows)?rows:[]}catch{return[]}}
 function rememberCurrent(label){
  const page=currentPage();if(!shellEligible()||page==="index.html")return;
@@ -46,11 +47,13 @@ function rememberCurrent(label){
 }
 function previewActive(){try{return Boolean(JSON.parse(localStorage.getItem("hub-rpg:master-preview:v1")||"null")?.username)}catch{return false}}
 function masterSession(){try{return JSON.parse(localStorage.getItem("hub-rpg:collaboration-session:v1")||"null")}catch{return null}}
+function masterNpcAccess(){return Boolean(masterSession()?.isMaster&&!previewActive())}
 function contextualAction(){
  if(previewActive())return null;
  const page=currentPage(),params=new URLSearchParams(location.search);
  
  if(page==="sessoes.html")return{label:"Nova sessão",href:"#session-create-card"};
+ if(page==="npcs.html"&&masterNpcAccess())return{label:"Novo NPC",href:"criacao-personagem.html?npc=1"};
  if(page==="lista-personagens.html"||page==="personagens.html")return{label:"Novo personagem",href:"criacao-personagem.html"};
  if(page==="mesa.html")return{label:"Nova sessão",href:"sessoes.html?campaign="+encodeURIComponent(params.get("id")||"")};
  return null
@@ -78,7 +81,7 @@ function buildSidebar(){
  const brand=document.createElement("a");brand.className="hub-brand";brand.href="painel.html";brand.setAttribute("aria-label","Ir para o início do Hub");
  brand.innerHTML='<span class="hub-brand-mark"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16 2 21 11 30 16 21 21 16 30 11 21 2 16 11 11Z" fill="currentColor" opacity=".28"/><path d="M16 5v22M5 16h22M10 10l12 12M22 10 10 22" stroke="currentColor" stroke-width="1.6"/></svg></span><strong>HUB</strong>';
  aside.appendChild(brand);
- const nav=document.createElement("nav");nav.className="hub-nav";nav.setAttribute("aria-label","Navegação principal");NAV_ITEMS.forEach(function(item){nav.appendChild(makeLink(item))});aside.appendChild(nav);
+ const nav=document.createElement("nav");nav.className="hub-nav";nav.setAttribute("aria-label","Navegação principal");NAV_ITEMS.filter(item=>!item.masterOnly||masterNpcAccess()).forEach(function(item){nav.appendChild(makeLink(item))});aside.appendChild(nav);
  const spacer=document.createElement("div");spacer.className="hub-sidebar-spacer";aside.appendChild(spacer);
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
@@ -93,13 +96,14 @@ function breadcrumbTrail(label){
  if(page==="painel.html"||page==="index.html")return[{label:"Início"}];
  const sections={
   "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
-  "personagens.html":"Personagens","lista-personagens.html":"Personagens",
+  "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
   "bibliotecas.html":"Biblioteca","configuracoes.html":"Configurações"
  };
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
  if(page==="mesa.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:label&&label!=="Campanhas"?label:"Campanha"}];
  if(LIBRARY_PAGES.has(page))return[...start,{label:"Biblioteca",href:"bibliotecas.html"},{label:label||pageLabel(page)}];
+ if(CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return[...start,{label:"NPCs",href:"npcs.html"},{label:page==="criacao-personagem.html"?"Criação de NPC":"Ficha de NPC"}];
  if(CHARACTER_PAGES.has(page))return[...start,{label:"Personagens",href:"personagens.html"},{label:label||pageLabel(page)}];
  return[...start,{label:label||pageLabel(page)}]
 }
@@ -134,7 +138,7 @@ function buildCommand(){
  document.body.appendChild(modal);return modal
 }
 function commandItems(){
- const base=NAV_ITEMS.map(function(item){return{label:item.label,href:item.page,kind:"Área",icon:item.icon}});
+ const base=NAV_ITEMS.filter(item=>!item.masterOnly||masterNpcAccess()).map(function(item){return{label:item.label,href:item.page,kind:"Área",icon:item.icon}});
  base.push({label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(!previewActive())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
  readRecents().slice(0,4).forEach(function(row){base.push({label:row.label,href:row.href,kind:"Recente",icon:row.page==="mesa.html"?"campaign":"star"})});
  document.querySelectorAll('.section-nav a[href^="#"]').forEach(function(link){base.push({label:link.textContent.trim(),href:link.getAttribute("href"),kind:"Nesta página",icon:"chevron"})});
