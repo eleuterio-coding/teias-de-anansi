@@ -98,3 +98,22 @@
  .hub-collection-card{transition:none}
  .hub-collection-card:not(.hub-collection-create):hover{transform:none}
 }
+
+/* Compatibilidade com estilos legados que tinham especificidade maior. */
+#adventure-root .adventure-card.hub-collection-card{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding:0!important;background:var(--hub-surface-2,#111b27)!important;border:1px solid var(--hub-border,#27384b)!important}
+#adventure-root .adventure-card.hub-collection-card:hover{border-color:var(--hub-accent,#339dff)!important}
+#adventure-root .adventure-card.hub-collection-card .adventure-card-main{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:15px 14px 6px;flex:1}
+#adventure-root .adventure-card.hub-collection-card .adventure-card-title{margin:0 0 6px;font-size:1.09rem;line-height:1.35;color:var(--hub-text,#f4f7fb)}
+#adventure-root .adventure-card.hub-collection-card .adventure-card-description{margin:0 0 8px;color:var(--hub-text-2,#d3deea)!important;-webkit-text-fill-color:var(--hub-text-2,#d3deea)!important}
+#adventure-root .adventure-card.hub-collection-card .adventure-card-actions{display:flex;justify-content:space-between;align-items:center;align-self:stretch;gap:8px;padding:12px 14px 15px;width:100%;min-width:0;flex-wrap:nowrap}
+#adventure-root .adventure-card.hub-collection-card .adventure-card-actions button{min-width:0;width:auto;min-height:42px}
+#adventure-root .adventure-card.hub-collection-card .hub-parent-link{display:inline-flex;align-items:center;gap:5px;margin:0}
+#adventure-root .adventure-card.hub-collection-card .hub-parent-link a{position:relative;z-index:2;color:#9dcbff;text-underline-offset:2px}
+#adventure-root .adventure-card.hub-collection-card .hub-collection-image img{height:160px;max-height:none;width:100%;object-fit:cover}
+#adventure-root .adventure-card.hub-collection-card .hub-collection-context{align-self:stretch}
+#sessions-list:not(.hub-collection-grid)>.session-card{width:100%}
+.hub-collection-section [hidden]{display:none!important}
+@media(max-width:600px){
+ #adventure-root .adventure-card.hub-collection-card{flex-direction:column!important}
+ #adventure-root .adventure-card.hub-collection-card .adventure-card-actions{justify-content:space-between}
+}
