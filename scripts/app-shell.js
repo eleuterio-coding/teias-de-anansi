@@ -50,12 +50,12 @@ function masterSession(){try{return JSON.parse(localStorage.getItem("hub-rpg:col
 function masterNpcAccess(){return Boolean(masterSession()?.isMaster&&!previewActive())}
 function contextualAction(){
  if(previewActive())return null;
- const page=currentPage(),params=new URLSearchParams(location.search);
+ const page=currentPage();
  
  if(page==="sessoes.html")return{label:"Nova sessão",href:"#session-create-card"};
  if(page==="npcs.html"&&masterNpcAccess())return{label:"Novo NPC",href:"criacao-personagem.html?npc=1"};
  if(page==="lista-personagens.html"||page==="personagens.html")return{label:"Novo personagem",href:"criacao-personagem.html"};
- if(page==="mesa.html")return{label:"Nova sessão",href:"sessoes.html?campaign="+encodeURIComponent(params.get("id")||"")};
+
  return null
 }
 function makeLink(item){
