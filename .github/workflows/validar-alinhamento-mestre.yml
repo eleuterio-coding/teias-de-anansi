@@ -1,0 +1,32 @@
+name: Validar alinhamento dos controles do Mestre
+on:
+  pull_request:
+    paths:
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - '**.html'
+      - 'e2e/master-topbar-alignment.spec.js'
+      - '.github/workflows/validar-alinhamento-mestre.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - '**.html'
+      - 'e2e/master-topbar-alignment.spec.js'
+      - '.github/workflows/validar-alinhamento-mestre.yml'
+permissions:
+  contents: read
+jobs:
+  topbar-mestre:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --check scripts/hub-ux.js
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Verificar alinhamento e dropdowns em desktop e celular
+        run: npx playwright test e2e/master-topbar-alignment.spec.js
