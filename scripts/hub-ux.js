@@ -1,5 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20261016-layout1';
-import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261016-npcs1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261019-campaign-no-new-session1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
