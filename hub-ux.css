@@ -560,7 +560,7 @@ body.hub-shell-enabled #campaign-list .campaign-card-actions>button[data-delete]
 /* Navegação entre seções: marcador único animado, sem fazer a página saltar
    ao centralizar horizontalmente a aba ativa. */
 body.hub-shell-enabled .section-nav{isolation:isolate;scroll-behavior:smooth}
-body.hub-shell-enabled .section-nav a[aria-current="location"]{box-shadow:none!important}
+body.hub-shell-enabled .section-nav[data-indicator-ready="true"] a[aria-current="location"]{box-shadow:none!important}
 body.hub-shell-enabled .section-nav .section-nav-indicator{
  position:absolute;left:0;bottom:0;z-index:2;display:block;
  height:2px;width:0;border-radius:3px 3px 0 0;
