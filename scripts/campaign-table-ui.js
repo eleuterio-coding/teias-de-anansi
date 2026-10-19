@@ -16,13 +16,12 @@ const playerOrder=(a,b)=>alphabetical.compare(a.displayName||a.username||'',b.di
 const characterOrder=(a,b)=>alphabetical.compare(a.name||'Personagem sem nome',b.name||'Personagem sem nome')||alphabetical.compare(a.id||'',b.id||'');
 function charLabel(c){const s=c.refSnapshots||{},level=c.choices?.class?.level;return`${c.name||'Personagem sem nome'}${s.class?.name?` · ${s.class.name}${level?` ${level}`:''}`:''}`}
 function characterOptions(selected='',memberId='',username=''){
- const normalized=String(username||'').trim().toLowerCase();
- const unavailable=id=>campaigns.some(c=>(c.members||[]).some(m=>{
-  if(m.characterId!==id||(c.id===campaignId&&m.id===memberId))return false;
-  const other=String(m.username||m.name||'').trim().toLowerCase();
-  return c.id===campaignId||!normalized||!other||other!==normalized
- }));
- return `<option value="">— Sem personagem —</option>${characters.filter(c=>c.id===selected||!unavailable(c.id)).sort(characterOrder).map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(charLabel(c))}</option>`).join('')}`
+ // Somente personagens sem vínculo com qualquer campanha podem ser escolhidos.
+ // O vínculo com a própria linha continua aparecendo como seleção corrente.
+ const unavailable=id=>campaigns.some(c=>(c.members||[]).some(m=>
+  m.characterId===id&&(c.id!==campaignId||m.id!==memberId)
+ ));
+ return `<option value="">— Sem personagem —</option>${characters.filter(c=>!unavailable(c.id)).sort(characterOrder).map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(charLabel(c))}</option>`).join('')}`
 }
 function participantOptions(){const used=new Set(campaign.members.map(m=>String(m.username||m.name||'').trim().toLowerCase()));const rows=hubParticipants.filter(p=>!used.has(String(p.username||p.displayName||'').trim().toLowerCase())).sort(playerOrder);return`<option value="">— Selecione —</option>${rows.map(p=>`<option value="${esc(p.username)}">${esc(p.displayName)}</option>`).join('')}`}function participantMemberOptions(member){const currentKey=String(member.username||member.name||'').trim().toLowerCase(),rows=[...hubParticipants];if(currentKey&&!rows.some(p=>p.username===currentKey))rows.unshift({username:currentKey,displayName:member.name||currentKey});return rows.sort(playerOrder).map(p=>`<option value="${esc(p.username)}" ${p.username===currentKey?'selected':''}>${esc(p.displayName)}</option>`).join('')}
 function activeSession(){return campaign?.sessions.find(s=>s.id===campaign.activeSessionId)||null}
@@ -139,7 +138,7 @@ function bindMembers(){
    const value=event.target.value;
    const result=value?assignCharacterToMember(campaigns,campaignId,id,value):unassignCharacterFromMember(campaigns,campaignId,id);
    if(!result.ok){syncRosterControls();return feedback(result.reason,false)}
-   commitRoster(result.list,result.movedFrom?`Personagem movido de ${result.movedFrom.campaignName} para esta Mesa.`:'Vínculo de personagem atualizado.')
+   commitRoster(result.list,'Vínculo de personagem atualizado.')
   })
  });
  list.querySelectorAll('[data-remove-member]').forEach(button=>button.addEventListener('click',()=>{
@@ -168,6 +167,6 @@ function bindCampaignSaveButtons(){
  }))
 }
 
-function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,linked.movedFrom?`Jogador adicionado e personagem movido de ${linked.movedFrom.campaignName}.`:'Jogador e personagem vinculados.',{rebuildRows:true})})}
+function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
 async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username)}catch{hubParticipants=[]}render()}
 init();
