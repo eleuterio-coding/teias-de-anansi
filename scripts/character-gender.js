@@ -54,7 +54,7 @@ function safeRoleFallback(value,gender){
  const name=String(value||'').trim(),key=fold(name);
  if(!name||!gender||suffixInvariants.has(key)||name.includes(' ')||name.includes('-'))return name;
  if(gender==='Feminino'&&/o$/i.test(name))return name.slice(0,-1)+'a';
- if(gender==='Outro'&&/[oa]$/i.test(name))return name.slice(0,-1)+'e';
+ if(gender==='Outro'&&/o$/i.test(name))return name.slice(0,-1)+'e';
  return name
 }
 export function genderedCharacterTerm(value,gender,kind='class'){
