@@ -1,5 +1,5 @@
 import{test,expect}from'@playwright/test';
-import{findNextCampaignSession,readableSessionDate}from'../scripts/campaign-next-session-ui.js';
+import{findNextCampaignSession,findPreviousCampaignSession,readableSessionDate}from'../scripts/campaign-next-session-ui.js';
 const session={uid:'u-e2e-master',username:'rafael',isMaster:true,memberships:[]};
 const pending={
  id:'e2e-campaign-next',name:'Reinos de Prata',status:'current',members:[],
@@ -116,4 +116,39 @@ test('referência da capa sincronizada usa hidratação de mídia com fallback',
  await expect(image).toHaveAttribute('data-hub-media-id','session-cover-storage-id');
  await expect(image).toHaveAttribute('data-fallback-src','/fallback-cover.svg');
  await expect(card).toHaveAttribute('data-has-session-cover','true');
+});
+
+test('Sessão anterior é a última concluída antes da sessão corrente, com link',async({page})=>{
+ const withHistory={...pending,sessions:[
+  ...pending.sessions,
+  {id:'s-old',number:4,title:'Prólogo',status:'completed',date:'2026-10-11'},
+  {id:'s-previous',number:6,title:'Além das muralhas',status:'completed',date:'2026-10-18'},
+  {id:'s-cancelled',number:5,title:'Sessão cancelada',status:'cancelled'}
+ ]};
+ expect(findPreviousCampaignSession(pending)).toBe(null);
+ expect(findPreviousCampaignSession(withHistory)?.id).toBe('s-previous');
+ expect(findPreviousCampaignSession({...withHistory,sessions:withHistory.sessions.filter(s=>s.status==='completed')})?.id).toBe('s-previous');
+ await page.goto('/mesa.html?id=e2e-campaign-next');
+ await expect(page.locator('.campaign-product-summary .metric').last()).toContainText('Sessão anterior');
+ await expect(page.locator('.campaign-product-summary .metric').last()).toContainText('Nenhuma sessão anterior');
+ await expect(page.locator('.campaign-product-summary .metric').last()).not.toHaveAttribute('href',/./);
+ await page.evaluate(sessions=>{
+  const rows=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'));
+  rows[0].sessions=sessions;localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(rows));
+ },withHistory.sessions);
+ await page.reload();
+ const previous=page.locator('.campaign-product-summary .metric').last();
+ await expect(previous).toContainText('Sessão anterior');
+ await expect(previous).toContainText('Sessão 6 · Além das muralhas');
+ await expect(previous).toHaveAttribute('href','sessoes.html?campaign=e2e-campaign-next&id=s-previous');
+});
+
+test('Abrir sessão ganha CTA visual, preservando o destino e acessibilidade',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-next');
+ const button=page.locator('#proxima-sessao .campaign-next-action');
+ await expect(button).toBeVisible();
+ await expect(button).toHaveAttribute('href','sessoes.html?campaign=e2e-campaign-next&id=s-current');
+ await expect(button.locator('.campaign-next-action-kicker')).toHaveText('ACESSAR');
+ await expect(button.locator('.campaign-next-action-copy strong')).toHaveText('Abrir sessão');
+ await expect(button.locator('.campaign-next-action-icon svg')).toHaveCount(1);
 });

@@ -138,7 +138,7 @@ test('ações da ficha são ícones quadrados na mesma linha dos campos',async({
  expect(geo.remove.width).toBe(geo.remove.height);
 });
 
-test('ações da capa têm o mesmo azul semitransparente e não exibem Todas as campanhas',async({page})=>{
+test('ações da capa têm o mesmo azul sólido e não exibem Todas as campanhas',async({page})=>{
  await page.goto('/mesa.html?id=campaign-nav-ui-e2e');
  const actions=page.locator('.campaign-product-actions');
  await expect(actions.locator('a')).toHaveCount(2);
@@ -147,5 +147,5 @@ test('ações da capa têm o mesmo azul semitransparente e não exibem Todas as 
  await expect(actions.getByRole('link',{name:'Nova Sessão'})).toBeVisible();
  const fills=await actions.locator('a').evaluateAll(links=>links.map(link=>getComputedStyle(link).backgroundColor));
  expect(fills[0]).toBe(fills[1]);
- expect(fills[0]).toMatch(/rgba\(47, 156, 255, 0\.5\)/);
+ expect(fills[0]).toBe('rgb(47, 156, 255)');
 });

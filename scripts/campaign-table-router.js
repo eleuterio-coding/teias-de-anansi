@@ -1,5 +1,5 @@
 import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20261016-master-preview1';
-import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-image-backdrop1';
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-prev-and-cta1';
 import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20261019-campaign-status1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -11,5 +11,5 @@ function readOnlyTable(row){const c=row.campaign,m=row.membership,adventures=row
 function denied(){const root=document.getElementById('table-root');root.innerHTML='<div class="status warning"><strong>Mesa não atribuída a esta conta.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>'}
 function renderPlayerTable(){const shared=sharedCampaignById(campaignId);if(shared)readOnlyTable(shared);else denied()}
 function normalizeDm(){const list=readCampaigns();if(!list.some(c=>c.dmName!==DM_NAME))return;writeCampaigns(list.map(c=>({...c,dmName:DM_NAME})))}
-async function start(){if(playerMode()){renderPlayerTable();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();renderPlayerTable()});return}normalizeDm();await Promise.all([import('./campaign-table-ui.js?v=20261019-ordered-roots1'),import('./campaign-table-adventure-ui.js?v=20261016-campaign-geography1')])}
+async function start(){if(playerMode()){renderPlayerTable();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();renderPlayerTable()});return}normalizeDm();await Promise.all([import('./campaign-table-ui.js?v=20261019-editor-roster1'),import('./campaign-table-adventure-ui.js?v=20261016-campaign-geography1')])}
 start();

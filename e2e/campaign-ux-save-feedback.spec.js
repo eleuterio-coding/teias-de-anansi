@@ -18,7 +18,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.session));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(data.characters));
  },{session,campaign,characters});
 });
@@ -166,7 +166,7 @@ test('campos e ações de jogadores ficam alinhados na coluna compacta do deskto
   expect(row.remove.right).toBeLessThanOrEqual(row.row.right+2);
  }
 });
-test('Campanha e Jogadores ficam lado a lado no desktop e capa tem ações sobre a imagem',async({page})=>{
+test('Campanha ocupa largura inteira acima dos Jogadores e capa mantém ações',async({page})=>{
  await page.setViewportSize({width:1440,height:900});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const campaignCard=page.locator('#campanha'),playersCard=page.locator('#jogadores');
@@ -180,10 +180,18 @@ test('Campanha e Jogadores ficam lado a lado no desktop e capa tem ações sobre
   const controls=[...picker.querySelectorAll('.image-picker-actions :is(.image-picker-button,button[data-image-remove])')].filter(el=>!el.hidden).map(el=>el.getBoundingClientRect());
   return {campaign:bounds('campanha'),players:bounds('jogadores'),preview:preview.toJSON(),actions:actions.toJSON(),controls:controls.map(r=>r.toJSON()),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
  });
- expect(geometry.players.left).toBeGreaterThan(geometry.campaign.right-2);
- expect(Math.abs(geometry.players.top-geometry.campaign.top)).toBeLessThan(2);
- expect(geometry.campaign.width).toBeGreaterThan(200);
- expect(geometry.players.width).toBeGreaterThan(200);
+ expect(geometry.players.top).toBeGreaterThanOrEqual(geometry.campaign.bottom);
+ expect(Math.abs(geometry.players.left-geometry.campaign.left)).toBeLessThanOrEqual(2);
+ expect(Math.abs(geometry.campaign.width-geometry.players.width)).toBeLessThanOrEqual(2);
+ expect(geometry.campaign.width).toBeGreaterThan(700);
+ expect(geometry.players.width).toBeGreaterThan(700);
+ const columns=await campaignCard.evaluate(el=>{
+  const main=el.querySelector('.campaign-settings-primary').getBoundingClientRect();
+  const info=el.querySelector('.campaign-settings-details').getBoundingClientRect();
+  return {main:main.toJSON(),info:info.toJSON()};
+ });
+ expect(columns.info.left).toBeGreaterThanOrEqual(columns.main.right);
+ expect(Math.abs(columns.info.top-columns.main.top)).toBeLessThan(3);
  expect(geometry.actions.top).toBeGreaterThanOrEqual(geometry.preview.top);
  expect(geometry.actions.left).toBeGreaterThan(geometry.preview.left);
  expect(geometry.actions.right).toBeLessThanOrEqual(geometry.preview.right+1);
@@ -212,4 +220,50 @@ test('mobile mantém Campanha e Jogadores empilhados e controles da capa sobre a
  expect(geo.actions.right).toBeLessThanOrEqual(geo.preview.right+1);
  expect(geo.campaign.right).toBeLessThanOrEqual(geo.clientWidth+2);
  expect(geo.players.right).toBeLessThanOrEqual(geo.clientWidth+2);
+});
+
+test('reorganização dos jogadores por teclado persiste, sem alterar vínculos',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const list=page.locator('#member-list');
+ await expect(list.locator('[data-member-row]')).toHaveCount(2);
+ const bruno=list.locator('[data-member-row="m2"] .roster-grip');
+ await bruno.focus();
+ await bruno.press('ArrowUp');
+ await expect(list.locator('[data-member-row]').first()).toHaveAttribute('data-member-row','m2');
+ await expect(list.locator('[data-member-row="m2"] .roster-grip')).toBeFocused();
+ await page.reload();
+ await expect(list.locator('[data-member-row]').first()).toHaveAttribute('data-member-row','m2');
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0].members);
+ expect(saved.map(m=>m.id)).toEqual(['m2','m1']);
+ expect(saved.find(m=>m.id==='m1')?.characterId).toBe('pc-fernanda');
+});
+
+test('arrastar jogador sobre outro reordena sem perder personagens',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop-chromium','arraste nativo em desktop');
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const list=page.locator('#member-list');
+ const handle=list.locator('[data-member-row="m1"] .roster-grip');
+ const target=list.locator('[data-member-row="m2"]');
+ await handle.scrollIntoViewIfNeeded();
+ const from=await handle.boundingBox(),to=await target.boundingBox();
+ await page.mouse.move(from.x+from.width/2,from.y+from.height/2);
+ await page.mouse.down();
+ await page.mouse.move(to.x+to.width/2,to.y+to.height*.80,{steps:14});
+ await page.mouse.up();
+ await expect(list.locator('[data-member-row]').first()).toHaveAttribute('data-member-row','m2');
+ await expect(list.locator('[data-member-row]').last()).toHaveAttribute('data-member-row','m1');
+ await page.reload();
+ await expect(list.locator('[data-member-row]').last()).toHaveAttribute('data-member-row','m1');
+});
+
+test('borda da capa é suave e ações do editor continuam operacionais',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const preview=page.locator('#campanha .image-picker-preview');
+ await expect(preview).toBeVisible();
+ const border=await preview.evaluate(el=>getComputedStyle(el).borderColor);
+ expect(border).toMatch(/rgba\(178, 200, 222, 0\.14\)/);
+ const section=page.locator('#campanha');
+ await expect(section.locator('[data-campaign-field="name"]')).toBeVisible();
+ await expect(section.locator('[data-image-input]')).toHaveCount(1);
+ await expect(section.locator('[data-save-campaign-section]')).toBeVisible();
 });
