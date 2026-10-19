@@ -15,7 +15,7 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null){
   ?`<button type="button" class="hub-diagram-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${children.length}" aria-expanded="${!collapsed}" aria-controls="timeline-diagram-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${children.length} ${children.length===1?'subitem':'subitens'}</button>`
   :'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
- <div class="hub-diagram-node" data-diagram-event="${esc(node.id)}">
+ <div class="hub-diagram-node" data-diagram-event="${esc(node.id)}"${children.length?` data-diagram-toggle="${esc(node.id)}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para expandir ou recolher os subitens."`:``}>
  <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
  <strong>${esc(node.text)}</strong>
  <div class="hub-diagram-actions">
