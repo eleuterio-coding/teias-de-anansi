@@ -42,10 +42,11 @@ test('jogadores organizados e confirmação acessível após salvar',async({page
  await expect(rows).toHaveCount(2);
  await expect(page.locator('.roster-count')).toContainText('2 jogadores');
  for(const row of await rows.all()){
-  await expect(row.locator('[data-member-user]')).toBeVisible();
+  await expect(row.locator('.roster-player-name')).toBeVisible();
+  await expect(row.locator('[data-member-user]')).toHaveCount(0);
   await expect(row.locator('[data-member-character]')).toBeVisible();
   await expect(row.getByText('Notas',{exact:true})).toHaveCount(0);
-  await expect(row.locator('label').first()).toContainText('Jogador');
+  await expect(row.locator('.roster-player-label')).toHaveText('Jogador');
   await expect(row.locator('.roster-player-character label')).toContainText('Personagem');
   await expect(row.locator('.roster-open-button')).toBeVisible();
   await expect(row.locator('.roster-open-button')).toHaveText('Abrir');
