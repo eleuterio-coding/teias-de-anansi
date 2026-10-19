@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-flowchart1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-independent-roots1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const entries=value=>String(value||'').split(/\r?\n/).map(x=>x.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
 const clean=v=>String(v??'').trim();
@@ -72,14 +72,15 @@ function bullets(c,id,title,field){
  <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
-function nodeHtml(node,index,depth=0){
- const sub=(node.children||[]);
+function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
+ const sub=(node.children||[]),collapsed=collapsedIds.has(node.id);
  return `<li class="timeline-item" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}">
   <div class="campaign-flow-step" draggable="true" data-timeline-drag="${esc(node.id)}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
    <div class="campaign-flow-card">
     <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
     <input class="timeline-node-text" data-timeline-text="${esc(node.id)}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
     <div class="campaign-flow-actions">
+      ${sub.length?`<button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}" aria-controls="timeline-list-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button>`:''}
       <button type="button" class="secondary timeline-add-child" data-timeline-add-child="${esc(node.id)}" aria-label="Adicionar subevento">+ Subitem</button>
       <button type="button" class="secondary" data-timeline-move="up" data-timeline-target="${esc(node.id)}" aria-label="Mover para cima">↑</button>
       <button type="button" class="secondary" data-timeline-move="down" data-timeline-target="${esc(node.id)}" aria-label="Mover para baixo">↓</button>
@@ -89,21 +90,21 @@ function nodeHtml(node,index,depth=0){
     </div>
    </div>
   </div>
-  ${sub.length?`<ol class="timeline-children">${sub.map((child,i)=>nodeHtml(child,i,depth+1)).join('')}</ol>`:''}
+  ${sub.length?`<ol class="timeline-children" id="timeline-list-children-${esc(node.id)}" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>nodeHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
  </li>`
 }
-function flow(c,view='list'){
+function flow(c,view='list',collapsedIds=new Set()){
  const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span></div>${timelineViewToggle(mode)}</div>
- ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
+ ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  <div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>
  </section>`
 }
-export function renderStructuredSection(c,npcs,id,view='list'){
+export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=new Set()){
  if(id==='npcs')return roster(c,npcs);
  if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations');
 
- if(id==='linha-tempo')return flow(c,view);
+ if(id==='linha-tempo')return flow(c,view,collapsedIds);
  return''
 }
 export function renderStructuredDetails(c,npcs){
@@ -117,15 +118,16 @@ export function renderStructuredDetails(c,npcs){
   </div>
  </div>`
 }
-export function renderTimeline(c,view='list'){return flow(c,view)}
+export function renderTimeline(c,view='list',collapsedIds=new Set()){return flow(c,view,collapsedIds)}
 export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  let timelineView='list';
+ const collapsedTimelineIds=new Set();
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
  const root=document.querySelector('.campaign-sections');if(!root)return;
  const refresh=id=>{
   const previous=document.getElementById(id);if(!previous)return;
   const template=document.createElement('template');
-  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list');
+  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list',collapsedTimelineIds);
   previous.replaceWith(template.content.firstElementChild)
  };
  const persist=(patch,id,message,render=true)=>{
@@ -137,6 +139,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  const move=(source,target,position)=>{
   const previous=getCampaign().timelineNodes,updated=moveTimelineNode(previous,source,target,position);
   if(updated&&JSON.stringify(updated)!==JSON.stringify(previous)){
+   if(position==='child')collapsedTimelineIds.delete(target);
    saveTree(updated,'Linha do tempo reorganizada.');return true
   }
   if(!updated)feedback('Esse movimento não é permitido.',false);
@@ -157,7 +160,21 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(!section)return;
   const target=event.target.closest('button');if(!target)return;
   const c=getCampaign();
-  if(target.matches('[data-timeline-view]')){
+  if(target.matches('[data-timeline-toggle]')){
+   // Modifica só a ramificação: não recria campos, não perde o foco
+   // e preserva o estado ao alternar Lista / Fluxograma.
+   const id=target.dataset.timelineToggle;
+   const container=target.closest('.timeline-item,.hub-diagram-node-group');
+   const children=container?.querySelector(':scope > .timeline-children, :scope > .hub-diagram-children');
+   if(!children)return;
+   const closing=target.getAttribute('aria-expanded')==='true';
+   children.hidden=closing;
+   if(closing)collapsedTimelineIds.add(id);else collapsedTimelineIds.delete(id);
+   target.setAttribute('aria-expanded',String(!closing));
+   const count=Number(target.dataset.timelineCount);
+   target.textContent=`${closing?'Mostrar':'Ocultar'} ${count} ${count===1?'subitem':'subitens'}`;
+   return
+  }else if(target.matches('[data-timeline-view]')){
    timelineView=target.dataset.timelineView==='flowchart'?'flowchart':'list';
    refresh('linha-tempo');
    return
@@ -197,11 +214,12 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
    let name=parent?window.prompt('Nome do subevento:'):clean(section.querySelector('[data-new-timeline]')?.value);
    if(!name)return;
    const added=addTimelineNode(c.timelineNodes,name,parent);if(!added)return;
+   if(parent)collapsedTimelineIds.delete(parent);
    saveTree(added.nodes,'Evento adicionado.')
   }else if(target.matches('[data-timeline-delete]')){
    const id=target.dataset.timelineDelete,node=findNode(c.timelineNodes,id);
    if(node?.children?.length&&!confirm('Remover este evento e todos os seus subeventos?'))return;
-   const updated=removeTimelineNode(c.timelineNodes,id);if(updated)saveTree(updated,'Evento removido.')
+   const updated=removeTimelineNode(c.timelineNodes,id);if(updated){collapsedTimelineIds.delete(id);saveTree(updated,'Evento removido.')}
   }else if(target.matches('[data-timeline-move]')){
    const id=target.dataset.timelineTarget,loc=locationOf(c.timelineNodes,id);
    if(!loc)return;

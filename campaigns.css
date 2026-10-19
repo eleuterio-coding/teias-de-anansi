@@ -991,3 +991,34 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
   #table-root #jogadores .roster-player{grid-template-rows:18px 44px 68px 44px}
  }
 }
+
+/* Linha do tempo em Lista: raízes independentes, conexões somente nos ramos internos. */
+#table-root .timeline-tree{gap:13px}
+#table-root .timeline-tree>.timeline-item{
+ padding:10px 12px;border:1px solid var(--hub-border,#334a60);
+ border-radius:12px;background:var(--hub-surface-2,#132333)
+}
+#table-root .timeline-tree>.timeline-item::before,
+#table-root .timeline-tree>.timeline-item::after{content:none}
+#table-root .timeline-tree>.timeline-item>.campaign-flow-step::before,
+#table-root .timeline-tree>.timeline-item>.campaign-flow-step::after{display:none}
+#table-root .timeline-children{
+ position:relative;gap:5px;margin:4px 0 2px 24px;
+ padding:0 0 0 18px;border-left:2px solid rgba(96,175,240,.46)
+}
+#table-root .timeline-children>.timeline-item::before{
+ content:"";position:absolute;top:34px;left:-18px;
+ width:18px;height:2px;background:rgba(96,175,240,.46)
+}
+#table-root .timeline-children[hidden]{display:none!important}
+#table-root .timeline-collapse{
+ color:var(--hub-accent-2,#89caff);border-color:rgba(95,169,237,.4);
+ white-space:nowrap
+}
+#table-root .timeline-collapse:hover{border-color:#85c9ff}
+@media(max-width:650px){
+ #table-root .timeline-tree>.timeline-item{padding:9px}
+ #table-root .timeline-children{margin-left:9px;padding-left:14px}
+ #table-root .timeline-children>.timeline-item::before{left:-14px;width:14px}
+ #table-root .timeline-collapse{white-space:normal}
+}

@@ -36,3 +36,91 @@
  .hub-diagram-node-group{min-width:205px}
  .hub-diagram-children::after{left:calc(102.5px);right:calc(102.5px)}
 }
+
+/* Na Campanha, cada evento principal ocupa um cluster independente.
+   Somente subeventos recebem conectores. Não afeta fluxograma da Aventura. */
+.hub-diagram-scroll--campaign{
+ width:100%;padding:14px;border-color:#334b65;background:#0b1521;
+ overflow-x:auto;overscroll-behavior-x:contain
+}
+.hub-diagram-roots{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));
+ width:100%;min-width:0;gap:18px;align-items:start
+}
+.hub-diagram-root{
+ display:block;min-width:0;width:100%;padding:16px;
+ border:1px solid #2b4259;border-radius:14px;background:#101f2e
+}
+.hub-diagram-root+.hub-diagram-root::before{content:none;display:none}
+.hub-diagram-roots .hub-diagram-node-group{
+ display:flex;flex-direction:column;align-items:stretch;gap:0;
+ min-width:0;width:100%;flex:initial
+}
+.hub-diagram-roots .hub-diagram-node{
+ width:100%;max-width:100%;min-width:0;
+ padding:14px 15px;border-color:#476b8c
+}
+.hub-diagram-roots .hub-diagram-node-group[data-diagram-depth]:not([data-diagram-depth="0"])>.hub-diagram-node{
+ background:#162c40;border-color:#3c6487
+}
+.hub-diagram-roots .hub-diagram-actions{
+ display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:auto;padding-top:5px
+}
+.hub-diagram-roots .hub-diagram-actions button{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:34px;margin:0;padding:6px 10px;border-radius:8px;
+ font-size:.79rem;line-height:1.25;white-space:normal
+}
+.hub-diagram-roots .hub-diagram-collapse{
+ border:1px solid #426989;background:#102b42;color:#b4defa;cursor:pointer
+}
+.hub-diagram-roots .hub-diagram-collapse:hover,
+.hub-diagram-roots .hub-diagram-edit:hover{
+ border-color:#76b9ed;background:#224563;color:#fff
+}
+.hub-diagram-roots :is(.hub-diagram-collapse,.hub-diagram-edit):focus-visible{
+ outline:2px solid #87cfff;outline-offset:3px
+}
+/* Trilho vertical com ramos curtos somente entre pai e filhos. */
+.hub-diagram-roots .hub-diagram-children{
+ position:relative;display:grid;grid-template-columns:minmax(0,1fr);
+ justify-content:stretch;align-items:start;gap:11px;
+ min-width:0;min-height:0;margin:14px 0 0 14px;padding:0 0 0 18px
+}
+.hub-diagram-roots .hub-diagram-children::before{
+ content:"";position:absolute;left:0;top:26px;bottom:26px;
+ width:2px;border:0;background:#477ca5
+}
+.hub-diagram-roots .hub-diagram-children::after{content:none;display:none}
+.hub-diagram-roots .hub-diagram-children>.hub-diagram-node-group{position:relative}
+.hub-diagram-roots .hub-diagram-children>.hub-diagram-node-group::before,
+.hub-diagram-roots .hub-diagram-children>.hub-diagram-node-group:only-child::before{
+ content:"";position:absolute;top:25px;left:-18px;
+ width:18px;height:2px;border:0;background:#477ca5
+}
+/* Colunas internas: pai à esquerda e subeventos em lista compacta à direita. */
+@media(min-width:800px){
+ .hub-diagram-root>.hub-diagram-node-group:has(>.hub-diagram-children:not([hidden])){
+  display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  column-gap:17px;align-items:start
+ }
+ .hub-diagram-root>.hub-diagram-node-group>.hub-diagram-children{
+  margin:0;padding-left:17px
+ }
+ .hub-diagram-root>.hub-diagram-node-group>.hub-diagram-children::after{
+  content:"";display:block;position:absolute;top:25px;left:-17px;
+  width:17px;border-top:2px solid #477ca5
+ }
+}
+@media(max-width:760px){
+ .hub-diagram-scroll--campaign{padding:10px}
+ .hub-diagram-roots{grid-template-columns:minmax(0,1fr);gap:12px}
+ .hub-diagram-root{padding:12px}
+ .hub-diagram-roots .hub-diagram-node{padding:11px 12px}
+ .hub-diagram-roots .hub-diagram-children{margin-left:8px;padding-left:14px}
+ .hub-diagram-roots .hub-diagram-children>.hub-diagram-node-group::before,
+ .hub-diagram-roots .hub-diagram-children>.hub-diagram-node-group:only-child::before{left:-14px;width:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hub-diagram-roots .hub-diagram-node{transition:none}
+}
