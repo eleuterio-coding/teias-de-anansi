@@ -536,3 +536,22 @@ body.hub-shell-enabled #campaign-list .campaign-card-actions>button[data-delete]
 #hub-save-notice[data-outcome="error"]{border-color:rgba(255,108,108,.6);border-left-color:#ff6b6b}
 #hub-save-notice[data-outcome="error"] .hub-save-icon{color:#ff8585;background:rgba(255,108,108,.14)}
 @media(max-width:600px){#hub-save-notice{right:14px;bottom:14px}}
+
+
+/* Ações de criação da Campanha permanecem disponíveis em telas estreitas. */
+@media(max-width:900px){
+ #table-root .campaign-product-actions{
+  position:relative;top:auto;right:auto;display:flex;
+  flex-wrap:wrap;align-items:center;justify-content:flex-start;
+  gap:8px;padding:16px 18px 0
+ }
+ #table-root .campaign-product-actions .secondary{display:inline-flex}
+ #table-root .campaign-product-hero-content{min-height:175px;padding-top:16px}
+}
+@media(max-width:460px){
+ #table-root .campaign-product-actions{padding:14px 14px 0;gap:7px}
+ #table-root .campaign-product-actions .btn{
+  min-height:38px;padding:8px 10px;font-size:.82rem;white-space:nowrap
+ }
+}
+#adventure-create-card,#session-create-card{scroll-margin-top:84px}
