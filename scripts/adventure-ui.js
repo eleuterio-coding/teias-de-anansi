@@ -5,6 +5,8 @@ import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,create
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-reassign1';
 
+import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-recent1';
+
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1';
 const advStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s),advType=s=>({main:'Aventura principal',side:'Aventura secundária',oneshot:'One-shot',secondary:'Arco secundário'}[s]||s),sceneStatus=s=>({planned:'Planejada',active:'Em cena',completed:'Concluída',skipped:'Ignorada'}[s]||s),clueStatus=s=>({hidden:'Oculta',discovered:'Descoberta',resolved:'Resolvida'}[s]||s),treasureStatus=s=>({planned:'Planejado',found:'Encontrado',claimed:'Distribuído'}[s]||s),missionStatus=s=>({hidden:'Não descoberta',active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'}[s]||s);
@@ -26,9 +28,8 @@ function selectorHtml(){
  <div class="row-actions" style="margin-top:12px"><button id="create-adventure" type="button">Criar aventura</button></div></section>`
 }
 function listHtml(){
- const requested=params.get('campaign'),rows=adventures
-  .filter(a=>!requested||a.campaignId===requested)
-  .sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+ const requested=params.get('campaign'),filtered=adventures.filter(a=>!requested||a.campaignId===requested);
+ const rows=requested?sortCampaignAdventures(filtered):filtered.sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
  return`<section class="hub-collection-section adventure-list-section">
  <div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
  ${selectorHtml()}
