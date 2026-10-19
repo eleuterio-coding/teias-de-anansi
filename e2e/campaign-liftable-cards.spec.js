@@ -4,9 +4,9 @@ const campaign={
  id:'e2e-cards-lift',name:'A Cidadela',status:'active',system:'D&D 5.5e',
  members:[{id:'m1',name:'Jogador',username:'jogador',role:'player',characterId:'pc1'}],
  sessions:[{id:'next1',number:3,title:'A Passagem',status:'next',date:'2026-10-25'}],
- importantLocations:'Taverna\\nMuralha\\nMercado',
- activeMissions:'Ato I\\nAto II\\nAto III',
- timeline:'Primeiro evento\\nSegundo evento'
+ importantLocations:'Taverna\nMuralha\nMercado',
+ activeMissions:'Ato I\nAto II\nAto III',
+ timeline:'Primeiro evento\nSegundo evento'
 };
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
