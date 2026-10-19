@@ -72,7 +72,7 @@ function detailsSectionsHtml(){
 function memberRow(m){
  const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',initial=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}">
-  <button type="button" class="roster-grip" draggable="true" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
+  <button type="button" class="roster-grip" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
   <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display" aria-label="Jogador: ${esc(name)}"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
   <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
   <div class="row-actions roster-player-actions">${rosterOpenButton(linked)}<button type="button" class="danger roster-remove-button" data-remove-member="${esc(m.id)}" title="Remover jogador ${esc(name)}" aria-label="Remover jogador ${esc(name)}">
@@ -232,11 +232,12 @@ function bindRosterOrdering(list){
  });
  list.addEventListener('dragend',clear);
  list.addEventListener('pointerdown',event=>{
-  if(event.pointerType==='mouse'||event.button!==0)return;
+  if(event.button!==0)return;
   const grip=event.target.closest?.('.roster-grip'),row=findRow(grip);
   if(!grip||!row)return;
   sourceId=row.dataset.memberRow;pointer={id:event.pointerId,startX:event.clientX,startY:event.clientY,active:false};
-  grip.setPointerCapture?.(event.pointerId)
+  grip.setPointerCapture?.(event.pointerId);
+  event.preventDefault()
  });
  list.addEventListener('pointermove',event=>{
   if(!pointer||pointer.id!==event.pointerId)return;
