@@ -151,7 +151,17 @@ function initSaveFeedback(){
   for(const region of regions)if(statusSaveFeedback(region))break
  }).observe(document.body,{subtree:true,childList:true,characterData:true})
 }
-function enhanceDynamicUi(){enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
+const CAMPAIGN_PAGES=new Set(['campanhas.html','nova-campanha.html','mesa.html']);
+/* A campanha é um espaço de edição e narrativa: termos de regras, cenários,
+   atos ou eventos não devem virar links automáticos para verbetes.
+   Preserva links explícitos de ações (Abrir, Nova sessão, fichas, etc.). */
+function removeCampaignGlossaryLinks(){
+ if(!CAMPAIGN_PAGES.has(currentPage()))return;
+ for(const anchor of document.querySelectorAll('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')){
+  anchor.replaceWith(document.createTextNode(anchor.textContent||''))
+ }
+}
+function enhanceDynamicUi(){removeCampaignGlossaryLinks();enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}
 function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initSaveFeedback();initAppShell();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
 
