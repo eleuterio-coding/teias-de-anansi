@@ -34,4 +34,31 @@ test.describe('Campanha · ordenação de Atos', () => {
   expect(locations).not.toContain('data-act-drag=');
   expect(locations).toContain('data-edit-line="importantLocations"');
  });
+
+ test('arrastar na interface atualiza a sequência salva sem modificar os nomes', async ({ page }) => {
+  await page.goto('/index.html');
+  await page.setContent('<link rel="stylesheet" href="/campaigns.css"><main id="table-root"><div class="campaign-sections campaign-editor-grid"></div></main>');
+  await page.evaluate(async () => {
+   const { renderStructuredSection, bindStructuredDetails } = await import('/scripts/campaign-structured-ui.js');
+   const campaign = { activeMissions: 'Ato 1\nAto 2\nAto 3' };
+   document.querySelector('.campaign-sections').innerHTML = renderStructuredSection(campaign, [], 'missoes');
+   bindStructuredDetails({
+    getCampaign: () => campaign, getNpcs: () => [],
+    save: patch => Object.assign(campaign, patch), feedback: () => {}
+   });
+   window.__testCampaign = campaign;
+  });
+  const rows = page.locator('#missoes .campaign-act-entry');
+  expect(await rows.count()).toBe(3);
+  const last = await rows.nth(2).boundingBox();
+  await page.locator('#missoes [data-act-drag="0"]').dragTo(rows.nth(2), {
+   targetPosition: { x: Math.min(30, last.width / 2), y: last.height * .8 }
+  });
+  await expect.poll(() => page.evaluate(() => window.__testCampaign.activeMissions)).toBe('Ato 2\nAto 3\nAto 1');
+  await expect(rows.locator('input[data-edit-line="activeMissions"]')).toHaveValues(['Ato 2', 'Ato 3', 'Ato 1']);
+  await page.locator('#missoes [data-act-drag="2"]').focus();
+  await page.keyboard.press('ArrowUp');
+  await expect.poll(() => page.evaluate(() => window.__testCampaign.activeMissions)).toBe('Ato 2\nAto 1\nAto 3');
+  await expect(page.locator('#missoes [data-act-drag="1"]')).toBeFocused();
+ });
 });
