@@ -158,9 +158,10 @@ test('campos e ações de jogadores ficam alinhados na coluna compacta do deskto
  expect(results).toHaveLength(2);
  for(const row of results){
   expect(Math.abs(row.avatar.top-row.user.top),'Avatar e nome na mesma linha').toBeLessThanOrEqual(2);
-  expect(row.character.top,'Personagem após identificação').toBeGreaterThan(row.user.bottom);
+  expect(Math.abs(row.character.top-row.user.top),'Jogador e Personagem na mesma linha').toBeLessThanOrEqual(2);
+  expect(row.character.left,'Personagem à direita da identificação').toBeGreaterThan(row.user.right);
   expect(Math.abs(row.open.top-row.remove.top),'Botões alinhados entre si').toBeLessThanOrEqual(2);
-  expect(row.open.top,'Ações após personagem').toBeGreaterThan(row.character.bottom);
+  expect(row.open.top,'Ações após os dois campos').toBeGreaterThanOrEqual(row.character.bottom);
   expect(row.remove.right).toBeLessThanOrEqual(row.row.right+2);
  }
 });

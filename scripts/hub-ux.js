@@ -4,7 +4,7 @@ import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261019-campaig
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
 const COLLAB_SESSION_KEY='hub-rpg:collaboration-session:v1';
-let observer=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeModule=null,realtimeLoad=null,characterAccessLoad=null;
+let observer=null,navResizeObserver=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeModule=null,realtimeLoad=null,characterAccessLoad=null;
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
@@ -53,16 +53,50 @@ function enhanceLiveRegions(){
  }
 }
 function sectionLinks(nav){return[...nav.querySelectorAll('a[href^="#"]')].filter(a=>a.hash&&document.getElementById(a.hash.slice(1)))}
-function markCurrent(link,links,{center=false}={}){for(const a of links)if(a!==link)a.removeAttribute('aria-current');if(link){if(link.getAttribute('aria-current')!=='location')link.setAttribute('aria-current','location');if(center)link.scrollIntoView({block:'nearest',inline:'center'})}}
+function positionSectionIndicator(nav,link){
+ const indicator=nav.querySelector('.section-nav-indicator');
+ if(!indicator||!link)return;
+ const first=nav.dataset.indicatorReady!=='true';
+ if(first)indicator.style.transition='none';
+ indicator.style.width=`${link.offsetWidth}px`;
+ indicator.style.transform=`translate3d(${link.offsetLeft}px,0,0)`;
+ nav.dataset.indicatorReady='true';
+ if(first)requestAnimationFrame(()=>{if(indicator.isConnected)indicator.style.removeProperty('transition')});
+}
+function markCurrent(link,links,{center=false}={}){
+ for(const a of links)if(a!==link)a.removeAttribute('aria-current');
+ if(!link)return;
+ if(link.getAttribute('aria-current')!=='location')link.setAttribute('aria-current','location');
+ const nav=link.closest('.section-nav');if(!nav)return;
+ positionSectionIndicator(nav,link);
+ if(center){
+  const left=Math.max(0,Math.min(nav.scrollWidth-nav.clientWidth,link.offsetLeft+link.offsetWidth/2-nav.clientWidth/2));
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.dataset.hubMotion==='reduce';
+  nav.scrollTo({left,behavior:reduced?'auto':'smooth'});
+ }
+}
 function enhanceSectionNav(){
- const nav=document.querySelector('.section-nav');if(!nav){observer?.disconnect();observer=null;observedNav=null;observedSignature='';return}
+ const nav=document.querySelector('.section-nav');if(!nav){observer?.disconnect();observer=null;navResizeObserver?.disconnect();navResizeObserver=null;observedNav=null;observedSignature='';return}
  nav.setAttribute('aria-label',nav.getAttribute('aria-label')||'Navegação por seções');nav.dataset.horizontalScroll='true';
  const links=sectionLinks(nav);if(!links.length)return;const signature=links.map(a=>a.hash).join('|');
- for(const link of links)if(!boundLinks.has(link)){boundLinks.add(link);link.addEventListener('click',()=>markCurrent(link,sectionLinks(nav),{center:true}))}
+ if(!nav.querySelector('.section-nav-indicator')){
+  const indicator=document.createElement('span');indicator.className='section-nav-indicator';indicator.setAttribute('aria-hidden','true');nav.appendChild(indicator);
+ }
+ for(const link of links)if(!boundLinks.has(link)){boundLinks.add(link);link.addEventListener('click',()=>{
+  nav.dataset.manualNavUntil=String(Date.now()+1000);
+  markCurrent(link,sectionLinks(nav),{center:true});
+ })}
  if(nav===observedNav&&signature===observedSignature)return;
- observer?.disconnect();observer=null;observedNav=nav;observedSignature=signature;
+ observer?.disconnect();observer=null;navResizeObserver?.disconnect();navResizeObserver=null;observedNav=nav;observedSignature=signature;
+ if('ResizeObserver'in window){
+  navResizeObserver=new ResizeObserver(()=>{
+   const active=nav.querySelector('a[aria-current="location"]');if(active)positionSectionIndicator(nav,active);
+  });
+  navResizeObserver.observe(nav);for(const link of links)navResizeObserver.observe(link);
+ }
  if('IntersectionObserver'in window){
   const byId=new Map(links.map(a=>[a.hash.slice(1),a]));observer=new IntersectionObserver(entries=>{
+   if(Date.now()<Number(nav.dataset.manualNavUntil||0))return;
    const visible=entries.filter(x=>x.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
    if(visible)markCurrent(byId.get(visible.target.id),links)
   },{rootMargin:'-18% 0px -68% 0px',threshold:[0,.05,.25]});

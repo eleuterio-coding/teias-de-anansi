@@ -13,6 +13,7 @@ on:
       - 'scripts/hub-ux.js'
       - 'scripts/module-clean-loader.js'
       - 'e2e/layout-unificado.spec.js'
+      - 'e2e/campaign-nav-roster-timeline.spec.js'
       - '.github/workflows/validar-layout-navegador.yml'
   workflow_dispatch:
 jobs:
@@ -29,7 +30,7 @@ jobs:
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
       - name: Auditar interface em desktop e celular
-        run: npx playwright test e2e/layout-unificado.spec.js e2e/dashboard-viewport.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/layout-unificado.spec.js e2e/dashboard-viewport.spec.js e2e/campaign-nav-roster-timeline.spec.js --project=desktop-chromium --project=mobile-chromium
       - uses: actions/upload-artifact@v4
         if: always()
         with:

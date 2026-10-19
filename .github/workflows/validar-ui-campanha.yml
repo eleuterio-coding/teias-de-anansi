@@ -1,0 +1,27 @@
+name: Validar navegação e jogadores da Campanha
+on:
+  pull_request:
+    paths:
+      - 'campaigns.css'
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-structured-ui.js'
+      - 'mesa.html'
+      - 'e2e/campaign-nav-roster-timeline.spec.js'
+      - '.github/workflows/validar-ui-campanha.yml'
+permissions:
+  contents: read
+jobs:
+  campanha-ui:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Testar abas, jogadores e selo da linha do tempo
+        run: npx playwright test e2e/campaign-nav-roster-timeline.spec.js --project=desktop-chromium --project=mobile-chromium

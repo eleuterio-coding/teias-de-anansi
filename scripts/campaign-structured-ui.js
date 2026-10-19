@@ -94,7 +94,7 @@ function nodeHtml(node,index,depth=0){
 }
 function flow(c,view='list'){
  const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
- return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span>${timelineViewToggle(mode)}</div>
+ return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  <div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>
  </section>`
