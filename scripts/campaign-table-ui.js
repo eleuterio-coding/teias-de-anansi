@@ -213,6 +213,9 @@ function bindRosterOrdering(list){
   clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
   clone.classList.add('campaign-floating-card','roster-floating-card');
   clone.setAttribute('aria-hidden','true');
+  clone.style.display='grid';
+  clone.style.gridTemplateColumns=getComputedStyle(row).gridTemplateColumns;
+  clone.style.gridTemplateRows=getComputedStyle(row).gridTemplateRows;
   clone.style.left=rect.left+'px';clone.style.top=rect.top+'px';
   clone.style.width=rect.width+'px';clone.style.height=rect.height+'px';
   document.body.appendChild(clone);
