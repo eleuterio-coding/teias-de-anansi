@@ -1,7 +1,7 @@
 import{read,readNpcs}from'./character-builder/state.js';
-import{findNextCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-image-backdrop1';
+import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-prev-and-cta1';
 import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-ordered-roots1';
-import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-campaign-status1';
+import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-roster-order1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
@@ -34,11 +34,30 @@ function overviewHtml(){
  const linked=campaign.members.filter(m=>m.characterId).length,adventures=adventuresForCampaign(readAdventures(),campaignId);
 
  const cover=imageElementHtml(campaign.coverImage,campaign.coverImageUrl,{className:'campaign-product-hero-media',alt:''});
- const featured=findNextCampaignSession(campaign),nextLabel=featured?(featured.date||featured.title):'Não definida';
- const nextHref=featured?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(featured.id)}`:'';
- return `<section class="campaign-product-hero">${cover}<div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&new=1#adventure-create-card">Nova Aventura</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Nova Sessão</a></div><div class="campaign-product-hero-content"><div class="campaign-product-kicker">Contexto da Mesa · ${esc(campaign.system||'D&D 5.5e')}</div><div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(statusLabel(campaign.status))}</span></div><p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p><div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${countLabel(campaign.members.length,'jogador','jogadores')}</span><span class="badge">${countLabel(adventures.length,'aventura','aventuras')}</span></div></div></section><div class="campaign-product-summary">${metric('Status',statusLabel(campaign.status))}${metric('Sessões',campaign.sessions.length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Próxima sessão',nextLabel,nextHref)}</div>`
+ const previous=findPreviousCampaignSession(campaign);
+ const previousLabel=previous?`Sessão ${previous.number} · ${previous.title}`:'Nenhuma sessão anterior';
+ const previousHref=previous?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(previous.id)}`:'';
+ return `<section class="campaign-product-hero">${cover}<div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&new=1#adventure-create-card">Nova Aventura</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Nova Sessão</a></div><div class="campaign-product-hero-content"><div class="campaign-product-kicker">Contexto da Mesa · ${esc(campaign.system||'D&D 5.5e')}</div><div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(statusLabel(campaign.status))}</span></div><p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p><div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${countLabel(campaign.members.length,'jogador','jogadores')}</span><span class="badge">${countLabel(adventures.length,'aventura','aventuras')}</span></div></div></section><div class="campaign-product-summary">${metric('Status',statusLabel(campaign.status))}${metric('Sessões',campaign.sessions.length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão anterior',previousLabel,previousHref)}</div>`
 }
-function settingsHtml(){return`<section id='campanha' class='card campaign-editor-card'><h2>Campanha</h2><div class='form-grid two'><label>Nome da campanha<input data-campaign-field='name' value='${esc(campaign.name)}'></label><div class='wide'><strong>Imagem/capa</strong>${imagePickerHtml({media:campaign.coverImage,legacyUrl:campaign.coverImageUrl,alt:`Capa de ${campaign.name}`,className:'campaign-cover-image'})}</div><label class='wide'>Descrição curta<textarea maxlength='500' data-campaign-field='description'>${esc(campaign.description)}</textarea></label><label class='wide'>Cenário de Campanha<input maxlength='160' data-campaign-field='setting' value='${esc(campaign.setting||'')}'></label><label>Mundo / Plano<input maxlength='160' data-campaign-field='worldPlane' value='${esc(campaign.worldPlane||'')}'></label><label>Principal Continente / Região<input maxlength='160' data-campaign-field='mainRegion' value='${esc(campaign.mainRegion||'')}'></label><label>Status<select data-campaign-field='status'><option value='planned' ${campaign.status==='planned'?'selected':''}>Planejada</option><option value='active' ${campaign.status==='active'?'selected':''}>Em andamento</option><option value='paused' ${campaign.status==='paused'?'selected':''}>Pausada</option><option value='finished' ${campaign.status==='finished'?'selected':''}>Concluída</option><option value='cancelled' ${campaign.status==='cancelled'?'selected':''}>Cancelada</option></select></label></div><div class='row-actions' style='margin-top:10px'><button type='button' data-save-campaign-section>Salvar</button></div></section>`}
+function settingsHtml(){
+ return`<section id="campanha" class="card campaign-editor-card">
+  <h2>Campanha</h2>
+  <div class="campaign-settings-layout">
+   <div class="campaign-settings-primary">
+    <label>Nome da campanha<input data-campaign-field="name" value="${esc(campaign.name)}"></label>
+    <div class="campaign-settings-cover"><strong>Imagem/capa</strong>${imagePickerHtml({media:campaign.coverImage,legacyUrl:campaign.coverImageUrl,alt:`Capa de ${campaign.name}`,className:'campaign-cover-image'})}</div>
+   </div>
+   <div class="campaign-settings-details form-grid two">
+    <label class="wide">Descrição curta<textarea maxlength="500" data-campaign-field="description">${esc(campaign.description)}</textarea></label>
+    <label class="wide">Cenário de Campanha<input maxlength="160" data-campaign-field="setting" value="${esc(campaign.setting||'')}"></label>
+    <label>Mundo / Plano<input maxlength="160" data-campaign-field="worldPlane" value="${esc(campaign.worldPlane||'')}"></label>
+    <label>Principal Continente / Região<input maxlength="160" data-campaign-field="mainRegion" value="${esc(campaign.mainRegion||'')}"></label>
+    <label>Status<select data-campaign-field="status"><option value="planned" ${campaign.status==='planned'?'selected':''}>Planejada</option><option value="active" ${campaign.status==='active'?'selected':''}>Em andamento</option><option value="paused" ${campaign.status==='paused'?'selected':''}>Pausada</option><option value="finished" ${campaign.status==='finished'?'selected':''}>Concluída</option><option value="cancelled" ${campaign.status==='cancelled'?'selected':''}>Cancelada</option></select></label>
+   </div>
+  </div>
+  <div class="row-actions campaign-settings-save"><button type="button" data-save-campaign-section>Salvar</button></div>
+ </section>`
+}
 function referenceSectionsHtml(){const adventures=adventuresForCampaign(readAdventures(),campaignId);const adv=`<section id='aventuras' class='card campaign-editor-card'><div class='top'><h2>Aventuras da campanha</h2><a class='btn secondary' href='aventuras.html?campaign=${encodeURIComponent(campaignId)}'>Abrir aventuras</a></div><div class='list'>${adventures.length?adventures.map(a=>`<article class='campaign-reference-row'><div><strong>${esc(a.title)}</strong><div><span class='badge'>${esc(adventureStatus(a.status))}</span></div>${a.summary?`<p class='mini'>${esc(a.summary)}</p>`:''}</div><a class='btn secondary' href='aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(a.id)}'>Abrir</a></article>`).join(''):'<div class="empty">Nenhuma aventura vinculada.</div>'}</div></section>`;return adv}
 
 function detailsSectionsHtml(){
@@ -53,6 +72,7 @@ function detailsSectionsHtml(){
 function memberRow(m){
  const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',initial=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}">
+  <button type="button" class="roster-grip" draggable="true" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
   <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display" aria-label="Jogador: ${esc(name)}"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
   <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
   <div class="row-actions roster-player-actions">${rosterOpenButton(linked)}<button type="button" class="danger roster-remove-button" data-remove-member="${esc(m.id)}" title="Remover jogador ${esc(name)}" aria-label="Remover jogador ${esc(name)}">
@@ -130,6 +150,7 @@ function updateTextFields(){document.querySelectorAll('[data-campaign-field]').f
 function bindMembers(){
  const list=$('member-list');
  if(!list)return;
+ bindRosterOrdering(list);
  list.querySelectorAll('[data-member-row]').forEach(row=>{
   const id=row.dataset.memberRow;
   row.querySelector('[data-member-character]')?.addEventListener('change',event=>{
@@ -145,6 +166,95 @@ function bindMembers(){
   if(!result.ok)return feedback(result.reason,false);
   commitRoster(result.list,'Jogador removido.',{rebuildRows:true})
  }))
+}
+/** Ordenação acessível por arrastar (mouse/toque/caneta) ou setas do teclado.
+ * Persistência por IDs no mesmo array de membros, sem recriar a seção inteira. */
+function bindRosterOrdering(list){
+ if(list.dataset.rosterOrderBound==='true')return;
+ list.dataset.rosterOrderBound='true';
+ let sourceId='',targetId='',dropPosition='before',pointer=null;
+ const findRow=element=>element?.closest?.('#member-list [data-member-row]')||null;
+ const clear=()=>{
+  list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>
+   row.classList.remove('roster-order-moving','roster-order-before','roster-order-after'));
+  sourceId='';targetId='';pointer=null;
+ };
+ const hover=(target,y)=>{
+  list.querySelectorAll('.roster-order-before,.roster-order-after').forEach(row=>row.classList.remove('roster-order-before','roster-order-after'));
+  const row=findRow(target);
+  if(!row||row.dataset.memberRow===sourceId){targetId='';return}
+  const box=row.getBoundingClientRect();
+  targetId=row.dataset.memberRow;
+  dropPosition=y<box.top+box.height/2?'before':'after';
+  row.classList.add(dropPosition==='before'?'roster-order-before':'roster-order-after');
+ };
+ const reorder=(id,target,position,{focus=false}={})=>{
+  if(!id||!target||id===target)return false;
+  const currentIds=campaign.members.map(member=>member.id);
+  const result=reorderCampaignMember(campaigns,campaignId,id,target,position);
+  if(!result.ok){feedback(result.reason,false);return false}
+  if(!result.changed)return false;
+  const newIds=result.campaign.members.map(member=>member.id);
+  if(currentIds.join('|')===newIds.join('|'))return false;
+  commitRoster(result.list,'Ordem dos jogadores salva.',{rebuildRows:true});
+  if(focus)list.querySelectorAll('[data-member-row]').forEach(row=>{
+   if(row.dataset.memberRow===id)row.querySelector('.roster-grip')?.focus()
+  });
+  return true;
+ };
+ list.addEventListener('keydown',event=>{
+  const grip=event.target.closest?.('.roster-grip');
+  if(!grip||!['ArrowUp','ArrowDown'].includes(event.key))return;
+  event.preventDefault();
+  const row=findRow(grip),neighbor=event.key==='ArrowUp'?row?.previousElementSibling:row?.nextElementSibling;
+  if(neighbor?.dataset.memberRow)reorder(row.dataset.memberRow,neighbor.dataset.memberRow,event.key==='ArrowUp'?'before':'after',{focus:true});
+ });
+ list.addEventListener('dragstart',event=>{
+  if(!event.target.closest?.('.roster-grip'))return event.preventDefault();
+  const row=findRow(event.target);
+  if(!row)return;
+  sourceId=row.dataset.memberRow;
+  row.classList.add('roster-order-moving');
+  event.dataTransfer?.setData('text/plain',sourceId);
+  if(event.dataTransfer)event.dataTransfer.effectAllowed='move'
+ });
+ list.addEventListener('dragover',event=>{
+  if(!sourceId)return;
+  event.preventDefault();
+  if(event.dataTransfer)event.dataTransfer.dropEffect='move';
+  hover(event.target,event.clientY)
+ });
+ list.addEventListener('drop',event=>{
+  if(!sourceId)return;
+  event.preventDefault();
+  const id=sourceId,target=targetId,position=dropPosition;
+  clear();reorder(id,target,position)
+ });
+ list.addEventListener('dragend',clear);
+ list.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='mouse'||event.button!==0)return;
+  const grip=event.target.closest?.('.roster-grip'),row=findRow(grip);
+  if(!grip||!row)return;
+  sourceId=row.dataset.memberRow;pointer={id:event.pointerId,startX:event.clientX,startY:event.clientY,active:false};
+  grip.setPointerCapture?.(event.pointerId)
+ });
+ list.addEventListener('pointermove',event=>{
+  if(!pointer||pointer.id!==event.pointerId)return;
+  if(!pointer.active&&Math.hypot(event.clientX-pointer.startX,event.clientY-pointer.startY)<7)return;
+  pointer.active=true;
+  event.preventDefault();
+  const row=list.querySelectorAll('[data-member-row]');
+  row.forEach(r=>r.classList.toggle('roster-order-moving',r.dataset.memberRow===sourceId));
+  hover(document.elementFromPoint(event.clientX,event.clientY),event.clientY)
+ });
+ list.addEventListener('pointerup',event=>{
+  if(!pointer||pointer.id!==event.pointerId)return;
+  const dragged=pointer.active,id=sourceId;
+  if(dragged)hover(document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  const target=targetId,position=dropPosition;
+  clear();if(dragged)reorder(id,target,position)
+ });
+ list.addEventListener('pointercancel',clear);
 }
 function bindSessions(){document.querySelectorAll('[data-session-row]').forEach(row=>{const id=row.dataset.sessionRow;row.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>{const result=updateCampaignSession(campaigns,campaignId,id,{[input.dataset.sessionField]:input.value});if(result.ok)commit(result.list,{rerender:false,message:'Sessão salva.'})}));row.querySelectorAll('[data-session-participant]').forEach(input=>input.addEventListener('change',()=>{const ids=[...row.querySelectorAll('[data-session-participant]:checked')].map(el=>el.dataset.sessionParticipant),result=updateCampaignSession(campaigns,campaignId,id,{participantCharacterIds:ids});if(result.ok)commit(result.list,{rerender:false,message:'Participantes da sessão atualizados.'})}))});document.querySelectorAll('[data-start-session]').forEach(button=>button.addEventListener('click',()=>{const result=startCampaignSession(campaigns,campaignId,button.dataset.startSession);if(!result.ok)return feedback(result.reason,false);commit(result.list,{message:'Sessão iniciada.'})}));document.querySelectorAll('[data-finish-session]').forEach(button=>button.addEventListener('click',()=>{const result=finishCampaignSession(campaigns,campaignId,button.dataset.finishSession);if(result.ok)commit(result.list,{message:'Sessão concluída.'})}));document.querySelectorAll('[data-cancel-session]').forEach(button=>button.addEventListener('click',()=>{const result=cancelCampaignSession(campaigns,campaignId,button.dataset.cancelSession);if(result.ok)commit(result.list,{message:'Sessão cancelada.'})}));document.querySelectorAll('[data-remove-session]').forEach(button=>button.addEventListener('click',()=>{if(!confirm('Excluir esta sessão da campanha?'))return;const result=removeCampaignSession(campaigns,campaignId,button.dataset.removeSession);if(result.ok)commit(result.list,{message:'Sessão excluída.'})}))}
 function bindCampaignCover(){const picker=document.querySelector('#campanha [data-image-picker]');if(!picker)return;bindImagePicker(picker,{onSelect:async file=>{const before=campaigns,previous=campaign.coverImage,media=await uploadImage({campaignId,entityType:'campaign',entityId:campaignId,file}),result=updateCampaign(campaigns,campaignId,{coverImage:media,coverImageUrl:''});if(!result.ok){deleteImage(media).catch(()=>{});throw new Error(result.reason)}campaigns=writeCampaigns(result.list);campaign=campaignById(campaigns,campaignId);try{await persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})}catch(error){campaigns=writeCampaigns(before);campaign=campaignById(campaigns,campaignId);await deleteImage(media).catch(()=>{});render();throw new Error('A imagem não pôde ser sincronizada. A capa anterior foi preservada.')}render();feedback('Imagem salva e sincronizada.',true);if(previous?.id&&previous.id!==media.id)await deleteImage(previous).catch(()=>{})},onRemove:async()=>{const before=campaigns,previous=campaign.coverImage,result=updateCampaign(campaigns,campaignId,{coverImage:null,coverImageUrl:''});if(!result.ok)throw new Error(result.reason);campaigns=writeCampaigns(result.list);campaign=campaignById(campaigns,campaignId);try{await persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})}catch(error){campaigns=writeCampaigns(before);campaign=campaignById(campaigns,campaignId);render();throw new Error('A remoção não pôde ser sincronizada. A imagem foi preservada.')}render();feedback('Imagem removida e sincronizada.',true);if(previous?.id)await deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)})}
