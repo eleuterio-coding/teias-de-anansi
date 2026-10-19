@@ -116,3 +116,36 @@ test('em tela móvel o card empilha sem transbordar e preserva área de toque',a
  }
  expect(result.horizontalOverflow).toBeLessThanOrEqual(3);
 });
+
+test('ações da ficha são ícones quadrados na mesma linha dos campos',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='desktop-chromium','alinhamento em layout desktop');
+ await page.goto('/mesa.html?id=campaign-nav-ui-e2e');
+ const row=page.locator('#jogadores .roster-player').first();
+ await expect(row.locator('.roster-open-button svg')).toHaveCount(1);
+ await expect(row.locator('.roster-remove-button svg')).toHaveCount(1);
+ await expect(row.locator('.roster-open-button')).toHaveAttribute('aria-label',/Abrir ficha/);
+ await expect(row.locator('.roster-remove-button')).toHaveAttribute('aria-label',/Remover jogador/);
+ const geo=await row.evaluate(el=>{
+  const bounds=selector=>el.querySelector(selector).getBoundingClientRect();
+  const name=bounds('.roster-player-name'),character=bounds('[data-member-character]');
+  const open=bounds('.roster-open-button'),remove=bounds('.roster-remove-button');
+  return {name:name.toJSON(),character:character.toJSON(),open:open.toJSON(),remove:remove.toJSON()};
+ });
+ expect(geo.open.left).toBeGreaterThanOrEqual(geo.character.right);
+ expect(geo.remove.left).toBeGreaterThan(geo.open.right);
+ expect(Math.abs(geo.open.top-geo.character.top)).toBeLessThanOrEqual(5);
+ expect(geo.open.width).toBe(geo.open.height);
+ expect(geo.remove.width).toBe(geo.remove.height);
+});
+
+test('ações da capa têm o mesmo azul semitransparente e não exibem Todas as campanhas',async({page})=>{
+ await page.goto('/mesa.html?id=campaign-nav-ui-e2e');
+ const actions=page.locator('.campaign-product-actions');
+ await expect(actions.locator('a')).toHaveCount(2);
+ await expect(actions).not.toContainText('Todas as campanhas');
+ await expect(actions.getByRole('link',{name:'Nova Aventura'})).toBeVisible();
+ await expect(actions.getByRole('link',{name:'Nova Sessão'})).toBeVisible();
+ const fills=await actions.locator('a').evaluateAll(links=>links.map(link=>getComputedStyle(link).backgroundColor));
+ expect(fills[0]).toBe(fills[1]);
+ expect(fills[0]).toMatch(/rgba\(47, 156, 255, 0\.5\)/);
+});
