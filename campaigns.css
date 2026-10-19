@@ -409,10 +409,19 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
  align-items:start
 }
-#table-root .campaign-editor-grid>.campaign-editor-card{
+#table-root .campaign-editor-grid>.campaign-editor-card,
+#table-root .campaign-structured-columns .campaign-editor-card{
  min-width:0;min-height:170px;
  padding:20px;border:1px solid var(--hub-border,#304357);
  border-radius:14px;background:var(--hub-surface,#101923)
+}
+/* Colunas independentes: Atos começa logo após NPCs, sem aguardar Locais. */
+#table-root .campaign-editor-grid>.campaign-structured-columns{
+ grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ align-items:start;gap:16px;min-width:0
+}
+#table-root .campaign-structured-column{
+ display:flex;flex-direction:column;gap:16px;min-width:0
 }
 #table-root .campaign-editor-grid>:is(#campanha,#jogadores,#historia,#notas-mestre,#linha-tempo){grid-column:1/-1}
 #table-root .campaign-editor-grid .campaign-editor-card>h2,
@@ -490,6 +499,7 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 @media(max-width:900px){
  #table-root .campaign-editor-grid{grid-template-columns:minmax(0,1fr)}
  #table-root .campaign-editor-grid>.campaign-editor-card{grid-column:1/-1}
+ #table-root .campaign-structured-columns{grid-template-columns:minmax(0,1fr)}
 }
 @media(max-width:600px){
  #table-root .campaign-add-line{grid-template-columns:minmax(0,1fr)}
