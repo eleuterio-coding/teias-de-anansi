@@ -103,3 +103,58 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-descrip
  #adventure-root .adventure-card-status{gap:5px}
  #adventure-root .adventure-card .hub-parent-link{flex-wrap:wrap}
 }
+
+
+/* Aventura: mesmo modelo de participantes e ações do card de Campanha. */
+#adventure-root #participantes.roster-section{container:adventure-roster/inline-size}
+#adventure-root #participantes .roster-player{
+ display:grid;grid-template-columns:30px 40px minmax(0,.96fr) minmax(0,1.14fr) auto;
+ grid-template-rows:18px 44px;column-gap:9px;row-gap:6px;
+ align-items:stretch;min-width:0;padding:11px
+}
+#adventure-root #participantes .roster-player-identity{display:contents}
+#adventure-root #participantes .roster-grip{grid-column:1;grid-row:2;align-self:center;width:30px;min-height:38px;display:grid;place-items:center;padding:0;color:var(--hub-accent-2,#74bcf3)}
+#adventure-root #participantes .roster-grip svg{width:16px;height:23px}
+#adventure-root #participantes .roster-avatar{grid-column:2;grid-row:2;width:40px;height:44px}
+#adventure-root #participantes .roster-player-display{grid-column:3;grid-row:1/3;min-width:0;display:grid;grid-template-rows:18px 44px;gap:6px}
+#adventure-root #participantes .roster-player-label{font-size:.8rem;align-self:end}
+#adventure-root #participantes .roster-player-name{
+ display:flex;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+ padding:0 11px;border:1px solid var(--hub-border,#4d6070);border-radius:8px;
+ background:var(--hub-bg-raised,#131f2b);font-weight:650
+}
+#adventure-root #participantes .roster-player-character{grid-column:4;grid-row:1/3;min-width:0}
+#adventure-root #participantes .roster-player-character>label{display:grid;grid-template-rows:18px 44px;gap:6px}
+#adventure-root #participantes .roster-player select{min-width:0;min-height:44px;height:44px;margin:0}
+#adventure-root #participantes .roster-player-actions{
+ grid-column:5;grid-row:2;display:flex;gap:5px;align-items:center;justify-content:flex-end;
+ flex-wrap:nowrap;min-width:0;margin:0
+}
+#adventure-root #participantes .roster-player-actions :is(button,a){
+ display:grid;place-items:center;flex:0 0 38px;width:38px;min-width:38px;max-width:38px;
+ height:40px;min-height:40px;max-height:40px;padding:0;margin:0;border-radius:9px;line-height:1
+}
+#adventure-root #participantes .roster-player-actions :is(.roster-open-button,.roster-remove-button){flex-basis:40px;width:40px;min-width:40px}
+#adventure-root #participantes .roster-open-button{background:#152e44;color:#9bd9ff;border:1px solid #3b739f}
+#adventure-root #participantes .roster-remove-button{background:#321d27;color:#ffb1bb;border:1px solid #a45163}
+#adventure-root #participantes .roster-player-actions svg{width:19px;height:19px;pointer-events:none}
+#adventure-root #participantes .roster-action-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#adventure-root #participantes .roster-order-moving{opacity:.65}
+#adventure-root #participantes .roster-order-before{box-shadow:0 -3px 0 var(--hub-accent-2,#3aa2ff)}
+#adventure-root #participantes .roster-order-after{box-shadow:0 3px 0 var(--hub-accent-2,#3aa2ff)}
+@container adventure-roster (max-width:770px){
+ #adventure-root #participantes .roster-player{
+  grid-template-columns:30px 40px minmax(0,1fr) auto;grid-template-rows:18px 44px 18px 44px
+ }
+ #adventure-root #participantes .roster-player-display{grid-column:3/5;grid-row:1/3}
+ #adventure-root #participantes .roster-player-character{grid-column:3/4;grid-row:3/5}
+ #adventure-root #participantes .roster-player-actions{grid-column:4;grid-row:4}
+}
+@container adventure-roster (max-width:520px){
+ #adventure-root #participantes .roster-player{
+  grid-template-columns:30px 40px minmax(0,1fr);grid-template-rows:18px 44px 18px 44px 44px
+ }
+ #adventure-root #participantes .roster-player-display{grid-column:3;grid-row:1/3}
+ #adventure-root #participantes .roster-player-character{grid-column:1/4;grid-row:3/5}
+ #adventure-root #participantes .roster-player-actions{grid-column:1/4;grid-row:5;justify-content:flex-end}
+}
