@@ -212,6 +212,7 @@ function bindRosterOrdering(list){
   clone.querySelectorAll('input,select,button,a').forEach(el=>{el.tabIndex=-1;el.setAttribute('aria-hidden','true')});
   clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
   clone.classList.add('campaign-floating-card','roster-floating-card');
+  if(getComputedStyle(row).gridTemplateColumns.split(' ').length===3)clone.classList.add('roster-floating-compact');
   clone.setAttribute('aria-hidden','true');
   clone.style.display='grid';
   clone.style.gridTemplateColumns=getComputedStyle(row).gridTemplateColumns;
