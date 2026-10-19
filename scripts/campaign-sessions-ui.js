@@ -257,7 +257,7 @@ async function createSession(){
   const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv?.id||null,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv?.participantUsernames||[],participantCharacterIds:adv?.characterIds||[]});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
-  try{await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
+  try{if(coverImage)await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
   location.href=detailHref({...result.session,campaignId:campaign.id})
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
