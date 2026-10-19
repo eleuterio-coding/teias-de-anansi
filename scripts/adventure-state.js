@@ -17,6 +17,16 @@ const uniqLower=v=>[...new Set(arr(v).map(x=>text(x).toLowerCase()).filter(Boole
 const uid=prefix=>globalThis.crypto?.randomUUID?.()||`${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
 const copy=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:{};
 function stamp(row={},prefix){return{id:text(row.id)||uid(prefix),createdAt:text(row.createdAt)||now(),updatedAt:text(row.updatedAt)||now()}}
+function sanitizeParticipantAssignments(rows){
+ if(!Array.isArray(rows))return null;
+ const seen=new Set(),characters=new Set();
+ return rows.map(row=>({username:text(row?.username).toLowerCase(),characterId:text(row?.characterId)||null}))
+  .filter(row=>{if(!row.username||seen.has(row.username))return false;seen.add(row.username);
+   if(row.characterId&&characters.has(row.characterId))row.characterId=null;
+   if(row.characterId)characters.add(row.characterId);
+   return true
+  });
+}
 function sanitizeChapter(row={},index=0){return{...stamp(row,'chapter'),title:text(row.title)||`Capítulo ${index+1}`,arc:String(row.arc??''),status:['planned','active','completed'].includes(row.status)?row.status:'planned',summary:String(row.summary??''),notes:String(row.notes??''),order:Math.max(1,Math.floor(Number(row.order)||index+1))}}
 function sanitizeLegacyLocation(row={}){return{...stamp(row,'location'),name:text(row.name)||'Local',type:String(row.type??''),description:String(row.description??''),notes:String(row.notes??'')}}
 function sanitizeLegacyNpc(row={}){return{...stamp(row,'npc'),name:text(row.name)||'NPC',role:String(row.role??''),description:String(row.description??''),notes:String(row.notes??''),monsterId:text(row.monsterId)||null,source:String(row.source??'')}}
@@ -29,7 +39,7 @@ function sanitizeScene(row={},index=0){const encounter=copy(row.encounterRef);re
 export function sanitizeAdventure(row={}){
  const chapters=arr(row.chapters).map(sanitizeChapter).sort((a,b)=>a.order-b.order||a.title.localeCompare(b.title,'pt-BR'));
  const legacyLocations=arr(row.legacyLocations??row.locations).map(sanitizeLegacyLocation),legacyNpcs=arr(row.legacyNpcs??row.npcs).map(sanitizeLegacyNpc);
- const locationIds=uniq([...arr(row.locationIds),...legacyLocations.map(x=>x.id)]),npcIds=uniq([...arr(row.npcIds),...legacyNpcs.map(x=>x.id)]),characterIds=uniq(row.characterIds);
+ const locationIds=uniq([...arr(row.locationIds),...legacyLocations.map(x=>x.id)]),npcIds=uniq([...arr(row.npcIds),...legacyNpcs.map(x=>x.id)]),participantAssignments=sanitizeParticipantAssignments(row.participantAssignments),characterIds=participantAssignments?uniq(participantAssignments.map(m=>m.characterId)):uniq(row.characterIds);
  const locationSet=new Set(locationIds),npcSet=new Set(npcIds),characterSet=new Set(characterIds);
  const cluesRaw=arr(row.clues).map(sanitizeClue),handoutsRaw=arr(row.handouts??row.materials).map(sanitizeHandout),treasuresRaw=arr(row.treasures).map(sanitizeTreasure),missionsRaw=arr(row.missions).map(sanitizeMission).sort((a,b)=>a.order-b.order||a.title.localeCompare(b.title,'pt-BR')),timeline=arr(row.timelineEvents??(Array.isArray(row.timeline)?row.timeline:[])).map(sanitizeTimeline).sort((a,b)=>String(b.at).localeCompare(String(a.at)));
  const chapterIds=new Set(chapters.map(x=>x.id)),clueIds=new Set(cluesRaw.map(x=>x.id)),handoutIds=new Set(handoutsRaw.map(x=>x.id)),treasureIds=new Set(treasuresRaw.map(x=>x.id)),missionIds=new Set(missionsRaw.map(x=>x.id));
@@ -40,7 +50,7 @@ export function sanitizeAdventure(row={}){
  const missions=missionsRaw.map(item=>({...item,characterIds:item.characterIds.filter(id=>characterSet.has(id))}));
  let activeSceneId=text(row.activeSceneId)||null;const activeScenes=scenes.filter(x=>x.status==='active');if(activeSceneId&&!scenes.some(x=>x.id===activeSceneId&&x.status==='active'))activeSceneId=null;if(!activeSceneId&&activeScenes.length)activeSceneId=activeScenes[0].id;for(const scene of scenes)if(scene.status==='active'&&scene.id!==activeSceneId)scene.status='planned';
  let currentChapterId=text(row.currentChapterId)||null;if(currentChapterId&&!chapterIds.has(currentChapterId))currentChapterId=null;const activeScene=scenes.find(x=>x.id===activeSceneId);if(activeScene?.chapterId)currentChapterId=activeScene.chapterId;
- return{schema:ADVENTURE_SCHEMA,...stamp(row,'adventure'),campaignId:text(row.campaignId)||null,title:text(row.title)||'Nova Aventura',coverImage:sanitizeMediaRef(row.coverImage),coverImageUrl:String(row.coverImageUrl??''),description:String(row.description??''),status:row.status==='current'?'active':ADV_STATUS.has(row.status)?row.status:'planned',order:Math.max(1,Math.floor(Number(row.order)||1)),type:ADV_TYPES.has(row.type)?row.type:'main',arc:String(row.arc??''),pitch:String(row.pitch??''),objective:String(row.objective??''),summary:String(row.summary??''),currentSituation:String(row.currentSituation??''),nextStep:String(row.nextStep??''),dmNotes:String(row.dmNotes??''),participantUsernames:uniqLower(row.participantUsernames),characterIds,participantAccessConfigured:row.participantAccessConfigured===true,chapters,scenes,locationIds,npcIds,legacyLocations,legacyNpcs,clues,handouts,treasures,missions,timelineEvents:timeline,currentChapterId,activeSceneId}
+ return{schema:ADVENTURE_SCHEMA,...stamp(row,'adventure'),campaignId:text(row.campaignId)||null,title:text(row.title)||'Nova Aventura',coverImage:sanitizeMediaRef(row.coverImage),coverImageUrl:String(row.coverImageUrl??''),description:String(row.description??''),status:row.status==='current'?'active':ADV_STATUS.has(row.status)?row.status:'planned',order:Math.max(1,Math.floor(Number(row.order)||1)),type:ADV_TYPES.has(row.type)?row.type:'main',arc:String(row.arc??''),pitch:String(row.pitch??''),objective:String(row.objective??''),summary:String(row.summary??''),currentSituation:String(row.currentSituation??''),nextStep:String(row.nextStep??''),dmNotes:String(row.dmNotes??''),participantUsernames:participantAssignments?uniqLower(participantAssignments.map(m=>m.username)):uniqLower(row.participantUsernames),participantAssignments,characterIds,participantAccessConfigured:row.participantAccessConfigured===true,chapters,scenes,locationIds,npcIds,legacyLocations,legacyNpcs,clues,handouts,treasures,missions,timelineEvents:timeline,currentChapterId,activeSceneId}
 }
 /** Recupera a ordem narrativa dos registros antigos sem alterar posições já escolhidas. */
 export function normalizeAdventureOrders(list=[]){
@@ -76,6 +86,7 @@ export function reassignAdventureCampaign(list=[],campaigns=[],adventureId,targe
  const moved=sanitizeAdventure({...source,campaignId:targetId,order:newOrder,updatedAt:now(),
   participantUsernames:source.participantUsernames.filter(u=>allowedUsers.has(u)),
   characterIds:source.characterIds.filter(id=>allowedCharacters.has(id)),
+   participantAssignments:source.participantAssignments?.filter(row=>allowedUsers.has(row.username)).map(row=>({...row,characterId:allowedCharacters.has(row.characterId)?row.characterId:null}))??null,
   npcIds:source.npcIds.filter(id=>allowedNpcs.has(id)),
   locationIds:source.locationIds.filter(id=>allowedLocations.has(id)),
   legacyNpcs:[],legacyLocations:[],
