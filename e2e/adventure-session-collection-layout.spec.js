@@ -28,7 +28,7 @@ test('Aventuras usa topo e grade de Campanhas; card inteiro abre detalhes e tile
  await expect(item.locator('.hub-collection-description')).toContainText('intrigas');
  await expect(item.locator('.hub-parent-link')).toContainText('Reinos de Prata');
  await expect(item.getByRole('button',{name:'Abrir'})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir'})).toHaveCount(1);
+ await expect(item.getByRole('button',{name:'Excluir sessão A convocação'})).toHaveCount(1);
  await expect(page.locator('#adventure-create-card')).toBeHidden();
  await page.getByRole('link',{name:'Nova aventura'}).click();
  await expect(page.locator('#adventure-create-card')).toBeVisible();
