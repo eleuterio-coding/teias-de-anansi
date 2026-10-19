@@ -9,6 +9,7 @@ on:
       - 'mesa.html'
       - 'tests/auditar-editor-campanha.mjs'
       - 'e2e/campaign-full-item-drag.spec.js'
+      - 'e2e/campaign-liftable-cards.spec.js'
       - '.github/workflows/validar-arraste-itens-campanha.yml'
   workflow_dispatch:
 jobs:
@@ -24,6 +25,7 @@ jobs:
         run: |
           node --check scripts/campaign-structured-ui.js
           node --check e2e/campaign-full-item-drag.spec.js
+          node --check e2e/campaign-liftable-cards.spec.js
       - name: Testar operações e integridade dos dados
         run: |
           node tests/auditar-editor-campanha.mjs
@@ -33,4 +35,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Arrastar registros no desktop e celular
-        run: npx playwright test e2e/campaign-full-item-drag.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-full-item-drag.spec.js e2e/campaign-liftable-cards.spec.js --project=desktop-chromium --project=mobile-chromium
