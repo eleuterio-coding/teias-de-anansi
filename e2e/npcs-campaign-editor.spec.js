@@ -25,7 +25,7 @@ test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Enco
  await expect(page.locator('#materiais')).toHaveCount(0);
  await expect(page.locator('#encontros')).toHaveCount(0);
  const order=await page.locator('#notas-mestre,#linha-tempo').evaluateAll(nodes=>nodes.map(node=>node.id));
- expect(order).toEqual(['notas-mestre','linha-tempo']);
+ expect(order).toEqual(['linha-tempo','notas-mestre']);
  await page.locator('#campaign-npc-picker').selectOption('npc-e2e-1');
  await page.locator('[data-add-npc]').click();
  await expect(page.locator('#npcs')).toContainText('Arante');
@@ -36,10 +36,10 @@ test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Enco
  await page.locator('#locais [data-new-line]').fill('Nova região');
  await page.locator('#locais [data-add-line]').click();
  await expect(page.locator('#locais .campaign-bullet-list li')).toHaveCount(3);
- await page.locator('#linha-tempo [data-new-line]').fill('Revelação');
- await page.locator('#linha-tempo [data-add-line]').click();
+ await page.locator('#linha-tempo [data-new-timeline]').fill('Revelação');
+ await page.locator('#linha-tempo [data-timeline-add-root]').click();
  await expect(page.locator('#linha-tempo .campaign-flow-step')).toHaveCount(3);
- await page.locator('#linha-tempo [data-move-line="2"][data-direction="-1"]').click();
+ await page.locator('#linha-tempo [data-timeline-id="legacy-timeline-3"] [data-timeline-move="up"]').click();
  const updated=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]')[0]);
  expect(updated.timeline.split('\n')).toEqual(['Chegada','Revelação','Descoberta']);
 });
