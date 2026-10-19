@@ -102,16 +102,15 @@ function flow(c,view='list'){
 export function renderStructuredSection(c,npcs,id,view='list'){
  if(id==='npcs')return roster(c,npcs);
  if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations');
- if(id==='missoes')return bullets(c,'missoes','Atos','activeMissions');
+
  if(id==='linha-tempo')return flow(c,view);
  return''
 }
 export function renderStructuredDetails(c,npcs){
- // Pilhas independentes: a altura de Locais não desloca Atos para baixo.
+ // Pilhas independentes para NPCs e Locais; os Atos permanecem apenas nas Aventuras.
  return `<div class="campaign-structured-columns">
   <div class="campaign-structured-column">
    ${renderStructuredSection(c,npcs,'npcs')}
-   ${renderStructuredSection(c,npcs,'missoes')}
   </div>
   <div class="campaign-structured-column">
    ${renderStructuredSection(c,npcs,'locais')}
