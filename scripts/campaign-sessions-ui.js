@@ -243,6 +243,7 @@ function render(){
  if(!restricted)reload();
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
+ box?.classList.toggle('hub-collection-grid',!sessionId);
  if(!restricted)syncCreationOptions();
  if(sessionId){
   if(createCard)createCard.hidden=true;
