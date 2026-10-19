@@ -221,12 +221,14 @@ function bindRosterOrdering(list){
  const moveLift=(x,y)=>{
   if(floating)floating.element.style.transform='translate3d('+(x-floating.x)+'px,'+(y-floating.y)+'px,0) rotate(-1deg) scale(1.018)';
  };
- const clearVisual=()=>{
+ const clearHighlight=()=>{
   list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>{
    row.classList.remove('roster-order-moving','roster-order-before','roster-order-after');
    delete row.dataset.dropPosition;
   });
-  floating?.element.remove();floating=null;
+ };
+ const clearVisual=()=>{
+  clearHighlight();floating?.element.remove();floating=null;
  };
  const dropAt=(source,target,y)=>{
   const row=rowFor(target);
@@ -235,7 +237,7 @@ function bindRosterOrdering(list){
   return {target:row.dataset.memberRow,row,position:y<box.top+box.height/2?'before':'after'};
  };
  const mark=(source,drop)=>{
-  clearVisual();
+  clearHighlight();
   const row=[...list.querySelectorAll('[data-member-row]')].find(item=>item.dataset.memberRow===source);
   if(row)row.classList.add('roster-order-moving');
   if(drop){
