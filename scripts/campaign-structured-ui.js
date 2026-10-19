@@ -69,7 +69,7 @@ function roster(c,npcs){
 function bullets(c,id,title,field){
  const values=entries(c[field]);
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2><span class="campaign-editor-count">${values.length}</span></div>
- <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true"><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
+ <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-line-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-line-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function nodeHtml(node,index,depth=0){
@@ -77,6 +77,7 @@ function nodeHtml(node,index,depth=0){
  return `<li class="timeline-item" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}">
   <div class="campaign-flow-step" draggable="true" data-timeline-drag="${esc(node.id)}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
    <div class="campaign-flow-card">
+    <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
     <input class="timeline-node-text" data-timeline-text="${esc(node.id)}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
     <div class="campaign-flow-actions">
       <button type="button" class="secondary timeline-add-child" data-timeline-add-child="${esc(node.id)}" aria-label="Adicionar subevento">+ Subitem</button>
@@ -180,6 +181,18 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-del-line]')){
    const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
    persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.')
+  }else if(target.matches('[data-line-move]')){
+   const field=target.dataset.lineField,index=Number(target.dataset.lineIndex);
+   const values=entries(c[field]),direction=target.dataset.lineMove;
+   if(!['importantLocations','activeMissions'].includes(field)||!Number.isInteger(index)||!['up','down'].includes(direction))return;
+   const adjacent=index+(direction==='up'?-1:1);
+   if(adjacent<0||adjacent>=values.length)return;
+   const reordered=reorderLineValues(c[field],index,adjacent,direction==='up'?'before':'after');
+   if(reordered===null||reordered===c[field])return;
+   const id=sectionFor(field);
+   persist({[field]:reordered},id,'Ordem atualizada.');
+   const moved=document.querySelector('#'+id+' [data-line-index="'+adjacent+'"]');
+   showReorderConfirmation(id,moved);
   }else if(target.matches('[data-timeline-add-root],[data-timeline-add-child]')){
    const parent=target.dataset.timelineAddChild||null;
    let name=parent?window.prompt('Nome do subevento:'):clean(section.querySelector('[data-new-timeline]')?.value);
