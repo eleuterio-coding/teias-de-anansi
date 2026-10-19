@@ -421,7 +421,7 @@ body.hub-shell-enabled .modulos .nome{white-space:normal!important;color:var(--h
  body.hub-shell-enabled #campaign-list>.list{grid-template-columns:1fr}
 }
 @media(max-width:460px){
- body.hub-shell-enabled .hub-global-topbar .hub-master-control select{min-width:86px!important;max-width:106px!important}
+ body.hub-shell-enabled .hub-global-topbar .hub-master-control select{min-width:78px!important;max-width:94px!important}
  .hub-master-tools{gap:4px;padding-right:4px;margin-right:0}
  .campaign-product-summary{grid-template-columns:1fr}
  .campaign-product-actions .secondary{display:none}
