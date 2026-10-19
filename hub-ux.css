@@ -555,3 +555,25 @@ body.hub-shell-enabled #campaign-list .campaign-card-actions>button[data-delete]
  }
 }
 #adventure-create-card,#session-create-card{scroll-margin-top:84px}
+
+
+/* Navegação entre seções: marcador único animado, sem fazer a página saltar
+   ao centralizar horizontalmente a aba ativa. */
+body.hub-shell-enabled .section-nav{isolation:isolate;scroll-behavior:smooth}
+body.hub-shell-enabled .section-nav a[aria-current="location"]{box-shadow:none!important}
+body.hub-shell-enabled .section-nav .section-nav-indicator{
+ position:absolute;left:0;bottom:0;z-index:2;display:block;
+ height:2px;width:0;border-radius:3px 3px 0 0;
+ background:var(--hub-accent,#2f9cff);pointer-events:none;opacity:0;
+ transition:transform .38s cubic-bezier(.22,1,.36,1),width .32s cubic-bezier(.22,1,.36,1),opacity .16s ease;
+ will-change:transform,width
+}
+body.hub-shell-enabled .section-nav[data-indicator-ready="true"] .section-nav-indicator{opacity:1}
+#table-root :is(section[id],.campaign-structured-columns[id]){
+ scroll-margin-top:calc(var(--hub-topbar-height,64px) + 68px)
+}
+@media (prefers-reduced-motion:reduce){
+ body.hub-shell-enabled .section-nav{scroll-behavior:auto}
+ body.hub-shell-enabled .section-nav .section-nav-indicator{transition:none;will-change:auto}
+}
+html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav .section-nav-indicator{transition:none;will-change:auto}
