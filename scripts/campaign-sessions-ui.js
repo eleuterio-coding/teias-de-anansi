@@ -246,14 +246,14 @@ function render(){
  if(!restricted)syncCreationOptions();
  if(sessionId){
   if(createCard)createCard.hidden=true;
-  if(listSection)listSection.hidden=true;
+  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=true;
   const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
   if(!box)return;
   box.innerHTML=selected?`<div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>${sessionCard(selected,restricted)}`:`<div class="status warning">Sessão não encontrada.</div><div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>`;
   if(!restricted&&selected)bindSessionCards();hydrateMediaImages(box).catch(()=>{});
   return
  }
- if(listSection)listSection.hidden=false;
+ if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
  box.innerHTML=`${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':`<button type="button" id="open-session-create" class="hub-collection-card hub-collection-create" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="hub-collection-plus" aria-hidden="true">+</span><span class="hub-collection-create-label">Nova sessão</span></button>`}`;
