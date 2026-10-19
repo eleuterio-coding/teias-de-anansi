@@ -17,7 +17,7 @@ const classForms=[
  ['Paladino','Paladina','Paladine'],['Patrulheiro','Patrulheira','Patrulheire'],
  ['Ladino','Ladina','Ladine'],['Feiticeiro','Feiticeira','Feiticeire'],
  ['Bruxo','Bruxa','Bruxe'],['Mago','Maga','Mage'],
- ['Artífice','Artífice','Artífice']
+ ['Artífice','Artífice','Artífice'],['Domador','Domadora','Domadore']
 ];
 const speciesForms=[
  ['Elfo','Elfa','Elfe'],['Anão','Anã','Anãe'],['Gnomo','Gnoma','Gnome'],
@@ -41,11 +41,42 @@ const backgroundForms=[
  ['Forasteiro','Forasteira','Forasteire'],['Órfão','Órfã','Órfãe'],
  ['Herói','Heroína','Heroíne'],['Fazendeiro','Fazendeira','Fazendeire']
 ];
+const subclassForms=[
+ ["Mestre de Batalha","Mestra de Batalha","Mestre de Batalha"],
+ ["Mestre das Feras","Mestra das Feras","Mestre das Feras"],
+ ["Cavaleiro Arcano","Cavaleira Arcana","Cavaleire Arcane"],
+ ["Cavaleiro Rúnico","Cavaleira Rúnica","Cavaleire Rúnique"],
+ ["Guerreiro Psiônico","Guerreira Psiônica","Guerreire Psiônique"],
+ ["Guerreiro da Misericórdia","Guerreira da Misericórdia","Guerreire da Misericórdia"],
+ ["Guerreiro das Sombras","Guerreira das Sombras","Guerreire das Sombras"],
+ ["Guerreiro dos Elementos","Guerreira dos Elementos","Guerreire dos Elementos"],
+ ["Caçador","Caçadora","Caçadore"],
+ ["Assassino","Assassina","Assassine"],
+ ["Ladrão","Ladra","Ladre"],
+ ["Trapaceiro Arcano","Trapaceira Arcana","Trapaceire Arcane"],
+ ["Andarilho Feérico","Andarilha Feérica","Andarilhe Feérique"],
+ ["Andarilho do Inverno","Andarilha do Inverno","Andarilhe do Inverno"],
+ ["Espreitador Sombrio","Espreitadora Sombria","Espreitadore Sombrie"],
+ ["Abjurador","Abjuradora","Abjuradore"],
+ ["Adivinho","Adivinha","Adivinhe"],
+ ["Evocador","Evocadora","Evocadore"],
+ ["Ilusionista","Ilusionista","Ilusioniste"],
+ ["Alquimista","Alquimista","Alquimiste"],
+ ["Armeiro","Armeira","Armeire"],
+ ["Artilheiro","Artilheira","Artilheire"],
+ ["Ferreiro de Batalha","Ferreira de Batalha","Ferreire de Batalha"],
+ ["Cartógrafo","Cartógrafa","Cartógrafe"],
+ ["Guardião do Enxame","Guardiã do Enxame","Guardiãe do Enxame"],
+ ["Rastreador","Rastreadora","Rastreadore"],
+ ["Herdeiro dos Três","Herdeira dos Três","Herdeire dos Três"],
+ ["Cantor da Lâmina","Cantora da Lâmina","Cantore da Lâmina"],
+ ["Estandarteiro","Estandarteira","Estandarteire"],
+];
 const tables={
  class:new Map(classForms.flatMap(forms=>forms.map(form=>[fold(form),forms]))),
  species:new Map(speciesForms.flatMap(forms=>forms.map(form=>[fold(form),forms]))),
  background:new Map(backgroundForms.flatMap(forms=>forms.map(form=>[fold(form),forms]))),
- subclass:new Map()
+ subclass:new Map(subclassForms.flatMap(forms=>forms.map(form=>[fold(form),forms])))
 };
 const suffixInvariants=new Set(['halfling','tiefling','orc','gnoll','goliath','warforged','aasimar','tabaxi','shifter','gargula','medusa','harpia','nobre','monge','artifice']);
 function safeRoleFallback(value,gender){
@@ -76,4 +107,21 @@ export function characterIdentity(character,{includeName=true,includeClass=true,
  if(includeSpecies&&species)bits.push(genderedCharacterTerm(species,gender,'species'));
  if(includeBackground&&refs.background?.name)bits.push(genderedCharacterTerm(refs.background.name,gender,'background'));
  return bits.join(' · ')
+}
+
+
+/** Exibe o nome da linhagem de quem joga; não reescreve o dado normativo. */
+export function genderedCharacterLineage(value,gender){
+ const name=String(value??'').trim();
+ const colon=name.lastIndexOf(':');
+ const prefix=colon>=0?name.slice(0,colon+1)+' ':'';const subject=colon>=0?name.slice(colon+1).trim():name;
+ const explicit={
+  'Elfo da Floresta':['Elfo da Floresta','Elfa da Floresta','Elfe da Floresta'],
+  'Alto Elfo':['Alto Elfo','Alta Elfa','Alte Elfe'],
+  'Gnomo da Floresta':['Gnomo da Floresta','Gnoma da Floresta','Gnome da Floresta'],
+  'Gnomo das Rochas':['Gnomo das Rochas','Gnoma das Rochas','Gnome das Rochas']
+ };
+ const forms=explicit[subject];
+ if(forms){const g=normalizeCharacterGender(gender);return prefix+forms[g==='Feminino'?1:g==='Outro'?2:0]}
+ return prefix+genderedCharacterTerm(subject,gender,'species')
 }
