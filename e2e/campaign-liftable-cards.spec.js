@@ -35,26 +35,26 @@ test('resumo usa ordem fixa, links diretos e flexão gramatical',async({page})=>
  await cards.nth(2).click();
  await expect(page).toHaveURL(/#jogadores$/);
 });
-test('setas reorganizam Atos e Locais e salvam ordem',async({page})=>{
+test('setas reorganizam Locais e salvam sua ordem sem exibir Atos',async({page})=>{
  await page.goto('/mesa.html?id=e2e-cards-lift');
- const acts=page.locator('#missoes [data-line-drag]');
+ await expect(page.locator('#missoes')).toHaveCount(0);
  const places=page.locator('#locais [data-line-drag]');
- await expect(acts).toHaveCount(3);
- await expect(acts.nth(0).locator('.campaign-reorder-grip')).toBeVisible();
- await expect(acts.nth(0).locator('[data-line-move="up"]')).toBeDisabled();
- await acts.nth(0).locator('[data-line-move="down"]').click();
+ await expect(places).toHaveCount(3);
+ await expect(places.first().locator('.campaign-reorder-grip')).toBeVisible();
+ await expect(places.first().locator('[data-line-move="up"]')).toBeDisabled();
  await places.nth(2).locator('[data-line-move="up"]').click();
- await expect(page.locator('#missoes [data-edit-line]').first()).toHaveValue('Ato II');
  await expect(page.locator('#locais [data-edit-line]').nth(1)).toHaveValue('Mercado');
  await page.reload();
- await expect(page.locator('#missoes [data-edit-line]').first()).toHaveValue('Ato II');
  await expect(page.locator('#locais [data-edit-line]').nth(1)).toHaveValue('Mercado');
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
+ expect(saved.activeMissions).toBe('Ato I\nAto II\nAto III');
 });
+
 test('clique e segure faz o card se destacar e seguir o cursor',async({page,browserName})=>{
  test.skip(browserName!=='chromium' || test.info().project.name!=='desktop-chromium','Gestos de mouse verificados no desktop');
  await page.goto('/mesa.html?id=e2e-cards-lift');
- const grip=page.locator('#missoes [data-line-drag]').first().locator('.campaign-reorder-grip');
- const target=page.locator('#missoes [data-line-drag]').nth(2);
+ const grip=page.locator('#locais [data-line-drag]').first().locator('.campaign-reorder-grip');
+ const target=page.locator('#locais [data-line-drag]').nth(2);
  await grip.scrollIntoViewIfNeeded();
  const origin=await grip.boundingBox(),destination=await target.boundingBox();
  expect(origin).toBeTruthy();expect(destination).toBeTruthy();
@@ -67,7 +67,7 @@ test('clique e segure faz o card se destacar e seguir o cursor',async({page,brow
  expect(after.y).toBeGreaterThan(before.y+10);
  await page.mouse.up();
  await expect(page.locator('.campaign-floating-card')).toHaveCount(0);
- await expect(page.locator('#missoes [data-edit-line]').last()).toHaveValue('Ato I');
+ await expect(page.locator('#locais [data-edit-line]').last()).toHaveValue('Taverna');
 });
 
 

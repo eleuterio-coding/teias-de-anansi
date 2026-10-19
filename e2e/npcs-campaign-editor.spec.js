@@ -20,7 +20,7 @@ test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Enco
  await page.goto('/mesa.html?id=e2e-npc-campaign');
  await expect(page.locator('#npcs')).toBeVisible();
  await expect(page.locator('#locais .campaign-bullet-list li')).toHaveCount(2);
- await expect(page.locator('#missoes .campaign-bullet-list li')).toHaveCount(1);
+ await expect(page.locator('#missoes')).toHaveCount(0);
  await expect(page.locator('#linha-tempo .campaign-flow-step')).toHaveCount(2);
  await expect(page.locator('#materiais')).toHaveCount(0);
  await expect(page.locator('#encontros')).toHaveCount(0);

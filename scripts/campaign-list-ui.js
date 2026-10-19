@@ -1,4 +1,4 @@
-import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261016-campaign-geography1';
+import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
 import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
 import{deleteImage,imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
@@ -6,9 +6,10 @@ const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,
 const DM_NAME='Rafael',SYSTEM_NAME='D&D 5.5e';
 let campaigns=[],readOnly=false,visibleAdventures=[];
 function persist(list){campaigns=writeCampaigns(list);render()}
-function statusLabel(status){return({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída'}[status]||status)}
+function statusLabel(status){return({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[status]||status)}
 
-const CAMPAIGN_STATUSES=['planned','current','active','paused','finished'];
+const CAMPAIGN_STATUSES=['active','paused','finished','cancelled','planned'];
+const statusPriority=status=>{const rank=CAMPAIGN_STATUSES.indexOf(status);return rank<0?CAMPAIGN_STATUSES.length:rank};
 const amount=(count,singular,plural)=>`${count} ${count===1?singular:plural}`;
 function card(c){
  const sessions=Array.isArray(c.sessions)?c.sessions:[];
@@ -47,10 +48,16 @@ function createTile(){
 }
 function render(){
  const box=$('campaign-list');if(!box)return;
- const ordered=[...campaigns].sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+ const choice=$('campaign-status-filter')?.value||'all';
+ const ordered=[...campaigns]
+  .filter(c=>choice==='all'||c.status===choice)
+  .sort((a,b)=>statusPriority(a.status)-statusPriority(b.status)||String(b.updatedAt||'').localeCompare(String(a.updatedAt||''))||String(a.name||'').localeCompare(String(b.name||''),'pt-BR'));
  box.innerHTML=ordered.length||!readOnly
   ? `<div class="list campaign-list-grid">${ordered.map(card).join('')}${readOnly?'':createTile()}</div>`
   : '<div class="empty">Nenhuma campanha atribuída.</div>';
+ if(!ordered.length&&choice!=='all'){
+  box.insertAdjacentHTML('afterbegin','<div class="empty campaign-filter-empty">Nenhuma campanha com esse status.</div>');
+ }
  if(readOnly){hydrateMediaImages(box).catch(()=>{});return}
  box.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
   if(!disclosure.open)return;
@@ -85,7 +92,7 @@ function loadVisibleCampaigns(){
  readOnly=playerMode();
  if(readOnly){
   const rows=sharedCampaignRows();
-  campaigns=rows.map(row=>row.campaign).filter(row=>row.id!=='e2e-explicit-player-access');
+  campaigns=rows.map(row=>({...row.campaign,status:row.campaign.status==='current'?'active':row.campaign.status})).filter(row=>row.id!=='e2e-explicit-player-access');
   visibleAdventures=rows.flatMap(row=>(Array.isArray(row.adventures)?row.adventures:[]).map(adventure=>({...adventure,campaignId:adventure.campaignId||row.campaign.id}))).filter(row=>row.campaignId!=='e2e-explicit-player-access')
  }else{
   campaigns=normalizeLocalCampaigns().filter(row=>row.id!=='e2e-explicit-player-access');
@@ -96,6 +103,7 @@ function loadVisibleCampaigns(){
 function refreshFromRemote(event){event.detail?.claim?.();loadVisibleCampaigns();render()}
 function init(){
  loadVisibleCampaigns();
+ $('campaign-status-filter')?.addEventListener('change',render);
  render();
  document.addEventListener('pointerdown',event=>{
   if(event.target.closest?.('[data-status-disclosure]'))return;
