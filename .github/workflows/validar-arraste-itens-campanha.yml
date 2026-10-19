@@ -1,0 +1,36 @@
+name: Validar arraste de Atos, Locais e Linha do Tempo
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'campaigns.css'
+      - 'mesa.html'
+      - 'tests/auditar-editor-campanha.mjs'
+      - 'e2e/campaign-full-item-drag.spec.js'
+      - '.github/workflows/validar-arraste-itens-campanha.yml'
+  workflow_dispatch:
+jobs:
+  reordenar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe
+        run: |
+          node --check scripts/campaign-structured-ui.js
+          node --check e2e/campaign-full-item-drag.spec.js
+      - name: Testar operações e integridade dos dados
+        run: |
+          node tests/auditar-editor-campanha.mjs
+          node tests/auditar-campanhas-mesas.mjs
+      - name: Preparar navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Arrastar registros no desktop e celular
+        run: npx playwright test e2e/campaign-full-item-drag.spec.js --project=desktop-chromium --project=mobile-chromium
