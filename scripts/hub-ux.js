@@ -72,7 +72,7 @@ function markCurrent(link,links,{center=false}={}){
  if(center){
   const left=Math.max(0,Math.min(nav.scrollWidth-nav.clientWidth,link.offsetLeft+link.offsetWidth/2-nav.clientWidth/2));
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches||document.documentElement.dataset.hubMotion==='reduce';
-  nav.scrollTo({left,behavior:reduced?'instant':'smooth'});
+  nav.scrollTo({left,behavior:reduced?'auto':'smooth'});
  }
 }
 function enhanceSectionNav(){
