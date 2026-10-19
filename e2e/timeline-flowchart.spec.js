@@ -1,0 +1,68 @@
+import{test,expect}from'@playwright/test';
+
+const campaign={
+ id:'timeline-flow-cmp',name:'Reinos de Prata',status:'active',system:'D&D 5.5e',
+ members:[],sessions:[],timelineNodes:[
+  {id:'root-1',text:'Chegada à cidade',children:[
+   {id:'child-1',text:'Descoberta da pista',children:[]},
+   {id:'child-2',text:'Encontro com o guarda',children:[]}]},
+  {id:'root-2',text:'Partida do grupo',children:[]}
+ ]
+};
+const adventure={
+ id:'timeline-flow-adv',campaignId:'timeline-flow-cmp',title:'As Rainhas',
+ timelineEvents:[
+  {id:'evt-new',title:'O Conselho',text:'Uma nova decisão foi tomada.',at:'2026-10-18T16:00:00Z',automatic:true},
+  {id:'evt-old',title:'O Chamado',text:'A jornada começou.',at:'2026-10-17T16:00:00Z',automatic:false}
+ ]
+};
+test.beforeEach(async({page})=>{
+ await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
+  status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})
+ }));
+ await page.addInitScript(data=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([data.adventure]));
+ },{campaign,adventure});
+});
+test('campanha alterna lista e fluxograma e preserva os subeventos ao editar',async({page})=>{
+ await page.goto('/mesa.html?id=timeline-flow-cmp');
+ const area=page.locator('#linha-tempo');
+ await expect(area.locator('[data-timeline-view="list"]')).toHaveAttribute('aria-pressed','true');
+ await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(2);
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ await expect(area.locator('[data-timeline-view="flowchart"]')).toHaveAttribute('aria-pressed','true');
+ await expect(area.locator('.hub-diagram-node')).toHaveCount(4);
+ await expect(area.locator('.hub-diagram-children > .hub-diagram-node-group')).toHaveCount(2);
+ await expect(area.locator('.hub-diagram-node').first()).toContainText('Chegada à cidade');
+ await area.locator('[data-diagram-edit="child-1"]').click();
+ const input=area.locator('[data-timeline-text="child-1"]');
+ await expect(input).toBeFocused();
+ await input.fill('Pista recuperada');
+ await input.press('Tab');
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ await expect(area.locator('[data-diagram-event="child-1"]')).toContainText('Pista recuperada');
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
+ expect(stored.timelineNodes).toHaveLength(2);
+ expect(stored.timelineNodes[0].children[0].id).toBe('child-1');
+ expect(stored.timelineNodes[0].children[0].text).toBe('Pista recuperada');
+});
+test('aventura alterna lista e fluxograma cronológico sem duplicar registros',async({page})=>{
+ await page.goto('/aventuras.html?campaign=timeline-flow-cmp&id=timeline-flow-adv');
+ const area=page.locator('#linha-tempo');
+ await expect(area.locator('.timeline-row')).toHaveCount(2);
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ await expect(area.locator('.hub-diagram-sequence-step')).toHaveCount(2);
+ await expect(area.locator('.hub-diagram-sequence-step').first()).toContainText('O Chamado');
+ await expect(area.locator('.hub-diagram-sequence-step').last()).toContainText('O Conselho');
+ await area.locator('[data-diagram-edit="evt-old"]').click();
+ await expect(area.locator('.timeline-row[data-entity-row="evt-old"]')).toHaveCount(1);
+ await area.locator('#new-timeline-title').fill('Novo acontecimento');
+ await area.locator('#new-timeline-text').fill('Outro registro narrativo');
+ await area.locator('#add-timeline').click();
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ await expect(area.locator('.hub-diagram-sequence-step')).toHaveCount(3);
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0]);
+ expect(stored.timelineEvents).toHaveLength(3);
+});
