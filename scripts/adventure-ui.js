@@ -2,7 +2,7 @@ import{readCampaigns,writeCampaigns,campaignById,addCampaignNpc,updateCampaignNp
 import{read as readCharacters,write as writeCharacters}from'./character-builder/state.js';
 import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261019-reassign1';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
-import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-reassign1';
+import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-reassign1';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[];
@@ -147,6 +147,7 @@ async function reassignSelectedAdventure(destinationId){
   ||current.participantUsernames.length>0||current.characterIds.length>0||current.npcIds.length>0||current.locationIds.length>0;
  if(dependent&&!confirm('Mudar a Campanha desta Aventura? Seus capítulos, cenas, missões e demais conteúdos serão preservados. Vínculos exclusivos da campanha anterior (sessões, jogadores, personagens, NPCs e locais) serão desvinculados quando não pertencerem à nova Campanha.')){render();return}
  clearTimeout(saveTimer);
+ const input=$('adventure-assignment');if(input)input.disabled=true;
  const oldCampaigns=campaigns,oldAdventures=adventures;
  let newCover=null;
  try{
@@ -163,16 +164,19 @@ async function reassignSelectedAdventure(destinationId){
   campaigns=writeCampaigns(result.campaigns);
   adventures=writeAdventures(result.list);
   campaignId=destinationId;adventureId=current.id;syncUrl();
-  if(newCover){
-   await persistCampaignMediaState(previousId,{entityType:'adventure',entityId:current.id});
-   await persistCampaignMediaState(destinationId,{entityType:'adventure',entityId:current.id});
-   await deleteImage(current.coverImage).catch(()=>{});
+  try{await persistAdventureCampaignReassignment(previousId,destinationId)}
+  catch(error){
+   if(!newCover){
+    render();feedback('Aventura reatribuída neste dispositivo. Sincronização online pendente: '+(error?.message||'indisponível'),false);return
+   }
+   throw error
   }
+  if(newCover)await deleteImage(current.coverImage).catch(()=>{});
   render();feedback('Aventura atribuída à nova Campanha, sem criar outra.',true)
  }catch(error){
   campaigns=writeCampaigns(oldCampaigns);adventures=writeAdventures(oldAdventures);
   campaignId=previousId;adventureId=current.id;syncUrl();
-  if(newCover)await deleteImage(newCover).catch(()=>{});
+  if(newCover){await deleteImage(newCover).catch(()=>{});await persistAdventureCampaignReassignment(previousId,destinationId).catch(()=>{})}
   render();feedback(error?.message||'Não foi possível alterar a Campanha da Aventura.',false)
  }
 }
