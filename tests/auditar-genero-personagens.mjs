@@ -1,6 +1,6 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
-import{normalizeCharacterGender,characterGender,genderedCharacterTerm,characterIdentity,CHARACTER_GENDER_OPTIONS}from'../scripts/character-gender.js';
+import{normalizeCharacterGender,characterGender,genderedCharacterTerm,characterIdentity,genderedCharacterLineage,CHARACTER_GENDER_OPTIONS}from'../scripts/character-gender.js';
 
 assert.deepEqual(CHARACTER_GENDER_OPTIONS,['Feminino','Masculino','Outro']);
 assert.equal(normalizeCharacterGender('feminino'),'Feminino');
@@ -29,6 +29,9 @@ assert.equal(genderedCharacterTerm('Medusa','Outro','species'),'Medusa');
 assert.equal(genderedCharacterTerm('Forjado Bélico','Feminino','species'),'Forjada Bélica');
 assert.equal(genderedCharacterTerm('Guerreiro','Feminino','class'),'Guerreira');
 assert.equal(genderedCharacterTerm('Guerreiro','Outro','class'),'Guerreire');
+assert.equal(genderedCharacterTerm('Caçador','Feminino','subclass'),'Caçadora');
+assert.equal(genderedCharacterTerm('Cavaleiro Arcano','Outro','subclass'),'Cavaleire Arcane');
+assert.equal(genderedCharacterLineage('Elfo da Floresta','Outro'),'Elfe da Floresta');
 assert.equal(genderedCharacterTerm('Patrulheiro','', 'class'),'Patrulheiro');
 assert.equal(genderedCharacterTerm('O Cerco','Outro','subclass'),'O Cerco');
 // Calculadores e nomes normativos continuam masculinos: identidade é só apresentação.
