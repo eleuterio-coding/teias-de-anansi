@@ -499,7 +499,7 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 @media(max-width:900px){
  #table-root .campaign-editor-grid{grid-template-columns:minmax(0,1fr)}
  #table-root .campaign-editor-grid>.campaign-editor-card{grid-column:1/-1}
- #table-root .campaign-structured-columns{grid-template-columns:minmax(0,1fr)}
+ #table-root .campaign-editor-grid>.campaign-structured-columns{grid-template-columns:minmax(0,1fr)}
 }
 @media(max-width:600px){
  #table-root .campaign-add-line{grid-template-columns:minmax(0,1fr)}
