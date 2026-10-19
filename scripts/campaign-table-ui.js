@@ -1,6 +1,6 @@
 import{read,readNpcs}from'./character-builder/state.js';
 import{findNextCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261017-next1';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-acts-timeline2';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-act-reorder1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
