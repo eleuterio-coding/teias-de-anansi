@@ -3,11 +3,19 @@ on:
   pull_request:
     paths:
       - 'scripts/adventure-state.js'
+      - 'scripts/adventure-roster-ui.js'
+      - 'scripts/campaign-important-location-ui.js'
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'campaigns.css'
+      - 'adventures.css'
       - 'scripts/adventure-ui.js'
       - 'scripts/image-media.js'
       - 'scripts/adventure-router.js'
       - 'aventuras.html'
       - 'e2e/adventure-reassignment.spec.js'
+      - 'e2e/adventure-roster-important-location-images.spec.js'
       - 'tests/auditar-aventuras.mjs'
       - '.github/workflows/validar-reatribuicao-aventura.yml'
   workflow_dispatch:
@@ -27,4 +35,4 @@ jobs:
       - name: Instalar Chromium
         run: npx playwright install --with-deps chromium
       - name: Testar reatribuição no navegador
-        run: npx playwright test e2e/adventure-reassignment.spec.js --project=desktop-chromium
+        run: npx playwright test e2e/adventure-reassignment.spec.js e2e/adventure-roster-important-location-images.spec.js --project=desktop-chromium

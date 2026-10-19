@@ -1,10 +1,10 @@
 import{read,readNpcs}from'./character-builder/state.js';
 import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-collapsed1';
-import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-session-order2';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-location-images1';
+import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-location-images1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
-import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
+import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
 import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
@@ -96,7 +96,7 @@ function memberRow(m){
  </article>`
 }
 function rosterHtml(){return`<section id="jogadores" class="card roster-section">
- <div class="roster-heading"><h2>Jogadores da Mesa</h2><span class="roster-count">${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}</span></div>
+ <div class="roster-heading"><h2>Jogadores da Campanha</h2><span class="roster-count">${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}</span></div>
  <div id="member-list" class="list roster-list">${campaign.members.length?campaign.members.map(memberRow).join(''):'<div class="empty">Nenhum jogador adicionado.</div>'}</div>
  <div class="roster-add-panel"><h3>Adicionar jogador</h3>
   <div class="roster-add-fields"><label>Jogador<select id="new-member-user">${participantOptions()}</select></label><label>Personagem<select id="new-member-character">${characterOptions('')}</select></label></div>

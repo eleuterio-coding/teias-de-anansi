@@ -1,5 +1,7 @@
 import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-ordered-roots1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
+import{hydrateMediaImages}from'./image-media.js?v=20261019-important-locations1';
 export const entries=value=>String(value||'').split(/\r?\n/).map(x=>x.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
 const clean=v=>String(v??'').trim();
 const npcHref=id=>'ficha-personagem.html?npc=1&id='+encodeURIComponent(id);
@@ -67,9 +69,9 @@ function roster(c,npcs){
  <a class="btn secondary campaign-npc-library-link" href="npcs.html">Abrir NPCs</a></section>`
 }
 function bullets(c,id,title,field){
- const values=entries(c[field]);
+ const values=entries(c[field]),locationRows=c.importantLocationEntries||[];
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2><span class="campaign-editor-count">${values.length}</span></div>
- <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
+ <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span><span class="campaign-list-marker" aria-hidden="true"></span>${field==='importantLocations'?locationThumbnail(locationRows[i]||{id:'old-'+i,name:v}):''}<input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
@@ -134,7 +136,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   const previous=document.getElementById(id);if(!previous)return;
   const template=document.createElement('template');
   template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list',collapsedTimelineIds);
-  previous.replaceWith(template.content.firstElementChild)
+  const next=template.content.firstElementChild;previous.replaceWith(next);hydrateMediaImages(next).catch(()=>{})
  };
  const persist=(patch,id,message,render=true)=>{
   save(patch,{message});if(render)refresh(id)
@@ -199,20 +201,29 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-add-line]')){
    const field=target.dataset.addLine,value=clean(section.querySelector('[data-new-line]')?.value);
    if(!value)return;
-   persist({[field]:[...entries(c[field]),value].join('\n')},sectionFor(field),'Registro adicionado.')
+   if(field==='importantLocations'){
+     const rows=[...(c.importantLocationEntries||[]),{id:globalThis.crypto?.randomUUID?.()||'important-location-'+Date.now(),name:value,image:null}];
+     persist(locationPatch(rows),'locais','Registro adicionado.')
+    }else persist({[field]:[...entries(c[field]),value].join('\n')},sectionFor(field),'Registro adicionado.')
   }else if(target.matches('[data-del-line]')){
    const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
-   persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.')
+   if(field==='importantLocations'){
+     const rows=[...(c.importantLocationEntries||[])],removed=rows.splice(Number(target.dataset.index),1)[0];
+     persist(locationPatch(rows),'locais','Registro removido.');
+     if(removed?.image?.id)void import('./image-media.js?v=20261019-important-locations1').then(({persistCampaignMediaState,deleteImage})=>persistCampaignMediaState(c.id,{entityType:'campaign',entityId:c.id}).then(()=>deleteImage(removed.image))).catch(error=>feedback(error?.message||'Falha ao sincronizar imagem removida.',false));
+    }else persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.')
   }else if(target.matches('[data-line-move]')){
    const field=target.dataset.lineField,index=Number(target.dataset.moveIndex);
    const values=entries(c[field]),direction=target.dataset.lineMove;
    if(!['importantLocations','activeMissions'].includes(field)||!Number.isInteger(index)||!['up','down'].includes(direction))return;
    const adjacent=index+(direction==='up'?-1:1);
    if(adjacent<0||adjacent>=values.length)return;
-   const reordered=reorderLineValues(c[field],index,adjacent,direction==='up'?'before':'after');
+   const reordered=field==='importantLocations'
+     ?reorderLocationRows(c.importantLocationEntries||[],index,adjacent,direction==='up'?'before':'after')
+     :reorderLineValues(c[field],index,adjacent,direction==='up'?'before':'after');
    if(reordered===null||reordered===c[field])return;
    const id=sectionFor(field);
-   persist({[field]:reordered},id,'Ordem atualizada.');
+   persist(field==='importantLocations'?locationPatch(reordered):{[field]:reordered},id,'Ordem atualizada.');
    const moved=document.querySelector('#'+id+' [data-line-index="'+adjacent+'"]');
    showReorderConfirmation(id,moved);
   }else if(target.matches('[data-timeline-add-root],[data-timeline-add-child]')){
@@ -242,7 +253,11 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
    const field=input.dataset.editLine,values=entries(c[field]),index=Number(input.dataset.index),value=clean(input.value);
    if(!value){input.value=values[index]||'';return feedback('O nome não pode ficar vazio.',false)}
    if(values[index]===value)return;
-   values[index]=value;persist({[field]:values.join('\n')},sectionFor(field),'Nome atualizado.',false)
+   values[index]=value;
+    const patch=field==='importantLocations'
+     ?locationPatch((c.importantLocationEntries||[]).map((row,i)=>i===index?{...row,name:value}:row))
+     :{[field]:values.join('\n')};
+    persist(patch,sectionFor(field),'Nome atualizado.',false)
   }else if(input.matches('[data-timeline-text]')){
    const id=input.dataset.timelineText,current=findNode(c.timelineNodes,id),value=clean(input.value);
    if(!value){input.value=current?.text||'';return feedback('O evento precisa de texto.',false)}
@@ -350,10 +365,12 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
    return
   }
   const field=info.field,id=field==='importantLocations'?'locais':'missoes';
-  const reordered=reorderLineValues(getCampaign()[field],info.index,drop.index,drop.position);
+  const reordered=field==='importantLocations'
+    ?reorderLocationRows(getCampaign().importantLocationEntries||[],info.index,drop.index,drop.position)
+    :reorderLineValues(getCampaign()[field],info.index,drop.index,drop.position);
   if(reordered!==null&&reordered!==getCampaign()[field]){
    const newIndex=drop.index+(drop.position==='after'?1:0)-(info.index<drop.index?1:0);
-   persist({[field]:reordered},id,'Ordem atualizada.');
+   persist(field==='importantLocations'?locationPatch(reordered):{[field]:reordered},id,'Ordem atualizada.');
    showReorderConfirmation(id,document.querySelector('#'+id+' [data-line-index="'+newIndex+'"]'))
   }
  };
@@ -471,5 +488,6 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   const info=pen,drop=targetFor(info,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
   pen=null;releaseLift();clearHighlight();if(info.active)applyDrop(info,drop)
  });
- root.addEventListener('pointercancel',()=>{pen=null;releaseLift();clearHighlight()})
+ root.addEventListener('pointercancel',()=>{pen=null;releaseLift();clearHighlight()});
+  bindLocationImages({root,getCampaign,save,refresh,feedback})
 }
