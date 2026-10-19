@@ -578,3 +578,21 @@ body.hub-shell-enabled .section-nav[data-indicator-ready="true"] .section-nav-in
 }
 html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav{scroll-behavior:auto}
 html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav .section-nav-indicator{transition:none;will-change:auto}
+
+/* Barra superior móvel: controles do Mestre cabem no viewport sem encolher busca e menu. */
+@media(max-width:460px){
+ body.hub-shell-enabled .hub-global-topbar{gap:6px;padding-inline:8px}
+ body.hub-shell-enabled .hub-topbar-left{flex:1 1 0;gap:5px;min-width:0}
+ body.hub-shell-enabled .hub-topbar-actions{flex:0 0 auto;gap:4px}
+ body.hub-shell-enabled .hub-master-tools{gap:3px;padding-right:4px;margin:0}
+ body.hub-shell-enabled .hub-global-topbar .hub-master-control select{
+  width:76px!important;min-width:76px!important;max-width:76px!important;
+  padding:0 21px 0 6px!important
+ }
+ body.hub-shell-enabled .hub-global-topbar .hub-icon-button{
+  flex:0 0 36px;min-width:36px;width:36px
+ }
+ body.hub-shell-enabled .hub-topbar-primary{
+  flex:0 0 36px;min-width:36px;padding:0 6px!important
+ }
+}
