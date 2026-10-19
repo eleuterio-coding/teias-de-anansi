@@ -700,3 +700,102 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 }
 #table-root .campaign-line-drop-target[data-drop-position="before"]::before{top:-6px}
 #table-root .campaign-line-drop-target[data-drop-position="after"]::before{bottom:-6px}
+
+
+/* Feedback de arraste: origem, zona de soltura e confirmação da nova ordem. */
+#table-root .campaign-line-dragging{
+ opacity:.86!important;
+ border-color:#76c9ff!important;
+ background:rgba(39,100,156,.23)!important;
+ outline:2px solid rgba(117,200,255,.68);
+ outline-offset:1px;
+ box-shadow:0 12px 30px rgba(0,0,0,.36),0 0 0 3px rgba(57,164,252,.16);
+ transform:scale(.986);
+ position:relative;z-index:2
+}
+#table-root .timeline-item.timeline-dragging>.campaign-flow-step{
+ opacity:.86!important;
+ transform:scale(.993);
+ position:relative;z-index:2
+}
+#table-root .timeline-item.timeline-dragging>.campaign-flow-step .campaign-flow-card{
+ background:rgba(39,100,156,.27)!important;
+ border:2px solid #76c9ff!important;
+ box-shadow:0 12px 30px rgba(0,0,0,.35),0 0 0 3px rgba(57,164,252,.13)
+}
+#table-root .campaign-editable-bullets .campaign-bullet-entry,
+#table-root .timeline-item>.campaign-flow-step .campaign-flow-card{
+ transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,opacity .16s ease,transform .16s ease
+}
+#table-root .campaign-line-drop-target{
+ outline:1px solid rgba(88,191,255,.6);
+ outline-offset:2px
+}
+#table-root .campaign-line-drop-target::before{
+ z-index:4;left:5px;right:5px;height:5px;
+ background:#58c5ff;box-shadow:0 0 0 3px rgba(60,166,249,.19),0 0 14px rgba(66,178,255,.8)
+}
+#table-root .campaign-line-drop-target::after{
+ content:"Soltar aqui";position:absolute;z-index:5;left:18px;
+ color:#081725;background:#9ad9ff;border:1px solid #d1ecff;
+ padding:3px 9px;border-radius:6px;line-height:1.3;
+ font-size:.7rem;font-weight:800;letter-spacing:.02em;
+ box-shadow:0 3px 12px rgba(0,0,0,.28);pointer-events:none
+}
+#table-root .campaign-line-drop-target[data-drop-position="before"]::after{top:-30px}
+#table-root .campaign-line-drop-target[data-drop-position="after"]::after{bottom:-30px}
+#table-root .timeline-item.timeline-drop-target>.campaign-flow-step .campaign-flow-card{
+ border-color:#60c5ff!important;
+ background:rgba(50,145,245,.2)!important;
+ box-shadow:0 0 0 2px rgba(75,183,255,.3)
+}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="before"]>.campaign-flow-step::before,
+#table-root .timeline-item.timeline-drop-target[data-drop-position="after"]>.campaign-flow-step::after{
+ display:block!important;height:5px;left:10px;right:6px;z-index:4;
+ background:#5dc6ff;
+ box-shadow:0 0 0 3px rgba(75,180,255,.18),0 0 13px rgba(75,180,255,.75)
+}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="before"]>.campaign-flow-step::before{top:0}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="after"]>.campaign-flow-step::after{bottom:0}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="child"]>.campaign-flow-step .campaign-flow-card{
+ box-shadow:inset 0 0 0 2px #5dc6ff,0 0 0 3px rgba(75,183,255,.22)
+}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="child"]>.campaign-flow-step .campaign-flow-card{
+ position:relative
+}
+#table-root .timeline-item.timeline-drop-target[data-drop-position="child"]>.campaign-flow-step .campaign-flow-card::after{
+ content:"Adicionar como subevento";position:absolute;z-index:5;top:-14px;right:9px;
+ background:#9ad9ff;color:#081725;font-size:.7rem;font-weight:800;
+ border:1px solid #d1ecff;border-radius:6px;padding:3px 8px;
+ pointer-events:none;box-shadow:0 3px 12px rgba(0,0,0,.22)
+}
+#table-root .campaign-reorder-confirmed.campaign-bullet-entry{
+ animation:campaign-order-confirmed 1.2s ease-out
+}
+#table-root .timeline-item.campaign-reorder-confirmed>.campaign-flow-step .campaign-flow-card{
+ animation:campaign-order-confirmed 1.2s ease-out
+}
+#table-root .campaign-reorder-feedback{
+ display:inline-flex;align-items:center;white-space:nowrap;
+ padding:5px 9px;border:1px solid rgba(111,222,173,.58);
+ background:rgba(32,128,85,.24);color:#a9f8d0;
+ border-radius:7px;font-size:.78rem;font-weight:750;
+ animation:campaign-reorder-message .25s ease-out
+}
+@keyframes campaign-order-confirmed{
+ 0%{border-color:#86f0bf;box-shadow:0 0 0 4px rgba(86,221,149,.36);background-color:rgba(46,155,105,.33)}
+ 40%{border-color:#86f0bf;box-shadow:0 0 0 4px rgba(86,221,149,.19);background-color:rgba(46,155,105,.20)}
+ 100%{box-shadow:0 0 0 0 rgba(86,221,149,0)}
+}
+@keyframes campaign-reorder-message{
+ from{opacity:0;transform:translateY(5px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@media(prefers-reduced-motion:reduce){
+ #table-root .campaign-line-dragging,#table-root .timeline-item.timeline-dragging>.campaign-flow-step{transform:none}
+ #table-root .campaign-reorder-confirmed.campaign-bullet-entry,
+ #table-root .timeline-item.campaign-reorder-confirmed>.campaign-flow-step .campaign-flow-card,
+ #table-root .campaign-reorder-feedback{animation:none}
+ #table-root .campaign-editable-bullets .campaign-bullet-entry,
+ #table-root .timeline-item>.campaign-flow-step .campaign-flow-card{transition:none}
+}

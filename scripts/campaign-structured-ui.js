@@ -135,9 +135,12 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   persist({timelineNodes:nodes,timeline:flattenTimeline(nodes).join('\n')},'linha-tempo',message)
  };
  const move=(source,target,position)=>{
-  const updated=moveTimelineNode(getCampaign().timelineNodes,source,target,position);
-  if(updated)saveTree(updated,'Linha do tempo reorganizada.');
-  else feedback('Esse movimento não é permitido.',false)
+  const previous=getCampaign().timelineNodes,updated=moveTimelineNode(previous,source,target,position);
+  if(updated&&JSON.stringify(updated)!==JSON.stringify(previous)){
+   saveTree(updated,'Linha do tempo reorganizada.');return true
+  }
+  if(!updated)feedback('Esse movimento não é permitido.',false);
+  return false
  };
  const clearDrag=()=>{
   root.querySelectorAll('.timeline-drop-target,.timeline-dragging').forEach(el=>{
@@ -245,6 +248,24 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   const bounds=item.getBoundingClientRect();
   return{item,position:y<bounds.top+bounds.height/2?'before':'after',index:Number(item.dataset.lineIndex)}
  };
+ const showReorderConfirmation=(sectionId,moved)=>{
+  const section=document.getElementById(sectionId);
+  if(!section)return;
+  moved?.classList.add('campaign-reorder-confirmed');
+  const heading=section.querySelector('.campaign-editor-head');
+  if(!heading)return;
+  heading.querySelector('[data-reorder-confirmation]')?.remove();
+  const message=document.createElement('span');
+  message.className='campaign-reorder-feedback';
+  message.dataset.reorderConfirmation='';
+  message.setAttribute('role','status');
+  message.textContent='✓ Ordem atualizada';
+  heading.appendChild(message);
+  window.setTimeout(()=>{
+   moved?.classList.remove('campaign-reorder-confirmed');
+   message.remove()
+  },2200)
+ };
  const mark=(info,drop)=>{
   clearHighlight();
   if(!info)return;
@@ -257,12 +278,19 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  const applyDrop=(info,drop)=>{
   if(!info||!drop)return;
   if(info.kind==='timeline'){
-   move(info.id,drop.id,drop.position);return
+   if(move(info.id,drop.id,drop.position)){
+    const row=[...root.querySelectorAll('#linha-tempo [data-timeline-id]')].find(element=>element.dataset.timelineId===info.id);
+    showReorderConfirmation('linha-tempo',row)
+   }
+   return
   }
   const field=info.field,id=field==='importantLocations'?'locais':'missoes';
   const reordered=reorderLineValues(getCampaign()[field],info.index,drop.index,drop.position);
-  if(reordered!==null&&reordered!==getCampaign()[field])
-   persist({[field]:reordered},id,'Ordem atualizada.')
+  if(reordered!==null&&reordered!==getCampaign()[field]){
+   const newIndex=drop.index+(drop.position==='after'?1:0)-(info.index<drop.index?1:0);
+   persist({[field]:reordered},id,'Ordem atualizada.');
+   showReorderConfirmation(id,document.querySelector('#'+id+' [data-line-index="'+newIndex+'"]'))
+  }
  };
  // Mouse: captura o ponteiro na superfície inteira; não depende do DnD nativo,
  // que pode perder o evento de soltura próximo às bordas dos inputs.
