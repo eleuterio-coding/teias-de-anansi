@@ -1147,3 +1147,16 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
   background:linear-gradient(105deg,rgba(8,15,24,.95),rgba(8,15,24,.68))
  }
 }
+
+
+/* Evita que o conteúdo longo das opções imponha largura intrínseca maior
+   que a coluna do grid, especialmente na coluna compacta da Campanha. */
+#table-root #jogadores .roster-player-character,
+#table-root #jogadores .roster-player-character>label,
+#table-root #jogadores .roster-player-character select{
+ box-sizing:border-box;min-width:0!important;
+ width:100%!important;max-width:100%!important
+}
+#table-root #jogadores .roster-player-character>label{
+ display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:18px 44px;gap:6px
+}
