@@ -16,7 +16,7 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null){
   :'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
  <div class="hub-diagram-node" data-diagram-event="${esc(node.id)}">
- <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order" aria-label="Número do evento">${ordinal}</span>`}</div>
+ <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
  <strong>${esc(node.text)}</strong>
  <div class="hub-diagram-actions">
  <button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>${toggle}
