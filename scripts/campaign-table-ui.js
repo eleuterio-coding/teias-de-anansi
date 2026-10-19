@@ -96,7 +96,7 @@ function memberRow(m){
  </article>`
 }
 function rosterHtml(){return`<section id="jogadores" class="card roster-section">
- <div class="roster-heading"><h2>Jogadores da Mesa</h2><span class="roster-count">${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}</span></div>
+ <div class="roster-heading"><h2>Jogadores da Campanha</h2><span class="roster-count">${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}</span></div>
  <div id="member-list" class="list roster-list">${campaign.members.length?campaign.members.map(memberRow).join(''):'<div class="empty">Nenhum jogador adicionado.</div>'}</div>
  <div class="roster-add-panel"><h3>Adicionar jogador</h3>
   <div class="roster-add-fields"><label>Jogador<select id="new-member-user">${participantOptions()}</select></label><label>Personagem<select id="new-member-character">${characterOptions('')}</select></label></div>
