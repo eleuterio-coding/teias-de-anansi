@@ -1,4 +1,4 @@
-import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media2';
+import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261019-location-projection1';
 import{readCampaigns}from'./campaign-state.js?v=20260925-media1';
 import{readAdventures}from'./adventure-state.js?v=20260925-media1';
 
