@@ -257,9 +257,10 @@ function render(){
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=`${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':`<button type="button" id="open-session-create" class="hub-collection-card hub-collection-create" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="hub-collection-plus" aria-hidden="true">+</span><span class="hub-collection-create-label">Nova sessão</span></button>`}`;
+ box.innerHTML=`${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':`<a href="${listHref()}${listHref().includes('?')?'&':'?'}new=1" id="open-session-create" class="hub-collection-card hub-collection-create campaign-create-tile" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="hub-collection-plus campaign-create-plus" aria-hidden="true">+</span><span class="hub-collection-create-label campaign-create-tile-label">Nova sessão</span></a>`}`;
  if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
- $('open-session-create')?.addEventListener('click',()=>{
+ $('open-session-create')?.addEventListener('click',event=>{
+  event.preventDefault();
   showCreationPanel=true;
   if(createCard)createCard.hidden=false;
   $('open-session-create')?.setAttribute('aria-expanded','true');
