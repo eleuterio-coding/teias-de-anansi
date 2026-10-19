@@ -21,28 +21,20 @@ test.beforeEach(async({page})=>{
 });
 const read=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
 
-test('arrastar pelo bullet inteiro reordena Atos e Locais e conserva os dados',async({page})=>{
+test('arrastar Locais e conservar registros legados de Atos',async({page})=>{
  await page.goto('/mesa.html?id=full-drag-campaign');
- const atos=page.locator('#missoes .campaign-bullet-entry'),locais=page.locator('#locais .campaign-bullet-entry');
- await expect(atos).toHaveCount(3);
- await expect(atos.nth(2)).toHaveAttribute('draggable','true');
- await atos.nth(2).dragTo(atos.nth(0),{
-  sourcePosition:{x:18,y:28},targetPosition:{x:18,y:3}
- });
- await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 3','Ato 1','Ato 2']);
+ await expect(page.locator('#missoes')).toHaveCount(0);
+ const locais=page.locator('#locais .campaign-bullet-entry');
+ await expect(locais).toHaveCount(3);
  await locais.nth(0).dragTo(locais.nth(2),{
   sourcePosition:{x:18,y:28},targetPosition:{x:18,y:62}
  });
  await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
  const saved=await read(page);
- expect(saved.activeMissions).toBe('Ato 3\nAto 1\nAto 2');
+ expect(saved.activeMissions).toBe('Ato 1\nAto 2\nAto 3');
  expect(saved.importantLocations).toBe('Portão de Baldur\nCidade Sem Sol\nFenda do Carvalho');
  await page.reload();
- await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 3','Ato 1','Ato 2']);
  await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
- await page.locator('#missoes [data-edit-line]').first().fill('Ato Final');
- await page.locator('#missoes [data-edit-line]').first().press('Tab');
- expect((await read(page)).activeMissions.split('\n')[0]).toBe('Ato Final');
 });
 
 test('toda a linha do evento é arrastável, com subeventos e histórico preservados',async({page})=>{
@@ -70,7 +62,7 @@ test('toda a linha do evento é arrastável, com subeventos e histórico preserv
 test('no celular o arraste por toque longo reordena o bullet inteiro',async({page})=>{
  test.skip(test.info().project.name!=='mobile-chromium','Validação específica de toque');
  await page.goto('/mesa.html?id=full-drag-campaign');
- const rows=page.locator('#missoes .campaign-bullet-entry');
+ const rows=page.locator('#locais .campaign-bullet-entry');
  await rows.nth(2).scrollIntoViewIfNeeded();
  const start=await rows.nth(0).boundingBox(),end=await rows.nth(2).boundingBox();
  expect(start&&end).toBeTruthy();
@@ -81,8 +73,8 @@ test('no celular o arraste por toque longo reordena o bullet inteiro',async({pag
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:(from+to)/2}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:to}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
- await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 2','Ato 3','Ato 1']);
- expect((await read(page)).activeMissions).toBe('Ato 2\nAto 3\nAto 1');
+ await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
+ expect((await read(page)).importantLocations).toBe('Portão de Baldur\nCidade Sem Sol\nFenda do Carvalho');
 });
 
 
