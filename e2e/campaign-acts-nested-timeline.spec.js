@@ -23,24 +23,19 @@ test('Jogador da Mesa é nome fixo, sem dropdown e Notas do Mestre vem por últi
  const ids=await page.locator('.campaign-sections > section').evaluateAll(nodes=>nodes.map(n=>n.id));
  expect(ids[ids.length-1]).toBe('notas-mestre');
  expect(ids[ids.length-2]).toBe('linha-tempo');
- await expect(page.locator('#missoes h2')).toHaveText('Atos');
+ await expect(page.locator('#missoes')).toHaveCount(0);
 });
-test('Locais e Atos permitem editar nomes e preservam alterações após atualizar a página',async({page})=>{
+test('Locais permitem editar nomes sem exibir Atos antigos',async({page})=>{
  await page.goto('/mesa.html?id=edit-tree-test');
  await page.locator('#locais [data-edit-line]').first().fill('Sharn revisitada');
  await page.locator('#locais [data-edit-line]').first().press('Tab');
- await page.locator('#missoes [data-edit-line]').first().fill('Ato I — A Coroa');
- await page.locator('#missoes [data-edit-line]').first().press('Tab');
- await page.locator('#missoes [data-new-line]').fill('Ato II — O Portal');
- await page.locator('#missoes [data-add-line]').click();
+ await expect(page.locator('#missoes')).toHaveCount(0);
  await page.reload();
  await expect(page.locator('#locais [data-edit-line]').first()).toHaveValue('Sharn revisitada');
- await expect(page.locator('#missoes [data-edit-line]')).toHaveCount(2);
- await expect(page.locator('#missoes [data-edit-line]').first()).toHaveValue('Ato I — A Coroa');
- await expect(page.locator('#missoes [data-edit-line]').last()).toHaveValue('Ato II — O Portal');
+ await expect(page.locator('#missoes')).toHaveCount(0);
  const persisted=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
  expect(persisted.importantLocations).toContain('Sharn revisitada');
- expect(persisted.activeMissions).toContain('Ato II');
+ expect(persisted.activeMissions).toBe('Encontrar a Coroa');
 });
 test('Linha do tempo permite editar texto, criar subitem, rearranjar e persistir hierarquia',async({page})=>{
  await page.goto('/mesa.html?id=edit-tree-test');
