@@ -28,7 +28,7 @@ test('Aventuras usa topo e grade de Campanhas; card inteiro abre detalhes e tile
  await expect(item.locator('.hub-collection-description')).toContainText('intrigas');
  await expect(item.locator('.hub-parent-link')).toContainText('Reinos de Prata');
  await expect(item.getByRole('button',{name:'Abrir'})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir sessão A convocação'})).toHaveCount(1);
+ await expect(item.getByRole('button',{name:'Excluir'})).toHaveCount(1);
  await expect(page.locator('#adventure-create-card')).toBeHidden();
  await page.getByRole('link',{name:'Nova aventura'}).click();
  await expect(page.locator('#adventure-create-card')).toBeVisible();
@@ -52,7 +52,7 @@ test('Sessões usa mesmo cabeçalho, imagem, status e novo tile, mantendo detalh
  await expect(item.locator('.hub-collection-context')).toContainText('Reinos de Prata');
  await expect(item.locator('.hub-collection-context')).toContainText('As Rainhas');
  await expect(item.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir'})).toHaveCount(1);
+ await expect(item.getByRole('button',{name:'Excluir sessão A convocação'})).toHaveCount(1);
  await expect(page.locator('#session-create-card')).toBeHidden();
  await list.getByRole('link',{name:'Nova sessão'}).click();
  await expect(page.locator('#session-create-card')).toBeVisible();
