@@ -667,3 +667,36 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  #table-root .campaign-editable-bullets .campaign-bullet-entry{flex-wrap:wrap}
  #table-root .campaign-editable-bullets .campaign-list-remove{margin-left:auto}
 }
+
+/* Reorganização direta: toda a superfície do registro serve para arrastar. */
+#table-root .campaign-editable-bullets .campaign-bullet-entry,
+#table-root .timeline-item>.campaign-flow-step{
+ cursor:grab;
+}
+#table-root .campaign-editable-bullets .campaign-bullet-entry:active,
+#table-root .timeline-item>.campaign-flow-step:active{cursor:grabbing}
+#table-root .campaign-editable-bullets .campaign-bullet-entry :is(input,button),
+#table-root .timeline-item>.campaign-flow-step :is(input,button){
+ cursor:auto;
+}
+#table-root .campaign-editable-bullets .campaign-bullet-entry input,
+#table-root .timeline-item>.campaign-flow-step input{cursor:text}
+#table-root .campaign-editable-bullets .campaign-bullet-entry button,
+#table-root .timeline-item>.campaign-flow-step button{cursor:pointer}
+#table-root .campaign-editable-bullets .campaign-bullet-entry:hover,
+#table-root .timeline-item>.campaign-flow-step:hover .campaign-flow-card{
+ border-color:rgba(100,181,247,.58)
+}
+#table-root .campaign-line-dragging,
+#table-root .timeline-item.timeline-dragging>.campaign-flow-step{
+ opacity:.55
+}
+#table-root .campaign-line-drop-target{
+ position:relative;border-color:#5abaff!important;background:rgba(54,143,228,.13)!important
+}
+#table-root .campaign-line-drop-target::before{
+ content:"";position:absolute;left:8px;right:8px;height:3px;
+ background:#53b7ff;border-radius:4px;pointer-events:none
+}
+#table-root .campaign-line-drop-target[data-drop-position="before"]::before{top:-6px}
+#table-root .campaign-line-drop-target[data-drop-position="after"]::before{bottom:-6px}
