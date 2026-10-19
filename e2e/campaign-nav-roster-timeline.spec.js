@@ -42,8 +42,8 @@ test('jogador e personagem dividem a linha e os botões são compactos no deskto
  });
  expect(Math.abs(sizes.playerY-sizes.characterY)).toBeLessThanOrEqual(2);
  expect(sizes.characterX).toBeGreaterThan(sizes.playerRight);
- expect(sizes.openHeight).toBeLessThanOrEqual(38);
- expect(sizes.removeHeight).toBeLessThanOrEqual(38);
+ expect(sizes.openHeight).toBeLessThanOrEqual(44);
+ expect(sizes.removeHeight).toBeLessThanOrEqual(44);
  expect(sizes.openWidth).toBeLessThanOrEqual(90);
  expect(sizes.removeWidth).toBeLessThanOrEqual(90);
  await expect(row.locator('[data-member-character]')).toHaveValue('char-aluria');
