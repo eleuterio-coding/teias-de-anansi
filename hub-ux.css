@@ -334,6 +334,8 @@ body.hub-shell-enabled #campaign-list .campaign-card-details>.mini{
 .campaign-product-kicker{display:flex;align-items:center;gap:8px;color:#91a4b8;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;font-weight:760}
 .campaign-product-title-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:7px 0}
 .campaign-product-title-row h1{margin:0!important;font:700 clamp(2rem,3.3vw,3.25rem)/1 Georgia,"Times New Roman",serif!important;letter-spacing:.01em!important}
+/* Centralização óptica do selo de status ao lado do título da Campanha. */
+#table-root .campaign-product-title-row > .badge{align-self:center;flex-shrink:0;white-space:nowrap;transform:translateY(3px)}
 .campaign-product-description{max-width:760px;margin:4px 0 13px;color:#d2dbe5;font-size:.98rem}
 .campaign-product-meta{display:flex;gap:7px;flex-wrap:wrap}
 .campaign-product-meta .badge{backdrop-filter:blur(5px);background:rgba(20,32,45,.78)!important}
