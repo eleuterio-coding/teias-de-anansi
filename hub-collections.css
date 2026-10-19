@@ -1,0 +1,100 @@
+/* Cards de Aventuras e Sessões: mesma estrutura visual da Lista de Campanhas. */
+.hub-collection-section{display:grid;gap:14px;margin-top:0}
+.hub-collection-section>.campaign-list-heading{margin:0;align-items:center}
+.hub-collection-section>.campaign-list-heading h2{margin:0}
+.hub-collection-grid{
+ display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))!important;
+ grid-auto-rows:minmax(372px,auto);gap:14px;align-items:stretch;
+ margin:0;padding:0;list-style:none
+}
+.hub-collection-card{
+ position:relative;isolation:isolate;display:flex!important;flex-direction:column!important;
+ min-width:0;width:100%;height:100%;overflow:hidden;align-items:stretch;
+ border:1px solid var(--hub-border,#27384b);border-radius:14px;padding:0!important;
+ background:var(--hub-surface-2,#111b27);color:var(--hub-text,#f2f5f9);
+ transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease
+}
+.hub-collection-card:not(.hub-collection-create):hover{border-color:var(--hub-accent,#339dff);box-shadow:0 10px 28px #0004;transform:translateY(-2px)}
+.hub-collection-card .hub-collection-stretched{
+ position:absolute;inset:0;z-index:1;border-radius:inherit;text-decoration:none
+}
+.hub-collection-card .hub-collection-stretched:focus-visible{
+ outline:3px solid var(--hub-accent,#339dff);outline-offset:-4px
+}
+.hub-collection-card .hub-collection-image{
+ position:relative;display:block;width:100%;height:160px;min-height:160px;
+ border:0;border-radius:0;overflow:hidden;
+ background:linear-gradient(145deg,#25394a,#172433 60%,#182f49);
+}
+.hub-collection-card .hub-collection-image img{
+ display:block;width:100%;height:160px;max-height:none;margin:0;
+ border:0;border-radius:0;object-fit:cover
+}
+.hub-collection-image-placeholder{
+ display:grid;place-items:center;width:100%;height:160px;
+ color:#91a5bc;font-size:2.1rem;font-weight:350;letter-spacing:.04em
+}
+.hub-collection-card .hub-collection-status{
+ position:absolute;top:12px;right:12px;z-index:3;
+ padding:7px 10px;min-height:32px;border:1px solid #b5c9db85;border-radius:7px;
+ background:#263747dc;color:#e2edf6;font-size:.76rem;font-weight:700;
+ line-height:1.3;white-space:nowrap;backdrop-filter:blur(8px)
+}
+.hub-collection-card .hub-collection-status.status-current{
+ border-color:#6cc4ffad;background:#194167dc;color:#9cdbff
+}
+.hub-collection-card .hub-collection-status.status-active,
+.hub-collection-card .hub-collection-status.status-next{
+ border-color:#5ce69da3;background:#124f33dc;color:#91f3b9
+}
+.hub-collection-card .hub-collection-status.status-planned{
+ border-color:#ffc662a8;background:#593c16dc;color:#ffcf85
+}
+.hub-collection-card .hub-collection-status.status-paused{
+ border-color:#d1a0ffa6;background:#4e336ddc;color:#e0baff
+}
+.hub-collection-card .hub-collection-status.status-completed,
+.hub-collection-card .hub-collection-status.status-cancelled,
+.hub-collection-card .hub-collection-status.status-archived{
+ border-color:#a3bed399;background:#344656e0;color:#caddf0
+}
+.hub-collection-body{display:flex;flex:1;flex-direction:column;min-width:0;padding:15px 14px 6px}
+.hub-collection-body h3{margin:0 0 6px;font-size:1.09rem;font-weight:750;line-height:1.35;overflow-wrap:anywhere;color:inherit}
+.hub-collection-description{margin:0 0 8px;line-height:1.45;font-size:.92rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;overflow-wrap:anywhere}
+.hub-collection-context{display:flex;align-items:center;flex-wrap:wrap;gap:5px 9px;color:var(--hub-text-2,#a3afc0);font-size:.81rem;line-height:1.4}
+.hub-collection-context span{overflow-wrap:anywhere}
+.hub-collection-metrics{margin-top:8px;color:var(--hub-text-2,#9eabbc);font-size:.81rem;line-height:1.42}
+.hub-collection-card .hub-collection-actions{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:8px;position:relative;z-index:2;padding:12px 14px 15px;margin-top:auto;width:100%
+}
+.hub-collection-card .hub-collection-actions .btn,
+.hub-collection-card .hub-collection-actions button{min-width:0;max-width:100%;min-height:42px;margin:0;padding:9px 10px;font-size:.84rem;white-space:nowrap}
+.hub-collection-card .hub-collection-actions button.danger{margin-left:auto}
+.hub-collection-card.hub-collection-create{
+ display:flex!important;justify-content:center;align-items:center;
+ gap:12px;min-height:372px;padding:22px!important;
+ border:2px dashed #68829a;border-radius:14px;background:transparent;
+ color:var(--hub-text,#e8f0f7);cursor:pointer;text-align:center
+}
+.hub-collection-create .hub-collection-plus{
+ display:grid;place-items:center;width:68px;height:68px;border:1px solid #6f94b4;
+ border-radius:50%;font-size:2.9rem;font-weight:300;line-height:1
+}
+.hub-collection-create .hub-collection-create-label{font-size:1.08rem;font-weight:750}
+.hub-collection-card.hub-collection-create:is(:hover,:focus-visible){
+ border-color:#339dff;background:rgba(51,157,255,.06);color:#79c1ff
+}
+.hub-collection-card.hub-collection-create:focus-visible{outline:2px solid #70bfff;outline-offset:3px}
+.hub-collection-create-panel{margin:0 0 16px;max-width:850px}
+.hub-collection-create-panel[hidden]{display:none!important}
+.hub-collection-create-panel>.row-actions{justify-content:flex-end}
+.hub-collection-detail-back{margin:12px 0 14px}
+@media(max-width:540px){
+ .hub-collection-grid{grid-template-columns:minmax(0,1fr)!important;grid-auto-rows:auto}
+ .hub-collection-card.hub-collection-create{min-height:260px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hub-collection-card{transition:none}
+ .hub-collection-card:not(.hub-collection-create):hover{transform:none}
+}
