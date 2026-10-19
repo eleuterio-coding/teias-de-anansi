@@ -1,6 +1,6 @@
 import{read,readNpcs}from'./character-builder/state.js';
 import{findNextCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261017-next1';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261016-campaign-editor1';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-acts-timeline2';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
@@ -23,8 +23,7 @@ function characterOptions(selected='',memberId='',username=''){
  ));
  return `<option value="">— Sem personagem —</option>${characters.filter(c=>!unavailable(c.id)).sort(characterOrder).map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(charLabel(c))}</option>`).join('')}`
 }
-function participantOptions(){const used=new Set(campaign.members.map(m=>String(m.username||m.name||'').trim().toLowerCase()));const rows=hubParticipants.filter(p=>!used.has(String(p.username||p.displayName||'').trim().toLowerCase())).sort(playerOrder);return`<option value="">— Selecione —</option>${rows.map(p=>`<option value="${esc(p.username)}">${esc(p.displayName)}</option>`).join('')}`}function participantMemberOptions(member){const currentKey=String(member.username||member.name||'').trim().toLowerCase(),rows=[...hubParticipants];if(currentKey&&!rows.some(p=>p.username===currentKey))rows.unshift({username:currentKey,displayName:member.name||currentKey});return rows.sort(playerOrder).map(p=>`<option value="${esc(p.username)}" ${p.username===currentKey?'selected':''}>${esc(p.displayName)}</option>`).join('')}
-function activeSession(){return campaign?.sessions.find(s=>s.id===campaign.activeSessionId)||null}
+function participantOptions(){const used=new Set(campaign.members.map(m=>String(m.username||m.name||'').trim().toLowerCase()));const rows=hubParticipants.filter(p=>!used.has(String(p.username||p.displayName||'').trim().toLowerCase())).sort(playerOrder);return`<option value="">— Selecione —</option>${rows.map(p=>`<option value="${esc(p.username)}">${esc(p.displayName)}</option>`).join('')}`}function activeSession(){return campaign?.sessions.find(s=>s.id===campaign.activeSessionId)||null}
 function metric(label,value){return`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`}
 function overviewHtml(){
  const linked=campaign.members.filter(m=>m.characterId).length,adventures=adventuresForCampaign(readAdventures(),campaignId);
@@ -41,14 +40,14 @@ function detailsSectionsHtml(){
  const text=(id,title,field)=>`<section id="${id}" class="card campaign-editor-card"><h2>${esc(title)}</h2><textarea class="campaign-large-text" data-campaign-field="${field}">${esc(campaign[field])}</textarea><div class="row-actions" style="margin-top:10px"><button type="button" data-save-campaign-section>Salvar</button></div></section>`;
  return text('historia','Resumo da história','historySummary')
   +renderStructuredDetails(campaign,readNpcs())
-  +text('notas-mestre','Notas do Mestre','dmNotes')
   +renderTimeline(campaign)
+  +text('notas-mestre','Notas do Mestre','dmNotes')
 }
 
 function memberRow(m){
  const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',initial=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}">
-  <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><label>Jogador<select data-member-user aria-label="Jogador: ${esc(name)}">${participantMemberOptions(m)}</select></label></div>
+  <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display" aria-label="Jogador: ${esc(name)}"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
   <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
   <div class="row-actions roster-player-actions">${rosterOpenButton(linked)}<button type="button" class="danger" data-remove-member="${esc(m.id)}">Remover</button></div>
  </article>`
@@ -79,8 +78,8 @@ function syncRosterControls({rebuildRows=false}={}){
   const member=campaign.members.find(m=>m.id===row.dataset.memberRow);
   if(!member)continue;
   const name=member.name||member.username||'Jogador';
-  const user=row.querySelector('[data-member-user]');
-  if(user)user.value=String(member.username||member.name||'').trim().toLowerCase();
+  const playerName=row.querySelector('.roster-player-name');
+  if(playerName)playerName.textContent=name;
   const avatar=row.querySelector('.roster-avatar');
   if(avatar)avatar.textContent=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
   const characterSelect=row.querySelector('[data-member-character]');
@@ -118,22 +117,13 @@ function commitRoster(list,message,{rebuildRows=false}={}){
 function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Mesa.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
 function sessionCard(s){const participants=s.participantCharacterIds.map(id=>characters.find(c=>c.id===id)?.name||id).filter(Boolean);return`<article class="session-card ${s.status==='active'?'active':''}" data-session-row="${esc(s.id)}"><div class="session-head"><div><h3>Sessão ${s.number} · ${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><div class="row-actions">${['planned','next'].includes(s.status)?`<button type="button" data-start-session="${esc(s.id)}">Iniciar sessão</button>`:''}${s.status==='active'?`<button type="button" data-finish-session="${esc(s.id)}">Concluir sessão</button>`:''}${!['completed','cancelled'].includes(s.status)?`<button type="button" class="secondary" data-cancel-session="${esc(s.id)}">Cancelar</button>`:''}<button type="button" class="danger" data-remove-session="${esc(s.id)}">Excluir</button></div></div><div class="form-grid two" style="margin-top:10px"><label>Título<input data-session-field="title" value="${esc(s.title)}"></label><label>Data<input data-session-field="date" type="date" value="${esc(s.date)}"></label><label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>`<option value="${v}" ${s.status===v?'selected':''}>${esc(sessionStatus(v))}</option>`).join('')}</select></label><label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label><label class="wide">Resumo / recap<textarea data-session-field="summary">${esc(s.summary)}</textarea></label><label class="wide">Notas compartilhadas<textarea data-session-field="sharedNotes">${esc(s.sharedNotes)}</textarea></label><label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label><div class="wide"><strong>Personagens participantes</strong><div data-session-participants style="margin-top:5px">${participantChecks(s)}</div></div></div>${participants.length?`<p class="mini">Registrados: ${esc(participants.join(', '))}</p>`:''}</article>`}
 function sessionsHtml(){const sessions=[...campaign.sessions].sort((a,b)=>b.number-a.number);return`<section id="sessoes" class="card campaign-editor-card"><div class="top"><div><h2>Sessões da campanha</h2></div><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}">Planejar sessão</a></div><div class="list">${sessions.length?sessions.map(s=>`<article class="campaign-reference-row"><div><strong>Sessão ${s.number} · ${esc(s.title)}</strong><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(s.id)}">Abrir</a></article>`).join(''):'<div class="empty">Nenhuma sessão atrelada a esta campanha.</div>'}</div></section>`}
-function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>Próxima sessão</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#missoes'>Missões</a><a href='#notas-mestre'>Notas</a><a href='#linha-tempo'>Linha do tempo</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}
+function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>Próxima sessão</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#missoes'>Atos</a><a href='#linha-tempo'>Linha do tempo</a><a href='#notas-mestre'>Notas do Mestre</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}
 function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:false,message:'Mesa salva automaticamente.'}),eventName==='input'?350:0)})})}
 function bindMembers(){
  const list=$('member-list');
  if(!list)return;
  list.querySelectorAll('[data-member-row]').forEach(row=>{
   const id=row.dataset.memberRow;
-  row.querySelector('[data-member-user]')?.addEventListener('change',event=>{
-   const participant=hubParticipants.find(p=>p.username===event.target.value);
-   if(!participant){syncRosterControls();return feedback('Selecione um jogador.',false)}
-   const duplicate=campaign.members.some(m=>m.id!==id&&String(m.username||m.name||'').trim().toLowerCase()===participant.username);
-   if(duplicate){syncRosterControls();return feedback('Este jogador já participa da campanha.',false)}
-   const result=updateCampaignMember(campaigns,campaignId,id,{username:participant.username,name:participant.displayName,role:'player'});
-   if(!result.ok){syncRosterControls();return feedback(result.reason,false)}
-   commitRoster(result.list,'Jogador atualizado.')
-  });
   row.querySelector('[data-member-character]')?.addEventListener('change',event=>{
    const value=event.target.value;
    const result=value?assignCharacterToMember(campaigns,campaignId,id,value):unassignCharacterFromMember(campaigns,campaignId,id);
