@@ -4,7 +4,7 @@ import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campa
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-location-images1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
-import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
+import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
 import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
