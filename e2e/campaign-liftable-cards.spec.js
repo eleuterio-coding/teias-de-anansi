@@ -71,12 +71,64 @@ test('clique e segure faz o card se destacar e seguir o cursor',async({page,brow
 });
 
 
-test('retira os dois botões Nova sessão somente da página da campanha',async({page})=>{
+test('botões da Campanha abrem criação de Aventura ou Sessão pré-vinculada',async({page})=>{
  await page.goto('/mesa.html?id=e2e-cards-lift');
- await expect(page.locator('.hub-global-topbar .hub-topbar-primary')).toHaveCount(0);
- await expect(page.locator('.campaign-product-hero .campaign-product-actions a')).toHaveCount(1);
- await expect(page.locator('.campaign-product-hero .campaign-product-actions a')).toHaveText('Todas as campanhas');
- await expect(page.locator('#proxima-sessao .campaign-next-action')).toHaveAttribute('href','sessoes.html?campaign=e2e-cards-lift&id=next1');
- await page.goto('/sessoes.html?campaign=e2e-cards-lift');
- await expect(page.locator('.hub-global-topbar .hub-topbar-primary')).toContainText('Nova sessão');
+ const actions=page.locator('.campaign-product-hero .campaign-product-actions');
+ await expect(actions.locator('a')).toHaveCount(3);
+ await expect(actions.getByRole('link',{name:'Nova Aventura'})).toHaveAttribute('href','aventuras.html?campaign=e2e-cards-lift&new=1#adventure-create-card');
+ await expect(actions.getByRole('link',{name:'Nova Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-cards-lift&new=1#session-create-card');
+ await actions.getByRole('link',{name:'Nova Aventura'}).click();
+ await expect(page).toHaveURL(/aventuras\.html\?campaign=e2e-cards-lift&new=1#adventure-create-card/);
+ await expect(page.locator('#adventure-campaign')).toHaveValue('e2e-cards-lift');
+ await expect(page.locator('#new-adventure-title')).toBeVisible();
+ await expect(page.locator('#visao-geral')).toHaveCount(0);
+ await page.goto('/mesa.html?id=e2e-cards-lift');
+ await page.locator('.campaign-product-actions').getByRole('link',{name:'Nova Sessão'}).click();
+ await expect(page).toHaveURL(/sessoes\.html\?campaign=e2e-cards-lift&new=1#session-create-card/);
+ await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-cards-lift');
+ await expect(page.locator('#new-session-adventure')).toHaveValue('');
+ await expect(page.locator('#new-session-title')).toBeVisible();
+ await expect(page.locator('#proxima-sessao .campaign-next-action')).toHaveCount(0);
+});
+test('criar Aventura vinda da Campanha salva o vínculo com a Campanha correta',async({page})=>{
+ await page.goto('/aventuras.html?campaign=e2e-cards-lift&new=1#adventure-create-card');
+ await expect(page.locator('#adventure-campaign')).toHaveValue('e2e-cards-lift');
+ await page.locator('#new-adventure-title').fill('A Jornada da Cidadela');
+ await page.locator('#create-adventure').click();
+ await expect(page).toHaveURL(/aventuras\.html\?campaign=e2e-cards-lift&id=/);
+ await expect(page.locator('#adventure-assignment')).toHaveValue('e2e-cards-lift');
+ const rows=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]'));
+ const created=rows.filter(a=>a.title==='A Jornada da Cidadela');
+ expect(created).toHaveLength(1);
+ expect(created[0].campaignId).toBe('e2e-cards-lift');
+});
+test('criar Sessão vinculada à Campanha sem Aventura salva dentro da Campanha',async({page})=>{
+ await page.goto('/sessoes.html?campaign=e2e-cards-lift&new=1#session-create-card');
+ await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-cards-lift');
+ await page.locator('#new-session-title').fill('Sessão sem aventura');
+ await page.locator('#create-session').click();
+ await expect(page).toHaveURL(/sessoes\.html\?campaign=e2e-cards-lift&id=/);
+ const saved=await page.evaluate(()=>({
+  campaigns:JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]'),
+  standalone:JSON.parse(localStorage.getItem('hub-rpg:sessions:v1')||'[]')
+ }));
+ const target=saved.campaigns.find(c=>c.id==='e2e-cards-lift');
+ const session=target.sessions.find(s=>s.title==='Sessão sem aventura');
+ expect(session).toBeTruthy();
+ expect(session.adventureId).toBeNull();
+ expect(saved.standalone.some(s=>s.id===session.id)).toBe(false);
+ await page.reload();
+ await expect(page.locator('[data-session-id="'+session.id+'"]')).toHaveCount(1);
+});
+test('criar Sessão com Aventura da Campanha preserva os dois vínculos',async({page})=>{
+ await page.goto('/sessoes.html?campaign=e2e-cards-lift&new=1#session-create-card');
+ await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-cards-lift');
+ await page.locator('#new-session-adventure').selectOption('ad1');
+ await page.locator('#new-session-title').fill('Sessão das Rainhas');
+ await page.locator('#create-session').click();
+ await expect(page).toHaveURL(/sessoes\.html\?campaign=e2e-cards-lift/);
+ const target=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]').find(c=>c.id==='e2e-cards-lift'));
+ const session=target.sessions.find(s=>s.title==='Sessão das Rainhas');
+ expect(session).toBeTruthy();
+ expect(session.adventureId).toBe('ad1');
 });
