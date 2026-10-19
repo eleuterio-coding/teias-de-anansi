@@ -1,0 +1,40 @@
+name: Validar fluxogramas da linha do tempo
+on:
+  pull_request:
+    paths:
+      - 'scripts/timeline-flowchart.js'
+      - 'timeline-flowchart.css'
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'scripts/adventure-router.js'
+      - 'mesa.html'
+      - 'aventuras.html'
+      - 'e2e/timeline-flowchart.spec.js'
+      - '.github/workflows/validar-fluxograma-timeline.yml'
+  workflow_dispatch:
+jobs:
+  fluxogramas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe
+        run: |
+          node --check scripts/timeline-flowchart.js
+          node --check scripts/campaign-structured-ui.js
+          node --check scripts/adventure-ui.js
+      - name: Verificar modelos de dados
+        run: |
+          node tests/auditar-editor-campanha.mjs
+          node tests/auditar-aventuras.mjs
+      - name: Preparar navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar visualização e edição reais
+        run: npx playwright test e2e/timeline-flowchart.spec.js e2e/campaign-acts-nested-timeline.spec.js --project=desktop-chromium --project=mobile-chromium
