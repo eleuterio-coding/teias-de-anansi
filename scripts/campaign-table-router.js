@@ -1,5 +1,5 @@
 import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20261016-master-preview1';
-import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-open-only2';
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
 import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20261019-session-order2';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
