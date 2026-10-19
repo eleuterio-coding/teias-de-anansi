@@ -131,16 +131,6 @@ test('ações da ficha são ícones quadrados na mesma linha dos campos',async({
   const open=bounds('.roster-open-button'),remove=bounds('.roster-remove-button');
   return {name:name.toJSON(),character:character.toJSON(),open:open.toJSON(),remove:remove.toJSON()};
  });
- console.log('ROSTER_LAYOUT',JSON.stringify(await row.evaluate(el=>{
-  const rect=s=>el.querySelector(s).getBoundingClientRect().toJSON();
-  return {row:el.getBoundingClientRect().toJSON(),grid:getComputedStyle(el).gridTemplateColumns,
-   character:rect('.roster-player-character'),label:rect('.roster-player-character label'),
-   select:rect('[data-member-character]'),name:rect('.roster-player-name'),
-   actions:rect('.roster-player-actions'),open:rect('.roster-open-button'),
-   remove:rect('.roster-remove-button'),
-   characterArea:getComputedStyle(el.querySelector('.roster-player-character')).gridColumn,
-   actionsArea:getComputedStyle(el.querySelector('.roster-player-actions')).gridColumn}
- })));
  expect(geo.open.left).toBeGreaterThanOrEqual(geo.character.right);
  expect(geo.remove.left).toBeGreaterThan(geo.open.right);
  expect(Math.abs(geo.open.top-geo.character.top)).toBeLessThanOrEqual(5);
