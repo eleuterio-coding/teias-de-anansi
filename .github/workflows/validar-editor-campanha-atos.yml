@@ -13,6 +13,11 @@ on:
       - 'e2e/npcs-campaign-editor.spec.js'
       - 'e2e/campaign-ux-save-feedback.spec.js'
       - 'e2e/campaign-editor-recent-lists.spec.js'
+      - 'e2e/campaign-order-status-collapse.spec.js'
+      - 'scripts/campaign-recent-items.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/adventure-state.js'
+      - 'sessoes.html'
       - 'scripts/campaign-recent-items.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-router.js'
@@ -31,6 +36,11 @@ on:
       - 'e2e/npcs-campaign-editor.spec.js'
       - 'e2e/campaign-ux-save-feedback.spec.js'
       - 'e2e/campaign-editor-recent-lists.spec.js'
+      - 'e2e/campaign-order-status-collapse.spec.js'
+      - 'scripts/campaign-recent-items.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/adventure-state.js'
+      - 'sessoes.html'
       - 'scripts/campaign-recent-items.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-router.js'
@@ -51,6 +61,8 @@ jobs:
           node --check scripts/campaign-table-ui.js
           node --check scripts/campaign-structured-ui.js
           node --check scripts/campaign-recent-items.js
+          node --check scripts/campaign-sessions-ui.js
+          node --check scripts/adventure-state.js
           node --check scripts/adventure-ui.js
           node --check scripts/adventure-router.js
           node tests/auditar-editor-campanha.mjs
@@ -58,4 +70,4 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Testar editor e regressões no navegador
-        run: npx playwright test e2e/campaign-acts-nested-timeline.spec.js e2e/npcs-campaign-editor.spec.js e2e/campaign-ux-save-feedback.spec.js e2e/campaign-editor-recent-lists.spec.js
+        run: npx playwright test e2e/campaign-acts-nested-timeline.spec.js e2e/npcs-campaign-editor.spec.js e2e/campaign-ux-save-feedback.spec.js e2e/campaign-editor-recent-lists.spec.js e2e/campaign-order-status-collapse.spec.js
