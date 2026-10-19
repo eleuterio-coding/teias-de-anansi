@@ -122,6 +122,9 @@
 #campaign-list .campaign-card-status.status-finished{
   --status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0
 }
+#campaign-list .campaign-card-status.status-cancelled{
+ --status-bg:rgba(94,39,46,.83);--status-border:rgba(240,126,136,.58);--status-ink:#ffb5bf
+}
 
 /* Menu desenhado pelo Hub: mantém transparência com o menu aberto e fechado. */
 #campaign-list .campaign-status-disclosure{position:relative;min-width:0}
@@ -186,6 +189,9 @@
 }
 #campaign-list .campaign-status-option.status-finished{
   --option-bg:rgba(52,70,86,.40);--option-color:#caddf0;--option-border:rgba(163,190,211,.40)
+}
+#campaign-list .campaign-status-option.status-cancelled{
+ --option-bg:rgba(94,39,46,.50);--option-color:#ffb5bf;--option-border:rgba(240,126,136,.4)
 }
 #campaign-list .campaign-status-option[aria-pressed="true"]::after{
   content:"✓";font-size:.84rem;font-weight:800
@@ -854,4 +860,16 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 }
 @media(prefers-reduced-motion:reduce){
  .campaign-floating-card{transition:none!important;animation:none!important}
+}
+
+
+/* Filtro de status das Campanhas. */
+.campaign-list-heading{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.campaign-list-controls{display:flex;align-items:center;gap:10px;margin-left:auto}
+.campaign-list-controls label{font-size:.81rem;font-weight:650;white-space:nowrap}
+.campaign-list-controls select{min-width:170px;max-width:100%;min-height:40px;margin:0}
+.campaign-filter-empty{margin:10px 0 14px}
+@media(max-width:640px){
+ .campaign-list-controls{width:100%;justify-content:space-between;margin-left:0}
+ .campaign-list-controls select{flex:1;min-width:0}
 }
