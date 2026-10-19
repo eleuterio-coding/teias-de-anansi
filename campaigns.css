@@ -873,3 +873,72 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  .campaign-list-controls{width:100%;justify-content:space-between;margin-left:0}
  .campaign-list-controls select{flex:1;min-width:0}
 }
+
+
+/* Editor da Campanha: Campanha e Jogadores dividem a primeira linha no desktop.
+   Em telas pequenas, mantém-se a disposição vertical existente. */
+@media(min-width:901px){
+ #table-root .campaign-editor-grid>#campanha{
+  grid-column:1;grid-row:auto;min-width:0
+ }
+ #table-root .campaign-editor-grid>#jogadores{
+  grid-column:2;grid-row:auto;min-width:0
+ }
+ /* A largura do card de jogadores é menor: sem comprimir personagem ou ações. */
+ #table-root #jogadores .roster-player{
+  grid-template-columns:42px minmax(0,1fr);
+  grid-template-rows:18px 44px 18px 44px auto;
+  gap:8px 10px;min-width:0
+ }
+ #table-root #jogadores .roster-player-identity .roster-avatar{
+  grid-column:1;grid-row:2
+ }
+ #table-root #jogadores .roster-player-identity>.roster-player-display{
+  grid-column:2;grid-row:1/span 2
+ }
+ #table-root #jogadores .roster-player-character{
+  grid-column:1/-1;grid-row:3/span 2
+ }
+ #table-root #jogadores .roster-player-actions{
+  grid-column:1/-1;grid-row:5;
+  justify-content:flex-end;align-self:start;flex-wrap:wrap
+ }
+ #table-root #jogadores .roster-player-actions :is(.roster-open-button,button[data-remove-member]){
+  flex:0 0 auto
+ }
+}
+/* Apenas o seletor de capa da Campanha: ações posicionadas sobre a imagem. */
+#table-root #campanha .image-picker{
+ position:relative;min-width:0
+}
+#table-root #campanha .image-picker-preview{
+ position:relative
+}
+#table-root #campanha .image-picker-actions{
+ position:absolute;top:12px;right:12px;z-index:2;
+ display:flex;align-items:center;justify-content:flex-end;gap:8px;
+ margin:0;padding:0;max-width:calc(100% - 24px)
+}
+#table-root #campanha .image-picker-actions :is(.image-picker-button,button[data-image-remove]){
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:38px;margin:0;padding:8px 12px;
+ white-space:nowrap;font-size:.8rem;line-height:1.2;
+ background:rgba(10,20,32,.92)!important;
+ border:1px solid rgba(142,177,208,.65)!important;
+ border-radius:9px;color:#f4faff!important;
+ box-shadow:0 4px 14px rgba(0,0,0,.4);
+ backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)
+}
+#table-root #campanha .image-picker-actions :is(.image-picker-button,button[data-image-remove]):hover{
+ border-color:#8dd5ff!important;background:rgba(29,55,79,.95)!important
+}
+#table-root #campanha .image-picker-actions :is(.image-picker-button,button[data-image-remove]):focus-visible,
+#table-root #campanha .image-picker-actions .image-picker-button:focus-within{
+ outline:2px solid #9bddff;outline-offset:2px
+}
+@media(max-width:480px){
+ #table-root #campanha .image-picker-actions{top:9px;right:9px;gap:5px;max-width:calc(100% - 18px)}
+ #table-root #campanha .image-picker-actions :is(.image-picker-button,button[data-image-remove]){
+  min-height:36px;padding:7px 9px;font-size:.74rem
+ }
+}
