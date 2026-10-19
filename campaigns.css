@@ -583,6 +583,29 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  border-color:var(--hub-border,#456687);background:var(--hub-surface,#101923)
 }
 
+/* Atos: alça de arraste acessível e posição de inserção claramente marcada. */
+#table-root #missoes .campaign-act-entry{position:relative}
+#table-root #missoes .campaign-act-drag-handle{
+ display:grid;place-items:center;flex:none;width:34px;height:42px;min-height:42px;
+ padding:0;margin:0;border:1px solid transparent;border-radius:8px;
+ background:transparent;color:var(--hub-accent-2,#87c9ff);
+ cursor:grab;touch-action:none;user-select:none;font-size:1.4rem;line-height:1
+}
+#table-root #missoes .campaign-act-drag-handle:active{cursor:grabbing}
+#table-root #missoes .campaign-act-drag-handle:is(:hover,:focus-visible){
+ border-color:var(--hub-border,#456687);outline-offset:2px
+}
+#table-root #missoes .campaign-act-entry.act-dragging{opacity:.5}
+#table-root #missoes .campaign-act-entry.act-drop-target{
+ border-color:rgba(104,183,255,.75);background:rgba(50,145,245,.12)
+}
+#table-root #missoes .campaign-act-entry.act-drop-target::after{
+ content:"";position:absolute;left:10px;right:10px;height:3px;
+ border-radius:3px;background:#51b7ff;pointer-events:none
+}
+#table-root #missoes .campaign-act-entry.act-drop-target[data-drop-position="before"]::after{top:-6px}
+#table-root #missoes .campaign-act-entry.act-drop-target[data-drop-position="after"]::after{bottom:-6px}
+
 /* Linha do tempo: árvore de eventos/subeventos rearranjável. */
 #table-root .timeline-tree,
 #table-root .timeline-children{list-style:none;display:grid;gap:0;margin:0;padding:0;min-width:0}
