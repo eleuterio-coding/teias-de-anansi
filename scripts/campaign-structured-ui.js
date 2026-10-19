@@ -219,7 +219,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   else if(event.target.matches('[data-new-timeline]'))event.target.closest('section').querySelector('[data-timeline-add-root]')?.click();
   else event.target.blur()
  });
- let dragging=null,touch=null,pen=null,startedOnControl=false;
+ let dragging=null,touch=null,pen=null,mouse=null;
  const interactive=target=>Boolean(target.closest('input,textarea,select,button,a,[contenteditable="true"]'));
  const findSurface=target=>target?.closest?.('[data-timeline-drag],[data-line-drag]')||null;
  const dragInfo=surface=>surface?.hasAttribute('data-timeline-drag')
@@ -264,13 +264,41 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(reordered!==null&&reordered!==getCampaign()[field])
    persist({[field]:reordered},id,'Ordem atualizada.')
  };
+ // Mouse: captura o ponteiro na superfície inteira; não depende do DnD nativo,
+ // que pode perder o evento de soltura próximo às bordas dos inputs.
+ const clearMouse=()=>{
+  if(!mouse)return;
+  const surface=mouse.surface,pointerId=mouse.pointerId;
+  mouse=null;surface.draggable=true;
+  if(surface.hasPointerCapture?.(pointerId))surface.releasePointerCapture(pointerId);
+  clearHighlight()
+ };
  root.addEventListener('pointerdown',event=>{
-  if(event.pointerType==='mouse')startedOnControl=interactive(event.target)
+  if(event.pointerType!=='mouse'||event.button!==0||interactive(event.target))return;
+  const info=dragInfo(findSurface(event.target));
+  if(!info)return;
+  mouse={...info,pointerId:event.pointerId,x:event.clientX,y:event.clientY,active:false};
+  info.surface.draggable=false;
+  info.surface.setPointerCapture?.(event.pointerId);
+  event.preventDefault()
  });
+ root.addEventListener('pointermove',event=>{
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  if(!mouse.active&&Math.hypot(event.clientX-mouse.x,event.clientY-mouse.y)<6)return;
+  mouse.active=true;event.preventDefault();
+  mark(mouse,targetFor(mouse,document.elementFromPoint(event.clientX,event.clientY),event.clientY))
+ });
+ root.addEventListener('pointerup',event=>{
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  const info=mouse,drop=targetFor(info,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  const shouldMove=info.active;clearMouse();
+  if(shouldMove)applyDrop(info,drop)
+ });
+ root.addEventListener('pointercancel',clearMouse);
  root.addEventListener('dragstart',event=>{
   const surface=findSurface(event.target);
   if(!surface)return;
-  if(startedOnControl){event.preventDefault();return}
+  if(mouse){event.preventDefault();return}
   dragging=dragInfo(surface);
   if(!dragging)return;
   if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',dragging.kind==='timeline'?dragging.id:String(dragging.index))}
