@@ -92,7 +92,7 @@ function loadVisibleCampaigns(){
  readOnly=playerMode();
  if(readOnly){
   const rows=sharedCampaignRows();
-  campaigns=rows.map(row=>row.campaign).filter(row=>row.id!=='e2e-explicit-player-access');
+  campaigns=rows.map(row=>({...row.campaign,status:row.campaign.status==='current'?'active':row.campaign.status})).filter(row=>row.id!=='e2e-explicit-player-access');
   visibleAdventures=rows.flatMap(row=>(Array.isArray(row.adventures)?row.adventures:[]).map(adventure=>({...adventure,campaignId:adventure.campaignId||row.campaign.id}))).filter(row=>row.campaignId!=='e2e-explicit-player-access')
  }else{
   campaigns=normalizeLocalCampaigns().filter(row=>row.id!=='e2e-explicit-player-access');
