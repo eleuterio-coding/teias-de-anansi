@@ -50,7 +50,7 @@ function listHtml(){
    <div class="row-actions hub-collection-actions adventure-card-actions"><button type="button" data-open-adventure="${esc(a.id)}">Abrir</button><button type="button" class="danger" data-delete-adventure="${esc(a.id)}">Excluir</button></div>
   </article>`
  }).join('')}
- ${campaigns.length?`<button type="button" id="open-adventure-create" class="hub-collection-card hub-collection-create" aria-controls="adventure-create-card" aria-expanded="${createPanelOpen}"><span class="hub-collection-plus" aria-hidden="true">+</span><span class="hub-collection-create-label">Nova aventura</span></button>`:''}
+ ${campaigns.length?`<a href="aventuras.html?new=1" id="open-adventure-create" class="hub-collection-card hub-collection-create campaign-create-tile" aria-controls="adventure-create-card" aria-expanded="${createPanelOpen}"><span class="hub-collection-plus campaign-create-plus" aria-hidden="true">+</span><span class="hub-collection-create-label campaign-create-tile-label">Nova aventura</span></a>`:''}
  </div>
  </section>`
 }
@@ -227,7 +227,7 @@ async function reassignSelectedAdventure(destinationId){
  }
 }
 function bind(){const c=campaign();
- $('open-adventure-create')?.addEventListener('click',()=>{createPanelOpen=true;render();$('new-adventure-title')?.focus()});
+ $('open-adventure-create')?.addEventListener('click',event=>{event.preventDefault();createPanelOpen=true;render();$('new-adventure-title')?.focus()});
  $('cancel-adventure-create')?.addEventListener('click',()=>{createPanelOpen=false;render()});
 
  document.querySelectorAll('#linha-tempo [data-timeline-view],#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
