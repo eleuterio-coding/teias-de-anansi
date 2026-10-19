@@ -421,6 +421,10 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px
 }
 #table-root .campaign-editor-head h2{margin:0}
+/* Respiro entre ações e listas de Aventuras/Sessões na Campanha. */
+#table-root .campaign-editor-grid > :is(#aventuras,#sessoes) > .top{
+  margin-bottom:16px;
+}
 #table-root .campaign-editor-count{
  display:inline-flex;align-items:center;justify-content:center;
  min-width:28px;min-height:28px;padding:4px 9px;
