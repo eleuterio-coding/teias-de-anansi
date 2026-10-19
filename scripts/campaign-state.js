@@ -96,6 +96,22 @@ export function updateCampaignMember(list=[],campaignId,memberId,patch={}){
  }
  return{ok:true,list:clean,campaign,member:campaign.members[index]}
 }
+/** Reordena membros sem alterar IDs, vínculos ou dados das fichas. */
+export function reorderCampaignMember(list=[],campaignId,sourceId,targetId,position='before'){
+ const campaign=campaignById(list,campaignId);
+ if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};
+ const members=campaign.members;
+ const source=members.findIndex(m=>m.id===text(sourceId));
+ const target=members.findIndex(m=>m.id===text(targetId));
+ if(source<0||target<0||!['before','after'].includes(position))
+  return{ok:false,reason:'Jogador ou posição inválida.',list:arr(list).map(sanitizeCampaign)};
+ if(source===target)return{ok:true,list:arr(list).map(sanitizeCampaign),campaign,changed:false};
+ const [moved]=members.splice(source,1);
+ const updatedTarget=members.findIndex(m=>m.id===text(targetId));
+ members.splice(updatedTarget+(position==='after'?1:0),0,moved);
+ campaign.updatedAt=now();
+ return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,changed:true};
+}
 export function removeCampaignMember(list=[],campaignId,memberId){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const before=campaign.members.length;campaign.members=campaign.members.filter(m=>m.id!==text(memberId));if(campaign.members.length===before)return{ok:false,reason:'Participante não encontrado.',list:arr(list).map(sanitizeCampaign)};campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign}}
 export function assignCharacterToMember(list=[],campaignId,memberId,characterId){
  const targetCampaignId=text(campaignId),targetMemberId=text(memberId),charId=text(characterId);
