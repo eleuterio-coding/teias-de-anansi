@@ -8,7 +8,7 @@ export function findNextCampaignSession(campaign){
   if(pa!==pb)return pa-pb;
   const da=/^\d{4}-\d{2}-\d{2}$/.test(a.date||'')?a.date:'9999-12-31';
   const db=/^\d{4}-\d{2}-\d{2}$/.test(b.date||'')?b.date:'9999-12-31';
-  return da.localeCompare(db)||(Number(a.number)||0)-(Number(b.number)||0)
+  return da.localeCompare(db)||(Number(a.order||a.number)||0)-(Number(b.order||b.number)||0)
  })[0]||null
 }
 /** Última sessão concluída, anterior à sessão atual/próxima.
@@ -16,8 +16,9 @@ export function findNextCampaignSession(campaign){
 export function findPreviousCampaignSession(campaign){
  const sessions=Array.isArray(campaign?.sessions)?campaign.sessions:[];
  const featured=findNextCampaignSession(campaign);
- const completed=sessions.filter(session=>session?.status==='completed'&&(!featured||Number(session.number)<Number(featured.number)));
- return completed.sort((a,b)=>Number(b.number)-Number(a.number)||String(b.date||'').localeCompare(String(a.date||'')))[0]||null;
+ const orderOf=session=>Number(session?.order||session?.number)||0;
+ const completed=sessions.filter(session=>session?.status==='completed'&&(!featured||orderOf(session)<orderOf(featured)));
+ return completed.sort((a,b)=>orderOf(b)-orderOf(a)||Number(b.number)-Number(a.number)||String(b.date||'').localeCompare(String(a.date||'')))[0]||null;
 }
 export function readableSessionDate(raw){
  const matched=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(raw||''));
