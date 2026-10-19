@@ -66,9 +66,14 @@ test('layout de jogadores não provoca overflow em tela estreita',async({page})=
  await expect(page.locator('#jogadores .roster-player')).toHaveCount(2);
  const bounds=await page.evaluate(()=>{
   const region=document.querySelector('#jogadores'),rect=region.getBoundingClientRect();
+  const offending=[...document.querySelectorAll('body *')].filter(el=>{
+   const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+   return style.position!=='fixed'&&rect.width&&rect.right>document.documentElement.clientWidth+3
+  }).slice(0,12).map(el=>({tag:el.tagName,id:el.id,className:String(el.className).slice(0,75),right:Math.round(el.getBoundingClientRect().right)}));
   return{scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,
-   left:rect.left,right:rect.right}
+   left:rect.left,right:rect.right,offending}
  });
+ console.log('Mobile overflow trace:',JSON.stringify(bounds.offending));
  expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.clientWidth+2);
  expect(bounds.left).toBeGreaterThanOrEqual(-1);
  expect(bounds.right).toBeLessThanOrEqual(bounds.clientWidth+2);
@@ -142,25 +147,28 @@ test('salvar não reconstrói a Mesa e aviso de sucesso não altera a rolagem',a
  expect(Math.abs(after.top-before.top)).toBeLessThanOrEqual(1);
 });
 
-test('campos e botões da mesma linha ficam precisamente alinhados no desktop',async({page})=>{
+test('campos e ações de jogadores ficam alinhados na coluna compacta do desktop',async({page})=>{
  await page.setViewportSize({width:1500,height:950});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  await expect(page.locator('#jogadores .roster-player')).toHaveCount(2);
  const results=await page.locator('#jogadores .roster-player').evaluateAll(rows=>rows.map(row=>{
-  const top=selector=>row.querySelector(selector).getBoundingClientRect().top;
-  return{
-   avatar:top('.roster-avatar'),user:top('.roster-player-name'),
-   character:top('[data-member-character]'),open:top('.roster-open-button'),
-   remove:top('[data-remove-member]')
+  const rect=s=>row.querySelector(s).getBoundingClientRect();
+  return {
+   avatar:rect('.roster-avatar').toJSON(),user:rect('.roster-player-name').toJSON(),
+   character:rect('[data-member-character]').toJSON(),
+   open:rect('.roster-open-button').toJSON(),
+   remove:rect('[data-remove-member]').toJSON(),row:row.getBoundingClientRect().toJSON()
   }
  }));
  expect(results).toHaveLength(2);
- for(const row of results)for(const key of ['avatar','character','open','remove']){
-  expect(Math.abs(row[key]-row.user),`Alinhamento de ${key}`).toBeLessThanOrEqual(2);
+ for(const row of results){
+  expect(Math.abs(row.avatar.top-row.user.top),'Avatar e nome na mesma linha').toBeLessThanOrEqual(2);
+  expect(row.character.top,'Personagem após identificação').toBeGreaterThan(row.user.bottom);
+  expect(Math.abs(row.open.top-row.remove.top),'Botões alinhados entre si').toBeLessThanOrEqual(2);
+  expect(row.open.top,'Ações após personagem').toBeGreaterThan(row.character.bottom);
+  expect(row.remove.right).toBeLessThanOrEqual(row.row.right+2);
  }
 });
-
-
 test('Campanha e Jogadores ficam lado a lado no desktop e capa tem ações sobre a imagem',async({page})=>{
  await page.setViewportSize({width:1440,height:900});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
@@ -191,6 +199,8 @@ test('Campanha e Jogadores ficam lado a lado no desktop e capa tem ações sobre
 test('mobile mantém Campanha e Jogadores empilhados e controles da capa sobre a imagem',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
+ await expect(page.locator('#campanha [data-image-picker]')).toBeVisible();
+ await expect(page.locator('#jogadores')).toBeVisible();
  const geo=await page.evaluate(()=>{
   const campaign=document.querySelector('#campanha').getBoundingClientRect();
   const players=document.querySelector('#jogadores').getBoundingClientRect();
