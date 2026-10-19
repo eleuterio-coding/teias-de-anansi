@@ -1597,3 +1597,47 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 .campaign-location-lightbox::backdrop{background:rgba(0,0,0,.82)}
 .campaign-location-lightbox-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
 .campaign-location-lightbox img{display:block;max-width:100%;max-height:calc(94vh - 100px);object-fit:contain;margin:auto;border-radius:9px}
+
+
+/* Capas nos cinco cartões de Aventura e Sessão da Campanha. */
+#table-root .campaign-reference-cover-card{
+ position:relative;isolation:isolate;overflow:hidden;min-height:82px;
+ background:#13202e;color:#f6f9ff;align-items:center
+}
+#table-root .campaign-reference-cover-card>.campaign-reference-cover{
+ position:absolute;inset:0;width:100%;height:100%;max-height:none;
+ object-fit:cover;z-index:0;pointer-events:none
+}
+#table-root .campaign-reference-cover-card::before{
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:linear-gradient(90deg,rgba(5,11,21,.94) 0%,rgba(5,11,21,.77) 58%,rgba(5,11,21,.52) 100%)
+}
+#table-root .campaign-reference-cover-card>.campaign-reference-content,
+#table-root .campaign-reference-cover-card>.btn{
+ position:relative;z-index:2
+}
+#table-root .campaign-reference-cover-card>.campaign-reference-content{
+ min-width:0;overflow-wrap:anywhere
+}
+#table-root .campaign-reference-cover-card strong{color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.55)}
+#table-root .campaign-reference-cover-card .mini{color:#dae5f4}
+#table-root .campaign-reference-cover-card>.btn.secondary{
+ background:rgba(10,20,34,.78);border-color:rgba(164,196,230,.48);
+ color:#f6f9ff;white-space:nowrap
+}
+#table-root .campaign-reference-cover-card>.btn.secondary:hover,
+#table-root .campaign-reference-cover-card>.btn.secondary:focus-visible{
+ background:rgba(25,67,111,.94);border-color:#b5dbff
+}
+/* A exclusão mantém um alvo acessível com forma quadrada e ícone X. */
+.session-delete-button,
+.hub-collection-actions .session-delete-button{
+ display:inline-grid;place-items:center;flex:0 0 38px;width:38px;height:38px;
+ min-width:38px;min-height:38px;padding:0;border-radius:8px;
+ font-size:1.5rem;font-weight:450;line-height:1
+}
+.session-delete-button:focus-visible{outline:2px solid #e6a0a0;outline-offset:2px}
+@media(max-width:600px){
+ #table-root .campaign-reference-cover-card{flex-direction:row;align-items:center}
+ #table-root .campaign-reference-cover-card>.btn{margin-left:auto}
+}
