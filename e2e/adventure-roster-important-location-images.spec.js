@@ -24,9 +24,9 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.session));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
-  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(data.characters));
-  localStorage.setItem('hub-rpg:adventures:v1','[]');
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:characters:v4'))localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(data.characters));
+  if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1','[]');
  },{session,campaign,characters});
 });
 
