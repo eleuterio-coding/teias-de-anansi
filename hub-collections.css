@@ -117,3 +117,58 @@
  #adventure-root .adventure-card.hub-collection-card{flex-direction:column!important}
  #adventure-root .adventure-card.hub-collection-card .adventure-card-actions{justify-content:space-between}
 }
+
+/*
+ * Nova Aventura / Nova Sessão: replica o card "Nova campanha".
+ * Usar âncora, não botão primário: as regras globais de botão do Hub
+ * aplicavam um fundo azul que anulava o cartão tracejado da referência.
+ */
+.hub-collection-grid>a.hub-collection-create.campaign-create-tile{
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:12px!important;
+ align-self:stretch;
+ width:100%;
+ height:100%;
+ min-height:372px;
+ padding:22px!important;
+ margin:0;
+ border:2px dashed #9aaabc!important;
+ border-radius:14px!important;
+ background:transparent!important;
+ color:var(--hub-text,#e8f0f7)!important;
+ -webkit-text-fill-color:currentColor!important;
+ font:inherit;
+ text-align:center;
+ text-decoration:none!important;
+ cursor:pointer;
+ box-shadow:none;
+ box-sizing:border-box
+}
+.hub-collection-grid>a.hub-collection-create .hub-collection-plus{
+ display:grid;place-items:center;
+ flex:0 0 68px;width:68px;height:68px;
+ border:1px solid #52718e;border-radius:50%;
+ color:var(--hub-accent-2,#339dff);
+ font-size:2.9rem;font-weight:300;line-height:1;
+ -webkit-text-fill-color:currentColor
+}
+.hub-collection-grid>a.hub-collection-create .hub-collection-create-label{
+ display:block;margin:0;
+ font-size:1.08rem;font-weight:750;line-height:1.4;
+ color:var(--hub-text,#e8f0f7);
+ -webkit-text-fill-color:currentColor
+}
+.hub-collection-grid>a.hub-collection-create:is(:hover,:focus-visible){
+ border-color:#338ed7!important;
+ background:rgba(51,142,215,.06)!important;
+ color:var(--hub-text,#e8f0f7)!important
+}
+.hub-collection-grid>a.hub-collection-create:is(:hover,:focus-visible) .hub-collection-plus{
+ color:#66b9ff;border-color:#66b9ff
+}
+@media(max-width:540px){
+ .hub-collection-grid>a.hub-collection-create.campaign-create-tile{min-height:260px}
+}
