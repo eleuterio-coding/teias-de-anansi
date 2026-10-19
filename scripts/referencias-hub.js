@@ -1,7 +1,8 @@
 (()=>{
 'use strict';
-// O Painel Geral é um resumo operacional; nele não criamos links de verbetes.
-if((location.pathname.split('/').pop()||'index.html').toLowerCase()==='painel.html')return;
+// Verbete semântico é exclusivo das áreas de conteúdo. Não alterar textos das campanhas.
+const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+if(new Set(['painel.html','campanhas.html','nova-campanha.html','mesa.html']).has(page))return;
 const VERSION='20260819-refs3';
 const INDEX_URL=`dados/referencias-hub-index.json?v=${VERSION}`;
 const SKIP='script,style,noscript,textarea,input,select,option,button,a,.hub-ref,.meta,.badge,summary,h1,h2,h3,h4,h5,h6,nav,header,footer,.controles,pre,code';
