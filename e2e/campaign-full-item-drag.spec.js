@@ -16,7 +16,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(campaign=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
  },initialCampaign);
 });
 const read=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
