@@ -124,3 +124,19 @@
 @media(prefers-reduced-motion:reduce){
  .hub-diagram-roots .hub-diagram-node{transition:none}
 }
+
+
+/* Numeração ordinal dos eventos principais, compartilhada com a Lista.
+   A grade percorre os eventos da esquerda para a direita, de cima para baixo. */
+.hub-diagram-scroll--campaign .hub-diagram-roots{grid-auto-flow:row}
+.hub-diagram-scroll--campaign .hub-diagram-root{order:0}
+.hub-diagram-roots .hub-diagram-event-heading{
+ display:flex;align-items:center;gap:9px;min-width:0
+}
+.hub-diagram-roots .hub-diagram-order{
+ display:inline-grid;place-items:center;
+ min-width:27px;height:27px;padding:0 7px;
+ border:1px solid #5292c6;border-radius:9px;
+ background:#173d5e;color:#d1ebff;
+ font-size:.83rem;font-weight:850;line-height:1;font-variant-numeric:tabular-nums
+}
