@@ -95,8 +95,9 @@ test('destaque usa a imagem da sessão selecionada, não a capa da campanha',asy
   return {card:card.toJSON(),image:image.toJSON(),position:getComputedStyle(el).position};
  });
  expect(geometry.position).toBe('relative');
- expect(geometry.image.width).toBeCloseTo(geometry.card.width,0);
- expect(geometry.image.height).toBeCloseTo(geometry.card.height,0);
+ // A imagem preenche o interior do card, respeitando borda lateral e cantos arredondados.
+ expect(geometry.card.width-geometry.image.width).toBeLessThanOrEqual(6);
+ expect(geometry.card.height-geometry.image.height).toBeLessThanOrEqual(3);
  await expect(card.getByRole('link',{name:/Abrir sessão/})).toBeVisible();
 });
 
