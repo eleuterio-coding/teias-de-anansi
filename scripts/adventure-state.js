@@ -1,3 +1,4 @@
+import{sanitizeCampaign}from'./campaign-state.js?v=20261016-campaign-geography1';
 export const ADVENTURE_KEY='hub-rpg:adventures:v1';
 export const ADVENTURE_SCHEMA='hub-rpg/adventure/v2';
 export const ADVENTURE_STATUS=Object.freeze(['planned','current','active','paused','completed','archived']);
@@ -47,6 +48,39 @@ export function adventureById(list=[],adventureId){const id=text(adventureId);re
 export function adventuresForCampaign(list=[],campaignId){const id=text(campaignId);return arr(list).map(sanitizeAdventure).filter(a=>a.campaignId===id)}
 export function createAdventure(list=[],data={}){const campaignId=text(data.campaignId);if(!campaignId)return{ok:false,reason:'Selecione uma Campanha.',list:arr(list).map(sanitizeAdventure)};const adventure=sanitizeAdventure({...data,id:data.id||uid('adventure'),campaignId,createdAt:now(),updatedAt:now()});const base=arr(list).map(sanitizeAdventure).map(a=>adventure.status==='current'&&a.status==='current'?{...a,status:'planned'}:a);return{ok:true,list:[...base,adventure],adventure}}
 export function updateAdventure(list=[],adventureId,patch={}){const id=text(adventureId);let adventure=null,found=false;const next=arr(list).map(row=>{const old=sanitizeAdventure(row);if(old.id!==id)return old;found=true;adventure=sanitizeAdventure({...old,...patch,id:old.id,campaignId:old.campaignId,createdAt:old.createdAt,updatedAt:now()});return adventure});return found?{ok:true,list:adventure.status==='current'?next.map(a=>a.id!==adventure.id&&a.status==='current'?{...a,status:'planned'}:a):next,adventure}:{ok:false,reason:'Aventura não encontrada.',list:arr(list).map(sanitizeAdventure)}}
+export function reassignAdventureCampaign(list=[],campaigns=[],adventureId,targetCampaignId){
+ const source=adventureById(list,adventureId),targetId=text(targetCampaignId),all=arr(campaigns).map(sanitizeCampaign),destination=all.find(c=>c.id===targetId);
+ if(!source)return{ok:false,reason:'Aventura não encontrada.'};
+ if(!destination)return{ok:false,reason:'Campanha de destino não encontrada.'};
+ if(source.campaignId===targetId)return{ok:true,list:arr(list).map(sanitizeAdventure),campaigns:all,adventure:source,previousCampaignId:source.campaignId,changed:false};
+ const sourceCampaignId=source.campaignId,members=arr(destination.members).filter(m=>m.active!==false),allowedUsers=new Set(members.map(m=>text(m.username).toLowerCase())),allowedCharacters=new Set(members.map(m=>text(m.characterId)).filter(Boolean)),allowedNpcs=new Set(arr(destination.npcs).map(n=>text(n.id))),allowedLocations=new Set(arr(destination.locations).map(l=>text(l.id))),sceneIds=new Set(source.scenes.map(s=>s.id));
+ // Campanhas possuem elencos e sessões próprios; o conteúdo narrativo continua sendo da Aventura.
+ const moved=sanitizeAdventure({...source,campaignId:targetId,updatedAt:now(),
+  participantUsernames:source.participantUsernames.filter(u=>allowedUsers.has(u)),
+  characterIds:source.characterIds.filter(id=>allowedCharacters.has(id)),
+  npcIds:source.npcIds.filter(id=>allowedNpcs.has(id)),
+  locationIds:source.locationIds.filter(id=>allowedLocations.has(id)),
+  legacyNpcs:[],legacyLocations:[],
+  scenes:source.scenes.map(scene=>({...scene,sessionId:null,sessionSceneId:null,encounterRef:{sessionId:null,encounterId:null},locationId:allowedLocations.has(scene.locationId)?scene.locationId:null,npcIds:scene.npcIds.filter(id=>allowedNpcs.has(id))})),
+  clues:source.clues.map(clue=>({...clue,npcId:allowedNpcs.has(clue.npcId)?clue.npcId:null,locationId:allowedLocations.has(clue.locationId)?clue.locationId:null,discoveredByCharacterId:allowedCharacters.has(clue.discoveredByCharacterId)?clue.discoveredByCharacterId:null,discoveredSessionId:null})),
+  handouts:source.handouts.map(handout=>({...handout,revealedSessionId:null})),
+  treasures:source.treasures.map(treasure=>({...treasure,locationId:allowedLocations.has(treasure.locationId)?treasure.locationId:null,recipientCharacterId:allowedCharacters.has(treasure.recipientCharacterId)?treasure.recipientCharacterId:null})),
+  missions:source.missions.map(mission=>({...mission,characterIds:mission.characterIds.filter(id=>allowedCharacters.has(id))})),
+  timelineEvents:source.timelineEvents.map(event=>({...event,sessionId:null}))
+ });
+ const nextCampaigns=all.map(campaign=>{
+  if(campaign.id!==sourceCampaignId)return campaign;
+  let changed=false;
+  const sessions=campaign.sessions.map(session=>{
+   const linked=session.adventureId===source.id;
+   const scenes=session.scenes.map(scene=>sceneIds.has(scene.adventureSceneId)?{...scene,adventureSceneId:null}:scene);
+   if(!linked&&!scenes.some((scene,i)=>scene!==session.scenes[i]))return session;
+   changed=true;return{...session,adventureId:linked?null:session.adventureId,scenes,updatedAt:now()}
+  });
+  return changed?sanitizeCampaign({...campaign,sessions,updatedAt:now()}):campaign
+ });
+ return{ok:true,list:arr(list).map(row=>text(row.id)===source.id?moved:sanitizeAdventure(row)),campaigns:nextCampaigns,adventure:moved,previousCampaignId:sourceCampaignId,changed:true}
+}
 export function removeAdventure(list=[],adventureId){const id=text(adventureId),base=arr(list).map(sanitizeAdventure),next=base.filter(x=>x.id!==id);return next.length===base.length?{ok:false,reason:'Aventura não encontrada.',list:base}:{ok:true,list:next}}
 export function removeAdventuresForCampaign(list=[],campaignId){const id=text(campaignId);return arr(list).map(sanitizeAdventure).filter(x=>x.campaignId!==id)}
 function timeline(adventure,title,type='note',refs={}){adventure.timelineEvents.unshift(sanitizeTimeline({title,type,text:refs.text||'',sessionId:refs.sessionId,sceneId:refs.sceneId,missionId:refs.missionId,automatic:refs.automatic===true,at:now()}))}

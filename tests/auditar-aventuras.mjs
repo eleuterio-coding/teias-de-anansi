@@ -1,6 +1,6 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
-import{ADVENTURE_KEY,ADVENTURE_SCHEMA,sanitizeAdventure,readAdventures,writeAdventures,createAdventure,updateAdventure,removeAdventure,removeAdventuresForCampaign,adventuresForCampaign,addAdventureChapter,addAdventureScene,addAdventureLocation,addAdventureNpc,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus,linkSceneToSession,linkSceneToEncounter,adventureContextForSession}from'../scripts/adventure-state.js';
+import{ADVENTURE_KEY,ADVENTURE_SCHEMA,sanitizeAdventure,readAdventures,writeAdventures,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,removeAdventuresForCampaign,adventuresForCampaign,addAdventureChapter,addAdventureScene,addAdventureLocation,addAdventureNpc,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus,linkSceneToSession,linkSceneToEncounter,adventureContextForSession}from'../scripts/adventure-state.js';
 import{sanitizeCampaign,addCampaignNpc,addCampaignLocation,removeCampaignLocation}from'../scripts/campaign-state.js';
 import{reconcileAdventureCampaignRefs}from'../scripts/adventure-integrity.js';
 import{revealedAdventureProjection}from'../scripts/collaboration-model.js';
@@ -43,6 +43,39 @@ const storage=new MemoryStorage;writeAdventures(list,storage);assert.ok(storage.
 const payload=JSON.stringify(roundtrip);for(const forbidden of['currentHp','spellSlotsUsed','inventoryCampaign','progressionHistory','initiativeOrder'])assert.equal(payload.includes(forbidden),false,`Aventura não deve copiar estado mecânico: ${forbidden}`);
 let other=createAdventure(list,{campaignId:'cmp-2',title:'Outra Campanha'});const cleaned=removeAdventuresForCampaign(other.list,'cmp-1');assert.equal(cleaned.some(x=>x.campaignId==='cmp-1'),false);assert.equal(cleaned.some(x=>x.campaignId==='cmp-2'),true);assert.equal(removeAdventure(updateAdventure(list,adventureId,{summary:'Resumo consolidado.'}).list,adventureId).ok,true);
 
+// Reatribuir uma Aventura troca somente seu vínculo — nunca duplica o registro.
+const oldCampaignWithLinks=sanitizeCampaign({...campaign,sessions:campaign.sessions.map(s=>({...s,adventureId,scenes:[{id:'ssc-1',title:'Cena vinculada',adventureSceneId:sceneId},{id:'ssc-2',title:'Outra cena'}]}))});
+const destination=sanitizeCampaign({id:'cmp-2',name:'Novo destino',members:[{id:'m2',username:'maria',role:'player',characterId:'pc-2'}],npcs:[{id:'npc-dest',name:'NPC destino'}]});
+const snapshot=JSON.stringify(list),before=list.find(a=>a.id===adventureId);
+const moved=reassignAdventureCampaign(list,[oldCampaignWithLinks,destination],adventureId,'cmp-2');
+assert.equal(moved.ok,true);
+assert.equal(moved.list.length,list.length,'A transferência não cria uma segunda Aventura.');
+assert.equal(moved.list.filter(a=>a.id===adventureId).length,1,'O ID original deve continuar único.');
+assert.equal(moved.adventure.id,adventureId);
+assert.equal(moved.adventure.createdAt,before.createdAt);
+assert.equal(moved.adventure.campaignId,'cmp-2');
+assert.equal(adventuresForCampaign(moved.list,'cmp-1').length,0);
+assert.equal(adventuresForCampaign(moved.list,'cmp-2').length,1);
+assert.equal(moved.adventure.title,before.title);
+for(const key of['chapters','scenes','missions','clues','handouts','treasures','timelineEvents'])
+ assert.deepEqual(moved.adventure[key].map(x=>x.id),before[key].map(x=>x.id),`Conteúdo de ${key} deve ser preservado.`);
+assert.deepEqual(moved.adventure.characterIds,[],'Personagens da campanha antiga não são copiados.');
+assert.deepEqual(moved.adventure.participantUsernames,[],'Acesso dos jogadores antigos não migra automaticamente.');
+assert.deepEqual(moved.adventure.npcIds,[],'NPCs de outra campanha não migram automaticamente.');
+assert.deepEqual(moved.adventure.locationIds,[],'Locais de outra campanha não migram automaticamente.');
+assert.equal(moved.adventure.scenes.find(s=>s.id===sceneId).sessionId,null);
+assert.equal(moved.adventure.scenes.find(s=>s.id===sceneId).encounterRef.encounterId,null);
+assert.equal(moved.campaigns[0].sessions[0].id,'session-1','Sessão original fica na campanha anterior.');
+assert.equal(moved.campaigns[0].sessions[0].adventureId,null);
+assert.equal(moved.campaigns[0].sessions[0].scenes[0].adventureSceneId,null);
+assert.equal(moved.campaigns[0].sessions[0].scenes[1].id,'ssc-2');
+assert.equal(JSON.stringify(moved.campaigns[1]),JSON.stringify(destination),'Campanha de destino não é sobrescrita.');
+assert.equal(JSON.stringify(list),snapshot,'A operação não pode mutar os argumentos.');
+assert.equal(reassignAdventureCampaign(moved.list,moved.campaigns,adventureId,'cmp-2').changed,false);
+assert.equal(reassignAdventureCampaign(list,[oldCampaignWithLinks,destination],adventureId,'missing').ok,false);
+assert.equal(reassignAdventureCampaign(list,[oldCampaignWithLinks,destination],'inexistente','cmp-2').ok,false);
+assert.equal(updateAdventure(moved.list,adventureId,{summary:'Após a transferência'}).list.length,list.length);
+
 const state=fs.readFileSync(new URL('../scripts/adventure-state.js',import.meta.url),'utf8'),integrity=fs.readFileSync(new URL('../scripts/adventure-integrity.js',import.meta.url),'utf8'),integrityUi=fs.readFileSync(new URL('../scripts/adventure-integrity-ui.js',import.meta.url),'utf8'),ui=fs.readFileSync(new URL('../scripts/adventure-ui.js',import.meta.url),'utf8'),router=fs.readFileSync(new URL('../scripts/adventure-router.js',import.meta.url),'utf8'),provider=fs.readFileSync(new URL('../scripts/firebase-collaboration-provider.js',import.meta.url),'utf8'),collab=fs.readFileSync(new URL('../scripts/collaboration-model.js',import.meta.url),'utf8'),campaignState=fs.readFileSync(new URL('../scripts/campaign-state.js',import.meta.url),'utf8'),page=fs.readFileSync(new URL('../aventuras.html',import.meta.url),'utf8'),css=fs.readFileSync(new URL('../adventures.css',import.meta.url),'utf8'),mesaBridge=fs.readFileSync(new URL('../scripts/campaign-table-adventure-ui.js',import.meta.url),'utf8');
 for(const token of['missions','timelineEvents','participantUsernames','characterIds','participantAccessConfigured','linkSceneToEncounter','adventureContextForSession'])assert.ok(state.includes(token),`Estado de Aventuras sem ${token}`);
 for(const token of['Visão geral','Participantes','Capítulos / Atos','Missões / Objetivos','Cenas','NPCs','Locais','Pistas','Materiais para os Jogadores','Tesouros e Recompensas','Sessões da Aventura','Linha do tempo','Entregar ao personagem','Item da Biblioteca'])assert.ok(ui.includes(token),`Workspace sem ${token}`);
@@ -53,6 +86,8 @@ assert.ok(integrity.includes('migrateLegacyAdventureEntities')&&integrityUi.incl
 assert.ok(provider.includes('participantAccessConfigured')&&provider.includes('adventureIds'),'Participantes selecionados devem controlar acesso remoto à Aventura.');
 assert.ok(collab.includes('materials:')&&collab.includes('visibleMissions'),'A projeção do jogador deve compartilhar apenas conteúdo permitido.');
 assert.ok(router.includes('Materiais para os Jogadores')&&router.includes('Missões / Objetivos'),'Jogador deve receber a nova estrutura em modo somente leitura.');
+assert.ok(ui.includes('id="adventure-assignment"')&&ui.includes('reassignSelectedAdventure'),'A edição precisa permitir mudar a Campanha sem criar outra Aventura.');
+assert.ok(ui.includes('Criar nova aventura')&&ui.includes('Filtrar aventuras por campanha'),'Criação e filtro precisam estar claros.');
 assert.equal(ui.includes('Adicionar sessão'),false,'Aventura não deve criar Sessões.');
 assert.ok(page.includes('adventure-router.js')&&page.includes('adventures.css'));assert.ok(css.includes('adventure-operational')&&css.includes('@media'));assert.ok(mesaBridge.includes('adventureContextForSession'));
 console.log('OK — Aventuras v2: workspace narrativo, acesso por participantes, catálogos reutilizáveis, materiais em PT-BR e compatibilidade legada.');

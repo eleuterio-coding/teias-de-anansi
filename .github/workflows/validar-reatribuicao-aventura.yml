@@ -1,0 +1,30 @@
+name: Validar reatribuição de aventura
+on:
+  pull_request:
+    paths:
+      - 'scripts/adventure-state.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/image-media.js'
+      - 'scripts/adventure-router.js'
+      - 'aventuras.html'
+      - 'e2e/adventure-reassignment.spec.js'
+      - 'tests/auditar-aventuras.mjs'
+      - '.github/workflows/validar-reatribuicao-aventura.yml'
+  workflow_dispatch:
+jobs:
+  reatribuir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar integridade dos dados da aventura
+        run: node tests/auditar-aventuras.mjs
+      - name: Instalar dependências de interface
+        run: npm install --no-audit --no-fund
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Testar reatribuição no navegador
+        run: npx playwright test e2e/adventure-reassignment.spec.js --project=desktop-chromium

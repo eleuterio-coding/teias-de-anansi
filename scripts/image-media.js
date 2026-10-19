@@ -78,12 +78,34 @@ export async function uploadImage({campaignId=null,entityType,entityId,file}={})
  const optimized=await optimizeImage(file),bytes=new Uint8Array(await optimized.blob.arrayBuffer()),p=await provider();
  return p.saveMedia({campaignId,entityType,entityId,mime:optimized.mime,width:optimized.width,height:optimized.height,size:bytes.byteLength,bytes})
 }
+export async function copyAdventureCoverToCampaign(media,campaignId,adventureId){
+ const id=text(media?.id),target=text(campaignId),entity=text(adventureId);
+ if(!id||!target||!entity)throw new Error('Imagem ou destino inválido.');
+ if(text(media.campaignId)===target)return media;
+ const p=await provider(),destination=readCampaigns().find(c=>text(c?.id)===target);
+ if(!destination)throw new Error('Campanha de destino não encontrada.');
+ // A campanha de destino pode ainda não ter sido publicada no Firebase.
+ await p.saveCampaignBundle(destination,readAdventures().filter(a=>text(a.campaignId)===target),[]);
+ const original=await p.readMedia(id);
+ if(!original?.bytes?.byteLength)throw new Error('A imagem original não está disponível para transferência.');
+ return p.saveMedia({campaignId:target,entityType:'adventure',entityId:entity,mime:original.mime||'image/webp',width:original.width,height:original.height,size:original.bytes.byteLength,bytes:original.bytes})
+}
 export async function persistCampaignMediaState(campaignId,{entityType='campaign',entityId=null}={}){
  const id=text(campaignId),type=text(entityType),targetId=text(entityId)||id;if(!id||!targetId)throw new Error('Entidade inválida para sincronização da imagem.');
  const campaign=readCampaigns().find(row=>text(row?.id)===id);
  if(!campaign)throw new Error('A Campanha vinculada à imagem não foi encontrada.');
  const adventures=readAdventures().filter(row=>text(row?.campaignId)===id),p=await provider();
  await p.saveCampaignMediaState({campaign,adventures,entityType:type,entityId:targetId});
+ return true
+}
+export async function persistAdventureCampaignReassignment(previousCampaignId,targetCampaignId){
+ const ids=[text(previousCampaignId),text(targetCampaignId)].filter((id,i,rows)=>id&&rows.indexOf(id)===i);
+ const campaigns=readCampaigns(),adventures=readAdventures(),p=await provider();
+ for(const id of ids){
+  const campaign=campaigns.find(row=>text(row.id)===id);
+  if(!campaign)throw new Error('Campanha não encontrada durante a sincronização.');
+  await p.saveCampaignBundle(campaign,adventures.filter(row=>text(row.campaignId)===id),[])
+ }
  return true
 }
 export async function deleteImage(media){
