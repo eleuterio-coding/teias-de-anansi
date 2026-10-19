@@ -11,6 +11,9 @@ const statusLabel=s=>({planned:'Planejada',current:'Atual',active:'Em andamento'
 function feedback(message,ok=true){const box=$('table-feedback');if(!box)return;box.hidden=false;box.className=`status ${ok?'ok':'warning'}`;box.textContent=message;clearTimeout(feedback.timer);feedback.timer=setTimeout(()=>box.hidden=true,3200)}
 function commit(list,{rerender=true,message='Mesa salva.'}={}){campaigns=writeCampaigns(list);campaign=campaignById(campaigns,campaignId);if(rerender)render();feedback(message,true)}
 function savePatch(patch,{rerender=false,message='Mesa salva.'}={}){const result=updateCampaign(campaigns,campaignId,patch);if(result.ok)commit(result.list,{rerender,message})}
+const alphabetical=new Intl.Collator('pt-BR',{sensitivity:'base',numeric:true});
+const playerOrder=(a,b)=>alphabetical.compare(a.displayName||a.username||'',b.displayName||b.username||'')||alphabetical.compare(a.username||'',b.username||'');
+const characterOrder=(a,b)=>alphabetical.compare(a.name||'Personagem sem nome',b.name||'Personagem sem nome')||alphabetical.compare(a.id||'',b.id||'');
 function charLabel(c){const s=c.refSnapshots||{},level=c.choices?.class?.level;return`${c.name||'Personagem sem nome'}${s.class?.name?` · ${s.class.name}${level?` ${level}`:''}`:''}`}
 function characterOptions(selected='',memberId='',username=''){
  const normalized=String(username||'').trim().toLowerCase();
@@ -19,9 +22,9 @@ function characterOptions(selected='',memberId='',username=''){
   const other=String(m.username||m.name||'').trim().toLowerCase();
   return c.id===campaignId||!normalized||!other||other!==normalized
  }));
- return `<option value="">— Sem personagem —</option>${characters.filter(c=>c.id===selected||!unavailable(c.id)).map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(charLabel(c))}</option>`).join('')}`
+ return `<option value="">— Sem personagem —</option>${characters.filter(c=>c.id===selected||!unavailable(c.id)).sort(characterOrder).map(c=>`<option value="${esc(c.id)}" ${c.id===selected?'selected':''}>${esc(charLabel(c))}</option>`).join('')}`
 }
-function participantOptions(){const used=new Set(campaign.members.map(m=>String(m.username||m.name||'').trim().toLowerCase()));const rows=hubParticipants.filter(p=>!used.has(String(p.username||p.displayName||'').trim().toLowerCase()));return`<option value="">— Selecione —</option>${rows.map(p=>`<option value="${esc(p.username)}">${esc(p.displayName)}</option>`).join('')}`}function participantMemberOptions(member){const currentKey=String(member.username||member.name||'').trim().toLowerCase(),rows=[...hubParticipants];if(currentKey&&!rows.some(p=>p.username===currentKey))rows.unshift({username:currentKey,displayName:member.name||currentKey});return rows.map(p=>`<option value="${esc(p.username)}" ${p.username===currentKey?'selected':''}>${esc(p.displayName)}</option>`).join('')}
+function participantOptions(){const used=new Set(campaign.members.map(m=>String(m.username||m.name||'').trim().toLowerCase()));const rows=hubParticipants.filter(p=>!used.has(String(p.username||p.displayName||'').trim().toLowerCase())).sort(playerOrder);return`<option value="">— Selecione —</option>${rows.map(p=>`<option value="${esc(p.username)}">${esc(p.displayName)}</option>`).join('')}`}function participantMemberOptions(member){const currentKey=String(member.username||member.name||'').trim().toLowerCase(),rows=[...hubParticipants];if(currentKey&&!rows.some(p=>p.username===currentKey))rows.unshift({username:currentKey,displayName:member.name||currentKey});return rows.sort(playerOrder).map(p=>`<option value="${esc(p.username)}" ${p.username===currentKey?'selected':''}>${esc(p.displayName)}</option>`).join('')}
 function activeSession(){return campaign?.sessions.find(s=>s.id===campaign.activeSessionId)||null}
 function metric(label,value){return`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`}
 function overviewHtml(){
