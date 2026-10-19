@@ -1,0 +1,36 @@
+name: Validar listas de Aventuras e Sessões
+on:
+  pull_request:
+    paths:
+      - 'hub-collections.css'
+      - 'aventuras.html'
+      - 'sessoes.html'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/hub-ux.js'
+      - 'e2e/adventure-session-collection-layout.spec.js'
+      - '.github/workflows/validar-listas-aventuras-sessoes.yml'
+  workflow_dispatch:
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar scripts
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/campaign-sessions-ui.js
+          node --check scripts/hub-ux.js
+      - name: Auditar persistência de aventuras
+        run: node tests/auditar-aventuras.mjs
+      - name: Instalar navegador de testes
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Validar layout, navegação e ausência de verbetes
+        run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js --project=desktop-chromium --project=mobile-chromium

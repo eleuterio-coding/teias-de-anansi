@@ -7,6 +7,31 @@ const advStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',p
 function simpleSection(title,rows,render){return`<section class="card"><h3>${esc(title)}</h3><div class="story-list">${rows.length?rows.map(render).join(''):'<div class="story-empty">Nenhum registro.</div>'}</div></section>`}
 function readOnly(){
  const rows=sharedCampaignRows(),campaignId=requestedCampaign||rows[0]?.campaign.id||'',campaignRow=rows.find(r=>r.campaign.id===campaignId),adventures=sharedAdventures().filter(a=>a.campaignId===campaignId),active=adventures.find(a=>a.id===requestedAdventure)||adventures[0]||null,root=document.getElementById('adventure-root');
+ if(!requestedAdventure){
+  const allowedIds=new Set(rows.map(r=>r.campaign.id));
+  const accessible=sharedAdventures().filter(a=>allowedIds.has(a.campaignId)&&(!requestedCampaign||a.campaignId===requestedCampaign))
+   .sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+  root.innerHTML=`<p class="hub-collection-home"><a href="index.html">← Início</a></p><div class="top hub-collection-top"><header><h1>Aventuras</h1></header></div>
+   <section class="hub-collection-section adventure-list-section"><div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
+   <div class="hub-collection-grid adventure-list">${accessible.length?accessible.map(a=>{
+    const parent=rows.find(r=>r.campaign.id===a.campaignId)?.campaign;
+    const href='aventuras.html?campaign='+encodeURIComponent(a.campaignId)+'&id='+encodeURIComponent(a.id);
+    const cover=imageElementHtml(a.coverImage,a.coverImageUrl,{className:'hub-collection-cover-image',alt:''});
+    return`<article class="adventure-card hub-collection-card" data-adventure-card="${esc(a.id)}">
+     <a class="hub-collection-stretched" href="${href}" aria-label="Abrir aventura ${esc(a.title)}"></a>
+     <div class="hub-collection-image">${cover||'<span class="hub-collection-image-placeholder" aria-hidden="true">✦</span>'}</div>
+     <span class="hub-collection-status status-${esc(a.status)}">${esc(advStatus(a.status))}</span>
+     <div class="hub-collection-body adventure-card-main"><h3 class="adventure-card-title">${esc(a.title)}</h3>
+      <p class="hub-collection-description adventure-card-description">${esc(a.description||a.summary||'Sem descrição.')}</p>
+      <div class="hub-collection-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(parent?.name||'Campanha não encontrada')}</strong></span></div>
+      <div class="hub-collection-metrics">Somente leitura</div>
+     </div>
+     <div class="hub-collection-actions adventure-card-actions"><a class="btn" href="${href}">Abrir</a></div>
+     </article>`
+   }).join(''):'<div class="empty">Nenhuma aventura atribuída.</div>'}</div></section>`;
+  hydrateMediaImages(root).catch(()=>{});
+  return
+ }
  if(!campaignRow){root.innerHTML='<div class="status warning"><strong>Nenhuma Aventura atribuída a esta conta.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}
  const participantMap=new Map(arr(campaignRow.participants).map(p=>[String(p.username||'').toLowerCase(),p])),characterMap=new Map(arr(campaignRow.characters).map(c=>[text(c.id),c]));
  const players=active?arr(active.participantUsernames).map(u=>participantMap.get(String(u).toLowerCase())).filter(Boolean):[],characters=active?arr(active.characterIds).map(id=>characterMap.get(text(id))).filter(Boolean):[],sessions=active?arr(campaignRow.campaign.sessions).filter(s=>arr(active.sessionIds).includes(s.id)):[];
@@ -14,5 +39,5 @@ function readOnly(){
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-prefill-creation1')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-unified-list1')}
 start();

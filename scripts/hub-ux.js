@@ -151,7 +151,7 @@ function initSaveFeedback(){
   for(const region of regions)if(statusSaveFeedback(region))break
  }).observe(document.body,{subtree:true,childList:true,characterData:true})
 }
-const CAMPAIGN_PAGES=new Set(['campanhas.html','nova-campanha.html','mesa.html']);
+const CAMPAIGN_PAGES=new Set(['campanhas.html','nova-campanha.html','mesa.html','aventuras.html','sessoes.html']);
 /* A campanha é um espaço de edição e narrativa: termos de regras, cenários,
    atos ou eventos não devem virar links automáticos para verbetes.
    Preserva links explícitos de ações (Abrir, Nova sessão, fichas, etc.). */
