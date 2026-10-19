@@ -84,3 +84,55 @@ test('no celular o arraste por toque longo reordena o bullet inteiro',async({pag
  await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 2','Ato 3','Ato 1']);
  expect((await read(page)).activeMissions).toBe('Ato 2\nAto 3\nAto 1');
 });
+
+
+test('o destino e o item arrastado ficam destacados e a troca recebe confirmação',async({page})=>{
+ await page.goto('/mesa.html?id=full-drag-campaign');
+ const rows=page.locator('#locais .campaign-bullet-entry');
+ await rows.first().scrollIntoViewIfNeeded();
+ const source=rows.nth(0),target=rows.nth(2);
+ const start=await source.boundingBox(),end=await target.boundingBox();
+ expect(start&&end).toBeTruthy();
+ const x=start.x+18,y=start.y+start.height/2;
+ await page.mouse.move(x,y);
+ await page.mouse.down();
+ await page.mouse.move(x,y+15,{steps:4});
+ await page.mouse.move(end.x+18,end.y+end.height-6,{steps:12});
+ await expect(source).toHaveClass(/campaign-line-dragging/);
+ await expect(target).toHaveClass(/campaign-line-drop-target/);
+ await expect(target).toHaveAttribute('data-drop-position','after');
+ const indicator=await target.evaluate(el=>({
+  line:getComputedStyle(el,'::before').height,
+  label:getComputedStyle(el,'::after').content,
+  box:getComputedStyle(el).outlineStyle
+ }));
+ expect(indicator.line).toBe('5px');
+ expect(indicator.label).toContain('Soltar aqui');
+ expect(indicator.box).toBe('solid');
+ await page.mouse.up();
+ await expect(page.locator('#locais [data-line-index="2"]')).toHaveClass(/campaign-reorder-confirmed/);
+ await expect(page.locator('#locais [data-reorder-confirmation]')).toContainText('Ordem atualizada');
+ await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(n=>n.value)))
+  .toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
+});
+
+test('a Linha do Tempo sinaliza o encaixe antes de confirmar a posição final',async({page})=>{
+ await page.goto('/mesa.html?id=full-drag-campaign');
+ const items=page.locator('#linha-tempo .timeline-tree > .timeline-item');
+ await items.nth(2).scrollIntoViewIfNeeded();
+ const source=items.nth(2).locator(':scope > .campaign-flow-step');
+ const destination=items.nth(0).locator('.campaign-flow-card').first();
+ const start=await source.boundingBox(),end=await destination.boundingBox();
+ expect(start&&end).toBeTruthy();
+ await page.mouse.move(start.x+17,start.y+25);
+ await page.mouse.down();
+ await page.mouse.move(start.x+17,start.y+40,{steps:4});
+ await page.mouse.move(end.x+20,end.y+5,{steps:10});
+ await expect(items.nth(2)).toHaveClass(/timeline-dragging/);
+ await expect(items.nth(0)).toHaveClass(/timeline-drop-target/);
+ await expect(items.nth(0)).toHaveAttribute('data-drop-position','before');
+ await page.mouse.up();
+ await expect(page.locator('#linha-tempo .timeline-tree > .timeline-item').first()).toHaveClass(/campaign-reorder-confirmed/);
+ await expect(page.locator('#linha-tempo [data-reorder-confirmation]')).toContainText('Ordem atualizada');
+ await expect(page.locator('#linha-tempo .timeline-tree > .timeline-item').first().locator('[data-timeline-text]').first()).toHaveValue('A decisão');
+});
