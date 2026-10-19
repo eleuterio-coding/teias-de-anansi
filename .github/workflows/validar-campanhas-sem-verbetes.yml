@@ -1,0 +1,38 @@
+name: Validar ausência de verbetes em Campanhas
+on:
+  pull_request:
+    paths:
+      - 'scripts/referencias-hub.js'
+      - 'scripts/hub-ux.js'
+      - 'campanhas.html'
+      - 'nova-campanha.html'
+      - 'mesa.html'
+      - 'e2e/campaign-no-glossary-links.spec.js'
+      - '.github/workflows/validar-campanhas-sem-verbetes.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/referencias-hub.js'
+      - 'scripts/hub-ux.js'
+      - 'campanhas.html'
+      - 'nova-campanha.html'
+      - 'mesa.html'
+      - 'e2e/campaign-no-glossary-links.spec.js'
+      - '.github/workflows/validar-campanhas-sem-verbetes.yml'
+permissions:
+  contents: read
+jobs:
+  campanha-sem-verbete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          node --check scripts/referencias-hub.js
+          node --check scripts/hub-ux.js
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Verificar Campanhas e Biblioteca
+        run: npx playwright test e2e/campaign-no-glossary-links.spec.js
