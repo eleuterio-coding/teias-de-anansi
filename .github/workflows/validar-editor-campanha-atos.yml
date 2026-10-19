@@ -12,6 +12,10 @@ on:
       - 'e2e/campaign-acts-nested-timeline.spec.js'
       - 'e2e/npcs-campaign-editor.spec.js'
       - 'e2e/campaign-ux-save-feedback.spec.js'
+      - 'e2e/campaign-editor-recent-lists.spec.js'
+      - 'scripts/campaign-recent-items.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
       - '.github/workflows/validar-editor-campanha-atos.yml'
   push:
     branches: [main]
@@ -26,6 +30,10 @@ on:
       - 'e2e/campaign-acts-nested-timeline.spec.js'
       - 'e2e/npcs-campaign-editor.spec.js'
       - 'e2e/campaign-ux-save-feedback.spec.js'
+      - 'e2e/campaign-editor-recent-lists.spec.js'
+      - 'scripts/campaign-recent-items.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
       - '.github/workflows/validar-editor-campanha-atos.yml'
 permissions:
   contents: read
@@ -42,9 +50,12 @@ jobs:
           node --check scripts/campaign-state.js
           node --check scripts/campaign-table-ui.js
           node --check scripts/campaign-structured-ui.js
+          node --check scripts/campaign-recent-items.js
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-router.js
           node tests/auditar-editor-campanha.mjs
           node tests/auditar-campanhas-mesas.mjs
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Testar editor e regressões no navegador
-        run: npx playwright test e2e/campaign-acts-nested-timeline.spec.js e2e/npcs-campaign-editor.spec.js e2e/campaign-ux-save-feedback.spec.js
+        run: npx playwright test e2e/campaign-acts-nested-timeline.spec.js e2e/npcs-campaign-editor.spec.js e2e/campaign-ux-save-feedback.spec.js e2e/campaign-editor-recent-lists.spec.js
