@@ -142,20 +142,72 @@ test('salvar não reconstrói a Mesa e aviso de sucesso não altera a rolagem',a
  expect(Math.abs(after.top-before.top)).toBeLessThanOrEqual(1);
 });
 
-test('campos e botões da mesma linha ficam precisamente alinhados no desktop',async({page})=>{
+test('campos e ações de jogadores ficam alinhados na coluna compacta do desktop',async({page})=>{
  await page.setViewportSize({width:1500,height:950});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  await expect(page.locator('#jogadores .roster-player')).toHaveCount(2);
  const results=await page.locator('#jogadores .roster-player').evaluateAll(rows=>rows.map(row=>{
-  const top=selector=>row.querySelector(selector).getBoundingClientRect().top;
-  return{
-   avatar:top('.roster-avatar'),user:top('.roster-player-name'),
-   character:top('[data-member-character]'),open:top('.roster-open-button'),
-   remove:top('[data-remove-member]')
+  const rect=s=>row.querySelector(s).getBoundingClientRect();
+  return {
+   avatar:rect('.roster-avatar').toJSON(),user:rect('.roster-player-name').toJSON(),
+   character:rect('[data-member-character]').toJSON(),
+   open:rect('.roster-open-button').toJSON(),
+   remove:rect('[data-remove-member]').toJSON(),row:row.getBoundingClientRect().toJSON()
   }
  }));
  expect(results).toHaveLength(2);
- for(const row of results)for(const key of ['avatar','character','open','remove']){
-  expect(Math.abs(row[key]-row.user),`Alinhamento de ${key}`).toBeLessThanOrEqual(2);
+ for(const row of results){
+  expect(Math.abs(row.avatar.top-row.user.top),'Avatar e nome na mesma linha').toBeLessThanOrEqual(2);
+  expect(row.character.top,'Personagem após identificação').toBeGreaterThan(row.user.bottom);
+  expect(Math.abs(row.open.top-row.remove.top),'Botões alinhados entre si').toBeLessThanOrEqual(2);
+  expect(row.open.top,'Ações após personagem').toBeGreaterThan(row.character.bottom);
+  expect(row.remove.right).toBeLessThanOrEqual(row.row.right+2);
  }
+});
+test('Campanha e Jogadores ficam lado a lado no desktop e capa tem ações sobre a imagem',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ const campaignCard=page.locator('#campanha'),playersCard=page.locator('#jogadores');
+ await expect(campaignCard).toBeVisible();
+ await expect(playersCard).toBeVisible();
+ const geometry=await page.evaluate(()=>{
+  const bounds=id=>{const r=document.getElementById(id).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width}};
+  const picker=document.querySelector('#campanha [data-image-picker]');
+  const preview=picker.querySelector('[data-image-dropzone]').getBoundingClientRect();
+  const actions=picker.querySelector('.image-picker-actions').getBoundingClientRect();
+  const controls=[...picker.querySelectorAll('.image-picker-actions :is(.image-picker-button,button[data-image-remove])')].filter(el=>!el.hidden).map(el=>el.getBoundingClientRect());
+  return {campaign:bounds('campanha'),players:bounds('jogadores'),preview:preview.toJSON(),actions:actions.toJSON(),controls:controls.map(r=>r.toJSON()),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth};
+ });
+ expect(geometry.players.left).toBeGreaterThan(geometry.campaign.right-2);
+ expect(Math.abs(geometry.players.top-geometry.campaign.top)).toBeLessThan(2);
+ expect(geometry.campaign.width).toBeGreaterThan(200);
+ expect(geometry.players.width).toBeGreaterThan(200);
+ expect(geometry.actions.top).toBeGreaterThanOrEqual(geometry.preview.top);
+ expect(geometry.actions.left).toBeGreaterThan(geometry.preview.left);
+ expect(geometry.actions.right).toBeLessThanOrEqual(geometry.preview.right+1);
+ expect(geometry.controls.length).toBeGreaterThan(0);
+ expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth+2);
+ await expect(campaignCard.locator('[data-image-input]')).toHaveCount(1);
+ await expect(campaignCard.locator('[data-image-remove]')).toHaveCount(1);
+ await expect(campaignCard.locator('.image-picker-button')).toBeVisible();
+});
+test('mobile mantém Campanha e Jogadores empilhados e controles da capa sobre a imagem',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/mesa.html?id=e2e-campaign-ux');
+ await expect(page.locator('#campanha [data-image-picker]')).toBeVisible();
+ await expect(page.locator('#jogadores')).toBeVisible();
+ const geo=await page.evaluate(()=>{
+  const campaign=document.querySelector('#campanha').getBoundingClientRect();
+  const players=document.querySelector('#jogadores').getBoundingClientRect();
+  const picker=document.querySelector('#campanha [data-image-picker]');
+  const preview=picker.querySelector('[data-image-dropzone]').getBoundingClientRect();
+  const actions=picker.querySelector('.image-picker-actions').getBoundingClientRect();
+  return {campaign:campaign.toJSON(),players:players.toJSON(),preview:preview.toJSON(),actions:actions.toJSON(),scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth}
+ });
+ expect(geo.players.top).toBeGreaterThanOrEqual(geo.campaign.bottom);
+ expect(Math.abs(geo.players.left-geo.campaign.left)).toBeLessThan(2);
+ expect(geo.actions.top).toBeGreaterThanOrEqual(geo.preview.top);
+ expect(geo.actions.right).toBeLessThanOrEqual(geo.preview.right+1);
+ expect(geo.campaign.right).toBeLessThanOrEqual(geo.clientWidth+2);
+ expect(geo.players.right).toBeLessThanOrEqual(geo.clientWidth+2);
 });
