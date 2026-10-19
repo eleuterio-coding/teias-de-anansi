@@ -93,14 +93,20 @@ function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
   ${sub.length?`<ol class="timeline-children" id="timeline-list-children-${esc(node.id)}" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>nodeHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
  </li>`
 }
-function flow(c,view='list',collapsedIds=new Set()){
+function defaultCollapsedTimelineIds(nodes=[]){
+ const hidden=new Set();
+ const visit=rows=>{for(const node of rows){if(node.children?.length){hidden.add(node.id);visit(node.children)}}};
+ visit(nodes);return hidden
+}
+function flow(c,view='list',collapsedIds=null){
  const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
+ collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  <div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>
  </section>`
 }
-export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=new Set()){
+export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null){
  if(id==='npcs')return roster(c,npcs);
  if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations');
 
@@ -118,10 +124,10 @@ export function renderStructuredDetails(c,npcs){
   </div>
  </div>`
 }
-export function renderTimeline(c,view='list',collapsedIds=new Set()){return flow(c,view,collapsedIds)}
+export function renderTimeline(c,view='list',collapsedIds=null){return flow(c,view,collapsedIds)}
 export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  let timelineView='list';
- const collapsedTimelineIds=new Set();
+ const collapsedTimelineIds=defaultCollapsedTimelineIds(getCampaign().timelineNodes||[]);
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
  const root=document.querySelector('.campaign-sections');if(!root)return;
  const refresh=id=>{

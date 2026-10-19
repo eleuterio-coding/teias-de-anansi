@@ -23,9 +23,9 @@ const adventures=[
  {id:'adv-3',campaignId:campaign.id,title:'As Rainhas',status:'completed',createdAt:'2026-03-01T00:00:00Z'},
  {id:'adv-4',campaignId:campaign.id,title:'A Fortaleza',status:'completed',createdAt:'2026-04-01T00:00:00Z'},
  {id:'adv-5',campaignId:campaign.id,title:'As Muralhas',status:'completed',createdAt:'2026-05-01T00:00:00Z'},
- {id:'adv-6',campaignId:campaign.id,title:'A Cidadela',status:'current',createdAt:'2026-06-01T00:00:00Z'},
+ {id:'adv-6',campaignId:campaign.id,title:'A Cidadela',status:'active',createdAt:'2026-06-01T00:00:00Z'},
  {id:'adv-7',campaignId:campaign.id,title:'Mais tarde',status:'planned',createdAt:'2026-12-01T00:00:00Z',updatedAt:'2026-12-02T00:00:00Z'},
- {id:'adv-other',campaignId:'outra-campanha',title:'Outra aventura',status:'current',createdAt:'2026-09-01T00:00:00Z'}
+ {id:'adv-other',campaignId:'outra-campanha',title:'Outra aventura',status:'active',createdAt:'2026-09-01T00:00:00Z'}
 ];
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
@@ -61,7 +61,7 @@ test('Campanha mostra até cinco Aventuras e Sessões, atuais primeiro, sem plan
  await expect(sessionsArea).not.toContainText('Amanhã');
  await expect(sessionsArea).not.toContainText('Futura');
  await expect(adventuresArea.getByRole('link',{name:'Abrir Aventuras'})).toHaveAttribute('href','aventuras.html?campaign=e2e-retrospectiva');
- await expect(sessionsArea.getByRole('link',{name:'Planeja Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-retrospectiva&new=1#session-create-card');
+ await expect(sessionsArea.getByRole('link',{name:'Planejar Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-retrospectiva&new=1#session-create-card');
 });
 test('Abrir Aventuras filtra pela Campanha e coloca planejadas por último',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
@@ -73,13 +73,18 @@ test('Abrir Aventuras filtra pela Campanha e coloca planejadas por último',asyn
  expect(ids).toEqual(['adv-6','adv-5','adv-4','adv-3','adv-2','adv-1','adv-7']);
  await expect(cards.last()).toContainText('Planejada');
 });
-test('Planeja Sessão abre formulário com Campanha preenchida automaticamente',async({page})=>{
+test('Planejar Sessão abre nova aba com formulário com Campanha preenchida automaticamente',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
- await page.locator('#sessoes').getByRole('link',{name:'Planeja Sessão'}).click();
- await expect(page).toHaveURL(/sessoes\.html\?campaign=e2e-retrospectiva&new=1#session-create-card/);
- await expect(page.locator('#session-create-card')).toBeVisible();
- await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-retrospectiva');
- await expect(page.locator('#new-session-title')).toBeVisible();
+ const [newPage]=await Promise.all([
+  page.context().waitForEvent('page'),
+  page.locator('#sessoes').getByRole('link',{name:'Planejar Sessão'}).click()
+ ]);
+ await newPage.waitForLoadState('domcontentloaded');
+ await expect(page).toHaveURL(/mesa\.html\?id=e2e-retrospectiva/);
+ await expect(newPage).toHaveURL(/sessoes\.html\?campaign=e2e-retrospectiva&new=1#session-create-card/);
+ await expect(newPage.locator('#session-create-card')).toBeVisible();
+ await expect(newPage.locator('#new-session-campaign')).toHaveValue('e2e-retrospectiva');
+ await expect(newPage.locator('#new-session-title')).toBeVisible();
 });
 test('Salvar fica na borda inferior da capa e pontilhado é branco discreto',async({page},info)=>{
  test.skip(info.project.name!=='desktop-chromium','alinhamento de duas colunas');

@@ -1,6 +1,6 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261019-campaign-status1';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261019-session-order2';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261019-adventure-order1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
 
@@ -110,6 +110,12 @@ function campaignOptions(current=''){
 function adventureOptions(current='',campaignId=''){
  return `<option value="">— Sem aventura —</option>${adventures.filter(a=>!campaignId||a.campaignId===campaignId).map(a=>option(a.id,adventureLabel(a),current)).join('')}`
 }
+function syncNextSessionOrder(){
+ const input=$('new-session-order');if(!input||input.dataset.orderEdited==='true')return;
+ const id=$('new-session-campaign')?.value||'';
+ const items=id?(campaignById(id)?.sessions||[]):standalone;
+ input.value=String(items.reduce((max,item)=>Math.max(max,Number(item.order||item.number)||0),0)+1);
+}
 function syncCreationOptions({resetAdventure=false}={}){
  const campaignSelect=$('new-session-campaign'),adventureSelect=$('new-session-adventure');
  if(!campaignSelect||!adventureSelect)return;
@@ -122,7 +128,8 @@ function syncCreationOptions({resetAdventure=false}={}){
  const validAdventure=linked&&(!validCampaign||linked.campaignId===validCampaign)?requestedAdventure:'';
  adventureSelect.innerHTML=adventureOptions(validAdventure,validCampaign);
  adventureSelect.value=validAdventure;
- createSelectInitialized=true
+ createSelectInitialized=true;
+ syncNextSessionOrder()
 }
 function adventureSceneOptions(session,selected=''){
  const a=adventureById(session.adventureId);
@@ -219,6 +226,7 @@ function sessionCard(s,restricted=false){
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
+  <label>Ordem<input type="number" min="1" step="1" data-session-field="order" value="${s.order}"></label>
   ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
@@ -280,17 +288,19 @@ async function createSession(){
  const targetCampaignId=selectedCampaign||adv?.campaignId||'',campaign=targetCampaignId?campaignById(targetCampaignId):null;
  if(targetCampaignId&&!campaign)return feedback('Selecione uma Campanha válida.',false);
  const newStatus=$('new-session-status')?.value||'planned',title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
+ const orderInput=$('new-session-order'),order=Number(orderInput?.value);
+ if(!Number.isInteger(order)||order<1)return feedback('Informe uma ordem válida para a Sessão.',false);
  if(campaign){
   const before=campaigns;let coverImage=null;
   try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv?.id||null,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv?.participantUsernames||[],participantCharacterIds:adv?.characterIds||[]});
+  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv?.id||null,title:title||undefined,date,status:newStatus,order,coverImage,participantUsernames:adv?.participantUsernames||[],participantCharacterIds:adv?.characterIds||[]});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
   try{if(coverImage)await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
   location.href=detailHref({...result.session,campaignId:campaign.id})
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,status:newStatus,coverImage});
+  const result=createStandaloneSession(standalone,{id,title:title||undefined,date,status:newStatus,order,coverImage});
   standalone=writeStandaloneSessions(result.list);location.href=detailHref(result.session)
  }
 }
@@ -343,7 +353,7 @@ function updateSceneLink(ref,sceneId,newAdventureSceneId){
  persistMutableSession(ref,session,'Cena vinculada.')
 }
 function saveSessionMainFromCard(ref,card){
- const patch=Object.fromEntries([...card.querySelectorAll('[data-session-field]')].map(input=>[input.dataset.sessionField,input.value]));
+ const patch=Object.fromEntries([...card.querySelectorAll('[data-session-field]')].map(input=>[input.dataset.sessionField,input.type==='number'?Number(input.value):input.value]));
  saveSession(ref,patch,'Etapa salva.')
 }
 function saveSessionParticipantsFromCard(ref,card){
@@ -371,7 +381,7 @@ function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
   const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});await saveSessionCoverPersistent(ref,{coverImage:media,coverImageUrl:''},{previous,newMedia:media,message:'Imagem salva e sincronizada.'})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;await saveSessionCoverPersistent(ref,{coverImage:null,coverImageUrl:''},{previous,message:'Imagem removida e sincronizada.'})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
-  card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.value})));
+  card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.type==='number'?Number(input.value):input.value})));
   card.querySelectorAll('[data-session-character]').forEach(input=>input.addEventListener('change',()=>{
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
   }));
@@ -407,6 +417,7 @@ const newCoverHolder=$('new-session-cover-picker');if(newCoverHolder){newCoverHo
 $('create-session')?.addEventListener('click',createSession);
 $('cancel-session-create')?.addEventListener('click',()=>{showCreationPanel=false;$('session-create-card').hidden=true;$('open-session-create')?.setAttribute('aria-expanded','false')});
 $('new-session-campaign')?.addEventListener('change',()=>syncCreationOptions({resetAdventure:true}));
+$('new-session-order')?.addEventListener('input',()=>{$('new-session-order').dataset.orderEdited='true'});
 $('new-session-adventure')?.addEventListener('change',event=>{
  const adventure=adventureById(event.target.value),campaignSelect=$('new-session-campaign');
  if(adventure&&campaignSelect&&!campaignSelect.value){campaignSelect.value=adventure.campaignId;syncCreationOptions()}

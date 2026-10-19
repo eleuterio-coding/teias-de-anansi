@@ -1,11 +1,11 @@
 import{read,readNpcs}from'./character-builder/state.js';
-import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-open-only2';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-ordered-roots1';
-import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-roster-order1';
-import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
+import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-collapsed1';
+import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-session-order2';
+import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-recent1';
+import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[s]||s),sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s),adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',archived:'Arquivada'}[s]||s);
@@ -53,8 +53,8 @@ function settingsHtml(){
     <label class="wide">Cenário de Campanha<input maxlength="160" data-campaign-field="setting" value="${esc(campaign.setting||'')}"></label>
     <label>Mundo / Plano<input maxlength="160" data-campaign-field="worldPlane" value="${esc(campaign.worldPlane||'')}"></label>
     <label>Principal Continente / Região<input maxlength="160" data-campaign-field="mainRegion" value="${esc(campaign.mainRegion||'')}"></label>
-    <label>Status<select data-campaign-field="status"><option value="planned" ${campaign.status==='planned'?'selected':''}>Planejada</option><option value="active" ${campaign.status==='active'?'selected':''}>Em andamento</option><option value="paused" ${campaign.status==='paused'?'selected':''}>Pausada</option><option value="finished" ${campaign.status==='finished'?'selected':''}>Concluída</option><option value="cancelled" ${campaign.status==='cancelled'?'selected':''}>Cancelada</option></select></label>
-    <div class="row-actions campaign-settings-save"><button type="button" data-save-campaign-section>Salvar</button></div>
+    <div class="campaign-settings-status-row wide"><label>Status<select data-campaign-field="status"><option value="planned" ${campaign.status==='planned'?'selected':''}>Planejada</option><option value="active" ${campaign.status==='active'?'selected':''}>Em andamento</option><option value="paused" ${campaign.status==='paused'?'selected':''}>Pausada</option><option value="finished" ${campaign.status==='finished'?'selected':''}>Concluída</option><option value="cancelled" ${campaign.status==='cancelled'?'selected':''}>Cancelada</option></select></label>
+    <div class="row-actions campaign-settings-save"><button type="button" data-save-campaign-section>Salvar</button></div></div>
    </div>
   </div>
  </section>`
@@ -164,7 +164,7 @@ function sessionsHtml(){
  const sessions=recentCampaignSessions(campaign.sessions,{limit:5});
  return`<section id="sessoes" class="card campaign-editor-card campaign-reference-section">
   <div class="top campaign-reference-head"><h2>Sessões da Campanha</h2>
-   <a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Planeja Sessão</a>
+   <a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card" target="_blank" rel="noopener noreferrer">Planejar Sessão</a>
   </div>
   <div class="list">${sessions.length?sessions.map(session=>`<article class="campaign-reference-row">
    <div><strong>Sessão ${session.number} · ${esc(session.title)}</strong>
