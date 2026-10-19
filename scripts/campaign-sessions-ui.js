@@ -6,14 +6,14 @@ import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-mas
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
+const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',sessionId=params.get('id')||'';let adventureFilter=params.get('adventure')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false,showCreationPanel=params.get('new')==='1';
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
 const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
-function detailHref(session){const q=new URLSearchParams;const targetCampaign=session.campaignId||campaignFilter,targetAdventure=session.adventureId||adventureFilter;if(targetCampaign)q.set('campaign',targetCampaign);if(targetAdventure)q.set('adventure',targetAdventure);q.set('id',session.id);return`sessoes.html?${q}`}
+function detailHref(session){const q=new URLSearchParams;const targetCampaign=session.campaignId||campaignFilter,targetAdventure=Object.hasOwn(session,'adventureId')?session.adventureId:adventureFilter;if(targetCampaign)q.set('campaign',targetCampaign);if(targetAdventure)q.set('adventure',targetAdventure);q.set('id',session.id);return`sessoes.html?${q}`}
 
 
 function feedback(message,ok=true){
@@ -30,7 +30,7 @@ function sharedSessions(){
 function allSessions(){
  const nested=allCampaignSessions(campaigns).map(s=>({...s,source:'campaign'}));
  const loose=standalone.map(s=>({...s,source:'standalone',campaignId:null,campaignName:''}));
- return [...nested,...loose].sort((a,b)=>String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||b.number-a.number)
+ return [...nested,...loose].sort((a,b)=>Number(b.order??b.number)-Number(a.order??a.number)||String(b.date||b.updatedAt).localeCompare(String(a.date||a.updatedAt))||b.number-a.number)
 }
 function filteredSessions(rows){
  return rows.filter(s=>(!campaignFilter||s.campaignId===campaignFilter)&&(!adventureFilter||s.adventureId===adventureFilter))
@@ -100,6 +100,33 @@ function storeMutableSession(ref,session){
 function persistMutableSession(ref,session,message='Sessão salva.'){
  if(!storeMutableSession(ref,session))return feedback('Não foi possível salvar a Sessão.',false);
  reload();render();if(message)feedback(message);return true
+}
+/** Trocar a Aventura preserva cenas próprias e desfaz os vínculos de cenas da anterior. */
+function changeSessionAdventure(ref,newAdventureId){
+ if(!ref||ref.source!=='campaign')return feedback('Vincule a Sessão a uma Campanha antes de escolher uma Aventura.',false);
+ const session=findMutableSession(ref);if(!session)return feedback('Sessão não encontrada.',false);
+ const id=String(newAdventureId||''),target=adventureById(id);
+ if(id&&(!target||target.campaignId!==ref.campaignId))return feedback('Escolha uma Aventura desta Campanha.',false);
+ if((session.adventureId||'')===id)return;
+ const previous=adventureById(session.adventureId);
+ const scenes=(session.scenes||[]).map(scene=>scene.adventureSceneId
+  ?{...scene,adventureSceneId:null,missionIds:[],clueIds:[],handoutIds:[],treasureIds:[]}
+  :scene);
+ const result=updateCampaignSession(campaigns,ref.campaignId,ref.id,{adventureId:id||null,scenes});
+ if(!result.ok)return feedback(result.reason,false);
+ campaigns=writeCampaigns(result.list);
+ if(previous){
+  adventures=writeAdventures(adventures.map(adv=>adv.id===previous.id
+   ?{...adv,scenes:adv.scenes.map(scene=>scene.sessionId===session.id
+     ?{...scene,sessionId:null,sessionSceneId:null,
+       encounterRef:scene.encounterRef?.sessionId===session.id
+        ?{...scene.encounterRef,sessionId:null,encounterId:null}:scene.encounterRef}
+     :scene)}
+   :adv))
+ }
+ adventureFilter=id;
+ history.replaceState(null,'',detailHref({...result.session,campaignId:ref.campaignId}));
+ reload();render();feedback('Aventura da sessão atualizada.')
 }
 function adventureLabel(a){
  const c=campaignById(a.campaignId);return c?`${a.title} · ${c.name}`:a.title
@@ -207,7 +234,7 @@ function sessionListCard(s,restricted=false){
   <div class="hub-collection-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(campaignName)}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||'Sem aventura')}</strong></span></div>
   <div class="hub-collection-metrics">${s.date?`${esc(s.date)} · `:''}${scenes} cena(s) · ${encounters} encontro(s)</div>
  </div>
- <div class="hub-collection-actions"><a class="btn" href="${href}">Abrir</a>${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}">Excluir</button>`}</div>
+ <div class="hub-collection-actions"><a class="btn" href="${href}">Abrir</a>${restricted?'':`<button type="button" class="danger session-delete-button" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}" title="Excluir sessão">×</button>`}</div>
  </article>`
 }
 function sessionCard(s,restricted=false){
@@ -216,7 +243,7 @@ function sessionCard(s,restricted=false){
  ${restricted?cover:''}<div class="session-head"><div>
   <h3>${esc(s.title)}</h3>
   <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
- </div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
+ </div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger session-delete-button" data-remove-session aria-label="Excluir sessão ${esc(s.title)}" title="Excluir sessão">×</button>`}</div></div>
  ${restricted?`
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
   ${s.summary?`<p>${esc(s.summary)}</p>`:''}
@@ -227,8 +254,8 @@ function sessionCard(s,restricted=false){
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
   <label>Ordem<input type="number" min="1" step="1" data-session-field="order" value="${s.order}"></label>
-  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
-  <label>Aventura<input value="${esc(adv?.title||'Sem aventura')}" readonly></label>
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next',...(s.status==='current'?['current']:[]),'completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
+  <label>Aventura<select data-session-adventure ${s.campaignId?'':'disabled'}>${adventureOptions(s.adventureId,s.campaignId||'__sem_campanha__')}</select></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
   <label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
@@ -382,6 +409,7 @@ function bindSessionCards(){
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
   const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});await saveSessionCoverPersistent(ref,{coverImage:media,coverImageUrl:''},{previous,newMedia:media,message:'Imagem salva e sincronizada.'})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;await saveSessionCoverPersistent(ref,{coverImage:null,coverImageUrl:''},{previous,message:'Imagem removida e sincronizada.'})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.type==='number'?Number(input.value):input.value})));
+  card.querySelector('[data-session-adventure]')?.addEventListener('change',event=>changeSessionAdventure(ref,event.target.value));
   card.querySelectorAll('[data-session-character]').forEach(input=>input.addEventListener('change',()=>{
    const ids=[...card.querySelectorAll('[data-session-character]:checked')].map(el=>el.dataset.sessionCharacter);saveSession(ref,{participantCharacterIds:ids},'Participantes atualizados.')
   }));

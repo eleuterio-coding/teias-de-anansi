@@ -5,7 +5,7 @@ import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMembe
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order2';
+import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order-desc3';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[s]||s),sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s),adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',archived:'Arquivada'}[s]||s);
@@ -59,17 +59,21 @@ function settingsHtml(){
   </div>
  </section>`
 }
+function referenceCover(...items){
+ const cover=items.find(item=>item&&(item.coverImage?.id||item.coverImageUrl));
+ return cover?imageElementHtml(cover.coverImage,cover.coverImageUrl,{className:'campaign-reference-cover',alt:''}):'';
+}
 function referenceSectionsHtml(){
- const adventures=sortCampaignAdventures(adventuresForCampaign(readAdventures(),campaignId),{includePlanned:false,limit:5});
+ const adventures=sortCampaignAdventures(adventuresForCampaign(readAdventures(),campaignId),{limit:5});
  return`<section id="aventuras" class="card campaign-editor-card campaign-reference-section">
   <div class="top campaign-reference-head"><h2>Aventuras da Campanha</h2>
    <a class="btn secondary campaign-reference-header-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}">Abrir Aventuras</a>
   </div>
-  <div class="list">${adventures.length?adventures.map(a=>`<article class="campaign-reference-row">
-   <div><strong>${esc(a.title)}</strong><div><span class="badge">${esc(adventureStatus(a.status))}</span></div>
+  <div class="list">${adventures.length?adventures.map(a=>`<article class="campaign-reference-row campaign-reference-cover-card">${referenceCover(a,campaign)}
+   <div class="campaign-reference-content"><strong>${esc(a.title)}</strong><div><span class="badge">${esc(adventureStatus(a.status))}</span></div>
    ${a.summary?`<p class="mini">${esc(a.summary)}</p>`:''}</div>
    <a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(a.id)}">Abrir</a>
-  </article>`).join(''):'<div class="empty">Nenhuma aventura iniciada ou concluída nesta Campanha.</div>'}</div>
+  </article>`).join(''):'<div class="empty">Nenhuma aventura vinculada a esta Campanha.</div>'}</div>
  </section>`
 }
 
@@ -161,16 +165,18 @@ function commitRoster(list,message,{rebuildRows=false}={}){
 function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Mesa.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
 function sessionCard(s){const participants=s.participantCharacterIds.map(id=>characters.find(c=>c.id===id)?.name||id).filter(Boolean);return`<article class="session-card ${s.status==='active'?'active':''}" data-session-row="${esc(s.id)}"><div class="session-head"><div><h3>Sessão ${s.number} · ${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><div class="row-actions">${['planned','next'].includes(s.status)?`<button type="button" data-start-session="${esc(s.id)}">Iniciar sessão</button>`:''}${s.status==='active'?`<button type="button" data-finish-session="${esc(s.id)}">Concluir sessão</button>`:''}${!['completed','cancelled'].includes(s.status)?`<button type="button" class="secondary" data-cancel-session="${esc(s.id)}">Cancelar</button>`:''}<button type="button" class="danger" data-remove-session="${esc(s.id)}">Excluir</button></div></div><div class="form-grid two" style="margin-top:10px"><label>Título<input data-session-field="title" value="${esc(s.title)}"></label><label>Data<input data-session-field="date" type="date" value="${esc(s.date)}"></label><label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>`<option value="${v}" ${s.status===v?'selected':''}>${esc(sessionStatus(v))}</option>`).join('')}</select></label><label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label><label class="wide">Resumo / recap<textarea data-session-field="summary">${esc(s.summary)}</textarea></label><label class="wide">Notas compartilhadas<textarea data-session-field="sharedNotes">${esc(s.sharedNotes)}</textarea></label><label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label><div class="wide"><strong>Personagens participantes</strong><div data-session-participants style="margin-top:5px">${participantChecks(s)}</div></div></div>${participants.length?`<p class="mini">Registrados: ${esc(participants.join(', '))}</p>`:''}</article>`}
 function sessionsHtml(){
- const sessions=recentCampaignSessions(campaign.sessions,{limit:5});
+ const runningAdventures=adventuresForCampaign(readAdventures(),campaignId).filter(a=>a.status==='active');
+ const adventureMap=new Map(runningAdventures.map(a=>[a.id,a]));
+ const sessions=recentCampaignSessions(campaign.sessions,{limit:5,activeAdventureIds:new Set(adventureMap.keys())});
  return`<section id="sessoes" class="card campaign-editor-card campaign-reference-section">
   <div class="top campaign-reference-head"><h2>Sessões da Campanha</h2>
    <a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card" target="_blank" rel="noopener noreferrer">Planejar Sessão</a>
   </div>
-  <div class="list">${sessions.length?sessions.map(session=>`<article class="campaign-reference-row">
-   <div><strong>Sessão ${session.number} · ${esc(session.title)}</strong>
+  <div class="list">${sessions.length?sessions.map(session=>`<article class="campaign-reference-row campaign-reference-cover-card">${referenceCover(adventureMap.get(session.adventureId),session,campaign)}
+   <div class="campaign-reference-content"><strong>Sessão ${session.number} · ${esc(session.title)}</strong>
     <div><span class="badge ${esc(session.status)}">${esc(sessionStatus(session.status))}</span>${session.date?`<span class="badge">${esc(session.date)}</span>`:''}</div></div>
    <a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(session.id)}">Abrir</a>
-  </article>`).join(''):'<div class="empty">Nenhuma sessão iniciada ou concluída nesta Campanha.</div>'}</div>
+  </article>`).join(''):'<div class="empty">Nenhuma sessão próxima ou concluída vinculada a uma Aventura em andamento.</div>'}</div>
  </section>`
 }
 function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>Próxima sessão</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#linha-tempo'>Linha do tempo</a><a href='#notas-mestre'>Notas do Mestre</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}

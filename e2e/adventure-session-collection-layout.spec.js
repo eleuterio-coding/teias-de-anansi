@@ -52,7 +52,7 @@ test('Sessões usa mesmo cabeçalho, imagem, status e novo tile, mantendo detalh
  await expect(item.locator('.hub-collection-context')).toContainText('Reinos de Prata');
  await expect(item.locator('.hub-collection-context')).toContainText('As Rainhas');
  await expect(item.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir'})).toHaveCount(1);
+ await expect(item.getByRole('button',{name:'Excluir sessão A convocação'})).toHaveCount(1);
  await expect(page.locator('#session-create-card')).toBeHidden();
  await list.getByRole('link',{name:'Nova sessão'}).click();
  await expect(page.locator('#session-create-card')).toBeVisible();

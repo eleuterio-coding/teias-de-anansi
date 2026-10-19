@@ -36,7 +36,7 @@ assert.equal(tableUi.includes('data-campaign-field="dmName"'),false,'Rafael não
 assert.ok(tableUi.includes("role:'player'"),'Participante adicionado pela Mesa deve ser sempre Jogador.');
 assert.ok(listUi.includes("DM_NAME='Rafael'"),'Rafael deve ser o Mestre fixo das Campanhas.');
 assert.ok(listUi.includes('Campanhas / Mesas')||fs.readFileSync(new URL('../campanhas.html',import.meta.url),'utf8').includes('Campanhas / Mesas'));
-assert.ok(sessionsUi.includes('Abrir Mesa'),'Visão de sessões deve voltar à Mesa.');
+assert.ok(sessionsUi.includes('Abrir Campanha'),'Visão de sessões deve permitir abrir a Campanha vinculada.');
 assert.ok(sheetUi.includes('sheet-campaign-context')&&sheetUi.includes('Abrir Mesa'),'Ficha deve mostrar contexto da campanha.');
 assert.ok(gameplay.includes("character-sheet-campaign-ui.js"),'Modo de Jogo deve carregar a integração de campanha.');
 assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.includes('Campanhas / Mesas'),'Lista de personagens deve integrar Mesas pela UI atual.');

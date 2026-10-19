@@ -37,7 +37,7 @@ test('estado migra Atual da Aventura sem apagá-la e Ordem persiste',()=>{
  expect(created.ok).toBe(true);expect(created.adventure.order).toBe(3);
  const updated=updateAdventure(created.list,created.adventure.id,{order:8});
  expect(updated.ok).toBe(true);expect(updated.adventure.order).toBe(8);
- expect(sortCampaignAdventures(updated.list).map(a=>a.id)).toEqual(['a-two','a-one',created.adventure.id]);
+ expect(sortCampaignAdventures(updated.list).map(a=>a.id)).toEqual([created.adventure.id,'a-two','a-one']);
 });
 test('Sessão mantém número separado da ordem e preserva legado',()=>{
  const legacy=sanitizeSession({id:'legacy',number:3,title:'Legado',status:'next'});
@@ -72,7 +72,7 @@ test('criação de Sessão oferece estados e sugere próxima Ordem, salvando-a',
  const form=page.locator('#session-create-card');
  await expect(form).toBeVisible();
  const statuses=await form.locator('#new-session-status option').evaluateAll(rows=>rows.map(o=>o.textContent));
- expect(statuses).toEqual(['Planejada','Próxima','Atual','Concluída','Cancelada']);
+ expect(statuses).toEqual(['Planejada','Próxima','Concluída','Cancelada']);
  await expect(form.locator('#new-session-order')).toHaveValue('3');
  await form.locator('#new-session-order').fill('7');
  await form.locator('#new-session-status').selectOption('completed');
