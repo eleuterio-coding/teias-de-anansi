@@ -1,5 +1,6 @@
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
+import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-recent1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
 const params=new URLSearchParams(location.search),requestedCampaign=params.get('campaign')||'',requestedAdventure=params.get('id')||'';
@@ -9,8 +10,8 @@ function readOnly(){
  const rows=sharedCampaignRows(),campaignId=requestedCampaign||rows[0]?.campaign.id||'',campaignRow=rows.find(r=>r.campaign.id===campaignId),adventures=sharedAdventures().filter(a=>a.campaignId===campaignId),active=adventures.find(a=>a.id===requestedAdventure)||adventures[0]||null,root=document.getElementById('adventure-root');
  if(!requestedAdventure){
   const allowedIds=new Set(rows.map(r=>r.campaign.id));
-  const accessible=sharedAdventures().filter(a=>allowedIds.has(a.campaignId)&&(!requestedCampaign||a.campaignId===requestedCampaign))
-   .sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+  const filtered=sharedAdventures().filter(a=>allowedIds.has(a.campaignId)&&(!requestedCampaign||a.campaignId===requestedCampaign));
+  const accessible=requestedCampaign?sortCampaignAdventures(filtered):filtered.sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
   root.innerHTML=`<p class="hub-collection-home"><a href="index.html">← Início</a></p><div class="top hub-collection-top"><header><h1>Aventuras</h1></header></div>
    <section class="hub-collection-section adventure-list-section"><div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
    <div class="hub-collection-grid adventure-list">${accessible.length?accessible.map(a=>{
@@ -39,5 +40,5 @@ function readOnly(){
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-create-tiles2')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-campaign-recent1')}
 start();
