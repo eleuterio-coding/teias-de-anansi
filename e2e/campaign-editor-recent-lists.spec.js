@@ -17,16 +17,18 @@ const campaign={
   {id:'session-10',number:10,title:'Cancelada',status:'cancelled'}
  ]
 };
+campaign.sessions=campaign.sessions.map(s=>({...s,adventureId:'adv-6',order:s.number}));
 const adventures=[
  {id:'adv-1',campaignId:campaign.id,title:'Origem',status:'completed',createdAt:'2026-01-01T00:00:00Z'},
  {id:'adv-2',campaignId:campaign.id,title:'O Espelho',status:'completed',createdAt:'2026-02-01T00:00:00Z'},
  {id:'adv-3',campaignId:campaign.id,title:'As Rainhas',status:'completed',createdAt:'2026-03-01T00:00:00Z'},
  {id:'adv-4',campaignId:campaign.id,title:'A Fortaleza',status:'completed',createdAt:'2026-04-01T00:00:00Z'},
  {id:'adv-5',campaignId:campaign.id,title:'As Muralhas',status:'completed',createdAt:'2026-05-01T00:00:00Z'},
- {id:'adv-6',campaignId:campaign.id,title:'A Cidadela',status:'active',createdAt:'2026-06-01T00:00:00Z'},
+ {id:'adv-6',campaignId:campaign.id,title:'A Cidadela',status:'active',coverImageUrl:'/capa-aventura.svg',createdAt:'2026-06-01T00:00:00Z'},
  {id:'adv-7',campaignId:campaign.id,title:'Mais tarde',status:'planned',createdAt:'2026-12-01T00:00:00Z',updatedAt:'2026-12-02T00:00:00Z'},
  {id:'adv-other',campaignId:'outra-campanha',title:'Outra aventura',status:'active',createdAt:'2026-09-01T00:00:00Z'}
 ];
+adventures.forEach((a,index)=>{a.order=a.id==='adv-other'?1:index+1});
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
   status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password',playerAccounts:[]})
@@ -37,16 +39,16 @@ test.beforeEach(async({page})=>{
   if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(data.adventures));
  },{session,campaign,adventures});
 });
-test('ordem narrativa: atual primeiro, retrospectiva descendente e planejadas no final',()=>{
+test('ordem numerica: maior para menor, com sessao proxima e concluidas',()=>{
  expect(sortCampaignAdventures(adventures).map(a=>a.id)).toEqual([
-  'adv-other','adv-6','adv-5','adv-4','adv-3','adv-2','adv-1','adv-7'
+  'adv-7','adv-6','adv-5','adv-4','adv-3','adv-2','adv-other','adv-1'
  ]);
  expect(sortCampaignAdventures(adventures.filter(a=>a.campaignId===campaign.id),{includePlanned:false,limit:5}).map(a=>a.id))
   .toEqual(['adv-6','adv-5','adv-4','adv-3','adv-2']);
  expect(recentCampaignSessions(campaign.sessions).map(s=>s.id))
-  .toEqual(['session-7','session-6','session-5','session-4','session-3']);
+  .toEqual(['session-9','session-6','session-5','session-4','session-3']);
 });
-test('Campanha mostra até cinco Aventuras e Sessões, atuais primeiro, sem planejadas',async({page})=>{
+test('Campanha mostra até cinco Aventuras por ordem e sessões da aventura em andamento',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
  const adventuresArea=page.locator('#aventuras'),sessionsArea=page.locator('#sessoes');
  await expect(adventuresArea.locator('h2')).toHaveText('Aventuras da Campanha');
@@ -54,24 +56,28 @@ test('Campanha mostra até cinco Aventuras e Sessões, atuais primeiro, sem plan
  await expect(adventuresArea.locator('.campaign-reference-row')).toHaveCount(5);
  await expect(sessionsArea.locator('.campaign-reference-row')).toHaveCount(5);
  const titles=await adventuresArea.locator('.campaign-reference-row strong').allTextContents();
- expect(titles).toEqual(['A Cidadela','As Muralhas','A Fortaleza','As Rainhas','O Espelho']);
+ expect(titles).toEqual(['Mais tarde','A Cidadela','As Muralhas','A Fortaleza','As Rainhas']);
  const sessions=await sessionsArea.locator('.campaign-reference-row strong').allTextContents();
- expect(sessions).toEqual(['Sessão 7 · O Portal','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha','Sessão 3 · Mercado']);
- await expect(adventuresArea).not.toContainText('Mais tarde');
+ expect(sessions).toEqual(['Sessão 9 · Futura','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha','Sessão 3 · Mercado']);
+ await expect(adventuresArea).toContainText('Mais tarde');
  await expect(sessionsArea).not.toContainText('Amanhã');
- await expect(sessionsArea).not.toContainText('Futura');
+ await expect(sessionsArea).toContainText('Futura');
+ await expect(sessionsArea).not.toContainText('O Portal');
+ await expect(adventuresArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa.svg');
+ await expect(adventuresArea.locator('.campaign-reference-row').nth(1).locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');
+ await expect(sessionsArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');
  await expect(adventuresArea.getByRole('link',{name:'Abrir Aventuras'})).toHaveAttribute('href','aventuras.html?campaign=e2e-retrospectiva');
  await expect(sessionsArea.getByRole('link',{name:'Planejar Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-retrospectiva&new=1#session-create-card');
 });
-test('Abrir Aventuras filtra pela Campanha e coloca planejadas por último',async({page})=>{
+test('Abrir Aventuras filtra e ordena por Ordem descrescente',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
  await page.locator('#aventuras').getByRole('link',{name:'Abrir Aventuras'}).click();
  await expect(page).toHaveURL(/aventuras\.html\?campaign=e2e-retrospectiva/);
  const cards=page.locator('#adventure-list [data-adventure-card]');
  await expect(cards).toHaveCount(7);
  const ids=await cards.evaluateAll(items=>items.map(item=>item.dataset.adventureCard));
- expect(ids).toEqual(['adv-6','adv-5','adv-4','adv-3','adv-2','adv-1','adv-7']);
- await expect(cards.last()).toContainText('Planejada');
+ expect(ids).toEqual(['adv-7','adv-6','adv-5','adv-4','adv-3','adv-2','adv-1']);
+ await expect(cards.first()).toContainText('Planejada');
 });
 test('Planejar Sessão abre nova aba com formulário com Campanha preenchida automaticamente',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
