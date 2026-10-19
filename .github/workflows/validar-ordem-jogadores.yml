@@ -1,0 +1,31 @@
+name: Validar ordem alfabética na Mesa
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'mesa.html'
+      - 'e2e/campaign-alphabetical-selectors.spec.js'
+      - '.github/workflows/validar-ordem-jogadores.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'mesa.html'
+      - 'e2e/campaign-alphabetical-selectors.spec.js'
+      - '.github/workflows/validar-ordem-jogadores.yml'
+permissions:
+  contents: read
+jobs:
+  ordem-jogadores:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Testar seletor de jogadores e personagens
+        run: npx playwright test e2e/campaign-alphabetical-selectors.spec.js
