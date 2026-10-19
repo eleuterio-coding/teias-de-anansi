@@ -1,7 +1,7 @@
 import assert from'node:assert/strict';
 import fs from'node:fs';
 import{
- CAMPAIGN_KEY,createCampaign,updateCampaign,addCampaignMember,assignCharacterToMember,addCampaignSession,startCampaignSession,finishCampaignSession,campaignContextForCharacter,allCampaignSessions,writeCampaigns,readCampaigns,sanitizeCampaign
+ CAMPAIGN_KEY,createCampaign,updateCampaign,addCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,startCampaignSession,finishCampaignSession,campaignContextForCharacter,allCampaignSessions,writeCampaigns,readCampaigns,sanitizeCampaign
 }from'../scripts/campaign-state.js';
 
 class MemoryStorage{constructor(){this.map=new Map}getItem(key){return this.map.has(key)?this.map.get(key):null}setItem(key,value){this.map.set(key,String(value))}}
@@ -12,7 +12,7 @@ assert.equal(list.length,2);
 let memberOne=addCampaignMember(list,first.id,{name:'Lia',role:'player'});assert.equal(memberOne.ok,true);list=memberOne.list;const m1=memberOne.member;
 let memberTwo=addCampaignMember(list,second.id,{name:'Lia',role:'player'});list=memberTwo.list;const m2=memberTwo.member;
 let linked=assignCharacterToMember(list,first.id,m1.id,'pc-1');assert.equal(linked.ok,true);list=linked.list;assert.equal(campaignContextForCharacter(list,'pc-1').campaign.id,first.id);
-linked=assignCharacterToMember(list,second.id,m2.id,'pc-1');assert.equal(linked.ok,true);assert.equal(linked.movedFrom.campaignId,first.id);list=linked.list;assert.equal(campaignContextForCharacter(list,'pc-1').campaign.id,second.id);assert.equal(list.find(c=>c.id===first.id).members.find(m=>m.id===m1.id).characterId,null,'Mover a ficha deve limpar o vínculo antigo.');
+linked=assignCharacterToMember(list,second.id,m2.id,'pc-1');assert.equal(linked.ok,false,'Ficha de outra campanha não pode ser selecionada, nem pelo mesmo jogador.');assert.match(linked.reason,/outra campanha/i);assert.equal(campaignContextForCharacter(list,'pc-1').campaign.id,first.id,'A recusa deve preservar a campanha original.');const freed=unassignCharacterFromMember(list,first.id,m1.id);assert.equal(freed.ok,true);list=freed.list;linked=assignCharacterToMember(list,second.id,m2.id,'pc-1');assert.equal(linked.ok,true,'Após desvincular da campanha original, pode ser usada na outra.');list=linked.list;assert.equal(campaignContextForCharacter(list,'pc-1').campaign.id,second.id);assert.equal(list.find(c=>c.id===first.id).members.find(m=>m.id===m1.id).characterId,null,'Desvinculação explícita deve liberar a ficha.');
 
 let updated=updateCampaign(list,second.id,{currentArc:'Arco 2',currentLocation:'Sharn',partyGoal:'Encontrar o artefato',sharedNotes:'Pista comum'});assert.equal(updated.ok,true);list=updated.list;
 let session=addCampaignSession(list,second.id,{title:'A Chegada',date:'2026-09-05',location:'Sharn',participantCharacterIds:['pc-1']});assert.equal(session.ok,true);list=session.list;const s1=session.session;
