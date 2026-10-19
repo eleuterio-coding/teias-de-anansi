@@ -1164,7 +1164,7 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 
 /* Regra final com especificidade suficiente para superar as dimensões antigas
    (66px × 34px) do seletor [data-remove-member]. */
-#table-root #jogadores .roster-player-actions :is(a.roster-open-button,button[data-remove-member].roster-remove-button){
+#table-root #jogadores .roster-player-actions :is(a.roster-open-button,button.roster-open-button,button[data-remove-member].roster-remove-button){
  display:grid!important;place-items:center;
  flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
  height:40px!important;min-height:40px!important;max-height:40px!important;
