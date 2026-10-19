@@ -1160,3 +1160,19 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 #table-root #jogadores .roster-player-character>label{
  display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:18px 44px;gap:6px
 }
+
+
+/* Regra final com especificidade suficiente para superar as dimensões antigas
+   (66px × 34px) do seletor [data-remove-member]. */
+#table-root #jogadores .roster-player-actions :is(a.roster-open-button,button[data-remove-member].roster-remove-button){
+ display:grid!important;place-items:center;
+ flex:0 0 40px!important;width:40px!important;min-width:40px!important;max-width:40px!important;
+ height:40px!important;min-height:40px!important;max-height:40px!important;
+ padding:0!important;border-radius:9px!important
+}
+@media(pointer:coarse){
+ #table-root #jogadores .roster-player-actions :is(a.roster-open-button,button.roster-open-button:disabled,button[data-remove-member].roster-remove-button){
+  flex-basis:44px!important;width:44px!important;min-width:44px!important;max-width:44px!important;
+  height:44px!important;min-height:44px!important;max-height:44px!important
+ }
+}
