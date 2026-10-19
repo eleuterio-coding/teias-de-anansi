@@ -12,7 +12,7 @@ assert.equal(legacy.timelineNodes[1].id,'legacy-timeline-2');
 assert.equal(legacy.importantLocations,'Sharn\nPontal','Locais legados preservados.');
 assert.equal(legacy.activeMissions,'Buscar coroa','Atos reutilizam os registros existentes.');
 assert.ok(renderStructuredSection(legacy,[],'locais').includes('data-edit-line="importantLocations"'));
-assert.ok(renderStructuredSection(legacy,[],'missoes').includes('<h2>Atos</h2>'));
+assert.equal(renderStructuredSection(legacy,[],'missoes'),'','Atos não aparecem mais na Campanha.');
 assert.ok(renderTimeline(legacy).includes('data-timeline-drag'));
 const before=structuredClone(legacy.timelineNodes);
 const child=addTimelineNode(before,'Pista','legacy-timeline-1');
@@ -37,8 +37,8 @@ assert.equal(reorderLineValues('Fenda\nPortão\nCidade',0,2,'after'),'Portão\nC
 assert.equal(reorderLineValues('Um\nDois',0,0),null,'Arrastar sobre o próprio item não altera dados.');
 assert.equal(reorderLineValues('Um\nDois',-1,1),null,'Índices inválidos não alteram dados.');
 assert.equal(reorderLineValues('Um\nDois',1,0,'child'),null,'Atos e Locais não aceitam aninhamento.');
-const atosHtml=renderStructuredSection(legacy,[],'missoes'),locaisHtml=renderStructuredSection(legacy,[],'locais');
-assert.ok(atosHtml.includes('data-line-drag="activeMissions"')&&atosHtml.includes('draggable="true"'));
+const locaisHtml=renderStructuredSection(legacy,[],'locais');
+assert.ok(!locaisHtml.includes('Atos'));
 assert.ok(locaisHtml.includes('data-line-drag="importantLocations"')&&locaisHtml.includes('draggable="true"'));
 assert.ok(renderTimeline(legacy).includes('class="campaign-flow-step" draggable="true" data-timeline-drag'));
 assert.equal(renderTimeline(legacy).includes('class="timeline-drag-handle"'),false,'Não deve depender de botão de arraste.');
@@ -49,4 +49,4 @@ assert.deepEqual(persisted.campaign.timelineNodes,updated,'Hierarquia preservada
 assert.equal(persisted.campaign.timeline,'Descoberta\nPista revisada');
 const intentionallyEmpty=updateCampaign(persisted.list,'c1',{timelineNodes:[],timeline:''});
 assert.equal(intentionallyEmpty.campaign.timelineNodes.length,0,'Apagar todos os eventos não os restaura.');
-console.log('OK — Atos, Locais, migração, árvore, renomeação, reorganização e persistência da Campanha.');
+console.log('OK — Atos legados preservados sem exibição, Locais, migração e Linha do Tempo da Campanha.');
