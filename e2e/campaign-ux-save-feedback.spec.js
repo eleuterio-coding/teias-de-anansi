@@ -161,7 +161,8 @@ test('campos e ações de jogadores ficam alinhados na coluna compacta do deskto
   expect(Math.abs(row.character.top-row.user.top),'Jogador e Personagem na mesma linha').toBeLessThanOrEqual(2);
   expect(row.character.left,'Personagem à direita da identificação').toBeGreaterThan(row.user.right);
   expect(Math.abs(row.open.top-row.remove.top),'Botões alinhados entre si').toBeLessThanOrEqual(2);
-  expect(row.open.top,'Ações após os dois campos').toBeGreaterThanOrEqual(row.character.bottom);
+  expect(row.open.left,'Ações à direita do personagem').toBeGreaterThanOrEqual(row.character.right);
+  expect(Math.abs(row.open.top-row.character.top),'Ações na mesma linha do seletor').toBeLessThanOrEqual(5);
   expect(row.remove.right).toBeLessThanOrEqual(row.row.right+2);
  }
 });
