@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import{sanitizeCampaign,updateCampaign}from'../scripts/campaign-state.js';
 import{
  entries,renderStructuredSection,renderTimeline,moveTimelineNode,addTimelineNode,
- renameTimelineNode,removeTimelineNode,countTimelineNodes,flattenTimeline
+ renameTimelineNode,removeTimelineNode,countTimelineNodes,flattenTimeline,reorderLineValues
 }from'../scripts/campaign-structured-ui.js';
 
 const legacy=sanitizeCampaign({id:'c1',name:'Teste',importantLocations:'Sharn\nPontal',activeMissions:'Buscar coroa',timeline:'Chegada\nDescoberta'});
@@ -32,6 +32,17 @@ assert.deepEqual(updated.map(x=>x.text),['Descoberta','Chegada','Pista revisada'
 updated=removeTimelineNode(updated,'legacy-timeline-1');
 assert.deepEqual(flattenTimeline(updated),['Descoberta','Pista revisada']);
 assert.deepEqual(entries('• Lugar A\n- Lugar B\nLugar C'),['Lugar A','Lugar B','Lugar C']);
+assert.equal(reorderLineValues('Ato 1\nAto 2\nAto 3',2,0,'before'),'Ato 3\nAto 1\nAto 2');
+assert.equal(reorderLineValues('Fenda\nPortão\nCidade',0,2,'after'),'Portão\nCidade\nFenda');
+assert.equal(reorderLineValues('Um\nDois',0,0),null,'Arrastar sobre o próprio item não altera dados.');
+assert.equal(reorderLineValues('Um\nDois',-1,1),null,'Índices inválidos não alteram dados.');
+assert.equal(reorderLineValues('Um\nDois',1,0,'child'),null,'Atos e Locais não aceitam aninhamento.');
+const atosHtml=renderStructuredSection(legacy,[],'missoes'),locaisHtml=renderStructuredSection(legacy,[],'locais');
+assert.ok(atosHtml.includes('data-line-drag="activeMissions"')&&atosHtml.includes('draggable="true"'));
+assert.ok(locaisHtml.includes('data-line-drag="importantLocations"')&&locaisHtml.includes('draggable="true"'));
+assert.ok(renderTimeline(legacy).includes('class="campaign-flow-step" draggable="true" data-timeline-drag'));
+assert.equal(renderTimeline(legacy).includes('class="timeline-drag-handle"'),false,'Não deve depender de botão de arraste.');
+
 const persisted=updateCampaign([legacy],'c1',{timelineNodes:updated,timeline:flattenTimeline(updated).join('\n')});
 assert.equal(persisted.ok,true);
 assert.deepEqual(persisted.campaign.timelineNodes,updated,'Hierarquia preservada na persistência.');
