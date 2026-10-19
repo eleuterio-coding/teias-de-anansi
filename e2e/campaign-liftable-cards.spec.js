@@ -69,3 +69,14 @@ test('clique e segure faz o card se destacar e seguir o cursor',async({page,brow
  await expect(page.locator('.campaign-floating-card')).toHaveCount(0);
  await expect(page.locator('#missoes [data-edit-line]').last()).toHaveValue('Ato I');
 });
+
+
+test('retira os dois botões Nova sessão somente da página da campanha',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-cards-lift');
+ await expect(page.locator('.hub-global-topbar .hub-topbar-primary')).toHaveCount(0);
+ await expect(page.locator('.campaign-product-hero .campaign-product-actions a')).toHaveCount(1);
+ await expect(page.locator('.campaign-product-hero .campaign-product-actions a')).toHaveText('Todas as campanhas');
+ await expect(page.locator('#proxima-sessao .campaign-next-action')).toHaveAttribute('href','sessoes.html?campaign=e2e-cards-lift&id=next1');
+ await page.goto('/sessoes.html?campaign=e2e-cards-lift');
+ await expect(page.locator('.hub-global-topbar .hub-topbar-primary')).toContainText('Nova sessão');
+});
