@@ -1,10 +1,10 @@
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-recent1';
+import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-order2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
 const params=new URLSearchParams(location.search),requestedCampaign=params.get('campaign')||'',requestedAdventure=params.get('id')||'';
-const advStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s),missionStatus=s=>({active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'}[s]||s),clueStatus=s=>({discovered:'Descoberta',resolved:'Resolvida'}[s]||s);
+const advStatus=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s),missionStatus=s=>({active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'}[s]||s),clueStatus=s=>({discovered:'Descoberta',resolved:'Resolvida'}[s]||s);
 function simpleSection(title,rows,render){return`<section class="card"><h3>${esc(title)}</h3><div class="story-list">${rows.length?rows.map(render).join(''):'<div class="story-empty">Nenhum registro.</div>'}</div></section>`}
 function readOnly(){
  const rows=sharedCampaignRows(),campaignId=requestedCampaign||rows[0]?.campaign.id||'',campaignRow=rows.find(r=>r.campaign.id===campaignId),adventures=sharedAdventures().filter(a=>a.campaignId===campaignId),active=adventures.find(a=>a.id===requestedAdventure)||adventures[0]||null,root=document.getElementById('adventure-root');
@@ -40,5 +40,5 @@ function readOnly(){
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-campaign-recent1')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-adventure-order1')}
 start();
