@@ -1022,3 +1022,128 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  #table-root .timeline-children>.timeline-item::before{left:-14px;width:14px}
  #table-root .timeline-collapse{white-space:normal}
 }
+
+
+/* Jogadores da Mesa: jogador, personagem e duas ações quadradas no mesmo eixo. */
+#table-root #jogadores .roster-player{
+ display:grid;
+ grid-template-columns:40px minmax(0,.96fr) minmax(0,1.16fr) 88px;
+ grid-template-rows:18px 44px;
+ gap:6px 9px;align-items:stretch;min-width:0;padding:11px
+}
+#table-root #jogadores .roster-player-identity{display:contents}
+#table-root #jogadores .roster-player-identity .roster-avatar{
+ grid-column:1;grid-row:2;width:40px;height:44px
+}
+#table-root #jogadores .roster-player-identity>.roster-player-display{
+ grid-column:2;grid-row:1 / 3;min-width:0
+}
+#table-root #jogadores .roster-player-character{
+ grid-column:3;grid-row:1 / 3;min-width:0
+}
+#table-root #jogadores .roster-player-actions{
+ grid-column:4;grid-row:2;display:flex;flex-wrap:nowrap;
+ align-self:center;align-items:center;justify-content:flex-end;
+ width:88px;margin:0;gap:6px
+}
+#table-root #jogadores .roster-player-actions :is(.roster-open-button,.roster-remove-button){
+ display:grid;place-items:center;flex:0 0 40px;
+ width:40px;min-width:40px;max-width:40px;
+ height:40px;min-height:40px;max-height:40px;
+ padding:0!important;margin:0;border-radius:9px;
+ text-decoration:none;line-height:1
+}
+#table-root #jogadores .roster-player-actions .roster-open-button{
+ background:#152e44!important;color:#9bd9ff!important;
+ border:1px solid #3b739f!important
+}
+#table-root #jogadores .roster-player-actions .roster-remove-button{
+ background:#321d27!important;color:#ffb1bb!important;
+ border:1px solid #a45163!important
+}
+#table-root #jogadores .roster-player-actions .roster-open-button:not(:disabled):hover{
+ background:#204b6d!important;color:#fff!important;border-color:#88d5ff!important
+}
+#table-root #jogadores .roster-player-actions .roster-remove-button:hover{
+ background:#5b2435!important;color:#fff!important;border-color:#ff92a2!important
+}
+#table-root #jogadores .roster-player-actions :is(.roster-open-button,.roster-remove-button):focus-visible{
+ outline:2px solid #9bd9ff;outline-offset:3px
+}
+#table-root #jogadores .roster-player-actions .roster-open-button:disabled{
+ opacity:.4!important;cursor:not-allowed
+}
+#table-root #jogadores .roster-player-actions svg{
+ display:block;pointer-events:none;width:19px;height:19px
+}
+#table-root #jogadores .roster-action-label{
+ position:absolute;width:1px;height:1px;overflow:hidden;
+ clip-path:inset(50%);white-space:nowrap
+}
+/* O card pode cair para dois níveis no celular sem cortar o nome ou controles. */
+@container campaign-roster (max-width:445px){
+ #table-root #jogadores .roster-player{
+  grid-template-columns:40px minmax(0,1fr) 88px;
+  grid-template-rows:18px 44px 18px 44px
+ }
+ #table-root #jogadores .roster-player-identity .roster-avatar{
+  grid-column:1;grid-row:2
+ }
+ #table-root #jogadores .roster-player-identity>.roster-player-display{
+  grid-column:2 / -1;grid-row:1 / 3
+ }
+ #table-root #jogadores .roster-player-character{
+  grid-column:1 / 3;grid-row:3 / 5
+ }
+ #table-root #jogadores .roster-player-actions{
+  grid-column:3;grid-row:4
+ }
+}
+@media(pointer:coarse){
+ #table-root #jogadores .roster-player-actions :is(.roster-open-button,.roster-remove-button){
+  width:44px;min-width:44px;max-width:44px;
+  height:44px;min-height:44px;max-height:44px;flex-basis:44px
+ }
+ #table-root #jogadores .roster-player{
+  grid-template-columns:40px minmax(0,.96fr) minmax(0,1.16fr) 94px
+ }
+ #table-root #jogadores .roster-player-actions{width:94px;gap:6px}
+ @container campaign-roster (max-width:465px){
+  #table-root #jogadores .roster-player{
+   grid-template-columns:40px minmax(0,1fr) 94px;
+   grid-template-rows:18px 44px 18px 44px
+  }
+  #table-root #jogadores .roster-player-identity>.roster-player-display{grid-column:2 / -1;grid-row:1 / 3}
+  #table-root #jogadores .roster-player-character{grid-column:1 / 3;grid-row:3 / 5}
+  #table-root #jogadores .roster-player-actions{grid-column:3;grid-row:4}
+ }
+}
+
+/* A capa da próxima sessão é decorativa e não interfere nas ações. */
+#table-root #proxima-sessao.campaign-next-highlight{
+ position:relative;isolation:isolate;overflow:hidden;
+ background-color:#101923
+}
+#table-root #proxima-sessao .campaign-next-backdrop{
+ position:absolute;inset:0;z-index:0;display:block;
+ width:100%;height:100%;min-height:100%;
+ object-fit:cover;object-position:center 43%;
+ opacity:.82;filter:saturate(.92) contrast(1.05);
+ pointer-events:none
+}
+#table-root #proxima-sessao[data-has-session-cover="true"]::before{
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:linear-gradient(100deg,rgba(8,15,24,.96) 0%,rgba(8,15,24,.84) 44%,rgba(8,15,24,.38) 100%)
+}
+#table-root #proxima-sessao .campaign-next-content,
+#table-root #proxima-sessao .campaign-next-action{
+ position:relative;z-index:2
+}
+#table-root #proxima-sessao[data-has-session-cover="true"] :is(.campaign-next-name,#proxima-sessao-titulo){
+ color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.28)
+}
+@media(max-width:710px){
+ #table-root #proxima-sessao[data-has-session-cover="true"]::before{
+  background:linear-gradient(105deg,rgba(8,15,24,.95),rgba(8,15,24,.68))
+ }
+}
