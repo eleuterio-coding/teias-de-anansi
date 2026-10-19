@@ -29,17 +29,17 @@ test('arrastar pelo bullet inteiro reordena Atos e Locais e conserva os dados',a
  await atos.nth(2).dragTo(atos.nth(0),{
   sourcePosition:{x:18,y:28},targetPosition:{x:18,y:3}
  });
- await expect(page.locator('#missoes [data-edit-line]')).toHaveValues(['Ato 3','Ato 1','Ato 2']);
+ await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 3','Ato 1','Ato 2']);
  await locais.nth(0).dragTo(locais.nth(2),{
   sourcePosition:{x:18,y:28},targetPosition:{x:18,y:62}
  });
- await expect(page.locator('#locais [data-edit-line]')).toHaveValues(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
+ await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
  const saved=await read(page);
  expect(saved.activeMissions).toBe('Ato 3\nAto 1\nAto 2');
  expect(saved.importantLocations).toBe('Portão de Baldur\nCidade Sem Sol\nFenda do Carvalho');
  await page.reload();
- await expect(page.locator('#missoes [data-edit-line]')).toHaveValues(['Ato 3','Ato 1','Ato 2']);
- await expect(page.locator('#locais [data-edit-line]')).toHaveValues(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
+ await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 3','Ato 1','Ato 2']);
+ await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
  await page.locator('#missoes [data-edit-line]').first().fill('Ato Final');
  await page.locator('#missoes [data-edit-line]').first().press('Tab');
  expect((await read(page)).activeMissions.split('\n')[0]).toBe('Ato Final');
@@ -71,7 +71,7 @@ test('no celular o arraste por toque longo reordena o bullet inteiro',async({pag
  test.skip(test.info().project.name!=='mobile-chromium','Validação específica de toque');
  await page.goto('/mesa.html?id=full-drag-campaign');
  const rows=page.locator('#missoes .campaign-bullet-entry');
- await rows.first().scrollIntoViewIfNeeded();
+ await rows.nth(2).scrollIntoViewIfNeeded();
  const start=await rows.nth(0).boundingBox(),end=await rows.nth(2).boundingBox();
  expect(start&&end).toBeTruthy();
  const client=await page.context().newCDPSession(page);
@@ -81,6 +81,6 @@ test('no celular o arraste por toque longo reordena o bullet inteiro',async({pag
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:(from+to)/2}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:to}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
- await expect(page.locator('#missoes [data-edit-line]')).toHaveValues(['Ato 2','Ato 3','Ato 1']);
+ await expect.poll(()=>page.locator('#missoes [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Ato 2','Ato 3','Ato 1']);
  expect((await read(page)).activeMissions).toBe('Ato 2\nAto 3\nAto 1');
 });
