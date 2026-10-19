@@ -151,3 +151,46 @@ test('fluxograma móvel não transborda e subeventos ficam abaixo do pai',async(
  expect(bounds.childrenTop).toBeGreaterThan(bounds.parentBottom);
  expect(bounds.scroll).toBeLessThanOrEqual(bounds.visible+2);
 });
+
+test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo após mover e adicionar',async({page})=>{
+ await page.goto('/mesa.html?id=timeline-flow-cmp');
+ const area=page.locator('#linha-tempo');
+ // A lista é a fonte da ordem; inserir eventos não cria ordem independente.
+ for(const title of ['Conselho da cidade','Último encontro']){
+  await area.locator('[data-new-timeline]').fill(title);
+  await area.locator('[data-timeline-add-root]').click();
+ }
+ const listNumbers=area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .campaign-flow-node');
+ await expect(listNumbers).toHaveText(['1','2','3','4']);
+ // Alterar a ordem dos eventos principais renumera os dois modelos.
+ await area.locator('[data-timeline-move="up"][data-timeline-target="root-2"]').first().click();
+ const reorderedTitles=await area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .timeline-node-text').evaluateAll(inputs=>inputs.map(el=>el.value));
+ expect(reorderedTitles).toEqual(['Partida do grupo','Chegada à cidade','Conselho da cidade','Último encontro']);
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ const roots=area.locator('.hub-diagram-roots > .hub-diagram-root');
+ await expect(roots).toHaveCount(4);
+ const order=await roots.evaluateAll(elements=>elements.map(el=>{
+  const node=el.querySelector(':scope > .hub-diagram-node-group > .hub-diagram-node');
+  const badge=node.querySelector('.hub-diagram-order');
+  const rect=el.getBoundingClientRect();
+  return {id:el.dataset.diagramRoot,order:el.dataset.diagramOrder,number:badge?.textContent,
+   kind:node.querySelector('.hub-diagram-kind')?.textContent,title:node.querySelector('strong')?.textContent,
+   top:rect.top,left:rect.left};
+ }));
+ expect(order.map(item=>item.order)).toEqual(['1','2','3','4']);
+ expect(order.map(item=>item.number)).toEqual(['1','2','3','4']);
+ expect(order.map(item=>item.kind)).toEqual(['Evento','Evento','Evento','Evento']);
+ expect(order.map(item=>item.title)).toEqual(reorderedTitles);
+ // Em grades multicoluna, ordem de leitura: esquerda > direita; depois próxima linha.
+ for(let index=1;index<order.length;index++){
+  const prev=order[index-1],curr=order[index];
+  expect(curr.top>prev.top+2 || (Math.abs(curr.top-prev.top)<=2&&curr.left>prev.left)).toBe(true);
+ }
+ // Subeventos não recebem numeração de eventos principais.
+ await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-order')).toHaveCount(0);
+ await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-kind')).toHaveText('Subevento');
+ await area.locator('[data-timeline-view="list"]').click();
+ await expect(area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .campaign-flow-node')).toHaveText(['1','2','3','4']);
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0].timelineNodes.map(x=>x.id));
+ expect(stored.slice(0,2)).toEqual(['root-2','root-1']);
+});
