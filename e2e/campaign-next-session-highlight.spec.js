@@ -148,7 +148,7 @@ test('Abrir sessão ganha CTA visual, preservando o destino e acessibilidade',as
  const button=page.locator('#proxima-sessao .campaign-next-action');
  await expect(button).toBeVisible();
  await expect(button).toHaveAttribute('href','sessoes.html?campaign=e2e-campaign-next&id=s-current');
- await expect(button.locator('.campaign-next-action-kicker')).toHaveText('ACESSAR');
+ await expect(button.locator('.campaign-next-action-kicker')).toHaveCount(0);
  await expect(button.locator('.campaign-next-action-copy strong')).toHaveText('Abrir sessão');
  await expect(button.locator('.campaign-next-action-icon svg')).toHaveCount(1);
 });
