@@ -6,9 +6,10 @@ const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,
 const DM_NAME='Rafael',SYSTEM_NAME='D&D 5.5e';
 let campaigns=[],readOnly=false,visibleAdventures=[];
 function persist(list){campaigns=writeCampaigns(list);render()}
-function statusLabel(status){return({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída'}[status]||status)}
+function statusLabel(status){return({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[status]||status)}
 
-const CAMPAIGN_STATUSES=['planned','current','active','paused','finished'];
+const CAMPAIGN_STATUSES=['active','paused','finished','cancelled','planned'];
+const statusPriority=status=>{const rank=CAMPAIGN_STATUSES.indexOf(status);return rank<0?CAMPAIGN_STATUSES.length:rank};
 const amount=(count,singular,plural)=>`${count} ${count===1?singular:plural}`;
 function card(c){
  const sessions=Array.isArray(c.sessions)?c.sessions:[];
@@ -47,10 +48,16 @@ function createTile(){
 }
 function render(){
  const box=$('campaign-list');if(!box)return;
- const ordered=[...campaigns].sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+ const choice=$('campaign-status-filter')?.value||'all';
+ const ordered=[...campaigns]
+  .filter(c=>choice==='all'||c.status===choice)
+  .sort((a,b)=>statusPriority(a.status)-statusPriority(b.status)||String(b.updatedAt||'').localeCompare(String(a.updatedAt||''))||String(a.name||'').localeCompare(String(b.name||''),'pt-BR'));
  box.innerHTML=ordered.length||!readOnly
   ? `<div class="list campaign-list-grid">${ordered.map(card).join('')}${readOnly?'':createTile()}</div>`
   : '<div class="empty">Nenhuma campanha atribuída.</div>';
+ if(!ordered.length&&choice!=='all'){
+  box.insertAdjacentHTML('afterbegin','<div class="empty campaign-filter-empty">Nenhuma campanha com esse status.</div>');
+ }
  if(readOnly){hydrateMediaImages(box).catch(()=>{});return}
  box.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
   if(!disclosure.open)return;
@@ -96,6 +103,7 @@ function loadVisibleCampaigns(){
 function refreshFromRemote(event){event.detail?.claim?.();loadVisibleCampaigns();render()}
 function init(){
  loadVisibleCampaigns();
+ $('campaign-status-filter')?.addEventListener('change',render);
  render();
  document.addEventListener('pointerdown',event=>{
   if(event.target.closest?.('[data-status-disclosure]'))return;
