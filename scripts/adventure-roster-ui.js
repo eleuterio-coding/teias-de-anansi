@@ -1,3 +1,4 @@
+import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const lower=value=>String(value||'').trim().toLowerCase();
 const sortText=(a,b)=>String(a).localeCompare(String(b),'pt-BR',{sensitivity:'base'});
@@ -20,7 +21,7 @@ export function adventureAssignments(adventure,campaign){
 export function adventureRosterHtml(adventure,campaign,characters=[]){
  const members=adventureMembers(campaign),byUsername=new Map(members.map(m=>[lower(m.username||m.name),m])),rows=adventureAssignments(adventure,campaign);
  const charMap=new Map(characters.map(c=>[c.id,c]));
- const label=id=>{const c=charMap.get(id);if(!c)return id;const cls=c.refSnapshots?.class?.name,level=c.choices?.class?.level;return(c.name||'Personagem sem nome')+(cls?' · '+cls+(level?' '+level:''):'')};
+ const label=id=>{const c=charMap.get(id);return c?characterIdentity(c):id};
  const characterOptions=(selected='',username='')=>{
   const used=new Set(rows.filter(row=>row.username!==username).map(row=>row.characterId).filter(Boolean));
   const eligible=[...new Set(members.map(member=>member.characterId).filter(Boolean))].filter(id=>!used.has(id)).sort((a,b)=>sortText(label(a),label(b)));
@@ -79,7 +80,7 @@ export function bindAdventureRoster({getAdventure,getCampaign,characters=[],save
   const selected=adventureMembers(getCampaign()).find(m=>lower(m.username||m.name)===user.value),memberIds=new Set(rows().map(row=>row.characterId).filter(Boolean)),all=adventureMembers(getCampaign()).map(m=>m.characterId).filter(id=>id&&!memberIds.has(id));
   const characterMap=new Map(characters.map(c=>[c.id,c]));
   character.innerHTML='<option value="">— Sem personagem —</option>'+[...new Set(all)].map(id=>{
-   const c=characterMap.get(id),label=c?(c.name||id)+(c.refSnapshots?.class?.name?' · '+c.refSnapshots.class.name+(c.choices?.class?.level?' '+c.choices.class.level:''):''):id;
+   const c=characterMap.get(id),label=c?characterIdentity(c):id;
    return`<option value="${esc(id)}" ${id===selected?.characterId?'selected':''}>${esc(label)}</option>`;
   }).join('');
  });
