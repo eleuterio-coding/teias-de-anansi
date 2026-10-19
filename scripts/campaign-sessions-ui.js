@@ -209,7 +209,7 @@ function sessionCard(s,restricted=false){
  ${restricted?cover:''}<div class="session-head"><div>
   <h3>${esc(s.title)}</h3>
   <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
- </div><div class="row-actions">${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
+ </div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger" data-remove-session>Excluir</button>`}</div></div>
  ${restricted?`
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
   ${s.summary?`<p>${esc(s.summary)}</p>`:''}
