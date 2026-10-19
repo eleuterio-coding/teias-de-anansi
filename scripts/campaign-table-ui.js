@@ -289,7 +289,7 @@ function bindRosterOrdering(list){
   const grip=event.target.closest?.('.roster-grip');
   if(!grip&&!event.target.matches?.('[data-member-row]'))return;
   event.preventDefault();
-  neighborMove(rowFor(event.target),event.key==='ArrowUp'?'up':'down','')
+  neighborMove(rowFor(event.target),event.key==='ArrowUp'?'up':'down','grip')
  });
  const clearMouse=()=>{
   if(!mouse)return;
