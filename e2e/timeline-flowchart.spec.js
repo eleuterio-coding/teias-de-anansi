@@ -194,3 +194,46 @@ test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo ap
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0].timelineNodes.map(x=>x.id));
  expect(stored.slice(0,2)).toEqual(['root-2','root-1']);
 });
+
+
+test('fluxograma abre e recolhe subitens clicando em qualquer área do cartão',async({page})=>{
+ await page.goto('/mesa.html?id=timeline-flow-cmp');
+ const area=page.locator('#linha-tempo');
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ const card=area.locator('.hub-diagram-node[data-diagram-event="root-1"]');
+ const toggle=card.locator('[data-timeline-toggle="root-1"]');
+ const children=area.locator('#timeline-diagram-children-root-1');
+ await expect(children).toBeHidden();
+ await card.locator('strong').click();
+ await expect(toggle).toHaveAttribute('aria-expanded','true');
+ await expect(children).toBeVisible();
+ await card.locator('.hub-diagram-event-heading').click();
+ await expect(toggle).toHaveAttribute('aria-expanded','false');
+ await expect(children).toBeHidden();
+ await card.click({position:{x:18,y:18}});
+ await expect(children).toBeVisible();
+ await toggle.click();
+ await expect(children).toBeHidden();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
+ expect(stored.timelineNodes[0].children).toHaveLength(2);
+});
+
+test('cartões do fluxograma são acessíveis por teclado; Editar mantém ação própria',async({page})=>{
+ await page.goto('/mesa.html?id=timeline-flow-cmp');
+ const area=page.locator('#linha-tempo');
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ const card=area.locator('.hub-diagram-node[data-diagram-event="root-1"]');
+ const children=area.locator('#timeline-diagram-children-root-1');
+ await card.focus();
+ await expect(card).toBeFocused();
+ await card.press('Enter');
+ await expect(children).toBeVisible();
+ await card.press('Space');
+ await expect(children).toBeHidden();
+ await card.locator('[data-diagram-edit="root-1"]').click();
+ await expect(area.locator('[data-timeline-view="list"]')).toHaveAttribute('aria-pressed','true');
+ await expect(area.locator('[data-timeline-text="root-1"]')).toBeFocused();
+ await area.locator('[data-timeline-view="flowchart"]').click();
+ const leaf=area.locator('.hub-diagram-node[data-diagram-event="root-2"]');
+ await expect(leaf).not.toHaveAttribute('data-diagram-toggle',/./);
+});
