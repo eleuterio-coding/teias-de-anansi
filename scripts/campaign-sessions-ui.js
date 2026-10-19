@@ -7,7 +7,7 @@ import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-mas
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
-let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false;
+let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false,showCreationPanel=params.get('new')==='1';
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
@@ -183,9 +183,25 @@ function encounterSummary(session){
  const rows=session.encounters||[];
  return `<section class="session-subsection"><h4>Encontros</h4><div class="story-list">${rows.length?rows.map(e=>`<div class="campaign-reference-row"><div><strong>${esc(e.title)}</strong><div><span class="badge">${esc(e.status||'planned')}</span></div></div></div>`).join(''):'<div class="story-empty">Nenhum encontro registrado.</div>'}</div></section>`
 }
-function sessionListCard(s){
- const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length,cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover session-cover-thumb',alt:''});
- return `<article class="session-card ${s.status==='active'?'active':''}">${cover}<div class="session-head"><div><h3>${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="hub-parent-link"><span>Campanha</span><strong>${esc(s.campaignName||campaignById(s.campaignId)?.name||"Sem campanha")}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||"Sem aventura")}</strong></span></div><p class="mini">${scenes} cena(s) · ${encounters} encontro(s)</p></div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Mesa</a>`:''}<a class="btn" href="${detailHref(s)}">Abrir sessão</a></div></div></article>`
+function sessionListCard(s,restricted=false){
+ const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
+ const cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'hub-collection-cover-image',alt:''});
+ const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
+ const description=s.summary||s.objective||'Sem descrição.';
+ const status=['planned','next','current','active','completed','cancelled'].includes(s.status)?s.status:'planned';
+ const href=detailHref(s);
+ return `<article class="hub-collection-card session-list-card" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
+ <a class="hub-collection-stretched" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
+ <div class="hub-collection-image">${cover||'<span class="hub-collection-image-placeholder" aria-hidden="true">✦</span>'}</div>
+ <span class="hub-collection-status status-${esc(status)}">${esc(statusLabel(status))}</span>
+ <div class="hub-collection-body">
+  <h3>${esc(s.title)}</h3>
+  <p class="hub-collection-description">${esc(description)}</p>
+  <div class="hub-collection-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(campaignName)}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||'Sem aventura')}</strong></span></div>
+  <div class="hub-collection-metrics">${s.date?`${esc(s.date)} · `:''}${scenes} cena(s) · ${encounters} encontro(s)</div>
+ </div>
+ <div class="hub-collection-actions"><a class="btn" href="${href}">Abrir</a>${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}">Excluir</button>`}</div>
+ </article>`
 }
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
@@ -225,23 +241,34 @@ function sessionCard(s,restricted=false){
 function render(){
  const restricted=playerMode();
  if(!restricted)reload();
- const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows),box=$('sessions-list'),createCard=$('session-create-card'),metrics=$('session-metrics');
+ const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
+ const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
  if(!restricted)syncCreationOptions();
  if(sessionId){
   if(createCard)createCard.hidden=true;
-  if(metrics)metrics.hidden=true;
+  if(listSection)listSection.hidden=true;
   const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
   if(!box)return;
-  box.innerHTML=selected?`<div class="row-actions" style="margin:14px 0"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>${sessionCard(selected,restricted)}`:`<div class="status warning">Sessão não encontrada.</div><div class="row-actions"><a class="btn secondary" href="${listHref()}">← Todas as sessões</a></div>`;
+  box.innerHTML=selected?`<div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>${sessionCard(selected,restricted)}`:`<div class="status warning">Sessão não encontrada.</div><div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>`;
   if(!restricted&&selected)bindSessionCards();hydrateMediaImages(box).catch(()=>{});
   return
  }
- if(createCard)createCard.hidden=restricted;
- if(metrics)metrics.hidden=false;
- const stats={planned:sessions.filter(s=>s.status==='planned').length,active:sessions.filter(s=>s.status==='active').length,completed:sessions.filter(s=>s.status==='completed').length};
- if(metrics)metrics.innerHTML=`<div class="metric"><span>Sessões</span><strong>${sessions.length}</strong></div><div class="metric"><span>Em andamento</span><strong>${stats.active}</strong></div><div class="metric"><span>Planejadas</span><strong>${stats.planned}</strong></div><div class="metric"><span>Concluídas</span><strong>${stats.completed}</strong></div>`;
+ if(listSection)listSection.hidden=false;
+ if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=sessions.length?sessions.map(sessionListCard).join(''):`<div class="empty">${restricted?'Nenhuma sessão foi atribuída à sua ficha.':'Nenhuma sessão registrada.'}</div>`;hydrateMediaImages(box).catch(()=>{})
+ box.innerHTML=`${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':`<button type="button" id="open-session-create" class="hub-collection-card hub-collection-create" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="hub-collection-plus" aria-hidden="true">+</span><span class="hub-collection-create-label">Nova sessão</span></button>`}`;
+ if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
+ $('open-session-create')?.addEventListener('click',()=>{
+  showCreationPanel=true;
+  if(createCard)createCard.hidden=false;
+  $('open-session-create')?.setAttribute('aria-expanded','true');
+  $('new-session-title')?.focus()
+ });
+ box.querySelectorAll('[data-delete-session-list]').forEach(button=>button.addEventListener('click',()=>{
+  const ref=sessionRef(button.dataset.deleteSessionList,button.dataset.sessionSource);
+  if(ref&&confirm('Excluir esta sessão?'))removeSession(ref)
+ }));
+ hydrateMediaImages(box).catch(()=>{})
 }
 async function createSession(){
  if(playerMode())return;
@@ -376,6 +403,7 @@ function bindSessionCards(){
 function refreshFromRemote(event){event.detail?.claim?.();render()}
 const newCoverHolder=$('new-session-cover-picker');if(newCoverHolder){newCoverHolder.innerHTML=imagePickerHtml({});bindImagePicker(newCoverHolder.querySelector('[data-image-picker]'),{onSelect:async file=>{pendingSessionCoverFile=file},onRemove:async()=>{pendingSessionCoverFile=null},onError:error=>feedback(error?.message||'Não foi possível usar a imagem.',false)})}
 $('create-session')?.addEventListener('click',createSession);
+$('cancel-session-create')?.addEventListener('click',()=>{showCreationPanel=false;$('session-create-card').hidden=true;$('open-session-create')?.setAttribute('aria-expanded','false')});
 $('new-session-campaign')?.addEventListener('change',()=>syncCreationOptions({resetAdventure:true}));
 $('new-session-adventure')?.addEventListener('change',event=>{
  const adventure=adventureById(event.target.value),campaignSelect=$('new-session-campaign');
