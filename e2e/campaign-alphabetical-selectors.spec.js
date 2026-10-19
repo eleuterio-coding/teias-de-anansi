@@ -57,9 +57,8 @@ test('Adicionar jogador ordena alfabeticamente jogadores e personagens disponív
 test('troca de personagem mantém seleção e ordenação nos jogadores existentes',async({page})=>{
  await page.goto('/mesa.html?id=camp-alphabetical');
  const existing=page.locator('[data-member-row="member-bruno"]');
- await expect(existing.locator('[data-member-user] option')).toHaveText([
-  'Álvaro','Bruno','Érica','Zuleica'
- ]);
+ await expect(existing.locator('[data-member-user]')).toHaveCount(0);
+ await expect(existing.locator('.roster-player-name')).toHaveText('Bruno');
  await expect(existing.locator('[data-member-character] option')).toHaveText([
   '— Sem personagem —','Ária','Ébano','Mago 2','Mago 10','Zorro'
  ]);
