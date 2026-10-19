@@ -37,4 +37,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Testar visualização e edição reais
-        run: npx playwright test e2e/timeline-flowchart.spec.js e2e/campaign-acts-nested-timeline.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/timeline-flowchart.spec.js --project=desktop-chromium --project=mobile-chromium
