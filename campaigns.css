@@ -799,3 +799,59 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  #table-root .campaign-editable-bullets .campaign-bullet-entry,
  #table-root .timeline-item>.campaign-flow-step .campaign-flow-card{transition:none}
 }
+
+
+/* Alça visível e controles alternativos para reorganizar Atos, Locais e eventos. */
+#table-root .campaign-reorder-grip{
+ display:inline-grid;place-items:center;flex:none;width:24px;min-height:36px;
+ font-size:1.35rem;line-height:1;color:var(--hub-accent-2,#85c8ff);
+ user-select:none;cursor:grab;touch-action:pan-y
+}
+#table-root .campaign-reorder-grip:active{cursor:grabbing}
+#table-root .campaign-editable-bullets .campaign-bullet-entry>.campaign-list-marker{flex:0 0 8px}
+#table-root .campaign-line-actions{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
+#table-root .campaign-line-actions button{min-height:34px;margin:0}
+#table-root .campaign-line-actions .campaign-move-button{min-width:34px;padding:6px 9px;font-weight:800}
+#table-root .campaign-line-actions button:disabled{opacity:.3;cursor:default}
+#table-root .campaign-bullet-entry:focus-visible{
+ outline:2px solid var(--hub-accent-2,#85c8ff);outline-offset:3px
+}
+#table-root .campaign-editable-bullets .campaign-bullet-entry:has(.campaign-reorder-grip:hover),
+#table-root .timeline-item>.campaign-flow-step:has(.campaign-reorder-grip:hover) .campaign-flow-card{
+ border-color:var(--hub-accent-2,#85c8ff)
+}
+/* Card levantado: cópia visual segue o ponteiro; original preserva espaço e controles. */
+.campaign-floating-card{
+ position:fixed!important;z-index:10080!important;box-sizing:border-box;
+ pointer-events:none!important;opacity:.96!important;
+ display:flex;align-items:center;gap:10px;
+ padding:12px 14px;border:1px solid #81c9ff!important;border-radius:11px;
+ background:var(--hub-surface,#142337)!important;color:var(--hub-text,#f2f8ff)!important;
+ box-shadow:0 24px 56px rgba(0,0,0,.5),0 0 0 4px rgba(55,154,248,.13);
+ transform-origin:center;will-change:transform;
+}
+.campaign-floating-card .campaign-reorder-grip{color:#8bccff}
+.campaign-floating-card input{
+ flex:1;min-width:0;border:0;background:transparent;color:inherit;
+ font:inherit;font-weight:650;pointer-events:none
+}
+.campaign-floating-card .campaign-flow-card{display:flex;flex:1;align-items:center;gap:8px;min-width:0}
+.campaign-floating-card .campaign-flow-actions,
+.campaign-floating-card .campaign-line-actions{display:flex;align-items:center;gap:5px;margin-left:auto}
+.campaign-floating-card .campaign-flow-actions button,
+.campaign-floating-card .campaign-line-actions button{max-height:36px;white-space:nowrap}
+.campaign-floating-card .campaign-flow-node{
+ display:grid;place-items:center;flex:none;width:32px;height:32px;border-radius:50%;
+ border:1px solid rgba(116,193,255,.6)
+}
+#table-root .campaign-bullet-entry.campaign-line-dragging,
+#table-root .timeline-item.timeline-dragging>.campaign-flow-step{opacity:.3}
+@media(max-width:650px){
+ #table-root .campaign-bullet-entry{flex-wrap:wrap}
+ #table-root .campaign-bullet-entry input[data-edit-line]{flex:1 1 calc(100% - 65px)}
+ #table-root .campaign-line-actions{width:100%;justify-content:flex-end}
+ .campaign-floating-card .campaign-line-actions{width:auto}
+}
+@media(prefers-reduced-motion:reduce){
+ .campaign-floating-card{transition:none!important;animation:none!important}
+}

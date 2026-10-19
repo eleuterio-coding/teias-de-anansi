@@ -69,7 +69,7 @@ function roster(c,npcs){
 function bullets(c,id,title,field){
  const values=entries(c[field]);
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2><span class="campaign-editor-count">${values.length}</span></div>
- <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true"><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
+ <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function nodeHtml(node,index,depth=0){
@@ -77,6 +77,7 @@ function nodeHtml(node,index,depth=0){
  return `<li class="timeline-item" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}">
   <div class="campaign-flow-step" draggable="true" data-timeline-drag="${esc(node.id)}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
    <div class="campaign-flow-card">
+    <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
     <input class="timeline-node-text" data-timeline-text="${esc(node.id)}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
     <div class="campaign-flow-actions">
       <button type="button" class="secondary timeline-add-child" data-timeline-add-child="${esc(node.id)}" aria-label="Adicionar subevento">+ Subitem</button>
@@ -180,6 +181,18 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-del-line]')){
    const field=target.dataset.delLine,values=entries(c[field]);values.splice(Number(target.dataset.index),1);
    persist({[field]:values.join('\n')},sectionFor(field),'Registro removido.')
+  }else if(target.matches('[data-line-move]')){
+   const field=target.dataset.lineField,index=Number(target.dataset.moveIndex);
+   const values=entries(c[field]),direction=target.dataset.lineMove;
+   if(!['importantLocations','activeMissions'].includes(field)||!Number.isInteger(index)||!['up','down'].includes(direction))return;
+   const adjacent=index+(direction==='up'?-1:1);
+   if(adjacent<0||adjacent>=values.length)return;
+   const reordered=reorderLineValues(c[field],index,adjacent,direction==='up'?'before':'after');
+   if(reordered===null||reordered===c[field])return;
+   const id=sectionFor(field);
+   persist({[field]:reordered},id,'Ordem atualizada.');
+   const moved=document.querySelector('#'+id+' [data-line-index="'+adjacent+'"]');
+   showReorderConfirmation(id,moved);
   }else if(target.matches('[data-timeline-add-root],[data-timeline-add-child]')){
    const parent=target.dataset.timelineAddChild||null;
    let name=parent?window.prompt('Nome do subevento:'):clean(section.querySelector('[data-new-timeline]')?.value);
@@ -222,7 +235,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   else if(event.target.matches('[data-new-timeline]'))event.target.closest('section').querySelector('[data-timeline-add-root]')?.click();
   else event.target.blur()
  });
- let dragging=null,touch=null,pen=null,mouse=null;
+ let dragging=null,touch=null,pen=null,mouse=null,floating=null;
  const interactive=target=>Boolean(target.closest('input,textarea,select,button,a,[contenteditable="true"]'));
  const findSurface=target=>target?.closest?.('[data-timeline-drag],[data-line-drag]')||null;
  const dragInfo=surface=>surface?.hasAttribute('data-timeline-drag')
@@ -230,6 +243,35 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   :surface?.hasAttribute('data-line-drag')
    ?{kind:'line',field:surface.dataset.lineDrag,index:Number(surface.dataset.lineIndex),surface}
    :null;
+ const releaseLift=()=>{
+  if(!floating)return;
+  floating.element.remove();
+  floating=null
+ };
+ const moveLift=(x,y)=>{
+  if(!floating)return;
+  floating.element.style.transform='translate3d('+(x-floating.x)+'px,'+(y-floating.y)+'px,0) rotate(-1deg) scale(1.018)'
+ };
+ const liftCard=(info,x,y)=>{
+  if(!info||floating)return;
+  const surface=info.surface,rect=surface.getBoundingClientRect();
+  const clone=surface.cloneNode(true);
+  clone.querySelectorAll('[id]').forEach(element=>element.removeAttribute('id'));
+  clone.querySelectorAll('input,textarea,select,button,a').forEach(element=>{
+   element.tabIndex=-1;element.setAttribute('aria-hidden','true')
+  });
+  clone.removeAttribute('draggable');
+  clone.removeAttribute('tabindex');
+  clone.classList.add('campaign-floating-card');
+  clone.setAttribute('aria-hidden','true');
+  clone.style.width=rect.width+'px';
+  clone.style.minHeight=rect.height+'px';
+  clone.style.left=rect.left+'px';
+  clone.style.top=rect.top+'px';
+  document.body.appendChild(clone);
+  floating={element:clone,x,y};
+  moveLift(x,y)
+ };
  const clearHighlight=()=>{
   root.querySelectorAll('.timeline-drop-target,.timeline-dragging,.campaign-line-drop-target,.campaign-line-dragging').forEach(element=>{
    element.classList.remove('timeline-drop-target','timeline-dragging','campaign-line-drop-target','campaign-line-dragging');
@@ -297,7 +339,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  const clearMouse=()=>{
   if(!mouse)return;
   const surface=mouse.surface,pointerId=mouse.pointerId;
-  mouse=null;surface.draggable=true;
+  clearTimeout(mouse.timer);mouse=null;surface.draggable=true;releaseLift();
   if(surface.hasPointerCapture?.(pointerId))surface.releasePointerCapture(pointerId);
   clearHighlight()
  };
@@ -306,6 +348,11 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   const info=dragInfo(findSurface(event.target));
   if(!info)return;
   mouse={...info,pointerId:event.pointerId,x:event.clientX,y:event.clientY,active:false};
+  mouse.timer=setTimeout(()=>{
+   if(mouse?.pointerId===event.pointerId&&!mouse.active){
+    mouse.active=true;liftCard(mouse,mouse.x,mouse.y);mark(mouse,null)
+   }
+  },160);
   info.surface.draggable=false;
   info.surface.setPointerCapture?.(event.pointerId);
   event.preventDefault()
@@ -314,6 +361,8 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(!mouse||mouse.pointerId!==event.pointerId)return;
   if(!mouse.active&&Math.hypot(event.clientX-mouse.x,event.clientY-mouse.y)<6)return;
   mouse.active=true;event.preventDefault();
+  liftCard(mouse,mouse.x,mouse.y);
+  moveLift(event.clientX,event.clientY);
   mark(mouse,targetFor(mouse,document.elementFromPoint(event.clientX,event.clientY),event.clientY))
  });
  root.addEventListener('pointerup',event=>{
@@ -348,13 +397,13 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  });
  root.addEventListener('dragend',()=>{dragging=null;clearHighlight()});
  // No toque, segurar o item brevemente ativa o arraste; deslizar normalmente continua rolando a página.
- const clearTouch=()=>{if(touch?.timer)clearTimeout(touch.timer);touch=null;clearHighlight()};
+ const clearTouch=()=>{if(touch?.timer)clearTimeout(touch.timer);touch=null;releaseLift();clearHighlight()};
  root.addEventListener('touchstart',event=>{
   if(touch||interactive(event.target))return;
   const surface=findSurface(event.target),point=event.changedTouches[0],info=dragInfo(surface);
   if(!info||!point)return;
   touch={...info,identifier:point.identifier,x:point.clientX,y:point.clientY,active:false,timer:setTimeout(()=>{
-   if(touch&&touch.identifier===point.identifier){touch.active=true;mark(touch,null)}
+   if(touch&&touch.identifier===point.identifier){touch.active=true;liftCard(touch,touch.x,touch.y);mark(touch,null)}
   },280)}
  },{passive:true});
  root.addEventListener('touchmove',event=>{
@@ -366,6 +415,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
    return
   }
   event.preventDefault();
+  moveLift(point.clientX,point.clientY);
   const target=document.elementFromPoint(point.clientX,point.clientY);
   mark(touch,targetFor(touch,target,point.clientY))
  },{passive:false});
@@ -390,12 +440,13 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(!pen||event.pointerId!==pen.pointerId)return;
   if(!pen.active&&Math.hypot(event.clientX-pen.x,event.clientY-pen.y)<7)return;
   pen.active=true;event.preventDefault();
+  liftCard(pen,pen.x,pen.y);moveLift(event.clientX,event.clientY);
   mark(pen,targetFor(pen,document.elementFromPoint(event.clientX,event.clientY),event.clientY))
  });
  root.addEventListener('pointerup',event=>{
   if(!pen||event.pointerId!==pen.pointerId)return;
   const info=pen,drop=targetFor(info,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
-  pen=null;clearHighlight();if(info.active)applyDrop(info,drop)
+  pen=null;releaseLift();clearHighlight();if(info.active)applyDrop(info,drop)
  });
- root.addEventListener('pointercancel',()=>{pen=null;clearHighlight()})
+ root.addEventListener('pointercancel',()=>{pen=null;releaseLift();clearHighlight()})
 }

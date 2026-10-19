@@ -346,6 +346,27 @@ body.hub-shell-enabled #campaign-list .campaign-card-details>.mini{
 .campaign-product-summary .metric{min-height:78px;padding:13px}
 .campaign-product-summary .metric span{text-transform:none!important;letter-spacing:0!important;font-size:.76rem!important}
 .campaign-product-summary .metric strong{display:block;margin-top:4px;font-size:1rem!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Atalhos da Campanha: Status / Sessões / Personagens / Próxima sessão. */
+.campaign-product-summary a.campaign-summary-link{
+ position:relative;display:block;min-width:0;box-sizing:border-box;
+ color:inherit!important;text-decoration:none!important;cursor:pointer;
+ transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease;
+ padding-right:29px;
+}
+.campaign-product-summary a.campaign-summary-link::after{
+ content:"↗";position:absolute;right:12px;top:12px;
+ color:var(--hub-accent-2,#87c9ff);font-size:1.05rem;line-height:1
+}
+.campaign-product-summary a.campaign-summary-link:hover{
+ border-color:var(--hub-accent-2,#87c9ff)!important;
+ background:var(--hub-surface-2,rgba(69,144,221,.12));
+ box-shadow:0 5px 18px rgba(0,0,0,.14)
+}
+.campaign-product-summary a.campaign-summary-link:focus-visible{
+ outline:3px solid var(--hub-accent-2,#87c9ff);outline-offset:3px
+}
+#table-root :is(#jogadores,#sessoes){scroll-margin-top:110px}
+
 body.hub-shell-enabled .campaign-sections{gap:14px}
 body.hub-shell-enabled .campaign-sections>.card{padding:18px}
 
