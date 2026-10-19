@@ -986,3 +986,8 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  }
  #table-root #jogadores .roster-player{grid-template-rows:18px 44px 44px}
 }
+@media (pointer:coarse){
+ @container campaign-roster (max-width:480px){
+  #table-root #jogadores .roster-player{grid-template-rows:18px 44px 68px 44px}
+ }
+}
