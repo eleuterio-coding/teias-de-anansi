@@ -808,6 +808,7 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  user-select:none;cursor:grab;touch-action:pan-y
 }
 #table-root .campaign-reorder-grip:active{cursor:grabbing}
+#table-root .campaign-editable-bullets .campaign-bullet-entry>.campaign-list-marker{flex:0 0 8px}
 #table-root .campaign-line-actions{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto}
 #table-root .campaign-line-actions button{min-height:34px;margin:0}
 #table-root .campaign-line-actions .campaign-move-button{min-width:34px;padding:6px 9px;font-weight:800}
