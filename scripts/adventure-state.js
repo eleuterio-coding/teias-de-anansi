@@ -55,7 +55,8 @@ export function reassignAdventureCampaign(list=[],campaigns=[],adventureId,targe
  if(source.campaignId===targetId)return{ok:true,list:arr(list).map(sanitizeAdventure),campaigns:all,adventure:source,previousCampaignId:source.campaignId,changed:false};
  const sourceCampaignId=source.campaignId,members=arr(destination.members).filter(m=>m.active!==false),allowedUsers=new Set(members.map(m=>text(m.username).toLowerCase())),allowedCharacters=new Set(members.map(m=>text(m.characterId)).filter(Boolean)),allowedNpcs=new Set(arr(destination.npcs).map(n=>text(n.id))),allowedLocations=new Set(arr(destination.locations).map(l=>text(l.id))),sceneIds=new Set(source.scenes.map(s=>s.id));
  // Campanhas possuem elencos e sessões próprios; o conteúdo narrativo continua sendo da Aventura.
- const moved=sanitizeAdventure({...source,campaignId:targetId,updatedAt:now(),
+ const newOrder=arr(list).filter(a=>a.campaignId===targetId).reduce((max,a)=>Math.max(max,Number(a.order)||1),0)+1;
+ const moved=sanitizeAdventure({...source,campaignId:targetId,order:newOrder,updatedAt:now(),
   participantUsernames:source.participantUsernames.filter(u=>allowedUsers.has(u)),
   characterIds:source.characterIds.filter(id=>allowedCharacters.has(id)),
   npcIds:source.npcIds.filter(id=>allowedNpcs.has(id)),
