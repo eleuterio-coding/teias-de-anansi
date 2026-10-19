@@ -15,7 +15,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(c=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'dm-cards',username:'rafael',isMaster:true,memberships:[]}));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([c]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([c]));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([{id:'pc1',name:'Personagem principal'}]));
   localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([{id:'ad1',title:'As Rainhas',campaignId:c.id,status:'active'}]));
  },campaign);
