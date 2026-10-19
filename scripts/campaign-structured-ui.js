@@ -1,3 +1,4 @@
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-flowchart1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const entries=value=>String(value||'').split(/\r?\n/).map(x=>x.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
 const clean=v=>String(v??'').trim();
@@ -84,29 +85,30 @@ function nodeHtml(node,index,depth=0){
   ${sub.length?`<ol class="timeline-children">${sub.map((child,i)=>nodeHtml(child,i,depth+1)).join('')}</ol>`:''}
  </li>`
 }
-function flow(c){
- const nodes=c.timelineNodes||[];
- return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span></div>
- <ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>
+function flow(c,view='list'){
+ const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
+ return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} eventos</span>${timelineViewToggle(mode)}</div>
+ ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  <div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>
  </section>`
 }
-export function renderStructuredSection(c,npcs,id){
+export function renderStructuredSection(c,npcs,id,view='list'){
  if(id==='npcs')return roster(c,npcs);
  if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations');
  if(id==='missoes')return bullets(c,'missoes','Atos','activeMissions');
- if(id==='linha-tempo')return flow(c);
+ if(id==='linha-tempo')return flow(c,view);
  return''
 }
 export function renderStructuredDetails(c,npcs){return ['npcs','locais','missoes'].map(id=>renderStructuredSection(c,npcs,id)).join('')}
-export function renderTimeline(c){return flow(c)}
+export function renderTimeline(c,view='list'){return flow(c,view)}
 export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
+ let timelineView='list';
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
  const root=document.querySelector('.campaign-sections');if(!root)return;
  const refresh=id=>{
   const previous=document.getElementById(id);if(!previous)return;
   const template=document.createElement('template');
-  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id);
+  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list');
   previous.replaceWith(template.content.firstElementChild)
  };
  const persist=(patch,id,message,render=true)=>{
@@ -135,7 +137,17 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(!section)return;
   const target=event.target.closest('button');if(!target)return;
   const c=getCampaign();
-  if(target.matches('[data-add-npc]')){
+  if(target.matches('[data-timeline-view]')){
+   timelineView=target.dataset.timelineView==='flowchart'?'flowchart':'list';
+   refresh('linha-tempo');
+   return
+  }else if(target.matches('[data-diagram-edit]')){
+   const selected=target.dataset.diagramEdit;
+   timelineView='list';refresh('linha-tempo');
+   const input=[...root.querySelectorAll('#linha-tempo [data-timeline-text]')].find(el=>el.dataset.timelineText===selected);
+   input?.scrollIntoView({block:'nearest'});input?.focus();
+   return
+  }else if(target.matches('[data-add-npc]')){
    const id=section.querySelector('#campaign-npc-picker')?.value;
    if(!id||!getNpcs().some(n=>n.id===id))return feedback('Selecione um NPC cadastrado.',false);
    persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])]},'npcs','NPC adicionado.')
