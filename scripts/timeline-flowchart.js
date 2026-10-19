@@ -9,14 +9,14 @@ export function timelineViewToggle(mode='list'){
  </div>`
 }
 // Eventos principais independentes; conexões limitadas à hierarquia de cada evento.
-function campaignNode(node,depth=0,collapsedIds=new Set()){
+function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null){
  const children=array(node.children),collapsed=collapsedIds.has(node.id);
  const toggle=children.length
   ?`<button type="button" class="hub-diagram-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${children.length}" aria-expanded="${!collapsed}" aria-controls="timeline-diagram-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${children.length} ${children.length===1?'subitem':'subitens'}</button>`
   :'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
  <div class="hub-diagram-node" data-diagram-event="${esc(node.id)}">
- <span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>
+ <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order" aria-label="Número do evento">${ordinal}</span>`}</div>
  <strong>${esc(node.text)}</strong>
  <div class="hub-diagram-actions">
  <button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>${toggle}
@@ -29,7 +29,7 @@ export function renderCampaignTimelineDiagram(nodes=[],collapsedIds=new Set()){
  const rows=array(nodes);
  if(!rows.length)return '<div class="hub-diagram-empty">Nenhum evento registrado.</div>';
  return `<div class="hub-diagram-scroll hub-diagram-scroll--campaign" role="region" aria-label="Fluxograma da campanha" tabindex="0">
- <div class="hub-diagram-roots">${rows.map(node=>`<div class="hub-diagram-root" data-diagram-root="${esc(node.id)}">${campaignNode(node,0,collapsedIds)}</div>`).join('')}</div>
+ <div class="hub-diagram-roots">${rows.map((node,index)=>`<div class="hub-diagram-root" data-diagram-root="${esc(node.id)}" data-diagram-order="${index+1}">${campaignNode(node,0,collapsedIds,index+1)}</div>`).join('')}</div>
  </div>`
 }
 export function renderAdventureTimelineDiagram(events=[]){
