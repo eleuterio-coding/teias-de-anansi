@@ -98,7 +98,18 @@ export function renderStructuredSection(c,npcs,id){
  if(id==='linha-tempo')return flow(c);
  return''
 }
-export function renderStructuredDetails(c,npcs){return ['npcs','locais','missoes'].map(id=>renderStructuredSection(c,npcs,id)).join('')}
+export function renderStructuredDetails(c,npcs){
+ // Pilhas independentes: a altura de Locais não desloca Atos para baixo.
+ return `<div class="campaign-structured-columns">
+  <div class="campaign-structured-column">
+   ${renderStructuredSection(c,npcs,'npcs')}
+   ${renderStructuredSection(c,npcs,'missoes')}
+  </div>
+  <div class="campaign-structured-column">
+   ${renderStructuredSection(c,npcs,'locais')}
+  </div>
+ </div>`
+}
 export function renderTimeline(c){return flow(c)}
 export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
