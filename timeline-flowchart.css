@@ -140,3 +140,21 @@
  background:#173d5e;color:#d1ebff;
  font-size:.83rem;font-weight:850;line-height:1;font-variant-numeric:tabular-nums
 }
+
+
+/* Fluxograma: cartões com subitens têm toda a superfície clicável. */
+.hub-diagram-roots .hub-diagram-node[data-diagram-toggle]{
+ cursor:pointer;transition:border-color .16s ease,background-color .16s ease
+}
+.hub-diagram-roots .hub-diagram-node[data-diagram-toggle]:hover{
+ border-color:#78bae8;background:#25415a
+}
+.hub-diagram-roots .hub-diagram-node[data-diagram-toggle]:focus-visible{
+ outline:3px solid #8ccfff;outline-offset:3px
+}
+/* Propriedade hidden precisa prevalecer sobre o display:grid dos subitens,
+   inclusive no layout móvel. */
+.hub-diagram-roots .hub-diagram-children[hidden]{display:none}
+@media(prefers-reduced-motion:reduce){
+ .hub-diagram-roots .hub-diagram-node[data-diagram-toggle]{transition:none}
+}
