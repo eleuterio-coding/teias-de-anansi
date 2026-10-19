@@ -30,7 +30,7 @@ test.beforeEach(async({page})=>{
  },{session,campaign,characters});
 });
 
-test('Campanha renomeada e imagens quadradas aparecem entre alça e nome',async({page})=>{
+test('Imagem quadrada fica entre os seis pontos e o ponto azul em Locais importantes',async({page})=>{
  await page.goto('/mesa.html?id=e2e-campaign-roster-images');
  await expect(page.locator('#jogadores h2')).toHaveText('Jogadores da Campanha');
  const locations=page.locator('#locais .campaign-bullet-entry');
@@ -41,11 +41,13 @@ test('Campanha renomeada e imagens quadradas aparecem entre alça e nome',async(
   const layout=await row.evaluate(element=>{
    const grip=element.querySelector('.campaign-reorder-grip').getBoundingClientRect();
    const image=element.querySelector('.campaign-location-thumb').getBoundingClientRect();
+   const dot=element.querySelector('.campaign-list-marker').getBoundingClientRect();
    const name=element.querySelector('input[data-edit-line]').getBoundingClientRect();
-   return{gripRight:grip.right,imageLeft:image.left,imageRight:image.right,nameLeft:name.left,width:image.width,height:image.height};
+   return{gripRight:grip.right,imageLeft:image.left,imageRight:image.right,dotLeft:dot.left,dotRight:dot.right,nameLeft:name.left,width:image.width,height:image.height};
   });
   expect(layout.imageLeft).toBeGreaterThan(layout.gripRight);
-  expect(layout.nameLeft).toBeGreaterThan(layout.imageRight);
+  expect(layout.dotLeft).toBeGreaterThan(layout.imageRight);
+  expect(layout.nameLeft).toBeGreaterThan(layout.dotRight);
   expect(Math.abs(layout.width-layout.height)).toBeLessThanOrEqual(2);
  }
 });
