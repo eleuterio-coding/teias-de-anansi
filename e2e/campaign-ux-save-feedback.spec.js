@@ -261,7 +261,7 @@ test('borda da capa é suave e ações do editor continuam operacionais',async({
  const preview=page.locator('#campanha .image-picker-preview');
  await expect(preview).toBeVisible();
  const border=await preview.evaluate(el=>getComputedStyle(el).borderColor);
- expect(border).toMatch(/rgba\(178, 200, 222, 0\.14\)/);
+ expect(border).toMatch(/rgba\(255, 255, 255, 0\.17\)/);
  const section=page.locator('#campanha');
  await expect(section.locator('[data-campaign-field="name"]')).toBeVisible();
  await expect(section.locator('[data-image-input]')).toHaveCount(1);
