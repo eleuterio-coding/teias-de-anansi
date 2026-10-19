@@ -197,93 +197,186 @@ function bindMembers(){
 }
 /** Ordenação acessível por arrastar (mouse/toque/caneta) ou setas do teclado.
  * Persistência por IDs no mesmo array de membros, sem recriar a seção inteira. */
+/** Igual a Locais importantes: o card inteiro é a superfície de arraste,
+ * com cópia elevada, marcador de soltura, setas e feedback de confirmação. */
 function bindRosterOrdering(list){
  if(list.dataset.rosterOrderBound==='true')return;
  list.dataset.rosterOrderBound='true';
- let sourceId='',targetId='',dropPosition='before',pointer=null;
- const findRow=element=>element?.closest?.('#member-list [data-member-row]')||null;
- const clear=()=>{
-  list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>
-   row.classList.remove('roster-order-moving','roster-order-before','roster-order-after'));
-  sourceId='';targetId='';pointer=null;
+ let dragging=null,mouse=null,touch=null,floating=null;
+ const rowFor=target=>target?.closest?.('#member-list [data-member-row]')||null;
+ const interactive=target=>Boolean(target?.closest?.('input,textarea,select,a,button:not(.roster-grip),[contenteditable="true"]'));
+ const lift=(row,x,y)=>{
+  if(floating)return;
+  const rect=row.getBoundingClientRect(),clone=row.cloneNode(true);
+  clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+  clone.querySelectorAll('input,select,button,a').forEach(el=>{el.tabIndex=-1;el.setAttribute('aria-hidden','true')});
+  clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
+  clone.classList.add('campaign-floating-card','roster-floating-card');
+  clone.setAttribute('aria-hidden','true');
+  clone.style.left=rect.left+'px';clone.style.top=rect.top+'px';
+  clone.style.width=rect.width+'px';clone.style.height=rect.height+'px';
+  document.body.appendChild(clone);
+  floating={element:clone,x,y};
  };
- const hover=(target,y)=>{
-  list.querySelectorAll('.roster-order-before,.roster-order-after').forEach(row=>row.classList.remove('roster-order-before','roster-order-after'));
-  const row=findRow(target);
-  if(!row||row.dataset.memberRow===sourceId){targetId='';return}
-  const box=row.getBoundingClientRect();
-  targetId=row.dataset.memberRow;
-  dropPosition=y<box.top+box.height/2?'before':'after';
-  row.classList.add(dropPosition==='before'?'roster-order-before':'roster-order-after');
+ const moveLift=(x,y)=>{
+  if(floating)floating.element.style.transform='translate3d('+(x-floating.x)+'px,'+(y-floating.y)+'px,0) rotate(-1deg) scale(1.018)';
  };
- const reorder=(id,target,position,{focus=false}={})=>{
-  if(!id||!target||id===target)return false;
-  const currentIds=campaign.members.map(member=>member.id);
-  const result=reorderCampaignMember(campaigns,campaignId,id,target,position);
-  if(!result.ok){feedback(result.reason,false);return false}
-  if(!result.changed)return false;
-  const newIds=result.campaign.members.map(member=>member.id);
-  if(currentIds.join('|')===newIds.join('|'))return false;
-  commitRoster(result.list,'Ordem dos jogadores salva.',{rebuildRows:true});
-  if(focus)list.querySelectorAll('[data-member-row]').forEach(row=>{
-   if(row.dataset.memberRow===id)row.querySelector('.roster-grip')?.focus()
+ const clearVisual=()=>{
+  list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>{
+   row.classList.remove('roster-order-moving','roster-order-before','roster-order-after');
+   delete row.dataset.dropPosition;
   });
-  return true;
+  floating?.element.remove();floating=null;
  };
+ const dropAt=(source,target,y)=>{
+  const row=rowFor(target);
+  if(!row||row.dataset.memberRow===source)return null;
+  const box=row.getBoundingClientRect();
+  return {target:row.dataset.memberRow,row,position:y<box.top+box.height/2?'before':'after'};
+ };
+ const mark=(source,drop)=>{
+  clearVisual();
+  const row=[...list.querySelectorAll('[data-member-row]')].find(item=>item.dataset.memberRow===source);
+  if(row)row.classList.add('roster-order-moving');
+  if(drop){
+   drop.row.classList.add(drop.position==='before'?'roster-order-before':'roster-order-after');
+   drop.row.dataset.dropPosition=drop.position;
+  }
+ };
+ const confirm=(id)=>{
+  const row=[...list.querySelectorAll('[data-member-row]')].find(item=>item.dataset.memberRow===id);
+  row?.classList.add('campaign-reorder-confirmed');
+  const heading=document.querySelector('#jogadores .roster-heading');
+  if(!heading)return;
+  heading.querySelector('[data-reorder-confirmation]')?.remove();
+  const tag=document.createElement('span');
+  tag.className='campaign-reorder-feedback';tag.dataset.reorderConfirmation='';
+  tag.setAttribute('role','status');tag.textContent='✓ Ordem atualizada';
+  heading.appendChild(tag);
+  setTimeout(()=>{row?.classList.remove('campaign-reorder-confirmed');tag.remove()},2200);
+ };
+ const reorder=(source,target,position,focusName='')=>{
+  if(!source||!target||source===target)return false;
+  const before=campaign.members.map(m=>m.id).join('|');
+  const result=reorderCampaignMember(campaigns,campaignId,source,target,position);
+  if(!result.ok){feedback(result.reason,false);return false}
+  if(!result.changed||before===result.campaign.members.map(m=>m.id).join('|'))return false;
+  commitRoster(result.list,'Ordem dos jogadores salva.',{rebuildRows:true});
+  confirm(source);
+  if(focusName){
+   const moved=[...list.querySelectorAll('[data-member-row]')].find(row=>row.dataset.memberRow===source);
+   (moved?.querySelector('[data-roster-move="'+focusName+'"]')||moved?.querySelector('.roster-grip'))?.focus();
+  }
+  return true
+ };
+ const neighborMove=(row,dir,focusName)=>{
+  const other=dir==='up'?row?.previousElementSibling:row?.nextElementSibling;
+  if(row?.dataset.memberRow&&other?.dataset.memberRow)
+   reorder(row.dataset.memberRow,other.dataset.memberRow,dir==='up'?'before':'after',focusName)
+ };
+ list.addEventListener('click',event=>{
+  const btn=event.target.closest?.('[data-roster-move]');
+  if(btn){event.preventDefault();neighborMove(rowFor(btn),btn.dataset.rosterMove,btn.dataset.rosterMove)}
+ });
  list.addEventListener('keydown',event=>{
+  if(!['ArrowUp','ArrowDown'].includes(event.key))return;
   const grip=event.target.closest?.('.roster-grip');
-  if(!grip||!['ArrowUp','ArrowDown'].includes(event.key))return;
+  if(!grip&&!event.target.matches?.('[data-member-row]'))return;
   event.preventDefault();
-  const row=findRow(grip),neighbor=event.key==='ArrowUp'?row?.previousElementSibling:row?.nextElementSibling;
-  if(neighbor?.dataset.memberRow)reorder(row.dataset.memberRow,neighbor.dataset.memberRow,event.key==='ArrowUp'?'before':'after',{focus:true});
+  neighborMove(rowFor(event.target),event.key==='ArrowUp'?'up':'down','')
  });
- list.addEventListener('dragstart',event=>{
-  if(!event.target.closest?.('.roster-grip'))return event.preventDefault();
-  const row=findRow(event.target);
-  if(!row)return;
-  sourceId=row.dataset.memberRow;
-  row.classList.add('roster-order-moving');
-  event.dataTransfer?.setData('text/plain',sourceId);
-  if(event.dataTransfer)event.dataTransfer.effectAllowed='move'
- });
- list.addEventListener('dragover',event=>{
-  if(!sourceId)return;
-  event.preventDefault();
-  if(event.dataTransfer)event.dataTransfer.dropEffect='move';
-  hover(event.target,event.clientY)
- });
- list.addEventListener('drop',event=>{
-  if(!sourceId)return;
-  event.preventDefault();
-  const id=sourceId,target=targetId,position=dropPosition;
-  clear();reorder(id,target,position)
- });
- list.addEventListener('dragend',clear);
+ const clearMouse=()=>{
+  if(!mouse)return;
+  const {row,pointerId,timer}=mouse;
+  clearTimeout(timer);mouse=null;
+  row.draggable=true;
+  if(row.hasPointerCapture?.(pointerId))row.releasePointerCapture(pointerId);
+  clearVisual()
+ };
  list.addEventListener('pointerdown',event=>{
-  if(event.button!==0)return;
-  const grip=event.target.closest?.('.roster-grip'),row=findRow(grip);
-  if(!grip||!row)return;
-  sourceId=row.dataset.memberRow;pointer={id:event.pointerId,startX:event.clientX,startY:event.clientY,active:false};
-  grip.setPointerCapture?.(event.pointerId);
+  if(event.pointerType!=='mouse'||event.button!==0||interactive(event.target))return;
+  const row=rowFor(event.target);
+  if(!row)return;
+  const info={row,source:row.dataset.memberRow,pointerId:event.pointerId,x:event.clientX,y:event.clientY,active:false};
+  info.timer=setTimeout(()=>{
+   if(mouse===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
+  },160);
+  mouse=info;row.draggable=false;
+  row.setPointerCapture?.(event.pointerId);
   event.preventDefault()
  });
  list.addEventListener('pointermove',event=>{
-  if(!pointer||pointer.id!==event.pointerId)return;
-  if(!pointer.active&&Math.hypot(event.clientX-pointer.startX,event.clientY-pointer.startY)<7)return;
-  pointer.active=true;
-  event.preventDefault();
-  const row=list.querySelectorAll('[data-member-row]');
-  row.forEach(r=>r.classList.toggle('roster-order-moving',r.dataset.memberRow===sourceId));
-  hover(document.elementFromPoint(event.clientX,event.clientY),event.clientY)
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  if(!mouse.active&&Math.hypot(event.clientX-mouse.x,event.clientY-mouse.y)<6)return;
+  mouse.active=true;event.preventDefault();
+  lift(mouse.row,mouse.x,mouse.y);
+  moveLift(event.clientX,event.clientY);
+  const drop=dropAt(mouse.source,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  mark(mouse.source,drop)
  });
  list.addEventListener('pointerup',event=>{
-  if(!pointer||pointer.id!==event.pointerId)return;
-  const dragged=pointer.active,id=sourceId;
-  if(dragged)hover(document.elementFromPoint(event.clientX,event.clientY),event.clientY);
-  const target=targetId,position=dropPosition;
-  clear();if(dragged)reorder(id,target,position)
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  const {source,active}=mouse;
+  const drop=dropAt(source,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  clearMouse();if(active&&drop)reorder(source,drop.target,drop.position)
  });
- list.addEventListener('pointercancel',clear);
+ list.addEventListener('pointercancel',clearMouse);
+ list.addEventListener('dragstart',event=>{
+  const row=rowFor(event.target);
+  if(mouse){event.preventDefault();return}
+  if(!row||interactive(event.target)){event.preventDefault();return}
+  dragging={source:row.dataset.memberRow};
+  if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',dragging.source)}
+  mark(dragging.source,null)
+ });
+ list.addEventListener('dragover',event=>{
+  if(!dragging)return;
+  const drop=dropAt(dragging.source,event.target,event.clientY);
+  if(!drop)return;
+  event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect='move';
+  mark(dragging.source,drop)
+ });
+ list.addEventListener('drop',event=>{
+  if(!dragging)return;
+  event.preventDefault();
+  const source=dragging.source,drop=dropAt(source,event.target,event.clientY);
+  dragging=null;clearVisual();if(drop)reorder(source,drop.target,drop.position)
+ });
+ list.addEventListener('dragend',()=>{dragging=null;clearVisual()});
+ const clearTouch=()=>{
+  if(touch?.timer)clearTimeout(touch.timer);
+  touch=null;clearVisual()
+ };
+ list.addEventListener('touchstart',event=>{
+  if(touch||interactive(event.target))return;
+  const row=rowFor(event.target),point=event.changedTouches[0];
+  if(!row||!point)return;
+  const info={source:row.dataset.memberRow,row,identifier:point.identifier,x:point.clientX,y:point.clientY,active:false};
+  info.timer=setTimeout(()=>{
+   if(touch===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
+  },280);
+  touch=info
+ },{passive:true});
+ list.addEventListener('touchmove',event=>{
+  if(!touch)return;
+  const point=[...event.touches].find(t=>t.identifier===touch.identifier);
+  if(!point)return;
+  if(!touch.active){
+   if(Math.hypot(point.clientX-touch.x,point.clientY-touch.y)>9)clearTouch();
+   return
+  }
+  event.preventDefault();
+  moveLift(point.clientX,point.clientY);
+  mark(touch.source,dropAt(touch.source,document.elementFromPoint(point.clientX,point.clientY),point.clientY))
+ },{passive:false});
+ list.addEventListener('touchend',event=>{
+  if(!touch)return;
+  const point=[...event.changedTouches].find(t=>t.identifier===touch.identifier);
+  if(!point)return;
+  const {source,active}=touch,drop=dropAt(source,document.elementFromPoint(point.clientX,point.clientY),point.clientY);
+  clearTouch();if(active){event.preventDefault();if(drop)reorder(source,drop.target,drop.position)}
+ },{passive:false});
+ list.addEventListener('touchcancel',clearTouch);
 }
 function bindSessions(){document.querySelectorAll('[data-session-row]').forEach(row=>{const id=row.dataset.sessionRow;row.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>{const result=updateCampaignSession(campaigns,campaignId,id,{[input.dataset.sessionField]:input.value});if(result.ok)commit(result.list,{rerender:false,message:'Sessão salva.'})}));row.querySelectorAll('[data-session-participant]').forEach(input=>input.addEventListener('change',()=>{const ids=[...row.querySelectorAll('[data-session-participant]:checked')].map(el=>el.dataset.sessionParticipant),result=updateCampaignSession(campaigns,campaignId,id,{participantCharacterIds:ids});if(result.ok)commit(result.list,{rerender:false,message:'Participantes da sessão atualizados.'})}))});document.querySelectorAll('[data-start-session]').forEach(button=>button.addEventListener('click',()=>{const result=startCampaignSession(campaigns,campaignId,button.dataset.startSession);if(!result.ok)return feedback(result.reason,false);commit(result.list,{message:'Sessão iniciada.'})}));document.querySelectorAll('[data-finish-session]').forEach(button=>button.addEventListener('click',()=>{const result=finishCampaignSession(campaigns,campaignId,button.dataset.finishSession);if(result.ok)commit(result.list,{message:'Sessão concluída.'})}));document.querySelectorAll('[data-cancel-session]').forEach(button=>button.addEventListener('click',()=>{const result=cancelCampaignSession(campaigns,campaignId,button.dataset.cancelSession);if(result.ok)commit(result.list,{message:'Sessão cancelada.'})}));document.querySelectorAll('[data-remove-session]').forEach(button=>button.addEventListener('click',()=>{if(!confirm('Excluir esta sessão da campanha?'))return;const result=removeCampaignSession(campaigns,campaignId,button.dataset.removeSession);if(result.ok)commit(result.list,{message:'Sessão excluída.'})}))}
 function bindCampaignCover(){const picker=document.querySelector('#campanha [data-image-picker]');if(!picker)return;bindImagePicker(picker,{onSelect:async file=>{const before=campaigns,previous=campaign.coverImage,media=await uploadImage({campaignId,entityType:'campaign',entityId:campaignId,file}),result=updateCampaign(campaigns,campaignId,{coverImage:media,coverImageUrl:''});if(!result.ok){deleteImage(media).catch(()=>{});throw new Error(result.reason)}campaigns=writeCampaigns(result.list);campaign=campaignById(campaigns,campaignId);try{await persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})}catch(error){campaigns=writeCampaigns(before);campaign=campaignById(campaigns,campaignId);await deleteImage(media).catch(()=>{});render();throw new Error('A imagem não pôde ser sincronizada. A capa anterior foi preservada.')}render();feedback('Imagem salva e sincronizada.',true);if(previous?.id&&previous.id!==media.id)await deleteImage(previous).catch(()=>{})},onRemove:async()=>{const before=campaigns,previous=campaign.coverImage,result=updateCampaign(campaigns,campaignId,{coverImage:null,coverImageUrl:''});if(!result.ok)throw new Error(result.reason);campaigns=writeCampaigns(result.list);campaign=campaignById(campaigns,campaignId);try{await persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})}catch(error){campaigns=writeCampaigns(before);campaign=campaignById(campaigns,campaignId);render();throw new Error('A remoção não pôde ser sincronizada. A imagem foi preservada.')}render();feedback('Imagem removida e sincronizada.',true);if(previous?.id)await deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)})}
