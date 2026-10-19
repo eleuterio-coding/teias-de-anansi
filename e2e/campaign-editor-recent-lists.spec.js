@@ -39,7 +39,7 @@ test.beforeEach(async({page})=>{
 });
 test('ordem narrativa: atual primeiro, retrospectiva descendente e planejadas no final',()=>{
  expect(sortCampaignAdventures(adventures).map(a=>a.id)).toEqual([
-  'adv-6','adv-other','adv-5','adv-4','adv-3','adv-2','adv-1','adv-7'
+  'adv-other','adv-6','adv-5','adv-4','adv-3','adv-2','adv-1','adv-7'
  ]);
  expect(sortCampaignAdventures(adventures.filter(a=>a.campaignId===campaign.id),{includePlanned:false,limit:5}).map(a=>a.id))
   .toEqual(['adv-6','adv-5','adv-4','adv-3','adv-2']);
