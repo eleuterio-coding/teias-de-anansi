@@ -74,7 +74,8 @@ test('clique e segure faz o card se destacar e seguir o cursor',async({page,brow
 test('botões da Campanha abrem criação de Aventura ou Sessão pré-vinculada',async({page})=>{
  await page.goto('/mesa.html?id=e2e-cards-lift');
  const actions=page.locator('.campaign-product-hero .campaign-product-actions');
- await expect(actions.locator('a')).toHaveCount(3);
+ await expect(actions.locator('a')).toHaveCount(2);
+ await expect(actions.getByRole('link',{name:'Todas as campanhas'})).toHaveCount(0);
  await expect(actions.getByRole('link',{name:'Nova Aventura'})).toHaveAttribute('href','aventuras.html?campaign=e2e-cards-lift&new=1#adventure-create-card');
  await expect(actions.getByRole('link',{name:'Nova Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-cards-lift&new=1#session-create-card');
  await actions.getByRole('link',{name:'Nova Aventura'}).click();
