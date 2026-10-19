@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-ordered-roots1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-card-click1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
 import{hydrateMediaImages}from'./image-media.js?v=20261019-important-locations1';
@@ -166,6 +166,13 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  root.addEventListener('click',event=>{
   const section=event.target.closest('#npcs,#locais,#missoes,#linha-tempo');
   if(!section)return;
+  // O cartão completo expande/recolhe a ramificação. Botões internos
+  // continuam executando exclusivamente suas próprias ações.
+  const diagramCard=event.target.closest('.hub-diagram-node[data-diagram-toggle]');
+  if(section.id==='linha-tempo'&&diagramCard&&!event.target.closest('button,a,input,textarea,select,[contenteditable="true"]')){
+   diagramCard.querySelector(':scope > .hub-diagram-actions > [data-timeline-toggle]')?.click();
+   return;
+  }
   const target=event.target.closest('button');if(!target)return;
   const c=getCampaign();
   if(target.matches('[data-timeline-toggle]')){
@@ -267,6 +274,13 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }
  });
  root.addEventListener('keydown',event=>{
+  // O cartão também funciona com teclado sem interceptar Editar/Mostrar.
+  const diagramCard=event.target.closest?.('.hub-diagram-node[data-diagram-toggle]');
+  if(diagramCard&&event.target===diagramCard&&['Enter',' '].includes(event.key)){
+   event.preventDefault();
+   diagramCard.querySelector(':scope > .hub-diagram-actions > [data-timeline-toggle]')?.click();
+   return;
+  }
   if(event.key!=='Enter'||!event.target.matches('[data-new-line],[data-new-timeline],[data-edit-line],[data-timeline-text]'))return;
   event.preventDefault();
   if(event.target.matches('[data-new-line]'))event.target.closest('section').querySelector('[data-add-line]')?.click();
