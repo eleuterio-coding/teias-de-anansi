@@ -1,0 +1,41 @@
+import assert from 'node:assert/strict';
+import{sanitizeCampaign,updateCampaign}from'../scripts/campaign-state.js';
+import{
+ entries,renderStructuredSection,renderTimeline,moveTimelineNode,addTimelineNode,
+ renameTimelineNode,removeTimelineNode,countTimelineNodes,flattenTimeline
+}from'../scripts/campaign-structured-ui.js';
+
+const legacy=sanitizeCampaign({id:'c1',name:'Teste',importantLocations:'Sharn\nPontal',activeMissions:'Buscar coroa',timeline:'Chegada\nDescoberta'});
+assert.equal(legacy.timelineNodes.length,2,'Eventos anteriores devem ser migrados em memória.');
+assert.equal(legacy.timelineNodes[0].text,'Chegada');
+assert.equal(legacy.timelineNodes[1].id,'legacy-timeline-2');
+assert.equal(legacy.importantLocations,'Sharn\nPontal','Locais legados preservados.');
+assert.equal(legacy.activeMissions,'Buscar coroa','Atos reutilizam os registros existentes.');
+assert.ok(renderStructuredSection(legacy,[],'locais').includes('data-edit-line="importantLocations"'));
+assert.ok(renderStructuredSection(legacy,[],'missoes').includes('<h2>Atos</h2>'));
+assert.ok(renderTimeline(legacy).includes('data-timeline-drag'));
+const before=structuredClone(legacy.timelineNodes);
+const child=addTimelineNode(before,'Pista','legacy-timeline-1');
+assert.ok(child,'Deve criar subevento.');
+assert.equal(child.nodes[0].children.length,1);
+assert.equal(countTimelineNodes(child.nodes),3);
+assert.equal(before[0].children.length,0,'Operações não mutam o array original.');
+let updated=renameTimelineNode(child.nodes,child.id,'Pista revisada');
+assert.equal(updated[0].children[0].text,'Pista revisada');
+assert.equal(renameTimelineNode(updated,child.id,'  '),null,'Nome vazio não pode ser salvo.');
+assert.equal(moveTimelineNode(updated,'legacy-timeline-1',child.id,'child'),null,'Não pode mover pai para dentro do descendente.');
+updated=moveTimelineNode(updated,child.id,'legacy-timeline-2','after');
+assert.equal(updated.length,3,'Subevento pode voltar à raiz.');
+assert.equal(updated[2].text,'Pista revisada');
+updated=moveTimelineNode(updated,'legacy-timeline-2','legacy-timeline-1','before');
+assert.deepEqual(updated.map(x=>x.text),['Descoberta','Chegada','Pista revisada']);
+updated=removeTimelineNode(updated,'legacy-timeline-1');
+assert.deepEqual(flattenTimeline(updated),['Descoberta','Pista revisada']);
+assert.deepEqual(entries('• Lugar A\n- Lugar B\nLugar C'),['Lugar A','Lugar B','Lugar C']);
+const persisted=updateCampaign([legacy],'c1',{timelineNodes:updated,timeline:flattenTimeline(updated).join('\n')});
+assert.equal(persisted.ok,true);
+assert.deepEqual(persisted.campaign.timelineNodes,updated,'Hierarquia preservada na persistência.');
+assert.equal(persisted.campaign.timeline,'Descoberta\nPista revisada');
+const intentionallyEmpty=updateCampaign(persisted.list,'c1',{timelineNodes:[],timeline:''});
+assert.equal(intentionallyEmpty.campaign.timelineNodes.length,0,'Apagar todos os eventos não os restaura.');
+console.log('OK — Atos, Locais, migração, árvore, renomeação, reorganização e persistência da Campanha.');
