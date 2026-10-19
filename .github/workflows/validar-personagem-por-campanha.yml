@@ -1,0 +1,43 @@
+name: Validar exclusividade de personagens por Campanha
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-state.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'mesa.html'
+      - 'tests/auditar-vinculo-unico-mesa.mjs'
+      - 'tests/auditar-campanhas-mesas.mjs'
+      - 'e2e/campaign-character-exclusivity.spec.js'
+      - '.github/workflows/validar-personagem-por-campanha.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-state.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'mesa.html'
+      - 'tests/auditar-vinculo-unico-mesa.mjs'
+      - 'tests/auditar-campanhas-mesas.mjs'
+      - 'e2e/campaign-character-exclusivity.spec.js'
+      - '.github/workflows/validar-personagem-por-campanha.yml'
+permissions:
+  contents: read
+jobs:
+  exclusividade-por-campanha:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar estado e sintaxe
+        run: |
+          node --check scripts/campaign-state.js
+          node --check scripts/campaign-table-ui.js
+          node tests/auditar-vinculo-unico-mesa.mjs
+          node tests/auditar-campanhas-mesas.mjs
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Validar dropdowns e vínculos em desktop e celular
+        run: npx playwright test e2e/campaign-character-exclusivity.spec.js
