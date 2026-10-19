@@ -18,7 +18,7 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(data.session));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(data.characters));
  },{session,campaign,characters});
 });
@@ -242,8 +242,14 @@ test('arrastar jogador sobre outro reordena sem perder personagens',async({page}
  test.skip(testInfo.project.name!=='desktop-chromium','arraste nativo em desktop');
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const list=page.locator('#member-list');
- await list.locator('[data-member-row="m1"] .roster-grip')
-  .dragTo(list.locator('[data-member-row="m2"]'),{targetPosition:{x:50,y:85}});
+ const handle=list.locator('[data-member-row="m1"] .roster-grip');
+ const target=list.locator('[data-member-row="m2"]');
+ await handle.scrollIntoViewIfNeeded();
+ const from=await handle.boundingBox(),to=await target.boundingBox();
+ await page.mouse.move(from.x+from.width/2,from.y+from.height/2);
+ await page.mouse.down();
+ await page.mouse.move(to.x+to.width/2,to.y+to.height*.80,{steps:14});
+ await page.mouse.up();
  await expect(list.locator('[data-member-row]').first()).toHaveAttribute('data-member-row','m2');
  await expect(list.locator('[data-member-row]').last()).toHaveAttribute('data-member-row','m1');
  await page.reload();
