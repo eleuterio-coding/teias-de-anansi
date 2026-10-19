@@ -39,7 +39,7 @@ test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Enco
  await page.locator('#linha-tempo [data-new-timeline]').fill('Revelação');
  await page.locator('#linha-tempo [data-timeline-add-root]').click();
  await expect(page.locator('#linha-tempo .campaign-flow-step')).toHaveCount(3);
- await page.locator('#linha-tempo [data-timeline-id="legacy-timeline-3"] [data-timeline-move="up"]').click();
+ await page.locator('#linha-tempo .timeline-tree > .timeline-item').nth(2).locator('[data-timeline-move="up"]').first().click();
  const updated=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]')[0]);
  expect(updated.timeline.split('\n')).toEqual(['Chegada','Revelação','Descoberta']);
 });
