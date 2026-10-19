@@ -42,8 +42,25 @@ export function sanitizeAdventure(row={}){
  let currentChapterId=text(row.currentChapterId)||null;if(currentChapterId&&!chapterIds.has(currentChapterId))currentChapterId=null;const activeScene=scenes.find(x=>x.id===activeSceneId);if(activeScene?.chapterId)currentChapterId=activeScene.chapterId;
  return{schema:ADVENTURE_SCHEMA,...stamp(row,'adventure'),campaignId:text(row.campaignId)||null,title:text(row.title)||'Nova Aventura',coverImage:sanitizeMediaRef(row.coverImage),coverImageUrl:String(row.coverImageUrl??''),description:String(row.description??''),status:row.status==='current'?'active':ADV_STATUS.has(row.status)?row.status:'planned',order:Math.max(1,Math.floor(Number(row.order)||1)),type:ADV_TYPES.has(row.type)?row.type:'main',arc:String(row.arc??''),pitch:String(row.pitch??''),objective:String(row.objective??''),summary:String(row.summary??''),currentSituation:String(row.currentSituation??''),nextStep:String(row.nextStep??''),dmNotes:String(row.dmNotes??''),participantUsernames:uniqLower(row.participantUsernames),characterIds,participantAccessConfigured:row.participantAccessConfigured===true,chapters,scenes,locationIds,npcIds,legacyLocations,legacyNpcs,clues,handouts,treasures,missions,timelineEvents:timeline,currentChapterId,activeSceneId}
 }
-export function readAdventures(storage=globalThis.localStorage){if(!storage)return[];try{return arr(JSON.parse(storage.getItem(ADVENTURE_KEY)||'[]')).map(sanitizeAdventure)}catch{return[]}}
-export function writeAdventures(list,storage=globalThis.localStorage){const clean=arr(list).map(sanitizeAdventure);if(storage)storage.setItem(ADVENTURE_KEY,JSON.stringify(clean));return clean}
+/** Recupera a ordem narrativa dos registros antigos sem alterar posições já escolhidas. */
+export function normalizeAdventureOrders(list=[]){
+ const rows=arr(list).map(row=>({...row})),groups=new Map();
+ rows.forEach((row,index)=>{
+  const id=text(row.campaignId)||'__standalone__';
+  if(!groups.has(id))groups.set(id,[]);
+  groups.get(id).push({row,index})
+ });
+ for(const group of groups.values()){
+  const previous=new Set(group.filter(x=>Number.isInteger(Number(x.row.order))&&Number(x.row.order)>=1).map(x=>Number(x.row.order)));
+  let candidate=1;
+  const missing=group.filter(x=>!Number.isInteger(Number(x.row.order))||Number(x.row.order)<1)
+   .sort((a,b)=>String(a.row.createdAt||a.row.updatedAt||'').localeCompare(String(b.row.createdAt||b.row.updatedAt||''))||a.index-b.index);
+  for(const item of missing){while(previous.has(candidate))candidate++;item.row.order=candidate;previous.add(candidate);candidate++}
+ }
+ return rows.map(sanitizeAdventure)
+}
+export function readAdventures(storage=globalThis.localStorage){if(!storage)return[];try{return normalizeAdventureOrders(JSON.parse(storage.getItem(ADVENTURE_KEY)||'[]'))}catch{return[]}}
+export function writeAdventures(list,storage=globalThis.localStorage){const clean=normalizeAdventureOrders(list);if(storage)storage.setItem(ADVENTURE_KEY,JSON.stringify(clean));return clean}
 export function adventureById(list=[],adventureId){const id=text(adventureId);return arr(list).map(sanitizeAdventure).find(a=>a.id===id)||null}
 export function adventuresForCampaign(list=[],campaignId){const id=text(campaignId);return arr(list).map(sanitizeAdventure).filter(a=>a.campaignId===id)}
 export function createAdventure(list=[],data={}){const campaignId=text(data.campaignId);if(!campaignId)return{ok:false,reason:'Selecione uma Campanha.',list:arr(list).map(sanitizeAdventure)};const maxOrder=arr(list).filter(a=>a.campaignId===campaignId).reduce((max,a)=>Math.max(max,Number(a.order)||1),0);const adventure=sanitizeAdventure({...data,order:data.order||maxOrder+1,id:data.id||uid('adventure'),campaignId,createdAt:now(),updatedAt:now()});const base=arr(list).map(sanitizeAdventure);return{ok:true,list:[...base,adventure],adventure}}
