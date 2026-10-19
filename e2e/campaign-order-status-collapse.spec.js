@@ -1,5 +1,5 @@
 import{test,expect}from'@playwright/test';
-import{sanitizeAdventure,createAdventure,updateAdventure}from'../scripts/adventure-state.js';
+import{sanitizeAdventure,normalizeAdventureOrders,createAdventure,updateAdventure}from'../scripts/adventure-state.js';
 import{sanitizeSession,addCampaignSession,readCampaigns,createStandaloneSession}from'../scripts/campaign-state.js';
 import{renderTimeline}from'../scripts/campaign-structured-ui.js';
 import{sortCampaignAdventures,recentCampaignSessions}from'../scripts/campaign-recent-items.js';
@@ -18,6 +18,16 @@ test.beforeEach(async({page})=>{
   if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(data.adventures));
  },{campaign,adventures});
+});
+test('Aventuras antigas recebem ordem cronológica sem sobrepor valores explícitos',()=>{
+ const legacy=normalizeAdventureOrders([
+  {id:'old',campaignId:'campaign-1',status:'completed',createdAt:'2026-01-01T00:00:00Z'},
+  {id:'new',campaignId:'campaign-1',status:'active',createdAt:'2026-04-01T00:00:00Z'},
+  {id:'other',campaignId:'campaign-2',status:'planned',createdAt:'2026-02-01T00:00:00Z'}
+ ]);
+ expect(legacy.map(a=>a.order)).toEqual([1,2,1]);
+ const saved=normalizeAdventureOrders(legacy);
+ expect(saved.map(a=>a.order)).toEqual([1,2,1]);
 });
 test('estado migra Atual da Aventura sem apagá-la e Ordem persiste',()=>{
  const legacy=sanitizeAdventure({id:'legado',campaignId:campaign.id,title:'Antiga',status:'current',order:4});
