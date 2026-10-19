@@ -42,10 +42,11 @@ test('jogadores organizados e confirmação acessível após salvar',async({page
  await expect(rows).toHaveCount(2);
  await expect(page.locator('.roster-count')).toContainText('2 jogadores');
  for(const row of await rows.all()){
-  await expect(row.locator('[data-member-user]')).toBeVisible();
+  await expect(row.locator('.roster-player-name')).toBeVisible();
+  await expect(row.locator('[data-member-user]')).toHaveCount(0);
   await expect(row.locator('[data-member-character]')).toBeVisible();
   await expect(row.getByText('Notas',{exact:true})).toHaveCount(0);
-  await expect(row.locator('label').first()).toContainText('Jogador');
+  await expect(row.locator('.roster-player-label')).toHaveText('Jogador');
   await expect(row.locator('.roster-player-character label')).toContainText('Personagem');
   await expect(row.locator('.roster-open-button')).toBeVisible();
   await expect(row.locator('.roster-open-button')).toHaveText('Abrir');
@@ -144,10 +145,11 @@ test('salvar não reconstrói a Mesa e aviso de sucesso não altera a rolagem',a
 test('campos e botões da mesma linha ficam precisamente alinhados no desktop',async({page})=>{
  await page.setViewportSize({width:1500,height:950});
  await page.goto('/mesa.html?id=e2e-campaign-ux');
+ await expect(page.locator('#jogadores .roster-player')).toHaveCount(2);
  const results=await page.locator('#jogadores .roster-player').evaluateAll(rows=>rows.map(row=>{
   const top=selector=>row.querySelector(selector).getBoundingClientRect().top;
   return{
-   avatar:top('.roster-avatar'),user:top('[data-member-user]'),
+   avatar:top('.roster-avatar'),user:top('.roster-player-name'),
    character:top('[data-member-character]'),open:top('.roster-open-button'),
    remove:top('[data-remove-member]')
   }
