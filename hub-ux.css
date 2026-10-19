@@ -576,4 +576,5 @@ body.hub-shell-enabled .section-nav[data-indicator-ready="true"] .section-nav-in
  body.hub-shell-enabled .section-nav{scroll-behavior:auto}
  body.hub-shell-enabled .section-nav .section-nav-indicator{transition:none;will-change:auto}
 }
+html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav{scroll-behavior:auto}
 html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav .section-nav-indicator{transition:none;will-change:auto}
