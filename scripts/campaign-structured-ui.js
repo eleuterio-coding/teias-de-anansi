@@ -51,6 +51,17 @@ export function removeTimelineNode(nodes,id){
  const result=clone(nodes),location=locationOf(result,id);if(!location)return null;
  location.list.splice(location.index,1);return result
 }
+export function reorderBulletEntries(values,fromIndex,toIndex,position='before'){
+ if(!Array.isArray(values)||!['before','after'].includes(position))return null;
+ const from=Number(fromIndex),to=Number(toIndex);
+ if(!Number.isInteger(from)||!Number.isInteger(to)||from<0||to<0||from>=values.length||to>=values.length||from===to)return null;
+ const ordered=[...values],[entry]=ordered.splice(from,1);
+ const targetInsertion=to+(position==='after'?1:0);
+ const insertion=targetInsertion-(from<targetInsertion?1:0);
+ if(insertion===from)return null;
+ ordered.splice(insertion,0,entry);
+ return ordered
+}
 function roster(c,npcs){
  const ids=c.importantNpcIds||[],chosen=ids.map(id=>npcs.find(n=>n.id===id)||{id,name:'NPC indisponível',missing:true}),available=npcs.filter(n=>!ids.includes(n.id)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt-BR'));
  return `<section id="npcs" class="card campaign-editor-card campaign-npc-card"><div class="campaign-editor-head"><h2>NPCs importantes</h2><span class="campaign-editor-count">${ids.length}</span></div>
@@ -59,9 +70,9 @@ function roster(c,npcs){
  <a class="btn secondary campaign-npc-library-link" href="npcs.html">Abrir NPCs</a></section>`
 }
 function bullets(c,id,title,field){
- const values=entries(c[field]);
+ const values=entries(c[field]),acts=field==='activeMissions';
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2><span class="campaign-editor-count">${values.length}</span></div>
- <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry"><span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
+ <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry${acts?' campaign-act-entry':''}" ${acts?'data-act-index="'+i+'"':''}>${acts?'<button type="button" class="campaign-act-drag-handle" data-act-drag="'+i+'" draggable="true" aria-label="Reordenar '+esc(v)+': arraste ou use seta para cima e seta para baixo" title="Arraste para reordenar (ou use as setas do teclado)">⠿</button>':'<span class="campaign-list-marker" aria-hidden="true"></span>'}<input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function nodeHtml(node,index,depth=0){
@@ -120,6 +131,16 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(updated)saveTree(updated,'Linha do tempo reorganizada.');
   else feedback('Esse movimento não é permitido.',false)
  };
+ const moveAct=(from,target,position)=>{
+  const updated=reorderBulletEntries(entries(getCampaign().activeMissions),from,target,position);
+  if(!updated)return false;
+  persist({activeMissions:updated.join('\n')},'missoes','Ordem dos atos salva.');
+  return true
+ };
+ const clearActTargets=()=>{root.querySelectorAll('#missoes .act-drop-target').forEach(el=>{el.classList.remove('act-drop-target');delete el.dataset.dropPosition})};
+ const clearActDrag=()=>{clearActTargets();root.querySelectorAll('#missoes .act-dragging').forEach(el=>el.classList.remove('act-dragging'))};
+ const actPosition=(item,y)=>{const box=item.getBoundingClientRect();return y<box.top+box.height/2?'before':'after'};
+ const highlightAct=(item,position)=>{clearActTargets();if(item){item.classList.add('act-drop-target');item.dataset.dropPosition=position}};
  const clearDrag=()=>{
   root.querySelectorAll('.timeline-drop-target,.timeline-dragging').forEach(el=>{
    el.classList.remove('timeline-drop-target','timeline-dragging');delete el.dataset.dropPosition
@@ -184,6 +205,14 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }
  });
  root.addEventListener('keydown',event=>{
+  const actHandle=event.target.closest?.('#missoes [data-act-drag]');
+  if(actHandle&&(event.key==='ArrowUp'||event.key==='ArrowDown')){
+   event.preventDefault();
+   const from=Number(actHandle.dataset.actDrag),to=from+(event.key==='ArrowUp'?-1:1);
+   if(to<0||to>=entries(getCampaign().activeMissions).length)return;
+   if(moveAct(from,to,event.key==='ArrowUp'?'before':'after'))root.querySelector('#missoes [data-act-drag="'+to+'"]')?.focus();
+   return
+  }
   if(event.key!=='Enter'||!event.target.matches('[data-new-line],[data-new-timeline],[data-edit-line],[data-timeline-text]'))return;
   event.preventDefault();
   if(event.target.matches('[data-new-line]'))event.target.closest('section').querySelector('[data-add-line]')?.click();
@@ -239,4 +268,53 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   clearDrag();if(moved&&item&&position)move(id,item.dataset.timelineId,position)
  });
  root.addEventListener('pointercancel',()=>{touch=null;clearDrag()})
+ // Atos: arraste exclusivo pela alça (sem interferir na edição dos nomes).
+ let draggedAct=null,touchAct=null;
+ root.addEventListener('dragstart',event=>{
+  const handle=event.target.closest?.('#missoes [data-act-drag]');if(!handle)return;
+  draggedAct=Number(handle.dataset.actDrag);
+  if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',String(draggedAct))}
+  handle.closest('.campaign-act-entry')?.classList.add('act-dragging')
+ });
+ root.addEventListener('dragover',event=>{
+  if(draggedAct===null)return;
+  const item=event.target.closest?.('#missoes .campaign-act-entry');if(!item)return;
+  event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect='move';
+  if(Number(item.dataset.actIndex)===draggedAct){clearActTargets();return}
+  highlightAct(item,actPosition(item,event.clientY))
+ });
+ root.addEventListener('drop',event=>{
+  if(draggedAct===null)return;
+  event.preventDefault();
+  const item=event.target.closest?.('#missoes .campaign-act-entry'),from=draggedAct;
+  const position=item?.dataset.dropPosition||(item?actPosition(item,event.clientY):null);
+  draggedAct=null;clearActDrag();
+  if(item&&position)moveAct(from,Number(item.dataset.actIndex),position)
+ });
+ root.addEventListener('dragend',()=>{draggedAct=null;clearActDrag()});
+ // No toque e com caneta, emule a seleção do alvo: HTML Drag and Drop não é consistente.
+ root.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='mouse')return;
+  const handle=event.target.closest?.('#missoes [data-act-drag]');if(!handle)return;
+  touchAct={from:Number(handle.dataset.actDrag),x:event.clientX,y:event.clientY,moved:false};
+  handle.setPointerCapture?.(event.pointerId)
+ });
+ root.addEventListener('pointermove',event=>{
+  if(!touchAct)return;
+  if(Math.hypot(event.clientX-touchAct.x,event.clientY-touchAct.y)>7)touchAct.moved=true;
+  if(!touchAct.moved)return;
+  event.preventDefault();
+  const item=document.elementFromPoint(event.clientX,event.clientY)?.closest('#missoes .campaign-act-entry');
+  if(item&&Number(item.dataset.actIndex)!==touchAct.from)highlightAct(item,actPosition(item,event.clientY));
+  else clearActTargets()
+ });
+ root.addEventListener('pointerup',event=>{
+  if(!touchAct)return;
+  const {from,moved}=touchAct;touchAct=null;
+  const item=document.elementFromPoint(event.clientX,event.clientY)?.closest('#missoes .campaign-act-entry');
+  const position=item?.dataset.dropPosition||(item?actPosition(item,event.clientY):null);
+  clearActDrag();
+  if(moved&&item&&position)moveAct(from,Number(item.dataset.actIndex),position)
+ });
+ root.addEventListener('pointercancel',()=>{touchAct=null;clearActDrag()})
 }
