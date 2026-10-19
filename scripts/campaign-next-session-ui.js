@@ -11,6 +11,14 @@ export function findNextCampaignSession(campaign){
   return da.localeCompare(db)||(Number(a.number)||0)-(Number(b.number)||0)
  })[0]||null
 }
+/** Última sessão concluída, anterior à sessão atual/próxima.
+ * Não apresenta sessões planejadas como se já tivessem ocorrido. */
+export function findPreviousCampaignSession(campaign){
+ const sessions=Array.isArray(campaign?.sessions)?campaign.sessions:[];
+ const featured=findNextCampaignSession(campaign);
+ const completed=sessions.filter(session=>session?.status==='completed'&&(!featured||Number(session.number)<Number(featured.number)));
+ return completed.sort((a,b)=>Number(b.number)-Number(a.number)||String(b.date||'').localeCompare(String(a.date||'')))[0]||null;
+}
 export function readableSessionDate(raw){
  const matched=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(raw||''));
  if(!matched)return'';
@@ -39,6 +47,6 @@ export function renderNextCampaignSession(campaign,{canPlan=false}={}){
   ${backdrop}<div class="campaign-next-content"><span class="campaign-next-kicker">PLANEJAMENTO DA MESA</span><h2 id="proxima-sessao-titulo">Próxima sessão</h2>
   <p class="campaign-next-name">Sessão ${Number(next.number)||1} · ${escapeHtml(next.title||'Sem título')}</p>
   <div class="campaign-next-meta"><span class="campaign-next-status">${escapeHtml(statusLabels[next.status]||'Planejada')}</span>${date?`<span class="campaign-next-date"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><time datetime="${escapeHtml(next.date)}">${escapeHtml(date)}</time></span>`:''}</div>
-  </div><a class="btn campaign-next-action" href="${base}&id=${encodeURIComponent(next.id||'')}">Abrir sessão <span aria-hidden="true">→</span></a>
+  </div><a class="btn campaign-next-action" href="${base}&id=${encodeURIComponent(next.id||'')}"><span class="campaign-next-action-copy"><span class="campaign-next-action-kicker">ACESSAR</span><strong>Abrir sessão</strong></span><span class="campaign-next-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
  </section>`
 }
