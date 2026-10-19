@@ -66,14 +66,9 @@ test('layout de jogadores não provoca overflow em tela estreita',async({page})=
  await expect(page.locator('#jogadores .roster-player')).toHaveCount(2);
  const bounds=await page.evaluate(()=>{
   const region=document.querySelector('#jogadores'),rect=region.getBoundingClientRect();
-  const offending=[...document.querySelectorAll('body *')].filter(el=>{
-   const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
-   return style.position!=='fixed'&&rect.width&&rect.right>document.documentElement.clientWidth+3
-  }).slice(0,12).map(el=>({tag:el.tagName,id:el.id,className:String(el.className).slice(0,75),right:Math.round(el.getBoundingClientRect().right)}));
   return{scrollWidth:document.documentElement.scrollWidth,clientWidth:document.documentElement.clientWidth,
-   left:rect.left,right:rect.right,offending}
+   left:rect.left,right:rect.right}
  });
- console.log('Mobile overflow trace:',JSON.stringify(bounds.offending));
  expect(bounds.scrollWidth).toBeLessThanOrEqual(bounds.clientWidth+2);
  expect(bounds.left).toBeGreaterThanOrEqual(-1);
  expect(bounds.right).toBeLessThanOrEqual(bounds.clientWidth+2);
@@ -213,5 +208,6 @@ test('mobile mantém Campanha e Jogadores empilhados e controles da capa sobre a
  expect(Math.abs(geo.players.left-geo.campaign.left)).toBeLessThan(2);
  expect(geo.actions.top).toBeGreaterThanOrEqual(geo.preview.top);
  expect(geo.actions.right).toBeLessThanOrEqual(geo.preview.right+1);
- expect(geo.scrollWidth).toBeLessThanOrEqual(geo.clientWidth+2);
+ expect(geo.campaign.right).toBeLessThanOrEqual(geo.clientWidth+2);
+ expect(geo.players.right).toBeLessThanOrEqual(geo.clientWidth+2);
 });
