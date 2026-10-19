@@ -29,12 +29,12 @@ test('mudar a campanha no editor reatribui a mesma aventura sem criar duplicata'
  page.on('dialog',dialog=>dialog.accept());
  await page.goto('/aventuras.html?campaign=e2e-adv-source&id=adv-original');
  await expect(page.locator('#adventure-assignment')).toHaveValue('e2e-adv-source');
- await expect(page.locator('#create-adventure')).toHaveText('Criar nova aventura');
+ await expect(page.locator('#create-adventure')).toHaveCount(0);
  await page.locator('#adventure-assignment').selectOption('e2e-adv-dest');
  await expect(page.locator('#adventure-assignment')).toHaveValue('e2e-adv-dest');
  await expect(page).toHaveURL(/campaign=e2e-adv-dest.*id=adv-original/);
- await expect(page.locator('.adventure-card')).toHaveCount(1);
- await expect(page.locator('.adventure-card strong').first()).toHaveText('As Rainhas');
+ await expect(page.locator('.adventure-card')).toHaveCount(0);
+ await expect(page.locator('.adventure-operational h2')).toHaveText('As Rainhas');
  const persisted=await page.evaluate(()=>({
   adventures:JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]'),
   campaigns:JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]')
@@ -50,11 +50,13 @@ test('mudar a campanha no editor reatribui a mesma aventura sem criar duplicata'
  expect(persisted.campaigns[0].sessions[0].scenes[0].adventureSceneId).toBeNull();
 });
 
-test('filtro de campanhas não altera vínculos e criação é ação separada',async({page})=>{
- await page.goto('/aventuras.html?campaign=e2e-adv-source&id=adv-original');
+test('escolher a Campanha ao criar não reatribui uma aventura existente',async({page})=>{
+ await page.goto('/aventuras.html');
+ await expect(page.locator('#adventure-assignment')).toHaveCount(0);
+ await page.locator('#open-adventure-create').click();
+ await expect(page.locator('#create-adventure')).toBeVisible();
  await page.locator('#adventure-campaign').selectOption('e2e-adv-dest');
  await expect(page.locator('#adventure-assignment')).toHaveCount(0);
- await expect(page.locator('#create-adventure')).toHaveText('Criar nova aventura');
  const rows=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]'));
  expect(rows).toHaveLength(1);
  expect(rows[0].campaignId).toBe('e2e-adv-source');
