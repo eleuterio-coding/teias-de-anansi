@@ -22,7 +22,7 @@ test('prioridade, filtro e conversão do status Atual legado',async({page})=>{
  expect(await cards.evaluateAll(items=>items.map(item=>item.dataset.campaignCard)))
   .toEqual(['c-active','c-current','c-pause','c-done','c-cancel','c-planned']);
  await expect(page.locator('#campaign-status-filter option')).toHaveText(['Todos os status','Em andamento','Pausada','Concluída','Cancelada','Planejada']);
- await expect(page.locator('#campaign-status-filter option')).not.toContainText('Atual');
+ await expect(page.locator('#campaign-status-filter option:has-text("Atual")')).toHaveCount(0);
  await expect(page.locator('[data-campaign-card="c-current"] .campaign-status-trigger')).toContainText('Em andamento');
  await page.locator('#campaign-status-filter').selectOption('paused');
  await expect(cards).toHaveCount(1);
