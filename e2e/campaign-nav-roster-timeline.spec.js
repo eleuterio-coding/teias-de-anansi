@@ -98,5 +98,21 @@ test('em tela móvel o card empilha sem transbordar e preserva área de toque',a
  });
  expect(result.below).toBe(true);
  expect(result.openHeight).toBeGreaterThanOrEqual(44);
+ if(result.horizontalOverflow>3){
+  const debug=await page.evaluate(()=>{
+   const width=document.documentElement.clientWidth;
+   const css=el=>getComputedStyle(el);
+   const isClipped=el=>{let parent=el.parentElement;while(parent){
+    const style=css(parent),rect=parent.getBoundingClientRect();
+    if(/auto|scroll|hidden|clip/.test(style.overflowX)&&rect.right<=width+2)return true;
+    parent=parent.parentElement;
+   }return false};
+   return [...document.querySelectorAll('body *')].map(el=>({el,rect:el.getBoundingClientRect()}))
+    .filter(x=>x.rect.width>0&&x.rect.right>width+3&&!isClipped(x.el))
+    .sort((a,b)=>b.rect.right-a.rect.right).slice(0,18)
+    .map(x=>({tag:x.el.tagName,cls:String(x.el.className).slice(0,100),id:x.el.id,left:Math.round(x.rect.left),right:Math.round(x.rect.right),width:Math.round(x.rect.width)}));
+  });
+  console.log('MOBILE_OVERFLOW_DIAGNOSTIC',JSON.stringify(debug));
+ }
  expect(result.horizontalOverflow).toBeLessThanOrEqual(3);
 });
