@@ -69,3 +69,50 @@ test('destaque responsivo sem transbordamento na tela pequena',async({page})=>{
  expect(bounds.buttonLeft).toBeGreaterThanOrEqual(bounds.cardLeft);
  expect(bounds.buttonRight).toBeLessThanOrEqual(bounds.cardRight+1);
 });
+
+test('destaque usa a imagem da sessão selecionada, não a capa da campanha',async({page})=>{
+ await page.route('**/mock-session-cover.svg',route=>route.fulfill({
+  status:200,contentType:'image/svg+xml',
+  body:'<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400"><rect width="1200" height="400" fill="#517eaa"/></svg>'
+ }));
+ await page.goto('/mesa.html?id=e2e-campaign-next');
+ await page.evaluate(()=>{
+  const campaigns=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'));
+  campaigns[0].coverImageUrl='/mock-campaign-cover.svg';
+  campaigns[0].sessions.find(s=>s.id==='s-current').coverImageUrl='/mock-session-cover.svg';
+  campaigns[0].sessions.find(s=>s.id==='s-next').coverImageUrl='/incorrect-next-cover.svg';
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(campaigns));
+ });
+ await page.reload();
+ const card=page.locator('#proxima-sessao');
+ await expect(card).toHaveAttribute('data-has-session-cover','true');
+ const image=card.locator('.campaign-next-backdrop');
+ await expect(image).toHaveAttribute('src','/mock-session-cover.svg');
+ await expect(image).toBeVisible();
+ await expect(image).toHaveJSProperty('naturalWidth',1200);
+ const geometry=await card.evaluate(el=>{
+  const card=el.getBoundingClientRect(),image=el.querySelector('.campaign-next-backdrop').getBoundingClientRect();
+  return {card:card.toJSON(),image:image.toJSON(),position:getComputedStyle(el).position};
+ });
+ expect(geometry.position).toBe('relative');
+ expect(geometry.image.width).toBeCloseTo(geometry.card.width,0);
+ expect(geometry.image.height).toBeCloseTo(geometry.card.height,0);
+ await expect(card.getByRole('link',{name:/Abrir sessão/})).toBeVisible();
+});
+
+test('referência da capa sincronizada usa hidratação de mídia com fallback',async({page})=>{
+ await page.goto('/mesa.html?id=e2e-campaign-next');
+ await page.evaluate(()=>{
+  const campaigns=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'));
+  const current=campaigns[0].sessions.find(s=>s.id==='s-current');
+  current.coverImage={id:'session-cover-storage-id',campaignId:'e2e-campaign-next',entityType:'session',entityId:'s-current'};
+  current.coverImageUrl='/fallback-cover.svg';
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(campaigns));
+ });
+ await page.reload();
+ const card=page.locator('#proxima-sessao');
+ const image=card.locator('.campaign-next-backdrop');
+ await expect(image).toHaveAttribute('data-hub-media-id','session-cover-storage-id');
+ await expect(image).toHaveAttribute('data-fallback-src','/fallback-cover.svg');
+ await expect(card).toHaveAttribute('data-has-session-cover','true');
+});
