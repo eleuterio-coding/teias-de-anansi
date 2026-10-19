@@ -598,18 +598,18 @@ html[data-hub-motion="reduce"] body.hub-shell-enabled .section-nav .section-nav-
 }
 
 
-/* As duas ações de criação usam a mesma tinta azul em 50% de opacidade;
+/* As duas ações de criação têm azul sólido e legível;
    o texto permanece opaco e legível sobre a capa. */
 #table-root .campaign-product-actions .campaign-product-create-action{
  display:inline-flex;align-items:center;justify-content:center;
- background:rgba(47,156,255,.50)!important;
- border:1px solid rgba(85,177,255,.55)!important;
+ background:#2f9cff!important;
+ border:1px solid #55b1ff!important;
  color:#fff!important;opacity:1!important;
  text-decoration:none;box-shadow:none;
  transition:background-color .16s ease,border-color .16s ease
 }
 #table-root .campaign-product-actions .campaign-product-create-action:hover{
- background:rgba(47,156,255,.68)!important;border-color:rgba(143,206,255,.8)!important
+ background:#2786e5!important;border-color:#8fceff!important
 }
 #table-root .campaign-product-actions .campaign-product-create-action:focus-visible{
  outline:2px solid #c0e8ff;outline-offset:3px
