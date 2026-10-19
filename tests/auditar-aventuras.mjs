@@ -87,7 +87,7 @@ assert.ok(provider.includes('participantAccessConfigured')&&provider.includes('a
 assert.ok(collab.includes('materials:')&&collab.includes('visibleMissions'),'A projeção do jogador deve compartilhar apenas conteúdo permitido.');
 assert.ok(router.includes('Materiais para os Jogadores')&&router.includes('Missões / Objetivos'),'Jogador deve receber a nova estrutura em modo somente leitura.');
 assert.ok(ui.includes('id="adventure-assignment"')&&ui.includes('reassignSelectedAdventure'),'A edição precisa permitir mudar a Campanha sem criar outra Aventura.');
-assert.ok(ui.includes('Criar nova aventura')&&ui.includes('Filtrar aventuras por campanha'),'Criação e filtro precisam estar claros.');
+assert.ok(ui.includes('Criar nova aventura')&&ui.includes('Campanha da aventura'),'Criação e filtro precisam estar claros.');
 assert.equal(ui.includes('Adicionar sessão'),false,'Aventura não deve criar Sessões.');
 assert.ok(page.includes('adventure-router.js')&&page.includes('adventures.css'));assert.ok(css.includes('adventure-operational')&&css.includes('@media'));assert.ok(mesaBridge.includes('adventureContextForSession'));
 console.log('OK — Aventuras v2: workspace narrativo, acesso por participantes, catálogos reutilizáveis, materiais em PT-BR e compatibilidade legada.');

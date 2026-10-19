@@ -7,13 +7,13 @@ import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-mas
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',adventureFilter=params.get('adventure')||'',sessionId=params.get('id')||'';
-let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null;
+let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false;
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
 const option=(value,label,current)=>`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`;
 const listHref=()=>{const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);return`sessoes.html${q.toString()?`?${q}`:''}`}
-function detailHref(session){const q=new URLSearchParams;if(campaignFilter)q.set('campaign',campaignFilter);if(adventureFilter)q.set('adventure',adventureFilter);q.set('id',session.id);return`sessoes.html?${q}`}
+function detailHref(session){const q=new URLSearchParams;const targetCampaign=session.campaignId||campaignFilter,targetAdventure=session.adventureId||adventureFilter;if(targetCampaign)q.set('campaign',targetCampaign);if(targetAdventure)q.set('adventure',targetAdventure);q.set('id',session.id);return`sessoes.html?${q}`}
 
 
 function feedback(message,ok=true){
@@ -104,8 +104,25 @@ function persistMutableSession(ref,session,message='Sessão salva.'){
 function adventureLabel(a){
  const c=campaignById(a.campaignId);return c?`${a.title} · ${c.name}`:a.title
 }
-function adventureOptions(current=''){
- return `<option value="">— Sem aventura —</option>${adventures.map(a=>option(a.id,adventureLabel(a),current)).join('')}`
+function campaignOptions(current=''){
+ return `<option value="">— Sem campanha —</option>${campaigns.map(c=>option(c.id,c.name,current)).join('')}`
+}
+function adventureOptions(current='',campaignId=''){
+ return `<option value="">— Sem aventura —</option>${adventures.filter(a=>!campaignId||a.campaignId===campaignId).map(a=>option(a.id,adventureLabel(a),current)).join('')}`
+}
+function syncCreationOptions({resetAdventure=false}={}){
+ const campaignSelect=$('new-session-campaign'),adventureSelect=$('new-session-adventure');
+ if(!campaignSelect||!adventureSelect)return;
+ const requestedAdventure=createSelectInitialized&&!resetAdventure?adventureSelect.value:!createSelectInitialized?adventureFilter:'';
+ const linked=adventureById(requestedAdventure);
+ const requestedCampaign=createSelectInitialized?campaignSelect.value:(campaignFilter||linked?.campaignId||'');
+ const validCampaign=campaigns.some(c=>c.id===requestedCampaign)?requestedCampaign:'';
+ campaignSelect.innerHTML=campaignOptions(validCampaign);
+ campaignSelect.value=validCampaign;
+ const validAdventure=linked&&(!validCampaign||linked.campaignId===validCampaign)?requestedAdventure:'';
+ adventureSelect.innerHTML=adventureOptions(validAdventure,validCampaign);
+ adventureSelect.value=validAdventure;
+ createSelectInitialized=true
 }
 function adventureSceneOptions(session,selected=''){
  const a=adventureById(session.adventureId);
@@ -209,8 +226,7 @@ function render(){
  const restricted=playerMode();
  if(!restricted)reload();
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows),box=$('sessions-list'),createCard=$('session-create-card'),metrics=$('session-metrics');
- const select=$('new-session-adventure');
- if(select&&!restricted)select.innerHTML=adventureOptions(adventureFilter);
+ if(!restricted)syncCreationOptions();
  if(sessionId){
   if(createCard)createCard.hidden=true;
   if(metrics)metrics.hidden=true;
@@ -229,16 +245,20 @@ function render(){
 }
 async function createSession(){
  if(playerMode())return;
- const adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId),newStatus=$('new-session-status')?.value||'planned',title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
- if(adv){
-  const campaign=campaignById(adv.campaignId);
-  if(!campaign)return feedback('A Campanha da Aventura não foi encontrada.',false);
-  const before=campaigns;let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
-  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv.id,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv.participantUsernames,participantCharacterIds:adv.characterIds});
+ const selectedCampaign=$('new-session-campaign')?.value||'',adventureId=$('new-session-adventure')?.value||null,adv=adventureById(adventureId);
+ if(adventureId&&!adv)return feedback('A Aventura selecionada não foi encontrada.',false);
+ if(selectedCampaign&&adv&&adv.campaignId!==selectedCampaign)return feedback('A Aventura selecionada pertence a outra Campanha.',false);
+ const targetCampaignId=selectedCampaign||adv?.campaignId||'',campaign=targetCampaignId?campaignById(targetCampaignId):null;
+ if(targetCampaignId&&!campaign)return feedback('Selecione uma Campanha válida.',false);
+ const newStatus=$('new-session-status')?.value||'planned',title=$('new-session-title')?.value.trim(),date=$('new-session-date')?.value,id=campaignUid('session');
+ if(campaign){
+  const before=campaigns;let coverImage=null;
+  try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:campaign.id,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
+  const result=addCampaignSession(campaigns,campaign.id,{id,adventureId:adv?.id||null,title:title||undefined,date,status:newStatus,coverImage,participantUsernames:adv?.participantUsernames||[],participantCharacterIds:adv?.characterIds||[]});
   if(!result.ok){if(coverImage)deleteImage(coverImage).catch(()=>{});return feedback(result.reason,false)}
   campaigns=writeCampaigns(result.list);
-  try{await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
-  location.href=detailHref(result.session)
+  try{if(coverImage)await persistCampaignMediaState(campaign.id,{entityType:'session',entityId:id})}catch(error){campaigns=writeCampaigns(before);if(coverImage)await deleteImage(coverImage).catch(()=>{});return feedback('A Sessão não pôde ser sincronizada. Nenhuma imagem foi perdida.',false)}
+  location.href=detailHref({...result.session,campaignId:campaign.id})
  }else{
   let coverImage=null;try{if(pendingSessionCoverFile)coverImage=await uploadImage({campaignId:null,entityType:'session',entityId:id,file:pendingSessionCoverFile})}catch(error){return feedback(error?.message||'Não foi possível salvar a imagem.',false)}
   const result=createStandaloneSession(standalone,{id,title:title||undefined,date,status:newStatus,coverImage});
@@ -356,6 +376,15 @@ function bindSessionCards(){
 function refreshFromRemote(event){event.detail?.claim?.();render()}
 const newCoverHolder=$('new-session-cover-picker');if(newCoverHolder){newCoverHolder.innerHTML=imagePickerHtml({});bindImagePicker(newCoverHolder.querySelector('[data-image-picker]'),{onSelect:async file=>{pendingSessionCoverFile=file},onRemove:async()=>{pendingSessionCoverFile=null},onError:error=>feedback(error?.message||'Não foi possível usar a imagem.',false)})}
 $('create-session')?.addEventListener('click',createSession);
+$('new-session-campaign')?.addEventListener('change',()=>syncCreationOptions({resetAdventure:true}));
+$('new-session-adventure')?.addEventListener('change',event=>{
+ const adventure=adventureById(event.target.value),campaignSelect=$('new-session-campaign');
+ if(adventure&&campaignSelect&&!campaignSelect.value){campaignSelect.value=adventure.campaignId;syncCreationOptions()}
+});
 reload();render();
+if(params.get('new')==='1'&&!sessionId&&!playerMode())requestAnimationFrame(()=>{
+ $('session-create-card')?.scrollIntoView({block:'start'});
+ $('new-session-title')?.focus({preventScroll:true})
+});
 window.addEventListener('hub-rpg:remote-updated',refreshFromRemote);
 window.addEventListener('hub-rpg:sessions-local-updated',()=>{reload();render()});
