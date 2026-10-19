@@ -2,3 +2,104 @@
 
 .adventure-operational{overflow:hidden}.adventure-cover{display:block;width:100%;max-height:280px;object-fit:cover;border-radius:10px;margin-bottom:12px}.adventure-metrics{margin-top:12px}.participant-columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.participant-columns h3{margin:0 0 8px}.entity-select-head{display:flex;justify-content:flex-end;margin-bottom:8px}.campaign-entity-card{border-left:4px solid #8884}.timeline-row p{white-space:pre-wrap}.player-adventure-grid{margin-top:12px}.player-adventure-grid>.card{margin:0}.adventure-player-overview{overflow:hidden}
 @media(max-width:700px){.participant-columns{grid-template-columns:1fr}.adventure-cover{max-height:220px}}
+/* Lista de Aventuras: identidade, metadados e ações em uma hierarquia legível. */
+#adventure-root .adventure-list{gap:12px}
+#adventure-root .adventure-card{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;
+ align-items:center;gap:20px;padding:18px 20px;
+ min-width:0;transition:border-color .16s ease,background-color .16s ease;
+}
+#adventure-root .adventure-card-main{
+ display:flex;flex-direction:column;align-items:flex-start;gap:9px;min-width:0
+}
+#adventure-root .adventure-card-title{
+ margin:0;font-size:1.13rem;font-weight:750;line-height:1.35;
+ overflow-wrap:anywhere
+}
+#adventure-root .adventure-card-title strong{font-weight:inherit}
+#adventure-root .adventure-card-status{align-items:center;gap:6px}
+#adventure-root .adventure-card-status .badge{margin:0}
+#adventure-root .adventure-card-context{
+ display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0
+}
+#adventure-root .adventure-card .hub-parent-link{
+ margin:0;max-width:100%;min-width:0;overflow-wrap:anywhere
+}
+#adventure-root .adventure-card .hub-parent-link a{
+ overflow-wrap:anywhere;text-underline-offset:3px
+}
+#adventure-root .adventure-card-arc{margin:0}
+#adventure-root .adventure-card-description{
+ margin:0;line-height:1.5;font-size:.9rem;overflow-wrap:anywhere
+}
+#adventure-root .adventure-card-actions{
+ display:flex;flex-wrap:nowrap;align-self:center;justify-content:flex-end;
+ align-items:center;gap:9px;min-width:max-content
+}
+#adventure-root .adventure-card-actions button{
+ min-width:90px;min-height:44px;white-space:nowrap
+}
+#adventure-root .adventure-card-actions button:focus-visible,
+#adventure-root .adventure-card .hub-parent-link a:focus-visible{
+ outline-offset:3px
+}
+
+/* O Hub usa tema escuro; nenhum card narrativo deve continuar branco nesse modo. */
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card,
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .story-card,
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .scene-card{
+ background:var(--hub-surface-2,#131f2b)!important;
+ border-color:var(--hub-border,#223245)!important;
+ color:var(--hub-text,#f4f7fb)!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card.active{
+ background:linear-gradient(100deg,rgba(47,156,255,.11),transparent 70%),var(--hub-surface-2,#131f2b)!important;
+ border-color:rgba(86,160,228,.62)!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card:hover{
+ border-color:#3c5874!important;background-color:#192839!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card-title{
+ color:var(--hub-text,#f4f7fb)!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card-description{
+ color:var(--hub-text-2,#b6c7d8)!important;
+ -webkit-text-fill-color:var(--hub-text-2,#b6c7d8)!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card .hub-parent-link{
+ background:rgba(143,103,239,.11)!important;
+ border-color:rgba(167,141,230,.35)!important;
+ color:#dfd2ff!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card .hub-parent-link>span{
+ color:#aa97d4!important
+}
+body.hub-shell-enabled:not(.hub-content-light) #adventure-root .adventure-card .hub-parent-link a{
+ color:#e2d7ff!important;font-weight:750
+}
+
+/* Respeita o modo de leitura claro, sem misturar textos claros com fundo branco. */
+body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card{
+ background:var(--hub-reader-paper,#fff)!important;
+ border-color:var(--hub-reader-border,#d2deeb)!important;
+ color:var(--hub-reader-ink,#172b3e)!important
+}
+body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card.active{
+ border-color:#4386bc!important;background:#f3f8fd!important
+}
+body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-title{
+ color:var(--hub-reader-ink,#172b3e)!important
+}
+body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-description{
+ color:var(--hub-reader-muted,#536678)!important
+}
+
+@media(max-width:760px){
+ #adventure-root .adventure-card{grid-template-columns:minmax(0,1fr);gap:16px;padding:16px}
+ #adventure-root .adventure-card-actions{justify-content:stretch;width:100%;min-width:0}
+ #adventure-root .adventure-card-actions button{flex:1;min-width:0}
+}
+@media(max-width:390px){
+ #adventure-root .adventure-card-status{gap:5px}
+ #adventure-root .adventure-card .hub-parent-link{flex-wrap:wrap}
+}

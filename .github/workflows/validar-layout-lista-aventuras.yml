@@ -1,0 +1,42 @@
+name: Validar layout da Lista de Aventuras
+on:
+  pull_request:
+    paths:
+      - 'adventures.css'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'aventuras.html'
+      - 'e2e/adventure-list-layout.spec.js'
+      - 'e2e/adventure-reassignment.spec.js'
+      - '.github/workflows/validar-layout-lista-aventuras.yml'
+  workflow_dispatch:
+jobs:
+  lista-aventuras:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe da interface
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-router.js
+          node --check e2e/adventure-list-layout.spec.js
+      - name: Verificar integridade das aventuras
+        run: node tests/auditar-aventuras.mjs
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+      - name: Instalar Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verificar cards em desktop e celular e reatribuição
+        run: npx playwright test e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js --project=desktop-chromium --project=mobile-chromium
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: lista-aventuras-debug
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
