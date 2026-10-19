@@ -47,21 +47,32 @@ export function addCampaignMember(list=[],campaignId,data={}){
  }
  return{ok:true,list:clean,campaign,member}
 }
+function characterAssignmentConflict(campaigns, campaignId, memberId, characterId){
+ const targetId=text(campaignId),memberKey=text(memberId),characterKey=text(characterId);
+ if(!characterKey)return null;
+ for(const campaign of campaigns){
+  for(const member of campaign.members){
+   if(member.characterId!==characterKey)continue;
+   if(campaign.id===targetId&&member.id===memberKey)continue;
+   return {campaign,member,elsewhere:campaign.id!==targetId};
+  }
+ }
+ return null;
+}
+function characterAssignmentReason(conflict){
+ return conflict?.elsewhere
+  ?'Este personagem já pertence a outra campanha. Desvincule-o da campanha original antes de atribuí-lo aqui.'
+  :'Este personagem já está atribuído a outro jogador nesta campanha. Desvincule-o primeiro.';
+}
 export function updateCampaignMember(list=[],campaignId,memberId,patch={}){
  const clean=arr(list).map(sanitizeCampaign),campaign=clean.find(c=>c.id===text(campaignId));
  if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:clean};
  const index=campaign.members.findIndex(m=>m.id===text(memberId));
  if(index<0)return{ok:false,reason:'Participante não encontrado.',list:clean};
  const current=campaign.members[index],next=sanitizeMember({...current,...patch,id:current.id});
- const reassigned=next.characterId&&next.characterId!==current.characterId;
- // Evita trocar o titular de uma ficha já usada por outro jogador em outra Mesa.
- if(next.characterId){
-  const owner=text(next.username||next.name).toLowerCase();
-  const conflict=clean.some(c=>c.members.some(m=>m.characterId===next.characterId
-   &&(c.id!==campaign.id||m.id!==current.id)
-   &&(c.id===campaign.id||text(m.username||m.name).toLowerCase()!==owner)));
-  if(conflict)return{ok:false,reason:'Este personagem já está atribuído a outro jogador.',list:clean}
- }
+ const conflict=characterAssignmentConflict(clean,campaign.id,current.id,next.characterId);
+ if(conflict)return{ok:false,reason:characterAssignmentReason(conflict),list:clean};
+ const reassigned=Boolean(next.characterId&&next.characterId!==current.characterId);
  campaign.members[index]=reassigned?{...next,characterId:null}:next;campaign.updatedAt=now();
  if(reassigned){
   const result=assignCharacterToMember(clean,campaignId,memberId,next.characterId);
@@ -73,26 +84,17 @@ export function updateCampaignMember(list=[],campaignId,memberId,patch={}){
 export function removeCampaignMember(list=[],campaignId,memberId){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const before=campaign.members.length;campaign.members=campaign.members.filter(m=>m.id!==text(memberId));if(campaign.members.length===before)return{ok:false,reason:'Participante não encontrado.',list:arr(list).map(sanitizeCampaign)};campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign}}
 export function assignCharacterToMember(list=[],campaignId,memberId,characterId){
  const targetCampaignId=text(campaignId),targetMemberId=text(memberId),charId=text(characterId);
- if(!charId)return{ok:false,reason:'Selecione um personagem.',list:arr(list).map(sanitizeCampaign)};
- const clean=arr(list).map(sanitizeCampaign),target=clean.find(c=>c.id===targetCampaignId);
+ const clean=arr(list).map(sanitizeCampaign);
+ if(!charId)return{ok:false,reason:'Selecione um personagem.',list:clean};
+ const target=clean.find(c=>c.id===targetCampaignId);
  const member=target?.members.find(m=>m.id===targetMemberId);
  if(!target||!member)return{ok:false,reason:'Mesa ou participante não encontrado.',list:clean};
- const owner=text(member.username||member.name).toLowerCase();
- // Um personagem nunca pode estar associado a dois jogadores diferentes.
- // Transferências entre campanhas do MESMO jogador continuam permitidas.
- const conflict=clean.some(c=>c.members.some(row=>{
-  if(row.characterId!==charId||(c.id===targetCampaignId&&row.id===targetMemberId))return false;
-  const otherOwner=text(row.username||row.name).toLowerCase();
-  return c.id===targetCampaignId||!owner||!otherOwner||otherOwner!==owner
- }));
- if(conflict)return{ok:false,reason:'Este personagem já está atribuído a outro jogador. Desvincule-o primeiro.',list:clean};
- let movedFrom=null;
- for(const campaign of clean)for(const row of campaign.members)if(row.characterId===charId){
-  if(campaign.id!==targetCampaignId||row.id!==targetMemberId)movedFrom={campaignId:campaign.id,campaignName:campaign.name,memberId:row.id};
-  row.characterId=null;campaign.updatedAt=now()
- }
+ // Exclusividade por campanha, independente de quem controla a ficha.
+ // Nunca transfira uma ficha silenciosamente entre campanhas.
+ const conflict=characterAssignmentConflict(clean,targetCampaignId,targetMemberId,charId);
+ if(conflict)return{ok:false,reason:characterAssignmentReason(conflict),list:clean};
  member.characterId=charId;target.updatedAt=now();
- return{ok:true,list:clean,campaign:target,member,movedFrom}
+ return{ok:true,list:clean,campaign:target,member}
 }
 export function unassignCharacterFromMember(list=[],campaignId,memberId){return updateCampaignMember(list,campaignId,memberId,{characterId:null})}
 export function addCampaignSession(list=[],campaignId,data={}){const campaign=campaignById(list,campaignId);if(!campaign)return{ok:false,reason:'Campanha não encontrada.',list:arr(list).map(sanitizeCampaign)};const maxNumber=campaign.sessions.reduce((m,s)=>Math.max(m,s.number),0),session=sanitizeSession({...data,id:data.id||campaignUid('session'),number:data.number||maxNumber+1,createdAt:now(),updatedAt:now()},maxNumber);if(session.status==='current')for(const old of campaign.sessions)if(old.status==='current')old.status='planned';campaign.sessions.push(session);campaign.updatedAt=now();return{ok:true,list:arr(list).map(row=>row.id===campaign.id?campaign:sanitizeCampaign(row)),campaign,session}}
