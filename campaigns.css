@@ -1770,3 +1770,10 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
  #table-root .campaign-player-story-card{min-height:150px}
  #table-root .campaign-player-story-content{padding:14px}
 }
+
+
+#table-root .campaign-player-readonly{display:inline-block;margin-top:4px;color:var(--hub-text-2,#abc0d5);font-size:.72rem;font-weight:650}
+#table-root .campaign-player-story-content h3{margin:0;font-size:1.05rem;line-height:1.25;overflow-wrap:anywhere;color:#fff}
+#table-root .campaign-player-shared-notes{border-top:1px solid var(--hub-border,#3d5165);padding-top:10px}
+#table-root .campaign-bullet-list>li.campaign-player-important-card>.campaign-list-marker{flex:0 0 8px;min-width:8px}
+#table-root .campaign-bullet-list>li.campaign-player-important-card>.campaign-player-location-placeholder{flex:0 0 44px;min-width:44px}
