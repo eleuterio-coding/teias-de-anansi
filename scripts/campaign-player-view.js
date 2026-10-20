@@ -22,7 +22,7 @@ function backgroundCard(item,kind,campaignId){
  const heading=isAdventure?name:`Sessão ${Number(item.number)||1} · ${name}`;
  const picture=media(item.coverImage,item.coverImageUrl,`Capa de ${heading}`,'campaign-player-story-image');
  return`<a class="campaign-player-story-card" href="${href}" aria-label="Abrir ${esc(heading)}">
- ${picture}<span class="campaign-player-story-content"><strong>${esc(heading)}</strong><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
+ ${picture}<span class="campaign-player-story-content"><h3>${esc(heading)}</h3><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
 }
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
@@ -47,9 +47,9 @@ export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
  const c=row.campaign,m=row.membership||{},adventures=arr(row.adventures),sessions=arr(c.sessions),characters=arr(row.characters);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
- root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
+ root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1><span class="campaign-player-readonly">Somente leitura</span></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
  <div class="campaign-player-grid">
- ${section('campanha','Campanha',`<div class="campaign-player-campaign-overview">${media(c.coverImage,c.coverImageUrl,`Capa de ${c.name}`,'campaign-player-campaign-cover')}<p>${esc(c.description||'')}</p></div>`)}
+ ${section('campanha','Campanha',`<div class="campaign-player-campaign-overview">${media(c.coverImage,c.coverImageUrl,`Capa de ${c.name}`,'campaign-player-campaign-cover')}<p>${esc(c.description||'')}</p>${c.sharedNotes?`<p class="campaign-player-shared-notes">${esc(c.sharedNotes)}</p>`:''} </div>`)}
  ${players(c,characters)}
  ${stories('aventuras','Aventuras da campanha',adventures,'adventure',c.id)}
  ${stories('sessoes','Sessões da campanha',sessions,'session',c.id)}
