@@ -40,6 +40,7 @@ test('Campanha e Aventura usam Nome · Classe lvl X · Raça no gênero da ficha
 });
 test('alterar gênero na Ficha é persistido e se reflete nos cards da Campanha',async({page})=>{
  await page.goto('/ficha-personagem.html?id=e2e-aluria');
+ await expect(page.locator('#sheet')).toBeVisible();
  const gender=page.locator('#profile-gender');
  await expect(gender).toHaveValue('Feminino');
  await gender.selectOption('Outro');
