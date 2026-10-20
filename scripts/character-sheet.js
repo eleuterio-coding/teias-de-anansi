@@ -141,8 +141,8 @@ function bindFields(){
   'personality':[rp,'personality'],'ideal':[rp,'ideal'],'bond':[rp,'bond'],'flaw':[rp,'flaw'],
   'inventory-notes':[inv,'notes'],'magic-items':[inv,'magicItems'],'other-holdings':[inv,'otherHoldings']
  };
- for(const[id,[obj,key]]of Object.entries(textBindings))$(id)?.addEventListener('input',e=>{obj[key]=key==='gender'?normalizeCharacterGender(e.target.value):e.target.value});
- $('profile-gender')?.addEventListener('change',e=>{p.gender=normalizeCharacterGender(e.target.value);renderHeader(derive());renderFeatures(derive());saveCharacter('Gênero atualizado.')});
+ for(const[id,[obj,key]]of Object.entries(textBindings))$(id)?.addEventListener('input',e=>{const current=id.startsWith('profile-')?state.c.sheet.profile:obj;current[key]=key==='gender'?normalizeCharacterGender(e.target.value):e.target.value});
+ $('profile-gender')?.addEventListener('change',e=>{state.c.sheet.profile.gender=normalizeCharacterGender(e.target.value);const d=derive();renderHeader(d);renderFeatures(d);saveCharacter('Gênero atualizado.')});
  for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{inv[coin]=Math.max(0,num(e.target.value));e.target.value=inv[coin]});
  $('current-hp')?.addEventListener('change',e=>{rt.currentHp=num(e.target.value);saveCharacter('PV atualizado.')});
  $('temp-hp')?.addEventListener('change',e=>{rt.tempHp=Math.max(0,num(e.target.value));e.target.value=rt.tempHp;saveCharacter('PV temporários atualizados.')});
