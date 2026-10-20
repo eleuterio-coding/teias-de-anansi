@@ -44,6 +44,15 @@ test('alterar gênero na Ficha é persistido e se reflete nos cards da Campanha'
  const gender=page.locator('#profile-gender');
  await expect(gender).toHaveValue('Feminino');
  await gender.selectOption('Outro');
+ const diagnostic=await page.evaluate(async()=>{
+  const {state}=await import('/scripts/character-builder/state.js');
+  return {select:document.getElementById('profile-gender')?.value,
+    inMemory:state.c?.sheet?.profile?.gender,
+    stored:JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]').find(c=>c.id==='e2e-aluria')?.sheet?.profile?.gender,
+    subtitle:document.getElementById('pc-subtitle')?.textContent,
+    status:document.getElementById('save-status')?.textContent}
+ });
+ console.log('GENDER_STATE_DIAGNOSTIC',JSON.stringify(diagnostic));
  await expect(page.locator('#pc-subtitle')).toContainText('Patrulheire');
  const value=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]')
   .find(c=>c.id==='e2e-aluria')?.sheet?.profile?.gender);
