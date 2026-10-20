@@ -207,7 +207,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-add-npc]')){
    const id=section.querySelector('#campaign-npc-picker')?.value;
    if(!id||!getNpcs().some(n=>n.id===id))return feedback('Selecione um NPC cadastrado.',false);
-   persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])]},'npcs','NPC adicionado.')
+   persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])],importantNpcPublicNames:{...(c.importantNpcPublicNames||{}),[id]:getNpcs().find(n=>n.id===id)?.name||'NPC'}},'npcs','NPC adicionado.')
   }else if(target.matches('[data-del-npc]')){
    persist({importantNpcIds:(c.importantNpcIds||[]).filter(id=>id!==target.dataset.delNpc)},'npcs','NPC removido.')
   }else if(target.matches('[data-add-line]')){
@@ -262,7 +262,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  root.addEventListener('change',event=>{
   const input=event.target,c=getCampaign();
   if(input.matches('[data-visible-npc]')){
-    persist({importantNpcVisibility:{...(c.importantNpcVisibility||{}),[input.dataset.visibleNpc]:input.checked}},'npcs','Visibilidade do NPC atualizada.',false)
+    persist({importantNpcVisibility:{...(c.importantNpcVisibility||{}),[input.dataset.visibleNpc]:input.checked},importantNpcPublicNames:{...(c.importantNpcPublicNames||{}),[input.dataset.visibleNpc]:getNpcs().find(n=>n.id===input.dataset.visibleNpc)?.name||c.importantNpcPublicNames?.[input.dataset.visibleNpc]||'NPC'}},'npcs','Visibilidade do NPC atualizada.',false)
    }else if(input.matches('[data-visible-location]')){
     const rows=(c.importantLocationEntries||[]).map(row=>row.id===input.dataset.visibleLocation?{...row,visibleToPlayers:input.checked}:row);
     persist(locationPatch(rows),'locais','Visibilidade do local atualizada.',false)
