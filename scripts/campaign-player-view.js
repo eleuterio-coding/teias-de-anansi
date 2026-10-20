@@ -1,4 +1,4 @@
-import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
+import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const arr=value=>Array.isArray(value)?value:[];
 const titleCase=name=>{const text=String(name||'').trim();return Array.from(text)[0]?.toLocaleUpperCase('pt-BR')||'J'};
