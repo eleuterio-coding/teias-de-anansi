@@ -9,7 +9,8 @@ let initialized=false,providerPromise=null,renderToken=0,authWatchBound=false;
 function ensureProfile(){
  if(!state.c)return null;
  state.c.sheet=state.c.sheet||{};
- state.c.sheet.profile={player:'',...(state.c.sheet.profile||{})};
+ state.c.sheet.profile=state.c.sheet.profile||{};
+ if(!('player' in state.c.sheet.profile))state.c.sheet.profile.player='';
  return state.c.sheet.profile
 }
 function provider(){
