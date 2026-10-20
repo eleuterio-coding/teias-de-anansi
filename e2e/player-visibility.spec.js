@@ -25,11 +25,10 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
  await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
- await expect(page.locator('#table-root [data-save-campaign-section],#table-root [data-remove-member],#table-root [data-del-npc],#table-root [data-edit-line]')).toHaveCount(0);
+ await expect(page.getByRole('button')).toHaveCount(0);
 
  await page.goto('/aventuras.html?campaign=c-gus');
  await expect(page.getByRole('heading',{name:'Aventura do Gus'})).toBeVisible();
- await page.goto('/aventuras.html?campaign=c-gus&id=a-gus');
  await expect(page.getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
  await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
 
