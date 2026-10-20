@@ -45,7 +45,7 @@ export function moveTimelineNode(nodes,sourceId,targetId,position='before'){
 }
 export function addTimelineNode(nodes,text,parentId=null){
  const name=clean(text);if(!name)return null;
- const result=clone(nodes),id=createId(),node={id,text:name,children:[]};
+ const result=clone(nodes),id=createId(),node={id,text:name,visibleToPlayers:false,children:[]};
  if(parentId){
   const parent=findNode(result,parentId);if(!parent)return null;
   parent.children.push(node)
