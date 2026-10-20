@@ -1,7 +1,7 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-card-click1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-disclosure1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
-import{hydrateMediaImages}from'./image-media.js?v=20261019-important-locations1';
+import{hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 export const entries=value=>String(value||'').split(/\r?\n/).map(x=>x.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
 const clean=v=>String(v??'').trim();
 const npcHref=id=>'ficha-personagem.html?npc=1&id='+encodeURIComponent(id);
@@ -45,7 +45,7 @@ export function moveTimelineNode(nodes,sourceId,targetId,position='before'){
 }
 export function addTimelineNode(nodes,text,parentId=null){
  const name=clean(text);if(!name)return null;
- const result=clone(nodes),id=createId(),node={id,text:name,children:[]};
+ const result=clone(nodes),id=createId(),node={id,text:name,visibleToPlayers:false,children:[]};
  if(parentId){
   const parent=findNode(result,parentId);if(!parent)return null;
   parent.children.push(node)
@@ -65,13 +65,13 @@ function roster(c,npcs){
  const ids=c.importantNpcIds||[],chosen=ids.map(id=>npcs.find(n=>n.id===id)||{id,name:'NPC indisponível',missing:true}),available=npcs.filter(n=>!ids.includes(n.id)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt-BR'));
  return `<section id="npcs" class="card campaign-editor-card campaign-npc-card"><div class="campaign-editor-head"><h2>NPCs importantes</h2><span class="campaign-editor-count">${ids.length}</span></div>
  <div class="campaign-add-line"><label>NPC<select id="campaign-npc-picker"><option value="">— Selecione um NPC —</option>${available.map(n=>`<option value="${esc(n.id)}">${esc(n.name||'NPC sem nome')}</option>`).join('')}</select></label><button type="button" data-add-npc>Adicionar NPC</button></div>
- <ul class="campaign-bullet-list">${chosen.length?chosen.map(n=>`<li><span class="campaign-list-marker"></span>${n.missing?`<span>${esc(n.name)}</span>`:`<a href="${npcHref(n.id)}">${esc(n.name||'NPC sem nome')}</a>`}<button type="button" class="secondary campaign-list-remove" data-del-npc="${esc(n.id)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum NPC vinculado.</li>'}</ul>
+ <ul class="campaign-bullet-list">${chosen.length?chosen.map(n=>`<li><span class="campaign-list-marker"></span>${n.missing?`<span>${esc(n.name)}</span>`:`<a href="${npcHref(n.id)}">${esc(n.name||'NPC sem nome')}</a>`}<label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-npc="${esc(n.id)}" ${c.importantNpcVisibility?.[n.id]===true?'checked':''}><span>Mostrar aos jogadores</span></label><button type="button" class="secondary campaign-list-remove" data-del-npc="${esc(n.id)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum NPC vinculado.</li>'}</ul>
  <a class="btn secondary campaign-npc-library-link" href="npcs.html">Abrir NPCs</a></section>`
 }
 function bullets(c,id,title,field){
  const values=entries(c[field]),locationRows=c.importantLocationEntries||[];
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2><span class="campaign-editor-count">${values.length}</span></div>
- <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>${field==='importantLocations'?locationThumbnail(locationRows[i]||{id:'old-'+i,name:v}):''}<span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions"><button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
+ <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>${field==='importantLocations'?locationThumbnail(locationRows[i]||{id:'old-'+i,name:v}):''}<span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions">${field==='importantLocations'?`<label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-location="${esc(locationRows[i]?.id||'')}" ${locationRows[i]?.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>`:''}<button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
@@ -82,6 +82,7 @@ function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
     <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
     <input class="timeline-node-text" data-timeline-text="${esc(node.id)}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
     <div class="campaign-flow-actions">
+      <label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-event="${esc(node.id)}" ${node.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>
       ${sub.length?`<button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}" aria-controls="timeline-list-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button>`:''}
       <button type="button" class="secondary timeline-add-child" data-timeline-add-child="${esc(node.id)}" aria-label="Adicionar subevento">+ Subitem</button>
       <button type="button" class="secondary" data-timeline-move="up" data-timeline-target="${esc(node.id)}" aria-label="Mover para cima">↑</button>
@@ -175,7 +176,11 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }
   const target=event.target.closest('button');if(!target)return;
   const c=getCampaign();
-  if(target.matches('[data-timeline-toggle]')){
+  if(target.matches('[data-timeline-visibility]')){
+    const updated=clone(c.timelineNodes),node=findNode(updated,target.dataset.timelineVisibility);
+    if(node){node.visibleToPlayers=node.visibleToPlayers!==true;saveTree(updated,'Visibilidade do evento atualizada.')}
+    return
+   }else if(target.matches('[data-timeline-toggle]')){
    // Modifica só a ramificação: não recria campos, não perde o foco
    // e preserva o estado ao alternar Lista / Fluxograma.
    const id=target.dataset.timelineToggle;
@@ -202,7 +207,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   }else if(target.matches('[data-add-npc]')){
    const id=section.querySelector('#campaign-npc-picker')?.value;
    if(!id||!getNpcs().some(n=>n.id===id))return feedback('Selecione um NPC cadastrado.',false);
-   persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])]},'npcs','NPC adicionado.')
+   persist({importantNpcIds:[...new Set([...(c.importantNpcIds||[]),id])],importantNpcPublicNames:{...(c.importantNpcPublicNames||{}),[id]:getNpcs().find(n=>n.id===id)?.name||'NPC'}},'npcs','NPC adicionado.')
   }else if(target.matches('[data-del-npc]')){
    persist({importantNpcIds:(c.importantNpcIds||[]).filter(id=>id!==target.dataset.delNpc)},'npcs','NPC removido.')
   }else if(target.matches('[data-add-line]')){
@@ -256,7 +261,15 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  });
  root.addEventListener('change',event=>{
   const input=event.target,c=getCampaign();
-  if(input.matches('[data-edit-line]')){
+  if(input.matches('[data-visible-npc]')){
+    persist({importantNpcVisibility:{...(c.importantNpcVisibility||{}),[input.dataset.visibleNpc]:input.checked},importantNpcPublicNames:{...(c.importantNpcPublicNames||{}),[input.dataset.visibleNpc]:getNpcs().find(n=>n.id===input.dataset.visibleNpc)?.name||c.importantNpcPublicNames?.[input.dataset.visibleNpc]||'NPC'}},'npcs','Visibilidade do NPC atualizada.',false)
+   }else if(input.matches('[data-visible-location]')){
+    const rows=(c.importantLocationEntries||[]).map(row=>row.id===input.dataset.visibleLocation?{...row,visibleToPlayers:input.checked}:row);
+    persist(locationPatch(rows),'locais','Visibilidade do local atualizada.',false)
+   }else if(input.matches('[data-visible-event]')){
+    const updated=clone(c.timelineNodes),node=findNode(updated,input.dataset.visibleEvent);
+    if(node){node.visibleToPlayers=input.checked;saveTree(updated,'Visibilidade do evento atualizada.')}
+   }else if(input.matches('[data-edit-line]')){
    const field=input.dataset.editLine,values=entries(c[field]),index=Number(input.dataset.index),value=clean(input.value);
    if(!value){input.value=values[index]||'';return feedback('O nome não pode ficar vazio.',false)}
    if(values[index]===value)return;

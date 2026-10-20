@@ -1,0 +1,41 @@
+name: Validar visibilidade da Campanha
+on:
+  pull_request:
+    paths:
+      - 'scripts/campaign-player-view.js'
+      - 'scripts/campaign-structured-ui.js'
+      - 'scripts/campaign-state.js'
+      - 'scripts/collaboration-model.js'
+      - 'scripts/campaign-table-router.js'
+      - 'scripts/timeline-flowchart.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'campaigns.css'
+      - 'mesa.html'
+      - 'tests/auditar-visibilidade-campanha.mjs'
+      - 'e2e/campaign-player-disclosure.spec.js'
+      - '.github/workflows/validar-visibilidade-campanha.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mestre-jogador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe e proteção de dados
+        run: |
+          node --check scripts/campaign-player-view.js
+          node --check scripts/campaign-structured-ui.js
+          node --check scripts/campaign-state.js
+          node --check scripts/collaboration-model.js
+          node tests/auditar-visibilidade-campanha.mjs
+      - name: Instalar navegador de testes
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Validar as visões do Mestre e Jogador
+        run: npx playwright test e2e/campaign-player-disclosure.spec.js --project=desktop-chromium --project=mobile-chromium
