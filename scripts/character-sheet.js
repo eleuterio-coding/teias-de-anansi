@@ -1,5 +1,6 @@
 import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
+import{characterGender,genderedCharacterTerm,genderedCharacterLineage,normalizeCharacterGender}from'./character-gender.js?v=20261019-gender1';
 import{loadSpells}from'./character-builder/spells.js';
 import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js';
 
@@ -34,10 +35,10 @@ function getFeatObjects(d){const selected=Object.values(state.c.choices?.feats||
 
 function renderHeader(d){
  $('pc-name').textContent=state.c.name||'Personagem sem nome';
- $('pc-subtitle').textContent=[d.klass?`${d.klass.name} ${d.level}`:null,d.sub?.name,d.species?.name,state.c.choices?.species?.lineage,d.bg?.name].filter(Boolean).join(' · ');
+ $('pc-subtitle').textContent=[d.klass?`${genderedCharacterTerm(d.klass.name,characterGender(state.c),'class')} lvl ${d.level}`:null,d.sub?genderedCharacterTerm(d.sub.name,characterGender(state.c),'subclass'):null,d.species?genderedCharacterTerm(d.species.name,characterGender(state.c),'species'):null,state.c.choices?.species?.lineage?genderedCharacterLineage(state.c.choices.species.lineage,characterGender(state.c)):null,d.bg?genderedCharacterTerm(d.bg.name,characterGender(state.c),'background'):null].filter(Boolean).join(' · ');
  $('edit-link').href=`criacao-personagem.html?${npcMode()?'npc=1&':''}id=${encodeURIComponent(state.c.id)}`;
  const p=state.c.sheet.profile;
- setInput('profile-player',p.player);setInput('profile-age',p.age);setInput('profile-gender',p.gender);setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
+ setInput('profile-player',p.player);setInput('profile-age',p.age);setInput('profile-gender',normalizeCharacterGender(p.gender));setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
 }
 
 function renderCore(d){
@@ -72,11 +73,11 @@ function renderCombat(d){
 }
 
 function renderFeatures(d){
- $('species-features').innerHTML=`<div class="section-source">${d.species?`${esc(d.species.name)} ${sourceBadge(d.species.source)}`:'Raça não definida'}</div>${featureList(d.speciesTraits)}`;
- $('class-features').innerHTML=`<div class="section-source">${d.klass?`${esc(d.klass.name)} ${sourceBadge(d.klass.source)}`:'Classe não definida'}</div>${featureList(d.classFeatures)}`;
- $('subclass-features').innerHTML=d.sub?`<div class="section-source">${esc(d.sub.name)} ${sourceBadge(d.sub.source)}</div><p>${esc(d.sub.description||'Sem descrição estruturada.')}</p>`:'<p class="muted">Subclasse ainda não definida.</p>';
+ $('species-features').innerHTML=`<div class="section-source">${d.species?`${esc(genderedCharacterTerm(d.species.name,characterGender(state.c),'species'))} ${sourceBadge(d.species.source)}`:'Raça não definida'}</div>${featureList(d.speciesTraits)}`;
+ $('class-features').innerHTML=`<div class="section-source">${d.klass?`${esc(genderedCharacterTerm(d.klass.name,characterGender(state.c),'class'))} ${sourceBadge(d.klass.source)}`:'Classe não definida'}</div>${featureList(d.classFeatures)}`;
+ $('subclass-features').innerHTML=d.sub?`<div class="section-source">${esc(genderedCharacterTerm(d.sub.name,characterGender(state.c),'subclass'))} ${sourceBadge(d.sub.source)}</div><p>${esc(d.sub.description||'Sem descrição estruturada.')}</p>`:'<p class="muted">Subclasse ainda não definida.</p>';
  const bg=d.bg;
- $('background-data').innerHTML=bg?`<div class="section-source">${esc(bg.name)} ${sourceBadge(bg.source)}</div><div class="row"><span>Perícias</span><strong>${arr(bg.skills).map(esc).join(', ')||'—'}</strong></div><div class="row"><span>Ferramentas</span><strong>${arr(bg.tools).map(esc).join(', ')||'—'}</strong></div><div class="row"><span>Talento de origem</span><strong>${esc(bg.feat?.name||'—')}</strong></div>`:'<p class="muted">Antecedente ainda não definido.</p>';
+ $('background-data').innerHTML=bg?`<div class="section-source">${esc(genderedCharacterTerm(bg.name,characterGender(state.c),'background'))} ${sourceBadge(bg.source)}</div><div class="row"><span>Perícias</span><strong>${arr(bg.skills).map(esc).join(', ')||'—'}</strong></div><div class="row"><span>Ferramentas</span><strong>${arr(bg.tools).map(esc).join(', ')||'—'}</strong></div><div class="row"><span>Talento de origem</span><strong>${esc(bg.feat?.name||'—')}</strong></div>`:'<p class="muted">Antecedente ainda não definido.</p>';
  const feats=getFeatObjects(d);
  $('feat-data').innerHTML=feats.length?feats.map(f=>`<details class="feature"><summary>${esc(f.name)} ${sourceBadge(f.source)}</summary><p>${esc(f.description||'')}</p></details>`).join(''):'<p class="muted">Nenhum talento registrado.</p>';
  const rp=state.c.sheet.roleplay;
@@ -140,7 +141,8 @@ function bindFields(){
   'personality':[rp,'personality'],'ideal':[rp,'ideal'],'bond':[rp,'bond'],'flaw':[rp,'flaw'],
   'inventory-notes':[inv,'notes'],'magic-items':[inv,'magicItems'],'other-holdings':[inv,'otherHoldings']
  };
- for(const[id,[obj,key]]of Object.entries(textBindings))$(id)?.addEventListener('input',e=>{obj[key]=e.target.value});
+ for(const[id,[obj,key]]of Object.entries(textBindings))$(id)?.addEventListener('input',e=>{obj[key]=key==='gender'?normalizeCharacterGender(e.target.value):e.target.value});
+ $('profile-gender')?.addEventListener('change',e=>{p.gender=normalizeCharacterGender(e.target.value);renderHeader(derive());renderFeatures(derive());saveCharacter('Gênero atualizado.')});
  for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{inv[coin]=Math.max(0,num(e.target.value));e.target.value=inv[coin]});
  $('current-hp')?.addEventListener('change',e=>{rt.currentHp=num(e.target.value);saveCharacter('PV atualizado.')});
  $('temp-hp')?.addEventListener('change',e=>{rt.tempHp=Math.max(0,num(e.target.value));e.target.value=rt.tempHp;saveCharacter('PV temporários atualizados.')});

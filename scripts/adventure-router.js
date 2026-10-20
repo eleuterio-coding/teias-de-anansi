@@ -40,5 +40,5 @@ function readOnly(){
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-order-desc3')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261019-gender1')}
 start();

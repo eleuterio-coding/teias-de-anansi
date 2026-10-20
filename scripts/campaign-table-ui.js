@@ -1,4 +1,5 @@
 import{read,readNpcs}from'./character-builder/state.js';
+import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
 import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-card-click1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-location-images1';
@@ -15,7 +16,7 @@ function savePatch(patch,{rerender=false,message='Mesa salva.'}={}){const result
 const alphabetical=new Intl.Collator('pt-BR',{sensitivity:'base',numeric:true});
 const playerOrder=(a,b)=>alphabetical.compare(a.displayName||a.username||'',b.displayName||b.username||'')||alphabetical.compare(a.username||'',b.username||'');
 const characterOrder=(a,b)=>alphabetical.compare(a.name||'Personagem sem nome',b.name||'Personagem sem nome')||alphabetical.compare(a.id||'',b.id||'');
-function charLabel(c){const s=c.refSnapshots||{},level=c.choices?.class?.level;return`${c.name||'Personagem sem nome'}${s.class?.name?` · ${s.class.name}${level?` ${level}`:''}`:''}`}
+function charLabel(c){return characterIdentity(c)}
 function characterOptions(selected='',memberId='',username=''){
  // Somente personagens sem vínculo com qualquer campanha podem ser escolhidos.
  // O vínculo com a própria linha continua aparecendo como seleção corrente.

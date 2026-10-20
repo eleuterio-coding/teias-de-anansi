@@ -1,4 +1,5 @@
 import{state,$,arr,num,esc}from'./state.js';
+import{normalizeCharacterGender}from'../character-gender.js?v=20261019-gender1';
 import{derive}from'./rules.js';
 import{languageOutcome}from'./language-mechanics.js?v=20260923-race-language-builder1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260826-equipment-ownership1';
@@ -28,7 +29,7 @@ function hydrate(){
  const profileFields={
   'profile-player':'player','profile-experience':'experience','profile-age':'age','profile-gender':'gender','profile-height':'height','profile-weight':'weight','profile-hair':'hair','profile-eyes':'eyes','profile-skin':'skin','profile-alignment':'alignment','profile-faith':'faith','profile-languages':'languages'
  };
- for(const[id,key]of Object.entries(profileFields))setValue(id,p[key]);
+ for(const[id,key]of Object.entries(profileFields))setValue(id,key==='gender'?normalizeCharacterGender(p[key]):p[key]);
  for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw','profile-notes':'notes'}))setValue(id,rp[key]);
  for(const coin of['cp','sp','ep','gp','pp'])setValue(`coin-${coin}`,num(inv[coin]));
  setValue('inventory-notes',inv.notes);setValue('magic-items',inv.magicItems);setValue('other-holdings',inv.otherHoldings);setValue('extra-spells',state.c.sheet.extraSpells);
@@ -37,7 +38,7 @@ function hydrate(){
 function renderProfile(){
  ensureSheetState();
  const p=state.c.sheet.profile,box=$('creation-profile');if(!box)return;
- box.innerHTML=row('Jogador',p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',p.gender)+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',languages());
+ box.innerHTML=row('Jogador',p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',normalizeCharacterGender(p.gender))+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',languages());
 }
 
 function renderRoleplay(){
@@ -64,7 +65,7 @@ function bind(){
  const profileFields={
   'profile-player':'player','profile-experience':'experience','profile-age':'age','profile-gender':'gender','profile-height':'height','profile-weight':'weight','profile-hair':'hair','profile-eyes':'eyes','profile-skin':'skin','profile-alignment':'alignment','profile-faith':'faith','profile-languages':'languages'
  };
- for(const[id,key]of Object.entries(profileFields))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.profile[key]=e.target.value;renderProfile();if(key==='languages')renderProficiencies()});
+ for(const[id,key]of Object.entries(profileFields))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.profile[key]=key==='gender'?normalizeCharacterGender(e.target.value):e.target.value;renderProfile();if(key==='languages')renderProficiencies();if(key==='gender')document.dispatchEvent(new CustomEvent('hub:character-gender-changed'))});
  for(const[id,key]of Object.entries({'personality':'personality','ideal':'ideal','bond':'bond','flaw':'flaw','profile-notes':'notes'}))$(id)?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.roleplay[key]=e.target.value;renderRoleplay()});
  for(const coin of['cp','sp','ep','gp','pp'])$(`coin-${coin}`)?.addEventListener('change',e=>{ensureSheetState();state.c.sheet.inventory[coin]=Math.max(0,num(e.target.value));e.target.value=state.c.sheet.inventory[coin];renderInventory()});
  $('inventory-notes')?.addEventListener('input',e=>{ensureSheetState();state.c.sheet.inventory.notes=e.target.value;renderInventory()});

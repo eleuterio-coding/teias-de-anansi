@@ -1,0 +1,50 @@
+name: Validar gênero e identidade dos personagens
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-gender.js'
+      - 'scripts/character-builder/**'
+      - 'scripts/character-builder.js'
+      - 'scripts/character-sheet.js'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/adventure-roster-ui.js'
+      - 'scripts/character-list-ui.js'
+      - 'criacao-personagem.html'
+      - 'ficha-personagem.html'
+      - 'e2e/character-gender-identity.spec.js'
+      - 'tests/auditar-genero-personagens.mjs'
+      - '.github/workflows/validar-genero-personagens.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/character-gender.js'
+      - 'e2e/character-gender-identity.spec.js'
+      - 'tests/auditar-genero-personagens.mjs'
+  workflow_dispatch:
+jobs:
+  genero-identidade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Conferir JavaScript
+        run: |
+          node --check scripts/character-gender.js
+          node --check scripts/character-builder/profile-ui.js
+          node --check scripts/character-builder/ui.js
+          node --check scripts/character-builder.js
+          node --check scripts/character-sheet.js
+          node --check scripts/campaign-table-ui.js
+          node --check scripts/adventure-roster-ui.js
+          node --check scripts/character-list-ui.js
+      - name: Auditar concordância e persistência
+        run: node tests/auditar-genero-personagens.mjs
+      - name: Instalar navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar Campanha, Aventura e ficha digital
+        run: npx playwright test e2e/character-gender-identity.spec.js --project=desktop-chromium --project=mobile-chromium
