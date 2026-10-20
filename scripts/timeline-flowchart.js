@@ -19,7 +19,7 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null){
  <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
  <strong>${esc(node.text)}</strong>
  <div class="hub-diagram-actions">
- <button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>${toggle}
+ <button type="button" class="hub-diagram-visibility" data-timeline-visibility="${esc(node.id)}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>${toggle}
  </div>
  </div>
  ${children.length?`<div id="timeline-diagram-children-${esc(node.id)}" class="hub-diagram-children" role="group" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${children.map(child=>campaignNode(child,depth+1,collapsedIds)).join('')}</div>`:''}
