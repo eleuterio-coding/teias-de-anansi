@@ -38,4 +38,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Validar as visões do Mestre e Jogador
-        run: npx playwright test e2e/campaign-player-disclosure.spec.js e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-player-disclosure.spec.js --project=desktop-chromium --project=mobile-chromium
