@@ -1,7 +1,7 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-card-click1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-disclosure1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
-import{hydrateMediaImages}from'./image-media.js?v=20261019-important-locations1';
+import{hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 export const entries=value=>String(value||'').split(/\r?\n/).map(x=>x.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
 const clean=v=>String(v??'').trim();
 const npcHref=id=>'ficha-personagem.html?npc=1&id='+encodeURIComponent(id);
