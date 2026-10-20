@@ -1,4 +1,4 @@
-import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-important-locations1';
+import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export const locationPatch=rows=>({importantLocationEntries:rows,importantLocations:rows.map(row=>row.name).join('\n')});
 export function reorderLocationRows(rows,sourceIndex,targetIndex,position='before'){
