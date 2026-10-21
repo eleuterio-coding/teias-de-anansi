@@ -256,11 +256,13 @@ body.hub-shell-enabled .panel{padding:18px}
 body.hub-shell-enabled .dash-row{padding:13px}
 
 /* Campaign list */
-body.hub-shell-enabled #campaign-list>.campaign-list-grid{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list)>.campaign-list-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
 }
-body.hub-shell-enabled #adventure-list>.list{
- grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px
+@media(max-width:760px){
+ body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list)>.campaign-list-grid{
+  grid-template-columns:minmax(0,1fr)
+ }
 }
 body.hub-shell-enabled .campaign-card{
  min-height:290px;flex-direction:column;padding:0!important;overflow:hidden
@@ -275,32 +277,32 @@ body.hub-shell-enabled .campaign-card>.row-actions{padding:8px 15px 15px;margin-
 body.hub-shell-enabled #campaign-create-card{background:linear-gradient(180deg,#101b27,#0d161f)!important}
 
 /* Card Nova campanha: mesma célula e altura das campanhas, moldura vazia. */
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-create-tile{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-create-tile{
   display:flex!important;flex-direction:column;justify-content:center;align-items:center;
   padding:22px!important;min-height:290px;
   background:var(--hub-surface)!important;color:var(--hub-text-2)!important;
   border:2px dashed #435a70!important;box-shadow:none!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-create-tile:is(:hover,:focus-visible){
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-create-tile:is(:hover,:focus-visible){
   background:var(--hub-surface-2)!important;color:var(--hub-accent-2)!important;
   border-color:var(--hub-accent)!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-create-plus{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-create-plus{
   border-color:#496581;color:var(--hub-accent-2)
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card>.campaign-card-actions{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card>.campaign-card-actions{
   display:flex;justify-content:space-between;
   padding:8px 15px 15px;gap:8px;align-items:center
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card-status .campaign-status-trigger{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status .campaign-status-trigger{
   color:var(--status-ink)!important;
   background:transparent!important;
   border-radius:6px!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-status-menu{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-menu{
   background:rgba(12,20,30,.58)!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) button.campaign-status-option{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) button.campaign-status-option{
   min-height:34px!important;height:auto!important;
   padding:7px 10px!important;
   border:1px solid var(--option-border)!important;
@@ -310,11 +312,11 @@ body.hub-shell-enabled :is(#campaign-list,#adventure-list) button.campaign-statu
   box-shadow:none!important;
   font-size:.78rem!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) button.campaign-status-option:is(:hover,:focus-visible){
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) button.campaign-status-option:is(:hover,:focus-visible){
   border-color:var(--option-color)!important;
   background:var(--option-bg)!important
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card-details>.mini{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-details>.mini{
   color:var(--hub-muted)!important
 }
 
@@ -444,7 +446,7 @@ body.hub-shell-enabled .modulos .nome{white-space:normal!important;color:var(--h
  .campaign-product-actions{top:14px;right:14px}
  .campaign-product-title-row h1{font-size:2rem!important}
  .campaign-product-summary{grid-template-columns:1fr 1fr}
- body.hub-shell-enabled :is(#campaign-list,#adventure-list)>.list{grid-template-columns:1fr}
+ body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list)>.list{grid-template-columns:1fr}
 }
 @media(max-width:460px){
  body.hub-shell-enabled .hub-global-topbar .hub-master-control select{min-width:78px!important;max-width:94px!important}
@@ -505,11 +507,11 @@ body.hub-shell-enabled .hub-breadcrumb-item>[aria-current="page"]{
 }
 /* O estado do card é definido pelo seletor superior.
    A área inferior mantém somente as ações extremas. */
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card>.campaign-card-actions{
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card>.campaign-card-actions{
   display:flex;justify-content:space-between
 }
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card-actions>a.btn{margin-right:auto}
-body.hub-shell-enabled :is(#campaign-list,#adventure-list) .campaign-card-actions>button[data-delete]{margin-left:auto}
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-actions>a.btn{margin-right:auto}
+body.hub-shell-enabled :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-actions>button[data-delete]{margin-left:auto}
 
 
 /* Confirmação de salvamento: um único padrão em todo o Hub. */
@@ -678,3 +680,4 @@ body.hub-shell-enabled .hub-topbar-user-link>svg{
 
 /* Ações da lista de Aventuras seguem o mesmo alinhamento de Campanhas. */
 body.hub-shell-enabled #adventure-list .campaign-card-actions>button[data-delete-adventure]{margin-left:auto}
+body.hub-shell-enabled #sessions-list .campaign-card-actions>button[data-delete-session-list]{margin-left:auto}
