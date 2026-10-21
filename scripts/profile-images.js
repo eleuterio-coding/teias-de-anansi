@@ -1,6 +1,6 @@
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 export const userKey=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-export const playerTerm=value=>userKey(value)==='fernanda'?'Jogadora':'Jogador';
+export const playerTerm=value=>userKey(value).split(/\s+/)[0]==='fernanda'?'Jogadora':'Jogador';
 export const validPortrait=value=>typeof value==='string'&&/^data:image\/(?:webp|png|jpeg);base64,[a-zA-Z0-9+/=]+$/.test(value)&&value.length<300000?value:'';
 const CACHE_KEY='hub-rpg:user-avatar-cache:v1';
 export function rememberedAvatars(){try{const data=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');return Array.isArray(data)?data:[]}catch{return[]}}
