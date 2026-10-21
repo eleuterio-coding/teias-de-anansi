@@ -110,7 +110,7 @@ export async function initMasterTools(){
  for(const row of[...(remote?.users||[]),...knownLocalUsers()]){
   const name=canonical.get(username(row.username));if(!name||name===master||!allowed.has(name))continue;
   const existing=map.get(name),spec=arr(remote?.config?.playerAccounts).find(spec=>username(spec.username)===name);
-  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:text(row.displayName)||existing?.displayName||text(spec?.displayName)||name})
+  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:existing?.displayName||text(row.displayName)||text(spec?.displayName)||name})
  }
  const users=[...map.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR')),preview=readMasterPreview();
  // Um modo de visualização salvo para um usuário excluído não pode sobreviver.
