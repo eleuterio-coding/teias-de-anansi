@@ -175,7 +175,7 @@ export function initAppShell(){
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
  frame.appendChild(buildTopbar());frame.appendChild(content);shell.appendChild(sidebar);shell.appendChild(frame);
  document.body.insertBefore(shell,document.body.firstChild);movable.forEach(function(node){content.appendChild(node)});
- document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");if(previewActive())document.body.classList.add("hub-master-preview");buildCommand();bindShell();renderRecents();updateAppShellContext();if(masterSession()?.isMaster)import("./master-tools.js?v=20261016-master-preview1").then(module=>module.initMasterTools?.()).catch(error=>console.warn("[Hub Mestre] topo:",error))
+ document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage())||CHARACTER_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");if(previewActive())document.body.classList.add("hub-master-preview");buildCommand();bindShell();renderRecents();updateAppShellContext();if(masterSession()?.isMaster)import("./master-tools.js?v=20261020-allowed-users1").then(module=>module.initMasterTools?.()).catch(error=>console.warn("[Hub Mestre] topo:",error))
 }
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
