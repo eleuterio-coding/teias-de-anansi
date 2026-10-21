@@ -18,4 +18,5 @@ assert.match(sheet,/retryWhenSharedCharacterArrives/);
 assert.match(sheet,/normalizeCharacter\(saved\)/);
 assert.match(access,/window\.addEventListener\('hub-rpg:remote-updated',apply\)/);
 assert.match(access,/function refreshAccess\(\)/);
+assert.match(access,/status&&status\.textContent!=='Somente leitura'/,'Proteção idempotente contra loops do MutationObserver');
 console.log('OK: normalização idêntica, recuperação compartilhada e autorização atualizada.');
