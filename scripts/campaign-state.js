@@ -134,7 +134,7 @@ export function assignCharacterToMember(list=[],campaignId,memberId,characterId)
  if(!charId)return{ok:false,reason:'Selecione um personagem.',list:clean};
  const target=clean.find(c=>c.id===targetCampaignId);
  const member=target?.members.find(m=>m.id===targetMemberId);
- if(!target||!member)return{ok:false,reason:'Mesa ou participante não encontrado.',list:clean};
+ if(!target||!member)return{ok:false,reason:'Campanha ou participante não encontrado.',list:clean};
  // Exclusividade por campanha, independente de quem controla a ficha.
  // Nunca transfira uma ficha silenciosamente entre campanhas.
  const conflict=characterAssignmentConflict(clean,targetCampaignId,targetMemberId,charId);
