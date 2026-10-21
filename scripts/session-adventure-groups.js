@@ -2,7 +2,7 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&
 const countLabel=n=>n===1?'1 sessão':`${n} sessões`;
 
 /** Reutiliza os cards de Sessão; somente a organização visual muda. */
-export function sessionAdventureGroupsHtml(sessions,adventures,renderCard){
+export function sessionAdventureGroupsHtml(sessions,adventures,renderCard,campaigns=[]){
  const known=new Map((Array.isArray(adventures)?adventures:[]).map(a=>[a.id,a]));
  const grouped=new Map();
  for(const session of Array.isArray(sessions)?sessions:[]){
@@ -17,7 +17,8 @@ export function sessionAdventureGroupsHtml(sessions,adventures,renderCard){
   const adv=known.get(group.adventureId);
   const hasAdventure=group.adventureId!=='__none__';
   const name=adv?.title||(hasAdventure?'Aventura não disponível':'Sem aventura');
-  const campaignName=group.items[0]?.campaignName||'';
+  const campaignName=group.items[0]?.campaignName
+   ||campaigns.find(c=>c.id===group.campaignId)?.name||'';
   const nameHtml=adv
    ?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(name)}">${esc(name)}</a>`
    :`<span>${esc(name)}</span>`;
