@@ -1,5 +1,5 @@
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261021-current-session1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261021-current-session1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261019-adventure-order1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
@@ -217,25 +217,61 @@ function encounterSummary(session){
  const rows=session.encounters||[];
  return `<section class="session-subsection"><h4>Encontros</h4><div class="story-list">${rows.length?rows.map(e=>`<div class="campaign-reference-row"><div><strong>${esc(e.title)}</strong><div><span class="badge">${esc(e.status||'planned')}</span></div></div></div>`).join(''):'<div class="story-empty">Nenhum encontro registrado.</div>'}</div></section>`
 }
+
+const SESSION_CARD_STATUSES=['current','next','active','planned','completed','cancelled'];
 function sessionListCard(s,restricted=false){
  const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
- const cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'hub-collection-cover-image',alt:''});
+ const cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
- const description=s.summary||s.objective||'Sem descrição.';
- const status=['planned','next','current','active','completed','cancelled'].includes(s.status)?s.status:'planned';
+ const description=s.summary||s.objective||'';
+ const status=SESSION_CARD_STATUSES.includes(s.status)?s.status:'planned';
  const href=detailHref(s);
- return `<article class="hub-collection-card session-list-card" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
- <a class="hub-collection-stretched" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
- <div class="hub-collection-image">${cover||'<span class="hub-collection-image-placeholder" aria-hidden="true">✦</span>'}</div>
- <span class="hub-collection-status status-${esc(status)}">${esc(statusLabel(status))}</span>
- <div class="hub-collection-body">
-  <h3>${esc(s.title)}</h3>
-  <p class="hub-collection-description">${esc(description)}</p>
-  <div class="hub-collection-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(campaignName)}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||'Sem aventura')}</strong></span></div>
-  <div class="hub-collection-metrics">${s.date?`${esc(s.date)} · `:''}${scenes} cena(s) · ${encounters} encontro(s)</div>
- </div>
- <div class="hub-collection-actions"><a class="btn" href="${href}">Abrir</a>${restricted?'':`<button type="button" class="danger session-delete-button" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}" title="Excluir sessão">×</button>`}</div>
- </article>`
+ const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
+ const context=`<p class="mini session-card-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(campaignName)}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||'Sem aventura')}</strong></span></p>`;
+ const statusControl=restricted
+  ?`<span class="campaign-status-value" aria-label="Status da sessão: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
+  :`<details class="campaign-status-disclosure" data-status-disclosure="${esc(s.id)}">
+     <summary class="campaign-status-trigger" data-session-status-trigger="${esc(s.id)}" aria-label="Alterar status da sessão ${esc(s.title)}: ${esc(statusLabel(status))}">
+      <span>${esc(statusLabel(status))}</span><span class="campaign-status-chevron" aria-hidden="true"></span>
+     </summary>
+     <div class="campaign-status-menu" role="group" aria-label="Escolher status da sessão ${esc(s.title)}">
+      ${SESSION_CARD_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-session-status-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-next-session-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
+     </div>
+    </details>`;
+ return `<article class="campaign-card" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
+  <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
+  <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
+  <div class="campaign-card-main">${cover}<div class="campaign-card-details">
+   <h2>${esc(s.title)}</h2>
+   ${description?`<p>${esc(description)}</p>`:''}
+   ${context}
+   <p class="mini">${s.date?`${esc(s.date)} · `:''}${counts}</p>
+  </div></div>
+  <div class="row-actions campaign-card-actions">
+   <a class="btn" href="${href}">Abrir</a>
+   ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">Excluir</button>`}
+  </div>
+ </article>`;
+}
+function sessionCreateTile(){
+ return `<a href="${listHref()}${listHref().includes('?')?'&':'?'}new=1" id="open-session-create" class="campaign-card campaign-create-tile" aria-label="Nova sessão" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="campaign-create-plus" aria-hidden="true">+</span><span class="campaign-create-tile-label">Nova sessão</span></a>`;
+}
+function updateSessionCardStatus(session,status){
+ if(!session||!SESSION_CARD_STATUSES.includes(status))return false;
+ if(session.status===status)return true;
+ if(session.source==='campaign'){
+  let result;
+  if(status==='active')result=startCampaignSession(campaigns,session.campaignId,session.id);
+  else if(status==='completed'&&session.status==='active')result=finishCampaignSession(campaigns,session.campaignId,session.id);
+  else result=updateCampaignSession(campaigns,session.campaignId,session.id,{status});
+  if(!result.ok){feedback(result.reason||'Não foi possível alterar o status.',false);return false}
+  campaigns=writeCampaigns(result.list);
+ }else{
+  const result=updateStandaloneSession(standalone,session.id,{status});
+  if(!result.ok){feedback(result.reason||'Não foi possível alterar o status.',false);return false}
+  standalone=writeStandaloneSessions(result.list);
+ }
+ reload();render();return true;
 }
 function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
@@ -278,7 +314,7 @@ function render(){
  if(!restricted)reload();
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
- box?.classList.toggle('hub-collection-grid',!sessionId);
+ box?.classList.remove('hub-collection-grid');
  if(!restricted)syncCreationOptions();
  if(sessionId){
   if(createCard)createCard.hidden=true;
@@ -292,7 +328,7 @@ function render(){
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=`${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':`<a href="${listHref()}${listHref().includes('?')?'&':'?'}new=1" id="open-session-create" class="hub-collection-card hub-collection-create campaign-create-tile" aria-controls="session-create-card" aria-expanded="${showCreationPanel}"><span class="hub-collection-plus campaign-create-plus" aria-hidden="true">+</span><span class="hub-collection-create-label campaign-create-tile-label">Nova sessão</span></a>`}`;
+ box.innerHTML=`<div class="list campaign-list-grid">${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':sessionCreateTile()}</div>`;
  if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
  $('open-session-create')?.addEventListener('click',event=>{
   event.preventDefault();
@@ -301,6 +337,16 @@ function render(){
   $('open-session-create')?.setAttribute('aria-expanded','true');
   $('new-session-title')?.focus()
  });
+ box.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
+  if(!disclosure.open)return;
+  box.querySelectorAll('[data-status-disclosure][open]').forEach(other=>{if(other!==disclosure)other.open=false})
+ }));
+ box.querySelectorAll('[data-next-session-status]').forEach(button=>button.addEventListener('click',()=>{
+  const ref=sessionRef(button.dataset.sessionStatusId,button.dataset.sessionSource);
+  if(ref&&updateSessionCardStatus(ref,button.dataset.nextSessionStatus)){
+   [...document.querySelectorAll('#sessions-list [data-session-status-trigger]')].find(el=>el.dataset.sessionStatusTrigger===ref.id)?.focus()
+  }else button.closest('details')?.removeAttribute('open')
+ }));
  box.querySelectorAll('[data-delete-session-list]').forEach(button=>button.addEventListener('click',()=>{
   const ref=sessionRef(button.dataset.deleteSessionList,button.dataset.sessionSource);
   if(ref&&confirm('Excluir esta sessão?'))removeSession(ref)
@@ -451,6 +497,16 @@ $('new-session-adventure')?.addEventListener('change',event=>{
  if(adventure&&campaignSelect&&!campaignSelect.value){campaignSelect.value=adventure.campaignId;syncCreationOptions()}
 });
 reload();render();
+document.addEventListener('pointerdown',event=>{
+ if(event.target.closest?.('#sessions-list [data-status-disclosure]'))return;
+ document.querySelectorAll('#sessions-list [data-status-disclosure][open]').forEach(node=>node.open=false)
+});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape')return;
+ const open=document.querySelector('#sessions-list [data-status-disclosure][open]');
+ if(!open)return;
+ open.open=false;open.querySelector('summary')?.focus();event.stopPropagation()
+});
 if(params.get('new')==='1'&&!sessionId&&!playerMode())requestAnimationFrame(()=>{
  $('session-create-card')?.scrollIntoView({block:'start'});
  $('new-session-title')?.focus({preventScroll:true})
