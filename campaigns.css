@@ -1940,7 +1940,11 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 #table-root .campaign-player-character-controls{display:flex;align-items:center;gap:6px;min-width:0;height:42px}
 #table-root .campaign-player-character-controls>.campaign-avatar-trigger{width:38px;height:38px;flex:0 0 38px}
 #table-root .campaign-player-character-controls>.campaign-player-character-link{
- flex:1;min-width:0;width:auto;overflow:hidden
+ display:flex;align-items:center;gap:8px;
+ flex:1;min-width:0;width:auto;height:42px;padding:0 10px;
+ border:1px solid #406685;border-radius:8px;
+ background:var(--hub-surface-2,#0c1723);color:var(--hub-text,#fff);
+ font-size:.83rem;font-weight:650;overflow:hidden;text-decoration:none
 }
 #table-root .campaign-player-character-link>span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 #table-root .campaign-player-roster-row .roster-player-profile-link{height:28px;width:28px;flex-basis:28px}
