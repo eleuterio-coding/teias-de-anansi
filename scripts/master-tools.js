@@ -1,4 +1,4 @@
-import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media2';
+import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261021-users-admin1';
 import{readCampaigns}from'./campaign-state.js?v=20260925-media1';
 import{readAdventures}from'./adventure-state.js?v=20260925-media1';
 import{read as readCharacters}from'./character-builder/state.js';
@@ -110,7 +110,7 @@ export async function initMasterTools(){
  for(const row of[...(remote?.users||[]),...knownLocalUsers()]){
   const name=canonical.get(username(row.username));if(!name||name===master||!allowed.has(name))continue;
   const existing=map.get(name),spec=arr(remote?.config?.playerAccounts).find(spec=>username(spec.username)===name);
-  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:text(spec?.displayName)||existing?.displayName||text(row.displayName)||name})
+  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:existing?.displayName||text(row.displayName)||text(spec?.displayName)||name})
  }
  const users=[...map.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR')),preview=readMasterPreview();
  // Um modo de visualização salvo para um usuário excluído não pode sobreviver.

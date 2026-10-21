@@ -1,0 +1,56 @@
+/* Usuários: mesma hierarquia visual e componentes do Hub. */
+body.hub-shell-enabled .hub-users-page{display:grid;gap:16px;align-content:start}
+body.hub-shell-enabled .hub-users-page>.top{margin-bottom:2px}
+body.hub-shell-enabled .hub-users-page .card{padding:22px;min-width:0}
+.hub-users-page .hub-user-own-name{font-weight:650;margin:0}
+.hub-users-page .hub-user-photo-card{justify-items:start}
+.hub-users-page .hub-user-photo-card .row-actions{flex-wrap:wrap}
+.hub-users-page .hub-users-heading{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.hub-users-page .hub-users-heading h2{margin:0}
+.hub-users-page .hub-users-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:12px;margin-top:16px}
+.hub-users-page .hub-user-list-item{
+ width:100%;min-height:90px;display:flex;align-items:center;gap:14px;text-align:left;
+ padding:14px;border:1px solid var(--hub-border,#344559);border-radius:12px;
+ background:var(--hub-surface-2,#152332);color:var(--hub-text,#fff);
+}
+.hub-users-page button.hub-user-list-item{cursor:pointer}
+.hub-users-page button.hub-user-list-item:hover,
+.hub-users-page button.hub-user-list-item[aria-pressed="true"]{
+ border-color:var(--hub-accent,#2f9cff);background:rgba(47,156,255,.12)
+}
+.hub-users-page .hub-user-list-photo{
+ width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;
+ border:1px solid var(--hub-border,#344559);border-radius:11px;
+ background:var(--hub-surface-3,#192c3e);color:var(--hub-muted,#aab9c9);
+ overflow:hidden;font-size:1.35rem;font-weight:700;
+}
+.hub-users-page .hub-user-list-photo img{width:100%;height:100%;object-fit:cover}
+.hub-users-page .hub-user-list-details{display:grid;gap:3px;min-width:0}
+.hub-users-page .hub-user-list-details strong{font-size:.98rem;overflow-wrap:anywhere}
+.hub-users-page .hub-user-list-details small{font-size:.78rem;color:var(--hub-muted,#aab9c9)}
+.hub-users-page .hub-user-admin-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px}
+.hub-users-page .hub-user-admin-photo{display:grid;justify-items:start;gap:12px;align-content:start}
+.hub-users-page .hub-user-admin-avatar{
+ width:152px;height:152px;display:grid;place-items:center;padding:0;
+ border:1px solid var(--hub-border,#344559);border-radius:16px;
+ background:var(--hub-surface-2,#152332);overflow:hidden;
+ font-size:2.5rem;color:var(--hub-muted,#aab9c9);cursor:pointer;
+}
+.hub-users-page .hub-user-admin-avatar img{width:100%;height:100%;object-fit:cover}
+.hub-users-page .hub-user-admin-fields{display:grid;gap:16px;align-content:start}
+.hub-users-page .hub-user-admin-fields label{max-width:560px}
+.hub-users-page .hub-user-admin-fields input{display:block;width:100%}
+.hub-users-page .hub-user-admin :is(.row-actions){display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.hub-users-page .hub-user-admin :is([role="status"]){margin:0;min-height:1em}
+.hub-users-page .hub-user-admin :is(button,.btn)[disabled]{cursor:default;opacity:.6}
+.hub-users-page .hub-user-admin-avatar:hover{border-color:var(--hub-accent,#2f9cff)}
+.hub-users-page .hub-user-admin-avatar:focus-visible,
+.hub-users-page .hub-user-list-item:focus-visible{
+ outline:3px solid var(--hub-accent-2,#67b8ff);outline-offset:3px
+}
+@media(max-width:650px){
+ body.hub-shell-enabled .hub-users-page .card{padding:16px}
+ .hub-users-page .hub-user-admin-layout{grid-template-columns:1fr;gap:18px}
+ .hub-users-page .hub-user-admin-avatar{width:108px;height:108px}
+ .hub-users-page .hub-users-list{grid-template-columns:1fr}
+}

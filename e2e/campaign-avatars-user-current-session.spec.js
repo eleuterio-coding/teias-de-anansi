@@ -82,14 +82,14 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#linha-tempo .campaign-player-event-children').first()).toBeHidden();
  await expect(page.locator('#jogadores input,#jogadores select,#jogadores button')).toHaveCount(0);
 });
-test('Menu Usuário imediatamente acima de Configurações',async({page})=>{
+test('Menu Usuários imediatamente acima de Configurações',async({page})=>{
  await page.addInitScript(()=>localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]})));
  await page.goto('/usuario.html');
  const nav=page.locator('.hub-nav-secondary .hub-nav-link');
  await expect(nav).toHaveCount(2);
- await expect(nav.first()).toContainText('Usuário');
+ await expect(nav.first()).toContainText('Usuários');
  await expect(nav.nth(1)).toContainText('Configurações');
- await expect(page.getByRole('heading',{name:'Usuário'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Usuários'})).toBeVisible();
 });
 test('Cards continuam empilhados no celular',async({page})=>{
  await page.setViewportSize({width:390,height:844});

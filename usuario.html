@@ -1,9 +1,51 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Usuário - Teias de Anansi</title><link rel="stylesheet" href="hub-ux.css?v=20261021-user1"><link rel="stylesheet" href="campaigns.css?v=20261021-avatars1"></head>
-<body><main id="main-content" class="hub-user-page">
-<header class="top"><div><h1>Usuário</h1></div></header>
-<section class="card hub-user-photo-card"><h2>Minha imagem</h2>
-<div class="hub-user-avatar-preview" id="user-avatar-preview" aria-label="Imagem atual do usuário"><span aria-hidden="true">◇</span></div>
-<div class="row-actions"><label class="btn" for="user-avatar-input">Selecionar imagem</label><input id="user-avatar-input" type="file" accept="image/png,image/jpeg,image/webp" hidden><button id="user-avatar-remove" type="button" class="secondary">Remover imagem</button></div>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Usuários - Teias de Anansi</title>
+<link rel="stylesheet" href="hub-ux.css?v=20261021-users-admin1">
+<link rel="stylesheet" href="campaigns.css?v=20261021-click-avatar1">
+<link rel="stylesheet" href="user-directory.css?v=20261021-users-admin1">
+</head>
+<body>
+<main id="main-content" class="hub-user-page hub-users-page">
+<header class="top"><div><h1>Usuários</h1></div></header>
+<section class="card hub-user-photo-card" id="own-profile-card">
+<h2>Meu perfil</h2>
+<p class="hub-user-own-name" id="own-display-name"></p>
+<div class="hub-user-avatar-preview" id="user-avatar-preview" role="button" tabindex="0" title="Selecionar imagem" aria-label="Selecionar minha imagem"><span aria-hidden="true">◇</span></div>
+<div class="row-actions"><label class="btn" for="user-avatar-input">Selecionar imagem</label><input id="user-avatar-input" type="file" accept="image/png,image/jpeg,image/webp" hidden><button id="user-avatar-remove" type="button" class="secondary">Remover</button></div>
 <p id="user-avatar-feedback" role="status" aria-live="polite"></p>
-</section></main><script type="module" src="scripts/hub-ux.js?v=20261021-user-nav2"></script><script type="module" src="scripts/user-profile-ui.js?v=20261021-user1"></script></body></html>
+</section>
+<section class="card hub-user-directory">
+<div class="hub-users-heading"><h2>Usuários do Hub</h2><span id="hub-users-count" class="mini"></span></div>
+<div id="hub-users-list" class="hub-users-list" aria-live="polite"></div>
+<p id="hub-users-feedback" role="status" aria-live="polite"></p>
+</section>
+<section class="card hub-user-admin" id="user-admin-card" hidden>
+<h2>Editar usuário</h2>
+<form id="user-admin-form">
+<div class="hub-user-admin-layout">
+<div class="hub-user-admin-photo">
+<button class="hub-user-admin-avatar" type="button" id="admin-avatar-preview" aria-label="Selecionar imagem deste usuário" title="Selecionar imagem"><span aria-hidden="true">◇</span></button>
+<input type="file" id="admin-avatar-file" accept="image/png,image/jpeg,image/webp" hidden>
+<div class="row-actions">
+<label class="btn secondary" for="admin-avatar-file">Selecionar imagem</label>
+<button class="secondary" id="admin-avatar-remove" type="button">Remover</button>
+</div>
+</div>
+<div class="hub-user-admin-fields">
+<label>Nome exibido<input id="admin-display-name" type="text" maxlength="80" autocomplete="off" required></label>
+<p class="mini" id="admin-login-name"></p>
+<div class="row-actions"><button type="submit" id="admin-save">Salvar alterações</button><button class="secondary" id="admin-cancel" type="button">Cancelar</button><a class="btn secondary" href="usuarios.html">Gerenciar acessos</a></div>
+<p id="admin-feedback" role="status" aria-live="polite"></p>
+</div>
+</div>
+</form>
+</section>
+</main>
+<script type="module" src="scripts/hub-ux.js?v=20261021-users-admin1"></script>
+<script type="module" src="scripts/user-profile-ui.js?v=20261021-users-admin1"></script>
+</body>
+</html>

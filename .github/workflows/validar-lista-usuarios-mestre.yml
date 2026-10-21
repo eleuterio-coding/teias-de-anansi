@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'scripts/master-tools.js'
+      - 'scripts/user-profile-ui.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'usuario.html'
+      - 'user-directory.css'
+      - 'e2e/user-directory-admin.spec.js'
       - 'scripts/collaboration-ui.js'
       - 'scripts/app-shell.js'
       - 'scripts/hub-ux.js'
@@ -27,6 +32,8 @@ jobs:
       - name: Verificar sintaxe
         run: |
           node --check scripts/master-tools.js
+          node --check scripts/user-profile-ui.js
+          node --check scripts/firebase-collaboration-provider.js
           node --check scripts/collaboration-ui.js
           node --check scripts/app-shell.js
           node --check scripts/hub-ux.js
@@ -35,4 +42,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Validar filtragem e limpeza de prévias
-        run: npx playwright test e2e/master-ghost-accounts.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/master-ghost-accounts.spec.js e2e/user-directory-admin.spec.js --project=desktop-chromium --project=mobile-chromium
