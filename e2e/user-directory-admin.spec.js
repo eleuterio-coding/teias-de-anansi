@@ -62,3 +62,14 @@ test('Jogador vê a lista mas não recebe controles administrativos',async({page
  await expect(page.locator('#user-avatar-preview')).toHaveAttribute('role','button');
  await expect(page.locator('#user-avatar-remove')).toHaveText('Remover');
 });
+
+test('Link da Campanha abre o perfil específico sem conceder edição ao jogador',async({page})=>{
+ await openAs(page,'fernanda',false);
+ await page.goto('/usuario.html?user=bruno&campaign=reinos-de-prata');
+ await expect(page.locator('#hub-user-focused-profile')).toBeVisible();
+ await expect(page.locator('#hub-focused-user-name')).toHaveText('Bruno');
+ await expect(page.locator('#hub-focused-user-login')).toHaveText('Usuário: @bruno');
+ await expect(page.locator('#hub-user-profile-back')).toHaveAttribute('href','mesa.html?id=reinos-de-prata');
+ await expect(page.locator('#user-admin-card')).toBeHidden();
+ await expect(page.locator('#hub-users-list .hub-user-list-item-focused')).toContainText('Bruno');
+});
