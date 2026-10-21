@@ -116,3 +116,18 @@ test('Quando a autenticação expira, retorno ao login preserva o endereço da f
  const next=new URL(page.url()).searchParams.get('next');
  expect(next).toBe('ficha-personagem.html?id=char-own');
 });
+
+test('Link Minha ficha na Campanha abre a versão atual da ficha',async({page})=>{
+ await page.addInitScript(({membership,cache,own})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-bruno',username:'bruno',isMaster:false,memberships:[membership]}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify(cache));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([own]));
+ },{membership,cache,own});
+ await page.goto('/mesa.html?id=campaign-sheet');
+ const link=page.getByRole('link',{name:'Minha ficha'});
+ await expect(link).toHaveAttribute('href',/ficha-personagem\.html\?v=20261021-fichas-auth3&id=char-own/);
+ await link.click();
+ await expect(page).toHaveURL(/ficha-personagem\.html/);
+ await expect(page.locator('#sheet')).toBeVisible({timeout:30000});
+ await expect(page.locator('#pc-name')).toHaveText('Personagem próprio');
+});
