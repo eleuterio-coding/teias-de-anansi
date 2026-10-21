@@ -1,6 +1,7 @@
 import{rememberAvatars,photoDataUrl,validPortrait}from'./profile-images.js?v=20261021-user1';
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-users-admin1';
 import{effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261016-master-preview1';
+import{updateAppShellContext}from'./app-shell.js?v=20261021-player-self-profile1';
 
 const $=id=>document.getElementById(id);
 const input=$('user-avatar-input'),remove=$('user-avatar-remove'),preview=$('user-avatar-preview'),feedback=$('user-avatar-feedback');
@@ -60,6 +61,7 @@ const returnCampaign=new URLSearchParams(location.search).get('campaign')||'';
 function renderFocusedProfile(){
  const card=$('hub-user-focused-profile');
  if(!card)return;
+ if(!isMaster){card.hidden=true;return}
  const row=profiles.find(profile=>profile.username===linkedProfile);
  card.hidden=!row;if(!row)return;
  $('hub-focused-user-title').textContent=row.username===text(provider?.config?.ownerUsername)?'Perfil do Mestre':'Perfil do jogador';
@@ -124,6 +126,13 @@ function setAdminBusy(value){
  if(adminRemove)adminRemove.disabled=value||!stagedAvatar;
 }
 async function refreshDirectory(){
+ if(!isMaster){
+  profiles=myProfile?[myProfile]:[];
+  directory?.replaceChildren();
+  if(adminCard)adminCard.hidden=true;
+  renderFocusedProfile();
+  return;
+ }
  const rows=await provider.listUsers();
  profiles=allowedProfiles(rows);
  rememberAvatars(profiles);
@@ -135,7 +144,9 @@ async function refreshDirectory(){
  if(isMaster)renderAdmin();
  renderFocusedProfile();
 }
-function announceUpdate(){window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}
+function announceUpdate(){
+ window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated',{detail:{username:myProfile?.username,displayName:myProfile?.displayName,avatarDataUrl:myProfile?.avatarDataUrl}}));
+}
 
 input?.addEventListener('change',async()=>{
  const file=input.files?.[0];input.value='';
@@ -226,8 +237,15 @@ async function init(){
   const account=await provider.currentUser();
   if(!account)throw new Error('Faça login para acessar perfis.');
   isMaster=Boolean(session.isMaster&&account.username===text(provider.config.ownerUsername));
+  if(!myProfile||myProfile.uid!==account.uid)throw new Error('Não foi possível confirmar o perfil da conta.');
+  document.body.classList.toggle('hub-self-profile-only',!isMaster);
+  const heading=document.querySelector('.hub-users-page>.top h1');
+  if(heading)heading.textContent=isMaster?'Usuários':'Usuário';
+  document.title=(isMaster?'Usuários':'Usuário')+' - Teias de Anansi';
+  updateAppShellContext();
   $('own-display-name').textContent=myProfile.displayName||myProfile.username;
   paint(myProfile.avatarDataUrl);rememberAvatars([myProfile]);
+  announceUpdate();
   status(feedback,'');
   await refreshDirectory();
  }catch(error){
