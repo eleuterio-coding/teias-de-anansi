@@ -21,7 +21,8 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(page.getByText('SESSÃO SECRETA')).toHaveCount(0);
 
  await page.goto('/mesa.html?id=c-gus');
- await expect(page.getByText(/somente leitura/i).first()).toBeVisible();
+ await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
+ await expect(page.locator('#campanha .campaign-player-campaign-overview')).toBeVisible();
  await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
  await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();

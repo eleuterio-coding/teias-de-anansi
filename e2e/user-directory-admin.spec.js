@@ -35,7 +35,7 @@ async function openAs(page,name,isMaster){
  },{name,isMaster});
  await page.route('**/scripts/firebase-collaboration-provider.js*',route=>route.fulfill({status:200,contentType:'text/javascript',body:mockModule}));
  await page.goto('/usuario.html');
- await expect(page.locator('#hub-users-list .hub-user-list-item')).toHaveCount(3);
+ await expect(page.locator('#hub-users-list .hub-user-list-item')).toHaveCount(isMaster?3:0);
 }
 test('Mestre vê o diretório, seleciona perfil, altera nome e foto e mantém mudanças',async({page})=>{
  await openAs(page,'rafael',true);
@@ -55,21 +55,36 @@ test('Mestre vê o diretório, seleciona perfil, altera nome e foto e mantém mu
  await page.reload();
  await expect(page.locator('[data-user-select="uid-bruno"]')).toContainText('Bruno Aventureiro');
 });
-test('Jogador vê a lista mas não recebe controles administrativos',async({page})=>{
+test('Jogador vê somente seu perfil sem lista ou controles administrativos',async({page})=>{
  await openAs(page,'bruno',false);
  await expect(page.locator('#user-admin-card')).toBeHidden();
+ await expect(page.locator('.hub-user-directory')).toBeHidden();
+ await expect(page.locator('#hub-user-focused-profile')).toBeHidden();
  await expect(page.locator('[data-user-select]')).toHaveCount(0);
+ await expect(page.locator('.hub-nav-secondary a[href="usuario.html"]')).toContainText('Usuário');
+ await expect(page.getByRole('heading',{name:'Usuário',exact:true})).toBeVisible();
+ await expect(page.locator('#own-display-name')).toHaveText('Bruno');
+ await expect(page.locator('#own-username')).toContainText('@bruno');
+ await expect(page.locator('[data-hub-preview-user]')).toHaveCount(0);
+ await expect(page.locator('[data-hub-user-link]')).toHaveAttribute('href','usuario.html');
  await expect(page.locator('#user-avatar-preview')).toHaveAttribute('role','button');
  await expect(page.locator('#user-avatar-remove')).toHaveText('Remover');
 });
 
-test('Link da Campanha abre o perfil específico sem conceder edição ao jogador',async({page})=>{
+test('URL externa de outro perfil não revela dados alheios ao jogador',async({page})=>{
  await openAs(page,'fernanda',false);
  await page.goto('/usuario.html?user=bruno&campaign=reinos-de-prata');
- await expect(page.locator('#hub-user-focused-profile')).toBeVisible();
- await expect(page.locator('#hub-focused-user-name')).toHaveText('Bruno');
- await expect(page.locator('#hub-focused-user-login')).toHaveText('Usuário: @bruno');
- await expect(page.locator('#hub-user-profile-back')).toHaveAttribute('href','mesa.html?id=reinos-de-prata');
+ await expect(page.locator('#hub-user-focused-profile')).toBeHidden();
+ await expect(page.locator('.hub-user-directory')).toBeHidden();
+ await expect(page.locator('#own-display-name')).toHaveText('Fernanda');
+ await expect(page.locator('#own-username')).toContainText('@fernanda');
  await expect(page.locator('#user-admin-card')).toBeHidden();
- await expect(page.locator('#hub-users-list .hub-user-list-item-focused')).toContainText('Bruno');
+ await expect(page.locator('#hub-users-list .hub-user-list-item-focused')).toHaveCount(0);
+});
+
+test('Login apresenta campo pessoal digitável em vez de escolha pública de usuários',async({page})=>{
+ await page.goto('/usuarios.html');
+ await expect(page.locator('#login-username')).toHaveAttribute('type','text');
+ await expect(page.locator('#login-username option')).toHaveCount(0);
+ await expect(page.locator('#login-username')).toHaveAttribute('autocomplete','username');
 });

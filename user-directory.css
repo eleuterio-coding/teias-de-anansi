@@ -73,3 +73,20 @@ body.hub-shell-enabled .hub-users-page .card{padding:22px;min-width:0}
 }
 .hub-users-page .hub-user-focus-avatar img{display:block;width:100%;height:100%;object-fit:cover}
 @media(max-width:550px){.hub-users-page .hub-user-focus-avatar{width:76px;height:76px;flex-basis:76px}.hub-users-page .hub-user-focus-body{gap:14px}}
+
+
+/* Jogador só acessa os dados da própria conta; sem lista nem seleção de perfis. */
+.hub-users-page .hub-user-own-identity{
+ margin:-5px 0 0;font-size:.8rem;color:var(--hub-muted,#b3c7d9);
+}
+.hub-users-page .hub-user-directory[hidden],
+.hub-self-profile-only .hub-users-page .hub-user-directory,
+.hub-self-profile-only .hub-users-page .hub-user-focus-card,
+.hub-self-profile-only .hub-users-page .hub-user-admin{display:none!important}
+.hub-self-profile-only .hub-users-page{max-width:780px;margin-inline:auto}
+.hub-self-profile-only .hub-users-page #own-profile-card{
+ display:grid;gap:15px;padding:25px
+}
+.hub-self-profile-only .hub-users-page #own-display-name{
+ font-size:1.16rem;font-weight:740
+}

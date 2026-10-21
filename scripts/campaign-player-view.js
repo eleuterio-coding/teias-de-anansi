@@ -1,4 +1,4 @@
-import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261021-current-first1';
+import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-current-first1';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
@@ -9,7 +9,7 @@ const section=(id,title,content,count=null)=>`<section id="${id}" class="card ca
 const campaignStatusText=status=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[status]||status||'');
 const empty=message=>`<div class="campaign-player-empty">${esc(message)}</div>`;
 const media=(media,legacyUrl,alt,className)=>imageElementHtml(media,legacyUrl,{className,alt});
-function players(c,characters,profiles=[]){
+function players(c,characters,profiles=[],myUsername=''){
  const members=arr(c.members).filter(row=>row?.active!==false&&row.role!=='dm');
  const byId=new Map(arr(characters).map(char=>[char.id,char]));
  const rows=members.map(member=>{
@@ -17,9 +17,10 @@ function players(c,characters,profiles=[]){
   const snapshots=character?.refSnapshots||{},level=character?.choices?.class?.level;
   const characterLabel=character?`${character.name||'Personagem sem nome'}${snapshots.class?.name?` · ${snapshots.class.name}${level?' '+level:''}`:''}`:'— Sem personagem —';
   const link=member.characterId?`<div class="campaign-player-character-controls">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}<a class="campaign-player-character-link" href="ficha-personagem.html?id=${encodeURIComponent(member.characterId)}" aria-label="Abrir ficha de ${esc(character?.name||name)}" title="Abrir ficha"><span>${esc(characterLabel)}</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div>`:`<span class="campaign-player-empty-character">${esc(characterLabel)}</span>`;
-  const href=`usuario.html?user=${encodeURIComponent(member.username||name)}&campaign=${encodeURIComponent(c.id)}`;
+  const ownProfile=Boolean(myUsername&&String(member.username||'').toLowerCase()===myUsername.toLowerCase());
+  const href=`usuario.html?campaign=${encodeURIComponent(c.id)}`;
   const shownName=profiles.find(p=>p.username===member.username)?.displayName||name;
-  return`<article class="campaign-player-roster-row">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),shownName)}<div class="campaign-player-roster-field"><span class="roster-player-label">${esc(term)}</span><div class="roster-player-name"><span>${esc(shownName)}</span><a class="roster-player-profile-link" href="${href}" aria-label="Abrir perfil de ${esc(shownName)}" title="Abrir perfil de ${esc(shownName)}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div></div><div class="campaign-player-roster-field"><span class="roster-player-label">Personagem</span>${link}</div></article>`;
+  return`<article class="campaign-player-roster-row">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),shownName)}<div class="campaign-player-roster-field"><span class="roster-player-label">${esc(term)}</span><div class="roster-player-name"><span>${esc(shownName)}</span>${ownProfile?`<a class="roster-player-profile-link" href="${href}" aria-label="Abrir meu perfil" title="Abrir meu perfil"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a>` : ''}</div></div><div class="campaign-player-roster-field"><span class="roster-player-label">Personagem</span>${link}</div></article>`;
  });
  return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`,rows.length);
 }
@@ -34,6 +35,43 @@ function backgroundCard(item,kind,campaignId){
 }
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
+}
+/* Mantém a prioridade oficial Atual → Próxima → Concluída.
+   Inclui sessões Planejadas quando não existem três prioritárias,
+   para não ocultar sessões disponíveis ao jogador. */
+function playerCampaignSessions(items){
+ const all=arr(items),priority=recentCampaignSessions(all,{limit:Infinity});
+ const picked=new Set(priority.map(item=>item.id));
+ const remaining=all.filter(item=>item&&!picked.has(item.id)).sort((a,b)=>
+  (Number(b.order??b.number)||0)-(Number(a.order??a.number)||0)
+  ||(Number(b.number)||0)-(Number(a.number)||0)
+  ||String(b.date||'').localeCompare(String(a.date||''))
+  ||String(b.id||'').localeCompare(String(a.id||''))
+ );
+ return [...priority,...remaining].slice(0,3)
+}
+function sessionStories(rows,campaignId){
+ const featured=rows.length&&rows[0].status==='current';
+ const cards=rows.map((item,index)=>{
+  const card=backgroundCard(item,'session',campaignId);
+  return featured&&index===0?card.replace('class="campaign-player-story-card"','class="campaign-player-story-card campaign-player-story-card-featured"'):card;
+ }).join('');
+ return section('sessoes','Sessões da Campanha',`<div class="campaign-player-story-grid campaign-player-sessions-grid">${rows.length?cards:empty('Nenhuma sessão disponível.')}</div>`,rows.length);
+}
+function campaignOverview(c){
+ const field=(title,value)=>`<div class="campaign-player-fact"><span>${esc(title)}</span><strong>${esc(value||'—')}</strong></div>`;
+ return `<div class="campaign-player-campaign-overview">
+  <div class="campaign-player-cover-frame">${media(c.coverImage,c.coverImageUrl,`Capa de ${c.name}`,'campaign-player-campaign-cover')}</div>
+  <div class="campaign-player-campaign-summary">
+   <div class="campaign-player-campaign-heading"><strong>${esc(c.name)}</strong><span class="campaign-player-campaign-status status-${esc(c.status||'planned')}">${esc(campaignStatusText(c.status))}</span></div>
+   <p class="campaign-player-campaign-description">${esc(c.description||'Nenhuma descrição registrada.')}</p>
+  </div>
+  <div class="campaign-player-facts">
+   ${field('Cenário de Campanha',c.setting)}${field('Mundo / Plano',c.worldPlane)}
+   ${field('Principal Continente / Região',c.mainRegion)}${field('Sistema',c.system)}
+  </div>
+  ${c.sharedNotes?`<p class="campaign-player-shared-notes">${esc(c.sharedNotes)}</p>`:''}
+ </div>`;
 }
 function npcs(c){
  const rows=arr(c.importantNpcEntries);
@@ -66,15 +104,15 @@ function timeline(c,mode='list'){
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
- const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=arr(c.sessions).sort((a,b)=>{const priority={current:0,next:1};const pa=priority[a.status]??2,pb=priority[b.status]??2;return pa-pb}),characters=arr(row.characters);
+ const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=playerCampaignSessions(c.sessions),characters=arr(row.characters);
  rememberAvatars(profiles);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
- root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1><span class="campaign-player-readonly">Somente leitura</span></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
+ root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
  <div class="campaign-player-grid">
- ${section('campanha','Campanha',`<div class="campaign-player-campaign-overview">${media(c.coverImage,c.coverImageUrl,`Capa de ${c.name}`,'campaign-player-campaign-cover')}<div class="campaign-player-information"><p><strong>Nome da campanha:</strong> ${esc(c.name)}</p><p><strong>Status:</strong> ${esc(campaignStatusText(c.status))}</p><p><strong>Descrição curta:</strong> ${esc(c.description||'—')}</p><p><strong>Cenário de Campanha:</strong> ${esc(c.setting||'—')}</p><p><strong>Mundo / Plano:</strong> ${esc(c.worldPlane||'—')}</p><p><strong>Principal Continente / Região:</strong> ${esc(c.mainRegion||'—')}</p></div>${c.sharedNotes?`<p class="campaign-player-shared-notes">${esc(c.sharedNotes)}</p>`:''} </div>`)}
- ${players(c,characters,profiles)}
- ${stories('aventuras','Aventuras da campanha',adventures,'adventure',c.id)}
- ${stories('sessoes','Sessões da campanha',sessions,'session',c.id)}
+ ${section('campanha','Campanha',campaignOverview(c))}
+ ${players(c,characters,profiles,m.username||'')}
+ ${stories('aventuras','Aventuras da Campanha',adventures,'adventure',c.id)}
+ ${sessionStories(sessions,c.id)}
  <div class="campaign-player-structured">${npcs(c)}${locations(c)}</div>
  ${timeline(c)}
  </div></div>`;

@@ -3,6 +3,15 @@ on:
   pull_request:
     paths:
       - 'scripts/app-shell.js'
+      - 'scripts/campaign-recent-items.js'
+      - 'scripts/campaign-list-ui.js'
+      - 'scripts/hub-ux.js'
+      - 'scripts/collaboration-ui.js'
+      - 'usuarios.html'
+      - 'campanhas.html'
+      - 'mesa.html'
+      - 'tests/auditar-visao-jogador-campanhas.mjs'
+      - 'e2e/player-visibility.spec.js'
       - 'scripts/profile-images.js'
       - 'scripts/user-profile-ui.js'
       - 'scripts/firebase-collaboration-provider.js'
@@ -44,6 +53,7 @@ jobs:
       - name: Validar sintaxe e modelos
         run: |
           for file in scripts/campaign-avatar-preview.js scripts/profile-images.js scripts/user-profile-ui.js scripts/firebase-collaboration-provider.js scripts/campaign-table-ui.js scripts/campaign-player-view.js scripts/campaign-next-session-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet.js scripts/character-builder/profile-ui.js scripts/character-builder/wizard-ui.js scripts/character-builder.js scripts/hub-ux.js scripts/adventure-roster-ui.js scripts/collaboration-model.js scripts/app-shell.js; do node --check "$file"; done
+          node tests/auditar-visao-jogador-campanhas.mjs
           node tests/auditar-campanha-status-retratos.mjs
           node tests/auditar-criacao-layout-origem.mjs
           node tests/auditar-perfil-campanha.mjs
@@ -54,4 +64,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Testar Campanha, usuários e fichas no navegador
-        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js e2e/character-creation-layout-portrait.spec.js e2e/user-directory-admin.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js e2e/character-creation-layout-portrait.spec.js e2e/user-directory-admin.spec.js e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium

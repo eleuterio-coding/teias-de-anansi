@@ -68,7 +68,14 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#jogadores .campaign-player-roster-row').first()).toContainText('Jogadora');
  await expect(page.locator('#jogadores .hub-user-photo img')).toHaveCount(2);
  await expect(page.locator('#jogadores .hub-character-photo img')).toHaveCount(2);
- await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(2);
+ await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(1);
+ await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveAttribute('href',/usuario\.html\?campaign=/);
+ await expect(page.locator('#aventuras h2')).toHaveText('Aventuras da Campanha');
+ await expect(page.locator('#sessoes h2')).toHaveText('Sessões da Campanha');
+ await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(3);
+ await expect(page.locator('#sessoes .campaign-player-story-card').first()).toHaveClass(/campaign-player-story-card-featured/);
+ await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
+ await expect(page.locator('#campanha .campaign-player-fact')).toHaveCount(4);
  await expect(page.locator('#aventuras .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-next')).toHaveText('Próxima');
@@ -128,4 +135,26 @@ test('Cards continuam empilhados no celular',async({page})=>{
  });
  expect(positions.players.top).toBeGreaterThan(positions.camp.top);
  expect(positions.sessions.top).toBeGreaterThan(positions.adventures.top);
+});
+
+test('Jogador: sessão Atual no topo e no máximo três sessões segundo prioridades existentes',async({page})=>{
+ const more={...shared,sessions:[
+  ...campaign.sessions,
+  {id:'next-high',number:4,order:4,title:'Outra travessia',status:'next'},
+  {id:'planned-high',number:5,order:5,title:'Preparação futura',status:'planned'},
+  {id:'completed-high',number:6,order:6,title:'Memórias passadas',status:'completed'}
+ ]};
+ await page.addInitScript(data=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'f-user',username:'fernanda',isMaster:false,memberships:[data.membership]}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({campaigns:{[data.campaign.id]:{membership:data.membership,payload:{campaign:data.more,participants:data.people,revealedAdventures:[]},characters:data.chars,characterIds:data.chars.map(c=>c.id)}}}));
+ },{campaign,membership,more,people,chars});
+ await page.goto('/mesa.html?id='+campaign.id);
+ const cards=page.locator('#sessoes .campaign-player-story-card');
+ await expect(cards).toHaveCount(3);
+ await expect(cards.nth(0)).toContainText('Confronto');
+ await expect(cards.nth(0)).toHaveClass(/campaign-player-story-card-featured/);
+ await expect(cards.nth(1)).toContainText('Outra travessia');
+ await expect(cards.nth(2)).toContainText('Travessia');
+ await expect(page.locator('#sessoes')).not.toContainText('Preparação futura');
+ await expect(page.locator('#sessoes')).not.toContainText('Memórias passadas');
 });
