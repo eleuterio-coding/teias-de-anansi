@@ -6,8 +6,8 @@ import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-backgr
 import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
 const STEPS=[
  {id:'classe',title:'Classe e Nível',description:'Defina a classe, o nível atual, a subclasse quando disponível, as perícias da classe e as magias.'},
- {id:'origem',title:'Origem',description:'Escolha o antecedente e complete os detalhes, características físicas, características pessoais e notas do personagem.'},
  {id:'raca',title:'Raça',description:'Escolha a raça e, quando existir, a variante, linhagem ou legado apropriado.'},
+ {id:'origem',title:'Origem',description:'Defina as características físicas e pessoais, adicione a imagem, escolha o antecedente e complete os demais detalhes.'},
  {id:'atributos',title:'Valores de Atributos',description:'Distribua os valores-base. Os bônus de Origem, Raça, talentos e Regras da Casa são aplicados separadamente.'},
  {id:'progressao',title:'Progressão',description:'Escolha os talentos universais, aumentos de atributo da Regra da Casa e outros benefícios de progressão disponíveis.'},
  {id:'equipamento',title:'Equipamento',description:'Defina o equipamento inicial e ativo, faça as compras obrigatórias de criação quando aplicável, organize o inventário e confira as moedas restantes.'},
@@ -24,7 +24,7 @@ if(!id)return true;if(canEditCharacter(id))return true;if(canOpenCharacter(id)){
 function ensureVisibleStepMenu(){
  if(byId('wizard-nav-no-scroll-style'))return;
  const style=document.createElement('style');style.id='wizard-nav-no-scroll-style';style.textContent=`
-.wizard-nav{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;position:sticky!important;top:0!important;z-index:50!important;background:#fff!important}
+.wizard-nav{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;position:sticky!important;top:var(--hub-topbar-height,64px)!important;z-index:50!important;background:var(--hub-bg,#0b121a)!important}
 .wizard-nav button{min-width:0!important;width:100%!important;white-space:normal!important}
 @media(max-width:1120px){.wizard-nav{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;overscroll-behavior-inline:contain!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important;padding-bottom:6px!important}.wizard-nav button{flex:0 0 160px!important;width:auto!important;min-height:54px!important}}
 @media(max-width:560px){.wizard-nav button{flex-basis:min(72vw,180px)!important}}

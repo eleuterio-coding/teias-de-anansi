@@ -1,0 +1,54 @@
+
+/* As áreas de personagem seguem o tema, a tipografia e os componentes do Hub. */
+body.hub-shell-enabled #builder,body.hub-shell-enabled #sheet{color:var(--hub-text)}
+body.hub-shell-enabled #builder .wizard-shell,
+body.hub-shell-enabled #builder .sheet,
+body.hub-shell-enabled #sheet .hero{
+ background:var(--hub-surface)!important;color:var(--hub-text)!important;
+ border:1px solid var(--hub-border)!important;border-radius:var(--hub-radius,14px)!important
+}
+body.hub-shell-enabled #builder :where(.wizard-head,.wizard-footer,.divider,.feature,.preview-block,.value-row),
+body.hub-shell-enabled #sheet :where(.feature,.row){border-color:var(--hub-border)!important}
+body.hub-shell-enabled #wizard-nav{
+ position:sticky!important;top:var(--hub-topbar-height,64px)!important;
+ background:var(--hub-bg)!important;border-bottom:1px solid var(--hub-border-soft)!important;
+ padding:10px 0!important
+}
+body.hub-shell-enabled #wizard-nav button:not(.is-active){
+ background:var(--hub-surface)!important;color:var(--hub-text-2)!important;border-color:var(--hub-border)!important
+}
+body.hub-shell-enabled #wizard-nav button:not(.is-active) span{color:var(--hub-muted)!important}
+body.hub-shell-enabled #wizard-nav button.is-active{
+ background:var(--hub-accent)!important;color:#fff!important;border-color:var(--hub-accent)!important
+}
+body.hub-shell-enabled #wizard-nav button.is-active span{color:#eaf5ff!important}
+body.hub-shell-enabled #wizard-nav button.has-warning:not(.is-active){border-color:#b78416!important}
+body.hub-shell-enabled #builder :where(.metric,.ability),
+body.hub-shell-enabled #sheet :where(.ability,.attack,.slot,.spell,.check),
+body.hub-shell-enabled #sheet .runtime .box{
+ background:var(--hub-surface-2)!important;color:var(--hub-text)!important;border-color:var(--hub-border)!important
+}
+body.hub-shell-enabled #builder .wizard-progress-wrap progress{accent-color:var(--hub-accent)}
+body.hub-shell-enabled #builder .hub-portrait-creation-content{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+body.hub-shell-enabled #builder .hub-portrait-creation-preview,
+body.hub-shell-enabled #builder .hub-review-portrait{
+ display:grid;place-items:center;flex:none;overflow:hidden;width:112px;height:112px;
+ border:1px solid var(--hub-border);border-radius:12px;
+ background:var(--hub-surface-2);font-size:2.25rem;color:var(--hub-muted)
+}
+body.hub-shell-enabled #builder :where(.hub-portrait-creation-preview,.hub-review-portrait) img{width:100%;height:100%;object-fit:cover}
+body.hub-shell-enabled #builder .hub-portrait-creation-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+body.hub-shell-enabled #builder .hub-portrait-creation-actions .hub-character-upload{
+ display:inline-flex;justify-content:center;align-items:center;min-height:44px;margin:0;
+ padding:10px 14px;border:1px solid var(--hub-border);
+ border-radius:9px;background:var(--hub-surface-2);color:var(--hub-text);cursor:pointer
+}
+body.hub-shell-enabled #builder .hub-portrait-creation-actions .hub-character-upload:hover{border-color:var(--hub-accent);background:var(--hub-surface)}
+body.hub-shell-enabled #builder .hub-portrait-creation-actions .mini{flex-basis:100%;margin:2px 0 0}
+body.hub-shell-enabled #builder .sheet-head{align-items:center}
+body.hub-shell-enabled #sheet .hub-sheet-portrait{border-color:var(--hub-border);background:var(--hub-surface-2)}
+@media(max-width:760px){
+ body.hub-shell-enabled #builder .wizard-shell{padding:16px}
+ body.hub-shell-enabled #builder .hub-portrait-creation-content{align-items:flex-start;gap:12px}
+ body.hub-shell-enabled #builder :where(.hub-portrait-creation-preview,.hub-review-portrait){width:80px;height:80px}
+}
