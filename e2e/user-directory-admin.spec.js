@@ -81,3 +81,10 @@ test('URL externa de outro perfil não revela dados alheios ao jogador',async({p
  await expect(page.locator('#user-admin-card')).toBeHidden();
  await expect(page.locator('#hub-users-list .hub-user-list-item-focused')).toHaveCount(0);
 });
+
+test('Login apresenta campo pessoal digitável em vez de escolha pública de usuários',async({page})=>{
+ await page.goto('/usuarios.html');
+ await expect(page.locator('#login-username')).toHaveAttribute('type','text');
+ await expect(page.locator('#login-username option')).toHaveCount(0);
+ await expect(page.locator('#login-username')).toHaveAttribute('autocomplete','username');
+});
