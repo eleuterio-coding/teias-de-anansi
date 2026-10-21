@@ -24,7 +24,7 @@ test('Campanhas usa exatamente duas colunas no desktop, inclusive para Nova camp
  const layout=await grid.evaluate(node=>{
   const items=[...node.children].map(item=>item.getBoundingClientRect());
   return{
-   columns:getComputedStyle(node).gridTemplateColumns.trim().split(/\\s+/).length,
+   columns:getComputedStyle(node).gridTemplateColumns.trim().split(' ').filter(Boolean).length,
    firstTop:items[0].top,secondTop:items[1].top,thirdTop:items[2].top,
    firstBottom:items[0].bottom,firstWidth:items[0].width,secondWidth:items[1].width
   };
@@ -44,7 +44,7 @@ test('Campanhas usa uma coluna no celular, sem transbordamento horizontal',async
  const layout=await grid.evaluate(node=>{
   const items=[...node.children].map(item=>item.getBoundingClientRect());
   return{
-   columns:getComputedStyle(node).gridTemplateColumns.trim().split(/\\s+/).length,
+   columns:getComputedStyle(node).gridTemplateColumns.trim().split(' ').filter(Boolean).length,
    tops:items.map(item=>item.top),
    bottoms:items.map(item=>item.bottom),
    pageWidth:document.documentElement.scrollWidth,
