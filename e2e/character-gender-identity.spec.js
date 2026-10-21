@@ -51,3 +51,16 @@ test('alterar gênero na Ficha é persistido e se reflete nos cards da Campanha'
  await page.goto('/mesa.html?id=e2e-gender-camp');
  await expect(page.locator('#jogadores [data-member-character] option:checked')).toHaveText('Aluria · Patrulheire lvl 4 · Elfe');
 });
+
+
+test('imagem do personagem é salva na ficha e permanece visível após recarregar',async({page})=>{
+ await page.goto('/ficha-personagem.html?id=e2e-aluria');
+ await expect(page.locator('#sheet')).toBeVisible();
+ const content='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==';
+ await page.locator('#character-portrait-file').setInputFiles({name:'aluria.png',mimeType:'image/png',buffer:Buffer.from(content,'base64')});
+ await expect(page.locator('#character-portrait-preview img')).toBeVisible();
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]').find(c=>c.id==='e2e-aluria')?.portraitDataUrl);
+ expect(stored).toMatch(/^data:image\/(webp|png);base64,/);
+ await page.reload();
+ await expect(page.locator('#character-portrait-preview img')).toBeVisible();
+});

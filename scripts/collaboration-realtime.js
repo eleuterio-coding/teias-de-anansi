@@ -1,4 +1,4 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20260925-media1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
 import{pullCollaborations,syncOwnCharacters}from'./collaboration-sync.js?v=20260925-media1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-master-full-control1';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';

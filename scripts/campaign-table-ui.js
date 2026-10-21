@@ -1,18 +1,19 @@
+import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
-import{findPreviousCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
+import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261021-current-session1';
 import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-disclosure1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-disclosure1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261019-order-desc3';
+import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-current-first1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[s]||s),sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s),adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',archived:'Arquivada'}[s]||s);
 function feedback(message,ok=true){const box=$('table-feedback');if(!box)return;box.hidden=false;box.className=`status ${ok?'ok':'warning'}`;box.textContent=message;clearTimeout(feedback.timer);feedback.timer=setTimeout(()=>box.hidden=true,3200)}
-function commit(list,{rerender=true,message='Mesa salva.'}={}){campaigns=writeCampaigns(list);campaign=campaignById(campaigns,campaignId);if(rerender)render();feedback(message,true)}
-function savePatch(patch,{rerender=false,message='Mesa salva.'}={}){const result=updateCampaign(campaigns,campaignId,patch);if(result.ok)commit(result.list,{rerender,message})}
+function commit(list,{rerender=true,message='Campanha salva.'}={}){campaigns=writeCampaigns(list);campaign=campaignById(campaigns,campaignId);if(rerender)render();feedback(message,true)}
+function savePatch(patch,{rerender=false,message='Campanha salva.'}={}){const result=updateCampaign(campaigns,campaignId,patch);if(result.ok)commit(result.list,{rerender,message})}
 const alphabetical=new Intl.Collator('pt-BR',{sensitivity:'base',numeric:true});
 const playerOrder=(a,b)=>alphabetical.compare(a.displayName||a.username||'',b.displayName||b.username||'')||alphabetical.compare(a.username||'',b.username||'');
 const characterOrder=(a,b)=>alphabetical.compare(a.name||'Personagem sem nome',b.name||'Personagem sem nome')||alphabetical.compare(a.id||'',b.id||'');
@@ -38,8 +39,9 @@ function overviewHtml(){
  const cover=imageElementHtml(campaign.coverImage,campaign.coverImageUrl,{className:'campaign-product-hero-media',alt:''});
  const previous=findPreviousCampaignSession(campaign);
  const previousLabel=previous?`Sessão ${previous.number} · ${previous.title}`:'Nenhuma sessão anterior';
- const previousHref=previous?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(previous.id)}`:'';
- return `<section class="campaign-product-hero">${cover}<div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&new=1#adventure-create-card">Nova Aventura</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Nova Sessão</a></div><div class="campaign-product-hero-content"><div class="campaign-product-kicker">Contexto da Mesa · ${esc(campaign.system||'D&D 5.5e')}</div><div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(statusLabel(campaign.status))}</span></div><p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p><div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${countLabel(campaign.members.length,'jogador','jogadores')}</span><span class="badge">${countLabel(adventures.length,'aventura','aventuras')}</span></div></div></section><div class="campaign-product-summary">${metric('Status',statusLabel(campaign.status))}${metric('Sessões',campaign.sessions.length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão anterior',previousLabel,previousHref)}</div>`
+ const upcoming=findUpcomingCampaignSession(campaign),upcomingLabel=upcoming?`Sessão ${upcoming.number} · ${upcoming.title}`:'Nenhuma próxima sessão',upcomingHref=upcoming?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(upcoming.id)}`:'';
+  const previousHref=previous?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(previous.id)}`:'';
+ return `<section class="campaign-product-hero">${cover}<div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&new=1#adventure-create-card">Nova Aventura</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Nova Sessão</a></div><div class="campaign-product-hero-content"><div class="campaign-product-kicker">Contexto da Campanha · ${esc(campaign.system||'D&D 5.5e')}</div><div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(statusLabel(campaign.status))}</span></div><p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p><div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${countLabel(campaign.members.length,'jogador','jogadores')}</span><span class="badge">${countLabel(adventures.length,'aventura','aventuras')}</span></div></div></section><div class="campaign-product-summary">${metric('Status',statusLabel(campaign.status))}${metric('Sessões',campaign.sessions.length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão Anterior',previousLabel,previousHref)+metric('Próxima Sessão',upcomingLabel,upcomingHref)}</div>`
 }
 function settingsHtml(){
  return`<section id="campanha" class="card campaign-editor-card">
@@ -88,11 +90,11 @@ function detailsSectionsHtml(){
 }
 
 function memberRow(m){
- const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',initial=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J',index=campaign.members.findIndex(x=>x.id===m.id);
+ const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',index=campaign.members.findIndex(x=>x.id===m.id);
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}" draggable="true" tabindex="0" aria-label="${esc(name)}. Arraste para reorganizar ou use as setas.">
   <button type="button" class="roster-grip" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
-  <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display" aria-label="Jogador: ${esc(name)}"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
-  <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
+  <div class="roster-player-identity">${playerAvatarHtml(m.username||name,hubParticipants)}<div class="roster-player-display" aria-label="${playerTerm(m.username||name)}: ${esc(name)}"><span class="roster-player-label">${playerTerm(m.username||name)}</span><span class="roster-player-name">${esc(name)}</span></div></div>
+  <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${characterAvatarHtml(linked)}<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></div></label></div>
   <div class="row-actions roster-player-actions">
    <button type="button" class="secondary roster-move-button" data-roster-move="up" data-roster-id="${esc(m.id)}" aria-label="Mover ${esc(name)} para cima" ${index===0?'disabled':''}>↑</button>
    <button type="button" class="secondary roster-move-button" data-roster-move="down" data-roster-id="${esc(m.id)}" aria-label="Mover ${esc(name)} para baixo" ${index===campaign.members.length-1?'disabled':''}>↓</button>
@@ -130,14 +132,16 @@ function syncRosterControls({rebuildRows=false}={}){
   const playerName=row.querySelector('.roster-player-name');
   if(playerName)playerName.textContent=name;
   const avatar=row.querySelector('.roster-avatar');
-  if(avatar)avatar.textContent=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
+  if(avatar)avatar.outerHTML=playerAvatarHtml(member.username||name,hubParticipants);
+   const term=row.querySelector('.roster-player-label');if(term)term.textContent=playerTerm(member.username||name);
   const characterSelect=row.querySelector('[data-member-character]');
   if(characterSelect){
    characterSelect.innerHTML=characterOptions(member.characterId,member.id,member.username||member.name);
    characterSelect.setAttribute('aria-label',`Personagem de ${name}`);
   }
   const linked=characters.find(c=>c.id===member.characterId);
-  const open=row.querySelector('.roster-open-button');
+   const portrait=row.querySelector('.hub-character-photo');if(portrait)portrait.outerHTML=characterAvatarHtml(linked);
+   const open=row.querySelector('.roster-open-button');
   if(open)open.outerHTML=rosterOpenButton(linked);
  }
  const count=document.querySelector('#jogadores .roster-count');
@@ -163,10 +167,10 @@ function commitRoster(list,message,{rebuildRows=false}={}){
  commit(list,{rerender:false,message});
  syncRosterControls({rebuildRows});
 }
-function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Mesa.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
+function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Campanha.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
 function sessionCard(s){const participants=s.participantCharacterIds.map(id=>characters.find(c=>c.id===id)?.name||id).filter(Boolean);return`<article class="session-card ${s.status==='active'?'active':''}" data-session-row="${esc(s.id)}"><div class="session-head"><div><h3>Sessão ${s.number} · ${esc(s.title)}</h3><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><div class="row-actions">${['planned','next'].includes(s.status)?`<button type="button" data-start-session="${esc(s.id)}">Iniciar sessão</button>`:''}${s.status==='active'?`<button type="button" data-finish-session="${esc(s.id)}">Concluir sessão</button>`:''}${!['completed','cancelled'].includes(s.status)?`<button type="button" class="secondary" data-cancel-session="${esc(s.id)}">Cancelar</button>`:''}<button type="button" class="danger" data-remove-session="${esc(s.id)}">Excluir</button></div></div><div class="form-grid two" style="margin-top:10px"><label>Título<input data-session-field="title" value="${esc(s.title)}"></label><label>Data<input data-session-field="date" type="date" value="${esc(s.date)}"></label><label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>`<option value="${v}" ${s.status===v?'selected':''}>${esc(sessionStatus(v))}</option>`).join('')}</select></label><label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label><label class="wide">Resumo / recap<textarea data-session-field="summary">${esc(s.summary)}</textarea></label><label class="wide">Notas compartilhadas<textarea data-session-field="sharedNotes">${esc(s.sharedNotes)}</textarea></label><label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label><div class="wide"><strong>Personagens participantes</strong><div data-session-participants style="margin-top:5px">${participantChecks(s)}</div></div></div>${participants.length?`<p class="mini">Registrados: ${esc(participants.join(', '))}</p>`:''}</article>`}
 function sessionsHtml(){
- const runningAdventures=adventuresForCampaign(readAdventures(),campaignId).filter(a=>a.status==='active');
+ const runningAdventures=adventuresForCampaign(readAdventures(),campaignId).filter(a=>['active','current'].includes(a.status));
  const adventureMap=new Map(runningAdventures.map(a=>[a.id,a]));
  const sessions=recentCampaignSessions(campaign.sessions,{limit:5,activeAdventureIds:new Set(adventureMap.keys())});
  return`<section id="sessoes" class="card campaign-editor-card campaign-reference-section">
@@ -180,8 +184,8 @@ function sessionsHtml(){
   </article>`).join(''):'<div class="empty">Nenhuma sessão próxima ou concluída vinculada a uma Aventura em andamento.</div>'}</div>
  </section>`
 }
-function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>Próxima sessão</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#linha-tempo'>Linha do tempo</a><a href='#notas-mestre'>Notas do Mestre</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}
-function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:false,message:'Mesa salva automaticamente.'}),eventName==='input'?350:0)})})}
+function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>${findCurrentCampaignSession(campaign)?'Sessão Atual':'Próxima Sessão'}</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#linha-tempo'>Linha do tempo</a><a href='#notas-mestre'>Notas do Mestre</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();hydrateMediaImages(root).catch(()=>{})}
+function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:false,message:'Campanha salva automaticamente.'}),eventName==='input'?350:0)})})}
 function bindMembers(){
  const list=$('member-list');
  if(!list)return;
@@ -196,7 +200,7 @@ function bindMembers(){
   })
  });
  list.querySelectorAll('[data-remove-member]').forEach(button=>button.addEventListener('click',()=>{
-  if(!confirm('Remover este jogador da Mesa? A ficha vinculada não será excluída.'))return;
+  if(!confirm('Remover este jogador da Campanha? A ficha vinculada não será excluída.'))return;
   const result=removeCampaignMember(campaigns,campaignId,button.dataset.removeMember);
   if(!result.ok)return feedback(result.reason,false);
   commitRoster(result.list,'Jogador removido.',{rebuildRows:true})
@@ -411,5 +415,25 @@ function bindCampaignSaveButtons(){
 }
 
 function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
-async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username)}catch{hubParticipants=[]}render()}
+async function init(){
+ if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}
+ campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();
+ let config=null;
+ try{
+  config=await loadFirebaseConfig();
+  hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username);
+ }catch{hubParticipants=[]}
+ // Renderiza imediatamente; obter imagens dos demais usuários é uma melhoria progressiva.
+ render();
+ if(config?.configured)void(async()=>{
+  try{
+   const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261021-user-profiles1');
+   const provider=await createFirebaseCollaborationProvider({config}),profiles=await provider.listUsers();
+   rememberAvatars(profiles);
+   const byUsername=new Map(profiles.map(p=>[p.username,p.avatarDataUrl]));
+   hubParticipants=hubParticipants.map(row=>({...row,avatarDataUrl:byUsername.get(row.username)||''}));
+   syncRosterControls();
+  }catch{}
+ })();
+}
 init();

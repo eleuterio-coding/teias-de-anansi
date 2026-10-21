@@ -1,3 +1,6 @@
+import{playerTerm}from'./profile-images.js?v=20261021-user1';
+import{photoDataUrl,characterPicture}from'./profile-images.js?v=20261021-user1';
+import{canEditCharacter}from'./collaboration-view.js?v=20261016-master-preview1';
 import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{characterGender,genderedCharacterTerm,genderedCharacterLineage,normalizeCharacterGender}from'./character-gender.js?v=20261019-gender1';
@@ -33,12 +36,31 @@ function eqText(bg){if(!bg)return'—';if(bg.equipmentOptions?.length){const o=b
 function setInput(id,value){const el=$(id);if(el)el.value=value??''}
 function getFeatObjects(d){const selected=Object.values(state.c.choices?.feats||{}).filter(Boolean).map(id=>state.catalogs.feats.find(f=>f.id===id)).filter(Boolean);if(d.bg?.feat?.name&&!selected.some(f=>f.name===d.bg.feat.name))selected.unshift({name:d.bg.feat.name,description:'Talento de origem concedido pelo antecedente.',source:d.bg.source});return selected}
 
+function renderPortrait(){
+ const box=$('character-portrait-preview');if(!box)return;
+ const src=characterPicture(state.c),input=$('character-portrait-file'),label=$('character-portrait-label');
+ box.replaceChildren();
+ if(src){const image=document.createElement('img');image.src=src;image.alt='Retrato de '+(state.c.name||'personagem');box.append(image)}
+ else{const placeholder=document.createElement('span');placeholder.textContent='◇';placeholder.setAttribute('aria-hidden','true');box.append(placeholder)}
+ const editable=npcMode()?npcMasterAuthorized():canEditCharacter(state.c.id);
+ if(label)label.hidden=!editable;if(input)input.disabled=!editable;
+}
+function bindPortrait(){
+ $('character-portrait-file')?.addEventListener('change',async event=>{
+  const file=event.target.files?.[0];event.target.value='';
+  if(!file||!(npcMode()?npcMasterAuthorized():canEditCharacter(state.c.id)))return;
+  try{const url=await photoDataUrl(file,{dimension:360,maxLength:115000});
+   state.c.portraitDataUrl=url;saveCharacter('Imagem do personagem salva.');renderPortrait()
+  }catch(error){const status=$('save-status');if(status)status.textContent=error?.message||'Imagem inválida.'}
+ });
+}
 function renderHeader(d){
+ renderPortrait();
  $('pc-name').textContent=state.c.name||'Personagem sem nome';
  $('pc-subtitle').textContent=[d.klass?`${genderedCharacterTerm(d.klass.name,characterGender(state.c),'class')} lvl ${d.level}`:null,d.sub?genderedCharacterTerm(d.sub.name,characterGender(state.c),'subclass'):null,d.species?genderedCharacterTerm(d.species.name,characterGender(state.c),'species'):null,state.c.choices?.species?.lineage?genderedCharacterLineage(state.c.choices.species.lineage,characterGender(state.c)):null,d.bg?genderedCharacterTerm(d.bg.name,characterGender(state.c),'background'):null].filter(Boolean).join(' · ');
  $('edit-link').href=`criacao-personagem.html?${npcMode()?'npc=1&':''}id=${encodeURIComponent(state.c.id)}`;
  const p=state.c.sheet.profile;
- setInput('profile-player',p.player);setInput('profile-age',p.age);setInput('profile-gender',normalizeCharacterGender(p.gender));setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
+ setInput('profile-player',p.player);const playerLabel=$('profile-player')?.closest('label')?.firstChild;if(playerLabel?.nodeType===3)playerLabel.textContent=playerTerm(p.player);setInput('profile-age',p.age);setInput('profile-gender',normalizeCharacterGender(p.gender));setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
 }
 
 function renderCore(d){
@@ -247,7 +269,8 @@ async function init(){
  if(d.klass?.spellAbility)renderSpellLoading(d);
  else{sanitizeSelections();d=derive();renderSpells(d)}
 
- bindFields();
+ bindFields();bindPortrait();
+ $('profile-player')?.addEventListener('change',event=>{const label=event.target.closest('label')?.firstChild;if(label?.nodeType===3)label.textContent=playerTerm(event.target.value)});
  window.addEventListener('hub-rpg:sheet-remote-refresh',refreshSheetFromRemote);
  showWarnings();
  $('loading').hidden=true;

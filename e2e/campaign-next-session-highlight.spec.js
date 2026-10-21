@@ -29,7 +29,8 @@ test('remove Personagens vinculados e destaca Próxima sessão acima do editor',
  await page.goto('/mesa.html?id=e2e-campaign-next');
  const highlight=page.locator('#proxima-sessao');
  await expect(highlight).toBeVisible();
- await expect(highlight.getByRole('heading',{name:'Próxima sessão'})).toBeVisible();
+ await expect(highlight.getByRole('heading',{name:'Sessão Atual'})).toBeVisible();
+ await expect(highlight).toContainText('PLANEJAMENTO DA CAMPANHA');
  await expect(highlight.locator('.campaign-next-name')).toContainText('Sessão 7 · A rainha e o véu');
  await expect(highlight.locator('.campaign-next-status')).toHaveText('Atual');
  await expect(highlight.locator('time[datetime="2026-11-19"]')).toHaveText('19 de novembro de 2026');
@@ -129,16 +130,16 @@ test('Sessão anterior é a última concluída antes da sessão corrente, com li
  expect(findPreviousCampaignSession(withHistory)?.id).toBe('s-previous');
  expect(findPreviousCampaignSession({...withHistory,sessions:withHistory.sessions.filter(s=>s.status==='completed')})?.id).toBe('s-previous');
  await page.goto('/mesa.html?id=e2e-campaign-next');
- await expect(page.locator('.campaign-product-summary .metric').last()).toContainText('Sessão anterior');
- await expect(page.locator('.campaign-product-summary .metric').last()).toContainText('Nenhuma sessão anterior');
- await expect(page.locator('.campaign-product-summary .metric').last()).not.toHaveAttribute('href',/./);
+ await expect(page.locator('.campaign-product-summary .metric').filter({hasText:'Sessão Anterior'})).toContainText('Sessão Anterior');
+ await expect(page.locator('.campaign-product-summary .metric').filter({hasText:'Sessão Anterior'})).toContainText('Nenhuma sessão anterior');
+ await expect(page.locator('.campaign-product-summary .metric').filter({hasText:'Sessão Anterior'})).not.toHaveAttribute('href',/./);
  await page.evaluate(sessions=>{
   const rows=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'));
   rows[0].sessions=sessions;localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(rows));
  },withHistory.sessions);
  await page.reload();
- const previous=page.locator('.campaign-product-summary .metric').last();
- await expect(previous).toContainText('Sessão anterior');
+ const previous=page.locator('.campaign-product-summary .metric').filter({hasText:'Sessão Anterior'});
+ await expect(previous).toContainText('Sessão Anterior');
  await expect(previous).toContainText('Sessão 6 · Além das muralhas');
  await expect(previous).toHaveAttribute('href','sessoes.html?campaign=e2e-campaign-next&id=s-previous');
 });

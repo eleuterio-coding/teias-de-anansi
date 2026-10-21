@@ -1,3 +1,4 @@
+import{playerTerm}from'../profile-images.js?v=20261021-user1';
 import{state,$,arr,num,esc}from'./state.js';
 import{normalizeCharacterGender}from'../character-gender.js?v=20261019-gender1';
 import{derive}from'./rules.js';
@@ -38,7 +39,7 @@ function hydrate(){
 function renderProfile(){
  ensureSheetState();
  const p=state.c.sheet.profile,box=$('creation-profile');if(!box)return;
- box.innerHTML=row('Jogador',p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',normalizeCharacterGender(p.gender))+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',languages());
+ box.innerHTML=row(playerTerm(p.player),p.player)+row('Experiência',p.experience)+row('Idade',p.age)+row('Gênero',normalizeCharacterGender(p.gender))+row('Altura',p.height)+row('Peso',p.weight)+row('Cabelo',p.hair)+row('Olhos',p.eyes)+row('Pele',p.skin)+row('Alinhamento',p.alignment)+row('Fé',p.faith)+row('Idiomas',languages());
 }
 
 function renderRoleplay(){
