@@ -29,6 +29,9 @@ function renderPortrait(){
  const remove=$('creation-portrait-remove');if(remove)remove.hidden=!src;
 }
 function bindPortrait(){
+ $('creation-portrait-picker')?.addEventListener('keydown',event=>{
+  if(event.key==='Enter'||event.key===' '){event.preventDefault();$('creation-portrait-file')?.click()}
+ });
  $('creation-portrait-file')?.addEventListener('change',async event=>{
   const file=event.target.files?.[0],characterId=state.c?.id;event.target.value='';
   if(!file||!characterId)return;

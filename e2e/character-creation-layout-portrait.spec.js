@@ -16,8 +16,21 @@ test('criação: Raça precede Origem, cards e tema seguem o Hub',async({page})=
   const nav=await page.locator('[data-wizard-step]').evaluateAll(items=>items.map(el=>el.dataset.wizardStep));
   expect(nav).toEqual(['classe','raca','origem','atributos','progressao','equipamento','revisao']);
   await page.locator('[data-wizard-step="origem"]').click();
-  const titles=await page.locator('[data-wizard-panel="origem"] .step-grid > .card > h3').allTextContents();
-  expect(titles.slice(0,3)).toEqual(['Características Físicas','Características Pessoais','Imagem do Personagem']);
+  const origin=page.locator('[data-wizard-panel="origem"]');
+  await expect(origin.locator('.hub-character-details-card > h3')).toHaveText('Detalhes do Personagem');
+  await expect(origin.locator('.hub-portrait-creation-card > h3')).toHaveText('Imagem do Personagem');
+  const titles=await origin.locator('.step-grid > .card > h3').allTextContents();
+  expect(titles.slice(0,2)).toEqual(['Características Físicas','Características Pessoais']);
+  const layout=await origin.evaluate(node=>{
+   const r=selector=>node.querySelector(selector).getBoundingClientRect();
+   return{details:r('.hub-character-details-card'),portrait:r('.hub-portrait-creation-card'),physical:r('.step-grid > .card'),preview:r('#creation-portrait-preview')};
+  });
+  expect(layout.details.top).toBeLessThan(layout.physical.top);
+  expect(layout.portrait.top).toBeLessThan(layout.physical.top);
+  if((page.viewportSize()?.width||0)>760){
+   expect(Math.abs(layout.details.top-layout.portrait.top)).toBeLessThan(8);
+   expect(layout.details.width).toBeGreaterThan(layout.portrait.width);
+  }
   await expect(page.locator('#creation-portrait-preview')).toBeVisible();
   await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
   await expect(page.locator('body')).toHaveClass(/hub-character-page/);
@@ -36,6 +49,18 @@ test('retrato escolhido na Origem permanece na ficha após salvar',async({page})
   await expect(page.locator('#sheet')).toBeVisible({timeout:35000});
   await expect(page.locator('#character-portrait-preview img')).toBeVisible();
   await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
+});
+test('imagem clicável abre a seleção pelo retrato',async({page})=>{
+ await page.goto('/criacao-personagem.html');
+ await expect(page.locator('#builder')).toBeVisible({timeout:35000});
+ await page.locator('[data-wizard-step="origem"]').click();
+ const picker=page.locator('#creation-portrait-picker');
+ await expect(picker).toHaveAttribute('role','button');
+ await expect(picker).toHaveAttribute('tabindex','0');
+ const choose=page.waitForEvent('filechooser');
+ await picker.click();
+ await (await choose).setFiles({name:'retrato.png',mimeType:'image/png',buffer:pixel});
+ await expect(page.locator('#creation-portrait-preview img')).toBeVisible();
 });
 test('em Usuário, remover é o rótulo e o retrato está acessível pelo teclado',async({page})=>{
   await page.goto('/usuario.html');
