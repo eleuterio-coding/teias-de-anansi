@@ -46,7 +46,7 @@ test('ordem numerica: maior para menor, com sessao proxima e concluidas',()=>{
  expect(sortCampaignAdventures(adventures.filter(a=>a.campaignId===campaign.id),{includePlanned:false,limit:5}).map(a=>a.id))
   .toEqual(['adv-6','adv-5','adv-4','adv-3','adv-2']);
  expect(recentCampaignSessions(campaign.sessions).map(s=>s.id))
-  .toEqual(['session-9','session-6','session-5','session-4','session-3']);
+  .toEqual(['session-7','session-9','session-6','session-5','session-4']);
 });
 test('Campanha mostra até cinco Aventuras por ordem e sessões da aventura em andamento',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
@@ -58,11 +58,11 @@ test('Campanha mostra até cinco Aventuras por ordem e sessões da aventura em a
  const titles=await adventuresArea.locator('.campaign-reference-row strong').allTextContents();
  expect(titles).toEqual(['Mais tarde','A Cidadela','As Muralhas','A Fortaleza','As Rainhas']);
  const sessions=await sessionsArea.locator('.campaign-reference-row strong').allTextContents();
- expect(sessions).toEqual(['Sessão 9 · Futura','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha','Sessão 3 · Mercado']);
+ expect(sessions).toEqual(['Sessão 7 · O Portal','Sessão 9 · Futura','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha']);
  await expect(adventuresArea).toContainText('Mais tarde');
  await expect(sessionsArea).not.toContainText('Amanhã');
  await expect(sessionsArea).toContainText('Futura');
- await expect(sessionsArea).not.toContainText('O Portal');
+ await expect(sessionsArea).toContainText('O Portal');
  await expect(adventuresArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa.svg');
  await expect(adventuresArea.locator('.campaign-reference-row').nth(1).locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');
  await expect(sessionsArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');

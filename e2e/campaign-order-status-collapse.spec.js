@@ -72,7 +72,7 @@ test('criação de Sessão oferece estados e sugere próxima Ordem, salvando-a',
  const form=page.locator('#session-create-card');
  await expect(form).toBeVisible();
  const statuses=await form.locator('#new-session-status option').evaluateAll(rows=>rows.map(o=>o.textContent));
- expect(statuses).toEqual(['Planejada','Próxima','Concluída','Cancelada']);
+ expect(statuses).toEqual(['Planejada','Próxima','Atual','Concluída','Cancelada']);
  await expect(form.locator('#new-session-order')).toHaveValue('3');
  await form.locator('#new-session-order').fill('7');
  await form.locator('#new-session-status').selectOption('completed');
