@@ -415,5 +415,25 @@ function bindCampaignSaveButtons(){
 }
 
 function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
-async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username);if(config.configured){try{const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261021-user-profiles1');const provider=await createFirebaseCollaborationProvider({config});const profiles=await provider.listUsers();rememberAvatars(profiles);hubParticipants=hubParticipants.map(row=>({...row,avatarDataUrl:profiles.find(p=>p.username===row.username)?.avatarDataUrl||''}))}catch{}}}catch{hubParticipants=[]}render()}
+async function init(){
+ if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}
+ campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();
+ let config=null;
+ try{
+  config=await loadFirebaseConfig();
+  hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username);
+ }catch{hubParticipants=[]}
+ // Renderiza imediatamente; obter imagens dos demais usuários é uma melhoria progressiva.
+ render();
+ if(config?.configured)void(async()=>{
+  try{
+   const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261021-user-profiles1');
+   const provider=await createFirebaseCollaborationProvider({config}),profiles=await provider.listUsers();
+   rememberAvatars(profiles);
+   const byUsername=new Map(profiles.map(p=>[p.username,p.avatarDataUrl]));
+   hubParticipants=hubParticipants.map(row=>({...row,avatarDataUrl:byUsername.get(row.username)||''}));
+   syncRosterControls();
+  }catch{}
+ })();
+}
 init();
