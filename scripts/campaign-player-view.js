@@ -1,4 +1,4 @@
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-current-first1';
+import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261021-current-first1';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -63,7 +63,7 @@ function timeline(c,mode='list'){
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
- const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=recentCampaignSessions(arr(c.sessions),{limit:5}),characters=arr(row.characters);
+ const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=arr(c.sessions).sort((a,b)=>{const priority={current:0,next:1};const pa=priority[a.status]??2,pb=priority[b.status]??2;return pa-pb}),characters=arr(row.characters);
  rememberAvatars(profiles);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
  root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1><span class="campaign-player-readonly">Somente leitura</span></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
