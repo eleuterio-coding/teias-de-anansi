@@ -1,7 +1,7 @@
 import{playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
-import{findPreviousCampaignSession,findUpcomingCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
+import{findPreviousCampaignSession,findUpcomingCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261021-current-session1';
 import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-disclosure1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-disclosure1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
