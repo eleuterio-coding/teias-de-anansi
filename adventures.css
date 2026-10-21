@@ -220,15 +220,17 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-descrip
  cursor:default;opacity:.34
 }
 #adventure-root .adventure-campaign-track{
- --adventure-gap:14px;--adventure-columns:var(--adventure-visible,3);
+ --adventure-gap:14px;
  display:grid;grid-auto-flow:column;
- grid-auto-columns:calc((100% - (var(--adventure-columns) - 1)*var(--adventure-gap))/var(--adventure-columns));
+ grid-auto-columns:calc((100% - 28px)/3);
  grid-template-columns:none;gap:var(--adventure-gap);
  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
  scroll-snap-type:x mandatory;scroll-padding-inline:2px;
  scrollbar-width:thin;scrollbar-color:#56738d transparent;
  padding:3px 2px 13px;min-width:0;max-width:100%
 }
+#adventure-root .adventure-campaign-track[data-visible="1"]{grid-auto-columns:100%}
+#adventure-root .adventure-campaign-track[data-visible="2"]{grid-auto-columns:calc((100% - 14px)/2)}
 #adventure-root .adventure-campaign-track>.campaign-card{
  min-width:0;width:100%;height:100%;scroll-snap-align:start;
  scroll-snap-stop:normal
@@ -279,13 +281,14 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-campaign-scr
  background:#f1f6fa;color:#203d54;border-color:#c1d0dd
 }
 @media(max-width:1050px){
- #adventure-root .adventure-campaign-track{--adventure-columns:min(2,var(--adventure-visible))}
+ #adventure-root .adventure-campaign-track{grid-auto-columns:calc((100% - 14px)/2)}
+ #adventure-root .adventure-campaign-track[data-visible="1"]{grid-auto-columns:100%}
  #adventure-root .adventure-create-tile-row{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:680px){
  #adventure-root .adventure-list-filterbar label{flex-basis:100%;max-width:none}
  #adventure-root .adventure-campaign-group{padding:13px 11px 10px}
- #adventure-root .adventure-campaign-track{--adventure-columns:1}
+ #adventure-root .adventure-campaign-track{grid-auto-columns:100%}
  #adventure-root .adventure-create-tile-row{grid-template-columns:minmax(0,1fr)}
  #adventure-root .adventure-campaign-scroll-actions{margin-left:0}
  #adventure-root .adventure-campaign-scroll-actions>span{display:none}
