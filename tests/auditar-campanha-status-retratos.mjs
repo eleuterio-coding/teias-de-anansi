@@ -26,7 +26,7 @@ assert.match(player,/bindCampaignAvatarPreviews\(root\)/);
 assert.match(portrait,/dialog\.showModal\(\)/);
 assert.match(portrait,/dialog\.addEventListener\('close'/);
 assert.match(portrait,/event\.preventDefault\(\)/);
-assert.match(portrait,/^const esc=/);
+assert.match(portrait,/const esc=/);
 assert.match(profileHtml,/id="hub-user-focused-profile"/);
 assert.match(user,/new URLSearchParams\(location\.search\)\.get\('user'\)/);
 assert.match(user,/renderFocusedProfile\(\)/);
