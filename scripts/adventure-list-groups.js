@@ -41,7 +41,7 @@ export function adventureGroupsHtml(adventures,campaigns,{campaign='all',status=
   const name=known.get(id)?.name||'Campanha não encontrada';
   const campaignLink=known.has(id)?`<a href="mesa.html?id=${encodeURIComponent(id)}" aria-label="Abrir campanha ${esc(name)}">${esc(name)}</a>`:`<span>${esc(name)}</span>`;
   const ordered=sortCampaignAdventures(items);
-  const showArrows=ordered.length>3;
+  const showArrows=ordered.length>1;
   const visible=Math.min(3,ordered.length);
   const cards=ordered.map(a=>adventureListCard(a,{parentName:known.get(id)?.name||'',readOnly})).join('');
   return `<section class="adventure-campaign-group" data-adventure-campaign-group="${esc(id)}" aria-label="Aventuras da campanha ${esc(name)}">
@@ -51,7 +51,7 @@ export function adventureGroupsHtml(adventures,campaigns,{campaign='all',status=
      <h3>${campaignLink}</h3>
      <span class="adventure-campaign-group-count">${countLabel(ordered.length)}</span>
     </div>
-    ${showArrows?`<div class="adventure-campaign-scroll-actions" aria-label="Navegação de aventuras">
+    ${showArrows?`<div class="adventure-campaign-scroll-actions" aria-label="Navegação de aventuras" hidden>
       <span>Arraste ou role para ver mais</span>
       <button class="secondary" type="button" data-adventure-scroll="-1" aria-label="Ver aventuras anteriores de ${esc(name)}">‹</button>
       <button class="secondary" type="button" data-adventure-scroll="1" aria-label="Ver próximas aventuras de ${esc(name)}">›</button>
@@ -74,6 +74,8 @@ export function bindAdventureGroupScroll(host){
    const max=track.scrollWidth-track.clientWidth;
    const prev=buttons.find(b=>b.dataset.adventureScroll==='-1');
    const next=buttons.find(b=>b.dataset.adventureScroll==='1');
+   const nav=group.querySelector('.adventure-campaign-scroll-actions');
+   if(nav)nav.hidden=max<=1;
    if(prev)prev.disabled=track.scrollLeft<=1;
    if(next)next.disabled=track.scrollLeft>=max-1;
   };
