@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {recentCampaignSessions} from '../scripts/campaign-recent-items.js';
+import {recentCampaignSessions,featuredCampaignAdventures} from '../scripts/campaign-recent-items.js';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 for(const file of ['scripts/campaign-player-view.js','scripts/campaign-list-ui.js','scripts/app-shell.js','scripts/user-profile-ui.js','scripts/hub-ux.js']){
  execFileSync(process.execPath,['--check',new URL('../'+file,import.meta.url).pathname],{stdio:'pipe'});
 }
 const player=read('scripts/campaign-player-view.js');
 const masterCampaign=read('scripts/campaign-table-ui.js');
+const adventureCards=read('scripts/campaign-adventure-card.js');
 const masterStructured=read('scripts/campaign-structured-ui.js');
 const shell=read('scripts/app-shell.js');
 const users=read('scripts/user-profile-ui.js');
@@ -22,6 +23,26 @@ assert.ok(player.includes("sessionStories(sessions,c.id)"), 'Layout próprio de 
 assert.ok(player.includes("'Sessões da Campanha'")&&player.includes("'Aventuras da Campanha'"),'Títulos');
 assert.ok(player.includes('campaign-player-story-card-featured'),'Destaque para Atual');
 assert.ok(player.includes('const footer=isAdventure?action:'),'Rodapé específico das sessões');
+const sampleAdventures=[
+ {id:'old-completed',status:'completed',order:2},
+ {id:'planned',status:'planned',order:11},
+ {id:'new-completed',status:'completed',order:8},
+ {id:'older-active',status:'active',order:1},
+ {id:'new-active',status:'active',order:9},
+ {id:'archived',status:'archived',order:12}
+];
+const snapshot=JSON.stringify(sampleAdventures);
+assert.deepEqual(featuredCampaignAdventures(sampleAdventures).map(a=>a.id),['new-active','new-completed'],'Seleciona somente a ativa e a última concluída');
+assert.equal(JSON.stringify(sampleAdventures),snapshot,'Seleção não altera os dados');
+assert.deepEqual(featuredCampaignAdventures(sampleAdventures.filter(a=>a.status==='completed')).map(a=>a.id),['new-completed'],'Uma aventura concluída ocupa a seção sozinha');
+assert.deepEqual(featuredCampaignAdventures(sampleAdventures.filter(a=>a.status==='planned')),[],'Não promove planejadas');
+assert.ok(masterCampaign.includes('featuredCampaignAdventures(adventuresForCampaign('),'Mestre usa o mesmo seletor');
+assert.ok(player.includes('featuredCampaignAdventures(arr(row.adventures))'),'Jogadores usam o mesmo seletor');
+assert.ok(masterCampaign.includes('renderCampaignAdventureCard(a,campaignId)'),'Mestre usa o mesmo card de aventura');
+assert.ok(player.includes("return renderCampaignAdventureCard(item,campaignId)"),'Jogadores usam o mesmo card de aventura');
+assert.ok(adventureCards.includes('campaign-adventure-featured-card'),'Card compartilhado mantém estrutura unificada');
+assert.ok(styles.includes('#table-root #aventuras .campaign-adventures-feature-grid{'),'Grade de duas aventuras preenche a seção');
+
 assert.ok(player.includes('class="campaign-player-story-footer"'),'Selo e botão no rodapé da sessão');
 assert.ok(styles.includes('.campaign-player-sessions-grid .campaign-player-story-footer{'),'CSS do rodapé da sessão presente');
 assert.ok(styles.includes('margin-left:auto;white-space:nowrap'),'Ação Abrir à direita');

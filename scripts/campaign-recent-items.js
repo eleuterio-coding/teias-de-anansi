@@ -10,6 +10,18 @@ export function sortCampaignAdventures(items=[],{includePlanned=true,limit=Infin
    return bDate.localeCompare(aDate)||String(b.id||'').localeCompare(String(a.id||''));
   }).slice(0,limit)
 }
+/** No quadro de Aventuras da Campanha, exibe apenas a aventura em andamento
+ * e a concluída mais recente segundo a Ordem narrativa (maior primeiro).
+ * Não promove aventuras planejadas, pausadas ou arquivadas para ocupar vagas.
+ * A seleção é idêntica para Mestre e Jogadores (após filtro de visibilidade).
+ */
+export function featuredCampaignAdventures(items=[]){
+ const sorted=sortCampaignAdventures(items);
+ const running=sorted.find(a=>a.status==='active'||a.status==='current');
+ const completed=sorted.find(a=>a.status==='completed');
+ return [running,completed].filter(Boolean);
+}
+
 /** Destaca a sessão Atual, seguida das Próximas, preservando Ordem decrescente em cada grupo.
  * Se informado, activeAdventureIds restringe aos vínculos válidos da Campanha. */
 export function recentCampaignSessions(items=[],{limit=5,activeAdventureIds=null}={}){

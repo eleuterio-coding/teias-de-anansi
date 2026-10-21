@@ -1,4 +1,5 @@
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-current-first1';
+import{featuredCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-adventure-featured2';
+import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-adventure-featured2';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
@@ -25,6 +26,7 @@ function players(c,characters,profiles=[],myUsername=''){
  return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`);
 }
 function backgroundCard(item,kind,campaignId){
+ if(kind==='adventure')return renderCampaignAdventureCard(item,campaignId);
  const isAdventure=kind==='adventure',name=String(isAdventure?item.title:item.title||'Sessão'),href=isAdventure?`aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`:`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`;
  const heading=isAdventure?name:`Sessão ${Number(item.number)||1} · ${name}`;
  const picture=media(item.coverImage,item.coverImageUrl,`Capa de ${heading}`,'campaign-player-story-image');
@@ -38,7 +40,7 @@ function backgroundCard(item,kind,campaignId){
  ${picture}<span class="campaign-player-story-content">${information}${footer}</span></a>`;
 }
 function stories(id,title,rows,kind,campaignId){
- return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`);
+ return section(id,title,`<div class="campaign-player-story-grid ${kind==='adventure'?'campaign-adventures-feature-grid':''}">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura em andamento ou concluída.':'Nenhuma sessão disponível.')}</div>`);
 }
 /* Mantém a prioridade oficial Atual → Próxima → Concluída.
    Inclui sessões Planejadas quando não existem três prioritárias,
@@ -107,7 +109,7 @@ function timeline(c,mode='list'){
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
- const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=playerCampaignSessions(c.sessions),characters=arr(row.characters);
+ const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=featuredCampaignAdventures(arr(row.adventures)),sessions=playerCampaignSessions(c.sessions),characters=arr(row.characters);
  rememberAvatars(profiles);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
  root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?v=20261021-fichas-auth3&id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>

@@ -8,7 +8,8 @@ import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMembe
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
-import{sortCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-current-first1';
+import{featuredCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-adventure-featured2';
+import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-adventure-featured2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignId=params.get('id');let campaigns=[],campaign=null,characters=[],hubParticipants=[],saveTimer=null;
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[s]||s),sessionStatus=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s),adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',completed:'Concluída',archived:'Arquivada'}[s]||s);
@@ -68,16 +69,12 @@ function referenceCover(...items){
  return cover?imageElementHtml(cover.coverImage,cover.coverImageUrl,{className:'campaign-reference-cover',alt:''}):'';
 }
 function referenceSectionsHtml(){
- const adventures=sortCampaignAdventures(adventuresForCampaign(readAdventures(),campaignId),{limit:5});
+ const adventures=featuredCampaignAdventures(adventuresForCampaign(readAdventures(),campaignId));
  return`<section id="aventuras" class="card campaign-editor-card campaign-reference-section">
   <div class="top campaign-reference-head"><h2>Aventuras da Campanha</h2>
    <a class="btn secondary campaign-reference-header-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}">Abrir Aventuras</a>
   </div>
-  <div class="list">${adventures.length?adventures.map(a=>`<article class="campaign-reference-row campaign-reference-cover-card">${referenceCover(a,campaign)}
-   <div class="campaign-reference-content"><strong>${esc(a.title)}</strong><div><span class="badge campaign-reference-status status-${esc(a.status||'planned')}">${esc(adventureStatus(a.status))}</span></div>
-   ${a.summary?`<p class="mini">${esc(a.summary)}</p>`:''}</div>
-   <a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(a.id)}">Abrir</a>
-  </article>`).join(''):'<div class="empty">Nenhuma aventura vinculada a esta Campanha.</div>'}</div>
+  <div class="list campaign-player-story-grid campaign-adventures-feature-grid">${adventures.length?adventures.map(a=>renderCampaignAdventureCard(a,campaignId)).join(''):'<div class="empty">Nenhuma aventura em andamento ou concluída nesta Campanha.</div>'}</div>
  </section>`
 }
 
