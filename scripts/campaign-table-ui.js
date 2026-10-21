@@ -91,7 +91,7 @@ function detailsSectionsHtml(){
 }
 
 function memberRow(m){
- const linked=characters.find(c=>c.id===m.characterId),name=hubParticipants.find(p=>p.username===m.username)?.displayName||m.name||m.username||'Jogador',index=campaign.members.findIndex(x=>x.id===m.id),profileUrl=`usuario.html?user=${encodeURIComponent(m.username||m.name||'')}`;
+ const linked=characters.find(c=>c.id===m.characterId),name=hubParticipants.find(p=>p.username===m.username)?.displayName||m.name||m.username||'Jogador',index=campaign.members.findIndex(x=>x.id===m.id),profileUrl=`usuario.html?user=${encodeURIComponent(m.username||m.name||'')}&campaign=${encodeURIComponent(campaignId)}`;
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}" draggable="true" tabindex="0" aria-label="${esc(name)}. Arraste para reorganizar ou use as setas.">
   <button type="button" class="roster-grip" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(m.username||name,hubParticipants),name)}<div class="roster-player-display" aria-label="${playerTerm(m.username||name)}: ${esc(name)}"><span class="roster-player-label">${playerTerm(m.username||name)}</span><div class="roster-player-name-line"><span class="roster-player-name">${esc(name)}</span><a class="roster-player-profile-link" href="${profileUrl}" title="Abrir perfil de ${esc(name)}" aria-label="Abrir perfil de ${esc(name)}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div></div></div>
@@ -135,7 +135,7 @@ function syncRosterControls({rebuildRows=false}={}){
   const avatar=row.querySelector('.roster-player-identity .campaign-avatar-trigger, .roster-player-identity .roster-avatar');
   if(avatar)avatar.outerHTML=campaignAvatarHtml(playerAvatarHtml(member.username||name,hubParticipants),name);
   const profileLink=row.querySelector('.roster-player-profile-link');
-  if(profileLink)profileLink.href=`usuario.html?user=${encodeURIComponent(member.username||member.name||'')}`;
+  if(profileLink)profileLink.href=`usuario.html?user=${encodeURIComponent(member.username||member.name||'')}&campaign=${encodeURIComponent(campaignId)}`;
    const term=row.querySelector('.roster-player-label');if(term)term.textContent=playerTerm(member.username||name);
   const characterSelect=row.querySelector('[data-member-character]');
   if(characterSelect){
