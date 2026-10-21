@@ -254,7 +254,7 @@ function sessionCard(s,restricted=false){
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
   <label>Ordem<input type="number" min="1" step="1" data-session-field="order" value="${s.order}"></label>
-  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next',...(s.status==='current'?['current']:[]),'completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
+  ${s.status==='active'?'':`<label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>option(v,statusLabel(v),s.status)).join('')}</select></label>`}
   <label>Aventura<select data-session-adventure ${s.campaignId?'':'disabled'}>${adventureOptions(s.adventureId,s.campaignId||'__sem_campanha__')}</select></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo / preparação<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
