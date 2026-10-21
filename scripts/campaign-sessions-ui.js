@@ -1,9 +1,10 @@
+import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261021-current-session1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261019-adventure-order1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
-import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261021-session-groups1';
+import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261021-shared-order1';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -130,7 +131,7 @@ function changeSessionAdventure(ref,newAdventureId){
  reload();render();feedback('Aventura da sessão atualizada.')
 }
 function adventureLabel(a){
- const c=campaignById(a.campaignId);return c?`${a.title} · ${c.name}`:a.title
+ const c=campaignById(a.campaignId);return c?`${numberedAdventureTitle(a)} · ${c.name}`:numberedAdventureTitle(a)
 }
 function campaignOptions(current=''){
  return `<option value="">— Sem campanha —</option>${campaigns.map(c=>option(c.id,c.name,current)).join('')}`
@@ -229,7 +230,7 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
  const href=detailHref(s);
  const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
  const campaignLink=s.campaignId?`<a href="mesa.html?id=${encodeURIComponent(s.campaignId)}" aria-label="Abrir campanha ${esc(campaignName)}">${esc(campaignName)}</a>`:`<strong>${esc(campaignName)}</strong>`;
- const adventureLink=adv?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(adv.title)}">${esc(adv.title)}</a>`:`<strong>${s.adventureId?'Aventura não disponível':'Sem aventura'}</strong>`;
+ const adventureLink=adv?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(adv.title)}">${esc(numberedAdventureTitle(adv))}</a>`:`<strong>${s.adventureId?'Aventura não disponível':'Sem aventura'}</strong>`;
  const context=`<p class="mini session-card-context hub-ancestry" role="group" aria-label="Campanha e aventura vinculadas"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${campaignLink}</span><span class="hub-ancestry-chevron" aria-hidden="true">›</span><span class="hub-parent-link hub-ancestry-adventure"><span>Aventura</span>${adventureLink}</span></p>`;
  const statusControl=restricted
   ?`<span class="campaign-status-value" aria-label="Status da sessão: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
@@ -245,7 +246,7 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
   <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
-   <h2>${esc(s.title)}</h2>
+   <h2>${esc(numberedSessionTitle(s))}</h2>
    ${description?`<p>${esc(description)}</p>`:''}
    ${context}
    <p class="mini">${s.date?`${esc(s.date)} · `:''}${counts}</p>
@@ -287,8 +288,8 @@ function sessionCard(s,restricted=false){
  const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
  return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
  ${restricted?cover:''}<div class="session-head"><div>
-  <h3>${esc(s.title)}</h3>
-  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(adv.title):'Sem aventura'}</span></div>
+  <h3>${esc(numberedSessionTitle(s))}</h3>
+  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(numberedAdventureTitle(adv)):'Sem aventura'}</span></div>
  </div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger session-delete-button" data-remove-session aria-label="Excluir sessão ${esc(s.title)}" title="Excluir sessão">×</button>`}</div></div>
  ${restricted?`
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
