@@ -77,7 +77,7 @@ export function bindAdventureRoster({getAdventure,getCampaign,characters=[],save
   const other=direction==='up'?row?.previousElementSibling:row?.nextElementSibling;
   if(row?.dataset.memberRow&&other?.dataset.memberRow)reorder(row.dataset.memberRow,other.dataset.memberRow,direction==='up'?'before':'after')
  };
- user?.addEventListener('change',()=>{
+ user?.addEventListener('change',()=>{const label=user.closest('label')?.firstChild;if(label?.nodeType===3)label.textContent=playerTerm(user.value);
   const selected=adventureMembers(getCampaign()).find(m=>lower(m.username||m.name)===user.value),memberIds=new Set(rows().map(row=>row.characterId).filter(Boolean)),all=adventureMembers(getCampaign()).map(m=>m.characterId).filter(id=>id&&!memberIds.has(id));
   const characterMap=new Map(characters.map(c=>[c.id,c]));
   character.innerHTML='<option value="">— Sem personagem —</option>'+[...new Set(all)].map(id=>{
