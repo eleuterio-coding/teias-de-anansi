@@ -15,7 +15,7 @@ const NAV_ITEMS=[
 const PAGE_LABELS={
  "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","nova-campanha.html":"Nova campanha","mesa.html":"Campanha",
  "sessoes.html":"Sessões","aventuras.html":"Aventuras","personagens.html":"Personagens",
- "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuário","configuracoes.html":"Configurações"
+ "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuários","configuracoes.html":"Configurações"
 };
 const ICONS={
  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
@@ -85,7 +85,7 @@ function buildSidebar(){
  const spacer=document.createElement("div");spacer.className="hub-sidebar-spacer";aside.appendChild(spacer);
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
- secondary.innerHTML='<a class="hub-nav-link" href="usuario.html">'+icon("player")+'<span>Usuário</span></a><a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
+ secondary.innerHTML='<a class="hub-nav-link" href="usuario.html">'+icon("player")+'<span>Usuários</span></a><a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
  if(currentPage()==="usuario.html")secondary.querySelector('a[href="usuario.html"]')?.setAttribute("aria-current","page");
   if(currentPage()==="configuracoes.html")secondary.querySelector('a[href="configuracoes.html"]')?.setAttribute("aria-current","page");
  aside.appendChild(secondary);
@@ -98,7 +98,7 @@ function breadcrumbTrail(label){
  const sections={
   "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
   "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
-  "bibliotecas.html":"Biblioteca","usuario.html":"Usuário","configuracoes.html":"Configurações"
+  "bibliotecas.html":"Biblioteca","usuario.html":"Usuários","configuracoes.html":"Configurações"
  };
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
@@ -140,7 +140,7 @@ function buildCommand(){
 }
 function commandItems(){
  const base=NAV_ITEMS.filter(item=>!item.masterOnly||masterNpcAccess()).map(function(item){return{label:item.label,href:item.page,kind:"Área",icon:item.icon}});
- base.push({label:"Usuário",href:"usuario.html",kind:"Área",icon:"player"},{label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(!previewActive())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
+ base.push({label:"Usuários",href:"usuario.html",kind:"Área",icon:"player"},{label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(!previewActive())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
  readRecents().slice(0,4).forEach(function(row){base.push({label:row.label,href:row.href,kind:"Recente",icon:row.page==="mesa.html"?"campaign":"star"})});
  document.querySelectorAll('.section-nav a[href^="#"]').forEach(function(link){base.push({label:link.textContent.trim(),href:link.getAttribute("href"),kind:"Nesta página",icon:"chevron"})});
  const seen=new Set();return base.filter(function(item){const key=item.href+"|"+item.label;if(seen.has(key))return false;seen.add(key);return true})
