@@ -57,8 +57,8 @@ export function adventureGroupsHtml(adventures,campaigns,{campaign='all',status=
       <button class="secondary" type="button" data-adventure-scroll="1" aria-label="Ver próximas aventuras de ${esc(name)}">›</button>
      </div>`:''}
    </div>
-   <div class="adventure-campaign-track" data-adventure-track tabindex="0" role="region"
-        aria-label="Aventuras da campanha ${esc(name)}" style="--adventure-visible:${visible}">
+   <div class="adventure-campaign-track" data-adventure-track data-visible="${visible}" tabindex="0" role="region"
+        aria-label="Aventuras da campanha ${esc(name)}">
     ${cards}
    </div>
   </section>`;
