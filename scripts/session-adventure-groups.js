@@ -48,7 +48,10 @@ export function sessionAdventureGroupsHtml(sessions,adventures,renderCard,campai
  }).join('');
 }
 
+let activeObservers=[];
 export function bindSessionAdventureScroll(host){
+ for(const observer of activeObservers)observer.disconnect();
+ activeObservers=[];
  host?.querySelectorAll('.session-adventure-group').forEach(group=>{
   const track=group.querySelector('[data-session-track]');
   const navigation=group.querySelector('.session-adventure-scroll-actions');
@@ -70,6 +73,11 @@ export function bindSessionAdventureScroll(host){
    track.scrollBy({left:Number(button.dataset.sessionScroll)*step*count,behavior:'smooth'});
   }));
   track.addEventListener('scroll',update,{passive:true});
+  if(typeof ResizeObserver==='function'){
+   const observer=new ResizeObserver(update);
+   observer.observe(track);
+   activeObservers.push(observer);
+  }
   update();
  });
 }
