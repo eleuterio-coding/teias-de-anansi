@@ -1,9 +1,13 @@
 import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20261016-master-preview1';
 
 const id=new URLSearchParams(location.search).get('id')||'';
-const accessMode=collaborationAccessMode(),guest=accessMode==='guest';
-const canOpen=!guest&&canOpenCharacter(id);
-const canEdit=!guest&&canEditCharacter(id);
+let accessMode='guest',guest=true,canOpen=false,canEdit=false;
+function refreshAccess(){
+ accessMode=collaborationAccessMode();guest=accessMode==='guest';
+ canOpen=!guest&&canOpenCharacter(id);
+ canEdit=canOpen&&canEditCharacter(id)
+}
+refreshAccess();
 let observer=null;
 
 function deny(){
@@ -49,10 +53,10 @@ function lock(){
  for(const editable of sheet.querySelectorAll('[contenteditable]'))editable.setAttribute('contenteditable','false')
 }
 function watch(){if(observer||guest||!canOpen||canEdit)return;observer=new MutationObserver(()=>lock());const sheet=document.getElementById('sheet');if(sheet)observer.observe(sheet,{childList:true,subtree:true})}
-function apply(){lock();ensureMasterDelete();watch()}
+function apply(){refreshAccess();lock();ensureMasterDelete();watch()}
 
 if(guest||!canOpen){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',deny,{once:true});else deny()}
 document.addEventListener('hub-rpg:sheet-ready',apply);
 document.addEventListener('hub-rpg:sheet-spells-ready',apply);
-document.addEventListener('hub-rpg:remote-updated',apply);
+window.addEventListener('hub-rpg:remote-updated',apply);
 queueMicrotask(apply);
