@@ -1,4 +1,4 @@
-import{playerTerm}from'../profile-images.js?v=20261021-user1';
+import{playerTerm,photoDataUrl,characterPicture}from'../profile-images.js?v=20261021-user1';
 import{state,$,arr,num,esc}from'./state.js';
 import{normalizeCharacterGender}from'../character-gender.js?v=20261019-gender1';
 import{derive}from'./rules.js';
@@ -15,6 +15,48 @@ function ensureSheetState(){
  c.sheet.runtime.spellSlotsUsed={...(c.sheet.runtime.spellSlotsUsed||{})};
  c.sheet.inventory={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:'',...(c.sheet.inventory||{})};
  c.sheet.extraSpells=c.sheet.extraSpells||'';
+}
+
+
+let portraitBusy=false;
+function renderOriginPortrait(){
+  const preview=$('origin-portrait-preview'),input=$('origin-portrait-file'),remove=$('origin-portrait-remove');
+  if(!preview||!state.c)return;
+  const picture=characterPicture(state.c);
+  preview.replaceChildren();
+  if(picture){const image=document.createElement('img');image.src=picture;image.alt='Imagem do personagem';preview.appendChild(image)}
+  else{const mark=document.createElement('span');mark.textContent='◇';mark.setAttribute('aria-hidden','true');preview.appendChild(mark)}
+  if(input)input.disabled=portraitBusy;
+  if(remove)remove.disabled=portraitBusy||!picture;
+}
+function initOriginPortrait(){
+  const input=$('origin-portrait-file'),remove=$('origin-portrait-remove'),status=$('origin-portrait-status');
+  if(!input||input.dataset.bound==='true')return;
+  input.dataset.bound='true';renderOriginPortrait();
+  input.addEventListener('change',async()=>{
+    const file=input.files?.[0];input.value='';
+    if(!file||portraitBusy)return;
+    const currentCharacter=state.c;
+    portraitBusy=true;renderOriginPortrait();
+    try{
+      const picture=await photoDataUrl(file,{dimension:360,maxLength:115000});
+      if(state.c!==currentCharacter)return;
+      state.c.portraitDataUrl=picture;
+      if(status)status.textContent='Imagem selecionada. Salve o personagem para manter a alteração.';
+    }catch(error){if(status)status.textContent=error?.message||'Imagem inválida.'}
+    finally{portraitBusy=false;renderOriginPortrait()}
+  });
+  remove?.addEventListener('click',()=>{
+    if(portraitBusy||!state.c)return;
+    state.c.portraitDataUrl='';
+    if(state.c.sheet)delete state.c.sheet.portraitDataUrl;
+    renderOriginPortrait();
+    if(status)status.textContent='Imagem removida. Salve o personagem para manter a alteração.';
+  });
+  document.addEventListener('hub:new-character',()=>{
+    if(status)status.textContent='';
+    renderOriginPortrait();
+  });
 }
 
 function setValue(id,value){const el=$(id);if(el)el.value=value??''}
@@ -80,4 +122,4 @@ function bind(){
  $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
 }
 
-export function initCharacterProfileUi(){ensureSheetState();hydrate();renderAll();bind()}
+export function initCharacterProfileUi(){ensureSheetState();hydrate();renderAll();bind();initOriginPortrait()}
