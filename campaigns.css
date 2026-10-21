@@ -96,8 +96,10 @@
 }
 
 
-/* O selo único ocupa o canto superior direito da campanha (sobre a capa).
-   A cor pertence ao status; somente o fundo é semitransparente. */
+/* Paleta única de status: Campanhas, Aventuras e Sessões (listas e cards internos).
+   Atual=azul, Próxima=ciano, Em andamento=verde, Planejada=âmbar,
+   Pausada=roxo, Concluída=cinza-azulado, Cancelada=vermelho, Arquivada=cinza.
+   As mesmas variáveis alimentam os selos e as referências no detalhe da Campanha. */
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card:not(.campaign-create-tile){position:relative}
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status{
   --status-bg:rgba(39,55,68,.78);
@@ -116,28 +118,48 @@
   backdrop-filter:blur(8px);
   box-shadow:0 2px 9px rgba(0,0,0,.18)
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-current{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-current,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-current,
+.hub-collection-card .hub-collection-status.status-current{
   --status-bg:rgba(25,65,103,.78);--status-border:rgba(108,196,255,.68);--status-ink:#9cdbff
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-next{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-next,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-next,
+.hub-collection-card .hub-collection-status.status-next{
   --status-bg:rgba(19,70,81,.78);--status-border:rgba(125,211,252,.68);--status-ink:#b6eeff
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-active{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-active,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-active,
+.hub-collection-card .hub-collection-status.status-active{
   --status-bg:rgba(18,79,51,.78);--status-border:rgba(92,230,157,.64);--status-ink:#91f3b9
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-planned{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-planned,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-planned,
+.hub-collection-card .hub-collection-status.status-planned{
   --status-bg:rgba(89,60,22,.78);--status-border:rgba(255,198,98,.66);--status-ink:#ffcf85
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-paused{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-paused,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-paused,
+.hub-collection-card .hub-collection-status.status-paused{
   --status-bg:rgba(78,51,109,.78);--status-border:rgba(209,160,255,.65);--status-ink:#e0baff
 }
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-finished,
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-completed{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-completed,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-finished,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-completed,
+.hub-collection-card .hub-collection-status.status-finished,
+.hub-collection-card .hub-collection-status.status-completed{
   --status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0
 }
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-cancelled,
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-archived{
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-cancelled,
+.hub-collection-card .hub-collection-status.status-cancelled{
  --status-bg:rgba(94,39,46,.83);--status-border:rgba(240,126,136,.58);--status-ink:#ffb5bf
+}
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-card-status.status-archived,
+#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-archived,
+.hub-collection-card .hub-collection-status.status-archived{
+ --status-bg:rgba(58,64,75,.80);--status-border:rgba(157,167,181,.64);--status-ink:#d3dce8
 }
 
 /* Menu desenhado pelo Hub: mantém transparência com o menu aberto e fechado. */
@@ -208,9 +230,11 @@
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option.status-completed{
   --option-bg:rgba(52,70,86,.40);--option-color:#caddf0;--option-border:rgba(163,190,211,.40)
 }
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option.status-cancelled,
-:is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option.status-archived{
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option.status-cancelled{
  --option-bg:rgba(94,39,46,.50);--option-color:#ffb5bf;--option-border:rgba(240,126,136,.4)
+}
+:is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option.status-archived{
+ --option-bg:rgba(58,64,75,.45);--option-color:#d3dce8;--option-border:rgba(157,167,181,.42)
 }
 :is(#campaign-list,#adventure-list,#sessions-list) .campaign-status-option[aria-pressed="true"]::after{
   content:"✓";font-size:.84rem;font-weight:800
@@ -1858,35 +1882,11 @@ body:not(.hub-shell-enabled) :is(#campaign-list,#adventure-list,#sessions-list) 
  display:inline-flex;align-items:center;width:max-content;max-width:100%;
  border:1px solid var(--status-border,rgba(175,190,210,.65));
  background:var(--status-bg,rgba(96,113,131,.23))!important;
- color:var(--status-color,#e2eaf5)!important;
+ color:var(--status-ink,#e2eaf5)!important;
  border-radius:999px;padding:3px 10px;font-size:.75rem;font-weight:750;
  line-height:1.35;white-space:normal
 }
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-planned{
- --status-bg:rgba(132,144,163,.20);--status-border:#99a9ba;--status-color:#d6e1ee
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-next{
- --status-bg:rgba(46,128,246,.22);--status-border:#75b6ff;--status-color:#bedfff
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-current{
- --status-bg:rgba(145,90,235,.27);--status-border:#c09dff;--status-color:#e0caff
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-active{
- --status-bg:rgba(32,154,99,.28);--status-border:#67dbaa;--status-color:#a6f4cd
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-completed,
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-finished{
- --status-bg:rgba(25,137,155,.26);--status-border:#69cdd9;--status-color:#b6f0f1
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-cancelled{
- --status-bg:rgba(185,57,77,.28);--status-border:#ff9aa7;--status-color:#ffcad2
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-archived{
- --status-bg:rgba(96,104,120,.28);--status-border:#aab2c1;--status-color:#e0e5ed
-}
-#table-root :is(.campaign-reference-status,.campaign-player-story-status).status-paused{
- --status-bg:rgba(174,119,24,.30);--status-border:#f5c575;--status-color:#ffe2ad
-}
+
 
 /* Capa: tracejado branco com 70% de opacidade, também sobre a arte. */
 #table-root #campanha .campaign-settings-cover .image-picker-preview,
