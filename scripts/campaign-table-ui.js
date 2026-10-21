@@ -1,3 +1,4 @@
+import{playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,findUpcomingCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261019-session-order2';
@@ -89,11 +90,11 @@ function detailsSectionsHtml(){
 }
 
 function memberRow(m){
- const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',initial=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J',index=campaign.members.findIndex(x=>x.id===m.id);
+ const linked=characters.find(c=>c.id===m.characterId),name=m.name||m.username||'Jogador',index=campaign.members.findIndex(x=>x.id===m.id);
  return `<article class="member-row roster-player" data-member-row="${esc(m.id)}" draggable="true" tabindex="0" aria-label="${esc(name)}. Arraste para reorganizar ou use as setas.">
   <button type="button" class="roster-grip" aria-label="Reordenar ${esc(name)}: arraste ou use as setas para cima e para baixo" title="Reordenar jogador"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>
-  <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display" aria-label="Jogador: ${esc(name)}"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
-  <div class="roster-player-character"><label>Personagem<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></label></div>
+  <div class="roster-player-identity">${playerAvatarHtml(m.username||name,hubParticipants)}<div class="roster-player-display" aria-label="${playerTerm(m.username||name)}: ${esc(name)}"><span class="roster-player-label">${playerTerm(m.username||name)}</span><span class="roster-player-name">${esc(name)}</span></div></div>
+  <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${characterAvatarHtml(linked)}<select data-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(m.characterId,m.id,m.username||m.name)}</select></div></label></div>
   <div class="row-actions roster-player-actions">
    <button type="button" class="secondary roster-move-button" data-roster-move="up" data-roster-id="${esc(m.id)}" aria-label="Mover ${esc(name)} para cima" ${index===0?'disabled':''}>↑</button>
    <button type="button" class="secondary roster-move-button" data-roster-move="down" data-roster-id="${esc(m.id)}" aria-label="Mover ${esc(name)} para baixo" ${index===campaign.members.length-1?'disabled':''}>↓</button>
@@ -131,14 +132,16 @@ function syncRosterControls({rebuildRows=false}={}){
   const playerName=row.querySelector('.roster-player-name');
   if(playerName)playerName.textContent=name;
   const avatar=row.querySelector('.roster-avatar');
-  if(avatar)avatar.textContent=Array.from(name.trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
+  if(avatar)avatar.outerHTML=playerAvatarHtml(member.username||name,hubParticipants);
+   const term=row.querySelector('.roster-player-label');if(term)term.textContent=playerTerm(member.username||name);
   const characterSelect=row.querySelector('[data-member-character]');
   if(characterSelect){
    characterSelect.innerHTML=characterOptions(member.characterId,member.id,member.username||member.name);
    characterSelect.setAttribute('aria-label',`Personagem de ${name}`);
   }
   const linked=characters.find(c=>c.id===member.characterId);
-  const open=row.querySelector('.roster-open-button');
+   const portrait=row.querySelector('.hub-character-photo');if(portrait)portrait.outerHTML=characterAvatarHtml(linked);
+   const open=row.querySelector('.roster-open-button');
   if(open)open.outerHTML=rosterOpenButton(linked);
  }
  const count=document.querySelector('#jogadores .roster-count');
@@ -412,5 +415,5 @@ function bindCampaignSaveButtons(){
 }
 
 function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
-async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username)}catch{hubParticipants=[]}render()}
+async function init(){if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();try{const config=await loadFirebaseConfig();hubParticipants=(config.playerAccounts||[]).map(row=>({username:String(row.username||'').trim().toLowerCase(),displayName:String(row.displayName||row.username||'').trim()})).filter(row=>row.username);if(config.configured){try{const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261021-user-profiles1');const provider=await createFirebaseCollaborationProvider({config});const profiles=await provider.listUsers();hubParticipants=hubParticipants.map(row=>({...row,avatarDataUrl:profiles.find(p=>p.username===row.username)?.avatarDataUrl||''}))}catch{}}}catch{hubParticipants=[]}render()}
 init();
