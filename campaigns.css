@@ -1777,3 +1777,45 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 #table-root .campaign-player-shared-notes{border-top:1px solid var(--hub-border,#3d5165);padding-top:10px}
 #table-root .campaign-bullet-list>li.campaign-player-important-card>.campaign-list-marker{flex:0 0 8px;min-width:8px}
 #table-root .campaign-bullet-list>li.campaign-player-important-card>.campaign-player-location-placeholder{flex:0 0 44px;min-width:44px}
+
+/* Identidade dos participantes e personagens em Campanhas e Aventuras. */
+.roster-avatar.hub-user-photo,.hub-character-photo{display:inline-flex;align-items:center;justify-content:center;flex:none;width:38px;height:38px;min-width:38px;border-radius:9px;border:1px solid var(--hub-border,#354c64);background:var(--hub-surface-2,#172536);overflow:hidden;color:var(--hub-accent-2,#84c9ff)}
+.roster-avatar.hub-user-photo img,.hub-character-photo img{display:block;width:100%;height:100%;object-fit:cover}
+.hub-character-photo-empty{opacity:.65;font-size:1.45rem}
+#table-root #jogadores .roster-character-picker,#adventure-root #participantes .roster-character-picker{display:flex;align-items:center;gap:8px;min-width:0;height:44px}
+#table-root #jogadores .roster-character-picker>select,#adventure-root #participantes .roster-character-picker>select{flex:1;min-width:0;height:44px}
+#table-root #jogadores .roster-character-picker>.hub-character-photo,#adventure-root #participantes .roster-character-picker>.hub-character-photo{width:38px;height:38px;min-width:38px}
+#table-root .campaign-player-character-link .hub-character-photo{width:30px;height:30px;min-width:30px;flex:0 0 30px}
+#table-root .campaign-player-roster-row .hub-user-photo{width:40px;height:42px}
+#table-root .campaign-player-grid>#campanha,
+#table-root .campaign-player-grid>#jogadores,
+#table-root .campaign-player-grid>#aventuras,
+#table-root .campaign-player-grid>#sessoes{grid-column:auto}
+#table-root .campaign-player-grid>#linha-tempo,
+#table-root .campaign-player-grid>.campaign-player-structured{grid-column:1/-1}
+#table-root .campaign-player-section{height:100%}
+#table-root .campaign-player-information{display:grid;gap:7px}
+#table-root .campaign-player-information p{margin:0;font-size:.86rem}
+#table-root .campaign-player-story-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,215px),1fr))}
+#table-root .campaign-player-event-card,#table-root .campaign-player-diagram .hub-diagram-node{gap:12px;flex-wrap:wrap;justify-content:space-between}
+#table-root .campaign-player-timeline-toggle{font-size:.75rem;padding:6px 9px;border:1px solid var(--hub-border,#3e526a);border-radius:7px;color:var(--hub-text,inherit)}
+#table-root .campaign-player-diagram{display:flex;align-items:flex-start;gap:20px;overflow-x:auto;min-width:0;padding:12px}
+#table-root .campaign-player-diagram>.campaign-player-event-item{flex:0 0 min(300px,80vw);list-style:none}
+#table-root .campaign-player-diagram .hub-diagram-node{display:flex;min-width:210px;padding:16px}
+#table-root .campaign-player-diagram .campaign-player-event-children{border-left:2px solid var(--hub-border,#3e526a);margin-left:13px;padding-left:14px}
+#table-root .campaign-player-event-children[hidden]{display:none!important}
+.hub-user-page{max-width:860px;margin:0 auto;display:grid;gap:18px}
+.hub-user-photo-card{display:grid;gap:16px;justify-items:start}
+.hub-user-photo-card>h2{margin:0}
+.hub-user-avatar-preview{display:grid;place-items:center;width:144px;height:144px;border:1px solid var(--hub-border,#465d73);border-radius:18px;background:var(--hub-surface-2,#152536);font-size:3rem;overflow:hidden}
+.hub-user-avatar-preview img{width:100%;height:100%;object-fit:cover}
+.hub-user-photo-card .row-actions{display:flex;align-items:center;gap:8px}
+.hub-user-photo-card label.btn{cursor:pointer}
+@media(max-width:820px){
+ #table-root .campaign-player-grid>#campanha,#table-root .campaign-player-grid>#jogadores,
+ #table-root .campaign-player-grid>#aventuras,#table-root .campaign-player-grid>#sessoes{grid-column:1/-1}
+}
+@media(max-width:550px){
+ #table-root .campaign-player-roster-row .hub-user-photo{grid-column:1;grid-row:1}
+ #table-root .campaign-player-roster-row .hub-character-photo{width:28px;height:28px;min-width:28px}
+}
