@@ -1,0 +1,34 @@
+name: Validar abertura de fichas
+on:
+  pull_request:
+    paths:
+      - 'scripts/character-sheet.js'
+      - 'scripts/character-sheet-access-ui.js'
+      - 'scripts/character-builder/state.js'
+      - 'e2e/character-sheet-shared-opening.spec.js'
+      - 'tests/auditar-abertura-fichas.mjs'
+      - '.github/workflows/validar-abertura-fichas.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  conferir-fichas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Sintaxe e normalização dos personagens
+        run: |
+          node --check scripts/character-sheet.js
+          node --check scripts/character-sheet-access-ui.js
+          node --check scripts/character-builder/state.js
+          node tests/auditar-abertura-fichas.mjs
+      - name: Instalar navegador de testes
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Abrir as fichas no navegador
+        run: npx playwright test e2e/character-sheet-shared-opening.spec.js --project=desktop-chromium
