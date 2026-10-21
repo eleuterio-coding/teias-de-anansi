@@ -68,7 +68,14 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#jogadores .campaign-player-roster-row').first()).toContainText('Jogadora');
  await expect(page.locator('#jogadores .hub-user-photo img')).toHaveCount(2);
  await expect(page.locator('#jogadores .hub-character-photo img')).toHaveCount(2);
- await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(2);
+ await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(1);
+ await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveAttribute('href',/usuario\.html\?campaign=/);
+ await expect(page.locator('#aventuras h2')).toHaveText('Aventuras da Campanha');
+ await expect(page.locator('#sessoes h2')).toHaveText('Sessões da Campanha');
+ await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(3);
+ await expect(page.locator('#sessoes .campaign-player-story-card').first()).toHaveClass(/campaign-player-story-card-featured/);
+ await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
+ await expect(page.locator('#campanha .campaign-player-fact')).toHaveCount(4);
  await expect(page.locator('#aventuras .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-next')).toHaveText('Próxima');
