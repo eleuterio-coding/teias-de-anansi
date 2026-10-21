@@ -5,7 +5,7 @@ import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disc
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const arr=value=>Array.isArray(value)?value:[];
 const titleCase=name=>{const text=String(name||'').trim();return Array.from(text)[0]?.toLocaleUpperCase('pt-BR')||'J'};
-const section=(id,title,content,count=null)=>`<section id="${id}" class="card campaign-player-section"><div class="campaign-editor-head"><h2>${esc(title)}</h2>${count===null?'':`<span class="campaign-editor-count">${count}</span>`}</div>${content}</section>`;
+const section=(id,title,content)=>`<section id="${id}" class="card campaign-player-section"><div class="campaign-editor-head"><h2>${esc(title)}</h2></div>${content}</section>`;
 const campaignStatusText=status=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[status]||status||'');
 const empty=message=>`<div class="campaign-player-empty">${esc(message)}</div>`;
 const media=(media,legacyUrl,alt,className)=>imageElementHtml(media,legacyUrl,{className,alt});
@@ -22,7 +22,7 @@ function players(c,characters,profiles=[],myUsername=''){
   const shownName=profiles.find(p=>p.username===member.username)?.displayName||name;
   return`<article class="campaign-player-roster-row">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),shownName)}<div class="campaign-player-roster-field"><span class="roster-player-label">${esc(term)}</span><div class="roster-player-name"><span>${esc(shownName)}</span>${ownProfile?`<a class="roster-player-profile-link" href="${href}" aria-label="Abrir meu perfil" title="Abrir meu perfil"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a>` : ''}</div></div><div class="campaign-player-roster-field"><span class="roster-player-label">Personagem</span>${link}</div></article>`;
  });
- return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`,rows.length);
+ return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`);
 }
 function backgroundCard(item,kind,campaignId){
  const isAdventure=kind==='adventure',name=String(isAdventure?item.title:item.title||'Sessão'),href=isAdventure?`aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`:`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`;
@@ -34,7 +34,7 @@ function backgroundCard(item,kind,campaignId){
  ${picture}<span class="campaign-player-story-content"><div class="campaign-player-story-information"><h3>${esc(heading)}</h3>${status?`<span class="campaign-player-story-status status-${esc(item.status||'planned')}">${esc(status)}</span>`:''}${date?`<span class="campaign-player-story-date">${esc(date)}</span>`:''}${summary?`<p>${esc(summary)}</p>`:''}</div><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
 }
 function stories(id,title,rows,kind,campaignId){
- return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
+ return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`);
 }
 /* Mantém a prioridade oficial Atual → Próxima → Concluída.
    Inclui sessões Planejadas quando não existem três prioritárias,
@@ -56,7 +56,7 @@ function sessionStories(rows,campaignId){
   const card=backgroundCard(item,'session',campaignId);
   return featured&&index===0?card.replace('class="campaign-player-story-card"','class="campaign-player-story-card campaign-player-story-card-featured"'):card;
  }).join('');
- return section('sessoes','Sessões da Campanha',`<div class="campaign-player-story-grid campaign-player-sessions-grid">${rows.length?cards:empty('Nenhuma sessão disponível.')}</div>`,rows.length);
+ return section('sessoes','Sessões da Campanha',`<div class="campaign-player-story-grid campaign-player-sessions-grid">${rows.length?cards:empty('Nenhuma sessão disponível.')}</div>`);
 }
 function campaignOverview(c){
  const field=(title,value)=>`<div class="campaign-player-fact"><span>${esc(title)}</span><strong>${esc(value||'—')}</strong></div>`;
@@ -75,13 +75,12 @@ function campaignOverview(c){
 }
 function npcs(c){
  const rows=arr(c.importantNpcEntries);
- return section('npcs','NPCs importantes',`<ul class="campaign-bullet-list campaign-player-static-list">${rows.length?rows.map(row=>`<li class="campaign-player-important-card"><span class="campaign-list-marker" aria-hidden="true"></span><strong>${esc(row.name)}</strong></li>`).join(''):`<li class="campaign-blank-state">Nenhum NPC disponível.</li>`}</ul>`,rows.length);
+ return section('npcs','NPCs importantes',`<ul class="campaign-bullet-list campaign-player-static-list">${rows.length?rows.map(row=>`<li class="campaign-player-important-card"><span class="campaign-list-marker" aria-hidden="true"></span><strong>${esc(row.name)}</strong></li>`).join(''):`<li class="campaign-blank-state">Nenhum NPC disponível.</li>`}</ul>`);
 }
 function locations(c){
  const rows=arr(c.importantLocationEntries);
- return section('locais','Locais importantes',`<ul class="campaign-bullet-list campaign-player-static-list">${rows.length?rows.map(row=>`<li class="campaign-player-important-card">${row.image?.id?`<button type="button" class="campaign-player-location-thumb" data-player-location-preview="${esc(row.id)}" aria-label="Ampliar imagem de ${esc(row.name)}">${media(row.image,'',`Imagem de ${row.name}`,'campaign-player-location-img')}</button>`:`<span class="campaign-player-location-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 18 6-6 4 4 3-3 5 5"/></svg></span>`}<span class="campaign-list-marker" aria-hidden="true"></span><strong>${esc(row.name)}</strong></li>`).join(''):`<li class="campaign-blank-state">Nenhum local disponível.</li>`}</ul>`,rows.length);
+ return section('locais','Locais importantes',`<ul class="campaign-bullet-list campaign-player-static-list">${rows.length?rows.map(row=>`<li class="campaign-player-important-card">${row.image?.id?`<button type="button" class="campaign-player-location-thumb" data-player-location-preview="${esc(row.id)}" aria-label="Ampliar imagem de ${esc(row.name)}">${media(row.image,'',`Imagem de ${row.name}`,'campaign-player-location-img')}</button>`:`<span class="campaign-player-location-placeholder" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 18 6-6 4 4 3-3 5 5"/></svg></span>`}<span class="campaign-list-marker" aria-hidden="true"></span><strong>${esc(row.name)}</strong></li>`).join(''):`<li class="campaign-blank-state">Nenhum local disponível.</li>`}</ul>`);
 }
-function countEvents(nodes){return arr(nodes).reduce((sum,node)=>sum+1+countEvents(node.children),0)}
 function eventRows(nodes,depth=0,mode='list'){
  return arr(nodes).map((node,index)=>{
   const children=arr(node.children),hasChildren=children.length>0,holder=mode==='flowchart'?'hub-diagram-node':'campaign-flow-card campaign-player-event-card',id=esc(node.id);
@@ -97,10 +96,10 @@ function eventRows(nodes,depth=0,mode='list'){
  }).join('')
 }
 function timeline(c,mode='list'){
- const nodes=arr(c.timelineNodes),total=countEvents(nodes);
+ const nodes=arr(c.timelineNodes);
  const toggle=`<div class="hub-timeline-view-toggle" role="group" aria-label="Modelo da linha do tempo"><button type="button" data-player-timeline-view="list" aria-pressed="${mode==='list'}">Lista</button><button type="button" data-player-timeline-view="flowchart" aria-pressed="${mode==='flowchart'}">Fluxograma</button></div>`;
  const tree=nodes.length?`<ol class="campaign-player-event-list ${mode==='flowchart'?'campaign-player-diagram hub-diagram-roots':''}">${eventRows(nodes,0,mode)}</ol>`:empty('Nenhum evento disponível.');
- return section('linha-tempo','Linha do tempo',toggle+tree,total);
+ return section('linha-tempo','Linha do tempo',toggle+tree);
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;

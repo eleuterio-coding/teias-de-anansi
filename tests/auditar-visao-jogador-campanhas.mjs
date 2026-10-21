@@ -7,6 +7,8 @@ for(const file of ['scripts/campaign-player-view.js','scripts/campaign-list-ui.j
  execFileSync(process.execPath,['--check',new URL('../'+file,import.meta.url).pathname],{stdio:'pipe'});
 }
 const player=read('scripts/campaign-player-view.js');
+const masterCampaign=read('scripts/campaign-table-ui.js');
+const masterStructured=read('scripts/campaign-structured-ui.js');
 const shell=read('scripts/app-shell.js');
 const users=read('scripts/user-profile-ui.js');
 const directory=read('usuario.html');
@@ -37,4 +39,7 @@ const samples=[
  {id:'next-high',status:'next',number:4,order:4}
 ];
 assert.deepEqual(recentCampaignSessions(samples,{limit:3}).map(x=>x.id),['current','next-high','next-low']);
-console.log('OK: 3 sessões por prioridade, perfil individual, login sem seletor e cards revisados.');
+assert.ok(!player.includes('campaign-editor-count'), 'Cards da campanha do jogador sem selo numérico de quantidade');
+assert.ok(!masterStructured.includes('class="campaign-editor-count"'), 'Cards estruturados do mestre sem selo numérico de quantidade');
+assert.ok(!masterCampaign.includes('class="roster-count"'), 'Card de jogadores do mestre sem contador no cabeçalho');
+console.log('OK: 3 sessões por prioridade, perfil individual e cards de campanhas sem indicadores de quantidade.');

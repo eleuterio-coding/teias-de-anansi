@@ -3,7 +3,7 @@ import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-prev
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261021-current-session1';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261019-disclosure1';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261021-campaign-header-clean1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-disclosure1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
@@ -104,7 +104,7 @@ function memberRow(m){
  </article>`
 }
 function rosterHtml(){return`<section id="jogadores" class="card roster-section">
- <div class="roster-heading"><h2>Jogadores da Campanha</h2><span class="roster-count">${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}</span></div>
+ <div class="roster-heading"><h2>Jogadores da Campanha</h2></div>
  <div id="member-list" class="list roster-list">${campaign.members.length?campaign.members.map(memberRow).join(''):'<div class="empty">Nenhum jogador adicionado.</div>'}</div>
  <div class="roster-add-panel"><h3>Adicionar jogador</h3>
   <div class="roster-add-fields"><label>Jogador<select id="new-member-user">${participantOptions()}</select></label><label>Personagem<select id="new-member-character">${characterOptions('')}</select></label></div>
@@ -147,8 +147,6 @@ function syncRosterControls({rebuildRows=false}={}){
    const open=row.querySelector('.roster-open-button');
   if(open)open.outerHTML=rosterOpenButton(linked);
  }
- const count=document.querySelector('#jogadores .roster-count');
- if(count)count.textContent=`${campaign.members.length} ${campaign.members.length===1?'jogador':'jogadores'}`;
  const userPicker=$('new-member-user');
  if(userPicker){
   const current=userPicker.value;
