@@ -66,8 +66,13 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
   const bounds=id=>document.getElementById(id).getBoundingClientRect();
   return{camp:bounds('campanha'),players:bounds('jogadores'),adventures:bounds('aventuras'),sessions:bounds('sessoes')}
  });
- expect(Math.abs(pair.camp.y-pair.players.y)).toBeLessThan(5);
- expect(Math.abs(pair.adventures.y-pair.sessions.y)).toBeLessThan(5);
+ if((page.viewportSize()?.width||0)>820){
+  expect(Math.abs(pair.camp.y-pair.players.y)).toBeLessThan(5);
+  expect(Math.abs(pair.adventures.y-pair.sessions.y)).toBeLessThan(5);
+ }else{
+  expect(pair.players.y).toBeGreaterThan(pair.camp.y);
+  expect(pair.sessions.y).toBeGreaterThan(pair.adventures.y);
+ }
  await expect(page.locator('#linha-tempo [data-player-timeline-collapse]')).toHaveCount(1);
  await page.locator('#linha-tempo [data-player-timeline-collapse]').click();
  await expect(page.locator('#linha-tempo .campaign-player-event-children').first()).toBeHidden();
@@ -78,6 +83,7 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#jogadores input,#jogadores select,#jogadores button')).toHaveCount(0);
 });
 test('Menu Usuário imediatamente acima de Configurações',async({page})=>{
+ await page.addInitScript(()=>localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]})));
  await page.goto('/usuario.html');
  const nav=page.locator('.hub-nav-secondary .hub-nav-link');
  await expect(nav).toHaveCount(2);
