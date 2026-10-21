@@ -10,8 +10,9 @@ function paint(value){
  if(current){const img=document.createElement('img');img.src=current;img.alt='Sua imagem de usuário';preview.append(img)}
  else{const icon=document.createElement('span');icon.textContent='◇';icon.setAttribute('aria-hidden','true');preview.append(icon)}
  remove.disabled=busy||!current;
+  preview?.setAttribute("aria-disabled",String(busy||!provider));
 }
-function loading(value){busy=value;input.disabled=value;remove.disabled=value||!current}
+function loading(value){busy=value;input.disabled=value;remove.disabled=value||!current;preview?.setAttribute("aria-disabled",String(value||!provider))}
 async function init(){
  const session=effectiveCollaborationSession();
  if(!session){state('Entre com sua conta para alterar a imagem.',true);input.disabled=true;remove.disabled=true;return}
@@ -30,4 +31,7 @@ input?.addEventListener('change',async()=>{const file=input.files?.[0];if(!file|
  }catch(error){state(error?.message||'Não foi possível salvar sua imagem.',true)}finally{input.value='';loading(false)}
 });
 remove?.addEventListener('click',async()=>{if(!provider||busy||!current)return;loading(true);try{const profile=await provider.saveMyAvatar('');rememberAvatars([profile]);paint('');state('Imagem removida.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}catch(error){state(error?.message||'Não foi possível remover a imagem.',true)}finally{loading(false)}});
+function openAvatarPicker(){if(provider&&!busy&&!input.disabled)input.click()}
+preview?.addEventListener('click',openAvatarPicker);
+preview?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openAvatarPicker()}});
 void init();
