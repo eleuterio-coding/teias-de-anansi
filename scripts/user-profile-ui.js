@@ -1,4 +1,4 @@
-import{photoDataUrl,validPortrait}from'./profile-images.js?v=20261021-user1';
+import{rememberAvatars,photoDataUrl,validPortrait}from'./profile-images.js?v=20261021-user1';
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
 import{effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261016-master-preview1';
 const input=document.getElementById('user-avatar-input'),remove=document.getElementById('user-avatar-remove'),preview=document.getElementById('user-avatar-preview'),feedback=document.getElementById('user-avatar-feedback');
@@ -20,14 +20,14 @@ async function init(){
   provider=await createFirebaseCollaborationProvider();
   if(!provider?.configured)throw new Error('Acesso online indisponível.');
   const profile=await provider.getMyProfile();
-  paint(profile.avatarDataUrl);
+  paint(profile.avatarDataUrl);rememberAvatars([profile]);
   state('Imagem vinculada à sua conta.');
  }catch(error){state(error?.message||'Não foi possível carregar sua conta.',true);input.disabled=true;remove.disabled=true}
 }
 input?.addEventListener('change',async()=>{const file=input.files?.[0];if(!file||!provider||busy)return;loading(true);try{
  const url=await photoDataUrl(file,{dimension:256,maxLength:110000});
- await provider.saveMyAvatar(url);paint(url);state('Imagem atualizada.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))
+ const profile=await provider.saveMyAvatar(url);rememberAvatars([profile]);paint(url);state('Imagem atualizada.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))
  }catch(error){state(error?.message||'Não foi possível salvar sua imagem.',true)}finally{input.value='';loading(false)}
 });
-remove?.addEventListener('click',async()=>{if(!provider||busy||!current)return;loading(true);try{await provider.saveMyAvatar('');paint('');state('Imagem removida.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}catch(error){state(error?.message||'Não foi possível remover a imagem.',true)}finally{loading(false)}});
+remove?.addEventListener('click',async()=>{if(!provider||busy||!current)return;loading(true);try{const profile=await provider.saveMyAvatar('');rememberAvatars([profile]);paint('');state('Imagem removida.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}catch(error){state(error?.message||'Não foi possível remover a imagem.',true)}finally{loading(false)}});
 void init();
