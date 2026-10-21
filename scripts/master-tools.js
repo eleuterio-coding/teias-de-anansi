@@ -41,14 +41,15 @@ function knownLocalUsers(){
  return[...map.values()]
 }
 async function providerData(){
+ let config=null;
  try{
-  const config=await loadFirebaseConfig();if(!config.configured)return{config,provider:null,users:[]};
+  config=await loadFirebaseConfig();if(!config.configured)return{config,provider:null,users:[]};
   const provider=await createFirebaseCollaborationProvider({config});let account=await provider.currentUser();
   if(!account)account=await new Promise(resolve=>{let settled=false,off=null;const done=value=>{if(settled)return;settled=true;try{off?.()}catch{}resolve(value)};off=provider.onAuthChanged(value=>done(value));setTimeout(()=>done(null),1800)});
   if(!account)return{config,provider:null,users:[]};
   const users=await provider.listUsers();
   return{config,provider,users}
- }catch(error){console.warn('[Hub Mestre] usuários:',error);return null}
+ }catch(error){console.warn('[Hub Mestre] usuários:',error);return{config,provider:null,users:[]}}
 }
 async function membershipsForUser(target,provider){
  const name=username(target),campaigns=readCampaigns(),byCampaign=new Map(),targetRows=[];
@@ -99,15 +100,21 @@ export async function initMasterTools(){
  const remote=await providerData(),master=username(session.username),map=new Map();
  // Apenas contas provisionáveis do Hub: perfis órfãos do Firebase e vínculos
  // históricos locais (inclusive usuários E2E) não são opções de visualização.
- const allowed=new Set(arr(remote?.config?.playerAccounts).flatMap(row=>[username(row?.username),username(row?.authUsername)]).filter(Boolean));
+ const canonical=new Map();
+ for(const row of arr(remote?.config?.playerAccounts)){
+  const name=username(row?.username);if(!name)continue;
+  canonical.set(name,name);
+  if(row?.authUsername)canonical.set(username(row.authUsername),name);
+ }
+ const allowed=new Set(canonical.values());
  for(const row of[...(remote?.users||[]),...knownLocalUsers()]){
-  const name=username(row.username);if(!name||name===master||!allowed.has(name))continue;
-  const existing=map.get(name);
-  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:text(row.displayName)||existing?.displayName||name})
+  const name=canonical.get(username(row.username));if(!name||name===master||!allowed.has(name))continue;
+  const existing=map.get(name),spec=arr(remote?.config?.playerAccounts).find(spec=>username(spec.username)===name);
+  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:text(spec?.displayName)||existing?.displayName||text(row.displayName)||name})
  }
  const users=[...map.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR')),preview=readMasterPreview();
  // Um modo de visualização salvo para um usuário excluído não pode sobreviver.
- if(preview?.username&&!users.some(row=>row.username===username(preview.username))){clearMasterPreview();location.reload();return}
+ if(preview?.username&&!allowed.has(username(preview.username))){clearMasterPreview();location.reload();return}
  if(userSelect){
   userSelect.innerHTML='<option value="">Mestre</option>'+users.map(row=>`<option value="${esc(row.username)}">${esc(row.displayName)}</option>`).join('');
   userSelect.value=preview?.username||'';
