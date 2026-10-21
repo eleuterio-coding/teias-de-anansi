@@ -14,6 +14,8 @@ on:
       - 'scripts/adventure-roster-ui.js'
       - 'scripts/collaboration-model.js'
       - 'usuario.html'
+      - 'user-directory.css'
+      - 'e2e/user-directory-admin.spec.js'
       - 'criacao-personagem.html'
       - 'character-pages.css'
       - 'scripts/character-builder/profile-ui.js'
@@ -48,4 +50,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Testar Campanha, usuários e fichas no navegador
-        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js e2e/character-creation-layout-portrait.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js e2e/character-creation-layout-portrait.spec.js e2e/user-directory-admin.spec.js --project=desktop-chromium --project=mobile-chromium
