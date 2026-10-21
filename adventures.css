@@ -206,6 +206,7 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-descrip
 #adventure-root .adventure-campaign-scroll-actions{
  display:flex;align-items:center;gap:7px;margin-left:auto;min-width:0
 }
+#adventure-root .adventure-campaign-scroll-actions[hidden]{display:none!important}
 #adventure-root .adventure-campaign-scroll-actions>span{
  color:var(--hub-muted,#9fb2c8);font-size:.76rem;margin-right:5px
 }
