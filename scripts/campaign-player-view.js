@@ -74,14 +74,14 @@ export function renderPlayerCampaign(row){
  <div class="campaign-player-structured">${npcs(c)}${locations(c)}</div>
  ${timeline(c)}
  </div></div>`;
- root.addEventListener('click',event=>{
+ root.onclick=event=>{
    const view=event.target.closest('[data-player-timeline-view]');
    if(view){const old=root.querySelector('#linha-tempo'),next=document.createElement('template');next.innerHTML=timeline(c,view.dataset.playerTimelineView==='flowchart'?'flowchart':'list');old.replaceWith(next.content.firstElementChild);return}
    const toggle=event.target.closest('[data-player-timeline-collapse]');if(!toggle)return;
    const row=toggle.closest('[data-player-event]'),children=row?.querySelector(':scope > .campaign-player-event-children');if(!children)return;
    children.hidden=!children.hidden;toggle.setAttribute('aria-expanded',String(!children.hidden));
    const count=children.children.length;toggle.textContent=`${children.hidden?'Mostrar':'Ocultar'} ${count} ${count===1?'subitem':'subitens'}`;
- });
+ };
  root.querySelectorAll('[data-player-location-preview]').forEach(button=>button.addEventListener('click',()=>{
   const item=arr(c.importantLocationEntries).find(row=>row.id===button.dataset.playerLocationPreview);
   if(!item?.image?.id)return;
