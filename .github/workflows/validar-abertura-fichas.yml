@@ -4,6 +4,11 @@ on:
     paths:
       - 'scripts/character-sheet.js'
       - 'scripts/collaboration-view.js'
+      - 'scripts/collaboration-realtime.js'
+      - 'scripts/character-list-ui.js'
+      - 'scripts/hub-ux.js'
+      - 'ficha-personagem.html'
+      - 'lista-personagens.html'
       - 'scripts/character-sheet-access-ui.js'
       - 'scripts/character-builder/state.js'
       - 'e2e/character-sheet-shared-opening.spec.js'
@@ -24,6 +29,9 @@ jobs:
       - name: Sintaxe e normalização dos personagens
         run: |
           node --check scripts/collaboration-view.js
+          node --check scripts/collaboration-realtime.js
+          node --check scripts/character-list-ui.js
+          node --check scripts/hub-ux.js
           node --check scripts/character-sheet.js
           node --check scripts/character-sheet-access-ui.js
           node --check scripts/character-builder/state.js
