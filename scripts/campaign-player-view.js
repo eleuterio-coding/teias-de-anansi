@@ -62,7 +62,7 @@ function timeline(c,mode='list'){
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
- const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=arr(row.adventures),sessions=arr(c.sessions).sort((a,b)=>{const priority={current:0,next:1};const pa=priority[a.status]??2,pb=priority[b.status]??2;return pa-pb||((Number(a.order||a.number)||0)-(Number(b.order||b.number)||0))}),characters=arr(row.characters);
+ const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=arr(row.adventures),sessions=arr(c.sessions).sort((a,b)=>{const priority={current:0,next:1};const pa=priority[a.status]??2,pb=priority[b.status]??2;return pa-pb}),characters=arr(row.characters);
  rememberAvatars(profiles);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
  root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1><span class="campaign-player-readonly">Somente leitura</span></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
