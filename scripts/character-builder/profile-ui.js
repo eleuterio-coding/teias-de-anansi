@@ -1,4 +1,4 @@
-import{playerTerm}from'../profile-images.js?v=20261021-user1';
+import{playerTerm,photoDataUrl,characterPicture}from'../profile-images.js?v=20261021-user1';
 import{state,$,arr,num,esc}from'./state.js';
 import{normalizeCharacterGender}from'../character-gender.js?v=20261019-gender1';
 import{derive}from'./rules.js';
@@ -15,6 +15,37 @@ function ensureSheetState(){
  c.sheet.runtime.spellSlotsUsed={...(c.sheet.runtime.spellSlotsUsed||{})};
  c.sheet.inventory={cp:0,sp:0,ep:0,gp:0,pp:0,notes:'',magicItems:'',otherHoldings:'',...(c.sheet.inventory||{})};
  c.sheet.extraSpells=c.sheet.extraSpells||'';
+}
+
+
+function renderPortrait(){
+ const src=characterPicture(state.c);
+ for(const id of ['creation-portrait-preview','creation-review-portrait']){
+  const box=$(id);if(!box)continue;
+  box.replaceChildren();
+  if(src){const image=document.createElement('img');image.src=src;image.alt='Retrato de '+(state.c.name||'personagem');box.append(image)}
+  else{const placeholder=document.createElement('span');placeholder.textContent='◇';placeholder.setAttribute('aria-hidden','true');box.append(placeholder)}
+ }
+ const remove=$('creation-portrait-remove');if(remove)remove.hidden=!src;
+}
+function bindPortrait(){
+ $('creation-portrait-file')?.addEventListener('change',async event=>{
+  const file=event.target.files?.[0],characterId=state.c?.id;event.target.value='';
+  if(!file||!characterId)return;
+  const status=$('creation-portrait-status');if(status)status.textContent='';
+  try{
+   const url=await photoDataUrl(file,{dimension:360,maxLength:115000});
+   if(state.c?.id!==characterId)return;
+   state.c.portraitDataUrl=url;renderPortrait();
+   if(status)status.textContent='Imagem pronta para salvar com o personagem.';
+  }catch(error){if(status)status.textContent=error?.message||'Imagem inválida.'}
+ });
+ $('creation-portrait-remove')?.addEventListener('click',()=>{
+  delete state.c.portraitDataUrl;
+  if(state.c.sheet)delete state.c.sheet.portraitDataUrl;
+  renderPortrait();
+  const status=$('creation-portrait-status');if(status)status.textContent='Imagem removida. Salve o personagem para confirmar.';
+ });
 }
 
 function setValue(id,value){const el=$(id);if(el)el.value=value??''}
@@ -60,7 +91,7 @@ function renderInventory(){
  box.innerHTML=ownedRow('Armas',owned.weapons)+ownedRow('Armaduras',owned.armors)+ownedRow('Escudos',owned.shields)+ownedRow('Pertences',owned.belongings)+row('Moedas',coins(inv))+textBlock('Inventário adicional',inv.notes)+textBlock('Itens mágicos',inv.magicItems)+textBlock('Outras posses',inv.otherHoldings)+textBlock('Magias de outras fontes',state.c.sheet.extraSpells);
 }
 
-function renderAll(){ensureSheetState();renderProfile();renderRoleplay();renderProficiencies();renderInventory()}
+function renderAll(){ensureSheetState();renderProfile();renderRoleplay();renderProficiencies();renderInventory();renderPortrait()}
 
 function bind(){
  const profileFields={
@@ -77,7 +108,7 @@ function bind(){
  document.addEventListener('hub:languages-changed',()=>{renderProfile();renderProficiencies()});
  document.addEventListener('hub:equipment-inventory-changed',()=>queueMicrotask(renderInventory));
  document.addEventListener('hub:starting-equipment-changed',()=>queueMicrotask(renderInventory));
- $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll()}));
+ $('new-character')?.addEventListener('click',()=>queueMicrotask(()=>{ensureSheetState();hydrate();renderAll();const status=$('creation-portrait-status');if(status)status.textContent=''}));
 }
 
-export function initCharacterProfileUi(){ensureSheetState();hydrate();renderAll();bind()}
+export function initCharacterProfileUi(){ensureSheetState();hydrate();renderAll();bind();bindPortrait()}
