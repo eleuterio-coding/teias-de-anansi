@@ -35,29 +35,16 @@
  color:#91a5bc;font-size:2.1rem;font-weight:350;letter-spacing:.04em
 }
 .hub-collection-card .hub-collection-status{
+ --status-bg:rgba(39,55,68,.78);
+ --status-border:rgba(181,201,219,.55);
+ --status-ink:#e2edf6;
  position:absolute;top:12px;right:12px;z-index:3;
- padding:7px 10px;min-height:32px;border:1px solid #b5c9db85;border-radius:7px;
- background:#263747dc;color:#e2edf6;font-size:.76rem;font-weight:700;
+ padding:7px 10px;min-height:32px;border:1px solid var(--status-border);border-radius:7px;
+ background:var(--status-bg);color:var(--status-ink);font-size:.76rem;font-weight:700;
  line-height:1.3;white-space:nowrap;backdrop-filter:blur(8px)
 }
-.hub-collection-card .hub-collection-status.status-current{
- border-color:#6cc4ffad;background:#194167dc;color:#9cdbff
-}
-.hub-collection-card .hub-collection-status.status-active,
-.hub-collection-card .hub-collection-status.status-next{
- border-color:#5ce69da3;background:#124f33dc;color:#91f3b9
-}
-.hub-collection-card .hub-collection-status.status-planned{
- border-color:#ffc662a8;background:#593c16dc;color:#ffcf85
-}
-.hub-collection-card .hub-collection-status.status-paused{
- border-color:#d1a0ffa6;background:#4e336ddc;color:#e0baff
-}
-.hub-collection-card .hub-collection-status.status-completed,
-.hub-collection-card .hub-collection-status.status-cancelled,
-.hub-collection-card .hub-collection-status.status-archived{
- border-color:#a3bed399;background:#344656e0;color:#caddf0
-}
+/* Cores por status herdadas de campaigns.css (paleta canônica do Hub). */
+
 .hub-collection-body{display:flex;flex:1;flex-direction:column;min-width:0;padding:15px 14px 6px}
 .hub-collection-body h3{margin:0 0 6px;font-size:1.09rem;font-weight:750;line-height:1.35;overflow-wrap:anywhere;color:inherit}
 .hub-collection-description{margin:0 0 8px;line-height:1.45;font-size:.92rem;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;overflow-wrap:anywhere}
