@@ -1,3 +1,4 @@
+import{playerTerm}from'./profile-images.js?v=20261021-user1';
 import{photoDataUrl,characterPicture}from'./profile-images.js?v=20261021-user1';
 import{canEditCharacter}from'./collaboration-view.js?v=20261016-master-preview1';
 import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
@@ -58,7 +59,7 @@ function renderHeader(d){
  $('pc-subtitle').textContent=[d.klass?`${genderedCharacterTerm(d.klass.name,characterGender(state.c),'class')} lvl ${d.level}`:null,d.sub?genderedCharacterTerm(d.sub.name,characterGender(state.c),'subclass'):null,d.species?genderedCharacterTerm(d.species.name,characterGender(state.c),'species'):null,state.c.choices?.species?.lineage?genderedCharacterLineage(state.c.choices.species.lineage,characterGender(state.c)):null,d.bg?genderedCharacterTerm(d.bg.name,characterGender(state.c),'background'):null].filter(Boolean).join(' · ');
  $('edit-link').href=`criacao-personagem.html?${npcMode()?'npc=1&':''}id=${encodeURIComponent(state.c.id)}`;
  const p=state.c.sheet.profile;
- setInput('profile-player',p.player);setInput('profile-age',p.age);setInput('profile-gender',normalizeCharacterGender(p.gender));setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
+ setInput('profile-player',p.player);const playerLabel=$('profile-player')?.closest('label')?.firstChild;if(playerLabel?.nodeType===3)playerLabel.textContent=playerTerm(p.player);setInput('profile-age',p.age);setInput('profile-gender',normalizeCharacterGender(p.gender));setInput('profile-height',p.height);setInput('profile-weight',p.weight);setInput('profile-alignment',p.alignment);setInput('profile-faith',p.faith);setInput('profile-languages',p.languages)
 }
 
 function renderCore(d){
