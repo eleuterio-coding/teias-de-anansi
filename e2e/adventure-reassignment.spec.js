@@ -33,7 +33,7 @@ test('mudar a campanha no editor reatribui a mesma aventura sem criar duplicata'
  await page.locator('#adventure-assignment').selectOption('e2e-adv-dest');
  await expect(page.locator('#adventure-assignment')).toHaveValue('e2e-adv-dest');
  await expect(page).toHaveURL(/campaign=e2e-adv-dest.*id=adv-original/);
- await expect(page.locator('.adventure-card')).toHaveCount(0);
+ await expect(page.locator('#adventure-list [data-adventure-card]')).toHaveCount(0);
  await expect(page.locator('.adventure-operational h2')).toHaveText('As Rainhas');
  const persisted=await page.evaluate(()=>({
   adventures:JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]'),
