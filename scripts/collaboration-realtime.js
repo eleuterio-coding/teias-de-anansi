@@ -107,6 +107,15 @@ async function pushChanges(){
  }
 }
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
+/* Sessão Firebase expirada: retornar ao login preservando a ficha pretendida.
+ * Antes havia uma chamada a loginUrl() sem definição, gerando ReferenceError. */
+function loginUrl(){
+ const current=location.pathname.split('/').pop()||'index.html';
+ if(current==='usuarios.html')return null;
+ const login=new URL('usuarios.html',location.href);
+ login.searchParams.set('next',current+(location.search||'')+(location.hash||''));
+ return login.href
+}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
  account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()
