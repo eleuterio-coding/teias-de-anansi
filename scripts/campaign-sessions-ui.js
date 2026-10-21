@@ -259,6 +259,13 @@ function sessionCreateTile(){
 function updateSessionCardStatus(session,status){
  if(!session||!SESSION_CARD_STATUSES.includes(status))return false;
  if(session.status===status)return true;
+ if(session.status==='active'&&status!=='completed'){
+  feedback('Finalize a sessão em andamento antes de selecionar outro status.',false);return false
+ }
+ if(session.source==='standalone'&&status==='completed'&&
+   (session.activeCombatId||session.activeEncounterId||(session.combats||[]).some(row=>row.status==='active')||(session.encounters||[]).some(row=>row.status==='active'))){
+  feedback('Finalize o combate ou encontro ativo antes de concluir a sessão.',false);return false
+ }
  if(session.source==='campaign'){
   let result;
   if(status==='active')result=startCampaignSession(campaigns,session.campaignId,session.id);
@@ -343,6 +350,7 @@ function render(){
  }));
  box.querySelectorAll('[data-next-session-status]').forEach(button=>button.addEventListener('click',()=>{
   const ref=sessionRef(button.dataset.sessionStatusId,button.dataset.sessionSource);
+  if(ref?.status===button.dataset.nextSessionStatus){button.closest('details')?.removeAttribute('open');return}
   if(ref&&updateSessionCardStatus(ref,button.dataset.nextSessionStatus)){
    [...document.querySelectorAll('#sessions-list [data-session-status-trigger]')].find(el=>el.dataset.sessionStatusTrigger===ref.id)?.focus()
   }else button.closest('details')?.removeAttribute('open')
