@@ -222,7 +222,7 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-descrip
 #adventure-root .adventure-campaign-track{
  --adventure-gap:14px;
  display:grid;grid-auto-flow:column;
- grid-auto-columns:calc((100% - 28px)/3);
+ grid-auto-columns:calc(33.333333% - 9.333333px);
  grid-template-columns:none;gap:var(--adventure-gap);
  overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;
  scroll-snap-type:x mandatory;scroll-padding-inline:2px;
@@ -230,7 +230,7 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-card-descrip
  padding:3px 2px 13px;min-width:0;max-width:100%
 }
 #adventure-root .adventure-campaign-track[data-visible="1"]{grid-auto-columns:100%}
-#adventure-root .adventure-campaign-track[data-visible="2"]{grid-auto-columns:calc((100% - 14px)/2)}
+#adventure-root .adventure-campaign-track[data-visible="2"]{grid-auto-columns:calc(50% - 7px)}
 #adventure-root .adventure-campaign-track>.campaign-card{
  min-width:0;width:100%;height:100%;scroll-snap-align:start;
  scroll-snap-stop:normal
@@ -281,7 +281,7 @@ body.hub-shell-enabled.hub-content-light #adventure-root .adventure-campaign-scr
  background:#f1f6fa;color:#203d54;border-color:#c1d0dd
 }
 @media(max-width:1050px){
- #adventure-root .adventure-campaign-track{grid-auto-columns:calc((100% - 14px)/2)}
+ #adventure-root .adventure-campaign-track{grid-auto-columns:calc(50% - 7px)}
  #adventure-root .adventure-campaign-track[data-visible="1"]{grid-auto-columns:100%}
  #adventure-root .adventure-create-tile-row{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
