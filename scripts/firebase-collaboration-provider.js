@@ -58,7 +58,7 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async signOut(){await lib.auth.signOut(auth)},
   async ensureProfile(firebaseUser=auth.currentUser){const u=accountFor(firebaseUser);await f.setDoc(f.doc(db,'users',u.uid),{uid:u.uid,username:u.username,displayName:u.displayName,role:u.username===ownerUsername?'dm':'player',updatedAt:f.serverTimestamp()},{merge:true});return u},
   async getMyProfile(){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const snap=await f.getDoc(f.doc(db,'users',u.uid));return{...accountFor(u),avatarDataUrl:snap.exists()?String(snap.data()?.avatarDataUrl||''):''}},
-  async saveMyAvatar(avatarDataUrl=''){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const safe=avatarDataUrl===''?'':/^data:image\\/(?:webp|jpeg|png);base64,[a-zA-Z0-9+/=]+$/.test(avatarDataUrl)&&avatarDataUrl.length<=125000?avatarDataUrl:null;
+  async saveMyAvatar(avatarDataUrl=''){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const safe=avatarDataUrl===''?'':/^data:image\/(?:webp|jpeg|png);base64,[a-zA-Z0-9+/=]+$/.test(avatarDataUrl)&&avatarDataUrl.length<=125000?avatarDataUrl:null;
    if(safe===null)throw new Error('Imagem de perfil inválida.');
    await f.setDoc(f.doc(db,'users',u.uid),{avatarDataUrl:safe,updatedAt:f.serverTimestamp()},{merge:true});
    return{...accountFor(u),avatarDataUrl:safe}
