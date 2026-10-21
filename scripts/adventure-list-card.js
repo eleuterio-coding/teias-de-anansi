@@ -32,7 +32,7 @@ export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
    <h2>${esc(name)}</h2>
    ${description?`<p>${esc(description)}</p>`:''}
-   <p class="mini"><span class="hub-parent-link"><span>Campanha</span>${parentName?`<a href="${campaignHref}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></p>
+   <p class="mini hub-ancestry" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></p>
    <p class="mini">${esc(types[a.type]||'Aventura')} ${a.arc?`· ${esc(a.arc)} `:''}· ${esc(counts)}</p>
   </div></div>
   <div class="row-actions campaign-card-actions">
