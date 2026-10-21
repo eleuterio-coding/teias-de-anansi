@@ -1,5 +1,6 @@
 import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261021-current-first1';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
+import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const arr=value=>Array.isArray(value)?value:[];
@@ -15,8 +16,10 @@ function players(c,characters,profiles=[]){
   const name=member.name||member.username||'Jogador',character=byId.get(member.characterId),term=playerTerm(member.username||name);
   const snapshots=character?.refSnapshots||{},level=character?.choices?.class?.level;
   const characterLabel=character?`${character.name||'Personagem sem nome'}${snapshots.class?.name?` · ${snapshots.class.name}${level?' '+level:''}`:''}`:'— Sem personagem —';
-  const link=member.characterId?`<a class="campaign-player-character-link" href="ficha-personagem.html?id=${encodeURIComponent(member.characterId)}" aria-label="Abrir ficha de ${esc(character?.name||name)}" title="Abrir ficha">${characterAvatarHtml(character)}${esc(characterLabel)}<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a>`:`<span class="campaign-player-empty-character">${esc(characterLabel)}</span>`;
-  return`<article class="campaign-player-roster-row">${playerAvatarHtml(member.username||name,profiles)}<div class="campaign-player-roster-field"><span class="roster-player-label">${esc(term)}</span><div class="roster-player-name">${esc(name)}</div></div><div class="campaign-player-roster-field"><span class="roster-player-label">Personagem</span>${link}</div></article>`;
+  const link=member.characterId?`<div class="campaign-player-character-controls">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}<a class="campaign-player-character-link" href="ficha-personagem.html?id=${encodeURIComponent(member.characterId)}" aria-label="Abrir ficha de ${esc(character?.name||name)}" title="Abrir ficha"><span>${esc(characterLabel)}</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div>`:`<span class="campaign-player-empty-character">${esc(characterLabel)}</span>`;
+  const href=`usuario.html?user=${encodeURIComponent(member.username||name)}&campaign=${encodeURIComponent(c.id)}`;
+  const shownName=profiles.find(p=>p.username===member.username)?.displayName||name;
+  return`<article class="campaign-player-roster-row">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),shownName)}<div class="campaign-player-roster-field"><span class="roster-player-label">${esc(term)}</span><div class="roster-player-name"><span>${esc(shownName)}</span><a class="roster-player-profile-link" href="${href}" aria-label="Abrir perfil de ${esc(shownName)}" title="Abrir perfil de ${esc(shownName)}"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></a></div></div><div class="campaign-player-roster-field"><span class="roster-player-label">Personagem</span>${link}</div></article>`;
  });
  return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`,rows.length);
 }
@@ -27,7 +30,7 @@ function backgroundCard(item,kind,campaignId){
  const labels={planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'};
  const status=labels[item.status]||item.status||'',summary=String(item.summary||item.description||'').trim(),date=String(item.date||'').trim();
  return`<a class="campaign-player-story-card" href="${href}" aria-label="Abrir ${esc(heading)}">
- ${picture}<span class="campaign-player-story-content"><div class="campaign-player-story-information"><h3>${esc(heading)}</h3>${status?`<span class="campaign-player-story-status">${esc(status)}</span>`:''}${date?`<span class="campaign-player-story-date">${esc(date)}</span>`:''}${summary?`<p>${esc(summary)}</p>`:''}</div><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
+ ${picture}<span class="campaign-player-story-content"><div class="campaign-player-story-information"><h3>${esc(heading)}</h3>${status?`<span class="campaign-player-story-status status-${esc(item.status||'planned')}">${esc(status)}</span>`:''}${date?`<span class="campaign-player-story-date">${esc(date)}</span>`:''}${summary?`<p>${esc(summary)}</p>`:''}</div><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
 }
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
@@ -94,5 +97,6 @@ export function renderPlayerCampaign(row){
   dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
   dialog.showModal();void hydrateMediaImages(dialog).catch(()=>{});
  }));
- void hydrateMediaImages(root).catch(()=>{});
+ bindCampaignAvatarPreviews(root);
+  void hydrateMediaImages(root).catch(()=>{});
 }

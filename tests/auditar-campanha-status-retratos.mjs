@@ -1,0 +1,33 @@
+import assert from'node:assert/strict';
+import fs from'node:fs';
+import{execFileSync}from'node:child_process';
+const read=p=>fs.readFileSync(p,'utf8');
+for(const js of ['scripts/campaign-avatar-preview.js','scripts/campaign-table-ui.js','scripts/campaign-player-view.js','scripts/user-profile-ui.js','scripts/campaign-table-router.js'])
+ execFileSync(process.execPath,['--check',js],{stdio:'pipe'});
+const dm=read('scripts/campaign-table-ui.js'),player=read('scripts/campaign-player-view.js');
+const portrait=read('scripts/campaign-avatar-preview.js'),user=read('scripts/user-profile-ui.js');
+const css=read('campaigns.css'),profileHtml=read('usuario.html');
+for(const status of ['planned','next','current','active','completed','cancelled','archived','paused','finished'])
+ assert.ok(css.includes('.status-'+status),'Cor específica ausente: '+status);
+assert.match(dm,/campaign-reference-status status-\$\{esc\(a\.status/);
+assert.match(dm,/campaign-reference-status status-\$\{esc\(session\.status/);
+assert.match(player,/campaign-player-story-status status-\$\{esc\(item\.status/);
+assert.match(css,/border:2px dashed rgba\(255,255,255,\.7\)!important/);
+assert.match(css,/campaign-settings-status-row\.wide/);
+assert.match(css,/campaign-settings-status-row \.campaign-settings-save/);
+assert.match(dm,/roster-player-profile-link/);
+assert.match(player,/roster-player-profile-link/);
+assert.match(dm,/campaignAvatarHtml\(playerAvatarHtml/);
+assert.match(dm,/campaignAvatarHtml\(characterAvatarHtml/);
+assert.match(player,/campaignAvatarHtml\(playerAvatarHtml/);
+assert.match(player,/campaignAvatarHtml\(characterAvatarHtml/);
+assert.match(dm,/bindCampaignAvatarPreviews\(root\)/);
+assert.match(player,/bindCampaignAvatarPreviews\(root\)/);
+assert.match(portrait,/dialog\.showModal\(\)/);
+assert.match(portrait,/dialog\.addEventListener\('close'/);
+assert.match(portrait,/event\.preventDefault\(\)/);
+assert.match(portrait,/const esc=/);
+assert.match(profileHtml,/id="hub-user-focused-profile"/);
+assert.match(user,/new URLSearchParams\(location\.search\)\.get\('user'\)/);
+assert.match(user,/renderFocusedProfile\(\)/);
+console.log('OK: status cromáticos, capa, alinhamento, retratos e perfis vinculados à Campanha.');

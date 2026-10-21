@@ -55,6 +55,22 @@ function allowedProfiles(rows){
  return[...byName.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR'));
 }
 function profileForSelection(){return profiles.find(row=>row.uid===selectedUid)||null}
+const linkedProfile=new URLSearchParams(location.search).get('user')?.trim().toLowerCase()||'';
+const returnCampaign=new URLSearchParams(location.search).get('campaign')||'';
+function renderFocusedProfile(){
+ const card=$('hub-user-focused-profile');
+ if(!card)return;
+ const row=profiles.find(profile=>profile.username===linkedProfile);
+ card.hidden=!row;if(!row)return;
+ $('hub-focused-user-title').textContent=row.username===text(provider?.config?.ownerUsername)?'Perfil do Mestre':'Perfil do jogador';
+ $('hub-focused-user-name').textContent=row.displayName;
+ $('hub-focused-user-login').textContent='Usuário: @'+row.username;
+ $('hub-focused-user-role').textContent=row.username===text(provider?.config?.ownerUsername)?'Mestre':'Jogador';
+ pictureInto($('hub-focused-user-avatar'),row.avatarDataUrl,'Foto de '+row.displayName);
+ const back=$('hub-user-profile-back');
+ if(back){back.hidden=!returnCampaign;if(returnCampaign)back.href='mesa.html?id='+encodeURIComponent(returnCampaign)}
+}
+
 function renderDirectory(){
  directory?.replaceChildren();
  const count=$('hub-users-count');if(count)count.textContent=`${profiles.length} ${profiles.length===1?'usuário':'usuários'}`;
@@ -63,6 +79,7 @@ function renderDirectory(){
  for(const row of profiles){
   const item=document.createElement(isMaster?'button':'div');
   item.className='hub-user-list-item';
+  if(row.username===linkedProfile)item.classList.add('hub-user-list-item-focused');
   if(isMaster){
    item.type='button';
    item.dataset.userSelect=row.uid;
@@ -112,8 +129,11 @@ async function refreshDirectory(){
  rememberAvatars(profiles);
  if(selectedUid&&!profiles.some(row=>row.uid===selectedUid))selectedUid='';
  if(isMaster&&!selectedUid)selectedUid=profiles.find(row=>row.uid===myProfile?.uid)?.uid||profiles[0]?.uid||'';
+ const fromLink=profiles.find(row=>row.username===linkedProfile);
+ if(fromLink&&isMaster)selectedUid=fromLink.uid;
  renderDirectory();
  if(isMaster)renderAdmin();
+ renderFocusedProfile();
 }
 function announceUpdate(){window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}
 
@@ -128,6 +148,9 @@ input?.addEventListener('change',async()=>{
   paint(url);status(feedback,'Imagem atualizada.');
   announceUpdate();
   await refreshDirectory();
+  if(linkedProfile&&!$('hub-user-focused-profile')?.hidden){
+   requestAnimationFrame(()=>$('hub-user-focused-profile')?.scrollIntoView({block:'start',behavior:'auto'}));
+  }
  }catch(error){status(feedback,error?.message||'Não foi possível salvar a imagem.',true)}
  finally{ownLoading(false)}
 });
