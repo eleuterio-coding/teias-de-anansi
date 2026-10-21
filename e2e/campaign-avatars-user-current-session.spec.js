@@ -36,6 +36,17 @@ test('Mestre: Campanha, status Atual, próxima sessão e retratos em participant
  await expect(page.locator('#jogadores [data-member-row="f1"] .hub-user-photo img')).toBeVisible();
  await expect(page.locator('#jogadores [data-member-row="f1"] .hub-character-photo img')).toBeVisible();
  await expect(page.locator('#jogadores [data-member-row="g1"] .roster-player-label')).toHaveText('Jogador');
+ await expect(page.locator('#jogadores [data-member-row="f1"] .roster-player-profile-link')).toHaveAttribute('href',/usuario\.html\?user=fernanda&campaign=/);
+ const avatar=page.locator('#jogadores [data-member-row="f1"] [data-campaign-avatar-preview]');
+ await expect(avatar).toHaveCount(2);
+ await avatar.first().click();
+ await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
+ await page.locator('dialog.campaign-avatar-lightbox [aria-label="Fechar imagem ampliada"]').click();
+ await expect(page.locator('dialog.campaign-avatar-lightbox')).toHaveCount(0);
+ await avatar.last().click();
+ await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
+ await page.keyboard.press('Escape');
+ await expect(page.locator('dialog.campaign-avatar-lightbox')).toHaveCount(0);
 });
 test('Sessões aceitam status Atual em novas e existentes',async({page})=>{
  await page.addInitScript(data=>{
@@ -57,6 +68,18 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#jogadores .campaign-player-roster-row').first()).toContainText('Jogadora');
  await expect(page.locator('#jogadores .hub-user-photo img')).toHaveCount(2);
  await expect(page.locator('#jogadores .hub-character-photo img')).toHaveCount(2);
+ await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(2);
+ await expect(page.locator('#aventuras .campaign-player-story-status.status-current')).toHaveText('Atual');
+ await expect(page.locator('#sessoes .campaign-player-story-status.status-current')).toHaveText('Atual');
+ await expect(page.locator('#sessoes .campaign-player-story-status.status-next')).toHaveText('Próxima');
+ const avatar=page.locator('#jogadores .campaign-player-roster-row').first().locator('[data-campaign-avatar-preview]');
+ await expect(avatar).toHaveCount(2);
+ await avatar.first().click();
+ await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
+ await page.keyboard.press('Escape');
+ await avatar.last().click();
+ await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
+ await page.locator('dialog.campaign-avatar-lightbox button').click();
  await expect(page.locator('#campanha')).toContainText('Toril');
  await expect(page.locator('#campanha')).toContainText('Costa da Espada');
  const first=page.locator('#sessoes .campaign-player-story-card').first();
@@ -80,7 +103,8 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await expect(page.locator('#linha-tempo .campaign-player-diagram')).toBeVisible();
  await page.locator('#linha-tempo [data-player-timeline-collapse]').click();
  await expect(page.locator('#linha-tempo .campaign-player-event-children').first()).toBeHidden();
- await expect(page.locator('#jogadores input,#jogadores select,#jogadores button')).toHaveCount(0);
+ await expect(page.locator('#jogadores input,#jogadores select')).toHaveCount(0);
+ await expect(page.locator('#jogadores button:not([data-campaign-avatar-preview])')).toHaveCount(0);
 });
 test('Menu Usuários imediatamente acima de Configurações',async({page})=>{
  await page.addInitScript(()=>localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]})));
