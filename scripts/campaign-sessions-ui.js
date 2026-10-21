@@ -227,7 +227,9 @@ function sessionListCard(s,restricted=false){
  const status=SESSION_CARD_STATUSES.includes(s.status)?s.status:'planned';
  const href=detailHref(s);
  const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
- const context=`<p class="mini session-card-context"><span class="hub-parent-link"><span>Campanha</span><strong>${esc(campaignName)}</strong></span><span class="hub-parent-link"><span>Aventura</span><strong>${esc(adv?.title||'Sem aventura')}</strong></span></p>`;
+ const campaignLink=s.campaignId?`<a href="mesa.html?id=${encodeURIComponent(s.campaignId)}" aria-label="Abrir campanha ${esc(campaignName)}">${esc(campaignName)}</a>`:`<strong>${esc(campaignName)}</strong>`;
+ const adventureLink=adv?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(adv.title)}">${esc(adv.title)}</a>`:'<strong>Sem aventura</strong>';
+ const context=`<p class="mini session-card-context hub-ancestry" role="group" aria-label="Campanha e aventura vinculadas"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${campaignLink}</span><span class="hub-ancestry-chevron" aria-hidden="true">›</span><span class="hub-parent-link hub-ancestry-adventure"><span>Aventura</span>${adventureLink}</span></p>`;
  const statusControl=restricted
   ?`<span class="campaign-status-value" aria-label="Status da sessão: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
   :`<details class="campaign-status-disclosure" data-status-disclosure="${esc(s.id)}">
