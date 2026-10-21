@@ -278,12 +278,13 @@ async function init(){
  if(!saved){
   if(!npcMode()&&collaborationAccessMode()!=='guest'&&id){
    waitingForCharacterId=id;
-   $('loading').innerHTML='<div class="status">Carregando a ficha compartilhada…</div>';
+   const loading=$('loading');if(loading){loading.dataset.sheetPending='true';loading.innerHTML='<div class="status">Carregando a ficha compartilhada…</div>'}
    return
   }
   $('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada ou sem acesso.</strong></div>';return
  }
  waitingForCharacterId='';
+ const loading=$('loading');if(loading)delete loading.dataset.sheetPending;
  state.c=normalizeCharacter(saved);
  ensureSheetState();
 
@@ -316,7 +317,7 @@ async function init(){
 
 function startSheet(){init().catch(e=>{
  const loading=$('loading');
- if(loading){loading.hidden=false;loading.innerHTML=`<div class="status warning"><strong>Falha ao abrir a ficha.</strong><br>${esc(e.message||e)}</div>`}
+ if(loading){delete loading.dataset.sheetPending;loading.hidden=false;loading.innerHTML=`<div class="status warning"><strong>Falha ao abrir a ficha.</strong><br>${esc(e.message||e)}</div>`}
  console.error('[character-sheet]',e)
 })}
 startSheet();
