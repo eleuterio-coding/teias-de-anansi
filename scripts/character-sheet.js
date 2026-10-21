@@ -1,6 +1,6 @@
 import{playerTerm}from'./profile-images.js?v=20261021-user1';
 import{photoDataUrl,characterPicture}from'./profile-images.js?v=20261021-user1';
-import{canEditCharacter,canOpenCharacter,sharedCharacterById,collaborationAccessMode}from'./collaboration-view.js?v=20261016-master-preview1';
+import{canEditCharacter,canOpenCharacter,sharedCharacterById,collaborationAccessMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,normalizeCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{characterGender,genderedCharacterTerm,genderedCharacterLineage,normalizeCharacterGender}from'./character-gender.js?v=20261019-gender1';
