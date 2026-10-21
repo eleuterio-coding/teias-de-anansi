@@ -1,3 +1,4 @@
+import{numberedAdventureTitle}from'./narrative-labels.js';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const countLabel=n=>n===1?'1 sessão':`${n} sessões`;
 
@@ -16,7 +17,7 @@ export function sessionAdventureGroupsHtml(sessions,adventures,renderCard,campai
  return [...grouped.values()].map(group=>{
   const adv=known.get(group.adventureId);
   const hasAdventure=group.adventureId!=='__none__';
-  const name=adv?.title||(hasAdventure?'Aventura não disponível':'Sem aventura');
+  const name=adv?numberedAdventureTitle(adv):(hasAdventure?'Aventura não disponível':'Sem aventura');
   const campaignName=group.items[0]?.campaignName
    ||campaigns.find(c=>c.id===group.campaignId)?.name||'';
   const nameHtml=adv
