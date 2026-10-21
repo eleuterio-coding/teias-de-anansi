@@ -1,6 +1,7 @@
+import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
-import{summarizeDashboard}from'./dashboard-state.js?v=20261016-next-only2';
+import{summarizeDashboard}from'./dashboard-state.js?v=20261021-shared-order1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -16,8 +17,8 @@ function row({href,title,detail,status,statusKey='',relations=[],media=null,lega
  return '<a class="dash-row '+(image?'has-cover':'')+'" href="'+esc(href)+'">'+image+'<div class="dash-row-copy"><strong>'+esc(title)+'</strong><div class="mini">'+esc(detail)+'</div>'+(relations.length?'<div class="card-relations">'+relations.map(r=>relationChip(r.kind,r.value)).join('')+'</div>':'')+'</div><div class="row-meta"><span class="badge '+esc(statusKey)+'">'+esc(status)+'</span></div></a>'
 }
 function renderCampaigns(rows){$('campaign-dashboard-list').innerHTML=rows.length?rows.map(c=>row({href:c.href,title:c.name,detail:[c.setting||c.system,countLabel((c.sessions||[]).length,'sessão','sessões')].filter(Boolean).join(' · '),status:campaignStatus(c.status),statusKey:c.status,media:c.coverImage,legacyUrl:c.coverImageUrl})).join(''):'<div class="empty">Nenhuma Campanha criada.</div>'}
-function renderAdventures(rows){$('adventure-dashboard-list').innerHTML=rows.length?rows.map(a=>row({href:a.href,title:a.title,detail:[a.type==='oneshot'?'One-shot':a.arc].filter(Boolean).join(' · '),status:adventureStatus(a.status),statusKey:a.status,relations:[{kind:'Campanha',value:a.campaignName||'Sem Campanha'}],media:a.coverImage,legacyUrl:a.coverImageUrl})).join(''):'<div class="empty">Nenhuma Aventura criada.</div>'}
-function renderSessions(rows){$('session-dashboard-list').innerHTML=rows.length?rows.map(s=>row({href:s.href,title:s.title,detail:'',status:sessionStatus(s.status),statusKey:s.status,relations:[{kind:'Campanha',value:s.campaignName||'Sem Campanha'},{kind:'Aventura',value:s.adventureName||'Sem Aventura vinculada'}],media:s.coverImage,legacyUrl:s.coverImageUrl})).join(''):'<div class="empty">Nenhuma Sessão criada.</div>'}
+function renderAdventures(rows){$('adventure-dashboard-list').innerHTML=rows.length?rows.map(a=>row({href:a.href,title:numberedAdventureTitle(a),detail:[a.type==='oneshot'?'One-shot':a.arc].filter(Boolean).join(' · '),status:adventureStatus(a.status),statusKey:a.status,relations:[{kind:'Campanha',value:a.campaignName||'Sem Campanha'}],media:a.coverImage,legacyUrl:a.coverImageUrl})).join(''):'<div class="empty">Nenhuma Aventura criada.</div>'}
+function renderSessions(rows){$('session-dashboard-list').innerHTML=rows.length?rows.map(s=>row({href:s.href,title:numberedSessionTitle(s),detail:'',status:sessionStatus(s.status),statusKey:s.status,relations:[{kind:'Campanha',value:s.campaignName||'Sem Campanha'},{kind:'Aventura',value:s.adventureName||'Sem Aventura vinculada'}],media:s.coverImage,legacyUrl:s.coverImageUrl})).join(''):'<div class="empty">Nenhuma Sessão criada.</div>'}
 function focusCard(id,{badge,title,subtitle,meta,href,button='Abrir',media=null,legacyUrl='',status=''}={},emptyTitle){
  const el=$(id);if(!el)return;
  el.dataset.focusStatus=status;
@@ -30,17 +31,37 @@ function focusCard(id,{badge,title,subtitle,meta,href,button='Abrir',media=null,
 
 function renderContext(summary){
  const next=summary.nextSession;
- focusCard('next-session',next?{badge:'Próxima sessão',status:next.session.status,title:next.session.title,subtitle:'Campanha: '+(next.campaign?.name||'Sem Campanha'),meta:'Aventura: '+(summary.adventures.find(a=>a.id===next.session.adventureId)?.title||'Sem Aventura vinculada'),href:next.campaign?`sessoes.html?campaign=${encodeURIComponent(next.campaign.id)}&id=${encodeURIComponent(next.session.id)}`:`sessoes.html?id=${encodeURIComponent(next.session.id)}`,button:'Abrir Sessão',media:next.session.coverImage,legacyUrl:next.session.coverImageUrl}:{badge:'Próxima sessão'},'Nenhuma próxima Sessão');
+ focusCard('next-session',next?{badge:'Próxima sessão',status:next.session.status,title:numberedSessionTitle(next.session),subtitle:'Campanha: '+(next.campaign?.name||'Sem Campanha'),meta:'Aventura: '+((summary.adventures.find(a=>a.id===next.session.adventureId)?numberedAdventureTitle(summary.adventures.find(a=>a.id===next.session.adventureId)):'Sem Aventura vinculada')),href:next.campaign?`sessoes.html?campaign=${encodeURIComponent(next.campaign.id)}&id=${encodeURIComponent(next.session.id)}`:`sessoes.html?id=${encodeURIComponent(next.session.id)}`,button:'Abrir Sessão',media:next.session.coverImage,legacyUrl:next.session.coverImageUrl}:{badge:'Próxima sessão'},'Nenhuma próxima Sessão');
  const campaign=summary.currentCampaign;
  focusCard('current-campaign',campaign?{badge:'Campanha atual',status:campaign.status,title:campaign.name,subtitle:campaign.setting||campaign.system,meta:'',href:campaign.href,button:'Abrir Campanha',media:campaign.coverImage,legacyUrl:campaign.coverImageUrl}:{badge:'Campanha atual'},'Nenhuma Campanha atual');
  const adventure=summary.currentAdventure;
- focusCard('current-adventure',adventure?{badge:'Aventura atual',status:adventure.status,title:adventure.title,subtitle:'Campanha: '+(adventure.campaignName||'Sem Campanha'),meta:'',href:adventure.href,button:'Abrir Aventura',media:adventure.coverImage,legacyUrl:adventure.coverImageUrl}:{badge:'Aventura atual'},'Nenhuma Aventura atual');
+ focusCard('current-adventure',adventure?{badge:'Aventura atual',status:adventure.status,title:numberedAdventureTitle(adventure),subtitle:'Campanha: '+(adventure.campaignName||'Sem Campanha'),meta:'',href:adventure.href,button:'Abrir Aventura',media:adventure.coverImage,legacyUrl:adventure.coverImageUrl}:{badge:'Aventura atual'},'Nenhuma Aventura atual');
  const current=summary.currentSession;
- focusCard('current-session',current?{badge:'Sessão atual',status:current.session.status,title:current.session.title,subtitle:'Campanha: '+(current.campaign?.name||'Sem Campanha'),meta:'Aventura: '+(summary.adventures.find(a=>a.id===current.session.adventureId)?.title||'Sem Aventura vinculada'),href:current.href,button:'Abrir Sessão',media:current.session.coverImage,legacyUrl:current.session.coverImageUrl}:{badge:'Sessão atual'},'Nenhuma Sessão atual')
+ focusCard('current-session',current?{badge:'Sessão atual',status:current.session.status,title:numberedSessionTitle(current.session),subtitle:'Campanha: '+(current.campaign?.name||'Sem Campanha'),meta:'Aventura: '+((summary.adventures.find(a=>a.id===current.session.adventureId)?numberedAdventureTitle(summary.adventures.find(a=>a.id===current.session.adventureId)):'Sem Aventura vinculada')),href:current.href,button:'Abrir Sessão',media:current.session.coverImage,legacyUrl:current.session.coverImageUrl}:{badge:'Sessão atual'},'Nenhuma Sessão atual')
+}
+
+/** Somente os vínculos efetivos da conta de jogador, nunca o elenco inteiro da campanha. */
+function renderPlayerAssignments(rows=[]){
+ const area=$('player-assignment'),host=$('player-assignment-list');if(!area||!host)return;
+ const restricted=playerMode();area.hidden=!restricted;if(!restricted){host.replaceChildren();return}
+ const safe=(Array.isArray(rows)?rows:[]).filter(row=>row?.campaign?.id&&row.campaign.id!=='e2e-explicit-player-access');
+ if(!safe.length){host.innerHTML='<div class="empty">Nenhum personagem ou campanha foi atribuído a esta conta.</div>';return}
+ const link=(href,label)=>`<a href="${esc(href)}">${esc(label)}</a>`;
+ const group=(label,body)=>`<div class="dashboard-player-link-group"><strong>${esc(label)}</strong>${body}</div>`;
+ const sorted=arr=>[...(Array.isArray(arr)?arr:[])].sort((a,b)=>(Number(a.order??a.number)||0)-(Number(b.order??b.number)||0)||String(a.title||'').localeCompare(String(b.title||''),'pt-BR'));
+ host.innerHTML=safe.map(row=>{
+  const c=row.campaign,m=row.membership||{},id=String(m.characterId||''),character=(row.characters||[]).find(item=>String(item?.id||'')===id);
+  const characterHtml=id?link(`ficha-personagem.html?id=${encodeURIComponent(id)}`,character?.name||'Personagem atribuído'):'<p class="mini">Nenhum personagem atribuído.</p>';
+  const allowedAdventures=new Set((m.adventureIds||[]).map(String)),allowedSessions=new Set((m.sessionIds||[]).map(String));
+  const adventures=sorted(row.adventures).filter(a=>allowedAdventures.has(String(a.id))).map(a=>link(`aventuras.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(a.id)}`,numberedAdventureTitle(a))).join('')||'<p class="mini">Nenhuma aventura atribuída.</p>';
+  const sessions=sorted(c.sessions).filter(s=>allowedSessions.has(String(s.id))).map(s=>link(`sessoes.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(s.id)}`,numberedSessionTitle(s))).join('')||'<p class="mini">Nenhuma sessão atribuída.</p>';
+  return`<article class="dashboard-player-campaign"><h3>${link(`mesa.html?id=${encodeURIComponent(c.id)}`,c.name)}</h3>${group('Personagem',characterHtml)}${group('Aventuras',adventures)}${group('Sessões',sessions)}</article>`;
+ }).join('')
 }
 
 // A página Início usa rolagem vertical como as demais áreas do Hub.
 // Não ocultar cards ou registros por paginação vinculada à altura da janela.
 const isE2EFixtureCampaign=c=>c?.id==='e2e-explicit-player-access';
-function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);hydrateMediaImages(document).catch(()=>{})}
+function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);renderPlayerAssignments(restricted?sharedCampaignRows():[]);hydrateMediaImages(document).catch(()=>{})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();init()});

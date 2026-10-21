@@ -31,12 +31,12 @@ test.beforeEach(async({page})=>{
 });
 test('Campanha filtra próxima e concluída pela Aventura em andamento, em Ordem decrescente',async({page})=>{
  await page.goto('/mesa.html?id=e2e-session-switch');
- const cards=page.locator('#sessoes .campaign-reference-row');
+ const cards=page.locator('#sessoes .campaign-player-story-card');
  await expect(cards).toHaveCount(2);
  await expect(cards.nth(0)).toContainText('Próxima sessão');
  await expect(cards.nth(1)).toContainText('Sessão concluída');
- await expect(cards.first().locator('.campaign-reference-cover')).toHaveAttribute('src','/aventura-capa.svg');
- await expect(page.locator('#aventuras .campaign-reference-row').first()).toContainText('As Rainhas');
+ await expect(cards.first().locator('.campaign-player-story-open')).toContainText('Abrir');
+ await expect(page.locator('#aventuras .campaign-player-story-card').first()).toContainText('As Rainhas');
 });
 test('Sessão existente troca Aventura e limpa vínculos anteriores sem excluir cenas',async({page})=>{
  await page.goto('/sessoes.html?campaign=e2e-session-switch&id=session-old');
@@ -58,9 +58,9 @@ test('Sessão existente troca Aventura e limpa vínculos anteriores sem excluir 
  expect(saved.scenes.find(s=>s.id==='session-own')).toMatchObject({title:'Cena própria',notes:'Não apagar'});
  expect(data.adventures[0].scenes[0]).toMatchObject({sessionId:null,sessionSceneId:null});
  await page.goto('/mesa.html?id=e2e-session-switch');
- await expect(page.locator('#sessoes .campaign-reference-row')).toHaveCount(3);
- await expect(page.locator('#sessoes .campaign-reference-row').first()).toContainText('Próxima sessão');
- await expect(page.locator('#sessoes .campaign-reference-row').nth(1)).toContainText('Prólogo');
+ await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(3);
+ await expect(page.locator('#sessoes .campaign-player-story-card').first()).toContainText('Próxima sessão');
+ await expect(page.locator('#sessoes .campaign-player-story-card').nth(1)).toContainText('Prólogo');
 });
 test('Novo status Atual não é oferecido na criação de sessões',async({page})=>{
  await page.goto('/sessoes.html?campaign=e2e-session-switch&new=1');

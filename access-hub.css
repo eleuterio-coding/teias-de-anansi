@@ -1,0 +1,12 @@
+/* Gerenciar acessos usa os tokens de superfície e tipografia do Hub. */
+body.hub-shell-enabled #main-content{max-width:1400px;margin:0 auto;width:100%;display:grid;gap:14px}
+body.hub-shell-enabled #main-content>.card{margin:0;background:var(--hub-surface,#111f2d);border-color:var(--hub-border,#33485d);border-radius:14px;box-shadow:none}
+body.hub-shell-enabled #main-content .player-access-grid{grid-template-columns:minmax(210px,.72fr) minmax(0,1.65fr);gap:16px}
+body.hub-shell-enabled #main-content .campaign-access-card,
+body.hub-shell-enabled #main-content .player-button{background:var(--hub-surface-2,#172a3d);color:var(--hub-text,#f1f5fa);border:1px solid var(--hub-border,#34485d);text-align:left}
+body.hub-shell-enabled #main-content .campaign-access-card.active,
+body.hub-shell-enabled #main-content .player-button.active{background:var(--hub-accent-subtle,#193a54);border-color:var(--hub-accent,#54a5e9);color:var(--hub-text,#f1f5fa)}
+body.hub-shell-enabled #main-content :is(.campaign-access-meta,.mini,.muted,.empty-access){color:var(--hub-text-2,#b9c8d6)}
+body.hub-shell-enabled #main-content :is(fieldset,.access-check){border-color:var(--hub-border,#34485d)}
+body.hub-shell-enabled #main-content input[type="checkbox"]{accent-color:var(--hub-accent,#4b9ce0)}
+@media(max-width:760px){body.hub-shell-enabled #main-content .player-access-grid{grid-template-columns:1fr}}

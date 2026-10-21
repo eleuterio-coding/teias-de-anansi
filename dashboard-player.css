@@ -1,0 +1,11 @@
+/* Vínculos próprios visíveis exclusivamente no painel do jogador. */
+.dashboard-player-links{min-height:0;margin:14px 0;display:grid;gap:14px}
+.dashboard-player-links[hidden]{display:none!important}
+.dashboard-player-links .dashboard-player-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.dashboard-player-links .dashboard-player-campaign{min-width:0;border:1px solid var(--hub-border,#34495e);background:var(--hub-surface-2,#111f2e);border-radius:12px;padding:14px;display:grid;gap:12px}
+.dashboard-player-links .dashboard-player-campaign>h3{font-size:1rem;margin:0;overflow-wrap:anywhere}
+.dashboard-player-links .dashboard-player-link-group{display:grid;gap:6px;min-width:0}
+.dashboard-player-links .dashboard-player-link-group>strong{font-size:.8rem;color:var(--hub-text-2,#b8c9dd)}
+.dashboard-player-links .dashboard-player-link-group a{display:block;border:1px solid var(--hub-border,#34495e);background:var(--hub-bg-raised,#122537);border-radius:8px;padding:8px 10px;text-decoration:none;overflow-wrap:anywhere;font-size:.86rem}
+.dashboard-player-links .dashboard-player-link-group a:hover{border-color:var(--hub-accent,#5eaaf0)}
+.dashboard-player-links .dashboard-player-link-group .mini{margin:0}

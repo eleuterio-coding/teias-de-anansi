@@ -1,3 +1,4 @@
+import{numberedAdventureTitle}from'./narrative-labels.js';
 const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
 const at=v=>Date.parse(v||'')||0;
@@ -73,7 +74,7 @@ function allSessions(campaigns=[],standaloneSessions=[]){
 }
 
 export function summarizeDashboard({characters=[],campaigns=[],adventures=[],standaloneSessions=[],now=new Date()}={}){
- const camps=orderedCampaigns(campaigns),advs=orderedAdventures(adventures),sessions=allSessions(camps,standaloneSessions).map(s=>({...s,adventureName:advs.find(a=>a.id===s.adventureId)?.title||'Sem Aventura vinculada'})),currentSession=chooseCurrentSession(camps,standaloneSessions),currentCampaign=chooseCurrentCampaign(camps,currentSession),currentAdventure=chooseCurrentAdventure(advs,currentCampaign,currentSession),nextSession=chooseNextSession(camps,now,standaloneSessions);
+ const camps=orderedCampaigns(campaigns),advs=orderedAdventures(adventures),sessions=allSessions(camps,standaloneSessions).map(s=>({...s,adventureName:advs.find(a=>a.id===s.adventureId)?numberedAdventureTitle(advs.find(a=>a.id===s.adventureId)):'Sem Aventura vinculada'})),currentSession=chooseCurrentSession(camps,standaloneSessions),currentCampaign=chooseCurrentCampaign(camps,currentSession),currentAdventure=chooseCurrentAdventure(advs,currentCampaign,currentSession),nextSession=chooseNextSession(camps,now,standaloneSessions);
  return{
   metrics:{campaigns:camps.length,adventures:advs.length,sessions:sessions.length},
   campaigns:camps.map(c=>({...c,href:hrefCampaign(c.id)})),

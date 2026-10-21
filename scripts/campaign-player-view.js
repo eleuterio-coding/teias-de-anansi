@@ -1,5 +1,6 @@
+import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{featuredCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-adventure-featured2';
-import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-adventure-featured2';
+import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-shared-order1';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
@@ -26,18 +27,7 @@ function players(c,characters,profiles=[],myUsername=''){
  return section('jogadores','Jogadores participantes',`<div class="campaign-player-roster">${rows.join('')||empty('Nenhum jogador participante.')}</div>`);
 }
 function backgroundCard(item,kind,campaignId){
- if(kind==='adventure')return renderCampaignAdventureCard(item,campaignId);
- const isAdventure=kind==='adventure',name=String(isAdventure?item.title:item.title||'Sessão'),href=isAdventure?`aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`:`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`;
- const heading=isAdventure?name:`Sessão ${Number(item.number)||1} · ${name}`;
- const picture=media(item.coverImage,item.coverImageUrl,`Capa de ${heading}`,'campaign-player-story-image');
- const labels={planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'};
- const status=labels[item.status]||item.status||'',summary=String(item.summary||item.description||'').trim(),date=String(item.date||'').trim();
- const badge=status?`<span class="campaign-player-story-status status-${esc(item.status||'planned')}">${esc(status)}</span>`:'';
- const action='<span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span>';
- const information=`<div class="campaign-player-story-information"><h3>${esc(heading)}</h3>${isAdventure?badge:''}${date?`<span class="campaign-player-story-date">${esc(date)}</span>`:''}${summary?`<p>${esc(summary)}</p>`:''}</div>`;
- const footer=isAdventure?action:`<span class="campaign-player-story-footer">${badge}${action}</span>`;
- return`<a class="campaign-player-story-card" href="${href}" aria-label="Abrir ${esc(heading)}">
- ${picture}<span class="campaign-player-story-content">${information}${footer}</span></a>`;
+ return kind==='adventure'?renderCampaignAdventureCard(item,campaignId):renderCampaignSessionCard(item,campaignId);
 }
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid ${kind==='adventure'?'campaign-adventures-feature-grid':''}">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura em andamento ou concluída.':'Nenhuma sessão disponível.')}</div>`);
