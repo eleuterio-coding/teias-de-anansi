@@ -276,7 +276,7 @@ async function init(){
  if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));(()=>{const p=document.getElementById('profile-player')?.closest('label');if(p){p.hidden=true;p.style.display='none'}})()}
  const id=new URLSearchParams(location.search).get('id'),saved=availableCharacter(id);
  if(!saved){
-  if(!npcMode()&&collaborationAccessMode()==='player'&&id){
+  if(!npcMode()&&collaborationAccessMode()!=='guest'&&id){
    waitingForCharacterId=id;
    $('loading').innerHTML='<div class="status">Carregando a ficha compartilhada…</div>';
    return
