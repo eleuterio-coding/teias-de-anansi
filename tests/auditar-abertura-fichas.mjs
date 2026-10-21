@@ -19,4 +19,5 @@ assert.match(sheet,/normalizeCharacter\(saved\)/);
 assert.match(access,/window\.addEventListener\('hub-rpg:remote-updated',apply\)/);
 assert.match(access,/function refreshAccess\(\)/);
 assert.match(access,/status&&status\.textContent!=='Somente leitura'/,'Proteção idempotente contra loops do MutationObserver');
+assert.match(access,/loading\?\.dataset\.sheetPending==='true'/,'Não negar acesso enquanto a ficha sincroniza');
 console.log('OK: normalização idêntica, recuperação compartilhada e autorização atualizada.');
