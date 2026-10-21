@@ -42,12 +42,12 @@ function knownLocalUsers(){
 }
 async function providerData(){
  try{
-  const config=await loadFirebaseConfig();if(!config.configured)return null;
+  const config=await loadFirebaseConfig();if(!config.configured)return{config,provider:null,users:[]};
   const provider=await createFirebaseCollaborationProvider({config});let account=await provider.currentUser();
   if(!account)account=await new Promise(resolve=>{let settled=false,off=null;const done=value=>{if(settled)return;settled=true;try{off?.()}catch{}resolve(value)};off=provider.onAuthChanged(value=>done(value));setTimeout(()=>done(null),1800)});
-  if(!account)return null;
+  if(!account)return{config,provider:null,users:[]};
   const users=await provider.listUsers();
-  return{provider,users}
+  return{config,provider,users}
  }catch(error){console.warn('[Hub Mestre] usuários:',error);return null}
 }
 async function membershipsForUser(target,provider){
@@ -97,11 +97,17 @@ export async function initMasterTools(){
  const session=readCollaborationSession(),root=document.querySelector('[data-hub-master-tools]');if(!session?.isMaster||!root)return;
  const userSelect=root.querySelector('[data-hub-preview-user]'),layoutSelect=root.querySelector('[data-hub-layout-select]');root.hidden=false;
  const remote=await providerData(),master=username(session.username),map=new Map();
+ // Apenas contas provisionáveis do Hub: perfis órfãos do Firebase e vínculos
+ // históricos locais (inclusive usuários E2E) não são opções de visualização.
+ const allowed=new Set(arr(remote?.config?.playerAccounts).flatMap(row=>[username(row?.username),username(row?.authUsername)]).filter(Boolean));
  for(const row of[...(remote?.users||[]),...knownLocalUsers()]){
-  const name=username(row.username);if(!name||name===master)continue;
-  map.set(name,{uid:text(row.uid),username:name,displayName:text(row.displayName)||name})
+  const name=username(row.username);if(!name||name===master||!allowed.has(name))continue;
+  const existing=map.get(name);
+  map.set(name,{uid:text(row.uid)||existing?.uid||'',username:name,displayName:text(row.displayName)||existing?.displayName||name})
  }
  const users=[...map.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR')),preview=readMasterPreview();
+ // Um modo de visualização salvo para um usuário excluído não pode sobreviver.
+ if(preview?.username&&!users.some(row=>row.username===username(preview.username))){clearMasterPreview();location.reload();return}
  if(userSelect){
   userSelect.innerHTML='<option value="">Mestre</option>'+users.map(row=>`<option value="${esc(row.username)}">${esc(row.displayName)}</option>`).join('');
   userSelect.value=preview?.username||'';
