@@ -6,11 +6,11 @@ import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-c
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-reassign1';
 
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261019-gender1';
-import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-order-desc3';
-import{adventureListCard,adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261021-context-path1';
+import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261021-campaign-groups1';
+import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261021-campaign-groups1';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1';
+const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1',listCampaignFilter=params.get('campaign')||'all',listStatusFilter='all';
 const advStatus=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s),advType=s=>({main:'Aventura principal',side:'Aventura secundária',oneshot:'One-shot',secondary:'Arco secundário'}[s]||s),sceneStatus=s=>({planned:'Planejada',active:'Em cena',completed:'Concluída',skipped:'Ignorada'}[s]||s),clueStatus=s=>({hidden:'Oculta',discovered:'Descoberta',resolved:'Resolvida'}[s]||s),treasureStatus=s=>({planned:'Planejado',found:'Encontrado',claimed:'Distribuído'}[s]||s),missionStatus=s=>({hidden:'Não descoberta',active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'}[s]||s);
 const campaign=()=>campaignById(campaigns,campaignId),adventure=()=>adventureById(adventures,adventureId);
 function option(value,label,current){return`<option value="${esc(value)}" ${String(value)===String(current)?'selected':''}>${esc(label)}</option>`}
@@ -21,7 +21,7 @@ function commit(result,message='Aventura salva.'){if(!result?.ok)return feedback
 function commitCampaign(result,message='Campanha atualizada.'){if(!result?.ok)return feedback(result?.reason||'Não foi possível atualizar a Campanha.',false);campaigns=writeCampaigns(result.list);normalizeRefs();render();feedback(message,true)}
 function campaignOptions(selected=campaignId){return campaigns.map(c=>option(c.id,c.name,selected)).join('')}
 function topHtml(){
- return `<p class="hub-collection-home"><a href="index.html">← Início</a></p><div class="top hub-collection-top"><header><h1>Aventuras</h1></header></div>`
+ return `<div class="top hub-collection-top"><header><h1>Aventuras</h1></header></div>`
 }
 function selectorHtml(){
  if(!campaigns.length)return '<div class="status warning">Crie uma Campanha antes de criar uma Aventura. <a href="campanhas.html">Abrir Campanhas</a></div>';
@@ -30,16 +30,16 @@ function selectorHtml(){
  <div class="row-actions" style="margin-top:12px"><button id="create-adventure" type="button">Criar aventura</button></div></section>`
 }
 function listHtml(){
- const requested=params.get('campaign'),filtered=adventures.filter(a=>!requested||a.campaignId===requested);
- const rows=requested?sortCampaignAdventures(filtered):filtered.sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
+ const choices=campaigns.filter(c=>c.id!=='e2e-explicit-player-access');
  return `<section class="hub-collection-section adventure-list-section">
   <div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
+  ${adventureFiltersHtml(choices,{campaign:listCampaignFilter,status:listStatusFilter})}
   ${selectorHtml()}
   <div id="adventure-list">
-   <div class="list campaign-list-grid">
-    ${rows.map(a=>adventureListCard(a,{parentName:campaigns.find(c=>c.id===a.campaignId)?.name||''})).join('')}
-    ${campaigns.length?adventureCreateTile(createPanelOpen):''}
+   <div class="adventure-campaign-groups">
+    ${adventureGroupsHtml(adventures,choices,{campaign:listCampaignFilter,status:listStatusFilter})}
    </div>
+   ${choices.length?`<div class="adventure-create-tile-row">${adventureCreateTile(createPanelOpen)}</div>`:''}
   </div>
  </section>`
 }
@@ -241,7 +241,10 @@ function bind(){const c=campaign();
   adventures=writeAdventures(result.list);render();
   [...document.querySelectorAll('#adventure-list [data-adventure-status-trigger]')].find(el=>el.dataset.adventureStatusTrigger===id)?.focus()
  }));
- $('open-adventure-create')?.addEventListener('click',event=>{event.preventDefault();createPanelOpen=true;render();$('new-adventure-title')?.focus()});
+ $('adventure-status-filter')?.addEventListener('change',event=>{listStatusFilter=event.target.value;render()});
+ $('adventure-campaign-filter')?.addEventListener('change',event=>{listCampaignFilter=event.target.value;render()});
+ bindAdventureGroupScroll(list);
+ $('open-adventure-create')?.addEventListener('click',event=>{event.preventDefault();createPanelOpen=true;if(listCampaignFilter!=='all')campaignId=listCampaignFilter;render();$('new-adventure-title')?.focus()});
  $('cancel-adventure-create')?.addEventListener('click',()=>{createPanelOpen=false;render()});
 
  document.querySelectorAll('#linha-tempo [data-timeline-view],#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
