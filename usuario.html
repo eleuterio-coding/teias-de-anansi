@@ -1,9 +1,43 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Usuário - Teias de Anansi</title><link rel="stylesheet" href="hub-ux.css?v=20261021-user1"><link rel="stylesheet" href="campaigns.css?v=20261021-avatars1"></head>
-<body><main id="main-content" class="hub-user-page">
-<header class="top"><div><h1>Usuário</h1></div></header>
-<section class="card hub-user-photo-card"><h2>Minha imagem</h2>
-<div class="hub-user-avatar-preview" id="user-avatar-preview" aria-label="Imagem atual do usuário"><span aria-hidden="true">◇</span></div>
-<div class="row-actions"><label class="btn" for="user-avatar-input">Selecionar imagem</label><input id="user-avatar-input" type="file" accept="image/png,image/jpeg,image/webp" hidden><button id="user-avatar-remove" type="button" class="secondary">Remover imagem</button></div>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Usuários - Teias de Anansi</title>
+<link rel="stylesheet" href="hub-ux.css?v=20261021-users-list1">
+<link rel="stylesheet" href="campaigns.css?v=20261021-avatars1">
+<link rel="stylesheet" href="user-profiles.css?v=20261021-users-list1">
+</head>
+<body>
+<main id="main-content" class="hub-user-page">
+<header class="top"><div><h1>Usuários</h1><p class="muted">Contas cadastradas no Hub de RPG.</p></div></header>
+<div class="hub-user-layout">
+<section class="card hub-user-directory" aria-labelledby="user-directory-heading">
+<h2 id="user-directory-heading">Lista de usuários</h2>
+<div id="user-directory-list" class="hub-user-directory-list" aria-label="Usuários cadastrados"></div>
+<p id="user-directory-feedback" class="mini" role="status" aria-live="polite">Carregando usuários...</p>
+</section>
+<section id="user-profile-card" class="card hub-user-photo-card" aria-labelledby="user-profile-heading" hidden>
+<div><h2 id="user-profile-heading">Perfil</h2><p id="user-profile-role" class="muted"></p></div>
+<label class="hub-user-name-field" for="user-display-name">Nome exibido
+<input id="user-display-name" type="text" maxlength="80" autocomplete="off">
+</label>
+<p class="mini">Usuário de acesso: <strong id="user-login-name"></strong> <span id="user-login-note">(não pode ser alterado aqui)</span></p>
+<div class="hub-user-photo-group">
+<h3>Foto do usuário</h3>
+<button id="user-avatar-preview" type="button" class="hub-user-avatar-preview" aria-label="Selecionar nova foto do usuário" title="Clique para mudar a foto"><span aria-hidden="true">◇</span></button>
+<div class="row-actions">
+<label class="btn" for="user-avatar-input">Selecionar imagem</label>
+<input id="user-avatar-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+<button id="user-avatar-remove" type="button" class="secondary">Remover foto</button>
+</div>
+</div>
+<div class="row-actions"><button id="user-name-save" type="button">Salvar nome</button></div>
 <p id="user-avatar-feedback" role="status" aria-live="polite"></p>
-</section></main><script type="module" src="scripts/hub-ux.js?v=20261021-user-nav2"></script><script type="module" src="scripts/user-profile-ui.js?v=20261021-user1"></script></body></html>
+</section>
+</div>
+</main>
+<script type="module" src="scripts/hub-ux.js?v=20261021-users-list1"></script>
+<script type="module" src="scripts/user-profile-ui.js?v=20261021-users-list1"></script>
+</body>
+</html>
