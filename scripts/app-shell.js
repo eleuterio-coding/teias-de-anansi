@@ -126,7 +126,7 @@ function userIdentity(){
  const session=masterSession();if(!session?.username)return null;
  const name=session.username;
  let avatar='';
- try{const cache=JSON.parse(localStorage.getItem('hub-rpg:user-avatar-cache:v1')||'[]');const match=(Array.isArray(cache)?cache:[]).find(row=>String(row.username||'').toLowerCase()===name.toLowerCase());const source=match?.avatarDataUrl||'';if(/^data:image\\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(source))avatar=source}catch{}
+ try{const cache=JSON.parse(localStorage.getItem('hub-rpg:user-avatar-cache:v1')||'[]');const match=(Array.isArray(cache)?cache:[]).find(row=>String(row.username||'').toLowerCase()===name.toLowerCase());const source=match?.avatarDataUrl||'';if(/^data:image\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(source))avatar=source}catch{}
  return{username:name,displayName:name.charAt(0).toLocaleUpperCase('pt-BR')+name.slice(1),avatar};
 }
 function updateTopbarIdentity(detail=null){
@@ -137,7 +137,7 @@ function updateTopbarIdentity(detail=null){
  if(name)name.textContent=shown;
  if(picture){
   picture.replaceChildren();
-  const src=matching&&/^data:image\\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(detail.avatarDataUrl||'')?detail.avatarDataUrl:identity.avatar;
+  const src=matching&&/^data:image\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(detail.avatarDataUrl||'')?detail.avatarDataUrl:identity.avatar;
   if(src){const img=document.createElement('img');img.alt='';img.src=src;picture.append(img)}
   else picture.textContent=shown.charAt(0).toLocaleUpperCase('pt-BR');
  }
