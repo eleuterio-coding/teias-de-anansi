@@ -1,5 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20261016-layout1';
-import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261021-character-unify1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261021-users-admin1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
