@@ -4,7 +4,7 @@ import{readAdventures}from'./adventure-state.js?v=20260925-media1';
 import{read as readCharacters}from'./character-builder/state.js';
 import{campaignSharedCoreProjection,sessionSharedProjection,revealedAdventureProjection,collaborationMemberBundle}from'./collaboration-model.js?v=20260925-media1';
 import{readCollaborationSession,readMasterPreview,writeMasterPreview,clearMasterPreview}from'./collaboration-view.js?v=20261016-master-preview1';
-import{readSettings,writeSettings}from'./settings-state.js?v=20261016-layout1';
+
 
 const arr=v=>Array.isArray(v)?v:[];
 const text=v=>String(v??'').trim();
@@ -96,7 +96,7 @@ async function activatePreview(target,users,provider){
 }
 export async function initMasterTools(){
  const session=readCollaborationSession(),root=document.querySelector('[data-hub-master-tools]');if(!session?.isMaster||!root)return;
- const userSelect=root.querySelector('[data-hub-preview-user]'),layoutSelect=root.querySelector('[data-hub-layout-select]');root.hidden=false;
+ const userSelect=root.querySelector('[data-hub-preview-user]');root.hidden=false;
  const remote=await providerData(),master=username(session.username),map=new Map();
  // Apenas contas provisionáveis do Hub: perfis órfãos do Firebase e vínculos
  // históricos locais (inclusive usuários E2E) não são opções de visualização.
@@ -120,8 +120,5 @@ export async function initMasterTools(){
   userSelect.value=preview?.username||'';
   userSelect.addEventListener('change',()=>activatePreview(userSelect.value,users,remote?.provider))
  }
- if(layoutSelect){
-  const settings=readSettings();layoutSelect.value=settings.layout||'default';
-  layoutSelect.addEventListener('change',()=>{const current=readSettings();writeSettings({...current,layout:layoutSelect.value})})
- }
+
 }
