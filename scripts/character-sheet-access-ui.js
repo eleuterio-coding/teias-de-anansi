@@ -47,7 +47,8 @@ function lock(){
  sheet.setAttribute('data-read-only','true');sheet.setAttribute('aria-label','Ficha de personagem, somente leitura');
  document.getElementById('edit-link')?.setAttribute('hidden','');
  document.getElementById('save-sheet')?.setAttribute('hidden','');
- document.getElementById('save-status')?.replaceChildren(document.createTextNode('Somente leitura'));
+ const status=document.getElementById('save-status');
+ if(status&&status.textContent!=='Somente leitura')status.textContent='Somente leitura';
  readOnlyBadge();
  for(const control of sheet.querySelectorAll('input,textarea,select,button')){control.disabled=true;control.setAttribute('aria-disabled','true')}
  for(const editable of sheet.querySelectorAll('[contenteditable]'))editable.setAttribute('contenteditable','false')
