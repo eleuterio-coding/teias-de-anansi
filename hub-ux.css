@@ -256,7 +256,10 @@ body.hub-shell-enabled .panel{padding:18px}
 body.hub-shell-enabled .dash-row{padding:13px}
 
 /* Campaign list */
-body.hub-shell-enabled :is(#campaign-list,#adventure-list)>.list{
+body.hub-shell-enabled #campaign-list>.campaign-list-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
+}
+body.hub-shell-enabled #adventure-list>.list{
  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px
 }
 body.hub-shell-enabled .campaign-card{
