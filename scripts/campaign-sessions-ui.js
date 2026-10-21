@@ -2,7 +2,8 @@ import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261021-current-session1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261019-adventure-order1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
+import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
+import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261021-session-groups1';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -219,8 +220,8 @@ function encounterSummary(session){
 }
 
 const SESSION_CARD_STATUSES=['current','next','active','planned','completed','cancelled'];
-function sessionListCard(s,restricted=false){
- const adv=adventureById(s.adventureId),scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
+function sessionListCard(s,restricted=false,availableAdventures=adventures){
+ const adv=availableAdventures.find(a=>a.id===s.adventureId)||null,scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
  const cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
  const description=s.summary||s.objective||'';
@@ -228,7 +229,7 @@ function sessionListCard(s,restricted=false){
  const href=detailHref(s);
  const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
  const campaignLink=s.campaignId?`<a href="mesa.html?id=${encodeURIComponent(s.campaignId)}" aria-label="Abrir campanha ${esc(campaignName)}">${esc(campaignName)}</a>`:`<strong>${esc(campaignName)}</strong>`;
- const adventureLink=adv?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(adv.title)}">${esc(adv.title)}</a>`:'<strong>Sem aventura</strong>';
+ const adventureLink=adv?`<a href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}" aria-label="Abrir aventura ${esc(adv.title)}">${esc(adv.title)}</a>`:`<strong>${s.adventureId?'Aventura não disponível':'Sem aventura'}</strong>`;
  const context=`<p class="mini session-card-context hub-ancestry" role="group" aria-label="Campanha e aventura vinculadas"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${campaignLink}</span><span class="hub-ancestry-chevron" aria-hidden="true">›</span><span class="hub-parent-link hub-ancestry-adventure"><span>Aventura</span>${adventureLink}</span></p>`;
  const statusControl=restricted
   ?`<span class="campaign-status-value" aria-label="Status da sessão: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
@@ -322,6 +323,7 @@ function render(){
  const restricted=playerMode();
  if(!restricted)reload();
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
+ const availableAdventures=restricted?sharedAdventures():adventures;
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
  box?.classList.remove('hub-collection-grid');
  if(!restricted)syncCreationOptions();
@@ -337,8 +339,11 @@ function render(){
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=`<div class="list campaign-list-grid">${sessions.map(row=>sessionListCard(row,restricted)).join('')}${restricted?'':sessionCreateTile()}</div>`;
+ box.innerHTML=`<div class="session-adventure-groups">
+  ${sessionAdventureGroupsHtml(sessions,availableAdventures,row=>sessionListCard(row,restricted,availableAdventures),campaigns)}
+ </div>${restricted?'':`<div class="session-create-tile-row">${sessionCreateTile()}</div>`}`;
  if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
+ bindSessionAdventureScroll(box);
  $('open-session-create')?.addEventListener('click',event=>{
   event.preventDefault();
   showCreationPanel=true;
