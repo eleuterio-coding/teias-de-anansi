@@ -6,9 +6,13 @@ const origin=creation.split('data-wizard-panel="origem"')[1].split('data-wizard-
 assert.ok(creation.indexOf('data-wizard-step="raca"')<creation.indexOf('data-wizard-step="origem"'));
 assert.ok(creation.indexOf('data-wizard-panel="raca"')<creation.indexOf('data-wizard-panel="origem"'));
 assert.ok(wizard.indexOf("id:'raca'")<wizard.indexOf("id:'origem'"));
+assert.ok(origin.indexOf('Detalhes do Personagem')<origin.indexOf('Imagem do Personagem'));
+assert.ok(origin.indexOf('Imagem do Personagem')<origin.indexOf('Características Físicas'));
 assert.ok(origin.indexOf('Características Físicas')<origin.indexOf('Características Pessoais'));
-assert.ok(origin.indexOf('Características Pessoais')<origin.indexOf('Imagem do Personagem'));
-assert.ok(origin.indexOf('Imagem do Personagem')<origin.indexOf('Antecedente'));
+assert.ok(origin.indexOf('Características Pessoais')<origin.indexOf('Antecedente'));
+assert.match(origin,/class="hub-character-identity-row full"/);
+assert.match(origin,/id="creation-portrait-picker"[^>]*role="button" tabindex="0"/);
+assert.match(profile,/creation-portrait-picker/);
 assert.match(creation,/id="creation-portrait-file"[^>]*accept="image\/png,image\/jpeg,image\/webp"/);
 assert.match(creation,/id="creation-review-portrait"/);
 assert.match(profile,/photoDataUrl\(file,\{dimension:360,maxLength:115000\}\)/);
