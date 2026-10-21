@@ -9,7 +9,7 @@ const params=new URLSearchParams(location.search),campaignId=params.get('id')||'
 const roleLabel=r=>r==='player'?'Jogador':r;
 const statusLabel=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s),campaignStatusLabel=s=>({planned:'Planejada',current:'Em andamento',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[s]||s);
 function readOnlyTable(row){renderPlayerCampaign(row)}
-function denied(){const root=document.getElementById('table-root');root.innerHTML='<div class="status warning"><strong>Mesa não atribuída a esta conta.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>'}
+function denied(){const root=document.getElementById('table-root');root.innerHTML='<div class="status warning"><strong>Campanha não atribuída a esta conta.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>'}
 function renderPlayerTable(){const shared=sharedCampaignById(campaignId);if(shared)readOnlyTable(shared);else denied()}
 function normalizeDm(){const list=readCampaigns();if(!list.some(c=>c.dmName!==DM_NAME))return;writeCampaigns(list.map(c=>({...c,dmName:DM_NAME})))}
 async function start(){if(playerMode()){renderPlayerTable();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();renderPlayerTable()});return}normalizeDm();await Promise.all([import('./campaign-table-ui.js?v=20261019-disclosure1'),import('./campaign-table-adventure-ui.js?v=20261016-campaign-geography1')])}
