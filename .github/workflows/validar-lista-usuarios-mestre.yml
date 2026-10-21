@@ -1,0 +1,38 @@
+name: Validar contas exibidas ao Mestre
+on:
+  pull_request:
+    paths:
+      - 'scripts/master-tools.js'
+      - 'scripts/collaboration-ui.js'
+      - 'scripts/app-shell.js'
+      - 'scripts/hub-ux.js'
+      - 'e2e/master-ghost-accounts.spec.js'
+      - '.github/workflows/validar-lista-usuarios-mestre.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/master-tools.js'
+      - 'scripts/collaboration-ui.js'
+      - 'e2e/master-ghost-accounts.spec.js'
+  workflow_dispatch:
+jobs:
+  excluir-fantasmas-da-interface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe
+        run: |
+          node --check scripts/master-tools.js
+          node --check scripts/collaboration-ui.js
+          node --check scripts/app-shell.js
+          node --check scripts/hub-ux.js
+      - name: Preparar Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Validar filtragem e limpeza de prévias
+        run: npx playwright test e2e/master-ghost-accounts.spec.js --project=desktop-chromium --project=mobile-chromium
