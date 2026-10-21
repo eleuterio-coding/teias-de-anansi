@@ -2,9 +2,18 @@ const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','
 export const userKey=value=>String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export const playerTerm=value=>userKey(value)==='fernanda'?'Jogadora':'Jogador';
 export const validPortrait=value=>typeof value==='string'&&/^data:image\/(?:webp|png|jpeg);base64,[a-zA-Z0-9+/=]+$/.test(value)&&value.length<300000?value:'';
+const CACHE_KEY='hub-rpg:user-avatar-cache:v1';
+export function rememberedAvatars(){try{const data=JSON.parse(localStorage.getItem(CACHE_KEY)||'[]');return Array.isArray(data)?data:[]}catch{return[]}}
+export function rememberAvatars(profiles=[]){
+ const existing=rememberedAvatars(),byName=new Map(existing.map(p=>[userKey(p.username),p]));
+ for(const profile of profiles){const name=userKey(profile.username||profile.displayName);if(!name)continue;byName.set(name,{username:name,avatarDataUrl:validPortrait(profile.avatarDataUrl)})}
+ try{localStorage.setItem(CACHE_KEY,JSON.stringify([...byName.values()].slice(0,50)))}catch{}
+}
 export const userPicture=(name,profiles=[])=>{
  const wanted=userKey(name);
- return validPortrait((Array.isArray(profiles)?profiles:[]).find(p=>userKey(p.username||p.displayName)===wanted)?.avatarDataUrl);
+ const current=(Array.isArray(profiles)?profiles:[]).find(p=>userKey(p.username||p.displayName)===wanted);
+ const previous=rememberedAvatars().find(p=>userKey(p.username)===wanted);
+ return validPortrait(current?.avatarDataUrl)||validPortrait(previous?.avatarDataUrl);
 };
 export const playerAvatarHtml=(name,profiles=[],extraClass='')=>{
  const picture=userPicture(name,profiles),initial=Array.from(String(name||'J').trim())[0]?.toLocaleUpperCase('pt-BR')||'J';
