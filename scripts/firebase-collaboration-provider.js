@@ -69,7 +69,7 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async saveMyAvatar(avatarDataUrl=''){if(typeof auth.authStateReady==='function')await auth.authStateReady();const u=auth.currentUser;if(!u)throw new Error('Faça login.');const safe=avatarDataUrl===''?'':/^data:image\/(?:webp|jpeg|png);base64,[a-zA-Z0-9+/=]+$/.test(avatarDataUrl)&&avatarDataUrl.length<=125000?avatarDataUrl:null;
    if(safe===null)throw new Error('Imagem de perfil inválida.');
    await f.setDoc(f.doc(db,'users',u.uid),{avatarDataUrl:safe,updatedAt:f.serverTimestamp()},{merge:true});
-   return{...accountFor(u),avatarDataUrl:safe}
+   return provider.getMyProfile()
   },
   async listUsers(){if(typeof auth.authStateReady==='function')await auth.authStateReady();if(!auth.currentUser)throw new Error('Faça login.');const snap=await f.getDocs(f.collection(db,'users')),seen=new Map();for(const d of snap.docs){const data=d.data()||{},name=canonicalUsername(data.username),row={uid:d.id,username:name||'usuario',displayName:text(data.displayName)||displayNameFor(name),avatarDataUrl:String(data.avatarDataUrl||'')};seen.set(row.username,row)}return[...seen.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR'))},
   async saveManagedUserProfile({uid,displayName,avatarDataUrl}={}){
