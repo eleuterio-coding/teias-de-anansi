@@ -13,6 +13,8 @@ let observer=null;
 function deny(){
  const loading=document.getElementById('loading'),sheet=document.getElementById('sheet');
  if(sheet)sheet.hidden=true;
+ // Enquanto o cache da Campanha chega, a ficha continua oculta sem negar acesso prematuramente.
+ if(loading?.dataset.sheetPending==='true'&&!guest)return;
  if(loading){loading.hidden=false;loading.innerHTML=`<div class="status warning"><strong>Ficha indisponível.</strong><br>${guest?'Faça login para acessar esta ficha.':'Esta ficha não faz parte dos seus acessos.'}</div>`}
 }
 async function deleteAsMaster(){
