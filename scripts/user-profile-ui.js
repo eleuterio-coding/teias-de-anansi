@@ -1,37 +1,215 @@
 import{rememberAvatars,photoDataUrl,validPortrait}from'./profile-images.js?v=20261021-user1';
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-users-admin1';
 import{effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261016-master-preview1';
-const input=document.getElementById('user-avatar-input'),remove=document.getElementById('user-avatar-remove'),preview=document.getElementById('user-avatar-preview'),feedback=document.getElementById('user-avatar-feedback');
-let provider=null,busy=false,current='';
-const state=(message,error=false)=>{feedback.textContent=message;feedback.style.color=error?'var(--hub-danger,#f19ca7)':''};
+
+const $=id=>document.getElementById(id);
+const input=$('user-avatar-input'),remove=$('user-avatar-remove'),preview=$('user-avatar-preview'),feedback=$('user-avatar-feedback');
+const directory=$('hub-users-list'),adminCard=$('user-admin-card'),adminForm=$('user-admin-form');
+const adminImage=$('admin-avatar-preview'),adminInput=$('admin-avatar-file'),adminRemove=$('admin-avatar-remove');
+const text=value=>String(value??'').trim();
+let provider=null,busy=false,current='',myProfile=null,isMaster=false,profiles=[];
+let selectedUid='',stagedAvatar='',avatarTouched=false,adminBusy=false;
+
+function status(node,message,error=false){
+ if(!node)return;
+ node.textContent=message;
+ node.style.color=error?'var(--hub-red,#ff9898)':'';
+}
+function pictureInto(node,source,alt=''){
+ if(!node)return;
+ node.replaceChildren();
+ const safe=validPortrait(source);
+ if(safe){const image=document.createElement('img');image.src=safe;image.alt=alt;node.appendChild(image)}
+ else{const mark=document.createElement('span');mark.textContent='◇';mark.setAttribute('aria-hidden','true');node.appendChild(mark)}
+}
 function paint(value){
  current=validPortrait(value);
- preview.replaceChildren();
- if(current){const img=document.createElement('img');img.src=current;img.alt='Sua imagem de usuário';preview.append(img)}
- else{const icon=document.createElement('span');icon.textContent='◇';icon.setAttribute('aria-hidden','true');preview.append(icon)}
- remove.disabled=busy||!current;
-  preview?.setAttribute("aria-disabled",String(busy||!provider));
+ pictureInto(preview,current,'Minha imagem de usuário');
+ if(remove)remove.disabled=busy||!current;
+ preview?.setAttribute('aria-disabled',String(busy||!provider));
 }
-function loading(value){busy=value;input.disabled=value;remove.disabled=value||!current;preview?.setAttribute("aria-disabled",String(value||!provider))}
+function ownLoading(value){
+ busy=value;
+ if(input)input.disabled=value;
+ if(remove)remove.disabled=value||!current;
+ preview?.setAttribute('aria-disabled',String(value||!provider));
+}
+function openAvatarPicker(){if(provider&&!busy&&!input.disabled)input.click()}
+preview?.addEventListener('click',openAvatarPicker);
+preview?.addEventListener('keydown',event=>{
+ if(event.key==='Enter'||event.key===' '){event.preventDefault();openAvatarPicker()}
+});
+
+function allowedProfiles(rows){
+ const allowed=new Set([text(provider?.config?.ownerUsername),...(provider?.config?.playerAccounts||[]).map(spec=>text(spec.username))].map(n=>n.toLowerCase()).filter(Boolean));
+ const byName=new Map();
+ for(const row of rows||[]){
+  const name=text(row.username).toLowerCase();
+  if(!name||!allowed.has(name)||!text(row.uid))continue;
+  byName.set(name,{uid:text(row.uid),username:name,displayName:text(row.displayName)||name,avatarDataUrl:validPortrait(row.avatarDataUrl)});
+ }
+ if(myProfile?.uid&&allowed.has(text(myProfile.username).toLowerCase())){
+  const key=text(myProfile.username).toLowerCase();
+  if(!byName.has(key))byName.set(key,{...myProfile,avatarDataUrl:validPortrait(myProfile.avatarDataUrl)});
+ }
+ return[...byName.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR'));
+}
+function profileForSelection(){return profiles.find(row=>row.uid===selectedUid)||null}
+function renderDirectory(){
+ directory?.replaceChildren();
+ const count=$('hub-users-count');if(count)count.textContent=`${profiles.length} ${profiles.length===1?'usuário':'usuários'}`;
+ if(!profiles.length){status($('hub-users-feedback'),'Nenhuma conta cadastrada.');return}
+ status($('hub-users-feedback'),'');
+ for(const row of profiles){
+  const item=document.createElement(isMaster?'button':'div');
+  item.className='hub-user-list-item';
+  if(isMaster){
+   item.type='button';
+   item.dataset.userSelect=row.uid;
+   item.setAttribute('aria-pressed',String(selectedUid===row.uid));
+   item.setAttribute('aria-label',`Editar ${row.displayName}`);
+   item.addEventListener('click',()=>selectUser(row.uid));
+  }
+  const photo=document.createElement('span');photo.className='hub-user-list-photo';
+  pictureInto(photo,row.avatarDataUrl,'');
+  const details=document.createElement('span');details.className='hub-user-list-details';
+  const title=document.createElement('strong');title.textContent=row.displayName;
+  const login=document.createElement('small');login.textContent=`@${row.username}`;
+  const role=document.createElement('small');role.textContent=row.username===text(provider?.config?.ownerUsername)?'Mestre':'Jogador';
+  details.append(title,login,role);item.append(photo,details);directory?.appendChild(item);
+ }
+}
+function renderAdmin(){
+ const row=profileForSelection();
+ if(!isMaster||!row){if(adminCard)adminCard.hidden=true;return}
+ adminCard.hidden=false;
+ $('admin-display-name').value=row.displayName;
+ $('admin-login-name').textContent=`Login: @${row.username}`;
+ stagedAvatar=validPortrait(row.avatarDataUrl);
+ avatarTouched=false;
+ pictureInto(adminImage,stagedAvatar,`Imagem de ${row.displayName}`);
+ adminRemove.disabled=!stagedAvatar;
+ adminInput.disabled=false;
+ status($('admin-feedback'),'');
+}
+function selectUser(uid){
+ if(!isMaster||adminBusy)return;
+ selectedUid=uid;
+ renderDirectory();renderAdmin();
+ adminCard?.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function setAdminBusy(value){
+ adminBusy=value;
+ for(const id of ['admin-display-name','admin-avatar-file','admin-save','admin-cancel']){
+  const node=$(id);if(node)node.disabled=value;
+ }
+ if(adminImage)adminImage.disabled=value;
+ if(adminRemove)adminRemove.disabled=value||!stagedAvatar;
+}
+async function refreshDirectory(){
+ const rows=await provider.listUsers();
+ profiles=allowedProfiles(rows);
+ rememberAvatars(profiles);
+ if(selectedUid&&!profiles.some(row=>row.uid===selectedUid))selectedUid='';
+ if(isMaster&&!selectedUid)selectedUid=profiles.find(row=>row.uid===myProfile?.uid)?.uid||profiles[0]?.uid||'';
+ renderDirectory();
+ if(isMaster)renderAdmin();
+}
+function announceUpdate(){window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}
+
+input?.addEventListener('change',async()=>{
+ const file=input.files?.[0];input.value='';
+ if(!file||!provider||busy)return;
+ ownLoading(true);
+ try{
+  const url=await photoDataUrl(file,{dimension:256,maxLength:110000});
+  const result=await provider.saveMyAvatar(url);
+  myProfile={...myProfile,...result};rememberAvatars([myProfile]);
+  paint(url);status(feedback,'Imagem atualizada.');
+  announceUpdate();
+  await refreshDirectory();
+ }catch(error){status(feedback,error?.message||'Não foi possível salvar a imagem.',true)}
+ finally{ownLoading(false)}
+});
+remove?.addEventListener('click',async()=>{
+ if(!provider||busy||!current)return;
+ ownLoading(true);
+ try{
+  const result=await provider.saveMyAvatar('');
+  myProfile={...myProfile,...result};rememberAvatars([myProfile]);
+  paint('');status(feedback,'Imagem removida.');
+  announceUpdate();
+  await refreshDirectory();
+ }catch(error){status(feedback,error?.message||'Não foi possível remover a imagem.',true)}
+ finally{ownLoading(false)}
+});
+
+adminImage?.addEventListener('click',()=>{if(isMaster&&!adminBusy&&selectedUid)adminInput?.click()});
+adminInput?.addEventListener('change',async()=>{
+ const file=adminInput.files?.[0],target=selectedUid;adminInput.value='';
+ if(!file||!isMaster||adminBusy||!target)return;
+ setAdminBusy(true);
+ try{
+  const url=await photoDataUrl(file,{dimension:256,maxLength:110000});
+  if(selectedUid!==target)return;
+  stagedAvatar=url;avatarTouched=true;
+  pictureInto(adminImage,url,'Imagem selecionada');
+  status($('admin-feedback'),'Imagem selecionada.');
+ }catch(error){status($('admin-feedback'),error?.message||'Imagem inválida.',true)}
+ finally{setAdminBusy(false)}
+});
+adminRemove?.addEventListener('click',()=>{
+ if(!isMaster||adminBusy||!selectedUid)return;
+ stagedAvatar='';avatarTouched=true;
+ pictureInto(adminImage,'');
+ adminRemove.disabled=true;
+ status($('admin-feedback'),'Imagem removida da prévia.');
+});
+adminForm?.addEventListener('submit',async event=>{
+ event.preventDefault();
+ const selected=profileForSelection(),name=text($('admin-display-name').value);
+ if(!isMaster||!selected||adminBusy)return;
+ if(!name||name.length>80){status($('admin-feedback'),'Informe um nome de até 80 caracteres.',true);return}
+ const changes={uid:selected.uid};
+ if(name!==selected.displayName)changes.displayName=name;
+ if(avatarTouched)changes.avatarDataUrl=stagedAvatar;
+ if(!('displayName'in changes)&&!('avatarDataUrl'in changes)){status($('admin-feedback'),'Nenhuma alteração para salvar.');return}
+ setAdminBusy(true);
+ try{
+  const updated=await provider.saveManagedUserProfile(changes);
+  if(myProfile?.uid===updated.uid){
+   myProfile={...myProfile,...updated};
+   $('own-display-name').textContent=myProfile.displayName;
+   paint(myProfile.avatarDataUrl);
+  }
+  rememberAvatars([updated]);
+  announceUpdate();
+  await refreshDirectory();
+  status($('admin-feedback'),'Alterações salvas.');
+ }catch(error){status($('admin-feedback'),error?.message||'Não foi possível salvar este perfil.',true)}
+ finally{setAdminBusy(false)}
+});
+$('admin-cancel')?.addEventListener('click',()=>{if(!adminBusy)renderAdmin()});
+
 async function init(){
  const session=effectiveCollaborationSession();
- if(!session){state('Entre com sua conta para alterar a imagem.',true);input.disabled=true;remove.disabled=true;return}
- if(masterPreviewMode()){state('Encerre a visualização de jogador para editar seu perfil.',true);input.disabled=true;remove.disabled=true;return}
+ if(!session){status(feedback,'Entre com sua conta para acessar perfis.',true);ownLoading(true);return}
+ if(masterPreviewMode()){status(feedback,'Encerre a visualização de jogador para acessar perfis.',true);ownLoading(true);return}
  try{
   provider=await createFirebaseCollaborationProvider();
   if(!provider?.configured)throw new Error('Acesso online indisponível.');
-  const profile=await provider.getMyProfile();
-  paint(profile.avatarDataUrl);rememberAvatars([profile]);
-  state('Imagem vinculada à sua conta.');
- }catch(error){state(error?.message||'Não foi possível carregar sua conta.',true);input.disabled=true;remove.disabled=true}
+  const account=await provider.currentUser();
+  if(!account)throw new Error('Faça login para acessar perfis.');
+  myProfile=await provider.getMyProfile();
+  isMaster=Boolean(session.isMaster&&account.username===text(provider.config.ownerUsername));
+  $('own-display-name').textContent=myProfile.displayName||myProfile.username;
+  paint(myProfile.avatarDataUrl);rememberAvatars([myProfile]);
+  status(feedback,'');
+  await refreshDirectory();
+ }catch(error){
+  status(feedback,error?.message||'Não foi possível carregar perfis.',true);
+  status($('hub-users-feedback'),'Não foi possível carregar os usuários.',true);
+  ownLoading(true);
+ }
 }
-input?.addEventListener('change',async()=>{const file=input.files?.[0];if(!file||!provider||busy)return;loading(true);try{
- const url=await photoDataUrl(file,{dimension:256,maxLength:110000});
- const profile=await provider.saveMyAvatar(url);rememberAvatars([profile]);paint(url);state('Imagem atualizada.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))
- }catch(error){state(error?.message||'Não foi possível salvar sua imagem.',true)}finally{input.value='';loading(false)}
-});
-remove?.addEventListener('click',async()=>{if(!provider||busy||!current)return;loading(true);try{const profile=await provider.saveMyAvatar('');rememberAvatars([profile]);paint('');state('Imagem removida.');window.dispatchEvent(new CustomEvent('hub-rpg:profile-photo-updated'))}catch(error){state(error?.message||'Não foi possível remover a imagem.',true)}finally{loading(false)}});
-function openAvatarPicker(){if(provider&&!busy&&!input.disabled)input.click()}
-preview?.addEventListener('click',openAvatarPicker);
-preview?.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openAvatarPicker()}});
 void init();
