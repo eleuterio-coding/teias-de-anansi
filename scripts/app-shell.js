@@ -36,7 +36,7 @@ function esc(value){return String(value??"").replace(/[&<>"]/g,function(c){retur
 function icon(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[name]||ICONS.chevron)+"</svg>"}
 function currentPage(){return location.pathname.split("/").pop()||"index.html"}
 function shellEligible(){return SHELL_PAGES.has(currentPage())}
-function pageLabel(page){page=page||currentPage();return PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
+function pageLabel(page){page=page||currentPage();return page==='usuario.html'?userAreaLabel():PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
 function pageMatches(item,page){page=page||currentPage();if(item.page==="npcs.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return true;if(item.page==="personagens.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return false;return item.page===page||(item.aliases||[]).includes(page)||((page==="mesa.html"||page==="nova-campanha.html")&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
 function readRecents(){try{const rows=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");return Array.isArray(rows)?rows:[]}catch{return[]}}
 function rememberCurrent(label){
@@ -48,6 +48,7 @@ function rememberCurrent(label){
 function previewActive(){try{return Boolean(JSON.parse(localStorage.getItem("hub-rpg:master-preview:v1")||"null")?.username)}catch{return false}}
 function masterSession(){try{return JSON.parse(localStorage.getItem("hub-rpg:collaboration-session:v1")||"null")}catch{return null}}
 function masterNpcAccess(){return Boolean(masterSession()?.isMaster&&!previewActive())}
+function userAreaLabel(){return masterNpcAccess()?'Usuários':'Usuário'}
 function contextualAction(){
  if(previewActive())return null;
  const page=currentPage();
@@ -85,7 +86,7 @@ function buildSidebar(){
  const spacer=document.createElement("div");spacer.className="hub-sidebar-spacer";aside.appendChild(spacer);
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
- secondary.innerHTML='<a class="hub-nav-link" href="usuario.html">'+icon("player")+'<span>Usuários</span></a><a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
+ secondary.innerHTML='<a class="hub-nav-link" href="usuario.html">'+icon("player")+'<span>'+userAreaLabel()+'</span></a><a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
  if(currentPage()==="usuario.html")secondary.querySelector('a[href="usuario.html"]')?.setAttribute("aria-current","page");
   if(currentPage()==="configuracoes.html")secondary.querySelector('a[href="configuracoes.html"]')?.setAttribute("aria-current","page");
  aside.appendChild(secondary);
@@ -98,7 +99,7 @@ function breadcrumbTrail(label){
  const sections={
   "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
   "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
-  "bibliotecas.html":"Biblioteca","usuario.html":"Usuários","configuracoes.html":"Configurações"
+  "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"configuracoes.html":"Configurações"
  };
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
@@ -121,6 +122,27 @@ function renderBreadcrumb(label){
    :'<a href="'+esc(part.href)+'">'+esc(part.label)+'</a>')+'</li>'
  }).join('')+'</ol>'
 }
+function userIdentity(){
+ const session=masterSession();if(!session?.username)return null;
+ const name=session.username;
+ let avatar='';
+ try{const cache=JSON.parse(localStorage.getItem('hub-rpg:user-avatar-cache:v1')||'[]');const match=(Array.isArray(cache)?cache:[]).find(row=>String(row.username||'').toLowerCase()===name.toLowerCase());const source=match?.avatarDataUrl||'';if(/^data:image\\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(source))avatar=source}catch{}
+ return{username:name,displayName:name.charAt(0).toLocaleUpperCase('pt-BR')+name.slice(1),avatar};
+}
+function updateTopbarIdentity(detail=null){
+ const link=document.querySelector('[data-hub-user-link]'),identity=userIdentity();if(!link||!identity)return;
+ const matching=detail&&String(detail.username||'').toLowerCase()===identity.username.toLowerCase();
+ const shown=matching&&detail.displayName?String(detail.displayName):identity.displayName;
+ const name=link.querySelector('[data-hub-user-name]'),picture=link.querySelector('[data-hub-user-picture]');
+ if(name)name.textContent=shown;
+ if(picture){
+  picture.replaceChildren();
+  const src=matching&&/^data:image\\/(?:webp|png|jpeg);base64,[A-Za-z0-9+/=]+$/.test(detail.avatarDataUrl||'')?detail.avatarDataUrl:identity.avatar;
+  if(src){const img=document.createElement('img');img.alt='';img.src=src;picture.append(img)}
+  else picture.textContent=shown.charAt(0).toLocaleUpperCase('pt-BR');
+ }
+ link.setAttribute('aria-label','Abrir meu perfil de usuário: '+shown)
+}
 function buildTopbar(){
  const header=document.createElement("header");header.className="hub-global-topbar";
  const left=document.createElement("div");left.className="hub-topbar-left";
@@ -129,6 +151,9 @@ function buildTopbar(){
  left.appendChild(crumb);header.appendChild(left);
  const actions=document.createElement("div");actions.className="hub-topbar-actions";
  const session=masterSession();if(session?.isMaster){const tools=document.createElement("div");tools.className="hub-master-tools";tools.dataset.hubMasterTools="";tools.hidden=true;tools.innerHTML='<span class="hub-master-tools-title">Mestre</span><label class="hub-master-control"><span>Usuário</span><select data-hub-preview-user aria-label="Visualizar o Hub como usuário"><option value="">Mestre</option></select></label><label class="hub-master-control"><span>Layout</span><select data-hub-layout-select aria-label="Selecionar layout do Hub"><option value="default">Padrão</option></select></label>';actions.appendChild(tools)}
+ const identity=userIdentity();if(identity){
+  const profile=document.createElement('a');profile.href='usuario.html';profile.className='hub-topbar-user-link';profile.dataset.hubUserLink='';profile.title='Meu perfil';profile.innerHTML='<span class="hub-topbar-user-picture" data-hub-user-picture></span><span class="hub-topbar-user-copy"><small>Meu perfil</small><strong data-hub-user-name></strong></span>'+icon('chevron');actions.appendChild(profile)
+ }
  const search=document.createElement("button");search.type="button";search.className="hub-icon-button";search.dataset.hubCommandOpen="";search.setAttribute("aria-label","Buscar");search.innerHTML=icon("search");actions.appendChild(search);
  const action=contextualAction();if(action){const a=document.createElement("a");a.className="hub-topbar-primary";a.href=action.href;a.innerHTML=icon("plus")+"<span>"+esc(action.label)+"</span>";actions.appendChild(a)}
  header.appendChild(actions);return header
@@ -140,7 +165,7 @@ function buildCommand(){
 }
 function commandItems(){
  const base=NAV_ITEMS.filter(item=>!item.masterOnly||masterNpcAccess()).map(function(item){return{label:item.label,href:item.page,kind:"Área",icon:item.icon}});
- base.push({label:"Usuários",href:"usuario.html",kind:"Área",icon:"player"},{label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(!previewActive())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"},{label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
+ base.push({label:userAreaLabel(),href:"usuario.html",kind:"Área",icon:"player"},{label:"Configurações",href:"configuracoes.html",kind:"Área",icon:"settings"});if(masterNpcAccess())base.push({label:"Jogadores",href:"usuarios.html",kind:"Área",icon:"player"});if(!previewActive())base.push({label:"Criar personagem",href:"criacao-personagem.html",kind:"Ação",icon:"plus"});
  readRecents().slice(0,4).forEach(function(row){base.push({label:row.label,href:row.href,kind:"Recente",icon:row.page==="mesa.html"?"campaign":"star"})});
  document.querySelectorAll('.section-nav a[href^="#"]').forEach(function(link){base.push({label:link.textContent.trim(),href:link.getAttribute("href"),kind:"Nesta página",icon:"chevron"})});
  const seen=new Set();return base.filter(function(item){const key=item.href+"|"+item.label;if(seen.has(key))return false;seen.add(key);return true})
@@ -163,6 +188,8 @@ function bindShell(){
  modal.addEventListener("mousedown",function(event){if(event.target===modal)closeCommand()});
  const toggle=document.querySelector("[data-hub-mobile-menu]");if(toggle)toggle.addEventListener("click",function(){const sidebar=document.querySelector("[data-hub-sidebar]");if(sidebar)sidebar.classList.toggle("is-open")});
  document.addEventListener("click",function(event){const sidebar=document.querySelector("[data-hub-sidebar]");if(innerWidth<=760&&sidebar&&sidebar.classList.contains("is-open")&&!event.target.closest("[data-hub-sidebar]")&&!event.target.closest("[data-hub-mobile-menu]"))sidebar.classList.remove("is-open")});
+ updateTopbarIdentity();
+ window.addEventListener('hub-rpg:profile-photo-updated',event=>updateTopbarIdentity(event.detail));
  window.addEventListener("keydown",function(event){
   if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==="k"){event.preventDefault();openCommand()}
   if(event.key==="Escape")closeCommand()
