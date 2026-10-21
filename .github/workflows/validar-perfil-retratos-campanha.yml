@@ -8,6 +8,8 @@ on:
       - 'scripts/firebase-collaboration-provider.js'
       - 'scripts/campaign-player-view.js'
       - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-avatar-preview.js'
+      - 'tests/auditar-campanha-status-retratos.mjs'
       - 'scripts/campaign-next-session-ui.js'
       - 'scripts/campaign-sessions-ui.js'
       - 'scripts/character-sheet.js'
@@ -41,7 +43,8 @@ jobs:
           node-version: '22'
       - name: Validar sintaxe e modelos
         run: |
-          for file in scripts/profile-images.js scripts/user-profile-ui.js scripts/firebase-collaboration-provider.js scripts/campaign-table-ui.js scripts/campaign-player-view.js scripts/campaign-next-session-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet.js scripts/character-builder/profile-ui.js scripts/character-builder/wizard-ui.js scripts/character-builder.js scripts/hub-ux.js scripts/adventure-roster-ui.js scripts/collaboration-model.js scripts/app-shell.js; do node --check "$file"; done
+          for file in scripts/campaign-avatar-preview.js scripts/profile-images.js scripts/user-profile-ui.js scripts/firebase-collaboration-provider.js scripts/campaign-table-ui.js scripts/campaign-player-view.js scripts/campaign-next-session-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet.js scripts/character-builder/profile-ui.js scripts/character-builder/wizard-ui.js scripts/character-builder.js scripts/hub-ux.js scripts/adventure-roster-ui.js scripts/collaboration-model.js scripts/app-shell.js; do node --check "$file"; done
+          node tests/auditar-campanha-status-retratos.mjs
           node tests/auditar-criacao-layout-origem.mjs
           node tests/auditar-perfil-campanha.mjs
           node tests/auditar-visibilidade-campanha.mjs
