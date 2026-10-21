@@ -33,7 +33,6 @@ function card(c){
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
    <h2>${esc(c.name)}</h2>
-   ${readOnly?'<span class="badge">Somente leitura</span>':''}
    ${c.description?`<p>${esc(c.description)}</p>`:''}
    <p class="mini">${esc(counts)}${active?` · <strong>Em andamento: ${esc(active.title)}</strong>`:''}</p>
   </div></div>
