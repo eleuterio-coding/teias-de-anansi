@@ -21,6 +21,10 @@ assert.ok(player.includes('return [...priority,...remaining].slice(0,3)'), 'Máx
 assert.ok(player.includes("sessionStories(sessions,c.id)"), 'Layout próprio de Sessões');
 assert.ok(player.includes("'Sessões da Campanha'")&&player.includes("'Aventuras da Campanha'"),'Títulos');
 assert.ok(player.includes('campaign-player-story-card-featured'),'Destaque para Atual');
+assert.ok(player.includes('const footer=isAdventure?action:'),'Rodapé específico das sessões');
+assert.ok(player.includes('class="campaign-player-story-footer"'),'Selo e botão no rodapé da sessão');
+assert.ok(styles.includes('.campaign-player-sessions-grid .campaign-player-story-footer{'),'CSS do rodapé da sessão presente');
+assert.ok(styles.includes('margin-left:auto;white-space:nowrap'),'Ação Abrir à direita');
 assert.ok(styles.includes('campaign-player-story-card-featured'),'Estilo do destaque');
 assert.ok(player.includes('campaign-player-campaign-summary')&&player.includes('campaign-player-facts'),'Informação hierarquizada');
 assert.ok(!player.includes('campaign-player-readonly'),'Sem selo Somente leitura da mesa');
