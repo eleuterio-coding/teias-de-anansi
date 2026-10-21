@@ -239,11 +239,13 @@ async function init(){
   isMaster=Boolean(session.isMaster&&account.username===text(provider.config.ownerUsername));
   if(!myProfile||myProfile.uid!==account.uid)throw new Error('Não foi possível confirmar o perfil da conta.');
   document.body.classList.toggle('hub-self-profile-only',!isMaster);
+  const directoryCard=document.querySelector('.hub-user-directory');if(directoryCard)directoryCard.hidden=!isMaster;
   const heading=document.querySelector('.hub-users-page>.top h1');
   if(heading)heading.textContent=isMaster?'Usuários':'Usuário';
   document.title=(isMaster?'Usuários':'Usuário')+' - Teias de Anansi';
   updateAppShellContext();
   $('own-display-name').textContent=myProfile.displayName||myProfile.username;
+  $('own-username').textContent='@'+myProfile.username+' · '+(isMaster?'Mestre':'Jogador');
   paint(myProfile.avatarDataUrl);rememberAvatars([myProfile]);
   announceUpdate();
   status(feedback,'');
