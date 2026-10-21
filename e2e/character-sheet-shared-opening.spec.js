@@ -99,3 +99,20 @@ test('A atribuição não concede acesso a outros personagens quando o cache est
  await expect(page.locator('#sheet')).toBeHidden();
  await expect(page.locator('#save-sheet')).not.toBeVisible();
 });
+
+test('Quando a autenticação expira, retorno ao login preserva o endereço da ficha',async({page})=>{
+ const code=`
+ export async function createFirebaseCollaborationProvider(){
+  return{configured:true,onAuthChanged(callback){queueMicrotask(()=>callback(null));return()=>{}}}
+ }
+ `;
+ await page.route('**/scripts/firebase-collaboration-provider.js*',route=>route.fulfill({status:200,contentType:'text/javascript',body:code}));
+ await page.addInitScript(pc=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([pc]));
+ },own);
+ await page.goto('/ficha-personagem.html?id=char-own',{waitUntil:'domcontentloaded'});
+ await expect(page).toHaveURL(/usuarios\.html\?next=ficha-personagem\.html/, {timeout:20000});
+ const next=new URL(page.url()).searchParams.get('next');
+ expect(next).toBe('ficha-personagem.html?id=char-own');
+});
