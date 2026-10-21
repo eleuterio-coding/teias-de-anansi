@@ -6,7 +6,7 @@
 <title>Usuários - Teias de Anansi</title>
 <link rel="stylesheet" href="hub-ux.css?v=20261021-users-admin1">
 <link rel="stylesheet" href="campaigns.css?v=20261021-click-avatar1">
-<link rel="stylesheet" href="user-directory.css?v=20261021-users-admin1">
+<link rel="stylesheet" href="user-directory.css?v=20261021-campaign-profile1">
 </head>
 <body>
 <main id="main-content" class="hub-user-page hub-users-page">
@@ -22,6 +22,10 @@
 <div class="hub-users-heading"><h2>Usuários do Hub</h2><span id="hub-users-count" class="mini"></span></div>
 <div id="hub-users-list" class="hub-users-list" aria-live="polite"></div>
 <p id="hub-users-feedback" role="status" aria-live="polite"></p>
+</section>
+<section class="card hub-user-focus-card" id="hub-user-focused-profile" aria-labelledby="hub-focused-user-title" hidden>
+ <div class="hub-user-focus-header"><h2 id="hub-focused-user-title">Perfil do jogador</h2><a class="btn secondary" href="mesa.html" id="hub-user-profile-back" hidden>Voltar</a></div>
+ <div class="hub-user-focus-body"><div class="hub-user-focus-avatar" id="hub-focused-user-avatar" aria-label="Foto do jogador"><span aria-hidden="true">◇</span></div><div><strong id="hub-focused-user-name"></strong><p class="mini" id="hub-focused-user-login"></p><p class="mini" id="hub-focused-user-role"></p></div></div>
 </section>
 <section class="card hub-user-admin" id="user-admin-card" hidden>
 <h2>Editar usuário</h2>
@@ -46,6 +50,6 @@
 </section>
 </main>
 <script type="module" src="scripts/hub-ux.js?v=20261021-users-admin1"></script>
-<script type="module" src="scripts/user-profile-ui.js?v=20261021-users-admin1"></script>
+<script type="module" src="scripts/user-profile-ui.js?v=20261021-campaign-profile1"></script>
 </body>
 </html>
