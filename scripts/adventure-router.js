@@ -1,6 +1,5 @@
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-order-desc3';
 import{adventureListCard}from'./adventure-list-card.js?v=20261021-campaign-groups1';
 import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261021-campaign-groups1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
