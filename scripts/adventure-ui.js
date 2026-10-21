@@ -7,6 +7,7 @@ import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMedia
 
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261019-gender1';
 import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-order-desc3';
+import{adventureListCard,adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261021-shared-cards1';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1';
@@ -31,29 +32,15 @@ function selectorHtml(){
 function listHtml(){
  const requested=params.get('campaign'),filtered=adventures.filter(a=>!requested||a.campaignId===requested);
  const rows=requested?sortCampaignAdventures(filtered):filtered.sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')));
- return`<section class="hub-collection-section adventure-list-section">
- <div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
- ${selectorHtml()}
- <div class="hub-collection-grid adventure-list" id="adventure-list">
- ${rows.map(a=>{
-  const parent=campaigns.find(c=>c.id===a.campaignId),summary=a.description||a.summary||a.pitch||'Sem descrição.';
-  const cover=imageElementHtml(a.coverImage,a.coverImageUrl,{alt:'',className:'hub-collection-cover-image'});
-  const href='aventuras.html?campaign='+encodeURIComponent(a.campaignId)+'&id='+encodeURIComponent(a.id);
-  return`<article class="adventure-card hub-collection-card" data-adventure-card="${esc(a.id)}">
-   <a class="hub-collection-stretched" href="${href}" aria-label="Abrir aventura ${esc(a.title)}"></a>
-   <div class="hub-collection-image">${cover||'<span class="hub-collection-image-placeholder" aria-hidden="true">✦</span>'}</div>
-   <span class="hub-collection-status status-${esc(a.status)}">${esc(advStatus(a.status))}</span>
-   <div class="hub-collection-body adventure-card-main">
-    <h3 class="adventure-card-title">${esc(a.title)}</h3>
-    <p class="hub-collection-description adventure-card-description">${esc(summary)}</p>
-    <div class="hub-collection-context adventure-card-context"><span class="hub-parent-link"><span>Campanha</span><a href="mesa.html?id=${encodeURIComponent(a.campaignId)}">${esc(parent?.name||'Campanha não encontrada')}</a></span><span>${esc(advType(a.type))}</span>${a.arc?`<span>${esc(a.arc)}</span>`:''}</div>
-    <div class="hub-collection-metrics">${a.chapters.length} capítulo(s) · ${a.scenes.length} cena(s) · ${a.missions.length} missão(ões)</div>
+ return `<section class="hub-collection-section adventure-list-section">
+  <div class="top campaign-list-heading"><h2>Lista de Aventuras</h2></div>
+  ${selectorHtml()}
+  <div id="adventure-list">
+   <div class="list campaign-list-grid">
+    ${rows.map(a=>adventureListCard(a,{parentName:campaigns.find(c=>c.id===a.campaignId)?.name||''})).join('')}
+    ${campaigns.length?adventureCreateTile(createPanelOpen):''}
    </div>
-   <div class="row-actions hub-collection-actions adventure-card-actions"><button type="button" data-open-adventure="${esc(a.id)}">Abrir</button><button type="button" class="danger" data-delete-adventure="${esc(a.id)}">Excluir</button></div>
-  </article>`
- }).join('')}
- ${campaigns.length?`<a href="aventuras.html?new=1" id="open-adventure-create" class="hub-collection-card hub-collection-create campaign-create-tile" aria-controls="adventure-create-card" aria-expanded="${createPanelOpen}"><span class="hub-collection-plus campaign-create-plus" aria-hidden="true">+</span><span class="hub-collection-create-label campaign-create-tile-label">Nova aventura</span></a>`:''}
- </div>
+  </div>
  </section>`
 }
 function entitySelect(rows,current,empty='— Nenhum —'){return`<option value="">${esc(empty)}</option>${rows.map(x=>option(x.id,x.title||x.name,current)).join('')}`}
@@ -239,6 +226,21 @@ async function reassignSelectedAdventure(destinationId){
  }
 }
 function bind(){const c=campaign();
+ const list=$('adventure-list');
+ list?.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
+  if(!disclosure.open)return;
+  list.querySelectorAll('[data-status-disclosure][open]').forEach(other=>{if(other!==disclosure)other.open=false})
+ }));
+ list?.querySelectorAll('[data-next-adventure-status]').forEach(button=>button.addEventListener('click',()=>{
+  const status=button.dataset.nextAdventureStatus,id=button.dataset.adventureStatusId;
+  const previous=adventures.find(a=>a.id===id)?.status||'planned';
+  if(!ADVENTURE_STATUSES.includes(status))return;
+  if(status===previous){button.closest('details')?.removeAttribute('open');return}
+  const result=updateAdventure(adventures,id,{status});
+  if(!result.ok){feedback(result.reason||'Não foi possível alterar o status.',false);return}
+  adventures=writeAdventures(result.list);render();
+  [...document.querySelectorAll('#adventure-list [data-adventure-status-trigger]')].find(el=>el.dataset.adventureStatusTrigger===id)?.focus()
+ }));
  $('open-adventure-create')?.addEventListener('click',event=>{event.preventDefault();createPanelOpen=true;render();$('new-adventure-title')?.focus()});
  $('cancel-adventure-create')?.addEventListener('click',()=>{createPanelOpen=false;render()});
 
@@ -254,6 +256,16 @@ function bind(){const c=campaign();
  }));
 $('adventure-assignment')?.addEventListener('change',event=>{void reassignSelectedAdventure(event.target.value)});$('adventure-campaign')?.addEventListener('change',e=>{campaignId=e.target.value;adventureId='';syncUrl();render()});$('create-adventure')?.addEventListener('click',()=>commit(createAdventure(adventures,newAdventureData()),'Aventura criada.'));document.querySelectorAll('[data-open-adventure]').forEach(b=>b.addEventListener('click',()=>{adventureId=b.dataset.openAdventure;const selected=adventure();if(selected)campaignId=selected.campaignId;syncUrl();render()}));document.querySelectorAll('[data-delete-adventure]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir esta Aventura?'))return;const target=adventures.find(row=>row.id===b.dataset.deleteAdventure),result=removeAdventure(adventures,b.dataset.deleteAdventure);if(result.ok){adventures=writeAdventures(result.list);if(adventureId===b.dataset.deleteAdventure)adventureId='';render();feedback('Aventura excluída.');if(target?.coverImage)deleteImage(target.coverImage).catch(()=>{})}}));if(!adventure())return;bindAdventureFields();bindAdventureCover();bindParticipants();bindEntityRows();bindScenes();bindCampaignEntities();bindAdventureSaveButtons();document.querySelectorAll('[data-remove-entity]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este registro da Aventura?'))return;commit(removeAdventureEntity(adventures,adventureId,b.dataset.key,b.dataset.removeEntity),'Registro excluído.')}));document.querySelectorAll('[data-start-scene]').forEach(b=>b.addEventListener('click',()=>commit(startAdventureScene(adventures,adventureId,b.dataset.startScene),'Cena iniciada.')));document.querySelectorAll('[data-complete-scene]').forEach(b=>b.addEventListener('click',()=>commit(completeAdventureScene(adventures,adventureId,b.dataset.completeScene),'Cena concluída.')));document.querySelectorAll('[data-skip-scene]').forEach(b=>b.addEventListener('click',()=>commit(skipAdventureScene(adventures,adventureId,b.dataset.skipScene),'Cena ignorada.')));$('add-chapter')?.addEventListener('click',()=>commit(addAdventureChapter(adventures,adventureId,{title:$('new-chapter-title')?.value,arc:$('new-chapter-arc')?.value}),'Capítulo adicionado.'));$('add-mission')?.addEventListener('click',()=>commit(addAdventureMission(adventures,adventureId,{title:$('new-mission-title')?.value,kind:$('new-mission-kind')?.value}),'Missão adicionada.'));$('add-clue')?.addEventListener('click',()=>commit(addAdventureClue(adventures,adventureId,{title:$('new-clue-title')?.value,text:$('new-clue-text')?.value}),'Pista adicionada.'));$('add-material')?.addEventListener('click',()=>commit(addAdventureHandout(adventures,adventureId,{title:$('new-material-title')?.value,content:$('new-material-content')?.value}),'Material adicionado.'));$('add-treasure')?.addEventListener('click',()=>commit(addAdventureTreasure(adventures,adventureId,{name:$('new-treasure-name')?.value,description:$('new-treasure-description')?.value,type:'magic-item'}),'Tesouro adicionado.'));$('add-scene')?.addEventListener('click',()=>commit(addAdventureScene(adventures,adventureId,{title:$('new-scene-title')?.value,chapterId:$('new-scene-chapter')?.value||null,locationId:$('new-scene-location')?.value||null}),'Cena adicionada.'));$('add-timeline')?.addEventListener('click',()=>commit(addAdventureTimelineEntry(adventures,adventureId,{title:$('new-timeline-title')?.value,text:$('new-timeline-text')?.value}),'Registro adicionado.'));$('add-campaign-npc')?.addEventListener('click',()=>{const result=addCampaignNpc(campaigns,campaignId,{name:$('new-npc-name')?.value,role:$('new-npc-role')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);commit(updateAdventure(adventures,adventureId,{npcIds:[...new Set([...adventure().npcIds,result.entity.id])]}),'NPC adicionado à Campanha e à Aventura.')});$('add-campaign-location')?.addEventListener('click',()=>{const result=addCampaignLocation(campaigns,campaignId,{name:$('new-location-name')?.value,type:$('new-location-type')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);commit(updateAdventure(adventures,adventureId,{locationIds:[...new Set([...adventure().locationIds,result.entity.id])]}),'Local adicionado à Campanha e à Aventura.')});document.querySelectorAll('[data-delete-campaign-npc]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este NPC da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('npc',b.dataset.deleteCampaignNpc);commitCampaign(removeCampaignNpc(campaigns,campaignId,b.dataset.deleteCampaignNpc),'NPC excluído da Campanha.')}));document.querySelectorAll('[data-delete-campaign-location]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este Local da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('location',b.dataset.deleteCampaignLocation);commitCampaign(removeCampaignLocation(campaigns,campaignId,b.dataset.deleteCampaignLocation),'Local excluído da Campanha.')}));document.querySelectorAll('[data-deliver-treasure]').forEach(b=>b.addEventListener('click',()=>deliverTreasure(b.dataset.deliverTreasure)))}
 normalizeRefs();render();
+document.addEventListener('pointerdown',event=>{
+ if(event.target.closest?.('#adventure-list [data-status-disclosure]'))return;
+ document.querySelectorAll('#adventure-list [data-status-disclosure][open]').forEach(el=>el.open=false)
+});
+document.addEventListener('keydown',event=>{
+ if(event.key!=='Escape')return;
+ const open=document.querySelector('#adventure-list [data-status-disclosure][open]');
+ if(!open)return;
+ open.open=false;open.querySelector('summary')?.focus();event.stopPropagation()
+});
 if(params.get('new')==='1')requestAnimationFrame(()=>{
  const form=$('adventure-create-card');
  if(form){form.scrollIntoView({block:'start'});$('new-adventure-title')?.focus({preventScroll:true})}
