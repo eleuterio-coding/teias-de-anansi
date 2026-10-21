@@ -1,5 +1,24 @@
 name: Validar listas de Aventuras e Sessões
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'campaigns.css'
+      - 'hub-ux.css'
+      - 'hub-collections.css'
+      - 'campaigns.css'
+      - 'hub-ux.css'
+      - 'campanhas.html'
+      - 'scripts/adventure-list-card.js'
+      - 'aventuras.html'
+      - 'campanhas.html'
+      - 'sessoes.html'
+      - 'scripts/adventure-list-card.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'e2e/adventure-session-collection-layout.spec.js'
+      - '.github/workflows/validar-listas-aventuras-sessoes.yml'
   pull_request:
     paths:
       - 'hub-collections.css'
@@ -23,6 +42,7 @@ jobs:
           node-version: '22'
       - name: Verificar scripts
         run: |
+          node --check scripts/adventure-list-card.js
           node --check scripts/adventure-ui.js
           node --check scripts/campaign-sessions-ui.js
           node --check scripts/hub-ux.js
