@@ -23,8 +23,10 @@ function backgroundCard(item,kind,campaignId){
  const isAdventure=kind==='adventure',name=String(isAdventure?item.title:item.title||'Sessão'),href=isAdventure?`aventuras.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`:`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(item.id)}`;
  const heading=isAdventure?name:`Sessão ${Number(item.number)||1} · ${name}`;
  const picture=media(item.coverImage,item.coverImageUrl,`Capa de ${heading}`,'campaign-player-story-image');
+ const labels={planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'};
+ const status=labels[item.status]||item.status||'',summary=String(item.summary||item.description||'').trim();
  return`<a class="campaign-player-story-card" href="${href}" aria-label="Abrir ${esc(heading)}">
- ${picture}<span class="campaign-player-story-content"><h3>${esc(heading)}</h3><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
+ ${picture}<span class="campaign-player-story-content"><div class="campaign-player-story-information"><h3>${esc(heading)}</h3>${status?`<span class="campaign-player-story-status">${esc(status)}</span>`:''}${summary?`<p>${esc(summary)}</p>`:''}</div><span class="campaign-player-story-open">Abrir <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg></span></span></a>`;
 }
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
