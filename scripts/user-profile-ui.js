@@ -198,9 +198,10 @@ async function init(){
  try{
   provider=await createFirebaseCollaborationProvider();
   if(!provider?.configured)throw new Error('Acesso online indisponível.');
+  // getMyProfile aguarda o Firebase restaurar a sessão antes de consultar o usuário.
+  myProfile=await provider.getMyProfile();
   const account=await provider.currentUser();
   if(!account)throw new Error('Faça login para acessar perfis.');
-  myProfile=await provider.getMyProfile();
   isMaster=Boolean(session.isMaster&&account.username===text(provider.config.ownerUsername));
   $('own-display-name').textContent=myProfile.displayName||myProfile.username;
   paint(myProfile.avatarDataUrl);rememberAvatars([myProfile]);
