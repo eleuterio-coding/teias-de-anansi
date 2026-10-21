@@ -55,6 +55,7 @@ function bindPortrait(){
  });
 }
 function renderHeader(d){
+ renderPortrait();
  $('pc-name').textContent=state.c.name||'Personagem sem nome';
  $('pc-subtitle').textContent=[d.klass?`${genderedCharacterTerm(d.klass.name,characterGender(state.c),'class')} lvl ${d.level}`:null,d.sub?genderedCharacterTerm(d.sub.name,characterGender(state.c),'subclass'):null,d.species?genderedCharacterTerm(d.species.name,characterGender(state.c),'species'):null,state.c.choices?.species?.lineage?genderedCharacterLineage(state.c.choices.species.lineage,characterGender(state.c)):null,d.bg?genderedCharacterTerm(d.bg.name,characterGender(state.c),'background'):null].filter(Boolean).join(' · ');
  $('edit-link').href=`criacao-personagem.html?${npcMode()?'npc=1&':''}id=${encodeURIComponent(state.c.id)}`;
@@ -268,7 +269,8 @@ async function init(){
  if(d.klass?.spellAbility)renderSpellLoading(d);
  else{sanitizeSelections();d=derive();renderSpells(d)}
 
- bindFields();
+ bindFields();bindPortrait();
+ $('profile-player')?.addEventListener('change',event=>{const label=event.target.closest('label')?.firstChild;if(label?.nodeType===3)label.textContent=playerTerm(event.target.value)});
  window.addEventListener('hub-rpg:sheet-remote-refresh',refreshSheetFromRemote);
  showWarnings();
  $('loading').hidden=true;
