@@ -31,7 +31,7 @@ async function setRealtime(active){
  const module=await realtimeLoad;module?.startRealtime?.()
 }
 function bootstrapRealtime(){let active=false;try{active=Boolean(localStorage.getItem(COLLAB_SESSION_KEY))}catch{}setRealtime(active)}
-function bootstrapPageAccess(){const page=currentPage();if(page!=='ficha-personagem.html'||new URLSearchParams(location.search).get('npc')==='1'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20260918-master-delete1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
+function bootstrapPageAccess(){const page=currentPage();if(page!=='ficha-personagem.html'||new URLSearchParams(location.search).get('npc')==='1'||characterAccessLoad)return;characterAccessLoad=import('./character-sheet-access-ui.js?v=20261021-shared-open1').catch(error=>{console.warn('[Hub access] ficha:',error);characterAccessLoad=null;return null})}
 function mainTarget(){
  const target=document.querySelector('main:not([hidden]),#sheet:not([hidden]),#builder:not([hidden]),#table-root')||document.querySelector('main,#sheet,#builder,#table-root,h1');
  if(!target)return null;if(!target.id)target.id='hub-main-content';
