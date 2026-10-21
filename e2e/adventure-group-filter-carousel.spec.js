@@ -103,3 +103,31 @@ test('Link para campanha recebido na URL inicial seleciona o filtro, mas usuári
  await page.locator('#adventure-campaign-filter').selectOption('all');
  await expect(page.locator('#adventure-list .adventure-campaign-group')).toHaveCount(2);
 });
+
+test('Jogador recebe grupos filtráveis somente das campanhas autorizadas',async({page})=>{
+ const membership={id:'m-1',campaignId:'c-1',uid:'player-1',username:'jogador',
+  role:'player',active:true,adventureIds:['c1-a1','c1-a2']};
+ const campaign=campaigns[0];
+ const playerRows=adventures.filter(a=>membership.adventureIds.includes(a.id));
+ await page.addInitScript(({membership,campaign,playerRows})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({
+   uid:'player-1',username:'jogador',isMaster:false,memberships:[membership]
+  }));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({
+   schema:'hub-rpg/collaboration-cache/v1',
+   campaigns:{[campaign.id]:{
+    membership,payload:{campaign,revealedAdventures:playerRows},characterIds:[]
+   }}
+  }));
+ },{membership,campaign,playerRows});
+ await page.goto('/aventuras.html');
+ await expect(page.locator('#adventure-list .adventure-campaign-group')).toHaveCount(1);
+ await expect(page.locator('#adventure-list [data-adventure-card]')).toHaveCount(2);
+ await expect(page.locator('#adventure-campaign-filter option')).toHaveCount(2);
+ await expect(page.locator('#adventure-list [data-delete-adventure]')).toHaveCount(0);
+ await expect(page.locator('#open-adventure-create')).toHaveCount(0);
+ await page.locator('#adventure-status-filter').selectOption('completed');
+ await expect(page.locator('#adventure-list [data-adventure-card]')).toHaveCount(1);
+ await expect(page.locator('#adventure-list [data-adventure-card="c1-a2"]')).toBeVisible();
+ await expect(page.getByText('Reinos de Prata')).toHaveCount(0);
+});
