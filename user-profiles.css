@@ -1,0 +1,31 @@
+/* Diretório de usuários e editor restrito ao Mestre. */
+.hub-user-page{max-width:1180px!important;width:100%;margin:0 auto;display:grid;gap:18px}
+.hub-user-page>.top p{margin:6px 0 0}
+.hub-user-layout{display:grid;grid-template-columns:minmax(250px,0.85fr) minmax(0,1.6fr);align-items:start;gap:18px}
+.hub-user-directory{display:grid;gap:14px;min-width:0}
+.hub-user-directory h2,.hub-user-photo-card h2{margin:0}
+.hub-user-directory-list{display:grid;gap:8px;max-height:65vh;overflow:auto}
+.hub-user-directory-item{display:flex;gap:13px;align-items:center;width:100%;padding:10px;border:1px solid var(--hub-border,#465d73);border-radius:12px;background:var(--hub-surface-2,#152536);color:var(--hub-text,#fff);text-align:left;cursor:pointer}
+.hub-user-directory-item:hover,.hub-user-directory-item.is-selected{border-color:var(--hub-accent,#399fe7);background:var(--hub-surface,#21364a)}
+.hub-user-directory-item:focus-visible,.hub-user-avatar-preview:focus-visible{outline:3px solid var(--hub-accent,#399fe7);outline-offset:2px}
+.hub-user-directory-item:disabled{opacity:.65;cursor:wait}
+.hub-user-directory-avatar{width:52px;height:52px;flex:none;display:grid;place-items:center;overflow:hidden;border:1px solid var(--hub-border,#465d73);border-radius:50%;font-size:1.3rem}
+.hub-user-directory-avatar img{width:100%;height:100%;object-fit:cover}
+.hub-user-directory-labels{min-width:0;display:grid;gap:2px}
+.hub-user-directory-labels strong,.hub-user-directory-labels small{overflow-wrap:anywhere}
+.hub-user-directory-labels small{color:var(--hub-muted,#9faebe)}
+.hub-user-photo-card{display:grid;gap:17px;justify-items:stretch!important}
+.hub-user-photo-card>div:first-child p{margin:4px 0 0}
+.hub-user-name-field{width:100%}
+.hub-user-name-field input{width:100%;margin-top:6px}
+.hub-user-photo-card .hub-user-photo-group{display:grid;justify-items:start;gap:11px}
+.hub-user-photo-group h3{margin:0;font-size:1rem}
+.hub-user-photo-group .hub-user-avatar-preview{cursor:pointer;color:var(--hub-text,#fff);padding:0}
+.hub-user-photo-group .hub-user-avatar-preview:not(:disabled):hover{border-color:var(--hub-accent,#399fe7)}
+.hub-user-photo-group .hub-user-avatar-preview:disabled{cursor:default}
+.hub-user-photo-card .row-actions{display:flex;gap:9px;flex-wrap:wrap}
+.hub-user-photo-card .row-actions.is-disabled{opacity:.55}
+.hub-user-photo-card .row-actions.is-disabled label{pointer-events:none;cursor:default}
+.hub-user-photo-card .row-actions>button{width:auto}
+#user-avatar-feedback{min-height:1.4em;margin:0}
+@media(max-width:740px){.hub-user-layout{grid-template-columns:minmax(0,1fr)}.hub-user-directory-list{max-height:310px}.hub-user-page{max-width:100%}}
