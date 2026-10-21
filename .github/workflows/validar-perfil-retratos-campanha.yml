@@ -14,6 +14,12 @@ on:
       - 'scripts/adventure-roster-ui.js'
       - 'scripts/collaboration-model.js'
       - 'usuario.html'
+      - 'criacao-personagem.html'
+      - 'character-hub.css'
+      - 'scripts/character-builder/profile-ui.js'
+      - 'scripts/character-builder/wizard-ui.js'
+      - 'scripts/character-builder.js'
+      - 'e2e/character-creation-layout-portrait.spec.js'
       - 'ficha-personagem.html'
       - 'sessoes.html'
       - 'campaigns.css'
@@ -34,7 +40,7 @@ jobs:
           node-version: '22'
       - name: Validar sintaxe e modelos
         run: |
-          for file in scripts/profile-images.js scripts/user-profile-ui.js scripts/firebase-collaboration-provider.js scripts/campaign-table-ui.js scripts/campaign-player-view.js scripts/campaign-next-session-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet.js scripts/adventure-roster-ui.js scripts/collaboration-model.js scripts/app-shell.js; do node --check "$file"; done
+          for file in scripts/profile-images.js scripts/user-profile-ui.js scripts/firebase-collaboration-provider.js scripts/campaign-table-ui.js scripts/campaign-player-view.js scripts/campaign-next-session-ui.js scripts/campaign-sessions-ui.js scripts/character-sheet.js scripts/character-builder/profile-ui.js scripts/character-builder/wizard-ui.js scripts/character-builder.js scripts/hub-ux.js scripts/adventure-roster-ui.js scripts/collaboration-model.js scripts/app-shell.js; do node --check "$file"; done
           node tests/auditar-perfil-campanha.mjs
           node tests/auditar-visibilidade-campanha.mjs
           node tests/auditar-editor-campanha.mjs
@@ -43,4 +49,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Testar Campanha, usuários e fichas no navegador
-        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-avatars-user-current-session.spec.js e2e/campaign-next-session-highlight.spec.js e2e/campaign-player-disclosure.spec.js e2e/character-gender-identity.spec.js e2e/character-creation-layout-portrait.spec.js --project=desktop-chromium --project=mobile-chromium
