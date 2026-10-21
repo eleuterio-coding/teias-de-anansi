@@ -1,7 +1,7 @@
 import{playerTerm}from'./profile-images.js?v=20261021-user1';
 import{photoDataUrl,characterPicture}from'./profile-images.js?v=20261021-user1';
-import{canEditCharacter}from'./collaboration-view.js?v=20261016-master-preview1';
-import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,loadCharacter,json}from'./character-builder/state.js';
+import{canEditCharacter,canOpenCharacter,sharedCharacterById,collaborationAccessMode}from'./collaboration-view.js?v=20261016-master-preview1';
+import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,read,write,normalizeCharacter,json}from'./character-builder/state.js';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{characterGender,genderedCharacterTerm,genderedCharacterLineage,normalizeCharacterGender}from'./character-gender.js?v=20261019-gender1';
 import{loadSpells}from'./character-builder/spells.js';
@@ -9,6 +9,23 @@ import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js'
 
 const CONDITIONS=['Agarrado','Amedrontado','Atordoado','Caído','Cego','Enfeitiçado','Envenenado','Impedido','Incapacitado','Inconsciente','Invisível','Paralisado','Petrificado','Surdo'];
 
+/* A ficha também pode existir somente no cache da Campanha.
+   Nunca expõe personagens compartilhados sem acesso válido. */
+function availableCharacter(id){
+ if(!id)return null;
+ const local=read().find(row=>row.id===id)||null;
+ if(npcMode())return local;
+ if(collaborationAccessMode()==='guest'||!canOpenCharacter(id))return null;
+ const shared=sharedCharacterById(id);
+ return canEditCharacter(id)?(local||shared||null):(shared||local||null)
+}
+let waitingForCharacterId='';
+function retryWhenSharedCharacterArrives(){
+ if(!waitingForCharacterId||!availableCharacter(waitingForCharacterId))return;
+ waitingForCharacterId='';
+ startSheet()
+}
+window.addEventListener('hub-rpg:remote-updated',retryWhenSharedCharacterArrives);
 function ensureSheetState(){
  const c=state.c;
  c.sheet=c.sheet||{};
@@ -237,13 +254,13 @@ function renderSheet(d){
 }
 
 function refreshSheetFromRemote(){
- const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
+ const id=new URLSearchParams(location.search).get('id'),saved=availableCharacter(id);
  if(!saved){
   const status=$('save-status');if(status)status.textContent='Esta ficha foi removida.';
   return
  }
  if(String(saved.updatedAt||'')===String(state.c?.updatedAt||''))return;
- state.c=loadCharacter();
+ state.c=normalizeCharacter(saved);
  ensureSheetState();
  sanitizeSelections();
  const d=derive();
@@ -257,9 +274,18 @@ function refreshSheetFromRemote(){
 async function init(){
  if(npcMode()&&!npcMasterAuthorized()){location.replace('personagens.html');return}
  if(npcMode()){document.title='Ficha de NPC - Teias de Anansi';document.querySelector('body > p > a')?.setAttribute('href','npcs.html');document.querySelector('.eyebrow')?.replaceChildren(document.createTextNode('Ficha de NPC'));(()=>{const p=document.getElementById('profile-player')?.closest('label');if(p){p.hidden=true;p.style.display='none'}})()}
- const id=new URLSearchParams(location.search).get('id'),saved=id?read().find(x=>x.id===id):null;
- if(!saved){$('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada.</strong></div>';return}
- state.c=loadCharacter();
+ const id=new URLSearchParams(location.search).get('id'),saved=availableCharacter(id);
+ if(!saved){
+  if(!npcMode()&&collaborationAccessMode()!=='guest'&&id){
+   waitingForCharacterId=id;
+   const loading=$('loading');if(loading){loading.dataset.sheetPending='true';loading.innerHTML='<div class="status">Carregando a ficha compartilhada…</div>'}
+   return
+  }
+  $('loading').innerHTML='<div class="status warning"><strong>Ficha não encontrada ou sem acesso.</strong></div>';return
+ }
+ waitingForCharacterId='';
+ const loading=$('loading');if(loading)delete loading.dataset.sheetPending;
+ state.c=normalizeCharacter(saved);
  ensureSheetState();
 
  await loadCoreCatalogs();
@@ -289,4 +315,9 @@ async function init(){
  document.dispatchEvent(new CustomEvent('hub-rpg:sheet-spells-ready'))
 }
 
-init().catch(e=>{$('loading').innerHTML=`<div class="status warning"><strong>Falha ao abrir a ficha.</strong><br>${esc(e.message||e)}</div>`;console.error('[character-sheet]',e)});
+function startSheet(){init().catch(e=>{
+ const loading=$('loading');
+ if(loading){delete loading.dataset.sheetPending;loading.hidden=false;loading.innerHTML=`<div class="status warning"><strong>Falha ao abrir a ficha.</strong><br>${esc(e.message||e)}</div>`}
+ console.error('[character-sheet]',e)
+})}
+startSheet();
