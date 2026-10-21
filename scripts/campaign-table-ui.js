@@ -114,7 +114,7 @@ function rosterHtml(){return`<section id="jogadores" class="card roster-section"
 function rosterOpenButton(linked){
  const icon='<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="roster-action-label">Abrir</span>';
  return linked
-  ?`<a class="btn secondary roster-open-button" href="ficha-personagem.html?id=${encodeURIComponent(linked.id)}" title="Abrir ficha de ${esc(linked.name||'personagem')}" aria-label="Abrir ficha de ${esc(linked.name||'personagem')}">${icon}</a>`
+  ?`<a class="btn secondary roster-open-button" href="ficha-personagem.html?v=20261021-fichas-auth3&id=${encodeURIComponent(linked.id)}" title="Abrir ficha de ${esc(linked.name||'personagem')}" aria-label="Abrir ficha de ${esc(linked.name||'personagem')}">${icon}</a>`
   :`<button type="button" class="secondary roster-open-button" disabled title="Vincule um personagem para abrir a ficha" aria-label="Abrir ficha - personagem não vinculado">${icon}</button>`;
 }
 /* Atualiza apenas os controles afetados. A seção e seu foco nunca são

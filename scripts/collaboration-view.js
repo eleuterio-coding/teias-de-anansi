@@ -45,9 +45,17 @@ export function participantsForSession(campaignId,sessionId,storage=globalThis.l
 export function participantsForAdventure(campaignId,adventureId,storage=globalThis.localStorage){const aid=text(adventureId);return sharedParticipants(campaignId,storage).filter(p=>p.role==='dm'||arr(p.adventureIds).map(text).includes(aid))}
 export function sharedCharacters(storage=globalThis.localStorage){const map=new Map();for(const row of sharedCampaignRows(storage))for(const character of arr(row.characters))if(text(character?.id))map.set(text(character.id),character);return[...map.values()]}
 export function sharedCharacterById(characterId,storage=globalThis.localStorage){const id=text(characterId);return sharedCharacters(storage).find(character=>text(character?.id)===id)||null}
-export function assignedCharacterIds(storage=globalThis.localStorage){return[...new Set(sharedCampaignRows(storage).map(row=>text(row.membership.characterId)).filter(Boolean))]}
+/* A atribuição da própria ficha já está na sessão autenticada.
+ * Ela não pode depender do cache de Campanhas chegar primeiro. */
+export function assignedCharacterIds(storage=globalThis.localStorage){
+ const session=effectiveCollaborationSession(storage);if(!session||session.isMaster)return[];
+ return[...new Set(arr(session.memberships)
+  .filter(row=>row?.active!==false&&row?.role==='player'
+   &&username(row?.username||row?.displayName)===session.username)
+  .map(row=>text(row.characterId)).filter(Boolean))]
+}
 export function ownedCharacterIds(storage=globalThis.localStorage){const session=effectiveCollaborationSession(storage);if(!session||session.isMaster)return[];return[...new Set(localCharacters(storage).filter(character=>text(character?.ownerUid)===session.uid||username(character?.ownerUsername)===session.username).map(character=>text(character?.id)).filter(Boolean))]}
 export function editableCharacterIds(storage=globalThis.localStorage){return[...new Set([...assignedCharacterIds(storage),...ownedCharacterIds(storage)])]}
-export function visibleCharacterIds(storage=globalThis.localStorage){return[...new Set([...sharedCampaignRows(storage).flatMap(row=>arr(row.characterIds)).map(text).filter(Boolean),...sharedCharacters(storage).map(c=>text(c?.id)).filter(Boolean),...ownedCharacterIds(storage)])]}
+export function visibleCharacterIds(storage=globalThis.localStorage){return[...new Set([...sharedCampaignRows(storage).flatMap(row=>arr(row.characterIds)).map(text).filter(Boolean),...sharedCharacters(storage).map(c=>text(c?.id)).filter(Boolean),...assignedCharacterIds(storage),...ownedCharacterIds(storage)])]}
 export function canOpenCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;return visibleCharacterIds(storage).includes(text(characterId))}
 export function canEditCharacter(characterId,storage=globalThis.localStorage){const mode=collaborationAccessMode(storage);if(mode==='guest')return false;if(mode==='master')return true;if(masterPreviewMode(storage))return false;return editableCharacterIds(storage).includes(text(characterId))}

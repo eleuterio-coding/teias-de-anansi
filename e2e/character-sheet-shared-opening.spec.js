@@ -70,3 +70,64 @@ test('Mestre continua abrindo ficha local normalmente',async({page})=>{
  await expect(page.locator('#pc-name')).toHaveText('Personagem próprio');
  await expect(page.locator('#save-sheet')).toBeVisible();
 });
+
+test('Ficha do jogador atribuída pela sessão abre com dados locais sem cache da Campanha',async({page})=>{
+ await page.addInitScript(({membership,own})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-bruno',username:'bruno',isMaster:false,memberships:[membership]}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({schema:'hub-rpg/collaboration-cache/v1',campaigns:{}}));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([own]));
+ },{membership,own});
+ await page.goto('/lista-personagens.html');
+ const card=page.locator('.pc').filter({hasText:'Personagem próprio'});
+ await expect(card).toBeVisible();
+ await expect(card.getByRole('link',{name:'Abrir Ficha'})).toHaveAttribute('href',/ficha-personagem/);
+ await card.getByRole('link',{name:'Abrir Ficha'}).click();
+ await expect(page).toHaveURL(/ficha-personagem\.html.*id=char-own/);
+ await expect(page.locator('#sheet')).toBeVisible({timeout:30000});
+ await expect(page.locator('#pc-name')).toHaveText('Personagem próprio');
+ await expect(page.locator('#save-sheet')).toBeVisible();
+});
+test('A atribuição não concede acesso a outros personagens quando o cache está ausente',async({page})=>{
+ await page.addInitScript(({membership,other})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-bruno',username:'bruno',isMaster:false,memberships:[membership]}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({schema:'hub-rpg/collaboration-cache/v1',campaigns:{}}));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([other]));
+ },{membership,other});
+ await page.goto('/lista-personagens.html');
+ await expect(page.locator('.pc')).toHaveCount(0);
+ await page.goto('/ficha-personagem.html?id=char-other');
+ await expect(page.locator('#sheet')).toBeHidden();
+ await expect(page.locator('#save-sheet')).not.toBeVisible();
+});
+
+test('Quando a autenticação expira, retorno ao login preserva o endereço da ficha',async({page})=>{
+ const code=`
+ export async function createFirebaseCollaborationProvider(){
+  return{configured:true,onAuthChanged(callback){queueMicrotask(()=>callback(null));return()=>{}}}
+ }
+ `;
+ await page.route('**/scripts/firebase-collaboration-provider.js*',route=>route.fulfill({status:200,contentType:'text/javascript',body:code}));
+ await page.addInitScript(pc=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([pc]));
+ },own);
+ await page.goto('/ficha-personagem.html?id=char-own',{waitUntil:'domcontentloaded'});
+ await expect(page).toHaveURL(/usuarios\.html\?next=ficha-personagem\.html/, {timeout:20000});
+ const next=new URL(page.url()).searchParams.get('next');
+ expect(next).toBe('ficha-personagem.html?id=char-own');
+});
+
+test('Link Minha ficha na Campanha abre a versão atual da ficha',async({page})=>{
+ await page.addInitScript(({membership,cache,own})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-bruno',username:'bruno',isMaster:false,memberships:[membership]}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify(cache));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([own]));
+ },{membership,cache,own});
+ await page.goto('/mesa.html?id=campaign-sheet');
+ const link=page.getByRole('link',{name:'Minha ficha'});
+ await expect(link).toHaveAttribute('href',/ficha-personagem\.html\?v=20261021-fichas-auth3&id=char-own/);
+ await link.click();
+ await expect(page).toHaveURL(/ficha-personagem\.html/);
+ await expect(page.locator('#sheet')).toBeVisible({timeout:30000});
+ await expect(page.locator('#pc-name')).toHaveText('Personagem próprio');
+});

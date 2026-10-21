@@ -1,6 +1,6 @@
 import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
 import{pullCollaborations,syncOwnCharacters}from'./collaboration-sync.js?v=20260925-media1';
-import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20260917-master-full-control1';
+import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
@@ -107,6 +107,15 @@ async function pushChanges(){
  }
 }
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
+/* Sessão Firebase expirada: retornar ao login preservando a ficha pretendida.
+ * Antes havia uma chamada a loginUrl() sem definição, gerando ReferenceError. */
+function loginUrl(){
+ const current=location.pathname.split('/').pop()||'index.html';
+ if(current==='usuarios.html')return null;
+ const login=new URL('usuarios.html',location.href);
+ login.searchParams.set('next',current+(location.search||'')+(location.hash||''));
+ return login.href
+}
 async function bindAccount(next){
  if(!next){account=null;unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
  account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>console.warn('[Hub realtime] listener:',error));await applyRemote()

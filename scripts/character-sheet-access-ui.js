@@ -1,4 +1,4 @@
-import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20261016-master-preview1';
+import{collaborationAccessMode,canOpenCharacter,canEditCharacter}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 
 const id=new URLSearchParams(location.search).get('id')||'';
 let accessMode='guest',guest=true,canOpen=false,canEdit=false;
