@@ -1825,3 +1825,9 @@ body:not(.hub-shell-enabled) #campaign-list .campaign-card-details h2{padding-ri
 #table-root .campaign-player-story-status{color:#bad8f5;font-weight:650;font-size:.76rem}
 #table-root .campaign-player-story-information p{margin:0;color:#e2ebf5;font-size:.79rem;line-height:1.35;max-height:3.8em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 #table-root .campaign-player-story-content{align-items:flex-end}
+
+/* A imagem do usuário é um segundo acionador do seletor de arquivos. */
+.hub-user-avatar-preview[role="button"]{cursor:pointer;transition:border-color .15s ease,box-shadow .15s ease}
+.hub-user-avatar-preview[role="button"]:hover{border-color:var(--hub-accent,#2f9cff)}
+.hub-user-avatar-preview[role="button"]:focus-visible{outline:3px solid var(--hub-accent-2,#67b8ff);outline-offset:3px}
+.hub-user-avatar-preview[aria-disabled="true"]{cursor:default;opacity:.65}
