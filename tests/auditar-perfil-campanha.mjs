@@ -1,5 +1,6 @@
 import assert from'node:assert/strict';
 import{findCurrentCampaignSession,findUpcomingCampaignSession,findPreviousCampaignSession,renderNextCampaignSession}from'../scripts/campaign-next-session-ui.js';
+import{recentCampaignSessions}from'../scripts/campaign-recent-items.js';
 import{campaignSharedProjection,participantSharedProjection}from'../scripts/collaboration-model.js';
 import{playerTerm,characterPicture,validPortrait}from'../scripts/profile-images.js';
 
@@ -18,6 +19,8 @@ const campaign={
   {id:'c',number:2,order:2,status:'current',title:'A atual'}
  ]
 };
+assert.deepEqual(recentCampaignSessions(campaign.sessions).map(s=>s.id),['c','n','p']);
+assert.deepEqual(recentCampaignSessions(campaign.sessions,{activeAdventureIds:new Set()}).map(s=>s.id),['c']);
 assert.equal(findCurrentCampaignSession(campaign)?.id,'c');
 assert.equal(findUpcomingCampaignSession(campaign)?.id,'n');
 assert.equal(findPreviousCampaignSession(campaign)?.id,'p');
