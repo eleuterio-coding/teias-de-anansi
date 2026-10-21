@@ -1,3 +1,4 @@
+import{playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const lower=value=>String(value||'').trim().toLowerCase();
@@ -31,12 +32,12 @@ export function adventureRosterHtml(adventure,campaign,characters=[]){
   .sort((a,b)=>sortText(a.name||a.username,b.name||b.username))
   .map(m=>`<option value="${esc(lower(m.username||m.name))}">${esc(m.name||m.username)}</option>`).join('');
  const list=rows.map((row,index)=>{
-  const member=byUsername.get(row.username),name=member?.name||member?.username||row.username,initial=Array.from(name)[0]?.toLocaleUpperCase('pt-BR')||'J',linked=charMap.get(row.characterId);
+  const member=byUsername.get(row.username),name=member?.name||member?.username||row.username,linked=charMap.get(row.characterId);
   const open=linked?`<a class="btn secondary roster-open-button" href="ficha-personagem.html?id=${encodeURIComponent(linked.id)}" title="Abrir ficha de ${esc(linked.name||'personagem')}" aria-label="Abrir ficha de ${esc(linked.name||'personagem')}">${openIcon}</a>`:`<button type="button" class="secondary roster-open-button" disabled title="Vincule um personagem para abrir a ficha">${openIcon}</button>`;
   return`<article class="member-row roster-player" data-member-row="${esc(row.username)}" draggable="true" tabindex="0" aria-label="${esc(name)}. Arraste para reorganizar ou use as setas.">
    <button type="button" class="roster-grip" aria-label="Reordenar ${esc(name)}" title="Reordenar jogador">${grip}</button>
-   <div class="roster-player-identity"><span class="roster-avatar" aria-hidden="true">${esc(initial)}</span><div class="roster-player-display"><span class="roster-player-label">Jogador</span><span class="roster-player-name">${esc(name)}</span></div></div>
-   <div class="roster-player-character"><label>Personagem<select data-adventure-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(row.characterId,row.username)}</select></label></div>
+   <div class="roster-player-identity">${playerAvatarHtml(row.username||name,campaign?.userProfiles||[])}<div class="roster-player-display"><span class="roster-player-label">${playerTerm(row.username||name)}</span><span class="roster-player-name">${esc(name)}</span></div></div>
+   <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${characterAvatarHtml(linked)}<select data-adventure-member-character aria-label="Personagem de ${esc(name)}">${characterOptions(row.characterId,row.username)}</select></div></label></div>
    <div class="row-actions roster-player-actions">
     <button type="button" class="secondary roster-move-button" data-roster-move="up" aria-label="Mover ${esc(name)} para cima" ${index===0?'disabled':''}>↑</button>
     <button type="button" class="secondary roster-move-button" data-roster-move="down" aria-label="Mover ${esc(name)} para baixo" ${index===rows.length-1?'disabled':''}>↓</button>
