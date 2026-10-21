@@ -15,7 +15,7 @@ function feedback(message,ok=true){const box=$('collab-feedback');box.hidden=fal
 function localCampaignOptions(){const campaigns=readCampaigns();return campaigns.length?campaigns.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''):'<option value="">Nenhuma Campanha local</option>'}
 function roleName(role,name=''){return role==='dm'?'Mestre':String(name||'').toLowerCase()==='fernanda'?'Jogadora':'Jogador'}
 function playerSpec(name){return(provider?.playerAccounts?.()||[]).find(row=>row.username===username(name))||null}
-function playerName(name){return playerSpec(name)?.displayName||name}
+function playerName(name){return knownUsers.find(row=>username(row.username)===username(name))?.displayName||playerSpec(name)?.displayName||name}
 function currentCampaign(){return readCampaigns().find(c=>c.id===activeCampaignId)||null}
 function currentPlayerMembership(campaignId=activeCampaignId){return(campaignMemberships.get(campaignId)||[]).find(m=>username(m.username)===selectedPlayer&&m.role==='player'&&m.active!==false)||null}
 function selectedValues(id){const root=$(id);return root?[...root.querySelectorAll('input[type="checkbox"]:checked')].map(input=>input.value).filter(Boolean):[]}
