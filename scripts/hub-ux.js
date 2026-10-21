@@ -1,5 +1,5 @@
 import{readSettings,applyUiPreferences}from'./settings-state.js?v=20261016-layout1';
-import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261021-player-self1';
+import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261021-remove-layout1';
 
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
