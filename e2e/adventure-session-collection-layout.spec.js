@@ -95,9 +95,10 @@ test('Campanhas, Aventuras e Sessões usam a mesma geometria e os mesmos control
   });
   result.push(css);
  }
- expect(result[0].columns).toBe(2);
- expect(result[1].columns).toBe(2);
- expect(result[2].columns).toBe(2);
+ const expectedColumns=(page.viewportSize()?.width||1280)>760?2:1;
+ expect(result[0].columns).toBe(expectedColumns);
+ expect(result[1].columns).toBe(expectedColumns);
+ expect(result[2].columns).toBe(expectedColumns);
  expect(result[1]).toEqual(result[0]);
  expect(result[2]).toEqual(result[0]);
 });
