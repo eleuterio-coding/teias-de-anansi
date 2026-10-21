@@ -56,14 +56,53 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async signInUsername({username,password}={}){const canonical=canonicalUsername(username),spec=accountSpec(canonical);if(!spec)throw new Error('Selecione uma conta válida.');if(!text(password))throw new Error('Informe a senha.');let result;try{result=await lib.auth.signInWithEmailAndPassword(auth,technicalEmail(canonical),password)}catch(error){if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'].includes(error?.code))throw new Error('Usuário ou senha incorretos.');if(error?.code==='auth/user-disabled')throw new Error('Este login está desativado.');if(error?.code==='auth/too-many-requests')throw new Error('Muitas tentativas. Tente novamente mais tarde.');throw new Error('Não foi possível entrar agora. Tente novamente.')}try{return await provider.ensureProfile(result.user)}catch(error){await lib.auth.signOut(auth).catch(()=>{});if(['permission-denied','firestore/permission-denied'].includes(error?.code))throw new Error('O login existe, mas o acesso online ainda não está atualizado.');throw error}},
   async createPlayerLogin({username,password}={}){const current=auth.currentUser?accountFor(auth.currentUser):null;if(!current||current.username!==ownerUsername)throw new Error('Somente Rafael pode criar logins de jogadores.');const canonical=canonicalUsername(username),spec=playerAccounts.find(row=>row.username===canonical);if(!spec)throw new Error('Selecione Bruno, Gustavo, Léo ou Fernanda.');if(text(password).length<6)throw new Error('A senha precisa ter pelo menos 6 caracteres.');const secondaryName=`player-provision-${Date.now()}-${Math.random().toString(36).slice(2)}`;let secondaryApp=null;try{secondaryApp=lib.app.initializeApp(firebaseOptions,secondaryName);const secondaryAuth=lib.auth.getAuth(secondaryApp),secondaryDb=lib.firestore.getFirestore(secondaryApp);const credential=await lib.auth.createUserWithEmailAndPassword(secondaryAuth,technicalEmail(canonical),password);await f.setDoc(f.doc(secondaryDb,'users',credential.user.uid),{uid:credential.user.uid,username:spec.username,displayName:spec.displayName,role:'player',updatedAt:f.serverTimestamp()},{merge:true});await lib.auth.signOut(secondaryAuth);return{uid:credential.user.uid,username:spec.username,displayName:spec.displayName}}catch(error){if(error?.code==='auth/email-already-in-use')throw new Error(`${spec.displayName} já possui login.`);if(error?.code==='auth/weak-password')throw new Error('Escolha uma senha com pelo menos 6 caracteres.');throw new Error('Não foi possível criar este login agora.')}finally{if(secondaryApp)await lib.app.deleteApp(secondaryApp).catch(()=>{})}},
   async signOut(){await lib.auth.signOut(auth)},
-  async ensureProfile(firebaseUser=auth.currentUser){const u=accountFor(firebaseUser);await f.setDoc(f.doc(db,'users',u.uid),{uid:u.uid,username:u.username,displayName:u.displayName,role:u.username===ownerUsername?'dm':'player',updatedAt:f.serverTimestamp()},{merge:true});return u},
-  async getMyProfile(){if(typeof auth.authStateReady==='function')await auth.authStateReady();const u=auth.currentUser;if(!u)throw new Error('Faça login.');const snap=await f.getDoc(f.doc(db,'users',u.uid));return{...accountFor(u),avatarDataUrl:snap.exists()?String(snap.data()?.avatarDataUrl||''):''}},
-  async saveMyAvatar(avatarDataUrl=''){if(typeof auth.authStateReady==='function')await auth.authStateReady();const u=auth.currentUser;if(!u)throw new Error('Faça login.');const safe=avatarDataUrl===''?'':/^data:image\/(?:webp|jpeg|png);base64,[a-zA-Z0-9+/=]+$/.test(avatarDataUrl)&&avatarDataUrl.length<=125000?avatarDataUrl:null;
-   if(safe===null)throw new Error('Imagem de perfil inválida.');
-   await f.setDoc(f.doc(db,'users',u.uid),{avatarDataUrl:safe,updatedAt:f.serverTimestamp()},{merge:true});
-   return{...accountFor(u),avatarDataUrl:safe}
+  async ensureProfile(firebaseUser=auth.currentUser){
+   const u=accountFor(firebaseUser),ref=f.doc(db,'users',u.uid),snap=await f.getDoc(ref),saved=snap.exists()?snap.data():{},displayName=text(saved.displayName)||u.displayName;
+   // O login não pode apagar um nome que o Mestre já personalizou.
+   const changes={uid:u.uid,username:u.username,role:u.username===ownerUsername?'dm':'player',updatedAt:f.serverTimestamp()};
+   if(!text(saved.displayName))changes.displayName=displayName;
+   await f.setDoc(ref,changes,{merge:true});
+   return{...u,displayName}
   },
-  async listUsers(){if(typeof auth.authStateReady==='function')await auth.authStateReady();if(!auth.currentUser)throw new Error('Faça login.');const snap=await f.getDocs(f.collection(db,'users')),seen=new Map();for(const d of snap.docs){const data=d.data()||{},name=canonicalUsername(data.username),row={uid:d.id,username:name||'usuario',displayName:text(data.displayName)||displayNameFor(name),avatarDataUrl:String(data.avatarDataUrl||'')};seen.set(row.username,row)}return[...seen.values()].sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR'))},
+  async getMyProfile(){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   const u=auth.currentUser;if(!u)throw new Error('Faça login.');
+   const snap=await f.getDoc(f.doc(db,'users',u.uid)),saved=snap.exists()?snap.data():{};
+   return{...accountFor(u),displayName:text(saved.displayName)||accountFor(u).displayName,avatarDataUrl:String(saved.avatarDataUrl||'')}
+  },
+  async saveUserProfile({uid,displayName,avatarDataUrl}={}){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   const actor=auth.currentUser;if(!actor)throw new Error('Faça login.');
+   const targetUid=text(uid)||actor.uid,isMaster=accountFor(actor).username===ownerUsername;
+   if(targetUid!==actor.uid&&!isMaster)throw new Error('Somente o Mestre pode editar outros usuários.');
+   const ref=f.doc(db,'users',targetUid),snap=await f.getDoc(ref);
+   if(!snap.exists())throw new Error('Usuário não encontrado no Hub.');
+   const saved=snap.data(),patch={};
+   if(displayName!==undefined){
+    if(!isMaster)throw new Error('Somente o Mestre pode alterar nomes de usuários.');
+    const name=text(displayName);
+    if(name.length<1||name.length>80||/[\u0000-\u001f\u007f]/.test(name))throw new Error('Informe um nome de 1 a 80 caracteres.');
+    patch.displayName=name;
+   }
+   if(avatarDataUrl!==undefined){
+    const safe=avatarDataUrl===''?'':typeof avatarDataUrl==='string'&&/^data:image\/(?:webp|jpeg|png);base64,[a-zA-Z0-9+/=]+$/.test(avatarDataUrl)&&avatarDataUrl.length<=125000?avatarDataUrl:null;
+    if(safe===null)throw new Error('Imagem de perfil inválida.');
+    patch.avatarDataUrl=safe;
+   }
+   if(!Object.keys(patch).length)throw new Error('Nenhuma alteração informada.');
+   await f.setDoc(ref,{...patch,updatedAt:f.serverTimestamp()},{merge:true});
+   return{uid:targetUid,username:canonicalUsername(saved.username),role:saved.role,displayName:patch.displayName??text(saved.displayName),avatarDataUrl:patch.avatarDataUrl??String(saved.avatarDataUrl||'')}
+  },
+  async saveMyAvatar(avatarDataUrl=''){
+   const actor=auth.currentUser;if(!actor)throw new Error('Faça login.');
+   return provider.saveUserProfile({uid:actor.uid,avatarDataUrl});
+  },
+  async listUsers(){
+   if(typeof auth.authStateReady==='function')await auth.authStateReady();
+   if(!auth.currentUser)throw new Error('Faça login.');
+   const snap=await f.getDocs(f.collection(db,'users'));
+   return snap.docs.map(d=>{const data=d.data()||{},name=canonicalUsername(data.username);return{uid:d.id,username:name||'usuario',role:data.role==='dm'?'dm':'player',displayName:text(data.displayName)||displayNameFor(name),avatarDataUrl:String(data.avatarDataUrl||'')}}).sort((a,b)=>a.displayName.localeCompare(b.displayName,'pt-BR'));
+  },
   async listCampaignMemberships(campaignId){const u=auth.currentUser,cid=text(campaignId);if(!u||!cid)return[];if(!await canManageCampaign(cid,u.uid))throw new Error('Somente Rafael pode administrar os jogadores desta Campanha.');return campaignMemberships(cid)},
   async listVisibleCampaignMemberships(campaignId){const u=auth.currentUser,cid=text(campaignId);if(!u||!cid)return[];if(!await canReadCampaign(cid,u))throw new Error('Esta conta não participa desta Campanha.');return campaignMemberships(cid)},
   async upsertMembership({campaignId,username,characterId=null,sessionIds=[],adventureIds=[]}={}){const current=auth.currentUser;if(!current)throw new Error('Faça login.');const cid=text(campaignId),playerUsername=canonicalUsername(username),email=technicalEmail(playerUsername),linkedCharacter=text(characterId)||null;if(!cid)throw new Error('Selecione uma Campanha.');if(!await canManageCampaign(cid,current.uid))throw new Error('Somente Rafael pode definir os acessos dos jogadores.');if(playerUsername===ownerUsername)throw new Error('Rafael já é o Mestre da Campanha.');const membership={id:membershipId(cid,email),campaignId:cid,uid:'',username:playerUsername,email,role:'player',characterId:linkedCharacter,sessionIds:unique(sessionIds),adventureIds:unique(adventureIds),displayName:displayNameFor(playerUsername),active:true,updatedAt:now()};await f.setDoc(membershipRef(cid,email),membership,{merge:false});return normalizeMember(membership)},
