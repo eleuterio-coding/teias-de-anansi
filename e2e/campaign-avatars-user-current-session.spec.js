@@ -89,7 +89,7 @@ test('Menu Usuário imediatamente acima de Configurações',async({page})=>{
  await expect(nav).toHaveCount(2);
  await expect(nav.first()).toContainText('Usuário');
  await expect(nav.nth(1)).toContainText('Configurações');
- await expect(page.getByRole('heading',{name:'Usuário'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Usuários'})).toBeVisible();
 });
 test('Cards continuam empilhados no celular',async({page})=>{
  await page.setViewportSize({width:390,height:844});
