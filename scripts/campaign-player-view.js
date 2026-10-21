@@ -36,6 +36,20 @@ function backgroundCard(item,kind,campaignId){
 function stories(id,title,rows,kind,campaignId){
  return section(id,title,`<div class="campaign-player-story-grid">${rows.length?rows.map(item=>backgroundCard(item,kind,campaignId)).join(''):empty(kind==='adventure'?'Nenhuma aventura disponível.':'Nenhuma sessão disponível.')}</div>`,rows.length);
 }
+/* Mantém a prioridade oficial Atual → Próxima → Concluída.
+   Inclui sessões Planejadas quando não existem três prioritárias,
+   para não ocultar sessões disponíveis ao jogador. */
+function playerCampaignSessions(items){
+ const all=arr(items),priority=recentCampaignSessions(all,{limit:Infinity});
+ const picked=new Set(priority.map(item=>item.id));
+ const remaining=all.filter(item=>item&&!picked.has(item.id)).sort((a,b)=>
+  (Number(b.order??b.number)||0)-(Number(a.order??a.number)||0)
+  ||(Number(b.number)||0)-(Number(a.number)||0)
+  ||String(b.date||'').localeCompare(String(a.date||''))
+  ||String(b.id||'').localeCompare(String(a.id||''))
+ );
+ return [...priority,...remaining].slice(0,3)
+}
 function sessionStories(rows,campaignId){
  const featured=rows.length&&rows[0].status==='current';
  const cards=rows.map((item,index)=>{
@@ -90,7 +104,7 @@ function timeline(c,mode='list'){
 }
 export function renderPlayerCampaign(row){
  const root=document.getElementById('table-root');if(!root)return;
- const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=recentCampaignSessions(c.sessions,{limit:3}),characters=arr(row.characters);
+ const c=row.campaign,m=row.membership||{},profiles=arr(row.participants),adventures=sortCampaignAdventures(arr(row.adventures),{limit:5}),sessions=playerCampaignSessions(c.sessions),characters=arr(row.characters);
  rememberAvatars(profiles);
  document.title=`${c.name} - Campanha - Teias de Anansi`;
  root.innerHTML=`<div class="campaign-player-page"><div class="top campaign-player-top"><div><h1>${esc(c.name)}</h1></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(c.id)}">Aventuras</a><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(c.id)}">Sessões</a>${m.characterId?`<a class="btn" href="ficha-personagem.html?id=${encodeURIComponent(m.characterId)}">Minha ficha</a>`:''}</div></div>
