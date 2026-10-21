@@ -26,6 +26,8 @@ test('Mestre não mostra usuário de teste armazenado em campanha nem ficha',asy
 });
 test('visualização salva de usuário órfão retorna automaticamente ao Mestre',async({page})=>{
  await page.addInitScript(ghost=>{
+  if(sessionStorage.getItem('e2e-preview-seeded'))return;
+  sessionStorage.setItem('e2e-preview-seeded','1');
   localStorage.setItem('hub-rpg:master-preview:v1',JSON.stringify({uid:'ghost',username:ghost,displayName:ghost,memberships:[]}));
   localStorage.setItem('hub-rpg:master-preview-cache:v1',JSON.stringify({campaigns:{},playerCharacters:{}}));
  },GHOST);
