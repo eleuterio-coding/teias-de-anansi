@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/character-sheet.js'
+      - 'scripts/collaboration-view.js'
       - 'scripts/character-sheet-access-ui.js'
       - 'scripts/character-builder/state.js'
       - 'e2e/character-sheet-shared-opening.spec.js'
@@ -22,6 +23,7 @@ jobs:
           node-version: '22'
       - name: Sintaxe e normalização dos personagens
         run: |
+          node --check scripts/collaboration-view.js
           node --check scripts/character-sheet.js
           node --check scripts/character-sheet-access-ui.js
           node --check scripts/character-builder/state.js
