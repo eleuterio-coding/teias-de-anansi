@@ -16,9 +16,9 @@ async function inspectAlignment(page,{expectLabels}){
  const user=page.locator('[data-hub-preview-user]');
  const layout=page.locator('[data-hub-layout-select]');
  await expect(user).toBeVisible();
- await expect(layout).toBeVisible();
+ await expect(layout).toHaveCount(0);
  await expect(user).toHaveValue('');
- await expect(layout).toHaveValue('default');
+
  const actual=await root.evaluate(root=>{
   const rect=node=>{const r=node.getBoundingClientRect();return{top:r.top,bottom:r.bottom,center:r.top+r.height/2,height:r.height,width:r.width}};
   const visible=node=>{const s=getComputedStyle(node);return s.display!=='none'&&s.visibility!=='hidden'};
@@ -34,23 +34,23 @@ async function inspectAlignment(page,{expectLabels}){
    scrollWidth:document.documentElement.scrollWidth
   }
  });
- expect(actual.selectors).toHaveLength(2);
- expect(Math.abs(actual.selectors[0].center-actual.selectors[1].center)).toBeLessThanOrEqual(1);
- expect(Math.abs(actual.selectors[0].top-actual.selectors[1].top)).toBeLessThanOrEqual(1);
+ expect(actual.selectors).toHaveLength(1);
+
+
  for(const r of actual.controls)expect(Math.abs(r.center-actual.selectors[0].center)).toBeLessThanOrEqual(1);
  for(const r of actual.selectors)expect(r.height).toBeGreaterThanOrEqual(35);
  if(expectLabels){
   expect(actual.titleVisible).toBe(true);
-  expect(actual.labelsVisible).toEqual([true,true]);
+  expect(actual.labelsVisible).toEqual([true]);
   expect(Math.abs(actual.title.center-actual.selectors[0].center)).toBeLessThanOrEqual(1);
   for(const r of actual.labels)expect(Math.abs(r.center-actual.selectors[0].center)).toBeLessThanOrEqual(1);
  }else{
   expect(actual.titleVisible).toBe(false);
-  expect(actual.labelsVisible).toEqual([false,false]);
+  expect(actual.labelsVisible).toEqual([false]);
  }
  expect(actual.scrollWidth).toBeLessThanOrEqual(actual.viewport+2);
 }
-test('Mestre, Usuário, Layout e seletores ficam alinhados no topo',async({page})=>{
+test('Mestre e seletor de Usuário ficam alinhados no topo sem Layout',async({page})=>{
  await page.goto('/painel.html');
  await inspectAlignment(page,{expectLabels:await page.evaluate(()=>document.documentElement.clientWidth>760)});
 });
@@ -61,10 +61,10 @@ test('alinhamento persiste na Campanha e após mudar largura',async({page})=>{
   await inspectAlignment(page,{expectLabels:width>760});
  }
 });
-test('dropdowns do Mestre mantêm as opções e a interação',async({page})=>{
+test('seletor de Usuário permanece acessível sem Layout',async({page})=>{
  await page.goto('/painel.html');
  await expect(page.locator('[data-hub-preview-user] option[value=""]')).toHaveText('Mestre');
- await expect(page.locator('[data-hub-layout-select] option[value="default"]')).toHaveText('Padrão');
- await page.locator('[data-hub-layout-select]').selectOption('default');
- await expect(page.locator('[data-hub-layout-select]')).toHaveValue('default');
+ await expect(page.locator('[data-hub-layout-select]')).toHaveCount(0);
+
+
 });
