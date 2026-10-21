@@ -50,8 +50,11 @@ test('Sessões usa a mesma estrutura de cards de Campanhas, inclusive status e b
  await page.goto('/sessoes.html');
  await expect(page.locator('.hub-collection-top h1')).toHaveText('Sessões');
  await expect(page.locator('#session-list-section .campaign-list-heading h2')).toHaveText('Lista de Sessões');
- const grid=page.locator('#sessions-list .campaign-list-grid');
- await expect(grid.locator('.campaign-card')).toHaveCount(2);
+ const group=page.locator('#sessions-list .session-adventure-group');
+ await expect(group).toHaveCount(1);
+ await expect(group.locator('[data-session-list-id]')).toHaveCount(1);
+ await expect(group.locator('h3 a')).toContainText('As Rainhas');
+ await expect(page.locator('#sessions-list #open-session-create')).toHaveCount(1);
  const item=page.locator('[data-session-list-id="collection-s1"]');
  await expect(item).toHaveClass(/campaign-card/);
  await expect(item.locator('.campaign-card-status')).toContainText('Atual');
@@ -77,7 +80,7 @@ test('Sessões usa a mesma estrutura de cards de Campanhas, inclusive status e b
  await expect(page.locator('#sessions-list')).not.toHaveClass(/hub-collection-grid/);
  await expect(page.locator('#session-list-section .campaign-list-heading')).toBeHidden();
 });
-test('Campanhas, Aventuras e Sessões preservam geometria e controles dos cards, mas Aventuras tem faixa própria',async({page})=>{
+test('Campanhas, Aventuras e Sessões preservam os cards e usam agrupamento para Aventuras e Sessões',async({page})=>{
  const result=[];
  for(const [url,selector] of [
   ['/campanhas.html','#campaign-list [data-campaign-card]'],
@@ -104,6 +107,9 @@ test('Campanhas, Aventuras e Sessões preservam geometria e controles dos cards,
  await page.goto('/aventuras.html');
  await expect(page.locator('.adventure-campaign-track')).toHaveCount(1);
  await expect(page.locator('#adventure-list>.campaign-list-grid')).toHaveCount(0);
+ await page.goto('/sessoes.html');
+ await expect(page.locator('.session-adventure-track')).toHaveCount(1);
+ await expect(page.locator('#sessions-list>.campaign-list-grid')).toHaveCount(0);
 });
 
 test('Nenhuma das duas páginas transforma conteúdo em link para verbetes',async({page})=>{
@@ -161,13 +167,8 @@ test('Nova Aventura replica o tile Nova campanha e Nova Sessão preserva seu til
   expect(visual.plusBorder).toBe('solid');
   expect(visual.plus.width).toBeCloseTo(68,0);
   expect(visual.plus.height).toBeCloseTo(68,0);
-  if(url.includes('sessoes')){
-   expect(Math.abs(visual.tile.height-visual.card.height)).toBeLessThanOrEqual(2);
-   expect(Math.abs(visual.tile.width-visual.card.width)).toBeLessThanOrEqual(2);
-  }else{
-   expect(visual.tile.width).toBeGreaterThan(200);
-   expect(visual.tile.height).toBeGreaterThanOrEqual(290);
-  }
+  expect(visual.tile.width).toBeGreaterThan(200);
+  expect(visual.tile.height).toBeGreaterThanOrEqual(290);
   expect(Math.abs((visual.plus.left+visual.plus.right)/2-(visual.tile.left+visual.tile.right)/2)).toBeLessThanOrEqual(2);
   expect(visual.plus.bottom).toBeLessThan(visual.label.top);
  }
