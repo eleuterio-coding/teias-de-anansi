@@ -325,6 +325,7 @@ function render(){
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
  const availableAdventures=restricted?sharedAdventures():adventures;
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
+ bindSessionAdventureScroll(null);
  box?.classList.remove('hub-collection-grid');
  if(!restricted)syncCreationOptions();
  if(sessionId){
