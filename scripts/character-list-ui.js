@@ -1,6 +1,6 @@
 import{read,write}from'./character-builder/state.js';
 import{characterIdentity,characterGender,genderedCharacterTerm}from'./character-gender.js?v=20261019-gender1';
-import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,playerCharacterInfo,masterPreviewMode}from'./collaboration-view.js?v=20261016-master-preview1';
+import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,playerCharacterInfo,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-master-delete1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function access(){const accessMode=collaborationAccessMode();return{mode:accessMode,restricted:accessMode==='player',guest:accessMode==='guest',preview:masterPreviewMode(),owned:new Set(editableCharacterIds()),visible:new Set(visibleCharacterIds())}}
