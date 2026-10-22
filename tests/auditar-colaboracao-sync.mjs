@@ -84,6 +84,8 @@ assert.ok(provider.includes('async reconcileRosterMemberships(campaign,adventure
 assert.ok(provider.includes("if(existing.some(m=>m.role==='player'&&m.username===playerUsername))continue"),'Não alterar permissões já configuradas na tela de acessos.');
 assert.ok(provider.includes('await provider.reconcileRosterMemberships(campaign,campaignAdventures)'),'Publicação de Campanha deve materializar permissões do elenco.');
 assert.ok(sync.includes('await provider.reconcileRosterMemberships(remoteCampaign,remoteAdventures)'),'Campanhas remotas antigas precisam recuperar memberships ausentes.');
+assert.ok(provider.includes("f.where('campaignId','==',cid)),snapshot=await f.getDocs(query)"),'Recuperação deve inspecionar inclusive memberships desativadas.');
+assert.ok(ops.includes('revokedAt:new Date().toISOString()')&&ops.includes('active:false'),'Revogações precisam permanecer registradas para impedir reativação automática.');
 assert.ok(ui.includes('publishLocalCampaign'),'Acesso explícito por seleção do Mestre deve continuar.');
 assert.ok(realtime.includes('publishMissingMasterCampaigns')&&realtime.includes('emitRemoteStatus'),'Bootstrap deve reparar publicações locais e reportar falhas.');
 
