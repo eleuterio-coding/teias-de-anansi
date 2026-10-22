@@ -285,18 +285,39 @@ function updateSessionCardStatus(session,status){
  reload();render();return true;
 }
 function sessionCard(s,restricted=false){
- const adv=adventureById(s.adventureId),participants=participantNames(s),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'session-cover',alt:`Capa de ${s.title}`});
- return `<article id="session-${esc(s.id)}" class="session-card ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
- ${restricted?cover:''}<div class="session-head"><div>
-  <h3>${esc(numberedSessionTitle(s))}</h3>
-  <div><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${adv?esc(numberedAdventureTitle(adv)):'Sem aventura'}</span></div>
- </div><div class="row-actions">${s.campaignId?`<a class="btn secondary" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn secondary" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir aventura</a>`:''}${restricted?'':`<button type="button" class="danger session-delete-button" data-remove-session aria-label="Excluir sessão ${esc(s.title)}" title="Excluir sessão">×</button>`}</div></div>
+ const adv=(restricted?sharedAdventures():adventures).find(a=>a.id===s.adventureId)||null, published=restricted?sharedCampaignRows().flatMap(row=>row.characters||[]):characters,participants=(s.participantCharacterIds||[]).map(id=>published.find(c=>c.id===id)?.name).filter(Boolean),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-product-hero-media',alt:`Capa de ${s.title}`});
+ const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
+ return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
+ <section class="campaign-product-hero session-product-hero">
+ ${cover}
+ <div class="campaign-product-actions">${s.campaignId?`<a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir Aventura</a>`:''}</div>
+ <div class="campaign-product-hero-content">
+ <div class="campaign-product-kicker">Sessão ${esc(campaignName)}${adv?' · '+esc(numberedAdventureTitle(adv)):''}</div>
+ <div class="campaign-product-title-row"><h1>${esc(numberedSessionTitle(s))}</h1><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span></div>
+ <p class="campaign-product-description">${esc(s.summary||s.objective||'Organize participantes, cenas e acontecimentos desta sessão.')}</p>
+ <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span></div>
+ </div></section>
+ <div class="campaign-product-summary">
+ <div class="metric"><span>Status</span><strong>${esc(statusLabel(s.status))}</strong></div>
+ <div class="metric"><span>Campanha</span><strong>${esc(campaignName)}</strong></div>
+ <div class="metric"><span>Aventura</span><strong>${adv?esc(numberedAdventureTitle(adv)):'Sem aventura'}</strong></div>
+ <div class="metric"><span>Personagens</span><strong>${participants.length}</strong></div>
+ <div class="metric"><span>Encontros</span><strong>${(s.encounters||[]).length}</strong></div>
+ </div>
+ <nav class="section-nav hub-detail-nav" aria-label="Seções da Sessão">
+ <a href="#visao-geral">Sessão</a><a href="#participantes">Participantes</a>
+ ${restricted?'':`<a href="#cenas">Cenas</a><a href="#encontros">Encontros</a><a href="#combates">Combate</a>`}
+ </nav>
+ <div class="campaign-sections campaign-editor-grid hub-detail-grid">
  ${restricted?`
+  <section id="visao-geral" class="card campaign-editor-card"><h2>Sessão</h2>
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
   ${s.summary?`<p>${esc(s.summary)}</p>`:''}
+  </section><section id="participantes" class="card campaign-editor-card"><h2>Participantes</h2>
   ${participants.length?`<p class="mini">Personagens: ${esc(participants.join(', '))}</p>`:''}
+  <p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></section>
  `:`
- <div class="form-grid two" style="margin-top:10px">
+ <section id="visao-geral" class="card campaign-editor-card"><h2>Sessão</h2><div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
@@ -310,15 +331,15 @@ function sessionCard(s,restricted=false){
   <label class="wide">Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
  </div>
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar</button></div>
- <div class="session-subsection"><h4>Jogadores participantes</h4><p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></div>
+ </section><section id="participantes" class="card campaign-editor-card"><h2>Participantes</h2><div class="session-subsection"><h4>Jogadores participantes</h4><p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></div>
  <div class="session-subsection"><h4>Personagens participantes</h4><div class="entity-checks">${characters.length?characters.map(c=>`<label><input type="checkbox" data-session-character="${esc(c.id)}" ${(s.participantCharacterIds||[]).includes(c.id)?'checked':''}>${esc(c.name||'Personagem')}</label>`).join(''):'<span class="mini">Nenhum personagem no Hub.</span>'}</div><div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-participants>Salvar</button></div></div>
- <section class="session-subsection"><div class="top"><h4>Cenas</h4></div>
+ </section><section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><section class="session-subsection">
  ${adv?`<div class="form-grid two" style="margin:8px 0 10px"><label>Cena da Aventura<select data-adventure-scene-picker>${adventureScenePickerOptions(s)}</select></label><div style="align-self:end"><button type="button" data-add-adventure-scene ${availableAdventureScenes(s).length?'':'disabled'}>Adicionar cena da Aventura</button></div></div>`:'<p class="mini">Esta Sessão não está vinculada a uma Aventura. Você ainda pode criar Cenas próprias da Sessão.</p>'}
  <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
  <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div>
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-scenes>Salvar</button></div></section>
  ${encounterSummary(s)}
- `}</article>`
+ `}</div></article>`
 }
 function render(){
  const restricted=playerMode();
