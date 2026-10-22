@@ -101,6 +101,7 @@ function breadcrumbTrail(label){
   "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
   "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
  };
+ if(page==="usuarios.html")return[...start,{label:"Usuários",href:"usuario.html"},{label:"Gerenciar acessos"}];
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
  if(page==="mesa.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:label&&label!=="Campanhas"?label:"Campanha"}];
