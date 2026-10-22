@@ -74,6 +74,8 @@ function renderFocusedProfile(){
 }
 
 function renderDirectory(){
+ const accessLink=$('hub-users-manage-access');
+ if(accessLink)accessLink.hidden=!isMaster;
  directory?.replaceChildren();
  const count=$('hub-users-count');if(count)count.textContent=`${profiles.length} ${profiles.length===1?'usuário':'usuários'}`;
  if(!profiles.length){status($('hub-users-feedback'),'Nenhuma conta cadastrada.');return}
