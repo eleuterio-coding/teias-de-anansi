@@ -1,7 +1,7 @@
 
 const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
 const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
-const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","bibliotecas.html","usuario.html","usuarios.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
+const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","lista-npcs.html","bibliotecas.html","usuario.html","usuarios.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
@@ -9,13 +9,13 @@ const NAV_ITEMS=[
  {page:"aventuras.html",label:"Aventuras",icon:"map"},
  {page:"sessoes.html",label:"Sessões",icon:"calendar"},
  {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
- {page:"npcs.html",label:"NPCs",icon:"player"},
+ {page:"npcs.html",aliases:["lista-npcs.html"],label:"NPCs",icon:"player"},
  {page:"bibliotecas.html",label:"Biblioteca",icon:"library"}
 ];
 const PAGE_LABELS={
  "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","nova-campanha.html":"Nova campanha","mesa.html":"Campanha",
  "sessoes.html":"Sessões","aventuras.html":"Aventuras","personagens.html":"Personagens",
- "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuários","usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
+ "lista-personagens.html":"Personagens","npcs.html":"NPCs","lista-npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuários","usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
 };
 const ICONS={
  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
@@ -54,8 +54,7 @@ function contextualAction(){
  const page=currentPage();
  
  if(page==="sessoes.html")return{label:"Nova sessão",href:"#session-create-card"};
- if(page==="npcs.html"&&masterNpcAccess())return{label:"Novo NPC",href:"criacao-personagem.html?npc=1"};
- if(page==="lista-personagens.html"||page==="personagens.html")return{label:"Novo personagem",href:"criacao-personagem.html"};
+ // A criação é acessada exclusivamente pelos cards dos menus de Personagens e NPCs.
 
  return null
 }
@@ -98,7 +97,7 @@ function breadcrumbTrail(label){
  if(page==="painel.html"||page==="index.html")return[{label:"Início"}];
  const sections={
   "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
-  "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
+  "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs","lista-npcs.html":"NPCs",
   "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
  };
  if(page==="usuarios.html")return[...start,{label:"Usuários",href:"usuario.html"},{label:"Gerenciar acessos"}];
