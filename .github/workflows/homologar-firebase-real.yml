@@ -1,22 +1,9 @@
 name: Homologar colaboração Firebase
 
+# O E2E utiliza o Firebase de produção. Acionamento manual impede consumo
+# de cota a cada commit enquanto recuperamos o acesso de todos os jogadores.
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'dados/firebase-config.json'
-      - 'firebase/**'
-      - 'scripts/collaboration-model.js'
-      - 'scripts/collaboration-ui.js'
-      - 'scripts/collaboration-sync.js'
-      - 'scripts/diagnosticar-acessos-remotos.mjs'
-      - 'tests/auditar-colaboracao-sync.mjs'
-      - 'scripts/firebase-collaboration-provider.js'
-      - 'usuarios.html'
-      - 'e2e/collaboration-real.spec.js'
-      - '.github/workflows/homologar-firebase-real.yml'
-      - '.github/workflows/publicar-v1-0-1.yml'
 
 permissions:
   contents: read

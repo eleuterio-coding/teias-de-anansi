@@ -61,17 +61,24 @@ function renderPlayerAssignments(rows=[]){
   return`<article class="dashboard-player-campaign"><h3>${link(`mesa.html?id=${encodeURIComponent(c.id)}`,c.name,'campanha')}</h3>${group('Personagem',characterHtml)}${group('Aventuras',adventures)}${group('Sessões',sessions)}</article>`;
  }).join('')+(personal.length?`<article class="dashboard-player-campaign"><h3>Personagens sem Campanha</h3>${group('Meus personagens',personal.map(c=>link(`ficha-personagem.html?id=${encodeURIComponent(c.id)}`,c.name||'Personagem sem nome','personagem')).join(''))}</article>`:'')
 }
+let remoteStatus='loading',remoteError='';
 function renderSyncStatus(detail={}){
+ if(detail.status)remoteStatus=detail.status;
+ if(detail.status==='error')remoteError=String(detail.message||'Falha na leitura remota.');
  const area=$('dashboard-sync-status');if(!area)return;
- const failed=detail.status==='error'&&playerMode();
- area.hidden=!failed;
- if(failed)area.textContent='Não foi possível sincronizar os dados desta conta. Verifique a conexão e atualize a página. Detalhes: '+String(detail.message||'Falha na leitura remota.');
+ if(!playerMode()){area.hidden=true;return}
+ if(remoteStatus==='ready'){area.hidden=true;return}
+ area.hidden=false;
+ if(remoteStatus==='error'){
+  const quota=/resource-exhausted|quota|429|too.many.requests/i.test(remoteError);
+  area.textContent=quota?'O Firebase atingiu um limite de operações. Os dados não foram apagados; aguarde o restabelecimento do serviço.':'Falha ao sincronizar os dados do jogador: '+remoteError;
+ }else area.textContent='Carregando campanhas, personagens e acessos desta conta...';
 }
 
 // A página Início usa rolagem vertical como as demais áreas do Hub.
 // Não ocultar cards ou registros por paginação vinculada à altura da janela.
 const isE2EFixtureCampaign=c=>c?.id==='e2e-explicit-player-access';
-function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);renderPlayerAssignments(restricted?sharedCampaignRows():[]);hydrateMediaImages(document).catch(()=>{})}
+function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);renderPlayerAssignments(restricted?sharedCampaignRows():[]);renderSyncStatus();hydrateMediaImages(document).catch(()=>{})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();init()});
 window.addEventListener('hub-rpg:remote-status',event=>renderSyncStatus(event.detail));
