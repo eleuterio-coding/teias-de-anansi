@@ -64,14 +64,14 @@ function image(npc){
 function noteKey(){return 'hub-rpg:player-npc-notes:'+String(effectiveCollaborationSession()?.uid||'no-user')+':v1'}
 function notes(){try{const value=JSON.parse(localStorage.getItem(noteKey())||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}}
 function relatedAdventures(npc,master){const cs=npc.linked.map(l=>l.campaign),ids=new Set(cs.map(c=>c.id));return adventuresOf(npc,(master?readAdventures():sharedAdventures()).filter(a=>ids.has(a.campaignId)),cs,true)}
-function sessionAppearances(npc){return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>['completed','finished','active','current'].includes(s.status)&&(arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))||readAdventures().some(a=>a.campaignId===l.campaign.id&&arr(a.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(npc.id))))).map(s=>({campaign:l.campaign,session:s})))}
+function sessionAppearances(npc){const master=isMaster();return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>master?(['completed','finished','active','current'].includes(s.status)&&(arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))||readAdventures().some(a=>a.campaignId===l.campaign.id&&arr(a.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(npc.id))))):arr(s.publicNpcIds).includes(npc.id)).map(s=>({campaign:l.campaign,session:s})))}
 function card(npc){
  const master=isMaster(),scope=window.__HUB_ROSTER_SCOPE__||{},first=npc.linked.find(l=>l.campaign.id===scope.selectedCampaign?.id)||npc.linked[0],campaignLinks=npc.linked.map(r=>`<a href="mesa.html?id=${encodeURIComponent(r.campaign.id)}">${esc(r.campaign.name)}</a>`).join(' · '),info=first?.meta||{},known=master?info:npc.source,
  label=master?(npc.linked.length?'Vinculado':'Sem campanha'):'Conhecido';
  const secondary=master?(info.role||npc.source?.refSnapshots?.class?.name||'Ficha de NPC'):(known.role||known.category&&categoryNames[known.category]||'NPC conhecido');
  const situation=master?(info.status||''):(known.status||'');
  const location=master?(info.location||''):(known.location||'');
- const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id),adventures=relatedAdventures(npc,master),sessions=master?sessionAppearances(npc):[];
+ const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id),adventures=relatedAdventures(npc,master),sessions=sessionAppearances(npc);
  const current=currentAdventure(adventures,npc.linked.map(x=>x.campaign)),past=previousAdventures(adventures,current,npc.linked.map(x=>x.campaign),npc,true,!master);
  const currentLocation=adventureCurrentLocation(current,npc.linked.find(x=>x.campaign.id===current?.campaignId)?.campaign);
  const infoStatus=String(situation||'NPC').toLocaleLowerCase('pt-BR');
