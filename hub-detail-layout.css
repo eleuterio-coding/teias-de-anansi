@@ -1,0 +1,53 @@
+/* Reúne os mesmos componentes de Campanha, Aventura e Sessão.
+   É aplicado somente às páginas de detalhe; listas mantêm seu comportamento. */
+#adventure-root .hub-detail-page,
+#sessions-list .hub-detail-page{width:100%;min-width:0;display:grid;gap:16px;align-content:start}
+#adventure-root .hub-detail-page .hub-collection-detail-back,
+#sessions-list .hub-detail-page .hub-collection-detail-back{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+#adventure-root .hub-detail-page .campaign-product-hero,
+#sessions-list .hub-detail-page .campaign-product-hero{margin:0;min-width:0}
+#adventure-root .hub-detail-page .campaign-product-summary,
+#sessions-list .hub-detail-page .campaign-product-summary{margin:0;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+#adventure-root .hub-detail-page .section-nav,
+#sessions-list .hub-detail-page .section-nav{position:sticky;top:var(--hub-topbar-height,64px);z-index:15;display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:12px;border:1px solid var(--hub-border,#33485d);border-radius:12px;background:var(--hub-surface,#102031);box-shadow:0 6px 26px #0002;margin:0}
+#adventure-root .hub-detail-page .section-nav a,
+#sessions-list .hub-detail-page .section-nav a{font-size:.87rem;white-space:nowrap;border-radius:8px;min-height:34px;display:inline-flex;align-items:center}
+#adventure-root .hub-detail-page .hub-detail-grid,
+#sessions-list .hub-detail-page .hub-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start;min-width:0}
+#adventure-root .hub-detail-grid>.card,
+#sessions-list .hub-detail-grid>.card{min-width:0;margin:0;padding:20px;border:1px solid var(--hub-border,#33485d);border-radius:13px;background:var(--hub-surface,#111f2d);box-shadow:none;scroll-margin-top:146px}
+#adventure-root .hub-detail-grid>.card>h2,
+#sessions-list .hub-detail-grid>.card>h2{font-size:1.18rem;margin:0 0 16px;line-height:1.35}
+#adventure-root .hub-detail-grid>:is(#visao-geral,#participantes,#cenas,#sessoes,#linha-tempo),
+#sessions-list .hub-detail-grid>:is(#visao-geral,#participantes,#cenas,#encontros,#combates){grid-column:1/-1}
+#adventure-root .hub-detail-grid :is(label,input,select,textarea),
+#sessions-list .hub-detail-grid :is(label,input,select,textarea){min-width:0;max-width:100%}
+#adventure-root .hub-detail-grid :is(.form-grid,.compact-grid),
+#sessions-list .hub-detail-grid :is(.form-grid,.compact-grid){min-width:0}
+#adventure-root .hub-detail-page .adventure-operational{margin:0}
+#sessions-list .hub-detail-page .session-card{display:grid;gap:16px;padding:0;margin:0;background:transparent;border:0;box-shadow:none;max-width:none;min-width:0}
+#sessions-list .hub-detail-page .session-card>.campaign-product-summary{margin:0}
+#sessions-list .hub-detail-page .session-card>.hub-detail-grid{gap:16px}
+#sessions-list .hub-detail-page .hub-detail-grid .session-subsection{margin:0;min-width:0}
+#sessions-list .hub-detail-page .session-card>.session-encounter-manager,
+#sessions-list .hub-detail-page .session-card>.session-combat-manager{margin:0;padding:20px;min-width:0;border:1px solid var(--hub-border,#33485d);border-radius:13px;background:var(--hub-surface,#111f2d);scroll-margin-top:146px}
+#sessions-list .hub-detail-page .session-card>.session-encounter-manager{grid-row:auto}
+#sessions-list .hub-detail-page .session-head{display:none}
+#sessions-list .hub-detail-page .session-card .session-subsection>h4{font-size:1.12rem;margin:0 0 13px}
+#sessions-list .hub-detail-page .session-card .session-subsection .story-list{margin-top:10px}
+#sessions-list .hub-detail-page .hub-detail-grid :is(.session-subsection,.form-grid)>.row-actions{margin-top:10px}
+@media(max-width:860px){
+ #adventure-root .hub-detail-page .hub-detail-grid,
+ #sessions-list .hub-detail-page .hub-detail-grid{grid-template-columns:1fr}
+ #adventure-root .hub-detail-page .hub-detail-grid>.card,
+ #sessions-list .hub-detail-page .hub-detail-grid>.card{grid-column:1}
+ #adventure-root .hub-detail-page .section-nav,
+ #sessions-list .hub-detail-page .section-nav{position:relative;top:auto}
+}
+@media(max-width:560px){
+ #adventure-root .hub-detail-grid>.card,#sessions-list .hub-detail-grid>.card{padding:14px}
+ #adventure-root .hub-detail-page .campaign-product-summary,
+ #sessions-list .hub-detail-page .campaign-product-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #adventure-root .hub-detail-page .section-nav,
+ #sessions-list .hub-detail-page .section-nav{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+}
