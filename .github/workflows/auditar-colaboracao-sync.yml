@@ -89,6 +89,7 @@ jobs:
         run: |
           node tests/auditar-colaboracao-provisionamento.mjs
           node tests/auditar-colaboracao-sync.mjs
+          node tests/regressao-realtime-quota.mjs
       - name: Regressão de abertura da ficha
         run: node tests/auditar-ficha-realtime.mjs
       - name: Regressão UX e mobile
