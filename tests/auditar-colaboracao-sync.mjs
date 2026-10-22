@@ -80,6 +80,10 @@ try{
  if(previousLocation===undefined)delete globalThis.location;else globalThis.location=previousLocation;
 }
 assert.ok(provider.includes("f.where('email','==',String(u.email).toLowerCase())"),'Consulta deve utilizar apenas e-mail, sem exigir índice composto.');
+assert.ok(provider.includes('async reconcileRosterMemberships(campaign,adventures=[])')&&provider.includes('allowed.has(canonicalUsername(m.username))'),'Apenas contas oficiais selecionadas no elenco devem criar vínculos.');
+assert.ok(provider.includes("if(existing.some(m=>m.role==='player'&&m.username===playerUsername))continue"),'Não alterar permissões já configuradas na tela de acessos.');
+assert.ok(provider.includes('await provider.reconcileRosterMemberships(campaign,campaignAdventures)'),'Publicação de Campanha deve materializar permissões do elenco.');
+assert.ok(sync.includes('await provider.reconcileRosterMemberships(remoteCampaign,remoteAdventures)'),'Campanhas remotas antigas precisam recuperar memberships ausentes.');
 assert.ok(ui.includes('publishLocalCampaign'),'Acesso explícito por seleção do Mestre deve continuar.');
 assert.ok(realtime.includes('publishMissingMasterCampaigns')&&realtime.includes('emitRemoteStatus'),'Bootstrap deve reparar publicações locais e reportar falhas.');
 
