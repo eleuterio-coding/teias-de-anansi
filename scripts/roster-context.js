@@ -45,8 +45,8 @@ export function sessionHistory(person,campaign,adventures=[],npc=false,publicVie
  for(const s of arr(campaign?.sessions)){
   const direct=npc?(!publicView&&arr(s.scenes).some(scene=>arr(scene.npcIds).includes(person.id))):arr(s.participantCharacterIds).includes(person.id);
   const adventure=adventures.find(a=>a.id===s.adventureId);
-  const allowed=npc?(!publicView&&arr(adventure?.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(person.id))):characterInAdventure(person,adventure,campaign);
-  if(direct||allowed&&adventure)records.push(s);
+  const observed=Boolean(npc&&!publicView&&arr(adventure?.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(person.id)));
+  if(direct||observed)records.push(s);
  }
  return records.sort((a,b)=>(a.order||a.number||0)-(b.order||b.number||0)||text(a.date).localeCompare(text(b.date)));
 }
