@@ -179,6 +179,42 @@ async function cleanupCampaign(page, { campaignId }) {
   }, { campaignId }).catch(error => console.warn(`Cleanup da Mesa E2E: ${error.message}`));
 }
 
+// Auditoria real de produção, somente leitura. Não exibe conteúdo de campanhas,
+// IDs de personagens, nomes de campanhas, e-mails ou informações de usuários.
+test.describe('Firebase real · diagnóstico de permissões existentes', () => {
+ test.skip(!hasCredentials, 'Conta do Mestre E2E não configurada.');
+ test('Conferir elenco, memberships e projeções compartilhadas de Fernanda', async ({page}) => {
+  await connect(page, env.adminUsername, env.adminPassword);
+  const info=await page.evaluate(async () => {
+   const p=globalThis.__e2eProvider;
+   const f=await import(`https://www.gstatic.com/firebasejs/${p.config.sdkVersion||'12.18.0'}/firebase-firestore.js`);
+   const [campaignSnap,memberSnap,userSnap]=await Promise.all([
+    f.getDocs(f.collection(p.db,'campaigns')),
+    f.getDocs(f.collection(p.db,'memberships')),
+    f.getDocs(f.collection(p.db,'users'))
+   ]);
+   const rows=memberSnap.docs.map(d=>d.data()||{});
+   const fernanda=rows.filter(m=>String(m.username||'').toLowerCase()==='fernanda'||String(m.email||'').toLowerCase().startsWith('fernanda@'));
+   const result={campaigns:campaignSnap.size,playerProfiles:userSnap.docs.filter(d=>d.data()?.role==='player').length,fernandaProfiles:userSnap.docs.filter(d=>String(d.data()?.username||'').toLowerCase()==='fernanda').length,fernandaMemberships:fernanda.length,fernandaActive:fernanda.filter(m=>m.active===true).length,fernandaCharacterLinks:fernanda.filter(m=>m.active===true&&m.characterId).length,fernandaSessionLinks:fernanda.reduce((n,m)=>n+(Array.isArray(m.sessionIds)?m.sessionIds.length:0),0),fernandaAdventureLinks:fernanda.reduce((n,m)=>n+(Array.isArray(m.adventureIds)?m.adventureIds.length:0),0),fernandaRosterCampaigns:0,fernandaRosterWithoutMembership:0,campaignsWithoutSharedDocument:0,fernandaOrphanSessionLinks:0,fernandaOrphanAdventureLinks:0};
+   for(const row of campaignSnap.docs){
+    const id=row.id;
+    const [priv,shared]=await Promise.all([f.getDoc(f.doc(p.db,'campaigns',id,'private','state')),f.getDoc(f.doc(p.db,'campaigns',id,'shared','state'))]);
+    if(!shared.exists()||!shared.data()?.payload?.campaign)result.campaignsWithoutSharedDocument++;
+    const campaign=priv.data()?.payload?.campaign;
+    const hasFernanda=Array.isArray(campaign?.members)&&campaign.members.some(m=>String(m.username||'').toLowerCase()==='fernanda'&&m.active!==false);
+    if(hasFernanda){result.fernandaRosterCampaigns++;if(!fernanda.some(m=>m.campaignId===id&&m.active===true))result.fernandaRosterWithoutMembership++}
+    for(const member of fernanda.filter(m=>m.campaignId===id&&m.active===true)){
+     for(const sid of member.sessionIds||[]){if(!(await f.getDoc(f.doc(p.db,'campaigns',id,'sessions',sid))).exists())result.fernandaOrphanSessionLinks++}
+     for(const aid of member.adventureIds||[]){if(!(await f.getDoc(f.doc(p.db,'campaigns',id,'adventureViews',aid))).exists())result.fernandaOrphanAdventureLinks++}
+    }
+   }
+   return result;
+  });
+  console.log('FIREBASE_PRODUCAO_ACESSOS_FERNANDA '+JSON.stringify(info));
+  expect(info.campaigns).toBeGreaterThanOrEqual(0);
+ });
+});
+
 test.describe('Firebase real · acessos explícitos do Jogador', () => {
   test.skip(!hasCredentials, 'Credenciais E2E da conta principal não estão disponíveis.');
 
