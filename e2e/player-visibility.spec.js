@@ -42,7 +42,9 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(otherCard).toContainText(/somente leitura/i);
  await expect(otherCard.getByText('Editar estrutura')).toHaveCount(0);
  await expect(page.getByText('FICHA FORA DA CAMPANHA')).toHaveCount(0);
- await expect(page.locator('#create-character-action')).toBeVisible();
+ await expect(page.locator('#create-character-action')).toHaveCount(0);
+ await page.goto('/personagens.html');
+ await expect(page.getByText('Criar personagem',{exact:true})).toBeVisible();
  await expect(page.getByRole('button',{name:'Excluir'})).toHaveCount(0);
 
  await page.goto('/criacao-personagem.html');
