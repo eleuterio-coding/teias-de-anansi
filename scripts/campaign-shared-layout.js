@@ -20,14 +20,15 @@ export function renderCampaignOverview(campaign,adventures=[],{readOnly=false}={
  return `<section class="campaign-product-hero">${cover}${links}<div class="campaign-product-hero-content">
  <div class="campaign-product-kicker">Contexto da Campanha · ${esc(campaign.system||'D&D 5.5e')}</div>
  <div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(campaignStatusLabel(campaign.status))}</span></div>
- <p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p>
+ <p class="campaign-product-description">${esc(campaign.historySummary||campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p>
  <div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${count((campaign.members||[]).length,'jogador','jogadores')}</span><span class="badge">${count(adventures.length,'aventura','aventuras')}</span></div>
  </div></section><div class="campaign-product-summary">${metric('Status',campaignStatusLabel(campaign.status))}${metric('Sessões',(campaign.sessions||[]).length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão Anterior',previous?numberedSessionTitle(previous):'Nenhuma sessão anterior',href(previous))}${metric('Próxima Sessão',upcoming?numberedSessionTitle(upcoming):'Nenhuma próxima sessão',href(upcoming))}</div>`;
 }
 /** Mesma geometria de labels, linhas e capa. Jogador recebe campos somente de leitura, nunca data-campaign-field. */
 export function renderCampaignSettings(c,{readOnly=false,imagePickerHtml=null}={}){
  const input=(name,value,{wide=false,maxlength=160}={})=>`<label class="${wide?'wide':''}">${name}<input ${readOnly?'readonly':''} ${readOnly?'':'data-campaign-field="'+({ 'Nome da campanha':'name','Cenário de Campanha':'setting','Mundo / Plano':'worldPlane','Principal Continente / Região':'mainRegion'}[name]||'')+'"'} maxlength="${maxlength}" value="${esc(value||'')}"></label>`;
- const description=`<label class="wide">Descrição curta<textarea maxlength="500" ${readOnly?'readonly':'data-campaign-field="description"'}>${esc(c.description||'')}</textarea></label>`;
+ // Preserva o campo antigo para registros legados, mas prioriza o resumo histórico.
+ const description=`<label id="historia" class="wide campaign-history-summary">Resumo da história<textarea maxlength="4000" ${readOnly?'readonly':'data-campaign-field="historySummary"'}>${esc(c.historySummary||c.description||'')}</textarea></label>`;
  const cover=readOnly?`<div class="image-picker campaign-readonly-picker"><div class="image-picker-preview">${imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-cover-image',alt:`Capa de ${c.name}`})||'<span class="mini">Sem imagem</span>'}</div></div>`:imagePickerHtml?.({media:c.coverImage,legacyUrl:c.coverImageUrl,alt:`Capa de ${c.name}`,className:'campaign-cover-image'})||'';
  const status=readOnly?`<input value="${esc(campaignStatusLabel(c.status))}" aria-label="Status" readonly>`:`<select data-campaign-field="status">${[['planned','Planejada'],['active','Em andamento'],['paused','Pausada'],['finished','Concluída'],['cancelled','Cancelada']].map(([value,label])=>`<option value="${value}" ${c.status===value?'selected':''}>${label}</option>`).join('')}</select>`;
  return `<section id="campanha" class="card campaign-editor-card">

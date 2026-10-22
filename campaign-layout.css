@@ -287,3 +287,82 @@
  }
  #table-root[data-campaign-access="player"] #jogadores .roster-player-actions{width:auto}
 }
+
+/* Exclusivo do jogador: eliminamos os trilhos administrativos reservados ao Mestre.
+   Jogador, Personagem e Abrir permanecem visíveis e alinhados. */
+#table-root[data-campaign-access="player"] #jogadores .roster-player.campaign-roster-readonly{
+ display:grid!important;
+ grid-template-columns:minmax(180px,1fr) minmax(200px,1.2fr) 44px!important;
+ grid-template-rows:minmax(68px,auto)!important;
+ column-gap:14px;row-gap:10px;
+ align-items:center;min-width:0;padding:12px;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-identity{
+ display:grid!important;
+ grid-column:1!important;grid-row:1!important;
+ grid-template-columns:42px minmax(0,1fr);
+ grid-template-rows:18px 44px;
+ column-gap:10px;row-gap:6px;
+ align-items:stretch;min-width:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-identity>.campaign-avatar-trigger{
+ grid-column:1!important;grid-row:2!important;
+ align-self:center;width:40px;height:44px;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-identity>.roster-player-display{
+ display:grid!important;grid-column:2!important;grid-row:1/3!important;
+ grid-template-rows:18px 44px;row-gap:6px;
+ min-width:0;min-height:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-name-line{
+ display:flex;width:100%;height:44px;min-width:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-character{
+ grid-column:2!important;grid-row:1!important;
+ width:100%;min-width:0;align-self:center;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-character>label{
+ display:grid;grid-template-rows:18px 44px;gap:6px;
+ min-width:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-actions{
+ display:flex;grid-column:3!important;grid-row:1!important;
+ justify-content:flex-end;align-items:center;align-self:end;
+ width:44px!important;height:44px;min-width:0;
+ padding:0;margin:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-character-picker{
+ min-width:0;max-width:100%;height:44px;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .campaign-readonly-character-control{
+ min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly :is(.roster-player-label,.roster-player-name){
+ display:flex;align-items:center;min-width:0;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-label{
+ height:18px;align-items:flex-start;line-height:18px;
+}
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-name{
+ height:42px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+@container campaign-roster (max-width:850px){
+ #table-root[data-campaign-access="player"] #jogadores .roster-player.campaign-roster-readonly{
+  grid-template-columns:minmax(0,1fr) 44px!important;
+  grid-template-rows:auto auto!important;gap:10px;
+ }
+ #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-identity{
+  grid-column:1/-1!important;grid-row:1!important;
+ }
+ #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-character{
+  grid-column:1!important;grid-row:2!important;
+ }
+ #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly>.roster-player-actions{
+  grid-column:2!important;grid-row:2!important;
+ }
+}
+#table-root #campanha .campaign-history-summary{scroll-margin-top:120px}
+#table-root .campaign-product-description{
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
+ overflow:hidden;white-space:pre-line;overflow-wrap:anywhere;
+}

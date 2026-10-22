@@ -1,4 +1,4 @@
-import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-unified-campaign1';
+import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-history-roster1';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{numberedSessionTitle}from'./narrative-labels.js';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
@@ -48,8 +48,7 @@ function referenceSectionsHtml(){return renderCampaignAdventuresSection(campaign
 function detailsSectionsHtml(){
 
  const text=(id,title,field)=>`<section id="${id}" class="card campaign-editor-card"><h2>${esc(title)}</h2><textarea class="campaign-large-text" data-campaign-field="${field}">${esc(campaign[field])}</textarea><div class="row-actions" style="margin-top:10px"><button type="button" data-save-campaign-section>Salvar</button></div></section>`;
- return text('historia','Resumo da história','historySummary')
-  +renderStructuredDetails(campaign,readNpcs())
+ return renderStructuredDetails(campaign,readNpcs())
   +renderTimeline(campaign)
   +text('notas-mestre','Notas do Mestre','dmNotes')
 }
