@@ -35,6 +35,9 @@ test('Mestre vê numeração nos cards e layout idêntico de sessões em Campanh
  const sess=page.locator('#sessoes .campaign-player-story-card');
  await expect(sess.locator('h3')).toContainText('Sessão 8 · A convocação');
  await expect(sess.locator('.campaign-player-story-open')).toBeVisible();
+ const currentBadge=page.locator('#proxima-sessao .campaign-next-status.status-current');
+ await expect(currentBadge).toHaveText('Atual');
+ await expect(currentBadge).toHaveCSS('color','rgb(145, 243, 185)');
  const styles=await sess.evaluate(card=>{
   const button=card.querySelector('.campaign-player-story-open').getBoundingClientRect();
   const footer=card.querySelector('.campaign-player-story-footer').getBoundingClientRect();

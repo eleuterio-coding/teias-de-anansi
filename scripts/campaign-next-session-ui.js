@@ -59,7 +59,7 @@ export function renderNextCampaignSession(campaign,{canPlan=false}={}){
  return`<section id="proxima-sessao" class="card campaign-next-highlight" aria-labelledby="proxima-sessao-titulo"${backdrop?' data-has-session-cover="true"':''}>
   ${backdrop}<div class="campaign-next-content"><span class="campaign-next-kicker">PLANEJAMENTO DA CAMPANHA</span><h2 id="proxima-sessao-titulo">${heading}</h2>
   <p class="campaign-next-name">${escapeHtml(numberedSessionTitle(next))}</p>
-  <div class="campaign-next-meta"><span class="campaign-next-status">${escapeHtml(statusLabels[next.status]||'Planejada')}</span>${date?`<span class="campaign-next-date"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><time datetime="${escapeHtml(next.date)}">${escapeHtml(date)}</time></span>`:''}</div>
+  <div class="campaign-next-meta"><span class="campaign-next-status status-${escapeHtml(next.status||'planned')}">${escapeHtml(statusLabels[next.status]||'Planejada')}</span>${date?`<span class="campaign-next-date"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><time datetime="${escapeHtml(next.date)}">${escapeHtml(date)}</time></span>`:''}</div>
   </div><a class="btn campaign-next-action" href="${base}&id=${encodeURIComponent(next.id||'')}"><span class="campaign-next-action-copy"><strong>Abrir sessão</strong></span><span class="campaign-next-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
  </section>`
 }

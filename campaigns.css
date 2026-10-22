@@ -589,6 +589,14 @@ body:not(.hub-shell-enabled) :is(#campaign-list,#adventure-list,#sessions-list) 
  background:rgba(25,65,103,.78);color:#9cdbff;
  font-size:.79rem;font-weight:750
 }
+#table-root .campaign-next-status:is(.status-current,.status-active){
+ border-color:rgba(92,230,157,.64);
+ background:rgba(18,79,51,.78);color:#91f3b9
+}
+#table-root .campaign-next-status.status-planned{
+ border-color:rgba(255,198,98,.66);
+ background:rgba(89,60,22,.78);color:#ffcf85
+}
 #table-root .campaign-next-date{
  display:inline-flex;align-items:center;gap:7px;
  color:var(--hub-text-2,#a7b7c9);font-size:.87rem;font-weight:650
