@@ -80,7 +80,8 @@ export async function revokeRemoteMembership(provider,campaignId,playerUsername)
  const matches=snapshot.docs.filter(row=>{const data=row.data()||{};return username(data.username)===target||username(data.email)===targetEmail});
  if(!matches.length)return false;
  const characterIds=[...new Set(matches.map(row=>text(row.data()?.characterId)).filter(Boolean))];
- await Promise.all(matches.map(row=>f.deleteDoc(row.ref)));
+ // Tombstone de permissão: evita reativação automática durante a reconciliação do elenco.
+ await Promise.all(matches.map(row=>f.updateDoc(row.ref,{active:false,revokedAt:new Date().toISOString(),updatedAt:new Date().toISOString()})));
  await Promise.all(characterIds.map(id=>f.deleteDoc(f.doc(db,'campaigns',cid,'characters',id)).catch(()=>{})));
  return true
 }
