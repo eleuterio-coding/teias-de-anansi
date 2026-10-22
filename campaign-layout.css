@@ -115,7 +115,7 @@
 #table-root[data-campaign-access="player"] #jogadores .roster-player-actions{
  width:170px;justify-content:flex-end;
 }
-#table-root[data-campaign-access="player"] #jogadores .roster-open-button{
+#table-root[data-campaign-access="player"] #jogadores .roster-player-actions .roster-open-button{
  display:grid!important;place-items:center;
  flex:0 0 44px!important;width:44px!important;min-width:44px!important;max-width:44px!important;
  height:44px!important;min-height:44px!important;max-height:44px!important;
@@ -166,17 +166,17 @@
 }
 #table-root #aventuras .campaign-adventures-feature-grid{
  grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));
- grid-auto-rows:minmax(164px,1fr);
+ grid-auto-rows:minmax(165px,1fr);
 }
 #table-root #sessoes .campaign-player-sessions-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
- grid-auto-rows:minmax(164px,1fr);
+ grid-auto-rows:minmax(165px,1fr);
 }
 #table-root .campaign-reference-section .campaign-player-story-card{
  display:flex;align-items:stretch;
- min-width:0;min-height:164px;height:100%;
+ min-width:0;min-height:165px;height:100%;
 }
-#table-root .campaign-reference-section .campaign-player-story-content{
+#table-root :is(#aventuras,#sessoes).campaign-reference-section .campaign-player-story-content{
  display:flex;flex-direction:column;
  align-items:stretch;justify-content:space-between;
  gap:10px;min-width:0;padding:14px;

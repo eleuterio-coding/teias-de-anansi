@@ -13,6 +13,8 @@ on:
       - 'scripts/timeline-flowchart.js'
       - 'scripts/firebase-collaboration-provider.js'
       - 'campaigns.css'
+      - 'campaign-layout.css'
+      - 'scripts/campaign-adventure-card.js'
       - 'mesa.html'
       - 'tests/auditar-visibilidade-campanha.mjs'
       - 'e2e/campaign-player-disclosure.spec.js'
