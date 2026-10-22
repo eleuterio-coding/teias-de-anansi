@@ -1,10 +1,10 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-roster-link2';
 import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261022-player-cloud-repair1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
-import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20260918-master-delete1';
+import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20261022-revocation1';
 
 // A revisão 20260917-player-catalog1 foi substituída por 20260917-reload-loop-fix1 para impedir recarga circular ao abrir a ficha.
 const CHANGE_EVENT='hub-rpg:data-changed';
