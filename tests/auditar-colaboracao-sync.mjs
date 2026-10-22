@@ -41,4 +41,46 @@ assert.equal(config.enabled,true);assert.equal(config.authMode,'username-passwor
 assert.equal(config.platform,'web-site-only');assert.equal(config.hosting,'github-pages');assert.equal(config.firebasePlan,'spark');assert.equal(config.billingForbidden,true);assert.equal(config.paymentMethodForbidden,true);assert.equal('hosting'in firebaseJson,false);assert.equal('functions'in firebaseJson,false);
 const repoRoot=new URL('../',import.meta.url).pathname,forbiddenMobile=[];function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){if(entry.name==='.git')continue;const full=path.join(dir,entry.name);if(entry.isDirectory())walk(full);else if(['google-services.json','GoogleService-Info.plist'].includes(entry.name)||/\.apk$/i.test(entry.name))forbiddenMobile.push(path.relative(repoRoot,full))}}walk(repoRoot);assert.deepEqual(forbiddenMobile,[]);
 assert.equal(runtime.includes('supabase'),false);assert.equal(runtime.includes('signingoogle'),false);assert.equal(runtime.includes('createinvite'),false);assert.equal(/private[_ -]?key|serviceaccount|client_secret/.test(JSON.stringify(config).toLowerCase()),false);
+
+/* Regressão: o primeiro login do Mestre não pode apagar campanhas locais,
+ * sobrescrever campanhas remotas íntegras ou criar permissões para jogadores. */
+const {publishMissingMasterCampaigns}=await import('../scripts/collaboration-sync.js');
+const previousStorage=globalThis.localStorage,previousLocation=globalThis.location;
+const testRows=[
+ {id:'c-new',name:'Campanha somente local',sessions:[],members:[],updatedAt:'2026-10-20T00:00:00Z'},
+ {id:'c-cloud',name:'Campanha remota íntegra',sessions:[],members:[],updatedAt:'2026-10-20T00:00:00Z'},
+ {id:'c-orphan',name:'Campanha sem vínculo do Mestre',sessions:[],members:[],updatedAt:'2026-10-20T00:00:00Z'}
+];
+const fakeData=new Map([
+ ['hub-rpg:campaigns:v1',JSON.stringify(testRows)],
+ ['hub-rpg:adventures:v1','[]'],
+ ['hub-rpg:characters:v4','[]']
+]);
+const fakeStorage={getItem:key=>fakeData.get(key)||null,setItem:(key,value)=>fakeData.set(key,value),removeItem:key=>fakeData.delete(key)};
+globalThis.localStorage=fakeStorage;
+globalThis.location={search:''};
+try{
+ const published=[],repaired=[];
+ const fakeProvider={
+  configured:true,config:{ownerUsername:'rafael'},
+  currentUser:async()=>({uid:'u-master',username:'rafael'}),
+  listMemberships:async()=>[{campaignId:'c-cloud',role:'dm',active:true}],
+  campaignPublicationStatus:async id=>({exists:id!=='c-new',published:id!=='c-new'}),
+  saveCampaignBundle:async(...args)=>{published.push(args[0].id)},
+  ensureMasterMembership:async id=>{repaired.push(id)}
+ };
+ const outcome=await publishMissingMasterCampaigns(fakeProvider,{storage:fakeStorage});
+ assert.deepEqual(outcome,{published:1,repaired:1},'Apenas uma campanha é publicada e um vínculo do Mestre é reparado.');
+ assert.deepEqual(published,['c-new'],'Não sobrescrever campanhas remotas já publicadas.');
+ assert.deepEqual(repaired,['c-orphan'],'A ausência de membership do Mestre não pode apagar conteúdo remoto.');
+ const player={...fakeProvider,currentUser:async()=>({uid:'u-player',username:'fernanda'})};
+ assert.deepEqual(await publishMissingMasterCampaigns(player,{storage:fakeStorage}),{published:0,repaired:0},'Jogadores não podem publicar campanhas de Mestre.');
+}finally{
+ if(previousStorage===undefined)delete globalThis.localStorage;else globalThis.localStorage=previousStorage;
+ if(previousLocation===undefined)delete globalThis.location;else globalThis.location=previousLocation;
+}
+assert.ok(provider.includes("f.where('email','==',String(u.email).toLowerCase())"),'Consulta deve utilizar apenas e-mail, sem exigir índice composto.');
+assert.ok(ui.includes('publishLocalCampaign'),'Acesso explícito por seleção do Mestre deve continuar.');
+assert.ok(realtime.includes('publishMissingMasterCampaigns')&&realtime.includes('emitRemoteStatus'),'Bootstrap deve reparar publicações locais e reportar falhas.');
+
 console.log('OK — Rafael, como Mestre, possui controle total do Hub e pode editar/excluir qualquer ficha; jogadores preservam autoria e continuam limitados aos próprios conteúdos e contextos atribuídos.');
