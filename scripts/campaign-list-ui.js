@@ -17,7 +17,8 @@ function card(c){
  const players=(c.members||[]).length,characters=(c.members||[]).filter(m=>m.characterId).length;
  const adventureCount=visibleAdventures.filter(row=>row.campaignId===c.id).length;
  const cover=imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-card-cover',alt:''});
- const counts=[amount(players,'jogador','jogadores'),amount(characters,'personagem','personagens'),amount(adventureCount,'aventura','aventuras'),amount(sessions.length,'sessão','sessões')].join(' · ');
+ const npcCount=readOnly?new Set([...(c.npcPublicEntries||[]),...(c.importantNpcEntries||[])].map(n=>n.id).filter(Boolean)).size:new Set([...(c.npcDirectory||[]),...(c.npcs||[]),...(c.importantNpcIds||[]).map(id=>({id}))].map(n=>n.id).filter(Boolean)).size;
+ const counts=[amount(players,'jogador','jogadores'),amount(characters,'personagem','personagens'),amount(npcCount,'NPC','NPCs'),amount(adventureCount,'aventura','aventuras'),amount(sessions.length,'sessão','sessões')].join(' · ');
  const status=CAMPAIGN_STATUSES.includes(c.status)?c.status:'planned';
  const statusControl=readOnly
   ?`<span class="campaign-status-value" aria-label="Status da campanha: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
@@ -38,6 +39,8 @@ function card(c){
   </div></div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="mesa.html?id=${encodeURIComponent(c.id)}">Abrir</a>
+   <a class="btn secondary" href="personagens.html?campaign=${encodeURIComponent(c.id)}">Personagens</a>
+   <a class="btn secondary" href="npcs.html?campaign=${encodeURIComponent(c.id)}">NPCs</a>
    ${readOnly?'':`<button type="button" class="danger" data-delete="${esc(c.id)}">Excluir</button>`}
   </div>
  </article>`
