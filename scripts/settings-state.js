@@ -43,7 +43,7 @@ export function normalizeSettings(input={}){
  const accessibility=source.accessibility&&typeof source.accessibility==='object'?source.accessibility:{};
  return{
   schema:SETTINGS_SCHEMA,
-  workspace:WORKSPACES.has(source.workspace)?source.workspace:base.workspace,
+  workspace:'auto',
   layout:LAYOUTS.has(source.layout)?source.layout:base.layout,
   sources:{enabled:[...ALL_SOURCES]},
   houseRules:{preset:'teias-v1',enabled:[]},
