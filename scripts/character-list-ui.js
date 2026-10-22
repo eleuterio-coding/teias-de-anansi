@@ -5,6 +5,7 @@ import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-mast
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[],norm=v=>String(v??'').toLocaleLowerCase('pt-BR'),statusNames={active:'Ativo',inactive:'Inativo',retired:'Aposentado',dead:'Morto',missing:'Desaparecido'};
 let view='cards';
+const initialCampaign=new URLSearchParams(location.search).get('campaign')||'all';let campaignFilterInitialized=false;
 function context(){
  const mode=collaborationAccessMode(),restricted=mode==='player',session=effectiveCollaborationSession();
  return{mode,restricted,guest:mode==='guest',preview:masterPreviewMode(),session,owned:new Set(editableCharacterIds()),visible:new Set(visibleCharacterIds())}
@@ -71,13 +72,14 @@ function card(c,ctx,campaigns){
  ${detail}${actions}</article>`;
 }
 function render(){
- const ctx=context(),list=characters(ctx),scopes=campaigns(ctx),query=norm($('directory-search')?.value),campaign=$('directory-campaign')?.value||'all',status=$('directory-status')?.value||'all',classValue=$('directory-class')?.value||'all';
+ const ctx=context(),list=characters(ctx),scopes=campaigns(ctx),query=norm($('directory-search')?.value),campaign=campaignFilterInitialized?$('directory-campaign')?.value||'all':initialCampaign,status=$('directory-status')?.value||'all',classValue=$('directory-class')?.value||'all';
  $('create-character-action').hidden=ctx.guest||ctx.preview;
+ $('directory-status').closest('label').hidden=ctx.restricted;
  $('character-subtitle').textContent=ctx.mode==='master'?'Gerencie personagens e atribuições das suas campanhas.':ctx.guest?'Entre no Hub para acessar seus personagens.':'Seus personagens e os companheiros de grupo disponíveis.';
  const selects=[$('directory-campaign'),$('directory-class')];
  const keepCampaign=campaign,keepClass=classValue;
  selects[0].innerHTML='<option value="all">Todas as campanhas</option>'+scopes.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
- selects[0].value=scopes.some(c=>c.id===keepCampaign)?keepCampaign:'all';
+ selects[0].value=scopes.some(c=>c.id===keepCampaign)?keepCampaign:'all';campaignFilterInitialized=true;
  const classes=[...new Set(list.map(klass))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
  selects[1].innerHTML='<option value="all">Todas as classes</option>'+classes.map(name=>`<option value="${esc(name)}">${esc(name)}</option>`).join('');
  selects[1].value=classes.includes(keepClass)?keepClass:'all';
