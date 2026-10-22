@@ -1,7 +1,7 @@
 import{renderPlayerCampaign}from'./campaign-player-view.js?v=20261022-player-character-button3';
 import{sharedCampaignById,playerMode}from'./collaboration-view.js?v=20261016-master-preview1';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-status-palette2';
-import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20261022-directories1';
+import{readCampaigns,writeCampaigns}from'./campaign-state.js?v=20261022-roster2';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DM_NAME='Rafael';
