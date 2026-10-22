@@ -51,54 +51,59 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   onAuthChanged(cb){return lib.auth.onAuthStateChanged(auth,async firebaseUser=>{if(!firebaseUser){cb(null);return}try{cb(await provider.ensureProfile(firebaseUser))}catch{cb(accountFor(firebaseUser))}})},
   async currentUser(){return auth.currentUser?accountFor(auth.currentUser):null},
   subscribeRealtime(onChange,onError=()=>{}){
-   const u=auth.currentUser;if(!u?.email)return()=>{};const account=accountFor(u);let children=[],playerChildren=[],campaignWatchKey=null,userWatchKey=null,playerWatchKey=null;
-   const clearChildren=()=>{for(const stop of children)try{stop()}catch{}children=[]};
-   const clearPlayerChildren=()=>{for(const stop of playerChildren)try{stop()}catch{}playerChildren=[]};
+   const u=auth.currentUser;if(!u?.email)return()=>{};
+   const account=accountFor(u),children=new Map(),playerChildren=new Map();
    const signal=snapshot=>{if(snapshot?.metadata?.hasPendingWrites)return;onChange?.()};
-   const watchDoc=ref=>children.push(f.onSnapshot(ref,signal,onError));
-   const watchCollection=ref=>children.push(f.onSnapshot(ref,signal,onError));
-   const watchPlayerCollection=ref=>playerChildren.push(f.onSnapshot(ref,signal,onError));
+   const wanted=(key,ref)=>({key,ref});
+   // Reutiliza assinaturas inalteradas em vez de fechar/reabrir todas as
+   // coleções sempre que uma única sessão ou aventura é atribuída.
+   const syncWatchers=(active,desired)=>{
+    const target=new Map(desired.map(item=>[item.key,item.ref]));
+    for(const[key,stop]of active)if(!target.has(key)){try{stop()}catch{}active.delete(key)}
+    for(const[key,ref]of target)if(!active.has(key))active.set(key,f.onSnapshot(ref,signal,onError));
+   };
+   const clearWatchers=active=>{for(const stop of active.values())try{stop()}catch{}active.clear()};
    let rootStop;
    if(account.username===ownerUsername){
     const campaignsQuery=f.query(f.collection(db,'campaigns'),f.where('ownerId','==',u.uid));
     const campaignsStop=f.onSnapshot(campaignsQuery,snapshot=>{
-     const key=snapshot.docs.map(row=>row.id).sort().join('|');
-     if(key!==campaignWatchKey){
-      campaignWatchKey=key;clearChildren();
-      watchCollection(f.collection(db,'users',u.uid,'characters'));
-      for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}
+     const desired=[wanted('own-characters',f.collection(db,'users',u.uid,'characters'))];
+     for(const row of snapshot.docs){
+      const cid=row.id;
+      desired.push(wanted('private:'+cid,f.doc(db,'campaigns',cid,'private','state')));
+      desired.push(wanted('campaign-characters:'+cid,f.collection(db,'campaigns',cid,'characters')));
+      desired.push(wanted('campaign-members:'+cid,f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid))));
      }
-     signal(snapshot)
+     syncWatchers(children,desired);
+     signal(snapshot);
     },onError);
     const usersStop=f.onSnapshot(f.collection(db,'users'),snapshot=>{
      const eligible=snapshot.docs.filter(row=>row.id!==u.uid&&playerAccounts.some(spec=>spec.username===canonicalUsername(row.data()?.username)));
-     const key=eligible.map(row=>row.id).sort().join('|');
-     if(key!==userWatchKey){userWatchKey=key;clearPlayerChildren();for(const row of eligible)watchPlayerCollection(f.collection(db,'users',row.id,'characters'))}
-     signal(snapshot)
+     syncWatchers(playerChildren,eligible.map(row=>wanted('player-characters:'+row.id,f.collection(db,'users',row.id,'characters'))));
+     signal(snapshot);
     },onError);
-    rootStop=()=>{try{campaignsStop()}catch{}try{usersStop()}catch{}}
+    rootStop=()=>{try{campaignsStop()}catch{}try{usersStop()}catch{}};
    }else{
     const email=String(u.email).toLowerCase(),q=f.query(f.collection(db,'memberships'),f.where('email','==',email));
     rootStop=f.onSnapshot(q,snapshot=>{
      const memberships=snapshot.docs.map(d=>normalizeMember({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');
-     const key=memberships.map(m=>[m.campaignId,...unique(m.sessionIds).sort(),':',...unique(m.adventureIds).sort()].join('|')).sort().join('||');
-     if(key!==playerWatchKey){
-      playerWatchKey=key;clearChildren();
-      watchCollection(f.collection(db,'users',u.uid,'characters'));
-      watchCollection(f.collection(db,'users'));
-      for(const m of memberships){
-       const cid=m.campaignId;
-       watchDoc(f.doc(db,'campaigns',cid,'shared','state'));
-       for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));
-       for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));
-       watchCollection(f.collection(db,'campaigns',cid,'characters'));
-       watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))
-      }
+     const desired=[
+      wanted('own-characters',f.collection(db,'users',u.uid,'characters')),
+      wanted('profiles',f.collection(db,'users'))
+     ];
+     for(const m of memberships){
+      const cid=m.campaignId;
+      desired.push(wanted('shared:'+cid,f.doc(db,'campaigns',cid,'shared','state')));
+      for(const sid of unique(m.sessionIds))desired.push(wanted('session:'+cid+':'+sid,f.doc(db,'campaigns',cid,'sessions',sid)));
+      for(const aid of unique(m.adventureIds))desired.push(wanted('adventure:'+cid+':'+aid,f.doc(db,'campaigns',cid,'adventureViews',aid)));
+      desired.push(wanted('campaign-characters:'+cid,f.collection(db,'campaigns',cid,'characters')));
+      desired.push(wanted('campaign-members:'+cid,f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid))));
      }
-     signal(snapshot)
-    },onError)
+     syncWatchers(children,desired);
+     signal(snapshot);
+    },onError);
    }
-   return()=>{try{rootStop?.()}catch{}clearChildren();clearPlayerChildren()}
+   return()=>{try{rootStop?.()}catch{}clearWatchers(children);clearWatchers(playerChildren)}
   },
   async signInUsername({username,password}={}){const canonical=canonicalUsername(username),spec=accountSpec(canonical);if(!spec)throw new Error('Selecione uma conta válida.');if(!text(password))throw new Error('Informe a senha.');let result;try{result=await lib.auth.signInWithEmailAndPassword(auth,technicalEmail(canonical),password)}catch(error){if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'].includes(error?.code))throw new Error('Usuário ou senha incorretos.');if(error?.code==='auth/user-disabled')throw new Error('Este login está desativado.');if(error?.code==='auth/too-many-requests')throw new Error('Muitas tentativas. Tente novamente mais tarde.');throw new Error('Não foi possível entrar agora. Tente novamente.')}try{return await provider.ensureProfile(result.user)}catch(error){await lib.auth.signOut(auth).catch(()=>{});if(['permission-denied','firestore/permission-denied'].includes(error?.code))throw new Error('O login existe, mas o acesso online ainda não está atualizado.');throw error}},
   async createPlayerLogin({username,password}={}){const current=auth.currentUser?accountFor(auth.currentUser):null;if(!current||current.username!==ownerUsername)throw new Error('Somente Rafael pode criar logins de jogadores.');const canonical=canonicalUsername(username),spec=playerAccounts.find(row=>row.username===canonical);if(!spec)throw new Error('Selecione Bruno, Gustavo, Léo ou Fernanda.');if(text(password).length<6)throw new Error('A senha precisa ter pelo menos 6 caracteres.');const secondaryName=`player-provision-${Date.now()}-${Math.random().toString(36).slice(2)}`;let secondaryApp=null;try{secondaryApp=lib.app.initializeApp(firebaseOptions,secondaryName);const secondaryAuth=lib.auth.getAuth(secondaryApp),secondaryDb=lib.firestore.getFirestore(secondaryApp);const credential=await lib.auth.createUserWithEmailAndPassword(secondaryAuth,technicalEmail(canonical),password);await f.setDoc(f.doc(secondaryDb,'users',credential.user.uid),{uid:credential.user.uid,username:spec.username,displayName:spec.displayName,role:'player',updatedAt:f.serverTimestamp()},{merge:true});await lib.auth.signOut(secondaryAuth);return{uid:credential.user.uid,username:spec.username,displayName:spec.displayName}}catch(error){if(error?.code==='auth/email-already-in-use')throw new Error(`${spec.displayName} já possui login.`);if(error?.code==='auth/weak-password')throw new Error('Escolha uma senha com pelo menos 6 caracteres.');throw new Error('Não foi possível criar este login agora.')}finally{if(secondaryApp)await lib.app.deleteApp(secondaryApp).catch(()=>{})}},
