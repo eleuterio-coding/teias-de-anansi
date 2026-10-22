@@ -1,7 +1,8 @@
 import{readNpcs,writeNpcs,npcMasterAuthorized,uid}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-directories1';
+import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-roster2';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{collaborationAccessMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
+import{npcInCampaign,npcInAdventure,adventuresOf,currentAdventure,previousAdventures,adventureCurrentLocation,sessionHistory,statusLabel as lifeLabel}from'./roster-context.js?v=20261022-roster2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[],fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 const categoryNames={ally:'Aliado',enemy:'Inimigo',neutral:'Neutro',mentor:'Mentor',merchant:'Comerciante',antagonist:'Antagonista',contact:'Contato'};
@@ -26,7 +27,10 @@ function masterEntries(campaigns){
    if(row.name&&!value.sheet)value.name=row.name;
    map.set(row.id,value)
   }
+  const linkedAdventures=readAdventures().filter(a=>a.campaignId===campaign.id);
+  for(const adv of linkedAdventures)for(const item of arr(adv.legacyNpcs))if(item?.id&&!map.has(item.id))map.set(item.id,{id:item.id,name:item.name||'NPC',sheet:false,source:item,linked:[]});
   const ids=new Set([...legacy,...existing].map(n=>n.id).filter(Boolean));
+  for(const adv of linkedAdventures)for(const id of arr(adv.npcIds))if(map.has(id))ids.add(id);
   for(const id of arr(campaign.importantNpcIds)){
    if(!map.has(id)&&campaign.importantNpcPublicNames?.[id])map.set(id,{id,name:campaign.importantNpcPublicNames[id],sheet:false,source:{id,name:campaign.importantNpcPublicNames[id]},linked:[]});
    if(map.has(id))ids.add(id)
@@ -59,15 +63,30 @@ function image(npc){
 }
 function noteKey(){return 'hub-rpg:player-npc-notes:'+String(effectiveCollaborationSession()?.uid||'no-user')+':v1'}
 function notes(){try{const value=JSON.parse(localStorage.getItem(noteKey())||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}}
-function relatedAdventures(npc,master){const campaigns=new Set(npc.linked.map(l=>l.campaign.id));return(master?readAdventures():sharedAdventures()).filter(a=>campaigns.has(a.campaignId)&&(master?arr(a.npcIds).includes(npc.id):arr(a.npcs).some(n=>n.id===npc.id)))}
-function sessionAppearances(npc){return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))).map(s=>({campaign:l.campaign,session:s})))}
+function relatedAdventures(npc,master){const cs=npc.linked.map(l=>l.campaign),ids=new Set(cs.map(c=>c.id));return adventuresOf(npc,(master?readAdventures():sharedAdventures()).filter(a=>ids.has(a.campaignId)),cs,true)}
+function sessionAppearances(npc){const master=isMaster();return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>master?(['completed','finished','active','current'].includes(s.status)&&(arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))||readAdventures().some(a=>a.campaignId===l.campaign.id&&arr(a.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(npc.id))))):arr(s.publicNpcIds).includes(npc.id)).map(s=>({campaign:l.campaign,session:s})))}
 function card(npc){
- const master=isMaster(),first=npc.linked[0],campaignLinks=npc.linked.map(r=>`<a href="mesa.html?id=${encodeURIComponent(r.campaign.id)}">${esc(r.campaign.name)}</a>`).join(' · '),info=first?.meta||{},known=master?info:npc.source,
+ const master=isMaster(),scope=window.__HUB_ROSTER_SCOPE__||{},first=npc.linked.find(l=>l.campaign.id===scope.selectedCampaign?.id)||npc.linked[0],campaignLinks=npc.linked.map(r=>`<a href="mesa.html?id=${encodeURIComponent(r.campaign.id)}">${esc(r.campaign.name)}</a>`).join(' · '),info=first?.meta||{},known=master?info:npc.source,
  label=master?(npc.linked.length?'Vinculado':'Sem campanha'):'Conhecido';
  const secondary=master?(info.role||npc.source?.refSnapshots?.class?.name||'Ficha de NPC'):(known.role||known.category&&categoryNames[known.category]||'NPC conhecido');
  const situation=master?(info.status||''):(known.status||'');
  const location=master?(info.location||''):(known.location||'');
- const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id),adventures=relatedAdventures(npc,master),sessions=master?sessionAppearances(npc):[];
+ const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id),adventures=relatedAdventures(npc,master),sessions=sessionAppearances(npc);
+ const current=currentAdventure(adventures,npc.linked.map(x=>x.campaign)),past=previousAdventures(adventures,current,npc.linked.map(x=>x.campaign),npc,true,!master);
+ const currentLocation=adventureCurrentLocation(current,npc.linked.find(x=>x.campaign.id===current?.campaignId)?.campaign);
+ const infoStatus=String(situation||'NPC').toLocaleLowerCase('pt-BR');
+ const life=['vivo','alive','active'].includes(infoStatus)?'Vivo':['morto','dead'].includes(infoStatus)?'Morto':['desaparecido','missing'].includes(infoStatus)?'Desaparecido':'NPC';
+ const source=master?npc.source||{}:known||{},klass=master?source.refSnapshots?.class?.name||'':known.className,level=master?source.choices?.class?.level:known.level;
+ const race=master?source.refSnapshots?.species?.name||'':known.species,background=master?source.refSnapshots?.background?.name||'':known.background;
+ const facts=`<dl class="hub-roster-info">
+ <div><dt>Responsável pelo NPC</dt><dd>Mestre</dd></div><div><dt>Nome do NPC</dt><dd>${esc(npc.name)}</dd></div>
+ <div><dt>Classe</dt><dd>${esc(klass||'Não informada')}</dd></div><div><dt>Nível</dt><dd>${esc(level||'Não informado')}</dd></div>
+ <div><dt>Raça / Espécie</dt><dd>${esc(race||'Não informada')}</dd></div><div><dt>Antecedente</dt><dd>${esc(background||'Não informado')}</dd></div>
+ <div><dt>Status</dt><dd>${esc(life)}</dd></div><div><dt>Local (Aventura)</dt><dd>${esc(currentLocation||'Não registrado na cena ativa')}</dd></div>
+ <div class="hub-roster-full"><dt>Aventura atual</dt><dd>${esc(current?.title||'Nenhuma aventura em andamento vinculada')}</dd></div>
+ <div class="hub-roster-full"><dt>Aventuras anteriores</dt><dd>${esc(past.map(a=>a.title).join(' · ')||'Nenhuma concluída registrada')}</dd></div>
+ <div class="hub-roster-full"><dt>Sessões em que apareceu</dt><dd>${esc(sessions.map(x=>x.session.title).join(' · ')||(master?'Nenhuma aparição registrada':'Não disponibilizadas na visão do jogador'))}</dd></div>
+ </dl>`;
  return`<article class="hub-directory-card" data-npc-id="${esc(npc.id)}">
  <div class="hub-directory-card-top"><div class="hub-directory-avatar">${image(npc)}</div><div><h3>${esc(npc.name||'NPC sem nome')}</h3><p>${esc(secondary)}</p></div></div>
  <div class="hub-directory-meta"><span class="hub-directory-tag">${esc(label)}</span>${master?`<span class="hub-directory-tag status-${status(npc)}">${status(npc)==='revealed'?'Revelado':'Não revelado'}</span>`:''}${situation?`<span class="hub-directory-tag">${esc(situation)}</span>`:''}</div>
@@ -80,6 +99,7 @@ function card(npc){
  ${adventures.length?`<span>Aventuras: ${adventures.map(a=>`<a href="aventuras.html?campaign=${encodeURIComponent(a.campaignId)}&id=${encodeURIComponent(a.id)}">${esc(a.title)}</a>`).join(' · ')}</span>`:''}
  ${sessions.length?`<span>Aparições em sessões: ${sessions.map(({campaign,session})=>`<a href="sessoes.html?campaign=${encodeURIComponent(campaign.id)}&id=${encodeURIComponent(session.id)}">${esc(session.title)}</a>`).join(' · ')}</span>`:''}
  </div>
+ ${facts}
  ${!master&&!masterPreviewMode()?`<details class="hub-directory-details"><summary>Minhas anotações</summary><div class="hub-directory-note-editor"><label for="note-${esc(key)}">Anotações pessoais (somente neste navegador)<textarea id="note-${esc(key)}" maxlength="3000" data-npc-note="${esc(key)}">${esc(playerNotes[key]||'')}</textarea></label><button type="button" class="secondary" data-save-player-note="${esc(key)}">Salvar anotação</button></div></details>`:''}
  <div class="hub-directory-actions">
  ${master&&npc.sheet?`<a class="btn" href="ficha-personagem.html?npc=1&id=${encodeURIComponent(npc.id)}">Abrir ficha</a><a class="btn secondary" href="criacao-personagem.html?npc=1&id=${encodeURIComponent(npc.id)}">Editar ficha</a>`:''}
@@ -88,7 +108,7 @@ function card(npc){
  </div></article>`
 }
 function render(){
- const master=isMaster(),cs=allCampaigns(),rows=master?masterEntries(cs):collaborationAccessMode()==='player'?publicEntries(cs):[],search=fold($('npc-search').value),cid=campaignFilterInitialized?$('npc-campaign-filter').value:initialCampaign,category=$('npc-category-filter').value,visibility=$('npc-visibility-filter').value;
+ const master=isMaster(),cs=allCampaigns(),rows=master?masterEntries(cs):collaborationAccessMode()==='player'?publicEntries(cs):[],search=fold($('npc-search').value),cid=campaignFilterInitialized?$('npc-campaign-filter').value:initialCampaign,category=$('npc-category-filter').value,visibility=$('npc-visibility-filter').value,lifeFilter=$('npc-life-filter')?.value||'all',scope=window.__HUB_ROSTER_SCOPE__||{};
  $('npc-master-actions').hidden=!master;
  $('npc-editor').hidden=!master||$('npc-editor').hidden;
  $('npc-subtitle').textContent=master?'Gerencie o elenco, os vínculos e o que cada campanha revela.':'NPCs conhecidos nas campanhas às quais você tem acesso.';
@@ -96,11 +116,13 @@ function render(){
  $('npc-visibility-filter').closest('label').hidden=!master;
  const filtered=rows.filter(n=>{
   const str=[n.name,n.source?.role,n.source?.faction,...n.linked.map(l=>[l.meta?.role,l.meta?.faction,l.meta?.publicName,l.campaign.name])].flat().join(' ');
-  return fold(str).includes(search)&&(cid==='all'||n.linked.some(l=>l.campaign.id===cid))&&(category==='all'||categories(n)===category)&&(!master||visibility==='all'||status(n)===visibility)
+  const raw=String(master?n.linked.find(l=>l.campaign.id===scope.selectedCampaign?.id)?.meta?.status||n.linked[0]?.meta?.status||'':n.source?.status||'').toLowerCase();
+  const life=['vivo','active','alive'].includes(raw)?'alive':['morto','dead'].includes(raw)?'dead':['desaparecido','missing'].includes(raw)?'missing':'npc';
+  return fold(str).includes(search)&&(!scope.selectedCampaign||n.linked.some(l=>l.campaign.id===scope.selectedCampaign.id))&&(!scope.selectedAdventure||npcInAdventure(n,scope.selectedAdventure))&&(cid==='all'||n.linked.some(l=>l.campaign.id===cid))&&(category==='all'||categories(n)===category)&&(lifeFilter==='all'||lifeFilter===life)&&(!master||visibility==='all'||status(n)===visibility)
  });
  const revealed=master?rows.filter(n=>status(n)==='revealed').length:rows.length;
  const campaignsWith= new Set(rows.flatMap(n=>n.linked.map(l=>l.campaign.id))).size;
- $('npc-metrics').innerHTML=[[rows.length,master?'NPCs cadastrados':'NPCs conhecidos'],[revealed,master?'NPCs revelados':'Registros disponíveis'],[campaignsWith,'Campanhas relacionadas']].map(([n,label])=>`<div class="hub-directory-metric"><strong>${n}</strong><span>${label}</span></div>`).join('');
+ $('npc-metrics').innerHTML=[[filtered.length,master?'NPCs exibidos':'NPCs conhecidos'],[revealed,master?'NPCs revelados':'Registros disponíveis'],[campaignsWith,'Campanhas relacionadas']].map(([n,label])=>`<div class="hub-directory-metric"><strong>${n}</strong><span>${label}</span></div>`).join('');
  $('npc-list').className='hub-directory-grid'+(view==='list'?' is-list':'');
  $('npc-list').innerHTML=filtered.length?filtered.map(card).join(''):`<div class="hub-directory-empty">${collaborationAccessMode()==='guest'?'Faça login para acessar NPCs.':rows.length?'Nenhum NPC encontrado com esses filtros.':master?'Nenhum NPC cadastrado. Use Novo NPC para criar uma ficha ou cadastre um NPC em Campanhas.':'Ainda não há NPCs revelados nas suas campanhas.'}</div>`;
  $('npc-view-cards').setAttribute('aria-pressed',String(view==='cards'));$('npc-view-list').setAttribute('aria-pressed',String(view==='list'));
@@ -126,6 +148,7 @@ function fillEditor(){
  set('npc-location',entry.location||'');set('npc-notes',entry.notes||legacy.notes||'');
  $('npc-reveal').checked=entry.id?entry.visibleToPlayers===true:legacyVisible;
  set('npc-public-name',entry.publicName||publicName);set('npc-public-category',entry.publicCategory||'');
+ set('npc-public-class',entry.publicClass);set('npc-public-level',entry.publicLevel||'');set('npc-public-species',entry.publicSpecies);set('npc-public-background',entry.publicBackground);
  set('npc-public-role',entry.publicRole);set('npc-public-faction',entry.publicFaction);set('npc-public-relationship',entry.publicRelationship);
  set('npc-public-status',entry.publicStatus);set('npc-public-location',entry.publicLocation);
  set('npc-public-description',entry.publicDescription);set('npc-public-portrait',entry.publicPortraitUrl);
@@ -153,7 +176,7 @@ function persistEntry(unlink=false){
   id,sheetId:source.sheet?id:null,name:source.name,
   category:$('npc-category').value,role:$('npc-role').value,faction:$('npc-faction').value,relationship:$('npc-relationship').value,
   status:$('npc-status').value,location:$('npc-location').value,notes:$('npc-notes').value,visibleToPlayers:visible,
-  publicName:name,publicCategory:$('npc-public-category').value,publicRole:$('npc-public-role').value,
+  publicName:name,publicCategory:$('npc-public-category').value,publicClass:$('npc-public-class').value,publicLevel:$('npc-public-level').value,publicSpecies:$('npc-public-species').value,publicBackground:$('npc-public-background').value,publicRole:$('npc-public-role').value,
   publicFaction:$('npc-public-faction').value,publicRelationship:$('npc-public-relationship').value,
   publicStatus:$('npc-public-status').value,publicLocation:$('npc-public-location').value,
   publicDescription:$('npc-public-description').value,
@@ -199,7 +222,7 @@ $('npc-list')?.addEventListener('click',event=>{
   try{localStorage.setItem(noteKey(),JSON.stringify(next));noteButton.textContent='Salvo neste navegador'}catch{alert('Não foi possível salvar a anotação.')}
  }
 });
-for(const field of['npc-search','npc-campaign-filter','npc-category-filter','npc-visibility-filter'])$(field)?.addEventListener(field==='npc-search'?'input':'change',render);
+for(const field of['npc-search','npc-campaign-filter','npc-category-filter','npc-visibility-filter','npc-life-filter'])$(field)?.addEventListener(field==='npc-search'?'input':'change',render);
 $('npc-view-cards')?.addEventListener('click',()=>{view='cards';render()});
 $('npc-view-list')?.addEventListener('click',()=>{view='list';render()});
 window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();render()});

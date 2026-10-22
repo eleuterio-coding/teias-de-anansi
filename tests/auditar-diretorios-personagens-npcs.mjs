@@ -51,13 +51,13 @@ assert.deepEqual(publicNpcEntries(unconfigured),[],'NPC da campanha não deve se
 const legacy=sanitizeCampaign({id:'camp-3',importantNpcIds:['npc-legacy'],importantNpcPublicNames:{'npc-legacy':'Contato conhecido'},importantNpcVisibility:{'npc-legacy':true}});
 assert.deepEqual(publicNpcEntries(legacy),[{id:'npc-legacy',name:'Contato conhecido'}],'Nomes legados explicitamente publicados continuam visíveis.');
 
-const names=['personagens.html','lista-personagens.html','npcs.html'];
+const names=['personagens.html','lista-personagens.html','npcs.html','lista-npcs.html'];
 for(const path of names){
  const html=read(path);
- assert.ok(html.includes('hub-directories.css'),'Página não utiliza estilos do Hub: '+path);
+ assert.ok(html.includes(path.startsWith('lista-')?'hub-directories.css':'hub-roster.css'),'Página não utiliza estilos do Hub: '+path);
  assert.ok(html.includes('hub-ux.js'),'Página sem o app shell: '+path);
 }
-assert.ok(read('scripts/app-shell.js').includes('{page:"npcs.html",label:"NPCs",icon:"player"}'),'NPCs precisa aparecer para ambos os perfis.');
+assert.ok(read('scripts/app-shell.js').includes('{page:"npcs.html",aliases:["lista-npcs.html"],label:"NPCs",icon:"player"}'),'NPCs precisa aparecer para ambos os perfis.');
 assert.ok(!read('scripts/npc-list-ui.js').includes("location.replace('personagens.html')"),'Jogadores não podem ser expulsos da lista de NPCs.');
 assert.ok(read('scripts/character-list-ui.js').includes('deleteCharacterAsMaster'),'Exclusão existente deve ser preservada.');
 console.log('PASS: diretórios, compatibilidade e limites de publicação dos NPCs.');

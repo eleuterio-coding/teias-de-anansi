@@ -1,4 +1,4 @@
-import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261022-directories1';
+import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261022-roster2';
 import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
 import{deleteImage,imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
@@ -39,8 +39,8 @@ function card(c){
   </div></div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="mesa.html?id=${encodeURIComponent(c.id)}">Abrir</a>
-   <a class="btn secondary" href="personagens.html?campaign=${encodeURIComponent(c.id)}">Personagens</a>
-   <a class="btn secondary" href="npcs.html?campaign=${encodeURIComponent(c.id)}">NPCs</a>
+   <a class="btn secondary" href="lista-personagens.html?mode=campanhas&campaign=${encodeURIComponent(c.id)}">Personagens</a>
+   <a class="btn secondary" href="lista-npcs.html?mode=campanhas&campaign=${encodeURIComponent(c.id)}">NPCs</a>
    ${readOnly?'':`<button type="button" class="danger" data-delete="${esc(c.id)}">Excluir</button>`}
   </div>
  </article>`

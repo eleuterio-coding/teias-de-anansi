@@ -15,9 +15,9 @@ test('Mestre pode vincular NPC existente, configurar revelação e consultar fic
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
   localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([npc]));
  },{master,campaign,npc});
- await page.goto('/npcs.html');
+ await page.goto('/lista-npcs.html');
  await expect(page.getByRole('heading',{name:'NPCs',exact:true})).toBeVisible();
- await expect(page.locator('#npc-list').getByText(npc.name)).toBeVisible();
+ await expect(page.locator('#npc-list').getByRole('heading',{name:npc.name})).toBeVisible();
  await expect(page.locator('#npc-master-actions')).toBeVisible();
  await expect(page.locator('#npc-list').getByRole('link',{name:'Abrir ficha'})).toBeVisible();
  await page.locator('#npc-list [data-config-npc="npc-1"]').click();
@@ -46,8 +46,8 @@ test('Jogador vê apenas os NPCs revelados, sem acesso aos dados privados ou aç
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([{...campaign,npcs:[{id:'hidden',name:'Vilão secreto',notes:'NUNCA_REVELAR_123'}]}]));
   localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([npc]));
  },{player,cache,campaign,npc});
- await page.goto('/npcs.html');
- await expect(page.locator('#npc-list').getByText('Lorde Seren')).toBeVisible();
+ await page.goto('/lista-npcs.html');
+ await expect(page.locator('#npc-list').getByRole('heading',{name:'Lorde Seren'})).toBeVisible();
  await expect(page.locator('#npc-list').getByText('Nobre')).toBeVisible();
  await expect(page.getByText('Nome verdadeiro secreto')).toHaveCount(0);
  await expect(page.getByText('Vilão secreto')).toHaveCount(0);
@@ -74,7 +74,7 @@ test('Personagens compartilham a lista e respeitam controle de edição do jogad
   localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify(cache));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([owned,peer]));
  },{player,owned,peer,cache});
- await page.goto('/personagens.html');
+ await page.goto('/lista-personagens.html');
  await expect(page.getByRole('heading',{name:'Personagens',exact:true})).toBeVisible();
  await expect(page.locator('.pc').filter({hasText:'Arannis'})).toContainText('Seu personagem');
  await expect(page.locator('.pc').filter({hasText:'Tharion'})).toContainText('somente leitura');
