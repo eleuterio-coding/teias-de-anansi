@@ -17,7 +17,21 @@ Não existe papel de Observador. Rafael não é um papel configurável: ele é s
 
 ## Personagens
 
-A área de Personagens reúne a Criação de Personagem e a Ficha Digital. Quando a conta conectada é de Jogador, somente a **ficha atribuída por Rafael** aparece como ficha de jogo editável. Jogadores não podem alterar fichas de outras pessoas.
+O menu **Personagens** é um diretório de fichas já existentes: indicadores, pesquisa, filtros por campanha, classe e status, cards/lista e atalhos para as fichas originais. Não há um segundo editor.
+
+Rafael pode consultar o elenco das campanhas e configurar status e anotações privadas por campanha. A vinculação de fichas a contas de jogadores continua na área **Jogadores**, sem autoatribuição.
+
+O jogador pode consultar os personagens autorizados em suas campanhas, editar somente suas fichas próprias/atribuídas e visualizar os demais apenas conforme as permissões existentes. Notas e status privados da campanha não entram na projeção compartilhada.
+
+## NPCs
+
+O menu **NPCs** existe para Mestre e Jogador. Rafael gerencia o catálogo local de fichas já existentes e vínculos com campanhas, além de campos narrativos verdadeiros e de **publicação explícita**: nome conhecido, categoria, ocupação, facção, relação, situação, localização e descrição públicas. Cada NPC pode ser configurado de forma independente em cada campanha.
+
+A versão do jogador lista apenas NPCs explicitamente publicados nas campanhas que lhe foram atribuídas. Os campos internos, nomes secretos e notas do mestre **não** são enviados pela projeção compartilhada; nem mesmo a participação de um NPC em uma Aventura o revela automaticamente. Informações não publicadas continuam ocultas, sem contagens de NPCs secretos.
+
+As fichas completas de NPC seguem no armazenamento local do Mestre; os dados públicos são sincronizados junto com as Campanhas. As anotações pessoais de NPCs do Jogador ficam **somente no navegador**, segmentadas pelo usuário conectado, não se sincronizam com o Firebase.
+
+
 
 ## Campanhas / Mesas
 
