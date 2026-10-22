@@ -2,6 +2,8 @@ import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{adventureListCard}from'./adventure-list-card.js?v=20261021-shared-order1';
+import{rememberAvatars,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
+import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261021-shared-order1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
@@ -32,8 +34,86 @@ function readOnly(){
  const participantMap=new Map(arr(campaignRow.participants).map(p=>[String(p.username||'').toLowerCase(),p])),characterMap=new Map(arr(campaignRow.characters).map(c=>[text(c.id),c]));
  const players=active?arr(active.participantUsernames).map(u=>participantMap.get(String(u).toLowerCase())).filter(Boolean):[],characters=active?arr(active.characterIds).map(id=>characterMap.get(text(id))).filter(Boolean):[],sessions=active?arr(campaignRow.campaign.sessions).filter(s=>arr(active.sessionIds).includes(s.id)):[];
  root.innerHTML=`<div class="top"><div><p class="mini">Hub / Aventuras · somente leitura</p><h1 style="margin:.1em 0">Aventuras</h1></div><div class="hero-actions"><a class="btn secondary" href="campanhas.html">Campanhas</a><a class="btn secondary" href="mesa.html?id=${encodeURIComponent(campaignId)}">Abrir Campanha</a></div></div><section class="card"><label>Campanha<select id="shared-adventure-campaign">${rows.map(r=>`<option value="${esc(r.campaign.id)}" ${r.campaign.id===campaignId?'selected':''}>${esc(r.campaign.name)}</option>`).join('')}</select></label></section><section class="card" style="margin-top:12px"><h2>Lista de Aventuras</h2><div id="adventure-list"><div class="list campaign-list-grid">${adventures.length?adventures.map(a=>adventureListCard(a,{parentName:campaignRow.campaign.name,readOnly:true})).join(''):'<div class="story-empty">Nenhuma Aventura atribuída nesta Campanha.</div>'}</div></div></section>${active?`<section class="card adventure-player-overview" style="margin-top:12px">${imageElementHtml(active.coverImage,active.coverImageUrl,{className:'adventure-cover',alt:''})}<div class="top"><div><p class="mini">${esc(campaignRow.campaign.name)}</p><h2>${esc(numberedAdventureTitle(active))}</h2></div><span class="badge">${esc(advStatus(active.status))}</span></div>${active.description?`<p>${esc(active.description)}</p>`:''}${active.summary?`<p><strong>Resumo:</strong> ${esc(active.summary)}</p>`:''}${active.currentSituation?`<p><strong>Situação atual:</strong> ${esc(active.currentSituation)}</p>`:''}${active.nextStep?`<p><strong>Próximo passo:</strong> ${esc(active.nextStep)}</p>`:''}</section><div class="story-grid player-adventure-grid">${simpleSection('Jogadores',players,p=>`<article class="story-card"><strong>${esc(p.displayName||p.username)}</strong></article>`)}${simpleSection('Personagens',characters,c=>`<article class="story-card"><strong>${esc(c.name||'Personagem')}</strong></article>`)}${simpleSection('Missões / Objetivos',arr(active.missions),m=>`<article class="story-card"><strong>${esc(m.title)}</strong> <span class="badge">${esc(missionStatus(m.status))}</span>${m.description?`<p>${esc(m.description)}</p>`:''}${m.reward?`<p><strong>Recompensa:</strong> ${esc(m.reward)}</p>`:''}${m.consequence?`<p><strong>Consequência:</strong> ${esc(m.consequence)}</p>`:''}</article>`)}${simpleSection('NPCs',arr(active.npcs),n=>`<article class="story-card"><strong>${esc(n.name)}</strong>${n.role?` <span class="badge">${esc(n.role)}</span>`:''}${n.description?`<p>${esc(n.description)}</p>`:''}</article>`)}${simpleSection('Locais',arr(active.locations),l=>`<article class="story-card"><strong>${esc(l.name)}</strong>${l.type?` <span class="badge">${esc(l.type)}</span>`:''}${l.description?`<p>${esc(l.description)}</p>`:''}</article>`)}${simpleSection('Pistas reveladas',arr(active.clues),c=>`<article class="story-card"><strong>${esc(c.title)}</strong> <span class="badge">${esc(clueStatus(c.status))}</span><p>${esc(c.text)}</p></article>`)}${simpleSection('Materiais para os Jogadores',arr(active.materials||active.handouts),h=>`<article class="story-card"><strong>${esc(h.title)}</strong>${h.content?`<p>${esc(h.content)}</p>`:''}${h.url?`<p><a href="${esc(h.url)}" target="_blank" rel="noopener">Abrir material</a></p>`:''}</article>`)}${simpleSection('Sessões da Aventura',sessions,s=>`<article class="story-card"><div class="top"><div><strong>${esc(numberedSessionTitle(s))}</strong></div><a class="btn secondary" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(s.id)}">Abrir</a></div></article>`)}</div>`:''}`;
+ alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessions);
  document.getElementById('shared-adventure-campaign')?.addEventListener('change',event=>{location.href=`aventuras.html?campaign=${encodeURIComponent(event.target.value)}`})
  hydrateMediaImages(root).catch(()=>{});
 }
+
+/* Mesma hierarquia visual da Campanha na visão de Jogador.
+   Reorganiza exclusivamente os campos JÁ publicados nesta visualização. */
+function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessions){
+ if(!root||!active)return;
+ const overview=root.querySelector('.adventure-player-overview');
+ const list=root.querySelector('#adventure-list')?.closest('section');
+ const picker=root.querySelector('#shared-adventure-campaign')?.closest('section');
+ const detailGrid=root.querySelector('.player-adventure-grid');
+ if(!overview||!detailGrid)return;
+ const wrapper=document.createElement('div');
+ wrapper.className='hub-detail-page adventure-detail-readonly';
+ const image=overview.querySelector('.adventure-cover');
+ image?.classList.add('campaign-product-hero-media');
+ const header=overview.querySelector('.top');
+ if(header){
+  header.className='campaign-product-hero-content';
+  const context=header.querySelector('.mini');
+  if(context)context.className='campaign-product-kicker';
+  const heading=header.querySelector('h2');
+  if(heading){const h1=document.createElement('h1');h1.textContent=heading.textContent;heading.replaceWith(h1)}
+  const titleRow=document.createElement('div');titleRow.className='campaign-product-title-row';
+  const title=header.querySelector('h1'),badge=header.querySelector('.badge');
+  if(title)titleRow.append(title);
+  if(badge)titleRow.append(badge);
+  header.append(titleRow);
+  for(const p of [...overview.querySelectorAll(':scope > p')]){p.classList.add('campaign-product-description');header.append(p)}
+  const badges=document.createElement('div');badges.className='campaign-product-meta';
+  badges.innerHTML='<span class="badge">Aventura</span><span class="badge">'+players.length+' '+(players.length===1?'jogador':'jogadores')+'</span><span class="badge">'+sessions.length+' '+(sessions.length===1?'sessão':'sessões')+'</span>';
+  header.append(badges);
+ }
+ overview.classList.remove('card','adventure-player-overview');
+ overview.classList.add('campaign-product-hero');
+ overview.removeAttribute('style');
+ const actions=document.createElement('div');actions.className='campaign-product-actions';
+ const campaignLink=document.createElement('a');campaignLink.className='btn campaign-product-create-action';
+ campaignLink.href='mesa.html?id='+encodeURIComponent(campaignRow.campaign.id);campaignLink.textContent='Abrir Campanha';
+ const sessionsLink=document.createElement('a');sessionsLink.className='btn campaign-product-create-action';
+ sessionsLink.href='sessoes.html?campaign='+encodeURIComponent(campaignRow.campaign.id);
+ sessionsLink.textContent='Abrir Sessões';
+ actions.append(campaignLink,sessionsLink);
+ overview.insertBefore(actions,overview.querySelector('.campaign-product-hero-content'));
+ const summary=document.createElement('div');summary.className='campaign-product-summary';
+ const statistics=[['Status',advStatus(active.status)],['Jogadores',players.length],['Personagens',characters.length],['Missões',arr(active.missions).length],['Sessões',sessions.length]];
+ for(const [name,value]of statistics){const metric=document.createElement('div');metric.className='metric';const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=String(value);metric.append(label,count);summary.append(metric)}
+ detailGrid.classList.remove('story-grid','player-adventure-grid');detailGrid.classList.add('campaign-sections','campaign-editor-grid','hub-detail-grid');
+ const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
+ for(const section of detailGrid.querySelectorAll(':scope > section')){
+  const title=section.querySelector('h3')?.textContent?.trim()||'';
+  section.id=sectionNames[title]||'';section.classList.add('campaign-editor-card');
+  const heading=section.querySelector('h3');
+  if(heading){const h2=document.createElement('h2');h2.textContent=heading.textContent;heading.replaceWith(h2)}
+ }
+ rememberAvatars(campaignRow.participants);
+ const playerSection=detailGrid.querySelector('#participantes');
+ const characterSection=detailGrid.querySelector('#personagens');
+ arr(players).forEach((player,i)=>{
+  const card=playerSection?.querySelectorAll('.story-card')[i];if(!card)return;
+  const name=player.displayName||player.username||'Jogador';
+  card.classList.add('hub-detail-avatar-row');
+  card.innerHTML=campaignAvatarHtml(playerAvatarHtml(player.username||name,campaignRow.participants),name)+'<strong>'+esc(name)+'</strong>';
+ });
+ arr(characters).forEach((character,i)=>{
+  const card=characterSection?.querySelectorAll('.story-card')[i];if(!card)return;
+  card.classList.add('hub-detail-avatar-row');
+  card.innerHTML=campaignAvatarHtml(characterAvatarHtml(character),character.name||'Personagem')+'<strong>'+esc(character.name||'Personagem')+'</strong>';
+ });
+ if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
+ if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
+ const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['missoes','Missões'],['npcs','NPCs'],['locais','Locais'],['pistas','Pistas'],['materiais','Materiais'],['sessoes','Sessões'],['outras-aventuras','Outras Aventuras']];
+ for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
+ wrapper.append(overview,summary,nav,detailGrid);
+ root.replaceChildren(wrapper);
+ bindCampaignAvatarPreviews(root);
+}
+
 async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261021-shared-order1')}
 start();
