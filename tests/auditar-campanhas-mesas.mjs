@@ -39,9 +39,9 @@ assert.ok(fs.readFileSync(new URL('../campanhas.html',import.meta.url),'utf8').i
 assert.ok(sessionsUi.includes('Abrir Campanha'),'Visão de sessões deve permitir abrir a Campanha vinculada.');
 assert.ok(sheetUi.includes('sheet-campaign-context')&&sheetUi.includes('Abrir Campanha'),'Ficha deve mostrar contexto da campanha.');
 assert.ok(gameplay.includes("character-sheet-campaign-ui.js"),'Modo de Jogo deve carregar a integração de campanha.');
-assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.includes('>Campanhas</a>'),'Lista de personagens deve integrar Mesas pela UI atual.');
-for(const token of['collaborationAccessMode','editableCharacterIds','visibleCharacterIds','canEditCharacter','canOpenCharacter','create-character-action','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
-assert.ok(characterListUi.includes('ctx.guest||ctx.preview'),'Jogador autenticado deve poder criar ficha, mas visualização de mestre deve permanecer somente leitura.');
+assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.includes('roster-picker-ui.js'),'Lista de personagens deve integrar Mesas pela UI atual.');
+for(const token of['collaborationAccessMode','editableCharacterIds','visibleCharacterIds','canEditCharacter','canOpenCharacter','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
+assert.ok(fs.readFileSync(new URL('../personagens.html',import.meta.url),'utf8').includes('Criar personagem'),'O menu oferece criação de personagem sem botão no topo.');
 assert.ok(index.includes('href="campanhas.html')&&index.includes('href="sessoes.html'),'Início deve ativar Campanhas e Sessões.');
 assert.equal([campaignState,listUi,tableUi,sessionsUi,sheetUi,characterListUi].join('\n').toLowerCase().includes('supabase'),false);
 console.log('OK — Rafael é Mestre fixo; jogadores podem criar e editar a própria ficha, veem fichas da Campanha e não editam as dos demais.');
