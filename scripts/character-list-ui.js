@@ -6,7 +6,7 @@ import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-mast
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{characterInCampaign,characterInAdventure,sessionHistory,adventuresOf,currentAdventure,previousAdventures,adventureCurrentLocation,statuses,knownName,statusLabel as rosterStatusLabel,arr as rosterArray}from'./roster-context.js?v=20261022-roster2';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const arr=v=>Array.isArray(v)?v:[],norm=v=>String(v??'').toLocaleLowerCase('pt-BR'),statusNames=Object.fromEntries([...statuses,['retired','Aposentado'],['inactive','Inativo']]);
+const arr=v=>Array.isArray(v)?v:[],norm=v=>String(v??'').toLocaleLowerCase('pt-BR'),statusNames=Object.fromEntries(statuses);
 let view='cards';
 const initialCampaign=new URLSearchParams(location.search).get('campaign')||'all';let campaignFilterInitialized=false;
 function context(){
@@ -68,7 +68,8 @@ function card(c,ctx,campaigns){
  const editableContext=!ctx.restricted&&linked.length;
  const detail=editableContext?`<details class="hub-directory-details"><summary>Gerenciar por campanha</summary>${linked.map(row=>{
   const meta=arr(row.characterDirectory).find(x=>x.id===c.id)||{status:'active',notes:''};
-  return`<div><label>${esc(row.name)} — Status<select data-character-status="${esc(c.id)}" data-campaign-id="${esc(row.id)}">${Object.entries(statusNames).map(([value,label])=>`<option value="${value}" ${meta.status===value?'selected':''}>${label}</option>`).join('')}</select></label><label>Anotação privada do mestre<textarea data-note-character="${esc(c.id)}" data-note-campaign="${esc(row.id)}" maxlength="2000">${esc(meta.notes)}</textarea></label><button type="button" class="secondary" data-save-note="${esc(c.id)}" data-campaign-id="${esc(row.id)}">Salvar anotação</button></div>`
+  const choices=Object.entries(statusNames);if(!statusNames[meta.status]&&meta.status)choices.push([meta.status,rosterStatusLabel(meta.status)+' (histórico)']);
+  return`<div><label>${esc(row.name)} — Status<select data-character-status="${esc(c.id)}" data-campaign-id="${esc(row.id)}">${choices.map(([value,label])=>`<option value="${value}" ${meta.status===value?'selected':''}>${label}</option>`).join('')}</select></label><label>Anotação privada do mestre<textarea data-note-character="${esc(c.id)}" data-note-campaign="${esc(row.id)}" maxlength="2000">${esc(meta.notes)}</textarea></label><button type="button" class="secondary" data-save-note="${esc(c.id)}" data-campaign-id="${esc(row.id)}">Salvar anotação</button></div>`
  }).join('')}</details>`:''; 
  const facts=`<dl class="hub-roster-info">
  <div><dt>Nome do jogador</dt><dd>${esc(owner(c,linked))}</dd></div>
