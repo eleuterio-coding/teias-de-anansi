@@ -342,6 +342,11 @@ function sessionCard(s,restricted=false){
  `}</div></article>`
 }
 function render(){
+ const detailMode=Boolean(sessionId);
+ const collectionTitle=document.querySelector('.hub-collection-top');
+ if(collectionTitle)collectionTitle.hidden=detailMode;
+ const homeLink=document.querySelector('.hub-collection-home');
+ if(homeLink)homeLink.hidden=detailMode;
  const restricted=playerMode();
  if(!restricted)reload();
  const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
