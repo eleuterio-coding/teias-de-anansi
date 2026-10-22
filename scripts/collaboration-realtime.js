@@ -14,7 +14,7 @@ const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
 const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
 let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),initialPublicationUid='',retryAfter=0,lastPullAt=0,scheduledPullAt=0;
-const pendingCharacterIds=new Set(),MIN_PULL_INTERVAL_MS=4000;
+const pendingCharacterIds=new Set(),pendingCampaignIds=new Set(),pendingAdventureCampaignIds=new Set(),MIN_PULL_INTERVAL_MS=4000;
 const pendingCampaignDeletes=new Set(),pendingCharacterDeletes=new Map();
 
 function cacheComparable(){
@@ -37,6 +37,16 @@ function captureRemovals(kind,beforeRaw,afterRaw){
  if(globalThis.__HUB_REALTIME_APPLYING__)return;
  const before=parseRows(beforeRaw),after=parseRows(afterRaw),afterIds=new Set(after.map(row=>text(row?.id)).filter(Boolean));
  if(kind==='characters')for(const id of changedEntityIds(before,after))pendingCharacterIds.add(id);
+ if(kind==='campaigns')for(const id of changedEntityIds(before,after))pendingCampaignIds.add(id);
+ if(kind==='adventures'){
+  const older=new Map(before.filter(row=>text(row?.id)).map(row=>[text(row.id),row]));
+  const newer=new Map(after.filter(row=>text(row?.id)).map(row=>[text(row.id),row]));
+  for(const id of changedEntityIds(before,after)){
+   const oldCid=text(older.get(id)?.campaignId),newCid=text(newer.get(id)?.campaignId);
+   if(oldCid)pendingAdventureCampaignIds.add(oldCid);
+   if(newCid)pendingAdventureCampaignIds.add(newCid);
+  }
+ }
  if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
  if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id)){const info=playerCharacterInfo(id);pendingCharacterDeletes.set(id,info?{...row,__managedOwner:info}:row)}}
 }
@@ -127,6 +137,9 @@ async function pushChanges(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return false;
  const kinds=new Set(pendingKinds);pendingKinds.clear();
  const changedIds=new Set(pendingCharacterIds);pendingCharacterIds.clear();const selectiveCharacters=changedIds.size>0;
+ const changedCampaignIds=new Set([...pendingCampaignIds,...pendingAdventureCampaignIds]);
+ pendingCampaignIds.clear();pendingAdventureCampaignIds.clear();
+ const selectiveCampaigns=changedCampaignIds.size>0;
  const removedCampaigns=[...pendingCampaignDeletes];pendingCampaignDeletes.clear();
  const removedCharacters=[...pendingCharacterDeletes.entries()];pendingCharacterDeletes.clear();
  const session=readCollaborationSession();if(!session)return false;
@@ -134,7 +147,7 @@ async function pushChanges(){
   if(session.isMaster){
    for(const id of removedCampaigns)await deleteRemoteCampaign(provider,id);
    if(kinds.has('campaigns')||kinds.has('adventures')||removedCampaigns.length){
-    const adventures=readAdventures(),characters=readCharacters();for(const campaign of readCampaigns())await provider.saveCampaignBundle(campaign,adventures.filter(a=>a.campaignId===campaign.id),characters)
+    const adventures=readAdventures(),characters=readCharacters();for(const campaign of readCampaigns())if(!selectiveCampaigns||changedCampaignIds.has(text(campaign.id)))await provider.saveCampaignBundle(campaign,adventures.filter(a=>a.campaignId===campaign.id),characters)
    }
    if(kinds.has('characters')){
     const characters=readCharacters(),campaigns=readCampaigns();
@@ -150,7 +163,7 @@ async function pushChanges(){
   }
   for(const[id,row]of removedCharacters){if(session.isMaster){await deleteRemoteCharacterAsMaster(provider,id);continue}const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
  }catch(error){
-  for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);for(const id of changedIds)pendingCharacterIds.add(id);
+  for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);for(const id of changedIds)pendingCharacterIds.add(id);for(const id of changedCampaignIds)pendingCampaignIds.add(id);
   const exhausted=/resource-exhausted|quota|429|too.many.requests/i.test([error?.code,error?.message].join(' '));
   retryAfter=Date.now()+(exhausted?60000:10000);
   console.warn('[Hub realtime] falha ao enviar atualização:',error);
@@ -178,6 +191,6 @@ export async function startRealtime(){
  startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured){emitRemoteStatus('error',new Error('Firebase não configurado ou indisponível.'));return null}unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);emitRemoteStatus('error',error);startPromise=null;return null});
  return startPromise
 }
-export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCharacterIds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();lastPullAt=0;scheduledPullAt=0;unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;retryAfter=0;initialPublicationUid='';startPromise=null}
+export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCharacterIds.clear();pendingCampaignIds.clear();pendingAdventureCampaignIds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();lastPullAt=0;scheduledPullAt=0;unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;retryAfter=0;initialPublicationUid='';startPromise=null}
 
 if(typeof window!=='undefined')window.addEventListener(CHANGE_EVENT,event=>schedulePush(event.detail?.kind));
