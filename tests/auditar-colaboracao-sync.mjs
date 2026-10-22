@@ -10,7 +10,7 @@ assert.equal(usernameFromTechnicalEmail('gus@teias.invalid'),'gus');
 assert.deepEqual(normalizeAccount({uid:'u1',email:'Rafael@teias.invalid'},{domain:'teias.invalid'}),{uid:'u1',username:'rafael',displayName:'rafael'});
 const membership=normalizeMembership({campaignId:'c1',uid:'u-gus',username:'gus',email:'gus@teias.invalid',role:'player',characterId:'pc1',sessionIds:['s1','s1'],adventureIds:['a1']});
 assert.equal(membership.username,'gus');assert.deepEqual(membership.sessionIds,['s1']);assert.deepEqual(membership.adventureIds,['a1']);
-const participant=participantSharedProjection(membership);assert.deepEqual(participant,{username:'gus',displayName:'gus',role:'player',characterId:'pc1',sessionIds:['s1'],adventureIds:['a1'],active:true});assert.equal('email'in participant,false);assert.equal('uid'in participant,false);
+const participant=participantSharedProjection(membership);assert.deepEqual(participant,{username:'gus',displayName:'gus',role:'player',characterId:'pc1',sessionIds:['s1'],adventureIds:['a1'],active:true,avatarDataUrl:''});assert.equal('email'in participant,false);assert.equal('uid'in participant,false);
 assert.equal(canCollaborate({ownerId:'u1',uid:'u1'},'adventure:write'),true);
 assert.equal(canCollaborate({ownerId:'u1',uid:'u2',membership:{uid:'u2',role:'player',active:true}},'campaign:write'),false,'Jogador não edita Campanha.');
 assert.equal(canCollaborate({ownerId:'u1',uid:'u2',membership:{uid:'u2',role:'player',active:true}},'character:read-campaign'),true,'Jogador lê as fichas da Campanha.');
