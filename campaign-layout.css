@@ -320,6 +320,7 @@
  align-self:center;
 }
 #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-identity>.campaign-avatar-trigger,
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-identity>.roster-avatar,
 #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-character-photo{
  grid-column:1!important;
  grid-row:2!important;
