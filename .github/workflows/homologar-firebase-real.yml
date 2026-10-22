@@ -10,6 +10,7 @@ on:
       - 'scripts/collaboration-model.js'
       - 'scripts/collaboration-ui.js'
       - 'scripts/collaboration-sync.js'
+      - 'tests/auditar-colaboracao-sync.mjs'
       - 'scripts/firebase-collaboration-provider.js'
       - 'usuarios.html'
       - 'e2e/collaboration-real.spec.js'
