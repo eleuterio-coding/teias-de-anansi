@@ -1,0 +1,24 @@
+/* Menus e elencos de Personagens/NPCs: duas colunas no desktop. */
+.hub-roster-menu{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:1180px}
+.hub-roster-menu [hidden]{display:none!important}
+.hub-roster-menu-page{margin-inline:auto}
+.hub-roster-choice-grid,.hub-directory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.hub-directory-grid.is-list{grid-template-columns:1fr}
+.hub-roster-choice{display:flex;flex-direction:column;gap:9px;min-height:146px;padding:20px;border:1px solid var(--hub-border,#33485d);border-radius:14px;background:var(--hub-surface,#101b26);text-decoration:none;color:var(--hub-text,#eff6ff)}
+.hub-roster-choice:hover,.hub-roster-choice:focus-visible,.hub-roster-choice.is-selected{border-color:var(--hub-accent,#3a9fff);background:var(--hub-surface-2,#172737)}
+.hub-roster-choice-label{font-size:1.15rem;font-weight:750}
+.hub-roster-choice-description{font-size:.85rem;color:var(--hub-text-2,#b0c0d0);line-height:1.45}
+.hub-roster-choice-cta{color:var(--hub-accent-2,#81bfff);margin-top:auto;font-size:.82rem;font-weight:700}
+.hub-roster-picker{margin:0 0 24px}.hub-roster-picker-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.hub-roster-picker-header h2{margin:0;font-size:1.17rem}
+.hub-roster-picker-header p{font-size:.88rem;color:var(--hub-text-2,#b0c0d0);margin:5px 0}
+.hub-roster-current{color:var(--hub-text-2,#b0c0d0);margin:10px 0}
+.hub-roster-alert{border:1px solid #e1aa6e;border-radius:8px;padding:12px}
+.hub-roster-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 14px}
+.hub-roster-info div{min-width:0;font-size:.83rem}
+.hub-roster-info dt{font-weight:650;color:var(--hub-muted,#93a8bc)}
+.hub-roster-info dd{margin:3px 0;color:var(--hub-text,#e7f0fa);overflow-wrap:anywhere}
+.hub-roster-info .hub-roster-full{grid-column:1/-1}
+.hub-roster-info a{color:var(--hub-accent-2,#81bfff)}
+.hub-directory-grid .hub-directory-card{min-height:0}
+@media(max-width:720px){.hub-roster-menu,.hub-roster-choice-grid,.hub-directory-grid{grid-template-columns:1fr!important}.hub-roster-picker-header{align-items:start;flex-direction:column}.hub-roster-info{grid-template-columns:1fr}}
