@@ -30,6 +30,10 @@ test('Mestre: Aventuras e Sessões da Campanha têm dimensões iguais',async({pa
  },masterData());
  await page.goto('/mesa.html?id='+cid);
  await expect(page.locator('#campanha [data-campaign-field="name"]')).toBeVisible();
+ await expect(page.locator('#campanha #historia')).toContainText('Resumo da história');
+ await expect(page.locator('#campanha #historia textarea[data-campaign-field="historySummary"]')).toHaveValue('Resumo público');
+ await expect(page.locator('#table-root > .campaign-sections > #historia')).toHaveCount(0);
+ await expect(page.locator('#table-root .campaign-product-description')).toContainText('Resumo público');
  await expect(page.locator('#aventuras .campaign-player-story-card')).toHaveCount(1);
  await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(1);
  const boxes=await page.locator('#aventuras,#sessoes').evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect();return{width:r.width,height:r.height,top:r.top}}));
@@ -69,11 +73,32 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  await page.goto('/mesa.html?id='+cid);
  const root=page.locator('#table-root');
  await expect(root).toHaveAttribute('data-campaign-access','player');
- for(const selector of ['.campaign-product-hero','.campaign-product-summary','#proxima-sessao','.section-nav','#campanha.campaign-editor-card','#jogadores.roster-section','#aventuras.campaign-reference-section','#sessoes.campaign-reference-section','#historia.campaign-editor-card','.campaign-structured-columns','#npcs.campaign-editor-card','#locais.campaign-editor-card','#linha-tempo.campaign-timeline-section']){
+ for(const selector of ['.campaign-product-hero','.campaign-product-summary','#proxima-sessao','.section-nav','#campanha.campaign-editor-card','#jogadores.roster-section','#aventuras.campaign-reference-section','#sessoes.campaign-reference-section','#campanha #historia','.campaign-structured-columns','#npcs.campaign-editor-card','#locais.campaign-editor-card','#linha-tempo.campaign-timeline-section']){
   await expect(root.locator(selector)).toBeVisible()
  }
  await expect(root.locator('#campanha input[readonly]')).not.toHaveCount(0);
+ await expect(root.locator('#campanha #historia textarea[readonly]')).toHaveValue('Resumo público');
+ await expect(root.locator('#campanha #historia')).toContainText('Resumo da história');
+ await expect(root.locator('.campaign-editor-grid > #historia')).toHaveCount(0);
+ await expect(root.locator('.campaign-product-description')).toContainText('Resumo público');
  await expect(root.locator('#jogadores .roster-player')).toHaveCount(2);
+ await expect(root.locator('#jogadores .roster-grip')).toHaveCount(0);
+ await expect(root.locator('#jogadores .roster-player-identity')).toHaveCount(2);
+ await expect(root.locator('#jogadores .roster-player-name')).toHaveText(['Ana','Bento']);
+ await expect(root.locator('#jogadores .roster-player-character')).toHaveCount(2);
+ const rowAlignment=await root.locator('#jogadores .roster-player').first().evaluate(row=>{
+  const r=s=>row.querySelector(s)?.getBoundingClientRect();
+  const identity=r('.roster-player-identity'),character=r('.roster-player-character'),open=r('.roster-open-button'),parent=row.getBoundingClientRect();
+  const clip=e=>e&&e.left>=parent.left-2&&e.right<=parent.right+2&&e.width>0;
+  const grid=getComputedStyle(row).gridTemplateColumns;
+  return{identityVisible:clip(identity),characterVisible:clip(character),actionVisible:clip(open),
+    charactersAfterIdentity:character.top>=identity.top-2,grid,overflow:row.scrollWidth-row.clientWidth};
+ });
+ expect(rowAlignment.identityVisible).toBe(true);
+ expect(rowAlignment.characterVisible).toBe(true);
+ expect(rowAlignment.actionVisible).toBe(true);
+ expect(rowAlignment.charactersAfterIdentity).toBe(true);
+ expect(rowAlignment.overflow).toBeLessThanOrEqual(3);
  await expect(root.locator('#aventuras .campaign-player-story-card')).toHaveCount(1);
  await expect(root.locator('#sessoes .campaign-player-story-card')).toHaveCount(1);
  await expect(root.locator('#npcs')).toContainText('NPC Público');
@@ -112,4 +137,32 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  await page.evaluate(()=>window.dispatchEvent(new CustomEvent('hub-rpg:remote-updated',{detail:{claim(){}}})));
  await expect(button).toHaveAttribute('aria-expanded','true');
  await button.click();await expect(button).toHaveAttribute('aria-expanded','false');
+});
+
+
+test('Mestre edita o resumo no card Campanha sem perder descrição antiga',async({page})=>{
+ await page.addInitScript(({campaign})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
+ },{campaign});
+ await page.goto('/mesa.html?id='+cid);
+ const field=page.locator('#campanha #historia textarea[data-campaign-field="historySummary"]');
+ await field.fill('A jornada nas fortalezas de prata.');
+ await expect.poll(async()=>page.evaluate(()=>{
+  const rows=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]');
+  return rows.find(c=>c.id==='mirror-e2e-campaign')?.historySummary
+ })).toBe('A jornada nas fortalezas de prata.');
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]').find(c=>c.id==='mirror-e2e-campaign'));
+ expect(saved.description).toBe('Uma campanha compartilhada');
+ await expect(page.locator('#campanha #historia')).toBeVisible();
+ await expect(page.locator('.campaign-editor-grid > #historia')).toHaveCount(0);
+});
+test('Campanha antiga sem historySummary mantém seu texto de descrição na área unificada',async({page})=>{
+ await page.addInitScript(({campaign})=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([{...campaign,historySummary:''}]));
+ },{campaign});
+ await page.goto('/mesa.html?id='+cid);
+ await expect(page.locator('#campanha #historia textarea')).toHaveValue('Uma campanha compartilhada');
+ await expect(page.locator('.campaign-product-description')).toContainText('Uma campanha compartilhada');
 });
