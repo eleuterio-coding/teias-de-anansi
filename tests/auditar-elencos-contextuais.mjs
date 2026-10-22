@@ -33,6 +33,7 @@ assert.equal(JSON.stringify(shared).includes(secret),false);
 assert.equal(JSON.stringify(shared).includes('Verdadeiro vilão'),false);
 assert.deepEqual(sessionSharedProjection(campaign.sessions[0],campaign).publicNpcIds,['npc1']);
 assert.deepEqual(sessionSharedProjection(campaign.sessions[1],campaign).publicNpcIds,[]);
+assert.deepEqual(sessionSharedProjection({...campaign.sessions[0],scenes:[]},campaign,[{id:'ad1',campaignId:'campaign1',scenes:[{sessionId:'s1',status:'completed',npcIds:['npc1']},{sessionId:'s1',status:'planned',npcIds:['npc2']}]}]).publicNpcIds,['npc1']);
 const advShared=revealedAdventureProjection(adventure,campaign);
 assert.equal(advShared.currentLocation,'Taverna');
 assert.equal(advShared.npcs[0].name,'Sábio');
