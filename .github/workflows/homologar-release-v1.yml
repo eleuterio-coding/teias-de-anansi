@@ -37,6 +37,7 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/auditar-release-v1.mjs
+      - run: node tests/auditar-diretorios-personagens-npcs.mjs
       - name: Testar idempotência e estabilidade de listeners sem Firebase real
         run: |
           node tests/regressao-quota-firestore-v2.mjs
