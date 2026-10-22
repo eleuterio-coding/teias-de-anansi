@@ -100,15 +100,15 @@ test('menu responsivo pode abrir, navegar e fechar',async ({page},testInfo)=>{
   }
 });
 
-test('tela de jogadores permanece independente do shell sem perder o design',async({page})=>{
+test('Mestre gerencia acessos no layout padrão, com menus lateral e superior',async({page})=>{
   await page.goto('/usuarios.html');
-  await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
-  await expect(page.getByRole('heading',{name:'Jogadores'})).toBeVisible();
-  await expect(page.locator('body')).toHaveClass(/hub-login-page/);
-  await expect(page.locator('.hub-app-shell')).toHaveCount(0);
-  await expect(page.locator('#login-username')).toHaveCount(1);
-  const bg=await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor);
-  expect(bg).toBe('rgb(244, 247, 251)');
+  await expect(page.getByRole('heading',{name:'Gerenciar acessos'})).toBeVisible();
+  await expect(page.locator('.hub-app-shell')).toBeVisible();
+  await expect(page.locator('body')).toHaveClass(/hub-shell-enabled/);
+  await expect(page.locator('body')).not.toHaveClass(/hub-login-page/);
+  await expect(page.locator('.hub-sidebar')).toBeVisible();
+  await expect(page.locator('.hub-global-topbar')).toBeVisible();
+  await expect(page.locator('#membership-tools')).toHaveCount(1);
 });
 
 test('menu de etapas permanece sticky acima do conteúdo da criação', async ({page},testInfo) => {

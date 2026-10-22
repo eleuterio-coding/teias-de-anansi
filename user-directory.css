@@ -90,3 +90,5 @@ body.hub-shell-enabled .hub-users-page .card{padding:22px;min-width:0}
 .hub-self-profile-only .hub-users-page #own-display-name{
  font-size:1.16rem;font-weight:740
 }
+
+.hub-users-page .hub-user-image-title{margin:0;font-size:.97rem;font-weight:700;color:var(--hub-text,#e8f1fa)}

@@ -1,3 +1,4 @@
+import{numberedAdventureTitle}from'./narrative-labels.js';
 import{imageElementHtml}from'./image-media.js?v=20260925-media2';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -9,7 +10,7 @@ const types={main:'Aventura principal',side:'Aventura secundária',oneshot:'One-
 
 export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
  const a=adventure;
- const name=String(a.title||'Aventura');
+ const name=String(a.title||'Aventura'),heading=numberedAdventureTitle(a);
  const status=ADVENTURE_STATUSES.includes(a.status)?a.status:'planned';
  const href=`aventuras.html?campaign=${encodeURIComponent(a.campaignId)}&id=${encodeURIComponent(a.id)}`;
  const campaignHref=`mesa.html?id=${encodeURIComponent(a.campaignId)}`;
@@ -27,10 +28,10 @@ export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
      </div>
     </details>`;
  return `<article class="campaign-card" data-adventure-card="${esc(a.id)}">
-  <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir aventura ${esc(name)}"></a>
+  <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir ${esc(heading)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">${cover}<div class="campaign-card-details">
-   <h2>${esc(name)}</h2>
+   <h2>${esc(heading)}</h2>
    ${description?`<p>${esc(description)}</p>`:''}
    <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></div>
    <p class="mini">${esc(types[a.type]||'Aventura')} ${a.arc?`· ${esc(a.arc)} `:''}· ${esc(counts)}</p>

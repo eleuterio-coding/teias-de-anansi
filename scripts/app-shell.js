@@ -1,7 +1,7 @@
 
 const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
 const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
-const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","bibliotecas.html","usuario.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
+const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","bibliotecas.html","usuario.html","usuarios.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
 const NAV_ITEMS=[
  {page:"painel.html",aliases:["index.html"],label:"Início",icon:"home"},
@@ -15,7 +15,7 @@ const NAV_ITEMS=[
 const PAGE_LABELS={
  "index.html":"Hub","painel.html":"Início","campanhas.html":"Campanhas","nova-campanha.html":"Nova campanha","mesa.html":"Campanha",
  "sessoes.html":"Sessões","aventuras.html":"Aventuras","personagens.html":"Personagens",
- "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuários","configuracoes.html":"Configurações"
+ "lista-personagens.html":"Personagens","npcs.html":"NPCs","bibliotecas.html":"Biblioteca","usuario.html":"Usuários","usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
 };
 const ICONS={
  home:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/>',
@@ -35,7 +35,7 @@ const ICONS={
 function esc(value){return String(value??"").replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function icon(name){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[name]||ICONS.chevron)+"</svg>"}
 function currentPage(){return location.pathname.split("/").pop()||"index.html"}
-function shellEligible(){return SHELL_PAGES.has(currentPage())}
+function shellEligible(){return SHELL_PAGES.has(currentPage())&&(currentPage()!=="usuarios.html"||Boolean(masterSession()?.isMaster))}
 function pageLabel(page){page=page||currentPage();return page==='usuario.html'?userAreaLabel():PAGE_LABELS[page]||document.title.split(" - ")[0]||"Hub"}
 function pageMatches(item,page){page=page||currentPage();if(item.page==="npcs.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return true;if(item.page==="personagens.html"&&CHARACTER_PAGES.has(page)&&new URLSearchParams(location.search).get("npc")==="1")return false;return item.page===page||(item.aliases||[]).includes(page)||((page==="mesa.html"||page==="nova-campanha.html")&&item.page==="campanhas.html")||(LIBRARY_PAGES.has(page)&&item.page==="bibliotecas.html")||(CHARACTER_PAGES.has(page)&&item.page==="personagens.html")}
 function readRecents(){try{const rows=JSON.parse(localStorage.getItem(RECENT_KEY)||"[]");return Array.isArray(rows)?rows:[]}catch{return[]}}
@@ -99,7 +99,7 @@ function breadcrumbTrail(label){
  const sections={
   "campanhas.html":"Campanhas","aventuras.html":"Aventuras","sessoes.html":"Sessões",
   "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs",
-  "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"configuracoes.html":"Configurações"
+  "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
  };
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
@@ -198,6 +198,7 @@ function bindShell(){
 export function initAppShell(){
  if(!shellEligible()||document.querySelector(".hub-app-shell"))return;
  const movable=[...document.body.childNodes].filter(function(node){return !(node.nodeType===1&&node.tagName==="SCRIPT")});
+ if(currentPage()==="usuarios.html")document.body.classList.remove("hub-login-page");
  const shell=document.createElement("div");shell.className="hub-app-shell";
  const sidebar=buildSidebar(),frame=document.createElement("div"),content=document.createElement("div");
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
