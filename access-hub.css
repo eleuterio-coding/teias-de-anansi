@@ -10,3 +10,16 @@ body.hub-shell-enabled #main-content :is(.campaign-access-meta,.mini,.muted,.emp
 body.hub-shell-enabled #main-content :is(fieldset,.access-check){border-color:var(--hub-border,#34485d)}
 body.hub-shell-enabled #main-content input[type="checkbox"]{accent-color:var(--hub-accent,#4b9ce0)}
 @media(max-width:760px){body.hub-shell-enabled #main-content .player-access-grid{grid-template-columns:1fr}}
+
+/* Gerenciar acessos: área subordinada à navegação de Usuários. */
+body.hub-shell-enabled .access-main-header{max-width:1400px;width:100%;margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;padding-bottom:10px}
+body.hub-shell-enabled .access-main-header h1{margin:3px 0 7px}
+body.hub-shell-enabled .access-main-header p{margin:0 0 5px}
+body.hub-shell-enabled #membership-tools .player-access-grid{align-items:start}
+body.hub-shell-enabled #membership-tools .player-access-grid>div{min-width:0}
+body.hub-shell-enabled #membership-tools :is(.campaign-access-list,.access-check-list){min-width:0}
+body.hub-shell-enabled #membership-tools #membership-form{display:grid;gap:16px;align-content:start}
+body.hub-shell-enabled #membership-tools #membership-form[hidden]{display:none}
+body.hub-shell-enabled #membership-tools .access-columns{gap:14px}
+body.hub-shell-enabled #membership-tools fieldset{min-width:0;border:1px solid var(--hub-border,#34485d);border-radius:12px;padding:15px}
+@media(max-width:700px){body.hub-shell-enabled .access-main-header .btn{width:100%}body.hub-shell-enabled #membership-tools .access-columns{grid-template-columns:1fr}}
