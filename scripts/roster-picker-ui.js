@@ -1,4 +1,4 @@
-import{readCampaigns}from'./campaign-state.js?v=20261022-directories1';
+import{readCampaigns}from'./campaign-state.js?v=20261022-roster2';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{collaborationAccessMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{arr,esc,nameSort}from'./roster-context.js?v=20261022-roster2';
