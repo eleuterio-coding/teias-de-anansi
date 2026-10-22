@@ -36,7 +36,7 @@ function sanitizeNpcDirectoryEntry(row={}){return{
  id:text(row.id),sheetId:text(row.sheetId)||null,name:text(row.name).slice(0,200),category:text(row.category).slice(0,80),
  role:text(row.role).slice(0,200),faction:text(row.faction).slice(0,200),relationship:text(row.relationship).slice(0,200),status:text(row.status).slice(0,80),
  location:text(row.location).slice(0,200),notes:String(row.notes??'').slice(0,6000),visibleToPlayers:row.visibleToPlayers===true,
- publicName:text(row.publicName).slice(0,200),publicRole:text(row.publicRole).slice(0,200),publicFaction:text(row.publicFaction).slice(0,200),
+ publicName:text(row.publicName).slice(0,200),publicCategory:text(row.publicCategory).slice(0,80),publicRole:text(row.publicRole).slice(0,200),publicFaction:text(row.publicFaction).slice(0,200),
  publicRelationship:text(row.publicRelationship).slice(0,200),publicStatus:text(row.publicStatus).slice(0,100),
  publicLocation:text(row.publicLocation).slice(0,200),publicDescription:String(row.publicDescription??'').slice(0,2000),
  publicPortraitUrl:String(row.publicPortraitUrl??'').slice(0,1000),updatedAt:text(row.updatedAt)||now()
