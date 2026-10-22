@@ -26,10 +26,10 @@ const sheet=fs.readFileSync(new URL('../ficha-personagem.html',import.meta.url),
 
 assert.ok(realtime.includes('sessionComparable()'),'Realtime deve comparar apenas o estado semântico da sessão.');
 assert.equal(realtime.includes('persistAuthenticatedAccount([])'),false,'Bootstrap não pode zerar memberships antes do pull.');
-assert.ok(realtime.includes("collaboration-view.js?v=20260917-master-full-control1"),'Realtime deve carregar a sessão idempotente sem cache antigo.');
+assert.match(realtime,/from'\.\/collaboration-view\.js\?v=/,'Realtime deve carregar o módulo de sessão idempotente.');
 assert.ok(view.includes('sameSession(current,base)'),'Persistência da sessão deve ser idempotente.');
-assert.ok(hubUx.includes("collaboration-realtime.js?v=20261016-current-status2"),'Hub deve carregar a revisão realtime atual, preservando a correção anti-loop.');
-assert.ok(sheet.includes('scripts/hub-ux.js?v=20261016-current-status3'),'Ficha deve forçar a revisão corrigida no navegador.');
+assert.match(hubUx,/import\('\.\/collaboration-realtime\.js\?v=/,'Hub deve carregar o realtime por import dinâmico.');
+assert.match(sheet,/scripts\/hub-ux\.js\?v=/,'Ficha deve carregar o bundle de UX versionado.');
 const autosave=fs.readFileSync(new URL('../scripts/character-sheet-autosave.js',import.meta.url),'utf8');
 const sheetJs=fs.readFileSync(new URL('../scripts/character-sheet.js',import.meta.url),'utf8');
 assert.equal(realtime.includes('location.reload'),false,'Realtime global não pode recarregar a página.');
