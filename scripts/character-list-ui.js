@@ -1,6 +1,7 @@
 import{read,write,uid}from'./character-builder/state.js';
-import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,canOpenCharacter,playerCharacterInfo,masterPreviewMode,sharedCampaignRows,effectiveCollaborationSession}from'./collaboration-view.js?v=20261021-ficha-permissao3';
+import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,canOpenCharacter,playerCharacterInfo,masterPreviewMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
+import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-master-delete1';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -51,11 +52,12 @@ function updateDirectory(id,campaignId,patch){
  const result=updateCampaign(all,campaignId,{characterDirectory:rows});
  if(result.ok){writeCampaigns(result.list);render()}
 }
+function characterAdventures(c,ctx,linked){const allowed=new Set(linked.map(row=>row.id));return(ctx.restricted?sharedAdventures():readAdventures()).filter(a=>allowed.has(a.campaignId)&&arr(a.characterIds).includes(c.id))}
 function card(c,ctx,campaigns){
  const linked=associations(c,campaigns),isOwned=ctx.owned.has(c.id),canEdit=canEditCharacter(c.id),canOpen=canOpenCharacter(c.id),
  linkedIds=linked.map(row=>row.id);
  const visibleSessionCount=linked.reduce((n,row)=>n+arr(row.sessions).filter(s=>arr(s.participantCharacterIds).includes(c.id)).length,0);
- const statuses=linked.map(row=>statusFor(c,row,ctx)).filter(Boolean);
+ const statuses=linked.map(row=>statusFor(c,row,ctx)).filter(Boolean),adventures=characterAdventures(c,ctx,linked);
  const status=linked.length?(ctx.restricted?'':statuses[0]||'active'):'';
  const statusLabel=linked.length?(ctx.restricted?'Vinculado':statuses.length>1&&statuses.some(x=>x!==statuses[0])?'Status variáveis':statusNames[status]||'Ativo'):'Sem campanha';
  const editableContext=!ctx.restricted&&linked.length;
@@ -68,7 +70,8 @@ function card(c,ctx,campaigns){
  <div class="hub-directory-meta"><span class="hub-directory-tag ${status?'status-'+esc(status):''}">${esc(statusLabel)}</span>${ctx.restricted?(isOwned?'<span class="hub-directory-tag">Seu personagem</span>':'<span class="hub-directory-tag">Outro jogador · somente leitura</span>'):''}</div>
  <div class="hub-directory-context"><span>Jogador: ${esc(owner(c,linked))}</span>
  ${linked.length?`<span>Campanhas: ${linked.map(row=>`<a href="mesa.html?id=${encodeURIComponent(row.id)}">${esc(row.name)}</a>`).join(' · ')}</span>`:'<span>Nenhuma campanha vinculada</span>'}
- ${visibleSessionCount?`<span>${visibleSessionCount} ${visibleSessionCount===1?'sessão registrada':'sessões registradas'}</span>`:''}
+ ${adventures.length?`<span>Aventuras: ${adventures.map(a=>`<a href="aventuras.html?campaign=${encodeURIComponent(a.campaignId)}&id=${encodeURIComponent(a.id)}">${esc(a.title)}</a>`).join(' · ')}</span>`:''}
+ ${visibleSessionCount?`<span><a href="sessoes.html?campaign=${encodeURIComponent(linked[0].id)}">${visibleSessionCount} ${visibleSessionCount===1?'sessão registrada':'sessões registradas'}</a></span>`:''}
  ${ctx.mode==='master'?'<a href="usuarios.html">Gerenciar atribuição de jogadores ↗</a>':''}</div>
  ${detail}${actions}</article>`;
 }
