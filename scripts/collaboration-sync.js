@@ -61,7 +61,10 @@ export async function pullCollaborations(provider,{storage=globalThis.localStora
   const bundle=await provider.getCampaignBundle(membership.campaignId);if(!bundle?.payload)continue;
   const linked=await provider.listCampaignCharacters(membership.campaignId);for(const character of linked)if(text(character?.id))linkedIds.add(text(character.id));
   if(bundle.mode==='private'){
-   const remoteCampaign=bundle.payload.campaign,remoteAdventures=arr(bundle.payload.adventures);campaigns=replaceRemote(campaigns,[remoteCampaign]);adventures=replaceCampaignScope(adventures,membership.campaignId,remoteAdventures);characters=replaceRemote(characters,linked)
+   const remoteCampaign=bundle.payload.campaign,remoteAdventures=arr(bundle.payload.adventures);
+   // Migração segura do elenco já publicado: somente vínculos explícitos ausentes.
+   if(typeof provider.reconcileRosterMemberships==='function')await provider.reconcileRosterMemberships(remoteCampaign,remoteAdventures);
+   campaigns=replaceRemote(campaigns,[remoteCampaign]);adventures=replaceCampaignScope(adventures,membership.campaignId,remoteAdventures);characters=replaceRemote(characters,linked)
   }else{
    const ownId=text(membership.characterId),ownRemote=linked.filter(c=>text(c?.id)===ownId),readOnlyRemote=linked.filter(c=>text(c?.id)!==ownId);cache.campaigns[membership.campaignId]={membership,payload:bundle.payload,characterIds:linked.map(c=>text(c?.id)).filter(Boolean),characters:linked,updatedAt:now()};for(const c of linked)if(text(c?.id))currentShared.add(text(c.id));campaigns=replaceRemote(campaigns,[bundle.payload.campaign]);adventures=replaceCampaignScope(adventures,membership.campaignId,arr(bundle.payload.revealedAdventures));characters=mergeNewest(characters,ownRemote);characters=replaceRemote(characters,readOnlyRemote)
   }
