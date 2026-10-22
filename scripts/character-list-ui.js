@@ -2,6 +2,7 @@ import{read,write,uid}from'./character-builder/state.js';
 import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,canOpenCharacter,playerCharacterInfo,masterPreviewMode,sharedCampaignRows,effectiveCollaborationSession}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
 import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-master-delete1';
+import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[],norm=v=>String(v??'').toLocaleLowerCase('pt-BR'),statusNames={active:'Ativo',inactive:'Inativo',retired:'Aposentado',dead:'Morto',missing:'Desaparecido'};
 let view='cards';
@@ -28,7 +29,7 @@ function statusFor(character,campaign,ctx){
  return arr(campaign.characterDirectory).find(row=>row.id===character.id)?.status||'active'
 }
 function klass(c){return c.refSnapshots?.class?.name||c.className||'Classe não informada'}
-function species(c){return c.refSnapshots?.species?.name||'Espécie não informada'}
+function species(c){return characterIdentity(c,{includeName:false})||c.refSnapshots?.species?.name||'Espécie não informada'}
 function level(c){const n=Number(c.choices?.class?.level||c.level);return Number.isFinite(n)&&n>0?'Nível '+n:'Nível não informado'}
 function owner(c,campaigns){
  const member=campaigns.flatMap(row=>arr(row.members)).find(row=>row.characterId===c.id);
