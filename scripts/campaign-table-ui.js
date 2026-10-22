@@ -1,3 +1,4 @@
+import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-unified-campaign1';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{numberedSessionTitle}from'./narrative-labels.js';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
@@ -5,7 +6,7 @@ import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-prev
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-status-palette2';
-import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261021-campaign-header-clean1';
+import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-disclosure1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
@@ -37,49 +38,13 @@ function metric(label,value,href=''){
   :`<div class="metric">${content}</div>`
 }
 const countLabel=(n,singular,plural)=>`${n} ${n===1?singular:plural}`
-function overviewHtml(){
- const linked=campaign.members.filter(m=>m.characterId).length,adventures=adventuresForCampaign(readAdventures(),campaignId);
-
- const cover=imageElementHtml(campaign.coverImage,campaign.coverImageUrl,{className:'campaign-product-hero-media',alt:''});
- const previous=findPreviousCampaignSession(campaign);
- const previousLabel=previous?numberedSessionTitle(previous):'Nenhuma sessão anterior';
- const upcoming=findUpcomingCampaignSession(campaign),upcomingLabel=upcoming?numberedSessionTitle(upcoming):'Nenhuma próxima sessão',upcomingHref=upcoming?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(upcoming.id)}`:'';
-  const previousHref=previous?`sessoes.html?campaign=${encodeURIComponent(campaignId)}&id=${encodeURIComponent(previous.id)}`:'';
- return `<section class="campaign-product-hero">${cover}<div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}&new=1#adventure-create-card">Nova Aventura</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Nova Sessão</a></div><div class="campaign-product-hero-content"><div class="campaign-product-kicker">Contexto da Campanha · ${esc(campaign.system||'D&D 5.5e')}</div><div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(statusLabel(campaign.status))}</span></div><p class="campaign-product-description">${esc(campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p><div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${countLabel(campaign.members.length,'jogador','jogadores')}</span><span class="badge">${countLabel(adventures.length,'aventura','aventuras')}</span></div></div></section><div class="campaign-product-summary">${metric('Status',statusLabel(campaign.status))}${metric('Sessões',campaign.sessions.length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão Anterior',previousLabel,previousHref)+metric('Próxima Sessão',upcomingLabel,upcomingHref)}</div>`
-}
-function settingsHtml(){
- return`<section id="campanha" class="card campaign-editor-card">
-  <h2>Campanha</h2>
-  <div class="campaign-settings-layout">
-   <div class="campaign-settings-primary">
-    <label>Nome da campanha<input data-campaign-field="name" value="${esc(campaign.name)}"></label>
-    <div class="campaign-settings-cover"><strong>Imagem/capa</strong>${imagePickerHtml({media:campaign.coverImage,legacyUrl:campaign.coverImageUrl,alt:`Capa de ${campaign.name}`,className:'campaign-cover-image'})}</div>
-   </div>
-   <div class="campaign-settings-details form-grid two">
-    <label class="wide">Descrição curta<textarea maxlength="500" data-campaign-field="description">${esc(campaign.description)}</textarea></label>
-    <label class="wide">Cenário de Campanha<input maxlength="160" data-campaign-field="setting" value="${esc(campaign.setting||'')}"></label>
-    <label>Mundo / Plano<input maxlength="160" data-campaign-field="worldPlane" value="${esc(campaign.worldPlane||'')}"></label>
-    <label>Principal Continente / Região<input maxlength="160" data-campaign-field="mainRegion" value="${esc(campaign.mainRegion||'')}"></label>
-    <div class="campaign-settings-status-row wide"><label>Status<select data-campaign-field="status"><option value="planned" ${campaign.status==='planned'?'selected':''}>Planejada</option><option value="active" ${campaign.status==='active'?'selected':''}>Em andamento</option><option value="paused" ${campaign.status==='paused'?'selected':''}>Pausada</option><option value="finished" ${campaign.status==='finished'?'selected':''}>Concluída</option><option value="cancelled" ${campaign.status==='cancelled'?'selected':''}>Cancelada</option></select></label>
-    <div class="row-actions campaign-settings-save"><button type="button" data-save-campaign-section>Salvar</button></div></div>
-   </div>
-  </div>
- </section>`
-}
+function overviewHtml(){return renderCampaignOverview(campaign,adventuresForCampaign(readAdventures(),campaignId))}
+function settingsHtml(){return renderCampaignSettings(campaign,{imagePickerHtml})}
 function referenceCover(...items){
  const cover=items.find(item=>item&&(item.coverImage?.id||item.coverImageUrl));
  return cover?imageElementHtml(cover.coverImage,cover.coverImageUrl,{className:'campaign-reference-cover',alt:''}):'';
 }
-function referenceSectionsHtml(){
- const adventures=featuredCampaignAdventures(adventuresForCampaign(readAdventures(),campaignId));
- return`<section id="aventuras" class="card campaign-editor-card campaign-reference-section">
-  <div class="top campaign-reference-head"><h2>Aventuras da Campanha</h2>
-   <a class="btn secondary campaign-reference-header-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}">Abrir Aventuras</a>
-  </div>
-  <div class="list campaign-player-story-grid campaign-adventures-feature-grid">${adventures.length?adventures.map(a=>renderCampaignAdventureCard(a,campaignId)).join(''):'<div class="empty">Nenhuma aventura em andamento ou concluída nesta Campanha.</div>'}</div>
- </section>`
-}
-
+function referenceSectionsHtml(){return renderCampaignAdventuresSection(campaignId,adventuresForCampaign(readAdventures(),campaignId))}
 function detailsSectionsHtml(){
 
  const text=(id,title,field)=>`<section id="${id}" class="card campaign-editor-card"><h2>${esc(title)}</h2><textarea class="campaign-large-text" data-campaign-field="${field}">${esc(campaign[field])}</textarea><div class="row-actions" style="margin-top:10px"><button type="button" data-save-campaign-section>Salvar</button></div></section>`;
@@ -169,14 +134,7 @@ function commitRoster(list,message,{rebuildRows=false}={}){
 }
 function participantChecks(session){const linked=campaign.members.filter(m=>m.characterId);if(!linked.length)return'<span class="mini">Nenhuma ficha vinculada à Campanha.</span>';const selected=new Set(session.participantCharacterIds);return linked.map(m=>{const character=characters.find(c=>c.id===m.characterId);return`<label class="badge"><input type="checkbox" style="width:auto;margin:0 5px 0 0" data-session-participant="${esc(m.characterId)}" ${selected.has(m.characterId)?'checked':''}>${esc(character?.name||m.name)}</label>`}).join('')}
 function sessionCard(s){const participants=s.participantCharacterIds.map(id=>characters.find(c=>c.id===id)?.name||id).filter(Boolean);return`<article class="session-card ${s.status==='active'?'active':''}" data-session-row="${esc(s.id)}"><div class="session-head"><div><h3>${esc(numberedSessionTitle(s))}</h3><div><span class="badge ${esc(s.status)}">${esc(sessionStatus(s.status))}</span>${s.date?`<span class="badge">${esc(s.date)}</span>`:''}</div></div><div class="row-actions">${['planned','next'].includes(s.status)?`<button type="button" data-start-session="${esc(s.id)}">Iniciar sessão</button>`:''}${s.status==='active'?`<button type="button" data-finish-session="${esc(s.id)}">Concluir sessão</button>`:''}${!['completed','cancelled'].includes(s.status)?`<button type="button" class="secondary" data-cancel-session="${esc(s.id)}">Cancelar</button>`:''}<button type="button" class="danger" data-remove-session="${esc(s.id)}">Excluir</button></div></div><div class="form-grid two" style="margin-top:10px"><label>Título<input data-session-field="title" value="${esc(s.title)}"></label><label>Data<input data-session-field="date" type="date" value="${esc(s.date)}"></label><label>Status<select data-session-field="status">${['planned','next','current','completed','cancelled'].map(v=>`<option value="${v}" ${s.status===v?'selected':''}>${esc(sessionStatus(v))}</option>`).join('')}</select></label><label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label><label class="wide">Resumo / recap<textarea data-session-field="summary">${esc(s.summary)}</textarea></label><label class="wide">Notas compartilhadas<textarea data-session-field="sharedNotes">${esc(s.sharedNotes)}</textarea></label><label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label><div class="wide"><strong>Personagens participantes</strong><div data-session-participants style="margin-top:5px">${participantChecks(s)}</div></div></div>${participants.length?`<p class="mini">Registrados: ${esc(participants.join(', '))}</p>`:''}</article>`}
-function sessionsHtml(){
- const runningAdventures=adventuresForCampaign(readAdventures(),campaignId).filter(a=>['active','current'].includes(a.status));
- const adventureMap=new Map(runningAdventures.map(a=>[a.id,a]));
- const sessions=recentCampaignSessions(campaign.sessions,{limit:5,activeAdventureIds:new Set(adventureMap.keys())});
- return`<section id="sessoes" class="card campaign-editor-card campaign-reference-section">
- <div class="top campaign-reference-head"><h2>Sessões da Campanha</h2><a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${encodeURIComponent(campaignId)}&new=1#session-create-card">Planejar Sessão</a></div>
- <div class="campaign-player-story-grid campaign-player-sessions-grid">${sessions.length?sessions.map((session,index)=>renderCampaignSessionCard(session,campaignId,{featured:index===0&&session.status==='current'})).join(''):'<div class="empty">Nenhuma sessão próxima ou concluída vinculada a uma Aventura em andamento.</div>'}</div></section>`
-}
+function sessionsHtml(){return renderCampaignSessionsSection(campaign,adventuresForCampaign(readAdventures(),campaignId))}
 function render(){const root=$('table-root');if(!root)return;if(!campaign){root.innerHTML='<div class="status warning"><strong>Campanha não encontrada.</strong><br><a href="campanhas.html">Voltar para Campanhas</a></div>';return}document.title=`${campaign.name} - Campanha - Teias de Anansi`;root.innerHTML=`${overviewHtml()}${renderNextCampaignSession(campaign,{canPlan:true})}<nav class='section-nav'><a href='#proxima-sessao'>${findCurrentCampaignSession(campaign)?'Sessão Atual':'Próxima Sessão'}</a><a href='#campanha'>Campanha</a><a href='#jogadores'>Jogadores</a><a href='#aventuras'>Aventuras</a><a href='#sessoes'>Sessões</a><a href='#historia'>História</a><a href='#npcs'>NPCs</a><a href='#locais'>Locais</a><a href='#linha-tempo'>Linha do tempo</a><a href='#notas-mestre'>Notas do Mestre</a></nav><div id='table-feedback' class='status' hidden></div><div class='campaign-sections campaign-editor-grid'>${settingsHtml()}${rosterHtml()}${referenceSectionsHtml()}${sessionsHtml()}${detailsSectionsHtml()}</div>`;bind();bindCampaignAvatarPreviews(root);hydrateMediaImages(root).catch(()=>{})}
 function updateTextFields(){document.querySelectorAll('[data-campaign-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'?'input':'change';input.addEventListener(eventName,()=>{const field=input.dataset.campaignField,value=input.value;clearTimeout(saveTimer);saveTimer=setTimeout(()=>savePatch({[field]:value},{rerender:false,message:'Campanha salva automaticamente.'}),eventName==='input'?350:0)})})}
 function bindMembers(){

@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261019-disclosure1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261022-unified-campaign1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
 import{hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
@@ -61,14 +61,26 @@ export function removeTimelineNode(nodes,id){
  const result=clone(nodes),location=locationOf(result,id);if(!location)return null;
  location.list.splice(location.index,1);return result
 }
-function roster(c,npcs){
+function roster(c,npcs,{readOnly=false}={}){
+ if(readOnly){
+  const rows=Array.isArray(c.importantNpcEntries)?c.importantNpcEntries:[];
+  return `<section id="npcs" class="card campaign-editor-card campaign-npc-card"><div class="campaign-editor-head"><h2>NPCs importantes</h2></div>
+   <ul class="campaign-bullet-list">${rows.length?rows.map(n=>`<li><span class="campaign-list-marker"></span><span>${esc(n.name||'NPC sem nome')}</span></li>`).join(''):'<li class="campaign-blank-state">Nenhum NPC disponível.</li>'}</ul></section>`;
+ }
  const ids=c.importantNpcIds||[],chosen=ids.map(id=>npcs.find(n=>n.id===id)||{id,name:'NPC indisponível',missing:true}),available=npcs.filter(n=>!ids.includes(n.id)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'pt-BR'));
  return `<section id="npcs" class="card campaign-editor-card campaign-npc-card"><div class="campaign-editor-head"><h2>NPCs importantes</h2></div>
  <div class="campaign-add-line"><label>NPC<select id="campaign-npc-picker"><option value="">— Selecione um NPC —</option>${available.map(n=>`<option value="${esc(n.id)}">${esc(n.name||'NPC sem nome')}</option>`).join('')}</select></label><button type="button" data-add-npc>Adicionar NPC</button></div>
  <ul class="campaign-bullet-list">${chosen.length?chosen.map(n=>`<li><span class="campaign-list-marker"></span>${n.missing?`<span>${esc(n.name)}</span>`:`<a href="${npcHref(n.id)}">${esc(n.name||'NPC sem nome')}</a>`}<label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-npc="${esc(n.id)}" ${c.importantNpcVisibility?.[n.id]===true?'checked':''}><span>Mostrar aos jogadores</span></label><button type="button" class="secondary campaign-list-remove" data-del-npc="${esc(n.id)}">Remover</button></li>`).join(''):'<li class="campaign-blank-state">Nenhum NPC vinculado.</li>'}</ul>
  <a class="btn secondary campaign-npc-library-link" href="npcs.html">Abrir NPCs</a></section>`
 }
-function bullets(c,id,title,field){
+function bullets(c,id,title,field,{readOnly=false}={}){
+ if(readOnly){
+  const rows=Array.isArray(c.importantLocationEntries)?c.importantLocationEntries:[];
+  return `<section id="locais" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>Locais importantes</h2></div>
+   <ul class="campaign-bullet-list">${rows.length?rows.map(row=>`<li class="campaign-readonly-location">
+   ${row.image?.id?`<button type="button" class="campaign-player-location-thumb" data-player-location-preview="${esc(row.id)}" aria-label="Ampliar imagem de ${esc(row.name)}"><img data-hub-media-id="${esc(row.image.id)}" alt="Imagem de ${esc(row.name)}"></button>`:''}
+   <span class="campaign-list-marker"></span><span>${esc(row.name)}</span></li>`).join(''):'<li class="campaign-blank-state">Nenhum local disponível.</li>'}</ul></section>`;
+ }
  const values=entries(c[field]),locationRows=c.importantLocationEntries||[];
  return `<section id="${id}" class="card campaign-editor-card"><div class="campaign-editor-head"><h2>${esc(title)}</h2></div>
  <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>${field==='importantLocations'?locationThumbnail(locationRows[i]||{id:'old-'+i,name:v}):''}<span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions">${field==='importantLocations'?`<label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-location="${esc(locationRows[i]?.id||'')}" ${locationRows[i]?.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>`:''}<button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
@@ -101,33 +113,40 @@ function defaultCollapsedTimelineIds(nodes=[]){
  const visit=rows=>{for(const node of rows){if(node.children?.length){hidden.add(node.id);visit(node.children)}}};
  visit(nodes);return hidden
 }
-function flow(c,view='list',collapsedIds=null){
+function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
+ const sub=Array.isArray(node.children)?node.children:[],collapsed=collapsedIds.has(node.id);
+ return `<li class="timeline-item" data-timeline-id="${esc(node.id)}"><div class="campaign-flow-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
+ <div class="campaign-flow-card"><span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>
+ ${sub.length?`<div class="campaign-flow-actions"><button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button></div>`:''}</div></div>
+ ${sub.length?`<ol class="timeline-children" ${collapsed?'hidden':''}>${sub.map((child,i)=>readonlyTimelineNode(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}</li>`;
+}
+function flow(c,view='list',collapsedIds=null,{readOnly=false}={}){
  const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
  collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(mode)}</div>
- ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
- <div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>
+ ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds,{readOnly}):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>readOnly?readonlyTimelineNode(n,i,0,collapsedIds):nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
+ ${readOnly?'':`<div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>`}
  </section>`
 }
-export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null){
- if(id==='npcs')return roster(c,npcs);
- if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations');
+export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null,{readOnly=false}={}){
+ if(id==='npcs')return roster(c,npcs,{readOnly});
+ if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations',{readOnly});
 
- if(id==='linha-tempo')return flow(c,view,collapsedIds);
+ if(id==='linha-tempo')return flow(c,view,collapsedIds,{readOnly});
  return''
 }
-export function renderStructuredDetails(c,npcs){
+export function renderStructuredDetails(c,npcs,{readOnly=false}={}){
  // Pilhas independentes para NPCs e Locais; os Atos permanecem apenas nas Aventuras.
  return `<div class="campaign-structured-columns">
   <div class="campaign-structured-column">
-   ${renderStructuredSection(c,npcs,'npcs')}
+   ${renderStructuredSection(c,npcs,'npcs','list',null,{readOnly})}
   </div>
   <div class="campaign-structured-column">
-   ${renderStructuredSection(c,npcs,'locais')}
+   ${renderStructuredSection(c,npcs,'locais','list',null,{readOnly})}
   </div>
  </div>`
 }
-export function renderTimeline(c,view='list',collapsedIds=null){return flow(c,view,collapsedIds)}
+export function renderTimeline(c,view='list',collapsedIds=null,{readOnly=false}={}){return flow(c,view,collapsedIds,{readOnly})}
 export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  let timelineView='list';
  const collapsedTimelineIds=defaultCollapsedTimelineIds(getCampaign().timelineNodes||[]);
