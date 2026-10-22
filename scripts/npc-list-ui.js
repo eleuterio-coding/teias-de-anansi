@@ -1,5 +1,5 @@
 import{readNpcs,writeNpcs,npcMasterAuthorized,uid}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-directories1';
+import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-roster2';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{collaborationAccessMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{npcInCampaign,npcInAdventure,adventuresOf,currentAdventure,previousAdventures,adventureCurrentLocation,sessionHistory,statusLabel as lifeLabel}from'./roster-context.js?v=20261022-roster2';
