@@ -367,18 +367,103 @@
  overflow:hidden;white-space:pre-line;overflow-wrap:anywhere;
 }
 
-/* Ajuste de espaçamento nos jogadores: o seletor ocupa a área disponível
-   e os quatro botões usam apenas a largura de que realmente precisam. */
-#table-root #jogadores .roster-list{gap:8px}
-@container campaign-roster (min-width:711px){
+/* Jogadores da Campanha — layout do Mestre.
+   Os controles ocupam somente suas próprias colunas, sem reservar largura
+   fantasma entre o seletor do personagem e as quatro ações. No container
+   estreito, jogador/personagem ocupam duas linhas sem rolagem horizontal. */
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-list{
+ gap:8px;
+ min-width:0;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
+ display:grid;
+ grid-template-rows:18px 44px;
+ column-gap:8px;
+ row-gap:6px;
+ padding:10px 12px;
+ min-width:0;
+ align-items:stretch;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player-identity>.roster-player-display{
+ grid-column:3;
+ grid-row:1 / 3;
+ min-width:0;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player-character{
+ grid-column:4;
+ grid-row:1 / 3;
+ min-width:0;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player-actions{
+ grid-column:5;
+ grid-row:2;
+ display:flex;
+ flex-wrap:nowrap;
+ align-self:center;
+ justify-self:end;
+ justify-content:flex-end;
+ width:max-content;
+ min-width:0;
+ margin:0;
+ padding:0;
+ gap:5px;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player-identity>.campaign-avatar-trigger{
+ grid-column:2;grid-row:2;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-grip{
+ grid-column:1;grid-row:2;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-player-character>label{
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ grid-template-rows:18px 44px;
+ gap:6px;
+ margin:0;
+ min-width:0;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-character-picker{
+ width:100%;
+ max-width:100%;
+ min-width:0;
+}
+#table-root:not([data-campaign-access="player"]) #jogadores .roster-character-picker>select{
+ flex:1 1 0;
+ min-width:0!important;
+ max-width:100%;
+}
+/* Desktop: jogador + personagem + ações, sem trilha flexível após o seletor. */
+@container campaign-roster (min-width:760px){
  #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
-  grid-template-columns:24px 40px minmax(0,.9fr) minmax(0,1.12fr) max-content;
-  column-gap:7px;
-  padding:10px 12px;
+  grid-template-columns:24px 40px minmax(0,1fr) minmax(0,1.35fr) max-content;
+ }
+}
+/* Intermediário: ações imediatamente ao lado do seletor, na segunda linha. */
+@container campaign-roster (min-width:500px) and (max-width:759px){
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
+  grid-template-columns:24px 40px minmax(0,1fr) max-content;
+  grid-template-rows:18px 44px 18px 44px;
+ }
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-identity>.roster-player-display{
+  grid-column:3 / 5;grid-row:1 / 3;
+ }
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-character{
+  grid-column:2 / 4;grid-row:3 / 5;
  }
  #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-actions{
-  width:max-content;
-  justify-self:end;
-  gap:5px;
+  grid-column:4;grid-row:4;
+ }
+}
+/* Celular: preservar seletor legível e manter todos os botões alcançáveis. */
+@container campaign-roster (max-width:499px){
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
+  grid-template-columns:24px 40px minmax(0,1fr);
+  grid-template-rows:18px 44px 18px 44px 44px;
+ }
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-character{
+  grid-column:2 / 4;grid-row:3 / 5;
+ }
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-actions{
+  grid-column:2 / 4;grid-row:5;
  }
 }
