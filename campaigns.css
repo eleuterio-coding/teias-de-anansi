@@ -2250,3 +2250,6 @@ body.hub-shell-enabled:not(.hub-content-light) :is(#adventure-list,#sessions-lis
  width:auto!important;min-width:44px!important;max-width:none!important;
  padding-inline:10px!important;text-decoration:none
 }
+
+/* Nota compartilhada: mesma largura do bloco final de Notas do Mestre. */
+#table-root .campaign-editor-grid > #notas-compartilhadas{grid-column:1/-1;min-width:0}
