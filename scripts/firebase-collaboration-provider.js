@@ -59,10 +59,16 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async ensureProfile(firebaseUser=auth.currentUser){
    const u=accountFor(firebaseUser),ref=f.doc(db,'users',u.uid),snap=await f.getDoc(ref),
      saved=snap.exists()?snap.data()||{}:{},displayName=text(saved.displayName)||u.displayName;
-   const update={uid:u.uid,username:u.username,role:u.username===ownerUsername?'dm':'player',updatedAt:f.serverTimestamp()};
+   const role=u.username===ownerUsername?'dm':'player';
+   const update={};
+   // Não atualizar updatedAt a cada leitura: perfis têm listeners ativos.
+   // Só escrever quando houver criação, correção da identidade ou nome ausente.
+   if(!snap.exists()||text(saved.uid)!==u.uid)update.uid=u.uid;
+   if(!snap.exists()||text(saved.username)!==u.username)update.username=u.username;
+   if(!snap.exists()||saved.role!==role)update.role=role;
    // Um nome definido pelo Mestre não pode ser substituído a cada login.
    if(!text(saved.displayName))update.displayName=displayName;
-   await f.setDoc(ref,update,{merge:true});
+   if(Object.keys(update).length){update.updatedAt=f.serverTimestamp();await f.setDoc(ref,update,{merge:true})}
    return{...u,displayName};
   },
   async getMyProfile(){if(typeof auth.authStateReady==='function')await auth.authStateReady();const u=auth.currentUser;if(!u)throw new Error('Faça login.');const snap=await f.getDoc(f.doc(db,'users',u.uid));const saved=snap.exists()?snap.data()||{}:{};return{...accountFor(u),displayName:text(saved.displayName)||accountFor(u).displayName,avatarDataUrl:String(saved.avatarDataUrl||'')}},
