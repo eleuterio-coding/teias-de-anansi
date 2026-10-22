@@ -1,4 +1,4 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-idempotent1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-stable-listeners1';
 import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261022-idempotent1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';
@@ -12,7 +12,7 @@ const REMOTE_EVENT='hub-rpg:remote-updated';
 const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
 const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
-let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),initialPublicationUid='';
+let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),initialPublicationUid='',retryAfter=0;
 const pendingCampaignDeletes=new Set(),pendingCharacterDeletes=new Map();
 
 function cacheComparable(){
@@ -87,7 +87,7 @@ async function reconcilePersonalCharacters(memberships=null){
  await syncOwnCharacters(provider,{memberships})
 }
 async function applyRemote(){
- if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
+ if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__||Date.now()<retryAfter)return;
  if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
  const before=snapshotState();
  globalThis.__HUB_REALTIME_APPLYING__=true;
@@ -101,12 +101,16 @@ async function applyRemote(){
   const result=await pullCollaborations(provider);
   await reconcilePersonalCharacters(result.memberships||[]);
   persistAuthenticatedAccount(result.memberships||[]);
-  emitRemoteStatus('ready');
- }catch(error){console.warn('[Hub realtime] falha ao receber atualização:',error);emitRemoteStatus('error',error)}finally{globalThis.__HUB_REALTIME_APPLYING__=false}
+  retryAfter=0;emitRemoteStatus('ready');
+ }catch(error){
+  // Em caso de cota/limite atingido, não disparar novas consultas incessantes.
+  if(/resource-exhausted|quota|429|too.many.requests/i.test([error?.code,error?.message].join(' ')))retryAfter=Date.now()+60000;
+  console.warn('[Hub realtime] falha ao receber atualização:',error);emitRemoteStatus('error',error)
+ }finally{globalThis.__HUB_REALTIME_APPLYING__=false}
  const after=snapshotState(),kinds=changedKinds(before,after);
  if(kinds.length)emitRemote(kinds)
 }
-function schedulePull(){clearTimeout(pullTimer);pullTimer=setTimeout(()=>applyRemote(),120)}
+function schedulePull(){if(Date.now()<retryAfter)return;clearTimeout(pullTimer);pullTimer=setTimeout(()=>applyRemote(),400)}
 async function pushChanges(){
  clearTimeout(pushTimer);pushTimer=0;
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
@@ -149,14 +153,14 @@ function loginUrl(){
  return login.href
 }
 async function bindAccount(next){
- if(!next){account=null;initialPublicationUid='';unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
+ if(!next){account=null;retryAfter=0;initialPublicationUid='';unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
  account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>{console.warn('[Hub realtime] listener:',error);emitRemoteStatus('error',error)});await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
- startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);emitRemoteStatus('error',error);startPromise=null;return null});
+ startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured){emitRemoteStatus('error',new Error('Firebase não configurado ou indisponível.'));return null}unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);emitRemoteStatus('error',error);startPromise=null;return null});
  return startPromise
 }
-export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;initialPublicationUid='';startPromise=null}
+export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;retryAfter=0;initialPublicationUid='';startPromise=null}
 
 if(typeof window!=='undefined')window.addEventListener(CHANGE_EVENT,event=>schedulePush(event.detail?.kind));

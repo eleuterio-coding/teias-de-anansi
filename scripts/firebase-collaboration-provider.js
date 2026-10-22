@@ -34,7 +34,7 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   onAuthChanged(cb){return lib.auth.onAuthStateChanged(auth,async firebaseUser=>{if(!firebaseUser){cb(null);return}try{cb(await provider.ensureProfile(firebaseUser))}catch{cb(accountFor(firebaseUser))}})},
   async currentUser(){return auth.currentUser?accountFor(auth.currentUser):null},
   subscribeRealtime(onChange,onError=()=>{}){
-   const u=auth.currentUser;if(!u?.email)return()=>{};const account=accountFor(u);let children=[],playerChildren=[];
+   const u=auth.currentUser;if(!u?.email)return()=>{};const account=accountFor(u);let children=[],playerChildren=[],campaignWatchKey=null,userWatchKey=null,playerWatchKey=null;
    const clearChildren=()=>{for(const stop of children)try{stop()}catch{}children=[]};
    const clearPlayerChildren=()=>{for(const stop of playerChildren)try{stop()}catch{}playerChildren=[]};
    const signal=snapshot=>{if(snapshot?.metadata?.hasPendingWrites)return;onChange?.()};
@@ -44,12 +44,42 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
    let rootStop;
    if(account.username===ownerUsername){
     const campaignsQuery=f.query(f.collection(db,'campaigns'),f.where('ownerId','==',u.uid));
-    const campaignsStop=f.onSnapshot(campaignsQuery,snapshot=>{clearChildren();watchCollection(f.collection(db,'users',u.uid,'characters'));for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError);
-    const usersStop=f.onSnapshot(f.collection(db,'users'),snapshot=>{clearPlayerChildren();for(const row of snapshot.docs){if(row.id===u.uid)continue;const data=row.data()||{},name=canonicalUsername(data.username);if(!playerAccounts.some(spec=>spec.username===name))continue;watchPlayerCollection(f.collection(db,'users',row.id,'characters'))}signal(snapshot)},onError);
+    const campaignsStop=f.onSnapshot(campaignsQuery,snapshot=>{
+     const key=snapshot.docs.map(row=>row.id).sort().join('|');
+     if(key!==campaignWatchKey){
+      campaignWatchKey=key;clearChildren();
+      watchCollection(f.collection(db,'users',u.uid,'characters'));
+      for(const row of snapshot.docs){const cid=row.id;watchDoc(f.doc(db,'campaigns',cid,'private','state'));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}
+     }
+     signal(snapshot)
+    },onError);
+    const usersStop=f.onSnapshot(f.collection(db,'users'),snapshot=>{
+     const eligible=snapshot.docs.filter(row=>row.id!==u.uid&&playerAccounts.some(spec=>spec.username===canonicalUsername(row.data()?.username)));
+     const key=eligible.map(row=>row.id).sort().join('|');
+     if(key!==userWatchKey){userWatchKey=key;clearPlayerChildren();for(const row of eligible)watchPlayerCollection(f.collection(db,'users',row.id,'characters'))}
+     signal(snapshot)
+    },onError);
     rootStop=()=>{try{campaignsStop()}catch{}try{usersStop()}catch{}}
    }else{
     const email=String(u.email).toLowerCase(),q=f.query(f.collection(db,'memberships'),f.where('email','==',email));
-    rootStop=f.onSnapshot(q,snapshot=>{clearChildren();watchCollection(f.collection(db,'users',u.uid,'characters'));watchCollection(f.collection(db,'users'));const memberships=snapshot.docs.map(d=>normalizeMember({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');for(const m of memberships){const cid=m.campaignId;watchDoc(f.doc(db,'campaigns',cid,'shared','state'));for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));watchCollection(f.collection(db,'campaigns',cid,'characters'));watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))}signal(snapshot)},onError)
+    rootStop=f.onSnapshot(q,snapshot=>{
+     const memberships=snapshot.docs.map(d=>normalizeMember({...d.data(),id:d.id})).filter(m=>m.active!==false&&m.role==='player');
+     const key=memberships.map(m=>[m.campaignId,...unique(m.sessionIds).sort(),':',...unique(m.adventureIds).sort()].join('|')).sort().join('||');
+     if(key!==playerWatchKey){
+      playerWatchKey=key;clearChildren();
+      watchCollection(f.collection(db,'users',u.uid,'characters'));
+      watchCollection(f.collection(db,'users'));
+      for(const m of memberships){
+       const cid=m.campaignId;
+       watchDoc(f.doc(db,'campaigns',cid,'shared','state'));
+       for(const sid of unique(m.sessionIds))watchDoc(f.doc(db,'campaigns',cid,'sessions',sid));
+       for(const aid of unique(m.adventureIds))watchDoc(f.doc(db,'campaigns',cid,'adventureViews',aid));
+       watchCollection(f.collection(db,'campaigns',cid,'characters'));
+       watchCollection(f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)))
+      }
+     }
+     signal(snapshot)
+    },onError)
    }
    return()=>{try{rootStop?.()}catch{}clearChildren();clearPlayerChildren()}
   },
