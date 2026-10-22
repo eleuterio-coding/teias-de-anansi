@@ -3,6 +3,9 @@ on:
   pull_request:
     paths:
       - 'scripts/campaign-player-view.js'
+      - 'scripts/campaign-shared-layout.js'
+      - 'scripts/collaboration-realtime.js'
+      - 'scripts/hub-ux.js'
       - 'scripts/campaign-structured-ui.js'
       - 'scripts/campaign-state.js'
       - 'scripts/collaboration-model.js'
@@ -13,6 +16,7 @@ on:
       - 'mesa.html'
       - 'tests/auditar-visibilidade-campanha.mjs'
       - 'e2e/campaign-player-disclosure.spec.js'
+      - 'e2e/campaign-shared-layout.spec.js'
       - '.github/workflows/validar-visibilidade-campanha.yml'
   workflow_dispatch:
 permissions:
@@ -28,7 +32,11 @@ jobs:
           node-version: '22'
       - name: Validar sintaxe e proteção de dados
         run: |
+          node --check scripts/campaign-shared-layout.js
           node --check scripts/campaign-player-view.js
+          node --check scripts/campaign-table-ui.js
+          node --check scripts/collaboration-realtime.js
+          node --check scripts/timeline-flowchart.js
           node --check scripts/campaign-structured-ui.js
           node --check scripts/campaign-state.js
           node --check scripts/collaboration-model.js
@@ -38,4 +46,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Validar as visões do Mestre e Jogador
-        run: npx playwright test e2e/campaign-player-disclosure.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-player-disclosure.spec.js e2e/campaign-shared-layout.spec.js --project=desktop-chromium --project=mobile-chromium

@@ -7,7 +7,7 @@ const base={
  importantLocationEntries:[{id:'location-public',name:'Portal Antigo',image:null,visibleToPlayers:true},{id:'location-hidden',name:'Lugar Secreto',image:null,visibleToPlayers:false}],
  timelineNodes:[{id:'event-public',text:'Chegada à cidade',visibleToPlayers:true,children:[]},{id:'event-hidden',text:'Conspiração escondida',visibleToPlayers:false,children:[]}],
  members:[{id:'m1',username:'fernanda',name:'Fernanda',role:'player',characterId:'char-f',active:true},{id:'m2',username:'gustavo',name:'Gustavo',role:'player',characterId:'char-g',active:true}],
- sessions:[{id:'session-1',number:1,title:'O chamado',status:'planned',coverImageUrl:'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22200%22%20height=%22120%22/%3E'}]
+ sessions:[{id:'session-1',number:1,title:'O chamado',status:'current',coverImageUrl:'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22200%22%20height=%22120%22/%3E'}]
 };
 const characterRows=[{id:'char-f',name:'Aluria',refSnapshots:{class:{name:'Patrulheiro'}},choices:{class:{level:4}}},{id:'char-g',name:'Dongron',refSnapshots:{class:{name:'Patrulheiro'}},choices:{class:{level:3}}}];
 const playerCampaign={
@@ -17,7 +17,7 @@ const playerCampaign={
  timeline:'Chegada à cidade',timelineNodes:[{id:'event-public',text:'Chegada à cidade',children:[]}]
 };
 const membership={id:'membership-f',campaignId:cid,uid:'f-id',username:'fernanda',role:'player',characterId:'char-f',active:true,sessionIds:['session-1'],adventureIds:['adventure-1']};
-const adventure={id:'adventure-1',campaignId:cid,title:'As Rainhas',coverImageUrl:'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22200%22%20height=%22120%22/%3E'};
+const adventure={id:'adventure-1',campaignId:cid,title:'As Rainhas',status:'active',coverImageUrl:'data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22200%22%20height=%22120%22/%3E'};
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
 });
@@ -53,20 +53,20 @@ test('Jogador vê cards com links de ficha, capas e registros públicos sem edi�
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(characterRows));
  },{membership,playerCampaign,characterRows,adventure});
  await page.goto('/mesa.html?id='+cid);
- await expect(page.getByRole('heading',{name:'Jogadores participantes'})).toBeVisible();
- const roster=page.locator('#jogadores .campaign-player-roster-row');
+ await expect(page.getByRole('heading',{name:'Jogadores da Campanha'})).toBeVisible();
+ const roster=page.locator('#jogadores .roster-player');
  await expect(roster).toHaveCount(2);
  await expect(roster.last()).toContainText('Dongron');
- await expect(roster.last().locator('.campaign-player-character-link')).toHaveAttribute('href','ficha-personagem.html?id=char-g');
- await expect(page.locator('#jogadores select,#jogadores input,#jogadores button')).toHaveCount(0);
+ await expect(roster.last().locator('a.campaign-readonly-character-control')).toHaveAttribute('href',/ficha-personagem\.html\?.*id=char-g/);
+ await expect(page.locator('#jogadores select,#jogadores input,#jogadores [data-remove-member],#jogadores [data-roster-move]')).toHaveCount(0);
  await expect(page.locator('#aventuras .campaign-player-story-card')).toHaveCount(1);
  await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(1);
  await expect(page.locator('#aventuras .campaign-player-story-image')).toHaveCount(1);
  await expect(page.locator('#sessoes .campaign-player-story-image')).toHaveCount(1);
- await expect(page.locator('#aventuras .badge,#sessoes .badge')).toHaveCount(0);
- await expect(page.locator('#npcs .campaign-player-important-card')).toHaveCount(1);
- await expect(page.locator('#locais .campaign-player-important-card')).toHaveCount(1);
- await expect(page.locator('#linha-tempo .campaign-player-event-item')).toHaveCount(1);
+ await expect(page.locator('#aventuras [data-campaign-field],#sessoes [data-campaign-field]')).toHaveCount(0);
+ await expect(page.locator('#npcs .campaign-bullet-list > li')).toHaveCount(1);
+ await expect(page.locator('#locais .campaign-bullet-list > li')).toHaveCount(1);
+ await expect(page.locator('#linha-tempo .timeline-item')).toHaveCount(1);
  await expect(page.locator('#npcs')).toContainText('NPC Revelado');
  await expect(page.locator('#locais')).toContainText('Portal Antigo');
  await expect(page.locator('#linha-tempo')).toContainText('Chegada à cidade');
