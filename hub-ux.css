@@ -216,7 +216,7 @@ body.hub-shell-enabled .badge{
  padding:4px 8px;border-radius:7px
 }
 body.hub-shell-enabled .badge.active,
-body.hub-shell-enabled .badge.live{background:var(--hub-green-soft)!important;color:#72e7a6!important;border-color:rgba(54,215,124,.35)!important}
+body.hub-shell-enabled .badge.live{background:var(--hub-green-soft)!important;color:#91f3b9!important;border-color:rgba(92,230,157,.64)!important}
 body.hub-shell-enabled .status{background:var(--hub-surface)!important;border-color:var(--hub-border)!important;color:var(--hub-text-2)}
 body.hub-shell-enabled .status.ok{background:var(--hub-green-soft)!important;border-color:rgba(54,215,124,.35)!important}
 body.hub-shell-enabled .empty{background:rgba(255,255,255,.015);border-color:#304155!important;color:var(--hub-muted)!important}
@@ -457,13 +457,13 @@ body.hub-shell-enabled .modulos .nome{white-space:normal!important;color:var(--h
 }
 
 /* Semantic status colors shared by all Hub lists, cards and detail screens. */
-body.hub-shell-enabled .badge.current{background:#173758!important;color:#7dc9ff!important;border-color:#3a88c2!important}
-body.hub-shell-enabled .badge.planned{background:#332819!important;color:#ffc977!important;border-color:#9b702f!important}
-body.hub-shell-enabled .badge.paused{background:#332b48!important;color:#d3adff!important;border-color:#8766b5!important}
-body.hub-shell-enabled .badge.finished,body.hub-shell-enabled .badge.completed{background:#263441!important;color:#b7cad9!important;border-color:#6a8698!important;opacity:1!important}
-body.hub-shell-enabled .badge.cancelled{background:#41292c!important;color:#ffacac!important;border-color:#ac595d!important}
-body.hub-shell-enabled .badge.archived{background:#30343b!important;color:#b9bdc8!important;border-color:#727989!important}
-body.hub-shell-enabled .badge.next{background:#203d53!important;color:#91dcf5!important;border-color:#478cb7!important}
+body.hub-shell-enabled .badge.current{background:#124f33!important;color:#91f3b9!important;border-color:#5ce69d!important}
+body.hub-shell-enabled .badge.planned{background:#593c16!important;color:#ffcf85!important;border-color:#ffc662!important}
+body.hub-shell-enabled .badge.paused{background:#4e336d!important;color:#e0baff!important;border-color:#d1a0ff!important}
+body.hub-shell-enabled .badge.finished,body.hub-shell-enabled .badge.completed{background:#344656!important;color:#caddf0!important;border-color:#a3bed3!important;opacity:1!important}
+body.hub-shell-enabled .badge.cancelled{background:#5e272e!important;color:#ffb5bf!important;border-color:#f07e88!important}
+body.hub-shell-enabled .badge.archived{background:#3a404b!important;color:#d3dce8!important;border-color:#9da7b5!important}
+body.hub-shell-enabled .badge.next{background:#194167!important;color:#9cdbff!important;border-color:#6cc4ff!important}
 
 /* Explicit, readable parent relationships on campaign adventure and session cards. */
 body.hub-shell-enabled .campaign-relationship{display:block;color:#c6b5ff!important;font-size:.8rem;font-weight:600;margin:4px 0 6px}

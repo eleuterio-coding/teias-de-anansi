@@ -9,3 +9,18 @@
 .dashboard-player-links .dashboard-player-link-group a{display:block;border:1px solid var(--hub-border,#34495e);background:var(--hub-bg-raised,#122537);border-radius:8px;padding:8px 10px;text-decoration:none;overflow-wrap:anywhere;font-size:.86rem}
 .dashboard-player-links .dashboard-player-link-group a:hover{border-color:var(--hub-accent,#5eaaf0)}
 .dashboard-player-links .dashboard-player-link-group .mini{margin:0}
+
+/* Ordem do Início compartilhada entre Mestre e Jogador. O card de vínculos permanece oculto ao Mestre. */
+body.dashboard-page #main-content>.dashboard-context{order:0}
+body.dashboard-page #main-content>.dashboard-player-links{order:1}
+body.dashboard-page #main-content>.dashboard-overview-title{order:2}
+body.dashboard-page #main-content>.dashboard-collections{order:3}
+/* A Campanha é uma navegação, não uma indicação de texto sublinhado. */
+.dashboard-player-links .dashboard-player-campaign>h3 a{display:block;color:inherit!important;text-decoration:none!important;overflow-wrap:anywhere;border-radius:5px}
+.dashboard-player-links .dashboard-player-campaign>h3 a:hover{color:var(--hub-accent-2,#9cdbff)!important}
+.dashboard-player-links .dashboard-player-campaign>h3 a:focus-visible{outline:2px solid var(--hub-accent-2,#9cdbff);outline-offset:3px}
+/* A área inteira de cada vínculo é clicável, com foco de teclado e realce visível. */
+.dashboard-player-links .dashboard-player-link-group a{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer;color:inherit;text-decoration:none!important;transition:border-color .16s ease,background-color .16s ease}
+.dashboard-player-links .dashboard-player-link-group a::after{content:'↗';margin-left:auto;flex:none;color:var(--hub-accent-2,#9cdbff);font-size:1rem}
+.dashboard-player-links .dashboard-player-link-group a:is(:hover,:focus-visible){border-color:var(--hub-accent-2,#9cdbff);background:var(--hub-surface-3,#1b3147)}
+.dashboard-player-links .dashboard-player-link-group a:focus-visible{outline:2px solid var(--hub-accent-2,#9cdbff);outline-offset:2px}
