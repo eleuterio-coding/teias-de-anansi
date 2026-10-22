@@ -6,11 +6,11 @@
 <title>Usuários - Teias de Anansi</title>
 <link rel="stylesheet" href="hub-ux.css?v=20261021-player-self1">
 <link rel="stylesheet" href="campaigns.css?v=20261021-click-avatar1">
-<link rel="stylesheet" href="user-directory.css?v=20261021-player-self1">
+<link rel="stylesheet" href="user-directory.css?v=20261022-users-organization1">
 </head>
 <body>
 <main id="main-content" class="hub-user-page hub-users-page">
-<header class="top"><div><h1>Usuários</h1></div></header>
+<header class="top hub-users-main-header"><div><h1>Usuários</h1><p class="mini">Perfis, imagens e permissões de acesso do Hub.</p></div></header>
 <section class="card hub-user-photo-card" id="own-profile-card">
 <h2>Meu perfil</h2>
 <p class="hub-user-own-name" id="own-display-name"></p><p class="hub-user-own-identity" id="own-username"></p>
@@ -20,7 +20,7 @@
 <p id="user-avatar-feedback" role="status" aria-live="polite"></p>
 </section>
 <section class="card hub-user-directory" hidden>
-<div class="hub-users-heading"><h2>Usuários do Hub</h2><span id="hub-users-count" class="mini"></span></div>
+<div class="hub-users-heading"><div><h2>Usuários do Hub</h2><p class="mini hub-user-directory-subtitle">Selecione um usuário para consultar ou editar seu perfil.</p></div><div class="hub-user-directory-actions"><span id="hub-users-count" class="mini"></span><a class="btn secondary" id="hub-users-manage-access" href="usuarios.html" hidden>Gerenciar acessos</a></div></div>
 <div id="hub-users-list" class="hub-users-list" aria-live="polite"></div>
 <p id="hub-users-feedback" role="status" aria-live="polite"></p>
 </section>
@@ -51,6 +51,6 @@
 </section>
 </main>
 <script type="module" src="scripts/hub-ux.js?v=20261022-dropdown-stable1"></script>
-<script type="module" src="scripts/user-profile-ui.js?v=20261021-player-self1"></script>
+<script type="module" src="scripts/user-profile-ui.js?v=20261022-users-organization1"></script>
 </body>
 </html>
