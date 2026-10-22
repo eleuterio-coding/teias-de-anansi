@@ -37,7 +37,31 @@ function captureRemovals(kind,beforeRaw,afterRaw){
  if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
  if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id)){const info=playerCharacterInfo(id);pendingCharacterDeletes.set(id,info?{...row,__managedOwner:info}:row)}}
 }
+/* Atualizações do servidor não devem desmontar selects nem menus que o jogador está usando.
+ * Acumula os tipos de mudança e entrega-os assim que o controle é fechado/abandona o foco. */
+const deferredKinds=new Set();
+let dropdownReleaseBound=false;
+function dropdownInUse(){
+ const active=document.activeElement;
+ if(active?.matches?.('select,[role="combobox"],input[list]'))return true;
+ if(document.querySelector('details[open], [role="listbox"]:not([hidden]), [aria-haspopup][aria-expanded="true"]'))return true;
+ return false
+}
+function flushDeferredRemote(){
+ if(!deferredKinds.size||dropdownInUse())return;
+ const kinds=[...deferredKinds];deferredKinds.clear();emitRemote(kinds)
+}
+function bindDropdownRelease(){
+ if(dropdownReleaseBound)return;dropdownReleaseBound=true;
+ const afterInteraction=()=>queueMicrotask(flushDeferredRemote);
+ document.addEventListener('focusout',afterInteraction,true);
+ document.addEventListener('toggle',afterInteraction,true);
+ document.addEventListener('pointerdown',afterInteraction,true);
+ document.addEventListener('keydown',event=>{if(event.key==='Escape'||event.key==='Tab')afterInteraction()},true)
+}
 function emitRemote(kinds=[]){
+ bindDropdownRelease();
+ if(dropdownInUse()){kinds.forEach(kind=>deferredKinds.add(kind));return}
  let handled=false;
  const detail={kinds:[...new Set(kinds)],at:new Date().toISOString(),claim(){handled=true},get handled(){return handled}};
  window.dispatchEvent(new CustomEvent(REMOTE_EVENT,{detail}))
@@ -133,6 +157,6 @@ export async function startRealtime(){
  startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured)return null;unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);emitRemoteStatus('error',error);startPromise=null;return null});
  return startPromise
 }
-export function stopRealtime(){clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;initialPublicationUid='';startPromise=null}
+export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;initialPublicationUid='';startPromise=null}
 
 if(typeof window!=='undefined')window.addEventListener(CHANGE_EVENT,event=>schedulePush(event.detail?.kind));
