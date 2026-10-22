@@ -46,16 +46,16 @@ function renderPlayerAssignments(rows=[]){
  const restricted=playerMode();area.hidden=!restricted;if(!restricted){host.replaceChildren();return}
  const safe=(Array.isArray(rows)?rows:[]).filter(row=>row?.campaign?.id&&row.campaign.id!=='e2e-explicit-player-access');
  if(!safe.length){host.innerHTML='<div class="empty">Nenhum personagem ou campanha foi atribuído a esta conta.</div>';return}
- const link=(href,label)=>`<a href="${esc(href)}">${esc(label)}</a>`;
+ const link=(href,label,type)=>`<a href="${esc(href)}" aria-label="Abrir ${esc(type)}: ${esc(label)}">${esc(label)}</a>`;
  const group=(label,body)=>`<div class="dashboard-player-link-group"><strong>${esc(label)}</strong>${body}</div>`;
  const sorted=arr=>[...(Array.isArray(arr)?arr:[])].sort((a,b)=>(Number(a.order??a.number)||0)-(Number(b.order??b.number)||0)||String(a.title||'').localeCompare(String(b.title||''),'pt-BR'));
  host.innerHTML=safe.map(row=>{
   const c=row.campaign,m=row.membership||{},id=String(m.characterId||''),character=(row.characters||[]).find(item=>String(item?.id||'')===id);
-  const characterHtml=id?link(`ficha-personagem.html?id=${encodeURIComponent(id)}`,character?.name||'Personagem atribuído'):'<p class="mini">Nenhum personagem atribuído.</p>';
+  const characterHtml=id?link(`ficha-personagem.html?id=${encodeURIComponent(id)}`,character?.name||'Personagem atribuído','personagem'):'<p class="mini">Nenhum personagem atribuído.</p>';
   const allowedAdventures=new Set((m.adventureIds||[]).map(String)),allowedSessions=new Set((m.sessionIds||[]).map(String));
-  const adventures=sorted(row.adventures).filter(a=>allowedAdventures.has(String(a.id))).map(a=>link(`aventuras.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(a.id)}`,numberedAdventureTitle(a))).join('')||'<p class="mini">Nenhuma aventura atribuída.</p>';
-  const sessions=sorted(c.sessions).filter(s=>allowedSessions.has(String(s.id))).map(s=>link(`sessoes.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(s.id)}`,numberedSessionTitle(s))).join('')||'<p class="mini">Nenhuma sessão atribuída.</p>';
-  return`<article class="dashboard-player-campaign"><h3>${link(`mesa.html?id=${encodeURIComponent(c.id)}`,c.name)}</h3>${group('Personagem',characterHtml)}${group('Aventuras',adventures)}${group('Sessões',sessions)}</article>`;
+  const adventures=sorted(row.adventures).filter(a=>allowedAdventures.has(String(a.id))).map(a=>link(`aventuras.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(a.id)}`,numberedAdventureTitle(a),'aventura')).join('')||'<p class="mini">Nenhuma aventura atribuída.</p>';
+  const sessions=sorted(c.sessions).filter(s=>allowedSessions.has(String(s.id))).map(s=>link(`sessoes.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(s.id)}`,numberedSessionTitle(s),'sessão')).join('')||'<p class="mini">Nenhuma sessão atribuída.</p>';
+  return`<article class="dashboard-player-campaign"><h3>${link(`mesa.html?id=${encodeURIComponent(c.id)}`,c.name,'campanha')}</h3>${group('Personagem',characterHtml)}${group('Aventuras',adventures)}${group('Sessões',sessions)}</article>`;
  }).join('')
 }
 

@@ -213,24 +213,26 @@ body.dashboard-page.hub-shell-enabled .focus-card {
 }
 body.dashboard-page .focus-card[data-focus-status="current"],
 body.dashboard-page .focus-card[data-focus-status="active"] {
-  --focus-accent: #22c55e;
+  --focus-accent: #91f3b9;
 }
 body.dashboard-page .focus-card[data-focus-status="next"] {
-  --focus-accent: #38bdf8;
+  --focus-accent: #9cdbff;
 }
 body.dashboard-page .focus-card[data-focus-status="planned"] {
-  --focus-accent: #f59e0b;
+  --focus-accent: #ffcf85;
 }
 body.dashboard-page .focus-card[data-focus-status="paused"] {
-  --focus-accent: #f59e0b;
+  --focus-accent: #e0baff;
 }
 body.dashboard-page .focus-card[data-focus-status="completed"],
 body.dashboard-page .focus-card[data-focus-status="finished"] {
-  --focus-accent: #60a5fa;
+  --focus-accent: #caddf0;
 }
-body.dashboard-page .focus-card[data-focus-status="cancelled"],
+body.dashboard-page .focus-card[data-focus-status="cancelled"] {
+  --focus-accent: #ffb5bf;
+}
 body.dashboard-page .focus-card[data-focus-status="archived"] {
-  --focus-accent: #f87171;
+  --focus-accent: #d3dce8;
 }
 body.dashboard-page .focus-card-heading,
 body.dashboard-page.hub-shell-enabled .focus-card-heading {
@@ -493,3 +495,7 @@ body.dashboard-page.hub-shell-enabled .dashboard-list-pager {
     min-height:155px;
   }
 }
+
+/* Título do Painel Geral abaixo do Contexto Atual e dos vínculos do Jogador. */
+body.dashboard-page .dashboard-overview-title{margin:10px 2px 0;font-size:2em;line-height:1.15;font-weight:750;letter-spacing:-.02em}
+body.dashboard-page.hub-shell-enabled .dashboard-overview-title{font-size:clamp(1.2rem,2vw,1.65rem)}

@@ -35,6 +35,9 @@ test('Mestre vê numeração nos cards e layout idêntico de sessões em Campanh
  const sess=page.locator('#sessoes .campaign-player-story-card');
  await expect(sess.locator('h3')).toContainText('Sessão 8 · A convocação');
  await expect(sess.locator('.campaign-player-story-open')).toBeVisible();
+ const currentBadge=page.locator('#proxima-sessao .campaign-next-status.status-current');
+ await expect(currentBadge).toHaveText('Atual');
+ await expect(currentBadge).toHaveCSS('color','rgb(145, 243, 185)');
  const styles=await sess.evaluate(card=>{
   const button=card.querySelector('.campaign-player-story-open').getBoundingClientRect();
   const footer=card.querySelector('.campaign-player-story-footer').getBoundingClientRect();
@@ -59,6 +62,15 @@ test('Jogador vê somente seus vínculos em Início com números persistidos',as
  await expect(section).toContainText('Sessão 8 · A convocação');
  await expect(section).not.toContainText('Outro personagem');
  await expect(section.locator('a[href="ficha-personagem.html?id=char-ana"]')).toHaveCount(1);
+ const assignedLinks=section.locator('.dashboard-player-link-group a');
+ await expect(assignedLinks).toHaveCount(3);
+ await expect(section.locator('a[href="aventuras.html?campaign=narrative-c1&id=narrative-a1"]')).toHaveAttribute('aria-label','Abrir aventura: Aventura 5 · As Rainhas');
+ await expect(section.locator('a[href="sessoes.html?campaign=narrative-c1&id=narrative-s1"]')).toHaveAttribute('aria-label','Abrir sessão: Sessão 8 · A convocação');
+ await expect(section.locator('h3 a[href="mesa.html?id=narrative-c1"]')).toHaveCSS('text-decoration-line','none');
+ const order=await page.locator('#main-content').evaluate(main=>Array.from(main.children).map(x=>x.id||x.className));
+ expect(order.indexOf('dashboard-context')).toBeLessThan(order.indexOf('player-assignment'));
+ expect(order.indexOf('player-assignment')).toBeLessThan(order.indexOf('dashboard-overview-title'));
+ expect(order.indexOf('dashboard-overview-title')).toBeLessThan(order.indexOf('dashboard-collections'));
  await page.goto('/mesa.html?id=narrative-c1');
  await expect(page.locator('#aventuras .campaign-player-story-card h3')).toContainText('Aventura 5 · As Rainhas');
  await expect(page.locator('#sessoes .campaign-player-story-card h3')).toContainText('Sessão 8 · A convocação');
@@ -72,4 +84,24 @@ test('Usuário exibe Minha Imagem antes da prévia',async({page})=>{
  await expect(card.locator('.hub-user-image-title')).toHaveText('Minha Imagem');
  const order=await card.evaluate(node=>Array.from(node.children).map(element=>element.className));
  expect(order.indexOf('hub-user-image-title')).toBeLessThan(order.indexOf('hub-user-avatar-preview'));
+});
+
+test('Mestre vê Contexto Atual antes do Painel Geral; status Atual verde e Próxima azul-claro',async({page})=>{
+ await page.addInitScript(()=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
+ });
+ await page.goto('/painel.html');
+ await expect(page.locator('#player-assignment')).toBeHidden();
+ const order=await page.locator('#main-content').evaluate(main=>Array.from(main.children).map(x=>x.id||x.className));
+ expect(order.indexOf('dashboard-context')).toBeLessThan(order.indexOf('dashboard-overview-title'));
+ expect(order.indexOf('dashboard-overview-title')).toBeLessThan(order.indexOf('dashboard-collections'));
+ await page.goto('/sessoes.html');
+ const palette=await page.evaluate(()=>{
+  const node=document.createElement('span');node.className='campaign-card-status status-current';document.querySelector('#sessions-list')?.appendChild(node);
+  const current=getComputedStyle(node).color;
+  node.className='campaign-card-status status-next';
+  const next=getComputedStyle(node).color;node.remove();
+  return{current,next};
+ });
+ expect(palette).toEqual({current:'rgb(145, 243, 185)',next:'rgb(156, 219, 255)'});
 });
