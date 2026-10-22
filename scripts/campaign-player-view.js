@@ -20,6 +20,7 @@ function playerRoster(c,characters,profiles=[],username=''){
   const characterName=permitted?`<a class="campaign-readonly-character-control" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">${esc(person)}</a>`:`<span class="campaign-readonly-character-control">${characterId?esc(person):'— Sem personagem —'}</span>`;
   const open=permitted?`<a class="btn secondary roster-open-button" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">Abrir</a>`:'';
   return `<article class="member-row roster-player campaign-roster-readonly">
+  <span class="roster-grip" aria-hidden="true" title="Ordem estabelecida pelo Mestre"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></span>
   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),display)}
    <div class="roster-player-display"><span class="roster-player-label">${esc(playerTerm(member.username||name))}</span>
    <div class="roster-player-name-line"><span class="roster-player-name">${esc(display)}</span>${profileLink}</div></div></div>
@@ -58,6 +59,10 @@ function bindReadOnly(root,c){
    dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
    dialog.showModal();void hydrateMediaImages(dialog).catch(()=>{});
    return;
+  }
+  const diagram=event.target.closest('[data-diagram-toggle]');
+  if(diagram&&!event.target.closest('button,a,input')){
+   diagram.querySelector('[data-timeline-toggle]')?.click();return
   }
   const toggle=event.target.closest('[data-timeline-toggle]');
   if(!toggle)return;

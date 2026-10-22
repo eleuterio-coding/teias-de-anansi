@@ -44,7 +44,7 @@ let dropdownReleaseBound=false;
 function dropdownInUse(){
  const active=document.activeElement;
  if(active?.matches?.('select,[role="combobox"],input[list]'))return true;
- if(document.querySelector('details[open], [role="listbox"]:not([hidden]), [aria-haspopup][aria-expanded="true"]'))return true;
+ if(document.querySelector('details.campaign-status-disclosure[open], details[open]:focus-within, [role="listbox"]:not([hidden]), [aria-haspopup][aria-expanded="true"]'))return true;
  return false
 }
 function flushDeferredRemote(){

@@ -2236,3 +2236,17 @@ body.hub-shell-enabled:not(.hub-content-light) :is(#adventure-list,#sessions-lis
 #table-root[data-campaign-access="player"] .campaign-readonly-location .campaign-list-marker{flex:none}
 #table-root[data-campaign-access="player"] #linha-tempo .timeline-children[hidden],
 #table-root[data-campaign-access="player"] #linha-tempo .hub-diagram-children[hidden]{display:none!important}
+
+#table-root[data-campaign-access="player"] #jogadores .roster-player{
+ cursor:default!important;user-select:text!important
+}
+#table-root[data-campaign-access="player"] #jogadores .roster-grip{
+ cursor:default!important;pointer-events:none;opacity:.34
+}
+#table-root[data-campaign-access="player"] #jogadores .roster-grip:hover{
+ background:transparent;border-color:transparent
+}
+#table-root[data-campaign-access="player"] #jogadores .roster-player-actions .roster-open-button{
+ width:auto!important;min-width:44px!important;max-width:none!important;
+ padding-inline:10px!important;text-decoration:none
+}
