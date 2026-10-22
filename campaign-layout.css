@@ -366,3 +366,19 @@
  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;
  overflow:hidden;white-space:pre-line;overflow-wrap:anywhere;
 }
+
+/* Ajuste de espaçamento nos jogadores: o seletor ocupa a área disponível
+   e os quatro botões usam apenas a largura de que realmente precisam. */
+#table-root #jogadores .roster-list{gap:8px}
+@container campaign-roster (min-width:711px){
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
+  grid-template-columns:24px 40px minmax(0,.9fr) minmax(0,1.12fr) max-content;
+  column-gap:7px;
+  padding:10px 12px;
+ }
+ #table-root:not([data-campaign-access="player"]) #jogadores .roster-player-actions{
+  width:max-content;
+  justify-self:end;
+  gap:5px;
+ }
+}
