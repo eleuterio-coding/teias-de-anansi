@@ -17,7 +17,7 @@ test('Mestre pode vincular NPC existente, configurar revelação e consultar fic
  },{master,campaign,npc});
  await page.goto('/lista-npcs.html');
  await expect(page.getByRole('heading',{name:'NPCs',exact:true})).toBeVisible();
- await expect(page.locator('#npc-list').getByText(npc.name)).toBeVisible();
+ await expect(page.locator('#npc-list').getByRole('heading',{name:npc.name})).toBeVisible();
  await expect(page.locator('#npc-master-actions')).toBeVisible();
  await expect(page.locator('#npc-list').getByRole('link',{name:'Abrir ficha'})).toBeVisible();
  await page.locator('#npc-list [data-config-npc="npc-1"]').click();
