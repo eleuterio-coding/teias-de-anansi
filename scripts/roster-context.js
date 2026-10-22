@@ -46,7 +46,7 @@ export function sessionHistory(person,campaign,adventures=[],npc=false,publicVie
   const direct=npc?(!publicView&&arr(s.scenes).some(scene=>arr(scene.npcIds).includes(person.id))):arr(s.participantCharacterIds).includes(person.id);
   const adventure=adventures.find(a=>a.id===s.adventureId);
   const observed=Boolean(npc&&!publicView&&arr(adventure?.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(person.id)));
-  if(direct||observed)records.push(s);
+  if((direct||observed)&&['completed','finished','active','current'].includes(s.status))records.push(s);
  }
  return records.sort((a,b)=>(a.order||a.number||0)-(b.order||b.number||0)||text(a.date).localeCompare(text(b.date)));
 }
@@ -57,7 +57,7 @@ export function adventuresOf(person,adventures,campaigns,npc=false){
  }).sort((a,b)=>text(a.updatedAt).localeCompare(text(b.updatedAt))||(a.order||0)-(b.order||0));
 }
 export function currentAdventure(related,campaigns=[]){
- const scored=arr(related).filter(a=>['active','current'].includes(a.status))
+ const scored=arr(related).filter(a=>['active','current'].includes(a.status)||arr(campaigns).some(c=>c.id===a.campaignId&&arr(c.sessions).some(s=>s.adventureId===a.id&&['active','current'].includes(s.status))))
   .sort((a,b)=>Number(Boolean(b.activeSceneId))-Number(Boolean(a.activeSceneId))||
     Number(arr(campaigns).some(c=>c.id===b.campaignId&&arr(c.sessions).some(s=>s.adventureId===b.id&&['current','active','next'].includes(s.status))))-
     Number(arr(campaigns).some(c=>c.id===a.campaignId&&arr(c.sessions).some(s=>s.adventureId===a.id&&['current','active','next'].includes(s.status))))||
