@@ -17,15 +17,19 @@ function playerRoster(c,characters,profiles=[],username=''){
   const person=character?.name||'Personagem atribuído',permitted=Boolean(characterId&&canOpenCharacter(characterId));
   const own=String(member.username||'').toLowerCase()===String(username||'').toLowerCase(),profileUrl=`usuario.html?campaign=${encodeURIComponent(c.id)}`;
   const profileLink=own?`<a class="roster-player-profile-link" href="${profileUrl}" title="Abrir meu perfil" aria-label="Abrir meu perfil">↗</a>`:'';
-  const characterName=permitted?`<a class="campaign-readonly-character-control" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">${esc(person)}</a>`:`<span class="campaign-readonly-character-control">${characterId?esc(person):'— Sem personagem —'}</span>`;
-  const icon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="roster-action-label">Abrir</span>';
-  const open=permitted?`<a class="btn secondary roster-open-button" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">${icon}</a>`:'';
+  const characterLabel=characterId?esc(person):'— Sem personagem —';
+  const characterLink=permitted
+   ?`<a class="roster-player-profile-link" href="${sheetHref(characterId)}" title="Abrir ficha de ${esc(person)}" aria-label="Abrir ficha de ${esc(person)}">↗</a>`
+   :'';
   return `<article class="member-row roster-player campaign-roster-readonly">
   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),display)}
    <div class="roster-player-display"><span class="roster-player-label">${esc(playerTerm(member.username||name))}</span>
    <div class="roster-player-name-line"><span class="roster-player-name">${esc(display)}</span>${profileLink}</div></div></div>
-  <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}${characterName}</div></label></div>
-  <div class="row-actions roster-player-actions">${open}</div>
+  <div class="roster-player-character">
+   <div class="roster-character-photo">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}</div>
+   <div class="roster-player-display roster-character-display"><span class="roster-player-label">Personagem</span>
+    <div class="roster-player-name-line"><span class="roster-player-name">${characterLabel}</span>${characterLink}</div></div>
+  </div>
   </article>`;
  }).join('');
  return `<section id="jogadores" class="card roster-section"><div class="roster-heading"><h2>Jogadores da Campanha</h2></div>
