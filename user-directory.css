@@ -92,3 +92,13 @@ body.hub-shell-enabled .hub-users-page .card{padding:22px;min-width:0}
 }
 
 .hub-users-page .hub-user-image-title{margin:0;font-size:.97rem;font-weight:700;color:var(--hub-text,#e8f1fa)}
+
+/* Navegação e hierarquia da seção Usuários. */
+.hub-users-page .hub-users-main-header{padding-bottom:2px}
+.hub-users-page .hub-users-main-header p{margin:6px 0 0}
+.hub-users-page .hub-user-directory-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.hub-users-page .hub-user-directory-subtitle{margin:6px 0 0}
+.hub-users-page .hub-user-photo-card{max-width:100%;display:grid;gap:12px;align-content:start}
+.hub-users-page .hub-user-photo-card #user-avatar-preview{border:1px solid var(--hub-border,#34485d);border-radius:13px;overflow:hidden}
+.hub-users-page .hub-user-directory .hub-users-heading{align-items:flex-start}
+@media(max-width:650px){.hub-users-page .hub-users-heading{flex-wrap:wrap}.hub-users-page .hub-user-directory-actions{width:100%;justify-content:space-between}}
