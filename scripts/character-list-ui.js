@@ -1,6 +1,6 @@
 import{read,write,uid}from'./character-builder/state.js';
 import{collaborationAccessMode,editableCharacterIds,visibleCharacterIds,sharedCharacters,canEditCharacter,canOpenCharacter,playerCharacterInfo,masterPreviewMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession}from'./collaboration-view.js?v=20261021-ficha-permissao3';
-import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
+import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-directories1';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{deleteCharacterAsMaster}from'./character-admin-actions.js?v=20260918-master-delete1';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
