@@ -1,0 +1,56 @@
+/* Listas gerenciais de Personagens e NPCs — seguem a hierarquia dos cards de Campanhas. */
+.hub-directory{width:100%;max-width:1500px;margin:auto;color:var(--hub-text,#f3f7fc)}
+.hub-directory-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.hub-directory-heading h1{font-size:clamp(1.5rem,2.4vw,2rem);margin:0 0 5px}
+.hub-directory-heading p{margin:0;color:var(--hub-text-2,#becddb)}
+.hub-directory-heading-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.hub-directory-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 22px}
+.hub-directory-metric{background:var(--hub-surface,#101923);border:1px solid var(--hub-border,#27374a);border-radius:13px;padding:16px 18px}
+.hub-directory-metric strong{display:block;font-size:1.45rem;line-height:1.2;color:var(--hub-text,#f8fbff)}
+.hub-directory-metric span{display:block;margin-top:5px;font-size:.84rem;color:var(--hub-text-2,#bdcbd8)}
+.hub-directory-filters{display:grid;grid-template-columns:minmax(180px,1.5fr) repeat(3,minmax(130px,1fr)) auto;gap:11px;align-items:end;margin-bottom:22px;padding:15px;background:var(--hub-surface,#101923);border:1px solid var(--hub-border,#263447);border-radius:13px}
+.hub-directory-filters label,.hub-directory-form-grid label{display:grid;gap:5px;min-width:0;font-size:.84rem;color:var(--hub-text-2,#c1cfdd);font-weight:600}
+.hub-directory input,.hub-directory select,.hub-directory textarea{background:var(--hub-surface-2,#13202b)!important;color:var(--hub-text,#f3f7fb)!important;border:1px solid var(--hub-border,#334658)!important;border-radius:8px;padding:9px 10px;width:100%;margin:0;min-width:0}
+.hub-directory button,.hub-directory .btn{min-height:40px}
+.hub-directory-display{display:flex;gap:3px;padding:3px;border:1px solid var(--hub-border,#334658);border-radius:9px}
+.hub-directory-display button{border:0!important;border-radius:6px;background:transparent;color:var(--hub-text-2,#adbed0);padding:7px 10px;font-size:.8rem}
+.hub-directory-display button[aria-pressed="true"]{background:var(--hub-accent,#277fd5)!important;color:#fff!important}
+.hub-directory-section-title{font-size:1.2rem;margin:0 0 14px}
+.hub-directory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
+.hub-directory-grid.is-list{grid-template-columns:1fr}
+.hub-directory-card{display:flex;flex-direction:column;min-width:0;gap:10px;background:var(--hub-surface-2,#121f2b);border:1px solid var(--hub-border,#33485a);border-radius:14px;padding:17px;min-height:200px}
+.hub-directory-card:hover{border-color:var(--hub-accent,#368ce6)}
+.hub-directory-grid.is-list .hub-directory-card{min-height:0}
+.hub-directory-card-top{display:flex;align-items:center;gap:13px;min-width:0}
+.hub-directory-avatar{width:66px;height:66px;flex:0 0 66px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;font-weight:800;color:#9ecff8;background:linear-gradient(145deg,#233e57,#142638);border:1px solid #38526a;overflow:hidden}
+.hub-directory-avatar img{width:100%;height:100%;object-fit:cover}
+.hub-directory-card h3{font-size:1.08rem;line-height:1.35;margin:0 0 5px;overflow-wrap:anywhere;color:var(--hub-text,#f8fbff)}
+.hub-directory-card p{margin:0;color:var(--hub-text-2,#a9bdcf);font-size:.86rem;overflow-wrap:anywhere}
+.hub-directory-meta{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.hub-directory-tag{border:1px solid var(--hub-border,#39536c);border-radius:7px;padding:4px 7px;color:var(--hub-text-2,#bdd0df);font-size:.75rem}
+.hub-directory-tag.status-active,.hub-directory-tag.status-revealed{border-color:#297b4e;color:#8de4ae}
+.hub-directory-tag.status-dead,.hub-directory-tag.status-hidden{border-color:#865e5e;color:#f1b1b1}
+.hub-directory-context{display:grid;gap:5px;font-size:.83rem;color:var(--hub-text-2,#b4c4d4)}
+.hub-directory-context a{color:var(--hub-accent-2,#87c4ff);text-decoration:none}
+.hub-directory-context a:hover{text-decoration:underline}
+.hub-directory-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:auto;padding-top:10px;border-top:1px solid var(--hub-border-soft,#223346)}
+.hub-directory-actions .btn,.hub-directory-actions button{padding:8px 10px;font-size:.82rem;text-decoration:none}
+.hub-directory-actions .danger{margin-left:auto}
+.hub-directory-details{margin-top:3px;border-top:1px solid var(--hub-border,#34485b);padding-top:9px}
+.hub-directory-details summary{cursor:pointer;font-size:.84rem;color:var(--hub-accent-2,#86c0f8);font-weight:700}
+.hub-directory-details label{display:grid;gap:5px;font-size:.81rem;color:var(--hub-text-2,#bbcada);margin-top:10px}
+.hub-directory-editor{border:1px solid var(--hub-border,#354d62);border-radius:13px;padding:18px;margin:0 0 20px;background:var(--hub-surface,#122131)}
+.hub-directory-editor-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+.hub-directory-editor-top h2{margin:0;font-size:1.15rem}
+.hub-directory-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hub-directory-wide{grid-column:1/-1}
+.hub-directory textarea{min-height:76px;resize:vertical}
+.hub-directory-public{margin:18px 0 13px;padding:14px;border:1px solid var(--hub-border,#354d62);border-radius:10px}
+.hub-directory-public legend{padding:0 8px;font-weight:750}
+.hub-directory .hub-directory-checkbox{display:flex;align-items:center;gap:10px;font-size:.88rem}
+.hub-directory-checkbox input{width:19px!important;min-width:19px}
+.hub-directory-hint{font-size:.78rem!important;color:var(--hub-muted,#a4b3bf);margin:9px 0 14px!important}
+.hub-directory-note-editor{display:grid;gap:8px;margin-top:8px}
+.hub-directory-empty{grid-column:1/-1;border:1px dashed var(--hub-border,#395269);padding:22px;border-radius:12px;color:var(--hub-text-2,#b4c6d6)}
+@media(max-width:1000px){.hub-directory-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-directory-display{align-self:end;justify-content:center}}
+@media(max-width:600px){.hub-directory-metrics{gap:8px}.hub-directory-metric{padding:12px}.hub-directory-metric strong{font-size:1.2rem}.hub-directory-filters,.hub-directory-form-grid{grid-template-columns:1fr}.hub-directory-wide{grid-column:auto}.hub-directory-heading-actions{width:100%}.hub-directory-heading-actions>*{flex:1;text-align:center}.hub-directory-avatar{width:54px;height:54px;flex-basis:54px}}

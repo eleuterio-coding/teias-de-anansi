@@ -40,8 +40,8 @@ assert.ok(sessionsUi.includes('Abrir Campanha'),'Visão de sessões deve permiti
 assert.ok(sheetUi.includes('sheet-campaign-context')&&sheetUi.includes('Abrir Campanha'),'Ficha deve mostrar contexto da campanha.');
 assert.ok(gameplay.includes("character-sheet-campaign-ui.js"),'Modo de Jogo deve carregar a integração de campanha.');
 assert.ok(characterList.includes('scripts/character-list-ui.js')&&characterList.includes('>Campanhas</a>'),'Lista de personagens deve integrar Mesas pela UI atual.');
-for(const token of['accessMode','editableCharacterIds','visibleCharacterIds','visible.has(c.id)','create-character-action','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
-assert.ok(characterListUi.includes("hidden=guest"),'Jogador autenticado deve poder iniciar a criação de personagem.');
+for(const token of['collaborationAccessMode','editableCharacterIds','visibleCharacterIds','canEditCharacter','canOpenCharacter','create-character-action','somente leitura'])assert.ok(characterListUi.includes(token),`Lista de personagens sem separação entre visibilidade da Campanha e edição da própria ficha: ${token}`);
+assert.ok(characterListUi.includes('ctx.guest||ctx.preview'),'Jogador autenticado deve poder criar ficha, mas visualização de mestre deve permanecer somente leitura.');
 assert.ok(index.includes('href="campanhas.html')&&index.includes('href="sessoes.html'),'Início deve ativar Campanhas e Sessões.');
 assert.equal([campaignState,listUi,tableUi,sessionsUi,sheetUi,characterListUi].join('\n').toLowerCase().includes('supabase'),false);
 console.log('OK — Rafael é Mestre fixo; jogadores podem criar e editar a própria ficha, veem fichas da Campanha e não editam as dos demais.');
