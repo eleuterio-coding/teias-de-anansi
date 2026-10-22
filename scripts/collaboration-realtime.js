@@ -5,6 +5,7 @@ import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-g
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
 import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20261022-revocation1';
+import{changedEntityIds}from'./collaboration-quota-utils.js?v=20261022-quota1';
 
 // A revisão 20260917-player-catalog1 foi substituída por 20260917-reload-loop-fix1 para impedir recarga circular ao abrir a ficha.
 const CHANGE_EVENT='hub-rpg:data-changed';
@@ -12,7 +13,8 @@ const REMOTE_EVENT='hub-rpg:remote-updated';
 const STORAGE_PATCH=Symbol.for('hub-rpg.realtime-storage-patch-v2');
 const KIND_BY_KEY=new Map([[CAMPAIGN_KEY,'campaigns'],[ADVENTURE_KEY,'adventures'],[CHARACTER_KEY,'characters']]);
 const text=v=>String(v??'').trim();
-let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),initialPublicationUid='',retryAfter=0;
+let provider=null,account=null,unsubscribeRemote=null,unsubscribeAuth=null,startPromise=null,pushTimer=0,pullTimer=0,pendingKinds=new Set(),initialPublicationUid='',retryAfter=0,lastPullAt=0,scheduledPullAt=0;
+const pendingCharacterIds=new Set(),MIN_PULL_INTERVAL_MS=4000;
 const pendingCampaignDeletes=new Set(),pendingCharacterDeletes=new Map();
 
 function cacheComparable(){
@@ -34,6 +36,7 @@ function parseRows(raw){try{const rows=JSON.parse(raw||'[]');return Array.isArra
 function captureRemovals(kind,beforeRaw,afterRaw){
  if(globalThis.__HUB_REALTIME_APPLYING__)return;
  const before=parseRows(beforeRaw),after=parseRows(afterRaw),afterIds=new Set(after.map(row=>text(row?.id)).filter(Boolean));
+ if(kind==='characters')for(const id of changedEntityIds(before,after))pendingCharacterIds.add(id);
  if(kind==='campaigns')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id))pendingCampaignDeletes.add(id)}
  if(kind==='characters')for(const row of before){const id=text(row?.id);if(id&&!afterIds.has(id)){const info=playerCharacterInfo(id);pendingCharacterDeletes.set(id,info?{...row,__managedOwner:info}:row)}}
 }
@@ -89,6 +92,7 @@ async function reconcilePersonalCharacters(memberships=null){
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__||Date.now()<retryAfter)return;
  if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
+ lastPullAt=Date.now();
  const before=snapshotState();
  globalThis.__HUB_REALTIME_APPLYING__=true;
  emitRemoteStatus('loading');
@@ -104,17 +108,25 @@ async function applyRemote(){
   retryAfter=0;emitRemoteStatus('ready');
  }catch(error){
   // Em caso de cota/limite atingido, não disparar novas consultas incessantes.
-  if(/resource-exhausted|quota|429|too.many.requests/i.test([error?.code,error?.message].join(' ')))retryAfter=Date.now()+60000;
+  if(/resource-exhausted|quota|429|too.many.requests/i.test([error?.code,error?.message].join(' '))){retryAfter=Date.now()+60000;schedulePull()}
   console.warn('[Hub realtime] falha ao receber atualização:',error);emitRemoteStatus('error',error)
  }finally{globalThis.__HUB_REALTIME_APPLYING__=false}
  const after=snapshotState(),kinds=changedKinds(before,after);
  if(kinds.length)emitRemote(kinds)
 }
-function schedulePull(){if(Date.now()<retryAfter)return;clearTimeout(pullTimer);pullTimer=setTimeout(()=>applyRemote(),400)}
+function schedulePull(){
+ // Coalesce notificações sem perder a próxima atualização; não reinicia o
+ // timer indefinidamente quando muitos snapshots chegam em sequência.
+ const time=Date.now(),at=Math.max(time+400,lastPullAt+MIN_PULL_INTERVAL_MS,retryAfter);
+ if(pullTimer&&scheduledPullAt<=at)return;
+ clearTimeout(pullTimer);scheduledPullAt=at;
+ pullTimer=setTimeout(()=>{pullTimer=0;scheduledPullAt=0;applyRemote()},Math.max(0,at-Date.now()));
+}
 async function pushChanges(){
  clearTimeout(pushTimer);pushTimer=0;
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
  const kinds=new Set(pendingKinds);pendingKinds.clear();
+ const changedIds=new Set(pendingCharacterIds);pendingCharacterIds.clear();const selectiveCharacters=changedIds.size>0;
  const removedCampaigns=[...pendingCampaignDeletes];pendingCampaignDeletes.clear();
  const removedCharacters=[...pendingCharacterDeletes.entries()];pendingCharacterDeletes.clear();
  const session=readCollaborationSession();if(!session)return;
@@ -126,19 +138,19 @@ async function pushChanges(){
    }
    if(kinds.has('characters')){
     const characters=readCharacters(),campaigns=readCampaigns();
-    for(const character of characters){const ownerUid=text(character?.ownerUid),ownerName=text(character?.ownerUsername).toLowerCase(),foreign=Boolean(ownerUid&&ownerUid!==text(session.uid))||Boolean(ownerName&&ownerName!==text(session.username).toLowerCase());if(foreign)await provider.saveManagedPlayerCharacter(character);else await provider.saveOwnCharacter(character)}
-    for(const campaign of campaigns){const linked=new Set((campaign.members||[]).map(m=>text(m.characterId)).filter(Boolean));for(const character of characters)if(linked.has(text(character.id)))await provider.saveCampaignCharacter(campaign.id,character)}
+    for(const character of characters){if(selectiveCharacters&&!changedIds.has(text(character?.id)))continue;const ownerUid=text(character?.ownerUid),ownerName=text(character?.ownerUsername).toLowerCase(),foreign=Boolean(ownerUid&&ownerUid!==text(session.uid))||Boolean(ownerName&&ownerName!==text(session.username).toLowerCase());if(foreign)await provider.saveManagedPlayerCharacter(character);else await provider.saveOwnCharacter(character)}
+    for(const campaign of campaigns){const linked=new Set((campaign.members||[]).map(m=>text(m.characterId)).filter(Boolean));for(const character of characters)if(linked.has(text(character.id))&&(!selectiveCharacters||changedIds.has(text(character.id))))await provider.saveCampaignCharacter(campaign.id,character)}
    }
   }else if(kinds.has('characters')){
    const memberships=await provider.listMemberships(),characters=readCharacters(),editable=new Set(editableCharacterIds());
-   for(const character of characters)if(editable.has(text(character?.id)))await provider.saveOwnCharacter(character);
+   for(const character of characters)if(editable.has(text(character?.id))&&(!selectiveCharacters||changedIds.has(text(character?.id))))await provider.saveOwnCharacter(character);
    for(const membership of memberships.filter(m=>m.role==='player'&&m.active!==false&&m.characterId)){
-    const character=characters.find(c=>c.id===membership.characterId);if(!character)continue;await provider.saveCampaignCharacter(membership.campaignId,character)
+    const character=characters.find(c=>c.id===membership.characterId);if(!character||(selectiveCharacters&&!changedIds.has(text(character.id))))continue;await provider.saveCampaignCharacter(membership.campaignId,character)
    }
   }
   for(const[id,row]of removedCharacters){if(session.isMaster){await deleteRemoteCharacterAsMaster(provider,id);continue}const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
  }catch(error){
-  for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);
+  for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);for(const id of changedIds)pendingCharacterIds.add(id);
   console.warn('[Hub realtime] falha ao enviar atualização:',error)
  }
 }
@@ -154,13 +166,13 @@ function loginUrl(){
 }
 async function bindAccount(next){
  if(!next){account=null;retryAfter=0;initialPublicationUid='';unsubscribeRemote?.();unsubscribeRemote=null;clearCollaborationSession();const target=loginUrl();if(target)location.replace(target);return}
- account=next;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>{console.warn('[Hub realtime] listener:',error);emitRemoteStatus('error',error)});await applyRemote()
+ account=next;lastPullAt=0;scheduledPullAt=0;clearTimeout(pullTimer);pullTimer=0;persistAuthenticatedAccount();unsubscribeRemote?.();unsubscribeRemote=provider.subscribeRealtime(()=>schedulePull(),error=>{console.warn('[Hub realtime] listener:',error);emitRemoteStatus('error',error)});await applyRemote()
 }
 export async function startRealtime(){
  if(startPromise)return startPromise;
  startPromise=(async()=>{installStorageBridge();provider=await createFirebaseCollaborationProvider();if(!provider?.configured){emitRemoteStatus('error',new Error('Firebase não configurado ou indisponível.'));return null}unsubscribeAuth=provider.onAuthChanged(next=>{bindAccount(next).catch(error=>console.warn('[Hub realtime] conta:',error))});return provider})().catch(error=>{console.warn('[Hub realtime] inicialização:',error);emitRemoteStatus('error',error);startPromise=null;return null});
  return startPromise
 }
-export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;retryAfter=0;initialPublicationUid='';startPromise=null}
+export function stopRealtime(){deferredKinds.clear();clearTimeout(pushTimer);clearTimeout(pullTimer);pendingKinds.clear();pendingCharacterIds.clear();pendingCampaignDeletes.clear();pendingCharacterDeletes.clear();lastPullAt=0;scheduledPullAt=0;unsubscribeRemote?.();unsubscribeRemote=null;unsubscribeAuth?.();unsubscribeAuth=null;provider=null;account=null;retryAfter=0;initialPublicationUid='';startPromise=null}
 
 if(typeof window!=='undefined')window.addEventListener(CHANGE_EVENT,event=>schedulePush(event.detail?.kind));
