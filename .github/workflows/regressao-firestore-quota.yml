@@ -1,0 +1,37 @@
+name: Regressão de consumo Firestore (sem produção)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'scripts/collaboration-realtime.js'
+      - 'scripts/collaboration-quota-utils.js'
+      - 'scripts/collaboration-sync.js'
+      - 'tests/regressao-*quota*.mjs'
+      - 'tests/regressao-listeners-jogadores.mjs'
+      - '.github/workflows/regressao-firestore-quota.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  testes-offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe do código alterado
+        run: |
+          node --check scripts/firebase-collaboration-provider.js
+          node --check scripts/collaboration-realtime.js
+          node --check scripts/collaboration-quota-utils.js
+      - name: Testar redução de writes e listeners simulados
+        run: |
+          node tests/regressao-quota-firestore-v2.mjs
+          node tests/regressao-realtime-quota.mjs
+          node tests/regressao-listeners-jogadores.mjs
+          node tests/auditar-colaboracao-sync.mjs
+          node tests/auditar-ficha-realtime.mjs
