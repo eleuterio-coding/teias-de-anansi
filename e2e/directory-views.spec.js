@@ -55,10 +55,12 @@ test('Jogador vê apenas os NPCs revelados, sem acesso aos dados privados ou aç
  await expect(page.locator('#npc-master-actions')).toBeHidden();
  await expect(page.locator('#npc-editor')).toBeHidden();
  await expect(page.locator('.hub-nav-link[href="npcs.html"]')).toBeVisible();
+ await page.locator('#npc-list .hub-directory-details summary').click();
  const note=page.locator('[data-npc-note]');
  await note.fill('Meu palpite sobre o nobre.');
  await page.locator('[data-save-player-note]').click();
  await page.reload();
+ await page.locator('#npc-list .hub-directory-details summary').click();
  await expect(page.locator('[data-npc-note]')).toHaveValue('Meu palpite sobre o nobre.');
 });
 
