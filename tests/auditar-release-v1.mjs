@@ -25,7 +25,7 @@ assert.ok(workflow.includes('npm run test:e2e')&&workflow.includes('playwright i
 const firebaseE2e=read('e2e/collaboration-real.spec.js'),firebaseWorkflow=read('.github/workflows/homologar-firebase-real.yml');
 for(const token of['E2E_FIREBASE_ADMIN_USERNAME','createUserWithEmailAndPassword','deleteUser','browser.newContext','PRIVATE_MARK','SHARED_MARK','OTHER_MARK','characterId','sessionIds','adventureIds','campaign-update','private-read','membership-update','other-character-read','other-session-read','other-adventure-read','saveCharacter'])assert.ok(firebaseE2e.includes(token),`Gate Firebase real sem contrato: ${token}.`);
 for(const forbidden of['upsertAuthorizedUser','setAuthorizedUserActive','E2E_FIREBASE_PLAYER_','setOffline(true)'])assert.equal(firebaseE2e.includes(forbidden),false,`Gate Firebase contém contrato removido: ${forbidden}.`);
-for(const token of['workflow_dispatch','push:','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase sem ${token}.`);
+for(const token of['workflow_dispatch','concurrency:','E2E_FIREBASE_ADMIN_USERNAME','E2E_FIREBASE_ADMIN_PASSWORD','npm run test:e2e:firebase'])assert.ok(firebaseWorkflow.includes(token),`Workflow Firebase sem ${token}.`);
 assert.equal(/password\s*[:=]\s*['"][^'"]+['"]/i.test(firebaseE2e),false,'Teste Firebase não pode conter senha literal.');
 
 const home=read('index.html'),users=read('usuarios.html'),provider=read('scripts/firebase-collaboration-provider.js'),rules=read('firebase/firestore.rules'),firebaseConfig=JSON.parse(read('dados/firebase-config.json')),storageRegistry=read('scripts/storage-registry.js'),view=read('scripts/collaboration-view.js'),hubUx=read('scripts/hub-ux.js');

@@ -34,7 +34,9 @@ function simulate(username,master=false){
   root.cb(snapshot);const first=opens;root.cb(snapshot);
   assert.equal(opens,first,username+' não reabre watchers ao receber membership inalterada.');
   root.cb({docs:[doc('member1',{...membership,sessionIds:['session1','session2']})],metadata:{}});
-  assert.ok(opens>first&&closes>0,username+' atualiza watchers quando permissões de sessão mudam.');
+  assert.ok(opens>first&&closes===0,username+' adiciona somente o novo watcher sem recriar os existentes.');
+  root.cb(snapshot);
+  assert.ok(closes>0,username+' libera apenas a assinatura removida.');
  }
  stop();
  assert.ok(listeners.every(item=>!item.active),'Nenhum listener deve continuar ativo após logout.');
