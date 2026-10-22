@@ -27,7 +27,10 @@ function masterEntries(campaigns){
    if(row.name&&!value.sheet)value.name=row.name;
    map.set(row.id,value)
   }
+  const linkedAdventures=readAdventures().filter(a=>a.campaignId===campaign.id);
+  for(const adv of linkedAdventures)for(const item of arr(adv.legacyNpcs))if(item?.id&&!map.has(item.id))map.set(item.id,{id:item.id,name:item.name||'NPC',sheet:false,source:item,linked:[]});
   const ids=new Set([...legacy,...existing].map(n=>n.id).filter(Boolean));
+  for(const adv of linkedAdventures)for(const id of arr(adv.npcIds))if(map.has(id))ids.add(id);
   for(const id of arr(campaign.importantNpcIds)){
    if(!map.has(id)&&campaign.importantNpcPublicNames?.[id])map.set(id,{id,name:campaign.importantNpcPublicNames[id],sheet:false,source:{id,name:campaign.importantNpcPublicNames[id]},linked:[]});
    if(map.has(id))ids.add(id)
