@@ -34,6 +34,27 @@ test('Mestre: Aventuras e Sessões da Campanha têm dimensões iguais',async({pa
  await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(1);
  const boxes=await page.locator('#aventuras,#sessoes').evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect();return{width:r.width,height:r.height,top:r.top}}));
  expect(Math.abs(boxes[0].width-boxes[1].width)).toBeLessThan(2);
+ const audit=await page.locator('#table-root').evaluate(root=>{
+  const rect=s=>root.querySelector(s)?.getBoundingClientRect();
+  const hero=rect('#campanha'),roster=rect('#jogadores'),a=rect('#aventuras'),s=rect('#sessoes');
+  const hA=rect('#aventuras .campaign-reference-head h2'),hS=rect('#sessoes .campaign-reference-head h2');
+  const footA=root.querySelector('#aventuras .campaign-player-story-footer');
+  const footS=root.querySelector('#sessoes .campaign-player-story-footer');
+  const openerA=footA?.querySelector('.campaign-player-story-open')?.getBoundingClientRect();
+  const openerS=footS?.querySelector('.campaign-player-story-open')?.getBoundingClientRect();
+  return{
+   fullWidth:Math.abs(hero.width-roster.width),headAligned:Math.abs(hA.top-hS.top),
+   footers:!!footA&&!!footS,
+   openersLeft:openerA.left-footA.getBoundingClientRect().left<18&&openerS.left-footS.getBoundingClientRect().left<18,
+   overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+   width:innerWidth
+  };
+ });
+ expect(audit.fullWidth).toBeLessThan(2);
+ expect(audit.footers).toBe(true);
+ expect(audit.openersLeft).toBe(true);
+ expect(audit.overflow).toBeLessThanOrEqual(3);
+ if(audit.width>900)expect(audit.headAligned).toBeLessThan(3);
  if((await page.evaluate(()=>innerWidth))>900){
   expect(Math.abs(boxes[0].height-boxes[1].height)).toBeLessThan(2);
   expect(Math.abs(boxes[0].top-boxes[1].top)).toBeLessThan(2)
@@ -61,6 +82,31 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  for(const hidden of ['NPC Secreto','Local Secreto','Plano secreto','Segredo do mestre'])await expect(root).not.toContainText(hidden);
  await expect(root.locator('[data-campaign-field],[data-remove-member],[data-visible-npc],[data-visible-location],[data-visible-event],[data-timeline-delete],[data-add-npc]')).toHaveCount(0);
  await expect(root.locator('#jogadores a[href*="id=ana-char"]')).toHaveCount(2);
+ const aligned=await root.evaluate(node=>{
+  const r=s=>node.querySelector(s)?.getBoundingClientRect();
+  const a=r('#aventuras'),s=r('#sessoes'),hA=r('#aventuras .campaign-reference-head h2'),hS=r('#sessoes .campaign-reference-head h2');
+  const cover=node.querySelector('#campanha .campaign-readonly-picker .image-picker-preview img');
+  const button=r('#jogadores .roster-open-button');
+  return{
+   sameWidth:Math.abs(a.width-s.width)<2,
+   sameRow:Math.abs(a.top-s.top)<3,
+   sameHeight:Math.abs(a.height-s.height)<3,
+   sameHeading:Math.abs(hA.top-hS.top)<3,
+   openWidth:button?.width||0,
+   twoFooters:node.querySelectorAll('#aventuras .campaign-player-story-footer,#sessoes .campaign-player-story-footer').length===2,
+   imageFit:cover?getComputedStyle(cover).objectFit:null,
+   overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+   width:innerWidth
+  }
+ });
+ expect(aligned.sameWidth).toBe(true);
+ if(aligned.width>900){
+  expect(aligned.sameRow).toBe(true);expect(aligned.sameHeight).toBe(true);expect(aligned.sameHeading).toBe(true);
+ }
+ expect(aligned.twoFooters).toBe(true);
+ expect(aligned.openWidth).toBeGreaterThanOrEqual(40);
+ if(aligned.imageFit)expect(aligned.imageFit).toBe('cover');
+ expect(aligned.overflow).toBeLessThanOrEqual(3);
  const button=root.locator('#linha-tempo .timeline-collapse').first();
  await button.click();await expect(button).toHaveAttribute('aria-expanded','true');
  await page.evaluate(()=>window.dispatchEvent(new CustomEvent('hub-rpg:remote-updated',{detail:{claim(){}}})));
