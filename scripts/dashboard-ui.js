@@ -3,7 +3,8 @@ import{readCampaigns,readStandaloneSessions}from'./campaign-state.js?v=20261016-
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{summarizeDashboard}from'./dashboard-state.js?v=20261021-shared-order1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
+import{playerMode,sharedCampaignRows,sharedAdventures,editableCharacterIds}from'./collaboration-view.js?v=20261022-player-home1';
+import{read as readCharacters}from'./character-builder/state.js';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const campaignStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída'}[s]||s);
 const adventureStatus=s=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s);
@@ -45,7 +46,9 @@ function renderPlayerAssignments(rows=[]){
  const area=$('player-assignment'),host=$('player-assignment-list');if(!area||!host)return;
  const restricted=playerMode();area.hidden=!restricted;if(!restricted){host.replaceChildren();return}
  const safe=(Array.isArray(rows)?rows:[]).filter(row=>row?.campaign?.id&&row.campaign.id!=='e2e-explicit-player-access');
- if(!safe.length){host.innerHTML='<div class="empty">Nenhum personagem ou campanha foi atribuído a esta conta.</div>';return}
+ const ownIds=new Set(editableCharacterIds()),assignedIds=new Set(safe.map(row=>String(row.membership?.characterId||'')).filter(Boolean));
+ const personal=readCharacters().filter(c=>c?.id&&ownIds.has(String(c.id))&&!assignedIds.has(String(c.id)));
+ if(!safe.length&&!personal.length){host.innerHTML='<div class="empty">Nenhum personagem ou campanha foi atribuído a esta conta.</div>';return}
  const link=(href,label,type)=>`<a href="${esc(href)}" aria-label="Abrir ${esc(type)}: ${esc(label)}">${esc(label)}</a>`;
  const group=(label,body)=>`<div class="dashboard-player-link-group"><strong>${esc(label)}</strong>${body}</div>`;
  const sorted=arr=>[...(Array.isArray(arr)?arr:[])].sort((a,b)=>(Number(a.order??a.number)||0)-(Number(b.order??b.number)||0)||String(a.title||'').localeCompare(String(b.title||''),'pt-BR'));
@@ -56,7 +59,13 @@ function renderPlayerAssignments(rows=[]){
   const adventures=sorted(row.adventures).filter(a=>allowedAdventures.has(String(a.id))).map(a=>link(`aventuras.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(a.id)}`,numberedAdventureTitle(a),'aventura')).join('')||'<p class="mini">Nenhuma aventura atribuída.</p>';
   const sessions=sorted(c.sessions).filter(s=>allowedSessions.has(String(s.id))).map(s=>link(`sessoes.html?campaign=${encodeURIComponent(c.id)}&id=${encodeURIComponent(s.id)}`,numberedSessionTitle(s),'sessão')).join('')||'<p class="mini">Nenhuma sessão atribuída.</p>';
   return`<article class="dashboard-player-campaign"><h3>${link(`mesa.html?id=${encodeURIComponent(c.id)}`,c.name,'campanha')}</h3>${group('Personagem',characterHtml)}${group('Aventuras',adventures)}${group('Sessões',sessions)}</article>`;
- }).join('')
+ }).join('')+(personal.length?`<article class="dashboard-player-campaign"><h3>Personagens sem Campanha</h3>${group('Meus personagens',personal.map(c=>link(`ficha-personagem.html?id=${encodeURIComponent(c.id)}`,c.name||'Personagem sem nome','personagem')).join(''))}</article>`:'')
+}
+function renderSyncStatus(detail={}){
+ const area=$('dashboard-sync-status');if(!area)return;
+ const failed=detail.status==='error'&&playerMode();
+ area.hidden=!failed;
+ if(failed)area.textContent='Não foi possível sincronizar os dados desta conta. Verifique a conexão e atualize a página. Detalhes: '+String(detail.message||'Falha na leitura remota.');
 }
 
 // A página Início usa rolagem vertical como as demais áreas do Hub.
@@ -65,3 +74,4 @@ const isE2EFixtureCampaign=c=>c?.id==='e2e-explicit-player-access';
 function init(){const restricted=playerMode(),campaigns=(restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()).filter(c=>!isE2EFixtureCampaign(c)),adventures=(restricted?sharedAdventures():readAdventures()).filter(a=>a?.campaignId!=='e2e-explicit-player-access'),standaloneSessions=(restricted?[]:readStandaloneSessions()).filter(s=>s?.campaignId!=='e2e-explicit-player-access'),summary=summarizeDashboard({campaigns,adventures,standaloneSessions,now:new Date()});renderCampaigns(summary.campaigns);renderAdventures(summary.adventures);renderSessions(summary.sessions);renderContext(summary);renderPlayerAssignments(restricted?sharedCampaignRows():[]);hydrateMediaImages(document).catch(()=>{})}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();init()});
+window.addEventListener('hub-rpg:remote-status',event=>renderSyncStatus(event.detail));
