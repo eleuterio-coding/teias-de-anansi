@@ -116,7 +116,9 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async reconcileRosterMemberships(campaign,adventures=[]){
    const u=auth.currentUser,owner=accountFor(u).username,cid=text(campaign?.id);
    if(owner!==ownerUsername||!cid)return{created:0};
-   const existing=await campaignMemberships(cid),allowed=new Set(playerAccounts.map(p=>p.username));
+   // Inclui recusas registradas (active:false); elas nunca são reativadas automaticamente.
+   const query=f.query(f.collection(db,'memberships'),f.where('campaignId','==',cid)),snapshot=await f.getDocs(query);
+   const existing=snapshot.docs.map(doc=>normalizeMember({...doc.data(),id:doc.id})),allowed=new Set(playerAccounts.map(p=>p.username));
    const roster=arr(campaign.members).filter(m=>m?.role==='player'&&m?.active!==false&&allowed.has(canonicalUsername(m.username)));
    let created=0;
    for(const member of roster){
