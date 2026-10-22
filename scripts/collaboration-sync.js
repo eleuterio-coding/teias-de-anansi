@@ -29,6 +29,28 @@ export async function syncOwnCharacters(provider,{storage=globalThis.localStorag
  return{characters:merged,ownCharacters:mergedOwn,pushed:mergedOwn.length,remote:liveRemote.length,shared:sharedIds.size,deleted:deletedIds.size}
 }
 export async function publishLocalCampaign(provider,campaignId,{storage=globalThis.localStorage}={}){if(!provider?.configured)throw new Error('Sincronização remota não configurada.');const campaign=readCampaigns(storage).find(c=>c.id===campaignId);if(!campaign)throw new Error('Campanha local não encontrada.');const adventures=readAdventures(storage).filter(a=>a.campaignId===campaignId),characters=readCharacters();return provider.saveCampaignBundle(campaign,adventures,characters)}
+/** Publica somente campanhas que ainda não existem na nuvem.
+ * O conteúdo remoto válido sempre prevalece: não há overwrite no login.
+ * Vínculos de jogadores continuam explícitos e não são concedidos por dedução do elenco. */
+export async function publishMissingMasterCampaigns(provider,{storage=globalThis.localStorage}={}){
+ if(!provider?.configured)throw new Error('Sincronização remota não configurada.');
+ const account=await provider.currentUser(),owner=username(provider.config?.ownerUsername||'rafael');
+ if(!account||username(account.username)!==owner)return{published:0,repaired:0};
+ const campaigns=readCampaigns(storage).filter(c=>text(c?.id)),adventures=readAdventures(storage),characters=readCharacters(),memberships=await provider.listMemberships();
+ const authorized=new Set(memberships.filter(m=>m.role==='dm'&&m.active!==false).map(m=>text(m.campaignId)));
+ let published=0,repaired=0;
+ for(const campaign of campaigns){
+  const status=await provider.campaignPublicationStatus(campaign.id);
+  if(!status.published){
+   await provider.saveCampaignBundle(campaign,adventures.filter(a=>a.campaignId===campaign.id),characters);
+   published++;
+  }else if(!authorized.has(text(campaign.id))){
+   await provider.ensureMasterMembership(campaign.id);
+   repaired++;
+  }
+ }
+ return{published,repaired}
+}
 export async function pullCollaborations(provider,{storage=globalThis.localStorage}={}){
  if(!provider?.configured)throw new Error('Sincronização remota não configurada.');
  const account=await provider.currentUser(),memberships=await provider.listMemberships(),cache=readCollaborationCache(storage),localCampaigns=readCampaigns(storage),localAdventures=readAdventures(storage),playerAccount=isPlayerAccount(account,provider),previousCatalog=catalogCharacterIds(cache),previousShared=sharedCharacterIds(cache);
@@ -48,4 +70,4 @@ export async function pullCollaborations(provider,{storage=globalThis.localStora
  if(!playerAccount&&typeof provider.listPlayerCharacters==='function'){const playerCharacters=await provider.listPlayerCharacters(),catalog={};for(const character of playerCharacters){const id=text(character?.id);if(!id)continue;const linked=linkedIds.has(id);catalog[id]={ownerUid:text(character.ownerUid),ownerUsername:username(character.ownerUsername),ownerDisplayName:text(character.ownerDisplayName)||text(character.ownerUsername),linked,updatedAt:text(character.updatedAt)};characters=linked?replaceRemote(characters,[character]):replaceRemote(characters,[character])}cache.playerCharacters=catalog}
  writeCampaigns(campaigns,storage);writeAdventures(adventures,storage);storage.setItem(CHARACTER_KEY,JSON.stringify(characters));writeCollaborationCache(cache,storage);return{memberships,privateCampaigns:campaigns.length,cache,characters}
 }
-export async function syncAll(provider,{storage=globalThis.localStorage}={}){const collaboration=await pullCollaborations(provider,{storage}),characters=await syncOwnCharacters(provider,{storage,memberships:collaboration.memberships});for(const membership of collaboration.memberships.filter(m=>m.role==='player'&&m.characterId)){const character=characters.characters.find(c=>c.id===membership.characterId);if(character)await provider.saveCampaignCharacter(membership.campaignId,character)}return{characters,collaboration,at:now()}}
+export async function syncAll(provider,{storage=globalThis.localStorage}={}){await publishMissingMasterCampaigns(provider,{storage});const collaboration=await pullCollaborations(provider,{storage}),characters=await syncOwnCharacters(provider,{storage,memberships:collaboration.memberships});for(const membership of collaboration.memberships.filter(m=>m.role==='player'&&m.characterId)){const character=characters.characters.find(c=>c.id===membership.characterId);if(character)await provider.saveCampaignCharacter(membership.campaignId,character)}return{characters,collaboration,at:now()}}
