@@ -54,6 +54,8 @@ assert.match(provider,/syncWatchers\(children,desired\)/,'Assinaturas devem ser 
 
 const realtime=fs.readFileSync(new URL('../scripts/collaboration-realtime.js',import.meta.url),'utf8');
 assert.match(realtime,/MIN_PULL_INTERVAL_MS=4000/,'Limite de frequência remota.');
+assert.match(realtime,/if\(pushInFlight\)return pushInFlight\.then\(\(\)=>pushChanges\(\)\)/,'Envios sobrepostos devem ser serializados.');
+assert.match(realtime,/setTimeout\(pushChanges,650\)/,'Edições rápidas devem ser agrupadas.');
 assert.match(realtime,/pendingCharacterIds\.add\(id\)/,'Mudanças de ficha precisam ser rastreadas.');
 assert.match(realtime,/pendingAdventureCampaignIds\.add\(oldCid\)/,'Aventura movida deve atualizar também a campanha de origem.');
 assert.match(realtime,/selectiveCampaigns\|\|changedCampaignIds\.has/,'Alterar uma campanha não deve republicar todas as outras.');
