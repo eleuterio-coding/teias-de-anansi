@@ -87,7 +87,7 @@ function buildSidebar(){
  const divider2=document.createElement("div");divider2.className="hub-sidebar-divider";aside.appendChild(divider2);
  const secondary=document.createElement("nav");secondary.className="hub-nav-secondary";secondary.setAttribute("aria-label","Navegação secundária");
  secondary.innerHTML='<a class="hub-nav-link" href="usuario.html">'+icon("player")+'<span>'+userAreaLabel()+'</span></a><a class="hub-nav-link" href="configuracoes.html">'+icon("settings")+'<span>Configurações</span></a>';
- if(currentPage()==="usuario.html")secondary.querySelector('a[href="usuario.html"]')?.setAttribute("aria-current","page");
+ if(currentPage()==="usuario.html"||currentPage()==="usuarios.html")secondary.querySelector('a[href="usuario.html"]')?.setAttribute("aria-current","page");
   if(currentPage()==="configuracoes.html")secondary.querySelector('a[href="configuracoes.html"]')?.setAttribute("aria-current","page");
  aside.appendChild(secondary);
  return aside
