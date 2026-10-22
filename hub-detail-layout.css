@@ -42,7 +42,7 @@
  #adventure-root .hub-detail-page .hub-detail-grid>.card,
  #sessions-list .hub-detail-page .hub-detail-grid>.card{grid-column:1}
  #adventure-root .hub-detail-page .section-nav,
- #sessions-list .hub-detail-page .section-nav{position:relative;top:auto}
+ #sessions-list .hub-detail-page .section-nav{position:sticky;top:var(--hub-topbar-height,64px)}
 }
 @media(max-width:560px){
  #adventure-root .hub-detail-grid>.card,#sessions-list .hub-detail-grid>.card{padding:14px}
