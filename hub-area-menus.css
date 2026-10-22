@@ -17,3 +17,13 @@
 .hub-area-page .hub-area-description{color:var(--hub-text-2,#adc0d0)}
 @media(max-width:650px){.hub-area-menu{grid-template-columns:1fr}.hub-area-menu a{min-height:145px}.hub-area-heading .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.hub-area-menu a{transition:none}.hub-area-menu a:hover{transform:none}}
+
+/* Listas compartilham o mesmo card de entidade, sem estilos claros legados. */
+.hub-area-page .top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hub-area-page #lista{display:grid;gap:12px;margin-top:20px}
+.hub-area-page #lista .pc{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:90px}
+.hub-area-page #lista .pc h2{font-size:1.08rem;margin:0 0 5px}
+.hub-area-page #lista .pc .muted{color:var(--hub-text-2,#aebfd0)}
+.hub-area-page #lista .pc .actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.hub-area-page #lista .pc .actions .btn{text-decoration:none}
+@media(max-width:650px){.hub-area-page #lista .pc{align-items:stretch;flex-direction:column}.hub-area-page #lista .pc .actions{display:grid;grid-template-columns:1fr;width:100%}.hub-area-page #lista .pc .actions>*{width:100%}}
