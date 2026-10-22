@@ -48,13 +48,13 @@ export function normalizeSettings(input={}){
   sources:{enabled:[...ALL_SOURCES]},
   houseRules:{preset:'teias-v1',enabled:[]},
   sheet:{
-   density:DENSITIES.has(sheet.density)?sheet.density:base.sheet.density,
-   showSources:bool(sheet.showSources,base.sheet.showSources),
-   stickySections:bool(sheet.stickySections,base.sheet.stickySections)
+   density:'comfortable',
+   showSources:true,
+   stickySections:true
   },
   accessibility:{
    fontScale:FONT_SCALES.has(accessibility.fontScale)?accessibility.fontScale:base.accessibility.fontScale,
-   contrast:CONTRASTS.has(accessibility.contrast)?accessibility.contrast:base.accessibility.contrast,
+   contrast:'standard',
    motion:MOTIONS.has(accessibility.motion)?accessibility.motion:base.accessibility.motion
   },
   campaignDefaults:{dmName:'Rafael',setting:'',system:'D&D 5.5e'},
