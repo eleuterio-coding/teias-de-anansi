@@ -9,7 +9,7 @@ const NAV_ITEMS=[
  {page:"aventuras.html",label:"Aventuras",icon:"map"},
  {page:"sessoes.html",label:"Sessões",icon:"calendar"},
  {page:"personagens.html",aliases:["lista-personagens.html"],label:"Personagens",icon:"users"},
- {page:"npcs.html",label:"NPCs",icon:"player",masterOnly:true},
+ {page:"npcs.html",label:"NPCs",icon:"player"},
  {page:"bibliotecas.html",label:"Biblioteca",icon:"library"}
 ];
 const PAGE_LABELS={
