@@ -1,5 +1,5 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-roster-link2';
-import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261022-player-cloud-repair1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-idempotent1';
+import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261022-idempotent1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261016-campaign-geography1';
 import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261016-current-status2';
