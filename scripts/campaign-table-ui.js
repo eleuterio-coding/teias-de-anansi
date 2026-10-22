@@ -9,7 +9,7 @@ import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampai
 import{renderStructuredDetails,renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261019-disclosure1';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261019-adventure-order1';
-import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20260925-media1';
+import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261022-idempotent1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-location-projection1';
 import{featuredCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-adventure-featured2';
 import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-shared-order1';
@@ -378,7 +378,7 @@ async function init(){
  render();
  if(config?.configured)void(async()=>{
   try{
-   const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261021-user-profiles1');
+   const{createFirebaseCollaborationProvider}=await import('./firebase-collaboration-provider.js?v=20261022-idempotent1');
    const provider=await createFirebaseCollaborationProvider({config}),profiles=await provider.listUsers();
    rememberAvatars(profiles);
    const byUsername=new Map(profiles.map(p=>[p.username,p]));
