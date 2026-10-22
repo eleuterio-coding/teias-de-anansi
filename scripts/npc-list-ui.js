@@ -5,6 +5,7 @@ const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,
 const arr=v=>Array.isArray(v)?v:[],fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 const categoryNames={ally:'Aliado',enemy:'Inimigo',neutral:'Neutro',mentor:'Mentor',merchant:'Comerciante',antagonist:'Antagonista',contact:'Contato'};
 let view='cards';
+const initialCampaign=new URLSearchParams(location.search).get('campaign')||'all';let campaignFilterInitialized=false;
 function isMaster(){return collaborationAccessMode()==='master'&&npcMasterAuthorized()&&!masterPreviewMode()}
 function allCampaigns(){return isMaster()?readCampaigns():sharedCampaignRows().map(row=>row.campaign)}
 function masterSources(campaign){
@@ -25,7 +26,10 @@ function masterEntries(campaigns){
    map.set(row.id,value)
   }
   const ids=new Set([...legacy,...existing].map(n=>n.id).filter(Boolean));
-  for(const id of arr(campaign.importantNpcIds))if(map.has(id))ids.add(id);
+  for(const id of arr(campaign.importantNpcIds)){
+   if(!map.has(id)&&campaign.importantNpcPublicNames?.[id])map.set(id,{id,name:campaign.importantNpcPublicNames[id],sheet:false,source:{id,name:campaign.importantNpcPublicNames[id]},linked:[]});
+   if(map.has(id))ids.add(id)
+  }
   for(const id of ids){
    const value=map.get(id);if(!value)continue;
    const meta=existing.find(n=>n.id===id)||legacy.find(n=>n.id===id)||{};
@@ -79,11 +83,11 @@ function card(npc){
  </div></article>`
 }
 function render(){
- const master=isMaster(),cs=allCampaigns(),rows=master?masterEntries(cs):collaborationAccessMode()==='player'?publicEntries(cs):[],search=fold($('npc-search').value),cid=$('npc-campaign-filter').value,category=$('npc-category-filter').value,visibility=$('npc-visibility-filter').value;
+ const master=isMaster(),cs=allCampaigns(),rows=master?masterEntries(cs):collaborationAccessMode()==='player'?publicEntries(cs):[],search=fold($('npc-search').value),cid=campaignFilterInitialized?$('npc-campaign-filter').value:initialCampaign,category=$('npc-category-filter').value,visibility=$('npc-visibility-filter').value;
  $('npc-master-actions').hidden=!master;
  $('npc-editor').hidden=!master||$('npc-editor').hidden;
  $('npc-subtitle').textContent=master?'Gerencie o elenco, os vínculos e o que cada campanha revela.':'NPCs conhecidos nas campanhas às quais você tem acesso.';
- const campaignSelect=$('npc-campaign-filter');campaignSelect.innerHTML='<option value="all">Todas as campanhas</option>'+cs.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');campaignSelect.value=cs.some(c=>c.id===cid)?cid:'all';
+ const campaignSelect=$('npc-campaign-filter');campaignSelect.innerHTML='<option value="all">Todas as campanhas</option>'+cs.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');campaignSelect.value=cs.some(c=>c.id===cid)?cid:'all';campaignFilterInitialized=true;
  $('npc-visibility-filter').closest('label').hidden=!master;
  const filtered=rows.filter(n=>{
   const str=[n.name,n.source?.role,n.source?.faction,...n.linked.map(l=>[l.meta?.role,l.meta?.faction,l.meta?.publicName,l.campaign.name])].flat().join(' ');
@@ -153,8 +157,9 @@ function persistEntry(unlink=false){
  });
  // Ocultar também referências legadas, para que desvincular não mantenha dados expostos.
  const oldVisibility={...(campaign.importantNpcVisibility||{})};
- if(unlink||!visible)oldVisibility[id]=false;
- const result=updateCampaign(all,campaign.id,{npcDirectory:rows,importantNpcVisibility:oldVisibility});
+ oldVisibility[id]=!unlink&&visible;
+ const publicNames={...(campaign.importantNpcPublicNames||{})};if(!unlink&&visible)publicNames[id]=name;
+ const result=updateCampaign(all,campaign.id,{npcDirectory:rows,importantNpcVisibility:oldVisibility,importantNpcPublicNames:publicNames});
  if(!result.ok){alert(result.reason||'Não foi possível atualizar NPC.');return}
  writeCampaigns(result.list);$('npc-editor').hidden=true;render()
 }
