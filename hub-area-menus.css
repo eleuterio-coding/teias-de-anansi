@@ -1,0 +1,19 @@
+/* Menus de Personagens e NPCs: mesmos tokens, cartões e espaçamentos do Hub. */
+.hub-area-page{max-width:1400px;width:100%;margin-inline:auto}
+.hub-area-heading{display:flex;align-items:end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.hub-area-heading h1{margin:0 0 5px;font-size:clamp(1.55rem,2.5vw,2rem)}
+.hub-area-heading p{margin:0;color:var(--hub-text-2,#adc0d0)}
+.hub-area-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px;margin:0;padding:0;list-style:none}
+.hub-area-menu a{display:flex;flex-direction:column;gap:12px;justify-content:space-between;min-height:182px;padding:22px;border-radius:14px;border:1px solid var(--hub-border,#33485d);background:var(--hub-surface,#111f2d);color:var(--hub-text,#eaf3fb);text-decoration:none;transition:border-color .15s,background .15s,transform .15s}
+.hub-area-menu a:hover,.hub-area-menu a:focus-visible{border-color:var(--hub-accent,#469ee8);background:var(--hub-surface-2,#172a3d);transform:translateY(-1px)}
+.hub-area-menu .hub-area-menu-icon{display:grid;place-items:center;width:42px;height:42px;border:1px solid var(--hub-border,#34485d);border-radius:11px;color:var(--hub-accent-2,#93caff);font-size:1.5rem}
+.hub-area-menu .hub-area-menu-title{display:block;font-size:1.1rem;font-weight:750}
+.hub-area-menu .hub-area-menu-desc{display:block;margin-top:6px;font-size:.87rem;line-height:1.5;color:var(--hub-text-2,#adc0d0)}
+.hub-area-menu .hub-area-menu-more{font-weight:700;font-size:.85rem;color:var(--hub-accent-2,#94ccff)}
+.hub-area-page .hub-entity-list{display:grid;gap:12px;margin-top:18px}
+.hub-area-page .pc,.hub-area-page .npc-library-card{background:var(--hub-surface,#111f2d);border:1px solid var(--hub-border,#34485d);border-radius:13px;box-shadow:none;padding:17px;min-width:0}
+.hub-area-page .pc h2,.hub-area-page .npc-library-card h2{color:var(--hub-text,#f1f5fa)}
+.hub-area-page :is(.pc,.npc-library-card) .actions{gap:8px}
+.hub-area-page .hub-area-description{color:var(--hub-text-2,#adc0d0)}
+@media(max-width:650px){.hub-area-menu{grid-template-columns:1fr}.hub-area-menu a{min-height:145px}.hub-area-heading .btn{width:100%}}
+@media(prefers-reduced-motion:reduce){.hub-area-menu a{transition:none}.hub-area-menu a:hover{transform:none}}
