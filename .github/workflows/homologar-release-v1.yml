@@ -37,6 +37,11 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/auditar-release-v1.mjs
+      - name: Testar idempotência e estabilidade de listeners sem Firebase real
+        run: |
+          node tests/regressao-quota-firestore-v2.mjs
+          node tests/regressao-realtime-quota.mjs
+          node tests/regressao-listeners-jogadores.mjs
 
   navegador:
     name: E2E Chromium · desktop e mobile
