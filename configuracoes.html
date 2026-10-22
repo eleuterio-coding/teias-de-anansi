@@ -4,19 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Configurações - Teias de Anansi</title>
-<link rel="stylesheet" href="hub-ux.css?v=20261021-player-self1">
-<link rel="stylesheet" href="settings.css?v=20260908-settings2">
+<link rel="stylesheet" href="hub-ux.css?v=20261022-settings-unified1">
+<link rel="stylesheet" href="settings.css?v=20261022-settings-unified1">
 </head>
-<body>
-<p><a href="index.html?v=20260909-perf1">← Início</a></p>
-<header class="settings-hero"><p class="eyebrow">Hub de RPG</p><h1>Configurações</h1></header>
-<main id="main-content" class="settings-grid">
-<section class="card"><h2>Perfil de uso</h2><label>Área padrão da interface<select id="workspace"><option value="auto">Automático</option><option value="jogador">Jogador</option><option value="mestre">Mestre</option></select></label></section>
-<section class="card"><h2>Ficha Digital</h2><label>Densidade<select id="sheet-density"><option value="comfortable">Confortável</option><option value="compact">Compacta</option></select></label><label class="toggle"><input id="show-sources" type="checkbox"> Exibir referências de fonte na Ficha</label><label class="toggle"><input id="sticky-sections" type="checkbox"> Manter navegação de seções fixa</label></section>
-<section class="card"><h2>Acessibilidade</h2><label>Tamanho do texto<select id="font-scale"><option value="normal">Normal</option><option value="large">Grande</option><option value="xlarge">Extra grande</option></select></label><label>Contraste<select id="contrast"><option value="standard">Padrão</option><option value="high">Alto contraste</option></select></label><label>Movimento<select id="motion"><option value="system">Seguir o sistema</option><option value="reduce">Reduzir animações</option></select></label></section>
-<section class="actions wide"><button id="save-settings" type="button">Salvar configurações</button><button id="reset-settings" class="secondary" type="button">Restaurar padrões</button><span id="settings-status" class="status-inline" role="status" aria-live="polite"></span></section>
+<body class="hub-settings-page">
+<main id="main-content" class="settings-page">
+<header class="settings-hero"><div><p class="eyebrow">Preferências de interface</p><h1>Configurações</h1><p class="settings-intro">Ajuste a leitura e o movimento da interface do Hub.</p></div></header>
+<section class="card settings-preferences" aria-labelledby="settings-accessibility-title">
+  <header class="settings-section-header"><h2 id="settings-accessibility-title">Acessibilidade</h2><p>Preferências visuais aplicadas em todas as áreas.</p></header>
+  <div class="settings-fields">
+  <label for="font-scale">Tamanho do texto<select id="font-scale"><option value="normal">Normal</option><option value="large">Grande</option><option value="xlarge">Extra grande</option></select></label>
+  <label for="motion">Movimento<select id="motion"><option value="system">Sistema</option><option value="reduce">Reduzir animações</option></select></label>
+  </div>
+</section>
+<section class="settings-actions" aria-label="Ações das configurações"><div class="actions"><button id="save-settings" type="button">Salvar configurações</button><button id="reset-settings" class="secondary" type="button">Restaurar padrões</button></div><span id="settings-status" class="status-inline" role="status" aria-live="polite"></span></section>
 </main>
-<script type="module" src="scripts/hub-ux.js?v=20261022-dropdown-stable1"></script>
-<script type="module" src="scripts/settings-ui.js?v=20260908-settings2"></script>
+<script type="module" src="scripts/hub-ux.js?v=20261022-quota-publish2"></script>
+<script type="module" src="scripts/settings-ui.js?v=20261022-settings-unified1"></script>
 </body>
 </html>
