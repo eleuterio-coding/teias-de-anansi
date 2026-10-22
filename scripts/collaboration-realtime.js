@@ -91,7 +91,7 @@ async function reconcilePersonalCharacters(memberships=null){
 }
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__||Date.now()<retryAfter)return;
- if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size)await pushChanges();
+ if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size){const pushed=await pushChanges();if(pushed===false){schedulePull();return}}
  lastPullAt=Date.now();
  const before=snapshotState();
  globalThis.__HUB_REALTIME_APPLYING__=true;
@@ -124,12 +124,12 @@ function schedulePull(){
 }
 async function pushChanges(){
  clearTimeout(pushTimer);pushTimer=0;
- if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return;
+ if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return false;
  const kinds=new Set(pendingKinds);pendingKinds.clear();
  const changedIds=new Set(pendingCharacterIds);pendingCharacterIds.clear();const selectiveCharacters=changedIds.size>0;
  const removedCampaigns=[...pendingCampaignDeletes];pendingCampaignDeletes.clear();
  const removedCharacters=[...pendingCharacterDeletes.entries()];pendingCharacterDeletes.clear();
- const session=readCollaborationSession();if(!session)return;
+ const session=readCollaborationSession();if(!session)return false;
  try{
   if(session.isMaster){
    for(const id of removedCampaigns)await deleteRemoteCampaign(provider,id);
@@ -151,8 +151,13 @@ async function pushChanges(){
   for(const[id,row]of removedCharacters){if(session.isMaster){await deleteRemoteCharacterAsMaster(provider,id);continue}const managed=row?.__managedOwner||null,ownerUid=text(managed?.ownerUid||row?.ownerUid),ownerName=text(managed?.ownerUsername||row?.ownerUsername).toLowerCase(),owns=text(row?.ownerUid)===text(session.uid)||text(row?.ownerUsername).toLowerCase()===text(session.username).toLowerCase();if(owns)await deleteRemoteOwnCharacter(provider,id)}
  }catch(error){
   for(const id of removedCampaigns)pendingCampaignDeletes.add(id);for(const[id,row]of removedCharacters)pendingCharacterDeletes.set(id,row);for(const kind of kinds)pendingKinds.add(kind);for(const id of changedIds)pendingCharacterIds.add(id);
-  console.warn('[Hub realtime] falha ao enviar atualização:',error)
+  const exhausted=/resource-exhausted|quota|429|too.many.requests/i.test([error?.code,error?.message].join(' '));
+  retryAfter=Date.now()+(exhausted?60000:10000);
+  console.warn('[Hub realtime] falha ao enviar atualização:',error);
+  schedulePull();
+  return false
  }
+ return true
 }
 function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
 /* Sessão Firebase expirada: retornar ao login preservando a ficha pretendida.
