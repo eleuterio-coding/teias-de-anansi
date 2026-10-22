@@ -13,6 +13,17 @@ function isPlayerAccount(account,provider){return Boolean(account?.username)&&us
 function sharedCharacterIds(cache){return new Set(Object.values(cache?.campaigns||{}).flatMap(row=>arr(row?.characterIds)).map(text).filter(Boolean))}
 function catalogCharacterIds(cache){return new Set(Object.keys(cache?.playerCharacters||{}).map(text).filter(Boolean))}
 function ownsCharacter(character,account){return text(character?.ownerUid)===text(account?.uid)||username(character?.ownerUsername)===username(account?.username)}
+// Não enviar novamente a mesma ficha a cada snapshot remoto: essa escrita
+// disparava um novo snapshot, criando um ciclo de leituras/escritas no Spark.
+export function charactersNeedingUpload(merged=[],remote=[]){
+ const remoteById=new Map(arr(remote).filter(c=>text(c?.id)).map(c=>[text(c.id),c]));
+ const updatedAt=c=>Date.parse(c?.updatedAt||c?.createdAt||'')||0;
+ return arr(merged).filter(c=>{
+  const id=text(c?.id),existing=remoteById.get(id);
+  return Boolean(id&&(!existing||updatedAt(c)>updatedAt(existing)));
+ });
+}
+
 export async function syncOwnCharacters(provider,{storage=globalThis.localStorage,memberships=null}={}){
  if(!provider?.configured)throw new Error('Sincronização remota não configurada.');
  const account=await provider.currentUser(),rows=memberships||await provider.listMemberships(),local=readCharacters(),remote=await provider.listOwnCharacters(),tombstones=typeof provider.listCharacterTombstones==='function'?await provider.listCharacterTombstones():[],deletedIds=new Set(arr(tombstones).map(row=>text(row?.id||row?.characterId)).filter(Boolean)),cache=readCollaborationCache(storage);
@@ -20,12 +31,12 @@ export async function syncOwnCharacters(provider,{storage=globalThis.localStorag
  if(!isPlayerAccount(account,provider)){
   const externalIds=catalogCharacterIds(cache),external=liveLocal.filter(character=>externalIds.has(text(character?.id))),localOwn=liveLocal.filter(character=>!externalIds.has(text(character?.id))),mergedOwn=mergeNewest(localOwn,liveRemote),merged=replaceRemote(mergedOwn,external);
   storage.setItem(CHARACTER_KEY,JSON.stringify(merged));
-  for(const character of mergedOwn)await provider.saveOwnCharacter(character);
+  for(const character of charactersNeedingUpload(mergedOwn,liveRemote))await provider.saveOwnCharacter(character);
   return{characters:merged,ownCharacters:mergedOwn,pushed:mergedOwn.length,remote:liveRemote.length,playerCharacters:external.length,deleted:deletedIds.size}
  }
  const sharedIds=sharedCharacterIds(cache),ownAssigned=new Set(rows.filter(m=>m?.active!==false&&m?.role==='player').map(m=>text(m.characterId)).filter(Boolean)),remoteIds=new Set(liveRemote.map(character=>text(character?.id)).filter(Boolean)),localOwn=liveLocal.filter(character=>{const id=text(character?.id);return ownAssigned.has(id)||remoteIds.has(id)||ownsCharacter(character,account)}),mergedOwn=mergeNewest(localOwn,liveRemote),readOnly=liveLocal.filter(character=>sharedIds.has(text(character?.id))&&!ownsCharacter(character,account)),merged=replaceRemote(mergedOwn,readOnly);
  storage.setItem(CHARACTER_KEY,JSON.stringify(merged));
- for(const character of mergedOwn)await provider.saveOwnCharacter(character);
+ for(const character of charactersNeedingUpload(mergedOwn,liveRemote))await provider.saveOwnCharacter(character);
  return{characters:merged,ownCharacters:mergedOwn,pushed:mergedOwn.length,remote:liveRemote.length,shared:sharedIds.size,deleted:deletedIds.size}
 }
 export async function publishLocalCampaign(provider,campaignId,{storage=globalThis.localStorage}={}){if(!provider?.configured)throw new Error('Sincronização remota não configurada.');const campaign=readCampaigns(storage).find(c=>c.id===campaignId);if(!campaign)throw new Error('Campanha local não encontrada.');const adventures=readAdventures(storage).filter(a=>a.campaignId===campaignId),characters=readCharacters();return provider.saveCampaignBundle(campaign,adventures,characters)}
