@@ -60,7 +60,15 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
    const syncWatchers=(active,desired)=>{
     const target=new Map(desired.map(item=>[item.key,item.ref]));
     for(const[key,stop]of active)if(!target.has(key)){try{stop()}catch{}active.delete(key)}
-    for(const[key,ref]of target)if(!active.has(key))active.set(key,f.onSnapshot(ref,signal,onError));
+    for(const[key,ref]of target)if(!active.has(key)){
+     let initial=true;
+     active.set(key,f.onSnapshot(ref,snapshot=>{
+      // A consulta raiz já agenda o pull de bootstrap; não duplicar
+      // consultas por cada snapshot inicial das assinaturas filhas.
+      if(initial){initial=false;return}
+      signal(snapshot);
+     },onError));
+    }
    };
    const clearWatchers=active=>{for(const stop of active.values())try{stop()}catch{}active.clear()};
    let rootStop;
@@ -217,7 +225,7 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
   async campaignPublicationStatus(campaignId){const u=auth.currentUser;if(!u||accountFor(u).username!==ownerUsername)throw new Error('Somente o Mestre pode verificar publicações.');const cid=text(campaignId);if(!cid)throw new Error('Campanha inválida.');const root=await f.getDoc(f.doc(db,'campaigns',cid));if(!root.exists())return{exists:false,published:false};const state=await f.getDoc(f.doc(db,'campaigns',cid,'private','state'));return{exists:true,published:state.exists()&&Boolean(state.data()?.payload?.campaign)}},
   // Restaura somente o vínculo do Mestre, sem modificar a Campanha remota.
   async ensureMasterMembership(campaignId){const u=auth.currentUser;if(!u||accountFor(u).username!==ownerUsername)throw new Error('Somente o Mestre pode recuperar seu vínculo.');const cid=text(campaignId);if(!cid)throw new Error('Campanha inválida.');const email=String(u.email||'').toLowerCase();await f.setDoc(membershipRef(cid,email),{id:membershipId(cid,email),campaignId:cid,uid:u.uid,username:ownerUsername,email,role:'dm',characterId:null,sessionIds:[],adventureIds:[],displayName:displayNameFor(ownerUsername),active:true,updatedAt:now()},{merge:true})},
-  async saveCampaignCharacter(campaignId,character){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const account=accountFor(u),cid=text(campaignId),charId=text(character?.id);if(!cid||!charId)throw new Error('Campanha ou personagem inválido.');const manager=await canManageCampaign(cid,u.uid),membership=await campaignRole(cid,u);if(!manager&&!(membership?.active&&membership.role==='player'&&membership.characterId===charId))throw new Error('Você só pode alterar a ficha atribuída a você nesta Campanha.');const signatureKey=`${u.uid}:campaign:${cid}:${charId}`,signature=canonicalJson(character);if(characterSignatures.get(signatureKey)===signature)return;const charRef=f.doc(db,'campaigns',cid,'characters',charId),old=await f.getDoc(charRef),ownerUid=manager?(text(character.ownerUid)||text(old.data()?.ownerUid)||u.uid):u.uid,ownerName=manager?canonicalUsername(character.ownerUsername||old.data()?.ownerUsername||account.username):account.username,payload={...character,ownerUid,ownerUsername:ownerName};await f.setDoc(charRef,{characterId:charId,ownerUid,ownerUsername:ownerName,payload,updatedAt:payload.updatedAt||now(),serverUpdatedAt:f.serverTimestamp()},{merge:true});characterSignatures.set(signatureKey,signature)},
+  async saveCampaignCharacter(campaignId,character){const u=auth.currentUser;if(!u)throw new Error('Faça login.');const account=accountFor(u),cid=text(campaignId),charId=text(character?.id);if(!cid||!charId)throw new Error('Campanha ou personagem inválido.');const manager=await canManageCampaign(cid,u.uid),membership=await campaignRole(cid,u);if(!manager&&!(membership?.active&&membership.role==='player'&&membership.characterId===charId))throw new Error('Você só pode alterar a ficha atribuída a você nesta Campanha.');const signatureKey=`${u.uid}:campaign:${cid}:${charId}`,signature=canonicalJson(character);if(characterSignatures.get(signatureKey)===signature)return;const charRef=f.doc(db,'campaigns',cid,'characters',charId),old=await f.getDoc(charRef),ownerUid=manager?(text(character.ownerUid)||text(old.data()?.ownerUid)||u.uid):u.uid,ownerName=manager?canonicalUsername(character.ownerUsername||old.data()?.ownerUsername||account.username):account.username,payload={...character,ownerUid,ownerUsername:ownerName};const expected={characterId:charId,ownerUid,ownerUsername:ownerName,payload,updatedAt:payload.updatedAt||now()};if(!old.exists()||!samePersistedFields(old.data(),expected))await f.setDoc(charRef,{...expected,serverUpdatedAt:f.serverTimestamp()},{merge:true});characterSignatures.set(signatureKey,signature)},
   async saveCampaignMediaState({campaign,adventures=[],entityType='campaign',entityId=null}={}){
    if(typeof auth.authStateReady==='function')await auth.authStateReady();
    const u=auth.currentUser;if(!u)throw new Error('Faça login para sincronizar a imagem.');
