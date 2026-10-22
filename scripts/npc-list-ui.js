@@ -64,7 +64,7 @@ function image(npc){
 function noteKey(){return 'hub-rpg:player-npc-notes:'+String(effectiveCollaborationSession()?.uid||'no-user')+':v1'}
 function notes(){try{const value=JSON.parse(localStorage.getItem(noteKey())||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}}
 function relatedAdventures(npc,master){const cs=npc.linked.map(l=>l.campaign),ids=new Set(cs.map(c=>c.id));return adventuresOf(npc,(master?readAdventures():sharedAdventures()).filter(a=>ids.has(a.campaignId)),cs,true)}
-function sessionAppearances(npc){return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))).map(s=>({campaign:l.campaign,session:s})))}
+function sessionAppearances(npc){return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>['completed','finished','active','current'].includes(s.status)&&(arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))||readAdventures().some(a=>a.campaignId===l.campaign.id&&arr(a.scenes).some(scene=>scene.sessionId===s.id&&arr(scene.npcIds).includes(npc.id))))).map(s=>({campaign:l.campaign,session:s})))}
 function card(npc){
  const master=isMaster(),scope=window.__HUB_ROSTER_SCOPE__||{},first=npc.linked.find(l=>l.campaign.id===scope.selectedCampaign?.id)||npc.linked[0],campaignLinks=npc.linked.map(r=>`<a href="mesa.html?id=${encodeURIComponent(r.campaign.id)}">${esc(r.campaign.name)}</a>`).join(' · '),info=first?.meta||{},known=master?info:npc.source,
  label=master?(npc.linked.length?'Vinculado':'Sem campanha'):'Conhecido';
