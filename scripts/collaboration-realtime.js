@@ -101,7 +101,7 @@ async function reconcilePersonalCharacters(memberships=null){
 }
 async function applyRemote(){
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__||Date.now()<retryAfter)return;
- if(pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size){const pushed=await pushChanges();if(pushed===false){schedulePull();return}}
+ if(pushInFlight||pendingKinds.size||pendingCampaignDeletes.size||pendingCharacterDeletes.size){const pushed=await pushChanges();if(pushed===false){schedulePull();return}}
  lastPullAt=Date.now();
  const before=snapshotState();
  globalThis.__HUB_REALTIME_APPLYING__=true;
