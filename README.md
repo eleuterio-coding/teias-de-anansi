@@ -17,7 +17,7 @@ Não existe papel de Observador. Rafael não é um papel configurável: ele é s
 
 ## Personagens
 
-O menu **Personagens** é um diretório de fichas já existentes: indicadores, pesquisa, filtros por campanha, classe e status, cards/lista e atalhos para as fichas originais. Não há um segundo editor.
+O menu **Personagens** apresenta quatro cards em duas colunas: **Abrir fichas**, **Criar personagem**, **Campanhas** e **Aventuras**. O botão de criação foi retirado da barra superior. Os cards Campanhas e Aventuras abrem uma seleção prévia e, depois da escolha, exibem exclusivamente o elenco vinculado, com jogador, personagem, classe, nível, raça/espécie, antecedente, aventura atual, aventuras concluídas, sessões realizadas, status e Local extraído da cena ativa da Aventura. Não existe um segundo editor de fichas.
 
 Rafael pode consultar o elenco das campanhas e configurar status e anotações privadas por campanha. A vinculação de fichas a contas de jogadores continua na área **Jogadores**, sem autoatribuição.
 
@@ -25,9 +25,11 @@ O jogador pode consultar os personagens autorizados em suas campanhas, editar so
 
 ## NPCs
 
-O menu **NPCs** existe para Mestre e Jogador. Rafael gerencia o catálogo local de fichas já existentes e vínculos com campanhas, além de campos narrativos verdadeiros e de **publicação explícita**: nome conhecido, categoria, ocupação, facção, relação, situação, localização e descrição públicas. Cada NPC pode ser configurado de forma independente em cada campanha.
+O menu **NPCs** reproduz a navegação em quatro cards e duas colunas, com seleção específica de Campanha ou Aventura antes de mostrar seu elenco. No caso dos NPCs, não há nome de jogador proprietário: o responsável indicado é o Mestre. Histórico de sessões e Local atual dependem de relações documentadas nas Sessões e cenas da Aventura.
 
-A versão do jogador lista apenas NPCs explicitamente publicados nas campanhas que lhe foram atribuídas. Os campos internos, nomes secretos e notas do mestre **não** são enviados pela projeção compartilhada; nem mesmo a participação de um NPC em uma Aventura o revela automaticamente. Informações não publicadas continuam ocultas, sem contagens de NPCs secretos.
+O menu **NPCs** existe para Mestre e Jogador. Rafael gerencia o catálogo local de fichas já existentes e vínculos com campanhas, além de campos narrativos verdadeiros e de **publicação explícita**: nome conhecido, categoria, classe, nível, raça/espécie, antecedente, ocupação, facção, relação, situação, localização e descrição públicas. Cada NPC pode ser configurado de forma independente em cada campanha.
+
+A versão do jogador lista apenas NPCs explicitamente publicados nas campanhas que lhe foram atribuídas. Os campos internos, nomes secretos e notas do mestre **não** são enviados pela projeção compartilhada; nem mesmo a participação de um NPC em uma Aventura o revela automaticamente. Aparições em Sessões só são compartilhadas quando o NPC já é público e aparece em cena concluída. Informações não publicadas continuam ocultas, sem contagens de NPCs secretos.
 
 As fichas completas de NPC seguem no armazenamento local do Mestre; os dados públicos são sincronizados junto com as Campanhas. As anotações pessoais de NPCs do Jogador ficam **somente no navegador**, segmentadas pelo usuário conectado, não se sincronizam com o Firebase.
 
