@@ -1,5 +1,5 @@
 import{readNpcs,writeNpcs,npcMasterAuthorized,uid}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
+import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261022-directories1';
 import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
 import{collaborationAccessMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
