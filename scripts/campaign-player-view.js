@@ -18,7 +18,8 @@ function playerRoster(c,characters,profiles=[],username=''){
   const own=String(member.username||'').toLowerCase()===String(username||'').toLowerCase(),profileUrl=`usuario.html?campaign=${encodeURIComponent(c.id)}`;
   const profileLink=own?`<a class="roster-player-profile-link" href="${profileUrl}" title="Abrir meu perfil" aria-label="Abrir meu perfil">↗</a>`:'';
   const characterName=permitted?`<a class="campaign-readonly-character-control" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">${esc(person)}</a>`:`<span class="campaign-readonly-character-control">${characterId?esc(person):'— Sem personagem —'}</span>`;
-  const open=permitted?`<a class="btn secondary roster-open-button" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">Abrir</a>`:'';
+  const icon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span class="roster-action-label">Abrir</span>';
+  const open=permitted?`<a class="btn secondary roster-open-button" href="${sheetHref(characterId)}" aria-label="Abrir ficha de ${esc(person)}">${icon}</a>`:`<span class="roster-action-placeholder" aria-hidden="true"></span>`;
   return `<article class="member-row roster-player campaign-roster-readonly">
   <span class="roster-grip" aria-hidden="true" title="Ordem estabelecida pelo Mestre"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></span>
   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(member.username||name,profiles),display)}
