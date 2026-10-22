@@ -132,7 +132,16 @@ function schedulePull(){
  clearTimeout(pullTimer);scheduledPullAt=at;
  pullTimer=setTimeout(()=>{pullTimer=0;scheduledPullAt=0;applyRemote()},Math.max(0,at-Date.now()));
 }
+let pushInFlight=null;
 async function pushChanges(){
+ // Nunca publicar duas versões da mesma ficha em paralelo.
+ if(pushInFlight)return pushInFlight.then(()=>pushChanges());
+ if(Date.now()<retryAfter){schedulePull();return false}
+ if(!pendingKinds.size&&!pendingCampaignDeletes.size&&!pendingCharacterDeletes.size)return true;
+ pushInFlight=flushPushChanges();
+ try{return await pushInFlight}finally{pushInFlight=null}
+}
+async function flushPushChanges(){
  clearTimeout(pushTimer);pushTimer=0;
  if(!provider||!account||globalThis.__HUB_REALTIME_APPLYING__)return false;
  const kinds=new Set(pendingKinds);pendingKinds.clear();
@@ -172,7 +181,7 @@ async function pushChanges(){
  }
  return true
 }
-function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,120)}
+function schedulePush(kind){if(!kind||globalThis.__HUB_REALTIME_APPLYING__)return;pendingKinds.add(kind);clearTimeout(pushTimer);pushTimer=setTimeout(pushChanges,650)}
 /* Sessão Firebase expirada: retornar ao login preservando a ficha pretendida.
  * Antes havia uma chamada a loginUrl() sem definição, gerando ReferenceError. */
 function loginUrl(){
