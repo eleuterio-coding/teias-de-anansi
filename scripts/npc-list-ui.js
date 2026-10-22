@@ -1,6 +1,7 @@
 import{readNpcs,writeNpcs,npcMasterAuthorized,uid}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,updateCampaign}from'./campaign-state.js?v=20261019-campaign-status1';
-import{collaborationAccessMode,sharedCampaignRows,effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
+import{readAdventures}from'./adventure-state.js?v=20261016-current-status2';
+import{collaborationAccessMode,sharedCampaignRows,sharedAdventures,effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[],fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 const categoryNames={ally:'Aliado',enemy:'Inimigo',neutral:'Neutro',mentor:'Mentor',merchant:'Comerciante',antagonist:'Antagonista',contact:'Contato'};
@@ -58,13 +59,15 @@ function image(npc){
 }
 function noteKey(){return 'hub-rpg:player-npc-notes:'+String(effectiveCollaborationSession()?.uid||'no-user')+':v1'}
 function notes(){try{const value=JSON.parse(localStorage.getItem(noteKey())||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}}
+function relatedAdventures(npc,master){const campaigns=new Set(npc.linked.map(l=>l.campaign.id));return(master?readAdventures():sharedAdventures()).filter(a=>campaigns.has(a.campaignId)&&(master?arr(a.npcIds).includes(npc.id):arr(a.npcs).some(n=>n.id===npc.id)))}
+function sessionAppearances(npc){return npc.linked.flatMap(l=>arr(l.campaign.sessions).filter(s=>arr(s.scenes).some(scene=>arr(scene.npcIds).includes(npc.id))).map(s=>({campaign:l.campaign,session:s})))}
 function card(npc){
  const master=isMaster(),first=npc.linked[0],campaignLinks=npc.linked.map(r=>`<a href="mesa.html?id=${encodeURIComponent(r.campaign.id)}">${esc(r.campaign.name)}</a>`).join(' · '),info=first?.meta||{},known=master?info:npc.source,
  label=master?(npc.linked.length?'Vinculado':'Sem campanha'):'Conhecido';
  const secondary=master?(info.role||npc.source?.refSnapshots?.class?.name||'Ficha de NPC'):(known.role||known.category&&categoryNames[known.category]||'NPC conhecido');
  const situation=master?(info.status||''):(known.status||'');
  const location=master?(info.location||''):(known.location||'');
- const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id);
+ const playerNotes=notes(),key=npc.key||((first?.campaign?.id||'')+':'+npc.id),adventures=relatedAdventures(npc,master),sessions=master?sessionAppearances(npc):[];
  return`<article class="hub-directory-card" data-npc-id="${esc(npc.id)}">
  <div class="hub-directory-card-top"><div class="hub-directory-avatar">${image(npc)}</div><div><h3>${esc(npc.name||'NPC sem nome')}</h3><p>${esc(secondary)}</p></div></div>
  <div class="hub-directory-meta"><span class="hub-directory-tag">${esc(label)}</span>${master?`<span class="hub-directory-tag status-${status(npc)}">${status(npc)==='revealed'?'Revelado':'Não revelado'}</span>`:''}${situation?`<span class="hub-directory-tag">${esc(situation)}</span>`:''}</div>
@@ -74,6 +77,8 @@ function card(npc){
  ${location?`<span>${master?'Localização':'Última localização conhecida'}: ${esc(location)}</span>`:''}
  ${master&&info.notes?`<span>Anotações do mestre disponíveis na configuração.</span>`:''}
  ${!master&&known.description?`<span>${esc(known.description)}</span>`:''}
+ ${adventures.length?`<span>Aventuras: ${adventures.map(a=>`<a href="aventuras.html?campaign=${encodeURIComponent(a.campaignId)}&id=${encodeURIComponent(a.id)}">${esc(a.title)}</a>`).join(' · ')}</span>`:''}
+ ${sessions.length?`<span>Aparições em sessões: ${sessions.map(({campaign,session})=>`<a href="sessoes.html?campaign=${encodeURIComponent(campaign.id)}&id=${encodeURIComponent(session.id)}">${esc(session.title)}</a>`).join(' · ')}</span>`:''}
  </div>
  ${!master&&!masterPreviewMode()?`<details class="hub-directory-details"><summary>Minhas anotações</summary><div class="hub-directory-note-editor"><label for="note-${esc(key)}">Anotações pessoais (somente neste navegador)<textarea id="note-${esc(key)}" maxlength="3000" data-npc-note="${esc(key)}">${esc(playerNotes[key]||'')}</textarea></label><button type="button" class="secondary" data-save-player-note="${esc(key)}">Salvar anotação</button></div></details>`:''}
  <div class="hub-directory-actions">
