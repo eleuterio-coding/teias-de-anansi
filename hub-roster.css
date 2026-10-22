@@ -22,3 +22,6 @@
 .hub-roster-info a{color:var(--hub-accent-2,#81bfff)}
 .hub-directory-grid .hub-directory-card{min-height:0}
 @media(max-width:720px){.hub-roster-menu,.hub-roster-choice-grid,.hub-directory-grid{grid-template-columns:1fr!important}.hub-roster-picker-header{align-items:start;flex-direction:column}.hub-roster-info{grid-template-columns:1fr}}
+
+.hub-roster-menu [data-master-only]{display:none!important}
+.hub-roster-menu [data-master-only][data-authorized="true"]:not([hidden]){display:list-item!important}
