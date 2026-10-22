@@ -27,7 +27,7 @@ test('Menus oferecem quatro cards em duas colunas e sem criação no topo',async
 });
 test('Campanhas -> selecionar -> elenco com informações completas',async({page})=>{
  await page.goto('/personagens.html');
- await page.getByRole('link',{name:/Campanhas Selecionar campanha/}).click();
+ await page.locator('.hub-roster-menu a[href*="mode=campanhas"]').click();
  await expect(page).toHaveURL(/lista-personagens\.html\?mode=campanhas/);
  await page.locator('.hub-roster-choice').filter({hasText:'Reinos de Prata'}).click();
  await expect(page.locator('.pc')).toHaveCount(2);
