@@ -23,7 +23,8 @@ function characters(ctx){
 }
 function campaigns(ctx){return ctx.restricted?sharedCampaignRows().map(row=>row.campaign):readCampaigns()}
 function associations(character,campaigns){
- return campaigns.filter(c=>characterInCampaign(character,c))
+ const available=collaborationAccessMode()==='player'?sharedAdventures():readAdventures();
+ return campaigns.filter(c=>characterInCampaign(character,c)||available.some(a=>a.campaignId===c.id&&characterInAdventure(character,a,c)))
 }
 function statusFor(character,campaign,ctx){
  if(!campaign)return'';
