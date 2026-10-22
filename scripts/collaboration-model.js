@@ -36,7 +36,7 @@ export function publicNpcEntries(campaign={}){
  for(const id of unique(campaign.importantNpcIds))if(visibility[id]===true&&text(known[id]))rows.set(id,{id,name:text(known[id])});
  for(const entry of arr(campaign.npcDirectory)){
   if(entry?.visibleToPlayers!==true||!text(entry.publicName)||!text(entry.id))continue;
-  rows.set(text(entry.id),{id:text(entry.id),name:text(entry.publicName),role:text(entry.publicRole),faction:text(entry.publicFaction),relationship:text(entry.publicRelationship),status:text(entry.publicStatus),location:text(entry.publicLocation),description:String(entry.publicDescription??''),portraitUrl:String(entry.publicPortraitUrl??'')});
+  rows.set(text(entry.id),{id:text(entry.id),name:text(entry.publicName),category:text(entry.publicCategory),role:text(entry.publicRole),faction:text(entry.publicFaction),relationship:text(entry.publicRelationship),status:text(entry.publicStatus),location:text(entry.publicLocation),description:String(entry.publicDescription??''),portraitUrl:String(entry.publicPortraitUrl??'')});
  }
  return[...rows.values()]
 }
