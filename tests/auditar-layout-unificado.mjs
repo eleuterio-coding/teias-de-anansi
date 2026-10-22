@@ -33,7 +33,7 @@ assert.match(shell,/data-hub-layout-select/,'Shell deve expor seleção de layou
 assert.match(read('hub-ux.css'),/\.hub-master-tools/,'Topo deve estilizar a área exclusiva do Mestre.');
 assert.match(shell,/LIBRARY_PAGES\.has\(page\)\&\&item\.page==="bibliotecas\.html"/);
 assert.match(ux,new RegExp('hub-layout\\.css\\?v='+layoutVersion));
-assert.ok(ux.includes('app-shell.js?v=20261016-menu-cachefix2'),'Importação do menu precisa invalidar o cache do módulo antigo.');
+assert.ok(ux.includes('app-shell.js?v=20261022-directories1'),'Importação do menu precisa invalidar o cache do módulo antigo.');
 assert.match(ux,/Editar Ficha/);
 assert.doesNotMatch(ux,/Editar estrutura/);
 const normalizer=read('scripts/normalizar_tema_modulos.py');
