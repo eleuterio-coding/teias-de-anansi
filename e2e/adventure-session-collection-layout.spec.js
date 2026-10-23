@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 /**
  * Auditoria dos cards reais de Aventuras e Sessões.
  * O layout panorâmico segue a geometria dos cards de Campanhas:
- * capa esquerda, informações direita, status no alto, ações na base.
+ * capa esquerda, informações direita, status sob o vínculo, ações na base.
  */
 const campaign={
  id:'collection-c1',name:'Reinos de Prata',status:'active',members:[],
@@ -53,12 +53,13 @@ async function geometry(card){
   const detail=node.querySelector('.campaign-card-details');
   const actions=node.querySelector('.campaign-card-actions');
   const badge=node.querySelector('.campaign-card-status');
+  const ancestry=node.querySelector('.campaign-card-ancestry-status>.hub-parent-link');
   const stats=node.querySelector('.campaign-card-metrics');
   const open=actions.querySelector('a.btn');
   const del=actions.querySelector('button.danger');
   const card=rect(node);
   return {card,art:rect(art),detail:rect(detail),actions:rect(actions),
-   badge:rect(badge),stats:rect(stats),open:rect(open),del:del?rect(del):null,
+   badge:rect(badge),ancestry:rect(ancestry),stats:rect(stats),open:rect(open),del:del?rect(del):null,
    display:getComputedStyle(node).display,
    columns:getComputedStyle(node).gridTemplateColumns,
    scrollWidth:document.documentElement.scrollWidth,
@@ -78,7 +79,7 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(card.locator('.campaign-card-status')).toContainText(item.status);
   await expect(card.locator('.campaign-card-art')).toHaveCount(1);
   await expect(card.locator('.campaign-card-metrics .campaign-card-stat')).toHaveCount(item.url.includes('aventuras')?1:2);
-  await expect(card.locator('.campaign-card-stat-icon svg')).toHaveCount(item.url.includes('aventuras')?1:2);
+  await expect(card.locator('.campaign-card-metrics :is(svg,.campaign-card-stat-icon)')).toHaveCount(0);
   await expect(card.locator('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')).toHaveCount(0);
   await expect(card.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
   await expect(card.getByRole('button',{name:/Excluir/})).toHaveCount(1);
@@ -93,6 +94,27 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(page.locator(item.panel)).toBeVisible();
   await page.locator(item.cancel).click();
   await expect(page.locator(item.panel)).toBeHidden();
+ }
+});
+test('status fica imediatamente abaixo da Campanha em Aventuras e da Aventura em Sessões',async({page})=>{
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  const wrapper=card.locator('.campaign-card-ancestry-status');
+  await expect(wrapper).toHaveCount(1);
+  await expect(wrapper.locator(':scope > .hub-parent-link')).toHaveCount(1);
+  await expect(wrapper.locator(':scope > .campaign-card-status')).toHaveCount(1);
+  await expect(wrapper.locator(':scope > .hub-parent-link')).toContainText(item.url.includes('aventuras')?'Reinos de Prata':'As Rainhas');
+  const check=await wrapper.evaluate(el=>{
+   const name=el.querySelector(':scope > .hub-parent-link').getBoundingClientRect();
+   const badge=el.querySelector(':scope > .campaign-card-status').getBoundingClientRect();
+   const style=getComputedStyle(el.querySelector(':scope > .campaign-card-status'));
+   return {name:{left:name.left,bottom:name.bottom},badge:{left:badge.left,top:badge.top},position:style.position};
+  });
+  expect(check.position).toBe('relative');
+  expect(check.badge.top).toBeGreaterThanOrEqual(check.name.bottom-2);
+  expect(Math.abs(check.badge.left-check.name.left)).toBeLessThan(3);
  }
 });
 test('Aventuras: exibir apenas quantidade real de sessões à esquerda',async({page})=>{
@@ -202,7 +224,8 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   expect(g.art.bottom).toBeGreaterThan(g.card.bottom-4);
   expect(g.detail.left).toBeGreaterThanOrEqual(g.art.right-3);
   expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
-  expect(g.badge.top-g.card.top).toBeLessThan(45);
+  expect(g.badge.top).toBeGreaterThanOrEqual(g.ancestry.bottom-2);
+  expect(Math.abs(g.badge.left-g.ancestry.left)).toBeLessThan(3);
   expect(g.actions.left).toBeGreaterThanOrEqual(g.art.right-2);
   expect(g.actions.bottom).toBeLessThanOrEqual(g.card.bottom+3);
   expect(g.actions.top).toBeGreaterThanOrEqual(g.stats.bottom-2);
