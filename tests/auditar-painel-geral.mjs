@@ -8,7 +8,7 @@ import{chooseNextSession,chooseCurrentSession,chooseCurrentCampaign,chooseCurren
 const campaigns=[
  {id:'c1',name:'Teias',status:'active',setting:'Planescape',updatedAt:'2026-09-04T13:00:00Z',activeSessionId:'s1',sessions:[
   {id:'s1',number:1,title:'Em jogo',status:'active',adventureId:'a1',date:'2026-09-04',updatedAt:'2026-09-04T13:10:00Z'},
-  {id:'s2',number:2,title:'Próxima',status:'planned',date:'2026-09-10',updatedAt:'2026-09-04T13:20:00Z'}
+  {id:'s2',number:2,title:'Próxima',status:'next',date:'2026-09-10',updatedAt:'2026-09-04T13:20:00Z'}
  ]},
  {id:'c2',name:'Outra Campanha',status:'planned',updatedAt:'2026-09-02T10:00:00Z',sessions:[]}
 ];
@@ -66,9 +66,9 @@ const statusCampaigns=[
  {id:'c-new',name:'Reinos de Prata',status:'planned',updatedAt:'2026-09-02T00:00:00Z',sessions:[{id:'s-new',title:'O Encontro',status:'planned',adventureId:'a-new',updatedAt:'2026-09-02T10:00:00Z'}]}
 ];
 assert.equal(sanitizeCampaign(statusCampaigns[1]).status,'planned');
-assert.equal(sanitizeCampaign({status:'current'}).status,'current');
+assert.equal(sanitizeCampaign({status:'current'}).status,'active','Status legado current é normalizado para active.');
 assert.equal(sanitizeSession({status:'current'}).status,'current');
-assert.equal(sanitizeAdventure({status:'current'}).status,'current');
+assert.equal(sanitizeAdventure({status:'current'}).status,'active','Aventura com status legado current permanece ativa.');
 let edited=updateCampaign(statusCampaigns,'c-new',{status:'current'});
 assert.equal(edited.ok,true);
 const updatedSession=updateCampaignSession(edited.list,'c-new','s-new',{status:'current'});
@@ -88,9 +88,9 @@ assert.equal(statusDash.sessions[0].id,'s-new','Listas do Painel devem priorizar
 assert.equal(statusDash.adventures[0].id,'a-new');
 assert.equal(statusDash.campaigns[0].id,'c-new');
 const anotherCurrent=updateCampaign(edited.list,'c-old',{status:'current'});
-assert.equal(anotherCurrent.list.filter(c=>c.status==='current').length,1,'Uma única Campanha deve ter o status Atual.');
+assert.equal(anotherCurrent.list.filter(c=>c.status==='current').length,0,'Status legado current não é persistido como novo estado.');
 const createdCurrentAdventure=createAdventure(setAdventure.list,{id:'a-third',campaignId:'c-new',title:'Nova',status:'current'});
-assert.equal(createdCurrentAdventure.list.filter(a=>a.status==='current').length,1,'Uma única Aventura deve ter o status Atual.');
+assert.equal(createdCurrentAdventure.adventure.status,'active','Aventura com valor legado current conserva o significado ativo.');
 for(const heading of ['Lista de Campanhas','Lista de Aventuras','Lista de Sessões'])assert.ok(page.includes(heading),'Faltou o título '+heading);
 for(const token of ['relationChip','Campanha','Aventura','statusKey','adventureName'])assert.ok(ui.includes(token),'Painel precisa identificar explicitamente os vínculos e status: '+token);
 const semanticCSS=fs.readFileSync(new URL('../hub-ux.css',import.meta.url),'utf8');
