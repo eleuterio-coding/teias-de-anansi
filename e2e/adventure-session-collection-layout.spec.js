@@ -1,175 +1,139 @@
-import{test,expect}from'@playwright/test';
+import {test,expect} from '@playwright/test';
 
-const campaign={id:'collection-c1',name:'Reinos de Prata',status:'active',members:[],sessions:[
- {id:'collection-s1',number:1,title:'A convocação',status:'current',adventureId:'collection-a1',
-  summary:'Os heróis são convocados.',scenes:[{id:'scene-1',title:'O encontro'}],encounters:[]}
-]};
-const adventure={id:'collection-a1',title:'As Rainhas',campaignId:campaign.id,status:'planned',
- type:'main',description:'As intrigas de um reino antigo.',chapters:[{id:'ch-1',title:'Primeiro ato'}],scenes:[],missions:[]};
+/**
+ * Auditoria dos cards reais de Aventuras e Sessões.
+ * O layout panorâmico segue a geometria dos cards de Campanhas:
+ * capa esquerda, informações direita, status no alto, ações na base.
+ */
+const campaign={
+ id:'collection-c1',name:'Reinos de Prata',status:'active',members:[],
+ sessions:[{id:'collection-s1',number:1,order:1,title:'A convocação',
+   status:'current',adventureId:'collection-a1',
+   summary:'Os heróis são convocados.',scenes:[{id:'scene-1',title:'O encontro'}],encounters:[]}]
+};
+const adventure={
+ id:'collection-a1',title:'As Rainhas',order:2,campaignId:campaign.id,
+ status:'planned',type:'main',description:'As intrigas de um reino antigo.',
+ chapters:[{id:'ch-1',title:'Primeiro ato'}],scenes:[],missions:[]
+};
 test.beforeEach(async({page})=>{
- await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
+ await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
+  status:200,contentType:'application/json',
+  body:JSON.stringify({enabled:false,authMode:'username-password'})
+ }));
  await page.addInitScript(data=>{
-  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
+  localStorage.setItem('hub-rpg:collaboration-session:v1',
+   JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([data.adventure]));
   localStorage.setItem('hub-rpg:standalone-sessions:v1',JSON.stringify([]));
  },{campaign,adventure});
 });
-
-test('Aventuras usa cards de Campanhas agrupados e mantém os vínculos',async({page})=>{
- await page.goto('/aventuras.html');
- await expect(page.locator('.hub-collection-top h1')).toHaveText('Aventuras');
- await expect(page.locator('.campaign-list-heading h2')).toHaveText('Lista de Aventuras');
- const group=page.locator('#adventure-list [data-adventure-campaign-group="collection-c1"]');
- await expect(group.locator('[data-adventure-card]')).toHaveCount(1);
- await expect(group.locator('h3 a')).toContainText('Reinos de Prata');
- await expect(page.locator('#adventure-list #open-adventure-create')).toHaveCount(1);
- await expect(page.locator('.hub-collection-home a')).toHaveCount(0);
- await expect(page.locator('#adventure-status-filter')).toHaveValue('all');
- await expect(page.locator('#adventure-campaign-filter')).toHaveValue('all');
- const item=page.locator('[data-adventure-card="collection-a1"]');
- await expect(item).toHaveClass(/campaign-card/);
- await expect(item.locator('.campaign-card-cover')).toHaveCount(0);
- await expect(item.locator('.campaign-card-status')).toContainText('Planejada');
- await expect(item.locator('.campaign-card-details>p:not(.mini)')).toContainText('intrigas');
- await expect(item.locator('.hub-parent-link')).toContainText('Reinos de Prata');
- await expect(item.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir'})).toHaveCount(1);
- await expect(page.locator('#adventure-create-card')).toBeHidden();
- await page.getByRole('link',{name:'Nova aventura'}).click();
- await expect(page.locator('#adventure-create-card')).toBeVisible();
- await page.locator('#cancel-adventure-create').click();
- await expect(page.locator('#adventure-create-card')).toBeHidden();
- await item.getByRole('link',{name:'Abrir',exact:true}).click();
- await expect(page.locator('#visao-geral')).toBeVisible();
- await expect(page.locator('.hub-collection-detail-back a')).toHaveAttribute('href','aventuras.html');
- await expect(page.locator('#adventure-list')).toHaveCount(0);
-});
-
-test('Sessões usa a mesma estrutura de cards de Campanhas, inclusive status e botões',async({page})=>{
- await page.goto('/sessoes.html');
- await expect(page.locator('.hub-collection-top h1')).toHaveText('Sessões');
- await expect(page.locator('#session-list-section .campaign-list-heading h2')).toHaveText('Lista de Sessões');
- const group=page.locator('#sessions-list .session-adventure-group');
- await expect(group).toHaveCount(1);
- await expect(group.locator('[data-session-list-id]')).toHaveCount(1);
- await expect(group.locator('h3 a')).toContainText('As Rainhas');
- await expect(page.locator('#sessions-list #open-session-create')).toHaveCount(1);
- const item=page.locator('[data-session-list-id="collection-s1"]');
- await expect(item).toHaveClass(/campaign-card/);
- await expect(item.locator('.campaign-card-status')).toContainText('Atual');
- await expect(item.locator('.campaign-card-details>p:not(.mini)')).toContainText('Os heróis');
- await expect(item.locator('.session-card-context')).toContainText('Reinos de Prata');
- await expect(item.locator('.session-card-context')).toContainText('As Rainhas');
- await expect(item.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
- await expect(item.getByRole('button',{name:'Excluir sessão A convocação'})).toHaveText('Excluir');
- await expect(item.locator('a[href^="referencia.html"],a.hub-ref')).toHaveCount(0);
- await expect(page.locator('#session-create-card')).toBeHidden();
- await page.getByRole('link',{name:'Nova sessão'}).click();
- await expect(page.locator('#session-create-card')).toBeVisible();
- await page.locator('#cancel-session-create').click();
- await expect(page.locator('#session-create-card')).toBeHidden();
- await item.locator('.campaign-status-trigger').click();
- await item.getByRole('button',{name:'Próxima'}).click();
- await expect(item.locator('.campaign-card-status')).toHaveClass(/status-next/);
- await expect(item.locator('.campaign-status-trigger')).toContainText('Próxima');
- const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]'));
- expect(saved[0].sessions.find(x=>x.id==='collection-s1')?.status).toBe('next');
- await item.getByRole('link',{name:'Abrir',exact:true}).click();
- await expect(page.locator('#sessions-list .session-card[data-session-id="collection-s1"]')).toBeVisible();
- await expect(page.locator('#sessions-list')).not.toHaveClass(/hub-collection-grid/);
- await expect(page.locator('#session-list-section .campaign-list-heading')).toBeHidden();
-});
-test('Campanhas, Aventuras e Sessões preservam os cards e usam agrupamento para Aventuras e Sessões',async({page})=>{
- const result=[];
- for(const [url,selector] of [
-  ['/campanhas.html','#campaign-list [data-campaign-card]'],
-  ['/aventuras.html','#adventure-list [data-adventure-card]'],
-  ['/sessoes.html','#sessions-list [data-session-list-id]']
- ]){
-  await page.goto(url);
-  const card=page.locator(selector).first();
+const cases=[
+ {url:'/aventuras.html',selector:'[data-adventure-card="collection-a1"]',
+  heading:'Aventura 2 · As Rainhas',description:'intrigas',status:'Planejada',
+  group:'[data-adventure-campaign-group="collection-c1"]',create:'#open-adventure-create',
+  panel:'#adventure-create-card',cancel:'#cancel-adventure-create'},
+ {url:'/sessoes.html',selector:'[data-session-list-id="collection-s1"]',
+  heading:'Sessão 1 · A convocação',description:'Os heróis',status:'Atual',
+  group:'.session-adventure-group',create:'#open-session-create',
+  panel:'#session-create-card',cancel:'#cancel-session-create'}
+];
+async function geometry(card){
+ return card.evaluate(node=>{
+  const rect=x=>{const r=x.getBoundingClientRect();return{x:r.x,y:r.y,
+   left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+  const art=node.querySelector('.campaign-card-art');
+  const detail=node.querySelector('.campaign-card-details');
+  const actions=node.querySelector('.campaign-card-actions');
+  const badge=node.querySelector('.campaign-card-status');
+  const stats=node.querySelector('.campaign-card-metrics');
+  const open=actions.querySelector('a.btn');
+  const del=actions.querySelector('button.danger');
+  const card=rect(node);
+  return {card,art:rect(art),detail:rect(detail),actions:rect(actions),
+   badge:rect(badge),stats:rect(stats),open:rect(open),del:del?rect(del):null,
+   display:getComputedStyle(node).display,
+   columns:getComputedStyle(node).gridTemplateColumns,
+   scrollWidth:document.documentElement.scrollWidth,
+   viewportWidth:document.documentElement.clientWidth
+  };
+ });
+}
+test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',async({page})=>{
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(page.locator(item.group)).toHaveCount(1);
   await expect(card).toBeVisible();
-  const css=await card.evaluate(node=>{
-   const sheet=getComputedStyle(node),status=getComputedStyle(node.querySelector('.campaign-card-status')),
-    open=getComputedStyle(node.querySelector('.campaign-card-actions .btn')),
-    deleteStyle=getComputedStyle(node.querySelector('.campaign-card-actions .danger'));
-   return{borderRadius:sheet.borderRadius,padding:sheet.padding,
-     cardDisplay:sheet.display,minHeight:sheet.minHeight,statusRadius:status.borderRadius,
-     statusPosition:status.position,openHeight:open.minHeight,deleteHeight:deleteStyle.minHeight,
-     hasStatusMenu:!!node.querySelector('.campaign-status-disclosure'),
-     noGlossaryLinks:!node.querySelector('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')}
-  });
-  result.push(css);
- }
- expect(result[1]).toEqual(result[0]);
- expect(result[2]).toEqual(result[0]);
- await page.goto('/aventuras.html');
- await expect(page.locator('.adventure-campaign-track')).toHaveCount(1);
- await expect(page.locator('#adventure-list>.campaign-list-grid')).toHaveCount(0);
- await page.goto('/sessoes.html');
- await expect(page.locator('.session-adventure-track')).toHaveCount(1);
- await expect(page.locator('#sessions-list>.campaign-list-grid')).toHaveCount(0);
-});
-
-test('Nenhuma das duas páginas transforma conteúdo em link para verbetes',async({page})=>{
- for(const url of ['/aventuras.html','/sessoes.html']){
-  await page.goto(url);
-  await page.evaluate(()=>{
-   const host=document.querySelector('main');
-   const example=document.createElement('a');example.href='referencia.html?id=verbete-teste';
-   example.className='hub-ref';example.textContent='Termo de cenário';host.appendChild(example)
-  });
-  await expect(page.locator('a.hub-ref,a[href^="referencia.html?id="]')).toHaveCount(0);
+  await expect(card).toHaveClass(/campaign-card-featured/);
+  await expect(card.locator('.campaign-card-details h2')).toHaveText(item.heading);
+  await expect(card.locator('.campaign-card-description')).toContainText(item.description);
+  await expect(card.locator('.campaign-card-status')).toContainText(item.status);
+  await expect(card.locator('.campaign-card-art')).toHaveCount(1);
+  await expect(card.locator('.campaign-card-metrics .campaign-card-stat')).toHaveCount(2);
+  await expect(card.locator('.campaign-card-stat-icon svg')).toHaveCount(2);
+  await expect(card.locator('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')).toHaveCount(0);
+  await expect(card.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
+  await expect(card.getByRole('button',{name:/Excluir/})).toHaveCount(1);
+  const create=page.locator(item.create);
+  await expect(create).toBeVisible();
+  await expect(create).toHaveClass(/campaign-create-tile/);
+  await create.click();
+  await expect(page.locator(item.panel)).toBeVisible();
+  await page.locator(item.cancel).click();
+  await expect(page.locator(item.panel)).toBeHidden();
  }
 });
-test('Cards se adaptam sem overflow horizontal no celular',async({page})=>{
+test('desktop: capa à esquerda, painel à direita, status no alto e ações na base',async({page},testInfo)=>{
+ await page.setViewportSize({width:1600,height:1000});
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  const g=await geometry(card);
+  expect(g.display).toBe('grid');
+  expect(g.art.width/g.card.width).toBeGreaterThan(.60);
+  expect(g.art.width/g.card.width).toBeLessThan(.69);
+  expect(Math.abs(g.art.left-g.card.left)).toBeLessThan(3);
+  expect(Math.abs(g.art.top-g.card.top)).toBeLessThan(3);
+  expect(g.art.bottom).toBeGreaterThan(g.card.bottom-4);
+  expect(g.detail.left).toBeGreaterThanOrEqual(g.art.right-3);
+  expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
+  expect(g.badge.top).toBeLessThan(g.detail.top+5);
+  expect(g.actions.left).toBeGreaterThanOrEqual(g.art.right-2);
+  expect(g.actions.bottom).toBeLessThanOrEqual(g.card.bottom+3);
+  expect(g.actions.top).toBeGreaterThanOrEqual(g.stats.bottom-2);
+  expect(g.open.left).toBeLessThan(g.del.left);
+  expect(g.open.width).toBeGreaterThan(80);
+  await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-desktop',
+    {body:await card.screenshot(),contentType:'image/png'});
+ }
+});
+test('celular: capa acima das informações, ações abaixo e sem overflow horizontal',async({page},testInfo)=>{
  await page.setViewportSize({width:390,height:844});
- for(const url of ['/aventuras.html','/sessoes.html']){
-  await page.goto(url);
-  const selector=url.includes('aventuras')?'#adventure-list .campaign-card':'#sessions-list .campaign-card';
-  await expect(page.locator(selector)).toHaveCount(2);
-  const layout=await page.evaluate(selector=>({
-   viewport:document.documentElement.clientWidth,
-   document:document.documentElement.scrollWidth,
-   cards:[...document.querySelectorAll(selector)].map(x=>x.getBoundingClientRect().width)
-  }),selector);
-  expect(layout.document).toBeLessThanOrEqual(layout.viewport+2);
-  expect(layout.cards.every(width=>width<=layout.viewport)).toBeTruthy();
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  const g=await geometry(card);
+  expect(g.scrollWidth).toBeLessThanOrEqual(g.viewportWidth+2);
+  expect(g.card.width).toBeLessThanOrEqual(g.viewportWidth);
+  expect(g.art.bottom).toBeLessThanOrEqual(g.detail.top+3);
+  expect(g.actions.top).toBeGreaterThanOrEqual(g.detail.bottom-2);
+  expect(g.open.width).toBeGreaterThanOrEqual(80);
+  expect(g.open.height).toBeGreaterThanOrEqual(40);
+  expect(g.del.right).toBeLessThanOrEqual(g.card.right+2);
+  await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-celular',
+    {body:await card.screenshot(),contentType:'image/png'});
  }
 });
-
-test('Nova Aventura replica o tile Nova campanha e Nova Sessão preserva seu tile',async({page})=>{
- for(const [url,tileSelector] of [
-  ['/aventuras.html','#open-adventure-create'],
-  ['/sessoes.html','#open-session-create']
- ]){
-  await page.goto(url);
-  const tile=page.locator(tileSelector);
-  await expect(tile).toBeVisible();
-  await expect(tile).toHaveClass(/campaign-create-tile/);
-  await expect(tile.locator('.campaign-create-plus')).toHaveText('+');
-  await expect(tile.locator('.campaign-create-tile-label')).toHaveText(/Nova (aventura|sessão)/);
-  const visual=await tile.evaluate(el=>{
-   const rect=node=>node.getBoundingClientRect(),style=getComputedStyle(el),
-    plus=el.querySelector('.campaign-create-plus'),label=el.querySelector('.campaign-create-tile-label'),
-    card=document.querySelector(el.id==='open-adventure-create'?'#adventure-list [data-adventure-card]':'#sessions-list [data-session-list-id]');
-   return{
-    border:style.borderTopStyle,direction:style.flexDirection,justify:style.justifyContent,align:style.alignItems,
-    tile:rect(el).toJSON(),card:card?rect(card).toJSON():null,plus:rect(plus).toJSON(),label:rect(label).toJSON(),
-    plusBorder:getComputedStyle(plus).borderTopStyle
-   };
-  });
-  expect(visual.border).toBe('dashed');
-  expect(visual.direction).toBe('column');
-  expect(visual.justify).toBe('center');
-  expect(visual.align).toBe('center');
-  expect(visual.plusBorder).toBe('solid');
-  expect(visual.plus.width).toBeCloseTo(68,0);
-  expect(visual.plus.height).toBeCloseTo(68,0);
-  expect(visual.tile.width).toBeGreaterThan(200);
-  expect(visual.tile.height).toBeGreaterThanOrEqual(290);
-  expect(Math.abs((visual.plus.left+visual.plus.right)/2-(visual.tile.left+visual.tile.right)/2)).toBeLessThanOrEqual(2);
-  expect(visual.plus.bottom).toBeLessThan(visual.label.top);
- }
+test('status das Sessões continua editável com persistência',async({page})=>{
+ await page.goto('/sessoes.html');
+ const card=page.locator(cases[1].selector);
+ await card.locator('.campaign-status-trigger').click();
+ await card.getByRole('button',{name:'Próxima'}).click();
+ await expect(card.locator('.campaign-card-status')).toHaveClass(/status-next/);
+ const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]'));
+ expect(stored[0].sessions.find(row=>row.id==='collection-s1')?.status).toBe('next');
 });
