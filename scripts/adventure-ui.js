@@ -15,8 +15,8 @@ import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMedia
 import{renderAdventureExploration,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261023-exploration1';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261023-exploration1';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261019-gender1';
-import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-panoramic2';
-import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-panoramic3';
+import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-session-count8';
+import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-session-count8';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1',listCampaignFilter=params.get('campaign')||'all',listStatusFilter='all';
