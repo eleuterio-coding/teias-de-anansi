@@ -132,7 +132,7 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaÃ§Ã
  expect(aligned.openWidth).toBeGreaterThanOrEqual(40);
  if(aligned.imageFit)expect(aligned.imageFit).toBe('cover');
  expect(aligned.overflow).toBeLessThanOrEqual(3);
- const button=root.locator('#linha-tempo .timeline-collapse').first();
+ const button=root.locator('#linha-tempo [data-timeline-toggle="visible"]');
  await button.click();await expect(button).toHaveAttribute('aria-expanded','true');
  await page.evaluate(()=>window.dispatchEvent(new CustomEvent('hub-rpg:remote-updated',{detail:{claim(){}}})));
  await expect(button).toHaveAttribute('aria-expanded','true');
