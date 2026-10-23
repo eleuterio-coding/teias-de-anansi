@@ -150,10 +150,35 @@ function syncAdventureSceneToSessionScene(sceneId,value){
 }
 function encounterOptions(scene){const session=campaign()?.sessions?.find(s=>s.id===scene.sessionId),rows=(session?.encounters||[]).map(e=>({id:e.id,title:e.title}));return entitySelect(rows,scene.encounterRef?.encounterId,'— Sem encontro —')}
 function checks(rows,selected,type){const set=new Set(selected||[]);return rows.length?rows.map(x=>`<label><input type="checkbox" data-scene-link="${type}" value="${esc(x.id)}" ${set.has(x.id)?'checked':''}>${esc(x.title||x.name)}</label>`).join(''):'<span class="mini">Nenhum registro.</span>'}
-function sceneCard(scene,a,i=0){return`<article class="story-card campaign-bullet-entry adventure-scene-record" data-reorder-adventure="scenes" draggable="true" tabindex="0" data-scene-row="${esc(scene.id)}">
-<div class="adventure-scene-record-main"><strong>${esc(scene.title)}</strong><span class="mini">${esc(a.chapters.find(c=>c.id===scene.chapterId)?.title||'Sem capítulo')}${scene.missionIds?.length?' · '+esc(a.missions.find(m=>m.id===scene.missionIds[0])?.title||''):''}</span></div>
-<div class="campaign-line-actions">${visibleToggle('scenes',scene.id,scene.visibleToPlayers)}${moveTools('scenes',scene.id,i,a.scenes.length)}
-<button type="button" class="danger campaign-list-remove" data-remove-entity="${esc(scene.id)}" data-key="scenes">Excluir cena</button></div></article>`}
+function sceneCard(scene,a,i=0){
+ const linkedNpcs=(campaign()?.npcs||[]).filter(n=>a.npcIds.includes(n.id));
+ const linkedLocations=(campaign()?.locations||[]).filter(l=>a.locationIds.includes(l.id));
+ return`<article class="story-card campaign-bullet-entry adventure-scene-record" data-reorder-adventure="scenes" draggable="true" tabindex="0" data-scene-row="${esc(scene.id)}">
+ <div class="adventure-scene-record-main"><strong>${esc(scene.title)}</strong><span class="mini">${esc(sceneStatus(scene.status))} · ${esc(a.chapters.find(c=>c.id===scene.chapterId)?.title||'Sem capítulo')}${scene.missionIds?.length?' · '+esc(a.missions.find(m=>m.id===scene.missionIds[0])?.title||''):''}</span></div>
+ <div class="campaign-line-actions">${visibleToggle('scenes',scene.id,scene.visibleToPlayers)}${moveTools('scenes',scene.id,i,a.scenes.length)}
+ ${scene.status==='planned'? `<button type="button" data-start-scene="${esc(scene.id)}">Iniciar</button><button type="button" class="secondary" data-skip-scene="${esc(scene.id)}">Ignorar</button>`:''}
+ ${scene.status==='active'?`<button type="button" data-complete-scene="${esc(scene.id)}">Concluir</button>`:''}
+ <button type="button" class="danger campaign-list-remove" data-remove-entity="${esc(scene.id)}" data-key="scenes">Excluir cena</button></div>
+ <details class="hub-scene-editor" data-scene-editor ${expandedSceneIds.has(scene.id)?'open':''}>
+ <summary>Editar cena e vínculos</summary>
+ <div class="form-grid two">
+ <label>Nome<input data-scene-field="title" value="${esc(scene.title)}"></label>
+ <label>Capítulo<select data-scene-field="chapterId">${chapterOptions(a,scene.chapterId)}</select></label>
+ <label>Local<select data-scene-field="locationId">${entitySelect(linkedLocations,scene.locationId,'— Sem local —')}</select></label>
+ <label>Cena da sessão<select data-scene-session-scene>${sessionSceneOptionsForAdventure(a,scene)}</select></label>
+ <label>Encontro<select data-scene-encounter>${encounterOptions(scene)}</select></label>
+ <label>Objetivo da cena<input data-scene-field="objective" value="${esc(scene.objective)}"></label>
+ <label class="wide">Descrição<textarea data-scene-field="description">${esc(scene.description)}</textarea></label>
+ <label class="wide">Desfecho<textarea data-scene-field="outcome">${esc(scene.outcome)}</textarea></label>
+ <label class="wide">Notas do Mestre<textarea data-scene-field="notes">${esc(scene.notes)}</textarea></label>
+ </div>
+ <div class="form-grid two">
+ <fieldset><legend>NPCs</legend><div class="entity-checks">${checks(linkedNpcs,scene.npcIds,'npcIds')}</div></fieldset>
+ <fieldset><legend>Monstros</legend><div class="entity-checks">${checks(a.monsters||[],scene.monsterIds,'monsterIds')}</div></fieldset>
+ <fieldset><legend>Objetivos</legend><div class="entity-checks">${checks(a.missions||[],scene.missionIds,'missionIds')}</div></fieldset>
+ </div>
+ </details></article>`
+}
 function timelineCard(row){return`<article class="story-card timeline-row" data-entity-row="${esc(row.id)}" data-entity-key="timelineEvents"><div><strong>${esc(row.title)}</strong> <span class="badge">${esc(new Date(row.at).toLocaleString('pt-BR'))}</span>${row.automatic?'<span class="badge">Automático</span>':''}</div>${row.text?`<p>${esc(row.text)}</p>`:''}${row.automatic?'':`<div class="row-actions"><button class="danger" data-remove-entity="${esc(row.id)}" data-key="timelineEvents">Excluir registro</button></div>`}</article>`}
 function adventureTimelineHtml(a){
  const flowchart=adventureTimelineView==='flowchart';
