@@ -46,7 +46,11 @@ test('Aventura: conteúdo legível, imagem à esquerda e ações no painel panor
    cardWidth:box.width,
    infoStart:info.left,imageEnd:image.right,
    footerStart:footer.left,footerEnd:footer.right,
-   statusTop:status.top,cardTop:box.top,footerBottom:footer.bottom,cardBottom:box.bottom
+   statusTop:status.top,
+   campaignBottom:rect('.campaign-card-ancestry-status > .hub-parent-link').bottom,
+   statusLeft:status.left,
+   campaignLeft:rect('.campaign-card-ancestry-status > .hub-parent-link').left,
+   cardTop:box.top,footerBottom:footer.bottom,cardBottom:box.bottom
   };
  });
  expect(ui.layout).toBe('grid');
@@ -56,7 +60,8 @@ test('Aventura: conteúdo legível, imagem à esquerda e ações no painel panor
  expect(ui.infoStart).toBeGreaterThanOrEqual(ui.imageEnd-3);
  expect(ui.footerStart).toBeGreaterThanOrEqual(ui.imageEnd-3);
  expect(ui.footerEnd).toBeLessThanOrEqual(1600);
- expect(ui.statusTop-ui.cardTop).toBeLessThan(40);
+ expect(ui.statusTop).toBeGreaterThanOrEqual(ui.campaignBottom-2);
+ expect(Math.abs(ui.statusLeft-ui.campaignLeft)).toBeLessThan(3);
  expect(ui.footerBottom-ui.cardBottom).toBeLessThan(4);
 });
 test('Aventura: visual responsivo evita overflow em celular',async({page})=>{
