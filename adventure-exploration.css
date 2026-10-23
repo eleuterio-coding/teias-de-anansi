@@ -158,6 +158,12 @@
   background:var(--hub-surface-2,#17293a);
   border-radius:11px;
 }
+/* Um registro expandido ocupa a largura total da listagem para que todos
+   os campos e grupos de vínculos permaneçam legíveis. */
+#adventure-root .adventure-exploration .explore-area-grid>.explore-record-card:has(>details[open]),
+#adventure-root .adventure-exploration .explore-level-grid>.explore-record-card:has(>details[open]){
+  grid-column:1/-1;
+}
 #adventure-root .adventure-exploration .explore-record-card:has(>details[open]){
   border-color:var(--hub-accent,#88abd0);
   box-shadow:0 0 0 1px var(--hub-accent,#88abd0);
