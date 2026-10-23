@@ -84,6 +84,7 @@ test('eventos principais são cartões independentes em Lista e Fluxograma',asyn
  await area.locator('[data-timeline-view="flowchart"]').click();
  const diagram=area.locator('.hub-diagram-roots');
  await expect(diagram.locator(':scope > .hub-diagram-root:not([data-diagram-root^="linked-"])')).toHaveCount(2);
+ await area.locator('[data-diagram-event="root-1"] strong').click();
  const geometry=await diagram.evaluate(el=>{
   const roots=[...el.querySelectorAll(':scope > .hub-diagram-root:not([data-diagram-root^="linked-"])')];
   const first=roots[0].getBoundingClientRect(),second=roots[1].getBoundingClientRect();
