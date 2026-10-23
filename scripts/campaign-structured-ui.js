@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261023-linked-timeline1';
+import{timelineViewToggle,renderCampaignTimelineDiagram,timelineDisclosure,timelineChildrenIndicator}from'./timeline-flowchart.js?v=20261023-cards-toggle2';
 import{projectCampaignTimeline}from'./campaign-timeline-projection.js?v=20261023-linked-timeline1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
@@ -88,19 +88,17 @@ function bullets(c,id,title,field,{readOnly=false}={}){
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
 function linkedTimelineHtml(node,index,depth=0,collapsedIds=new Set()){
- const sub=node.children||[],collapsed=collapsedIds.has(node.id);
- const kind=node.kind==='session'?'Sessão':'Aventura';
- return `<li class="timeline-item timeline-item-linked" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}" data-timeline-automatic="true">
-  <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
-   <div class="campaign-flow-card campaign-linked-card">
-    <div class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span>
-     <a class="campaign-linked-link" href="${esc(node.href)}">${esc(node.text)}</a>
-    </div>
-    ${sub.length?`<div class="campaign-flow-actions"><button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}" aria-controls="timeline-list-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button></div>`:''}
-   </div>
-  </div>
-  ${sub.length?`<ol class="timeline-children" id="timeline-list-children-${esc(node.id)}" aria-label="Sessões de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>linkedTimelineHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
- </li>`
+ const sub=node.children||[],hasChildren=sub.length>0,collapsed=collapsedIds.has(node.id);
+ const kind=node.kind==='session'?'Sessão':'Aventura',id=esc(node.id);
+ const title=`<span class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span><strong class="campaign-linked-name">${esc(node.text)}</strong></span>`;
+ // A sessão é um link de card inteiro; pais com filhos expandem por clique no card.
+ const card=hasChildren
+  ?`<div class="campaign-flow-card campaign-linked-card timeline-card-has-children" data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens.">${title}${timelineChildrenIndicator()}${timelineDisclosure(node,collapsed)}</div>`
+  :`<a class="campaign-flow-card campaign-linked-card campaign-linked-link-card" href="${esc(node.href)}" aria-label="Abrir ${kind}: ${esc(node.text)}">${title}</a>`;
+ return `<li class="timeline-item timeline-item-linked" data-timeline-id="${id}" data-timeline-depth="${depth}" data-timeline-automatic="true">
+ <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>${card}</div>
+ ${hasChildren?`<ol class="timeline-children" id="timeline-list-children-${id}" aria-label="Sessões de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>linkedTimelineHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
+ </li>`;
 }
 function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
  if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
@@ -130,6 +128,9 @@ function defaultCollapsedTimelineIds(nodes=[]){
  const visit=rows=>{for(const node of rows){if(node.children?.length){hidden.add(node.id);visit(node.children)}}};
  visit(nodes);return hidden
 }
+export function campaignTimelineCollapsedIds(c,adventures=[]){
+ return defaultCollapsedTimelineIds(projectCampaignTimeline(c,adventures));
+}
 function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
  if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
  const sub=Array.isArray(node.children)?node.children:[],collapsed=collapsedIds.has(node.id);
@@ -140,11 +141,11 @@ function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
 }
 function flow(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
  const nodes=projectCampaignTimeline(c,adventures),mode=view==='flowchart'?'flowchart':'list';
- // Registros vinculados começam expandidos; recolher por padrão só eventos manuais.
- collapsedIds=collapsedIds??defaultCollapsedTimelineIds(c.timelineNodes||[]);
+ // Todo grupo começa recolhido, tanto automático quanto manual.
+ collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds,{readOnly}):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>readOnly?readonlyTimelineNode(n,i,0,collapsedIds):nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
- ${readOnly?'':`<div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>`}
+ 
  </section>`
 }
 export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
@@ -168,7 +169,7 @@ export function renderStructuredDetails(c,npcs,{readOnly=false}={}){
 export function renderTimeline(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){return flow(c,view,collapsedIds,{readOnly,adventures})}
 export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],save,feedback}){
  let timelineView='list';
- const collapsedTimelineIds=defaultCollapsedTimelineIds(getCampaign().timelineNodes||[]);
+ const collapsedTimelineIds=campaignTimelineCollapsedIds(getCampaign(),getAdventures());
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
  const root=document.querySelector('.campaign-sections');if(!root)return;
  const refresh=id=>{
