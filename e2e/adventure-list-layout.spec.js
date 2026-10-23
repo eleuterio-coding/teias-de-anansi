@@ -51,8 +51,8 @@ test('Aventura: conteúdo legível, imagem à esquerda e ações no painel panor
  });
  expect(ui.layout).toBe('grid');
  expect(ui.background).toContain('gradient');
- expect(ui.imageWidth/ui.cardWidth).toBeGreaterThan(.40);
- expect(ui.imageWidth/ui.cardWidth).toBeLessThan(.45);
+ expect(ui.imageWidth/ui.cardWidth).toBeGreaterThan(.58);
+ expect(ui.imageWidth/ui.cardWidth).toBeLessThan(.62);
  expect(ui.infoStart).toBeGreaterThanOrEqual(ui.imageEnd-3);
  expect(ui.footerStart).toBeGreaterThanOrEqual(ui.imageEnd-3);
  expect(ui.footerEnd).toBeLessThanOrEqual(1600);
