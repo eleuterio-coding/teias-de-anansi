@@ -362,8 +362,6 @@ function sessionCard(s,restricted=false){
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
   ${s.summary?`<p>${esc(s.summary)}</p>`:''}
   </section>${sessionRosterHtml(s,{readOnly:true})}
-  ${false?`<p class="mini">Personagens: ${esc(participants.join(', '))}</p>`:''}
-  <p class="mini">${playerNames.length?esc(playerNames.join(', ')):'Nenhum jogador registrado.'}</p></section>
  `:`
  <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2><div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
@@ -408,7 +406,7 @@ function render(){
   const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
   if(!box)return;
   box.innerHTML=selected?sessionCard(selected,restricted):`<div class="status warning">Sessão não encontrada.</div><div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>`;
-  if(!restricted&&selected)bindSessionCards();if(selected)bindCampaignAvatarPreviews(box);hydrateMediaImages(box).catch(()=>{});
+  if(!restricted&&selected)bindSessionCards();if(selected){bindCampaignAvatarPreviews(box);if(!restricted)bindStructuredDetails({getCampaign:()=>sessionRef(selected.id,selected.source),getNpcs:()=>[],save:(patch,{message}={})=>saveSession(sessionRef(selected.id,selected.source),patch,message||'Linha do tempo salva.'),feedback});else box.querySelectorAll('[data-timeline-toggle]').forEach(button=>button.addEventListener('click',()=>{const children=button.closest('.timeline-item')?.querySelector(':scope > .timeline-children');if(children){children.hidden=!children.hidden;button.setAttribute('aria-expanded',String(!children.hidden))}}))}hydrateMediaImages(box).catch(()=>{});
   return
  }
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
