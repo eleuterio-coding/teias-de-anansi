@@ -1,6 +1,5 @@
 import{numberedAdventureTitle}from'./narrative-labels.js';
 import{imageElementHtml}from'./image-media.js?v=20260925-media2';
-import{cardMetricIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const arr=value=>Array.isArray(value)?value:[];
@@ -29,17 +28,16 @@ export function adventureListCard(adventure,{parentName='',readOnly=false,sessio
     </details>`;
  return `<article class="campaign-card campaign-card-featured" data-adventure-card="${esc(a.id)}">
   <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir ${esc(heading)}"></a>
-  <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">
    <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
    <div class="campaign-card-details">
     <div class="campaign-card-intro">
      <h2>${esc(heading)}</h2>
      ${description?`<p class="campaign-card-description">${esc(description)}</p>`:''}
-     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<strong>${esc(parentName)}</strong>`:'<strong>Campanha não encontrada</strong>'}</span></div>
+     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><div class="campaign-card-ancestry-status"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<strong>${esc(parentName)}</strong>`:'<strong>Campanha não encontrada</strong>'}</span><div class="campaign-card-status status-${esc(status)}">${statusControl}</div></div></div>
     </div>
     <div class="campaign-card-metrics campaign-card-metrics-single" role="group" aria-label="Sessões da aventura">
-     <div class="campaign-card-stat">${cardMetricIcon("scenes")}<span class="campaign-card-stat-copy"><strong>${sessionCount}</strong><span>${sessionCount===1?'Sessão':'Sessões'}</span></span></div>
+     <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${sessionCount}</strong><span>${sessionCount===1?'Sessão':'Sessões'}</span></span></div>
     </div>
    </div>
   </div>
