@@ -66,7 +66,8 @@ test('Jogador vê cards com links de ficha, capas e registros públicos sem edi�
  await expect(page.locator('#aventuras [data-campaign-field],#sessoes [data-campaign-field]')).toHaveCount(0);
  await expect(page.locator('#npcs .campaign-bullet-list > li')).toHaveCount(1);
  await expect(page.locator('#locais .campaign-bullet-list > li')).toHaveCount(1);
- await expect(page.locator('#linha-tempo .timeline-item')).toHaveCount(1);
+ await expect(page.locator('#linha-tempo .timeline-tree > .timeline-item')).toHaveCount(2);
+ await expect(page.locator('#linha-tempo .timeline-item-linked .campaign-linked-link')).toContainText('As Rainhas');
  await expect(page.locator('#npcs')).toContainText('NPC Revelado');
  await expect(page.locator('#locais')).toContainText('Portal Antigo');
  await expect(page.locator('#linha-tempo')).toContainText('Chegada à cidade');
