@@ -1,6 +1,6 @@
 import{numberedAdventureTitle}from'./narrative-labels.js';
-import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20261016-campaign-geography1';
-import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,campaignById}from'./campaign-state.js?v=20261022-chronicles-final3';
+import{readAdventures,writeAdventures,adventureContextForSession}from'./adventure-state.js?v=20261022-chronicles-final3';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 const params=new URLSearchParams(location.search),campaignId=params.get('id')||'';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
