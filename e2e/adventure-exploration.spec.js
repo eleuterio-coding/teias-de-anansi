@@ -13,8 +13,8 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  const errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=cmp-explore&id=adv-explore');
- await expect(page.locator('#exploracao > .explore-title h2')).toHaveText('Áreas e Salas');
- await expect(page.locator('#mapas > .explore-title h2')).toHaveText('Mapas e Níveis');
+ await expect(page.locator('#exploracao > .explore-title h2')).toHaveText('Locais');
+ await expect(page.locator('#mapas > .explore-title h2')).toHaveText('Mapas');
  await expect(page.locator('.hub-detail-grid > #exploracao')).toHaveCount(1);
  await expect(page.locator('.hub-detail-grid > #mapas')).toHaveCount(1);
  await expect(page.locator('#exploracao #ex-new-level')).toHaveCount(0);
@@ -22,11 +22,11 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await expect(page.locator('#mapas #ex-new-area')).toHaveCount(0);
  await expect(page.locator('.hub-detail-grid > #criar-area')).toHaveCount(1);
  await expect(page.locator('.hub-detail-grid > #criar-mapa')).toHaveCount(1);
- await expect(page.locator('.section-nav a[href="#exploracao"]')).toHaveText('Áreas e Salas');
- await expect(page.locator('.section-nav a[href="#mapas"]')).toHaveText('Mapas e Níveis');
- await expect(page.locator('#criar-area > h2')).toHaveText('Adicionar área / sala');
+ await expect(page.locator('.section-nav a[href="#exploracao"]')).toHaveText('Locais');
+ await expect(page.locator('.section-nav a[href="#mapas"]')).toHaveText('Mapas');
+ await expect(page.locator('#criar-area > h2')).toHaveText('Adicionar local');
  await expect(page.locator('#criar-area #ex-new-area')).toHaveCount(1);
- await expect(page.locator('#criar-mapa > h2')).toHaveText('Adicionar mapa / nível');
+ await expect(page.locator('#criar-mapa > h2')).toHaveText('Adicionar mapa');
  await expect(page.locator('#criar-mapa #ex-new-level')).toHaveCount(1);
  await expect(page.locator('#ex-new-area :is(input,select)')).toHaveCount(4);
  await expect(page.locator('.section-nav a[href="#criar-area"]')).toHaveText('Adicionar área');
