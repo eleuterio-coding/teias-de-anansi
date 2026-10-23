@@ -1,8 +1,8 @@
-import{readAdventures}from'./adventure-state.js?v=20261022-chronicles2';
-import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles2';
+import{readAdventures}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles2';
-import{createEncounter,updateEncounter,removeEncounter,addCharacterCombatant,addCreatureCombatant,removeCombatant}from'./encounter-state.js?v=20261022-chronicles2';
+import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles-final3';
+import{createEncounter,updateEncounter,removeEncounter,addCharacterCombatant,addCreatureCombatant,removeCombatant}from'./encounter-state.js?v=20261022-chronicles-final3';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
