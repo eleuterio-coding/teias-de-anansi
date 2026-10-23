@@ -37,9 +37,9 @@ export function normalizeExploration(raw={},references={}){
   a.connectionIds=a.connectionIds.filter(id=>areaIds.has(id)&&id!==a.id)
  }
  const history=arr(raw.history).map(record).map(x=>({...x,areaId:areaIds.has(x.areaId)?x.areaId:null})).sort((a,b)=>b.at.localeCompare(a.at));
- return{levels,areas,factions,history}
+ return{levels,areas,factions,history,activeAreaId:areaIds.has(text(raw.activeAreaId))?text(raw.activeAreaId):null}
 }
-const clone=e=>({levels:arr(e?.levels).map(x=>({...x})),areas:arr(e?.areas).map(x=>({...x})),factions:arr(e?.factions).map(x=>({...x})),history:arr(e?.history).map(x=>({...x}))});
+const clone=e=>({levels:arr(e?.levels).map(x=>({...x})),areas:arr(e?.areas).map(x=>({...x})),factions:arr(e?.factions).map(x=>({...x})),history:arr(e?.history).map(x=>({...x})),activeAreaId:text(e?.activeAreaId)||null});
 export function createExplorationEntity(exploration,kind,values={}){
  const e=clone(exploration),key=kind==='level'?'levels':kind==='area'?'areas':kind==='faction'?'factions':null;
  if(!key)return null;
@@ -60,6 +60,7 @@ export function removeExplorationEntity(exploration,kind,id){
   e.levels=e.levels.filter(l=>l.id!==id)
  }else if(kind==='area'){
   e.areas=e.areas.filter(a=>a.id!==id).map(a=>({...a,parentId:a.parentId===id?null:a.parentId,connectionIds:arr(a.connectionIds).filter(x=>x!==id)}));
+  if(e.activeAreaId===id)e.activeAreaId=null;
   // A crônica é preservada mesmo quando a área deixa de existir.
   e.history=e.history.map(h=>h.areaId===id?{...h,areaId:null}:h)
  }else if(kind==='faction'){
@@ -83,4 +84,11 @@ export function changeAreaStatus(exploration,id,next,{sessionId=null,notes='',vi
 export function explorationProgress(exploration){
  const areas=arr(exploration?.areas),total=areas.length;
  return{total,discovered:areas.filter(a=>a.status!=='unknown').length,visited:areas.filter(a=>['visited','resolved'].includes(a.status)).length,resolved:areas.filter(a=>a.status==='resolved').length}
+}
+
+/** Foco de condução independente do status, do fluxo narrativo e dos marcadores. */
+export function setCurrentExplorationArea(exploration,id=null){
+ const e=clone(exploration),key=text(id);
+ if(key&&!e.areas.some(a=>a.id===key))return{error:'Área atual não encontrada.'};
+ e.activeAreaId=key||null;return{exploration:e}
 }
