@@ -1,6 +1,7 @@
 /* Botão Abrir alinhado à esquerda em cards narrativos de ambas as visões. */
 #table-root .campaign-adventure-featured-card .campaign-player-story-content{flex-direction:column;align-items:stretch;justify-content:space-between}
 #table-root .campaign-adventure-featured-card .campaign-player-story-open{align-self:flex-start}
-#table-root .campaign-player-sessions-grid .campaign-player-story-footer{justify-content:flex-start;align-items:flex-start;flex-direction:column}
-#table-root .campaign-player-sessions-grid .campaign-player-story-footer .campaign-player-story-open{margin-left:0;align-self:flex-start}
+#table-root .campaign-player-sessions-grid .campaign-player-story-footer{justify-content:space-between;align-items:flex-end;flex-direction:row}
+#table-root .campaign-player-sessions-grid .campaign-player-story-footer .campaign-player-story-open{margin-left:0;align-self:flex-end;order:0}
+#table-root .campaign-player-sessions-grid .campaign-player-story-footer .campaign-player-story-status{margin-left:auto;align-self:flex-end;order:1}
 #table-root .campaign-reference-section>.campaign-player-story-grid{margin-top:12px}
