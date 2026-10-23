@@ -10,7 +10,6 @@ import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-sta
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261023-panoramic3';
-import{cardMetricIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -237,7 +236,6 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
  const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
  const campaignLink=`<strong>${esc(campaignName)}</strong>`;
  const adventureLink=adv?`<strong>${esc(numberedAdventureTitle(adv))}</strong>`:`<strong>${s.adventureId?'Aventura não disponível':'Sem aventura'}</strong>`;
- const context=`<p class="mini session-card-context hub-ancestry" role="group" aria-label="Campanha e aventura vinculadas"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${campaignLink}</span><span class="hub-ancestry-chevron" aria-hidden="true">›</span><span class="hub-parent-link hub-ancestry-adventure"><span>Aventura</span>${adventureLink}</span></p>`;
  const statusControl=restricted
   ?`<span class="campaign-status-value" aria-label="Status da sessão: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
   :`<details class="campaign-status-disclosure" data-status-disclosure="${esc(s.id)}">
@@ -248,9 +246,9 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
       ${SESSION_CARD_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-session-status-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-next-session-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
      </div>
     </details>`;
+ const context=`<div class="mini session-card-context hub-ancestry" role="group" aria-label="Campanha e aventura vinculadas"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${campaignLink}</span><span class="hub-ancestry-chevron" aria-hidden="true">›</span><div class="campaign-card-ancestry-status session-adventure-context"><span class="hub-parent-link hub-ancestry-adventure"><span>Aventura</span>${adventureLink}</span><div class="campaign-card-status status-${esc(status)}">${statusControl}</div></div></div>`;
  return `<article class="campaign-card campaign-card-featured" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
   <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
-  <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
   <div class="campaign-card-main">
    <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
    <div class="campaign-card-details">
@@ -260,8 +258,8 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
      ${context}
     </div>
     <div class="campaign-card-metrics" role="group" aria-label="Cenas e encontros da sessão">
-     <div class="campaign-card-stat">${cardMetricIcon("scenes")}<span class="campaign-card-stat-copy"><strong>${scenes}</strong><span>${scenes===1?'Cena':'Cenas'}</span></span></div>
-     <div class="campaign-card-stat">${cardMetricIcon("encounters")}<span class="campaign-card-stat-copy"><strong>${encounters}</strong><span>${encounters===1?'Encontro':'Encontros'}</span></span></div>
+     <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${scenes}</strong><span>${scenes===1?'Cena':'Cenas'}</span></span></div>
+     <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${encounters}</strong><span>${encounters===1?'Encontro':'Encontros'}</span></span></div>
     </div>
    </div>
   </div>
