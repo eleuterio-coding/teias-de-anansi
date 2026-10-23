@@ -1,3 +1,4 @@
+import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles1';
 import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles1';
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles1';
@@ -99,6 +100,12 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  rememberAvatars(campaignRow.participants);
  const playerSection=detailGrid.querySelector('#participantes');
  const characterSection=detailGrid.querySelector('#personagens');
+ const sessionsSection=detailGrid.querySelector('#sessoes');
+ if(sessionsSection){
+  sessionsSection.innerHTML='<h2>Sessões da Aventura</h2><div class="list campaign-player-story-grid">'+
+   (sessions.length?sessions.map(s=>renderCampaignSessionCard(s,campaignRow.campaign.id)).join(''):'<div class="empty">Nenhuma sessão disponível nesta Aventura.</div>')+'</div>';
+ }
+
  arr(players).forEach((player,i)=>{
   const card=playerSection?.querySelectorAll('.story-card')[i];if(!card)return;
   const name=player.displayName||player.username||'Jogador';
