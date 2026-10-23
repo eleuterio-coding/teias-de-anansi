@@ -7,6 +7,9 @@ on:
       - 'scripts/adventure-exploration-ui.js'
       - 'scripts/adventure-router.js'
       - 'adventure-exploration.css'
+      - 'timeline-flowchart.css'
+      - 'scripts/timeline-flowchart.js'
+      - 'tests/auditar-aventuras.mjs'
       - 'aventuras.html'
       - 'e2e/adventure-exploration.spec.js'
       - 'e2e/adventure-six-panels-actions.spec.js'
@@ -18,6 +21,9 @@ on:
       - 'scripts/adventure-router.js'
       - 'scripts/collaboration-model.js'
       - 'adventure-exploration.css'
+      - 'timeline-flowchart.css'
+      - 'scripts/timeline-flowchart.js'
+      - 'tests/auditar-aventuras.mjs'
       - 'hub-detail-layout.css'
       - 'aventuras.html'
       - 'e2e/adventure-exploration.spec.js'
@@ -34,6 +40,8 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
+      - name: Auditoria de Cenas e Linha do Tempo
+        run: node tests/auditar-aventuras.mjs
       - run: npx playwright install --with-deps chromium
       - name: Validar cards independentes e persistência em desktop e celular
         run: npx playwright test e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium
