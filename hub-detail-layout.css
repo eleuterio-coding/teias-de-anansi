@@ -342,3 +342,21 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 #adventure-root #sessoes .campaign-player-story-status.status-cancelled{--status-bg:rgba(94,39,46,.83);--status-border:rgba(240,126,136,.58);--status-ink:#ffb5bf}
 #adventure-root #sessoes .campaign-player-story-status.status-archived{--status-bg:rgba(58,64,75,.80);--status-border:rgba(157,167,181,.64);--status-ink:#d3dce8}
 #adventure-root #sessoes .campaign-player-story-status{border:1px solid var(--status-border,rgba(175,190,210,.65));background:var(--status-bg,rgba(96,113,131,.23))!important;color:var(--status-ink,#e2eaf5)!important;border-radius:999px;padding:3px 10px;line-height:1.35}
+
+/* Editor da cena existente: a edição ocupa toda a linha do card narrativo. */
+#adventure-root .hub-detail-grid .adventure-scene-record .hub-scene-editor{
+ flex:1 1 100%;width:100%;min-width:0;margin-top:4px;padding:12px;
+ border:1px solid var(--hub-border,#34495c);border-radius:9px;
+ background:var(--hub-surface,#102031);
+}
+#adventure-root .hub-detail-grid .hub-scene-editor>summary{
+ cursor:pointer;font-size:.85rem;font-weight:700;color:var(--hub-accent-2,#91c9fc);
+}
+#adventure-root .hub-detail-grid .hub-scene-editor>.form-grid{margin-top:12px}
+#adventure-root .hub-detail-grid .hub-scene-editor fieldset{
+ min-width:0;padding:9px;border:1px solid var(--hub-border,#34495c);border-radius:8px;
+}
+#adventure-root .hub-detail-grid .hub-scene-editor .entity-checks{display:flex;flex-wrap:wrap;gap:7px}
+@media(max-width:700px){
+ #adventure-root .hub-detail-grid .hub-scene-editor .form-grid.two{grid-template-columns:1fr}
+}
