@@ -48,7 +48,7 @@ test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editá
  await expect(roots.nth(0).locator('.timeline-children a.campaign-linked-link-card').first()).toHaveAttribute('href',`sessoes.html?campaign=${cid}&id=s-early`);
  await expect(area.locator('[data-new-timeline],[data-timeline-add-root],[data-timeline-add-child]')).toHaveCount(0);
  await expect(roots.nth(0).locator(':scope > .timeline-children')).toBeHidden();
- await expect(roots.nth(0).locator('.timeline-child-indicator')).toHaveCount(1);
+ await expect(area.locator('.timeline-child-indicator')).toHaveCount(0);
  const toggle=roots.nth(0).locator(':scope > .campaign-flow-step [data-timeline-toggle]');
  await expect(toggle).toHaveAttribute('aria-expanded','false');
  await expect(toggle).toHaveText('');
