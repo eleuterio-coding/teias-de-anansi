@@ -1,7 +1,7 @@
-import{noteSection}from'./hub-notes.js?v=20261022-notes1';
-import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-history-roster1';
-import{renderStructuredDetails,renderTimeline}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
-import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-status-palette2';
+import{noteSection}from'./hub-notes.js?v=20261022-chronicles1';
+import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-chronicles1';
+import{renderStructuredDetails,renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles1';
+import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles1';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
