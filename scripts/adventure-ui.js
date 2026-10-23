@@ -242,6 +242,15 @@ function bindAdventureMonsterLibrary(){
   list.innerHTML=shown.map(monster=>`<article class="adventure-monster-library-row"><div><strong>${esc(monster.name)}</strong><span class="mini">${esc(monster.sourceTitle||monster.sourceId||'Fonte não informada')}</span></div><button type="button" class="secondary" data-monster-library-detail="${esc(monster.id)}">Consultar</button></article>`).join('')||'<div class="story-empty">Nenhum monstro corresponde à pesquisa.</div>';
   more.hidden=matches.length<=shown.length;
  };
+ panel.addEventListener('adventure-monster-catalog-ready',()=>{
+  const picker=panel.querySelector('#new-adventure-monster');
+  if(picker){
+   const selected=picker.value;
+   picker.innerHTML='<option value="">— Selecione —</option>'+monsterCatalog.map(m=>option(m.id,m.name+' · '+(m.sourceTitle||m.sourceId||''),'')).join('');
+   if(selected)picker.value=selected;
+  }
+  draw();
+ });
  search.addEventListener('input',()=>{limit=60;draw()});
  more.addEventListener('click',()=>{limit+=60;draw()});
  list.addEventListener('click',async event=>{
@@ -538,4 +547,4 @@ if(params.get('new')==='1')requestAnimationFrame(()=>{
  if(form){form.scrollIntoView({block:'start'});$('new-adventure-title')?.focus({preventScroll:true})}
 });
 loadMagicItems().then(()=>{if(adventure())render()}).catch(()=>{});
-loadEncounterMonsterIndex().then(rows=>{monsterCatalog=rows;monsterCatalogReady=true;if(adventure())render()}).catch(error=>{monsterCatalogReady=true;console.warn('Catálogo de monstros indisponível:',error)})
+loadEncounterMonsterIndex().then(rows=>{monsterCatalog=rows;monsterCatalogReady=true;document.getElementById('monstros')?.dispatchEvent(new Event('adventure-monster-catalog-ready'))}).catch(error=>{monsterCatalogReady=true;document.getElementById('monstros')?.dispatchEvent(new Event('adventure-monster-catalog-ready'));console.warn('Catálogo de monstros indisponível:',error)})
