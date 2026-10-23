@@ -46,7 +46,7 @@ function card(c){
  </article>`
 }
 function createTile(){
- return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html">Nova Campanha</a>'
+ return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html" aria-label="Nova Campanha"><span class="campaign-create-plus" aria-hidden="true">+</span><span class="campaign-create-tile-label">Nova Campanha</span></a>'
 }
 function render(){
  const box=$('campaign-list');if(!box)return;
