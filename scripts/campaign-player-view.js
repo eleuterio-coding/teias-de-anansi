@@ -1,3 +1,4 @@
+import{noteSection}from'./hub-notes.js?v=20261022-notes1';
 import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-history-roster1';
 import{renderStructuredDetails,renderTimeline}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
 import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-status-palette2';
@@ -104,6 +105,7 @@ export function renderPlayerCampaign(row){
  ${renderStructuredDetails(c,[],{readOnly:true})}
  ${renderTimeline(c,'list',null,{readOnly:true})}
  ${c.sharedNotes?readonlyText('notas-compartilhadas','Notas compartilhadas',c.sharedNotes):''}
+ ${c.dmNoteEntries?.length?noteSection(c.dmNoteEntries,{readOnly:true}):''}
  </div>`;
  bindReadOnly(root,c);
  bindCampaignAvatarPreviews(root);
