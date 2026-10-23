@@ -1,6 +1,6 @@
 import{numberedAdventureTitle}from'./narrative-labels.js';
 import{imageElementHtml}from'./image-media.js?v=20260925-media2';
-import{cardMetricIcon,cardOpenArrow,cardDeleteIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
+import{cardMetricIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const arr=value=>Array.isArray(value)?value:[];
@@ -44,8 +44,8 @@ export function adventureListCard(adventure,{parentName='',readOnly=false,sessio
    </div>
   </div>
   <div class="row-actions campaign-card-actions">
-   <a class="btn" href="${href}">Abrir ${cardOpenArrow}</a>
-   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">${cardDeleteIcon} Excluir</button>`}
+   <a class="btn" href="${href}">Abrir</a>
+   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">>Excluir</button>`}
   </div>
  </article>`;
 }
