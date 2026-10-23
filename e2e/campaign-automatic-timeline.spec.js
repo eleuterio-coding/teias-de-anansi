@@ -51,7 +51,7 @@ test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editá
  const linkedTitle=roots.nth(0).locator(':scope > .campaign-flow-step a.campaign-timeline-title-link');
  const linkedCard=roots.nth(0).locator(':scope > .campaign-flow-step .campaign-linked-card');
  await linkedTitle.hover();
- await expect.poll(()=>linkedTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toContain('underline');
+ await expect.poll(()=>linkedTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toBe('none');
  await expect.poll(()=>linkedCard.evaluate(node=>getComputedStyle(node).transform)).not.toBe('none');
  await expect(roots.nth(0).locator('.timeline-children a.campaign-timeline-title-link').first()).toHaveAttribute('href',`sessoes.html?campaign=${cid}&id=s-early`);
  await expect(area.locator('[data-new-timeline],[data-timeline-add-root],[data-timeline-add-child]')).toHaveCount(0);
@@ -104,7 +104,7 @@ test('A hierarquia acompanha alterações nas entidades sem duplicar dados e fun
  await expect(roots.nth(0).locator('a.hub-diagram-linked-name').first()).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
  const flowTitle=parent.locator('a.hub-diagram-linked-name');
  await flowTitle.hover();
- await expect.poll(()=>flowTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toContain('underline');
+ await expect.poll(()=>flowTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toBe('none');
  await page.evaluate(ids=>{
   const list=JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'));
   list.find(row=>row.id===ids.a1).title='As Rainhas Renomeadas';
