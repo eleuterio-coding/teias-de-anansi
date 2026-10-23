@@ -3,7 +3,7 @@ import fs from'node:fs';
 import{ADVENTURE_KEY,ADVENTURE_SCHEMA,sanitizeAdventure,readAdventures,writeAdventures,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,removeAdventuresForCampaign,adventuresForCampaign,addAdventureChapter,addAdventureScene,addAdventureLocation,addAdventureNpc,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus,linkSceneToSession,linkSceneToEncounter,adventureContextForSession}from'../scripts/adventure-state.js';
 import{sanitizeCampaign,addCampaignNpc,addCampaignLocation,removeCampaignLocation}from'../scripts/campaign-state.js';
 import{reconcileAdventureCampaignRefs}from'../scripts/adventure-integrity.js';
-import{revealedAdventureProjection}from'../scripts/collaboration-model.js';
+import{revealedAdventureProjection,sharedExplorationProjection}from'../scripts/collaboration-model.js';
 import{deriveAdventureTimelineEvents}from'../scripts/timeline-flowchart.js';
 
 class MemoryStorage{constructor(){this.map=new Map}getItem(key){return this.map.has(key)?this.map.get(key):null}setItem(key,value){this.map.set(key,String(value))}}
@@ -50,6 +50,14 @@ const safe=revealedAdventureProjection(list.find(x=>x.id===adventureId),campaign
 
 let c2=sanitizeCampaign({id:'cmp-x',locations:[{id:'loc-x',name:'X'}],npcs:[{id:'npc-x',name:'N',currentLocationId:'loc-x'}]});let removedLocation=removeCampaignLocation([c2],'cmp-x','loc-x');assert.equal(removedLocation.ok,true);assert.equal(removedLocation.campaign.npcs[0].currentLocationId,null,'Excluir Local deve limpar localização atual dos NPCs.');
 
+const publishedMaps=sharedExplorationProjection({
+ levels:[{id:'map-visible',name:'Mapa público',visibleToPlayers:true,mapUrl:'https://example.org/map.png'},
+ {id:'map-private',name:'Mapa oculto',visibleToPlayers:false,mapUrl:'https://example.org/secret.png'}],
+ areas:[],factions:[],history:[]
+});
+assert.deepEqual(publishedMaps.levels.map(level=>level.id),['map-visible'],'Somente Mapas explicitamente autorizados devem ser publicados.');
+assert.equal(publishedMaps.levels[0].mapUrl,'https://example.org/map.png');
+assert.equal(JSON.stringify(publishedMaps).includes('secret.png'),false,'Endereços de Mapas privados nunca devem ser compartilhados.');
 // Permissões de jogadores: eventos vivos seguem a Cena; registros manuais e sessões exigem publicação própria.
 const hiddenProjection=revealedAdventureProjection(list.find(x=>x.id===adventureId),campaign);
 assert.equal(hiddenProjection.scenes.some(scene=>scene.id===sceneId),false,'Cenas ocultas não podem aparecer aos jogadores.');
