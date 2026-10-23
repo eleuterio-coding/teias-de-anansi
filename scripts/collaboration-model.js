@@ -50,7 +50,7 @@ export function campaignSharedCoreProjection(campaign={}){return{...campaignShar
 /* Exploração é privada por padrão. Mapa, coordenadas, perigos, fichas,
    links secretos e notas do Mestre jamais são transmitidos nesta projeção. */
 export function sharedExplorationProjection(exploration={}){
- const levels=arr(exploration.levels).filter(l=>l.visibleToPlayers===true).map(l=>({id:text(l.id),name:String(l.name??'')}));
+ const levels=arr(exploration.levels).filter(l=>l.visibleToPlayers===true).map(l=>({id:text(l.id),name:String(l.name??''),type:String(l.type??''),description:String(l.description??''),mapImage:mediaRef(l.mapImage),mapUrl:String(l.mapUrl??'')}));
  const levelIds=new Set(levels.map(l=>l.id));
  const areas=arr(exploration.areas).filter(a=>a.visibleToPlayers===true&&a.status!=='unknown').map(a=>({
   id:text(a.id),code:String(a.code??''),name:String(a.name??''),type:String(a.type??''),status:String(a.status??'discovered'),
