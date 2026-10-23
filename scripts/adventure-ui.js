@@ -211,12 +211,54 @@ function linkedSessionsHtml(a){
  return`<section id="sessoes" class="card campaign-editor-card"><h2>Sessões da Aventura</h2>
  <div class="list campaign-player-story-grid">${rows.length?rows.map(s=>renderCampaignSessionCard(s,a.campaignId)).join(''):'<div class="empty">Nenhuma sessão vinculada à Aventura.</div>'}</div></section>`;
 }
-function monstersHtml(a){return section('Monstros','monstros',ordered(a.monsters||[]).map((monster,i,rows)=>`<article class="story-card campaign-bullet-entry" draggable="true" tabindex="0" data-reorder-adventure="monsters">
-<div><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Monstro da Aventura')}</p></div><div class="campaign-line-actions">
-${visibleToggle('monsters',monster.id,monster.visibleToPlayers)}${moveTools('monsters',monster.id,i,rows.length)}
-<button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Excluir</button></div></article>`).join(''),
-`<div class="form-grid two"><label>Monstro da Biblioteca<select id="new-adventure-monster"><option value="">${monsterCatalogReady?'— Selecione —':'Carregando Biblioteca...'}</option>${monsterCatalog.map(m=>option(m.id,m.name+' · '+(m.sourceTitle||m.sourceId||''),'')).join('')}</select></label>
-<div class="row-actions"><button type="button" id="add-adventure-monster">Adicionar monstro</button></div></div>`)}
+function monstersHtml(a){
+ const current=ordered(a.monsters||[]);
+ return `<section id="monstros" class="card adventure-monster-library">
+ <div class="explore-title"><div class="explore-title-copy"><h2>Monstros</h2><p>Consulte os monstros disponíveis na Biblioteca. Pesquise por nome ou fonte e abra os detalhes.</p></div><span class="badge">${monsterCatalogReady?monsterCatalog.length:'…'} na Biblioteca</span></div>
+ <label class="adventure-monster-search">Buscar na Biblioteca<input id="adventure-monster-search" type="search" autocomplete="off" placeholder="Nome ou livro de origem" aria-controls="adventure-monster-results"></label>
+ <p id="adventure-monster-count" class="mini" role="status"></p>
+ <div id="adventure-monster-results" class="adventure-monster-results" aria-label="Monstros da Biblioteca"></div>
+ <button type="button" class="secondary" id="adventure-monster-more" hidden>Mostrar mais monstros</button>
+ <div id="adventure-monster-preview" class="adventure-monster-preview" role="status" aria-live="polite"></div>
+ <details class="adventure-monsters-attached"><summary>Monstros adicionados à Aventura (${current.length})</summary>
+ <div class="story-list">${current.length?current.map(monster=>`<article class="story-card" data-reorder-adventure="monsters"><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Biblioteca')}</p><button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div>
+ <div class="form-grid two"><label>Escolher da Biblioteca<select id="new-adventure-monster"><option value="">— Selecione —</option>${monsterCatalog.map(m=>option(m.id,m.name+' · '+(m.sourceTitle||m.sourceId||''),'')).join('')}</select></label>
+ <button type="button" id="add-adventure-monster">Adicionar à Aventura</button></div>
+ </details>
+ </section>`;
+}
+function bindAdventureMonsterLibrary(){
+ const panel=document.getElementById('monstros');if(!panel)return;
+ const search=panel.querySelector('#adventure-monster-search'),list=panel.querySelector('#adventure-monster-results');
+ const more=panel.querySelector('#adventure-monster-more'),count=panel.querySelector('#adventure-monster-count');
+ let limit=60;
+ const fold=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const draw=()=>{
+  const query=fold(search.value.trim());
+  const matches=monsterCatalog.filter(monster=>fold(monster.name+' '+(monster.sourceTitle||monster.sourceId||'')).includes(query));
+  const shown=matches.slice(0,limit);
+  count.textContent=monsterCatalogReady?`${matches.length} de ${monsterCatalog.length} monstros encontrados`:'Carregando Biblioteca de monstros...';
+  list.innerHTML=shown.map(monster=>`<article class="adventure-monster-library-row"><div><strong>${esc(monster.name)}</strong><span class="mini">${esc(monster.sourceTitle||monster.sourceId||'Fonte não informada')}</span></div><button type="button" class="secondary" data-monster-library-detail="${esc(monster.id)}">Consultar</button></article>`).join('')||'<div class="story-empty">Nenhum monstro corresponde à pesquisa.</div>';
+  more.hidden=matches.length<=shown.length;
+ };
+ search.addEventListener('input',()=>{limit=60;draw()});
+ more.addEventListener('click',()=>{limit+=60;draw()});
+ list.addEventListener('click',async event=>{
+  const button=event.target.closest('[data-monster-library-detail]');if(!button)return;
+  const monster=monsterCatalog.find(row=>row.id===button.dataset.monsterLibraryDetail);if(!monster)return;
+  const preview=panel.querySelector('#adventure-monster-preview');
+  preview.textContent='Carregando ficha de '+monster.name+'...';
+  try{
+   const detail=await loadEncounterMonsterDetail(monster);
+   if(!preview.isConnected)return;
+   preview.innerHTML=`<div class="adventure-monster-preview-head"><strong>${esc(detail.name)}</strong><span>${esc(detail.source||monster.sourceTitle||'Biblioteca')}</span></div>
+   <dl><div><dt>CA</dt><dd>${Number(detail.ac)||0}</dd></div><div><dt>PV</dt><dd>${Number(detail.maxHp)||1}</dd></div><div><dt>ND</dt><dd>${esc(detail.cr||'—')}</dd></div><div><dt>XP</dt><dd>${Number(detail.xp)||0}</dd></div></dl>
+   <p class="mini">Ficha proveniente da Biblioteca. Para usar na Aventura, selecione o monstro abaixo e clique em Adicionar.</p>`;
+   const picker=panel.querySelector('#new-adventure-monster');if(picker)picker.value=monster.id;
+  }catch(error){preview.textContent='Não foi possível carregar a ficha: '+(error?.message||'erro desconhecido')}
+ });
+ draw();
+}
 function section(title,id,body,form=''){return`<section id="${id}" class="card"><h2>${esc(title)}</h2><div class="story-list">${body||'<div class="story-empty">Nenhum registro.</div>'}</div>${form}<div class="row-actions" style="margin-top:10px"><button type="button" data-save-adventure-section>Salvar</button></div></section>`}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
@@ -427,6 +469,7 @@ function bindAdventureNotes(){
  });
 }
 function bind(){
+ bindAdventureMonsterLibrary();
  document.querySelectorAll('#linha-tempo [data-timeline-view]').forEach(button=>button.addEventListener('click',()=>{
   const next=button.dataset.timelineView==='flowchart'?'flowchart':'list';
   if(adventureTimelineView===next)return;
