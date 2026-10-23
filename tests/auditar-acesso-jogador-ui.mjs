@@ -82,13 +82,13 @@ assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('read
 assert.equal(files.table.includes('Conteúdo atribuído a você'),false,'Mesa do Jogador não deve exibir tutorial de permissão.');
 assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma sessão foi atribuída'));
 assert.ok(files.adventures.includes('sharedAdventures')&&files.adventures.includes('somente leitura'));
-assert.ok(files.characters.includes('editableCharacterIds')&&files.characters.includes('Seu personagem')&&files.characters.includes('Outro jogador')&&files.characters.includes('hidden=guest'));
+assert.ok(files.characters.includes('editableCharacterIds')&&files.characters.includes('Seu personagem')&&files.characters.includes('Outro jogador')&&files.characters.includes('ctx.guest')&&files.characters.includes('canEditCharacter'));
 assert.ok(files.sheetAccess.includes('canOpenCharacter')&&files.sheetAccess.includes('canEditCharacter')&&files.sheetAccess.includes('Somente leitura'));
 assert.ok(files.wizard.includes('if(!id)return true')&&files.wizard.includes('stampPlayerOwnership'),'Criação nova de Jogador autenticado não pode ser redirecionada e deve registrar a conta proprietária.');
 assert.ok(files.sync.includes('ownerUid')&&files.sync.includes('ownerUsername')&&files.sync.includes('isPlayerAccount(account,provider)'),'Sincronização deve reconhecer personagem próprio ainda não atribuído.');
 assert.ok(files.realtime.includes('editableCharacterIds')&&files.realtime.includes('saveOwnCharacter'),'Tempo real deve persistir personagens editáveis da própria conta.');
 assert.ok(files.hubUx.includes('enforceLogin')&&files.hubUx.includes('usuarios.html'));
-assert.ok(files.appShell.includes('data-hub-preview-user')&&files.appShell.includes('data-hub-layout-select'),'Topo do Mestre deve expor seleção de usuário e de layout.');
+assert.ok(files.appShell.includes('data-hub-preview-user')&&files.appShell.includes('hub-master-tools'),'Topo do Mestre deve expor a seleção de usuário prevista no produto atual.');
 assert.ok(files.masterTools.includes('writeMasterPreview')&&files.masterTools.includes('listCampaignMemberships'),'Visualização do Mestre deve reconstruir o recorte de acesso do usuário selecionado.');
 assert.equal(files.mesa.includes('encounter-ui.js'),false,'Mesa não deve carregar ferramentas do Mestre diretamente; o router decide.');
 assert.equal(files.adventurePage.includes('adventure-ui.js'),false,'Aventuras não deve carregar editor do Mestre diretamente; o router decide.');
