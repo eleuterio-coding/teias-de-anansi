@@ -333,7 +333,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],
   else event.target.blur()
  });
  let dragging=null,touch=null,pen=null,mouse=null,floating=null;
- const interactive=target=>Boolean(target.closest('input,textarea,select,button,a,[contenteditable="true"]'));
+ const interactive=target=>Boolean(target.closest('input,textarea,select,button,a,[contenteditable="true"]')||(target.closest('.campaign-flow-card[data-timeline-card-toggle]')&&!target.closest('.campaign-reorder-grip')));
  const findSurface=target=>target?.closest?.('[data-timeline-drag],[data-line-drag]')||null;
  const dragInfo=surface=>surface?.hasAttribute('data-timeline-drag')
   ?{kind:'timeline',id:surface.dataset.timelineDrag,surface}
