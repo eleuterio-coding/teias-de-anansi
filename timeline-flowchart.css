@@ -259,3 +259,58 @@
  #table-root #linha-tempo :is(.timeline-toggle-chevron,.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node){transition:none}
  #table-root #linha-tempo :is(.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node):hover{transform:none}
 }
+
+/* Aventuras: Cenas entram como itens vivos e automáticos da Linha do Tempo. */
+#adventure-root #linha-tempo .hub-timeline-heading{
+ display:flex;justify-content:space-between;align-items:center;
+ flex-wrap:wrap;gap:12px;padding-bottom:15px;
+ border-bottom:1px solid var(--hub-border,#344a60)
+}
+#adventure-root #linha-tempo .hub-timeline-heading h2{margin:0 0 5px}
+#adventure-root #linha-tempo .adventure-timeline-helper{
+ margin:0;max-width:62ch;line-height:1.5;
+ color:var(--hub-muted,#aec1d4)
+}
+#adventure-root #linha-tempo .adventure-timeline-list{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));
+ gap:12px;margin-top:15px
+}
+#adventure-root #linha-tempo .adventure-timeline-list>.timeline-row{
+ display:grid;align-content:start;gap:10px;
+ min-width:0;min-height:145px;padding:16px;
+ border:1px solid var(--hub-border,#344a60);
+ border-radius:11px;
+ background:var(--hub-surface-2,#17293a)
+}
+#adventure-root #linha-tempo .adventure-timeline-list>.adventure-timeline-scene{
+ border-left:3px solid var(--hub-accent,#79baf0)
+}
+#adventure-root #linha-tempo .adventure-timeline-row-head{
+ display:flex;align-items:center;justify-content:space-between;
+ flex-wrap:wrap;gap:7px
+}
+#adventure-root #linha-tempo .adventure-timeline-kind{
+ display:inline-flex;align-items:center;
+ padding:4px 8px;border-radius:6px;
+ background:rgba(83,141,192,.16);
+ border:1px solid rgba(104,162,208,.24);
+ color:var(--hub-text-2,#cce0f4);
+ font-size:.75rem;font-weight:750
+}
+#adventure-root #linha-tempo .timeline-row>strong{
+ font-size:1rem;line-height:1.35;overflow-wrap:anywhere
+}
+#adventure-root #linha-tempo .timeline-row>p{
+ margin:0;line-height:1.5;overflow-wrap:anywhere
+}
+#adventure-root #linha-tempo .adventure-timeline-scene-link{
+ margin-top:auto;
+ display:inline-flex;align-self:start;
+ color:var(--hub-accent,#91c5ef);
+ font-size:.82rem;font-weight:720;text-decoration:none
+}
+#adventure-root #linha-tempo .adventure-timeline-scene-link:hover{text-decoration:underline}
+#adventure-root #linha-tempo .hub-diagram-scroll{margin-top:15px}
+@media(max-width:550px){
+ #adventure-root #linha-tempo .adventure-timeline-list{grid-template-columns:minmax(0,1fr)}
+}
