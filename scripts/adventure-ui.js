@@ -432,7 +432,22 @@ function bindAdventureNotes(){
   save:rows=>commit(updateAdventure(adventures,adventureId,{dmNoteEntries:rows}),'Notas da Aventura atualizadas.')
  });
 }
-function bind(){const c=campaign();
+function bind(){
+ document.querySelectorAll('#linha-tempo [data-timeline-view]').forEach(button=>button.addEventListener('click',()=>{
+  const next=button.dataset.timelineView==='flowchart'?'flowchart':'list';
+  if(adventureTimelineView===next)return;
+  adventureTimelineView=next;
+  render();
+  document.getElementById('linha-tempo')?.scrollIntoView({block:'nearest'});
+ }));
+ document.querySelectorAll('#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
+  const eventId=button.dataset.diagramEdit;
+  adventureTimelineView='list';
+  render();
+  const target=[...document.querySelectorAll('#linha-tempo [data-entity-row]')].find(row=>row.dataset.entityRow===eventId);
+  (target||document.getElementById('linha-tempo'))?.scrollIntoView({block:'nearest'});
+ }));
+ const c=campaign();
  const list=$('adventure-list');
  list?.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
   if(!disclosure.open)return;
