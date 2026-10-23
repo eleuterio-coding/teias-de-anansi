@@ -66,8 +66,8 @@ export function renderAdventureExploration(a,c){
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
  const selected=areas.find(area=>area.id===selectedAreaId)||areas[0]||null;
  const progress=explorationProgress(exploration);
- return '<section class="card adventure-exploration" id="exploracao">'+
- '<div class="explore-title"><h2>Exploração</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
+ return '<section class="card adventure-exploration adventure-areas" id="exploracao">'+
+ '<div class="explore-title"><h2>Áreas e Salas</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
  '<details class="explore-create" id="ex-create-area" open><summary>Adicionar área / sala</summary>'+
  '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
  '<label>Identificador<input name="code" required placeholder="A01, Sala 1, Torre norte..."></label>'+
@@ -84,6 +84,9 @@ export function renderAdventureExploration(a,c){
   '</article>';
  }).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div>'+
  (selected?areaDetail(selected,a,c,exploration):'<div class="story-empty">Selecione ou adicione uma área para editar suas informações.</div>')+
+ '</section>'+
+ '<section class="card adventure-exploration adventure-maps" id="mapas">'+
+ '<div class="explore-title"><h2>Mapas e Níveis</h2><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
  '<details class="explore-create" id="ex-level-manager" open><summary>Adicionar mapa / nível</summary>'+
  '<form id="ex-new-level" class="explore-create-form explore-create-map">'+
  '<label>Nome do mapa<input name="name" required placeholder="Primeiro andar, Floresta..."></label>'+
@@ -105,8 +108,9 @@ export function renderAdventureExploration(a,c){
 }
 export function bindAdventureExploration({getAdventure,getCampaign,save,feedback}){
  const root=document.getElementById('exploracao');
+ const mapRoot=document.getElementById('mapas');
  const factions=document.getElementById('faccoes');
- if(!root&&!factions)return;
+ if(!root&&!mapRoot&&!factions)return;
  const get=()=>getAdventure()?.exploration;
  const apply=(result,message)=>{
   if(!result||result.error||!result.exploration){feedback(result?.error||'Não foi possível atualizar a exploração.',false);return false}
@@ -152,7 +156,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  root?.querySelectorAll('[data-ex-quick-status]').forEach(select=>select.addEventListener('change',()=>{
   apply(changeAreaStatus(get(),select.dataset.exQuickStatus,select.value),'Status da área atualizado.');
  }));
- root?.querySelector('#ex-new-level')?.addEventListener('submit',async event=>{
+ mapRoot?.querySelector('#ex-new-level')?.addEventListener('submit',async event=>{
   event.preventDefault();
   const form=event.target,name=form.elements.name.value.trim();if(!name)return;
   const file=form.elements.mapFile.files?.[0]||null;
@@ -173,7 +177,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   const result=createExplorationEntity(get(),'faction',{name});
   if(result){expandedFactionId=result.entity.id;apply(result,'Facção criada.')}
  });
- root?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
+ mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
   const node=button.closest('[data-ex-level]');if(node)edit('level',node.dataset.exLevel,node);
  }));
  root?.querySelector('[data-ex-save-area]')?.addEventListener('click',event=>{
@@ -183,7 +187,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   const id=event.target.dataset.exFocusArea;
   apply(setCurrentExplorationArea(get(),get()?.activeAreaId===id?null:id),'Área atualizada.');
  });
- root?.querySelectorAll('[data-ex-level] .explore-map-upload [data-image-picker]').forEach(picker=>{
+ mapRoot?.querySelectorAll('[data-ex-level] .explore-map-upload [data-image-picker]').forEach(picker=>{
   const id=picker.closest('[data-ex-level]')?.dataset.exLevel;if(!id)return;
   bindImagePicker(picker,{
    onSelect:async file=>syncMap(id,{file}),
@@ -198,7 +202,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   expandedFactionId=expandedFactionId===button.dataset.exExpandFaction?null:button.dataset.exExpandFaction;
   save(null,null,true);
  }));
- for(const scope of [root,factions].filter(Boolean)){
+ for(const scope of [root,mapRoot,factions].filter(Boolean)){
   scope.querySelectorAll('[data-ex-delete]').forEach(button=>button.addEventListener('click',()=>{
    if(!confirm('Excluir este registro e desvincular as referências associadas?'))return;
    const kind=button.dataset.exDelete,id=button.dataset.exId;
