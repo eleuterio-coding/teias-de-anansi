@@ -123,3 +123,169 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 .campaign-next-highlight .campaign-next-session-line .campaign-next-status{flex:none;border:1px solid #a5c8e97a;border-radius:8px;padding:5px 9px;font-weight:750}
 /* Sessões do jogador dentro da Aventura usam as mesmas imagens/status do Mestre. */
 #adventure-root .campaign-player-story-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px}
+
+/* Geometry mirrored from Campaign */
+:is(#adventure-root,#sessions-list) .campaign-timeline-flow{
+ display:grid;gap:0;list-style:none;margin:0;padding:0
+}
+:is(#adventure-root,#sessions-list) .campaign-flow-step{
+ position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);
+ column-gap:15px;min-height:96px;padding:0 0 20px
+}
+:is(#adventure-root,#sessions-list) .campaign-flow-step:not(:last-child)::before{
+ content:"";position:absolute;top:38px;bottom:0;left:20px;
+ width:2px;background:linear-gradient(var(--hub-accent,#319bff),rgba(62,148,231,.30))
+}
+:is(#adventure-root,#sessions-list) .campaign-flow-node{
+ z-index:1;display:grid;place-items:center;width:42px;height:42px;
+ border-radius:50%;border:1px solid rgba(97,175,255,.45);
+ background:#153753;color:#d9f1ff;font-weight:800
+}
+:is(#adventure-root,#sessions-list) .campaign-flow-card{
+ display:flex;justify-content:space-between;align-items:center;gap:14px;
+ min-width:0;min-height:60px;padding:14px 16px;
+ border-radius:12px;border:1px solid var(--hub-border,#304357);
+ background:var(--hub-surface-2,rgba(255,255,255,.04))
+}
+:is(#adventure-root,#sessions-list) .campaign-flow-card strong{overflow-wrap:anywhere;font-weight:650}
+:is(#adventure-root,#sessions-list) .campaign-flow-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+:is(#adventure-root,#sessions-list) .campaign-flow-actions button{min-height:34px}
+
+/* Linha do tempo: árvore de eventos/subeventos rearranjável. */
+:is(#adventure-root,#sessions-list) .timeline-tree,
+:is(#adventure-root,#sessions-list) .timeline-children{list-style:none;display:grid;gap:0;margin:0;padding:0;min-width:0}
+:is(#adventure-root,#sessions-list) .timeline-item{position:relative;min-width:0}
+:is(#adventure-root,#sessions-list) .timeline-children{
+ padding-left:44px;margin-left:20px;
+ border-left:2px solid rgba(79,153,224,.24)
+}
+:is(#adventure-root,#sessions-list) .timeline-children>.timeline-item .campaign-flow-node{
+ width:25px;height:25px;border-radius:50%;font-size:1.2rem
+}
+:is(#adventure-root,#sessions-list) .timeline-item>.campaign-flow-step{
+ display:grid;grid-template-columns:42px minmax(0,1fr);
+ align-items:center;gap:12px;min-height:72px;padding:8px 0
+}
+:is(#adventure-root,#sessions-list) .timeline-item>.campaign-flow-step::before{display:none}
+:is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-card{
+ flex:1;display:flex;align-items:center;justify-content:flex-start;
+ gap:8px;min-width:0;min-height:56px;padding:10px 12px;flex-wrap:wrap
+}
+:is(#adventure-root,#sessions-list) .timeline-drag-handle{
+ display:grid;place-items:center;flex:none;width:32px;height:36px;min-height:36px;
+ margin:0;padding:0;font-size:1.4rem;font-weight:750;line-height:1;
+ background:transparent;border:1px solid transparent;border-radius:8px;
+ color:var(--hub-accent-2,#87c9ff);cursor:grab;touch-action:none;user-select:none
+}
+:is(#adventure-root,#sessions-list) .timeline-drag-handle:active{cursor:grabbing}
+:is(#adventure-root,#sessions-list) .timeline-drag-handle:hover{border-color:var(--hub-border,#456687)}
+:is(#adventure-root,#sessions-list) .timeline-node-text{
+ flex:1 1 230px;min-width:110px;max-width:100%;height:42px;margin:0;
+ background:transparent;border:1px solid transparent;font-weight:650;color:inherit
+}
+:is(#adventure-root,#sessions-list) .timeline-node-text:is(:hover,:focus){
+ background:var(--hub-surface,#101923);border-color:var(--hub-border,#456687)
+}
+:is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-actions{
+ display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;
+ gap:6px;margin-left:auto
+}
+:is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-actions button{
+ min-width:34px;min-height:36px;margin:0;padding:6px 9px;border-radius:8px;font-size:.8rem
+}
+:is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-actions .timeline-add-child{
+ min-width:82px
+}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-dragging>.campaign-flow-step{opacity:.48}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target>.campaign-flow-step .campaign-flow-card{
+ border-color:rgba(104,183,255,.9);background:rgba(50,145,245,.14)
+}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target[data-drop-position="before"]>.campaign-flow-step:before,
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target[data-drop-position="after"]>.campaign-flow-step:after{
+ content:"";display:block;position:absolute;left:38px;right:0;
+ height:3px;border-radius:9px;background:#51b7ff
+}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target[data-drop-position="before"]>.campaign-flow-step:before{top:2px}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target[data-drop-position="after"]>.campaign-flow-step:after{bottom:2px}
+:is(#adventure-root,#sessions-list) .timeline-item.timeline-drop-target[data-drop-position="child"]>.campaign-flow-step .campaign-flow-card{
+ box-shadow:inset 0 0 0 2px rgba(104,183,255,.35)
+}
+@media(max-width:850px){
+ :is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-card{align-items:stretch}
+ :is(#adventure-root,#sessions-list) .timeline-item .timeline-node-text{flex-basis:calc(100% - 45px)}
+ :is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-actions{width:100%;justify-content:flex-start}
+}
+@media(max-width:650px){
+ :is(#adventure-root,#sessions-list) .timeline-children{margin-left:8px;padding-left:13px}
+ :is(#adventure-root,#sessions-list) .timeline-item>.campaign-flow-step{grid-template-columns:28px minmax(0,1fr);gap:7px}
+ :is(#adventure-root,#sessions-list) .timeline-item>.campaign-flow-step .campaign-flow-node{width:28px;height:28px;font-size:.78rem}
+ :is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-card{flex-direction:row;gap:5px;padding:8px}
+ :is(#adventure-root,#sessions-list) .timeline-item .timeline-node-text{min-width:90px}
+ :is(#adventure-root,#sessions-list) .timeline-item .campaign-flow-actions{width:100%}
+ :is(#adventure-root,#sessions-list) .campaign-editable-bullets .campaign-bullet-entry{flex-wrap:wrap}
+ :is(#adventure-root,#sessions-list) .campaign-editable-bullets .campaign-list-remove{margin-left:auto}
+}
+
+
+/* Próxima sessão: área prioritária da Campanha, acima do restante do editor. */
+:is(#adventure-root,#sessions-list) #proxima-sessao.campaign-next-highlight{
+ display:flex;align-items:center;justify-content:space-between;gap:20px;
+ min-width:0;margin:18px 0 16px;padding:24px 26px;
+ border:1px solid rgba(66,161,246,.46);border-left:4px solid var(--hub-accent,#329dff);
+ border-radius:15px;
+ background:linear-gradient(110deg,rgba(37,116,199,.16),rgba(40,112,179,.07) 55%,transparent),var(--hub-surface,#101923);
+ box-shadow:0 8px 26px rgba(3,13,29,.12)
+}
+:is(#adventure-root,#sessions-list) .campaign-next-content{display:grid;justify-items:start;gap:7px;min-width:0}
+:is(#adventure-root,#sessions-list) .campaign-next-kicker{
+ color:var(--hub-accent-2,#86c5ff);font-size:.69rem;font-weight:850;
+ letter-spacing:.12em
+}
+:is(#adventure-root,#sessions-list) #proxima-sessao-titulo{
+ margin:0;font-size:clamp(1.13rem,1.65vw,1.42rem);
+ line-height:1.2;font-weight:780
+}
+:is(#adventure-root,#sessions-list) .campaign-next-name{
+ margin:2px 0 4px;
+ font-size:clamp(1.2rem,2vw,1.65rem);
+ font-weight:770;line-height:1.3;overflow-wrap:anywhere
+}
+:is(#adventure-root,#sessions-list) .campaign-next-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:3px}
+:is(#adventure-root,#sessions-list) .campaign-next-status{
+ display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;
+ border:1px solid rgba(108,196,255,.68);border-radius:100px;
+ background:rgba(25,65,103,.78);color:#9cdbff;
+ font-size:.79rem;font-weight:750
+}
+:is(#adventure-root,#sessions-list) .campaign-next-status:is(.status-current,.status-active){
+ border-color:rgba(92,230,157,.64);
+ background:rgba(18,79,51,.78);color:#91f3b9
+}
+:is(#adventure-root,#sessions-list) .campaign-next-status.status-planned{
+ border-color:rgba(255,198,98,.66);
+ background:rgba(89,60,22,.78);color:#ffcf85
+}
+:is(#adventure-root,#sessions-list) .campaign-next-date{
+ display:inline-flex;align-items:center;gap:7px;
+ color:var(--hub-text-2,#a7b7c9);font-size:.87rem;font-weight:650
+}
+:is(#adventure-root,#sessions-list) .campaign-next-date svg{
+ width:16px;height:16px;fill:none;stroke:currentColor;
+ stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round
+}
+:is(#adventure-root,#sessions-list) .campaign-next-empty{margin:6px 0 0;color:var(--hub-text-2,#a7b7c9)}
+:is(#adventure-root,#sessions-list) .campaign-next-action{
+ display:inline-flex;justify-content:center;align-items:center;gap:10px;
+ flex:none;min-height:46px;padding:11px 18px;
+ border:1px solid var(--hub-accent,#329dff);border-radius:10px;
+ background:var(--hub-accent,#288eef);color:#fff;
+ font-size:.92rem;font-weight:750;white-space:nowrap;text-decoration:none
+}
+:is(#adventure-root,#sessions-list) .campaign-next-action:hover{filter:brightness(1.12)}
+:is(#adventure-root,#sessions-list) .campaign-next-action:focus-visible{outline:3px solid var(--hub-focus,#8dd5ff);outline-offset:3px}
+@media(max-width:710px){
+ :is(#adventure-root,#sessions-list) #proxima-sessao.campaign-next-highlight{flex-direction:column;align-items:stretch;padding:20px}
+ :is(#adventure-root,#sessions-list) .campaign-next-action{width:100%}
+}
+
+
