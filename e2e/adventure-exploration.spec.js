@@ -13,9 +13,16 @@ test('cadastro enxuto de mapa e área, XP/status persistidos e cards preservados
  const errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=cmp-explore&id=adv-explore');
- await expect(page.locator('#exploracao h2')).toHaveText('Exploração');
+ await expect(page.locator('#exploracao > .explore-title h2')).toHaveText('Áreas e Salas');
+ await expect(page.locator('#mapas > .explore-title h2')).toHaveText('Mapas e Níveis');
+ await expect(page.locator('.hub-detail-grid > #exploracao')).toHaveCount(1);
+ await expect(page.locator('.hub-detail-grid > #mapas')).toHaveCount(1);
+ await expect(page.locator('#exploracao #ex-new-level')).toHaveCount(0);
+ await expect(page.locator('#mapas #ex-new-area')).toHaveCount(0);
+ await expect(page.locator('.section-nav a[href="#exploracao"]')).toHaveText('Áreas e Salas');
+ await expect(page.locator('.section-nav a[href="#mapas"]')).toHaveText('Mapas e Níveis');
  await expect(page.locator('#ex-create-area summary')).toHaveText('Adicionar área / sala');
- await expect(page.locator('#ex-level-manager summary')).toHaveText('Adicionar mapa / nível');
+ await expect(page.locator('#mapas #ex-level-manager summary')).toHaveText('Adicionar mapa / nível');
  await expect(page.locator('#ex-new-area :is(input,select)')).toHaveCount(4);
  await expect(page.locator('#ex-new-level :is(input,textarea)')).toHaveCount(5);
  await page.locator('#ex-new-level input[name="name"]').fill('Primeiro andar');
