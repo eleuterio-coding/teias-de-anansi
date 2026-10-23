@@ -1,7 +1,7 @@
-import{readAdventures}from'./adventure-state.js?v=20261022-adventure-visibility1';
-import{addSessionScene}from'./campaign-state.js?v=20261022-session-timeline1';
+import{readAdventures}from'./adventure-state.js?v=20261022-chronicles1';
+import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles1';
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-roster2';
+import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles1';
 import{createEncounter,updateEncounter,removeEncounter,addCharacterCombatant,addCreatureCombatant,removeCombatant}from'./encounter-state.js?v=20260924-session-planning1';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 
