@@ -21,6 +21,7 @@ body.hub-shell-enabled:has(#sessions-list) .hub-app-content{
 #adventure-root #adventure-list .adventure-campaign-track,
 #sessions-list .session-adventure-track,
 #adventure-root #adventure-list > .campaign-list-grid{
+  container:campaignCollection / inline-size;
   display:grid!important;
   grid-template-columns:minmax(0,1fr)!important;
   grid-auto-flow:row!important;
@@ -325,6 +326,35 @@ body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .ca
   :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>a.btn,
   :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>button{
     min-width:86px;padding:9px 10px!important
+  }
+}
+/* Medir também a largura REAL da lista, não apenas a tela:
+   barras laterais podem estreitar o card sem mudar o viewport. */
+@container campaignCollection (max-width:700px){
+  #adventure-root #adventure-list .campaign-card-featured,
+  #sessions-list .campaign-card-featured,
+  body.hub-shell-enabled #adventure-list .campaign-card-featured,
+  body.hub-shell-enabled #sessions-list .campaign-card-featured{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:240px minmax(0,1fr) auto!important;
+    min-height:0!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-art,
+  body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-art{
+    grid-column:1!important;grid-row:1!important;
+    min-height:240px!important;height:240px!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details,
+  body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-details{
+    grid-column:1!important;grid-row:2!important;
+    padding:70px var(--campaign-card-edge) 0!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-status{
+    top:260px;max-width:calc(100% - 36px)
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions,
+  body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions{
+    grid-column:1!important;grid-row:3!important;padding-bottom:22px!important
   }
 }
 @media(prefers-reduced-motion:reduce){
