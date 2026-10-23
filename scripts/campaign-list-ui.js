@@ -12,12 +12,10 @@ const CAMPAIGN_STATUSES=['active','paused','finished','cancelled','planned'];
 const statusPriority=status=>{const rank=CAMPAIGN_STATUSES.indexOf(status);return rank<0?CAMPAIGN_STATUSES.length:rank};
 function card(c){
  const sessions=Array.isArray(c.sessions)?c.sessions:[];
- const active=sessions.find(s=>s.id===c.activeSessionId);
- const players=(c.members||[]).length,characters=(c.members||[]).filter(m=>m.characterId).length;
  const adventureCount=visibleAdventures.filter(row=>row.campaignId===c.id).length;
  const cover=imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-card-cover',alt:''});
- const npcCount=readOnly?new Set([...(c.npcPublicEntries||[]),...(c.importantNpcEntries||[])].map(n=>n.id).filter(Boolean)).size:new Set([...(c.npcDirectory||[]),...(c.npcs||[]),...(c.importantNpcIds||[]).map(id=>({id}))].map(n=>n.id).filter(Boolean)).size;
- const metrics=[['Jogador','Jogadores',players],['Personagem','Personagens',characters],['NPC','NPCs',npcCount],['Aventura','Aventuras',adventureCount],['Sessão','Sessões',sessions.length]].map(([singular,plural,count])=>`<div class="campaign-card-stat"><strong>${count}</strong><span>${count===1?singular:plural}</span></div>`).join('');
+ const metrics=[['Aventura','Aventuras',adventureCount],['Sessão','Sessões',sessions.length]]
+  .map(([singular,plural,count])=>`<div class="campaign-card-stat"><strong>${count}</strong><span>${count===1?singular:plural}</span></div>`).join('');
  const status=CAMPAIGN_STATUSES.includes(c.status)?c.status:'planned';
  const statusControl=readOnly
   ?`<span class="campaign-status-value" aria-label="Status da campanha: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
@@ -34,24 +32,21 @@ function card(c){
   <div class="campaign-card-main">
    <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
    <div class="campaign-card-details">
-    <div class="campaign-card-intro"><span class="campaign-card-eyebrow">Campanha</span>
+    <div class="campaign-card-intro">
      <h2>${esc(c.name)}</h2>
      ${c.description?`<p class="campaign-card-description">${esc(c.description)}</p>`:''}
     </div>
-    <div class="campaign-card-metrics" role="group" aria-label="Resumo da campanha">${metrics}</div>
-    ${active?`<div class="campaign-card-current"><span>Sessão em andamento</span><strong>${esc(active.title)}</strong></div>`:''}
+    <div class="campaign-card-metrics" role="group" aria-label="Aventuras e sessões da campanha">${metrics}</div>
    </div>
   </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="mesa.html?id=${encodeURIComponent(c.id)}">Abrir</a>
-   <a class="btn secondary" href="lista-personagens.html?mode=campanhas&campaign=${encodeURIComponent(c.id)}">Personagens</a>
-   <a class="btn secondary" href="lista-npcs.html?mode=campanhas&campaign=${encodeURIComponent(c.id)}">NPCs</a>
    ${readOnly?'':`<button type="button" class="danger" data-delete="${esc(c.id)}">Excluir</button>`}
   </div>
  </article>`
 }
 function createTile(){
- return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html" aria-label="Nova campanha"><span class="campaign-create-plus" aria-hidden="true">+</span><span class="campaign-create-tile-copy"><span class="campaign-create-tile-label">Nova campanha</span><span class="campaign-create-tile-description">Comece uma nova jornada para o seu grupo.</span></span></a>'
+ return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html">Nova Campanha</a>'
 }
 function render(){
  const box=$('campaign-list');if(!box)return;
