@@ -193,7 +193,7 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
 :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>a.btn,
 :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>button{
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  min-width:0!important;min-height:38px;max-width:49%;
+  min-width:0!important;min-height:42px;max-width:49%;
   margin:0!important;padding:7px 7px!important;
   font-size:.73rem;font-weight:730;line-height:1.2;
   border-radius:9px;white-space:nowrap
