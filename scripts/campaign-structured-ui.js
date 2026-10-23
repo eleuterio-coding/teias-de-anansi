@@ -102,26 +102,26 @@ function linkedTimelineHtml(node,index,depth=0,collapsedIds=new Set()){
 }
 function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
  if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
- const sub=(node.children||[]),collapsed=collapsedIds.has(node.id);
- return `<li class="timeline-item" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}">
-  <div class="campaign-flow-step" draggable="true" data-timeline-drag="${esc(node.id)}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
-   <div class="campaign-flow-card">
+ const sub=node.children||[],hasChildren=sub.length>0,collapsed=collapsedIds.has(node.id),id=esc(node.id);
+ return `<li class="timeline-item" data-timeline-id="${id}" data-timeline-depth="${depth}">
+  <div class="campaign-flow-step" draggable="true" data-timeline-drag="${id}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
+   <div class="campaign-flow-card${hasChildren?' timeline-card-has-children':''}"${hasChildren?` data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens."`:''}>
     <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
-    <input class="timeline-node-text" data-timeline-text="${esc(node.id)}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
+    <input class="timeline-node-text" data-timeline-text="${id}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
+    ${hasChildren?timelineChildrenIndicator():''}
     <div class="campaign-flow-actions">
-      <label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-event="${esc(node.id)}" ${node.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>
-      ${sub.length?`<button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}" aria-controls="timeline-list-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button>`:''}
-      <button type="button" class="secondary timeline-add-child" data-timeline-add-child="${esc(node.id)}" aria-label="Adicionar subevento">+ Subitem</button>
-      <button type="button" class="secondary" data-timeline-move="up" data-timeline-target="${esc(node.id)}" aria-label="Mover para cima">↑</button>
-      <button type="button" class="secondary" data-timeline-move="down" data-timeline-target="${esc(node.id)}" aria-label="Mover para baixo">↓</button>
-      <button type="button" class="secondary" data-timeline-move="indent" data-timeline-target="${esc(node.id)}" aria-label="Tornar subevento">↳</button>
-      <button type="button" class="secondary" data-timeline-move="outdent" data-timeline-target="${esc(node.id)}" aria-label="Mover para nível acima">↰</button>
-      <button type="button" class="secondary" data-timeline-delete="${esc(node.id)}" aria-label="Remover evento">Remover</button>
+      <label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-event="${id}" ${node.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>
+      ${hasChildren?timelineDisclosure(node,collapsed):''}
+      <button type="button" class="secondary" data-timeline-move="up" data-timeline-target="${id}" aria-label="Mover para cima">↑</button>
+      <button type="button" class="secondary" data-timeline-move="down" data-timeline-target="${id}" aria-label="Mover para baixo">↓</button>
+      <button type="button" class="secondary" data-timeline-move="indent" data-timeline-target="${id}" aria-label="Tornar subevento">↳</button>
+      <button type="button" class="secondary" data-timeline-move="outdent" data-timeline-target="${id}" aria-label="Mover para nível acima">↰</button>
+      <button type="button" class="secondary" data-timeline-delete="${id}" aria-label="Remover evento">Remover</button>
     </div>
    </div>
   </div>
-  ${sub.length?`<ol class="timeline-children" id="timeline-list-children-${esc(node.id)}" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>nodeHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
- </li>`
+  ${hasChildren?`<ol class="timeline-children" id="timeline-list-children-${id}" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>nodeHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
+ </li>`;
 }
 function defaultCollapsedTimelineIds(nodes=[]){
  const hidden=new Set();
@@ -133,11 +133,12 @@ export function campaignTimelineCollapsedIds(c,adventures=[]){
 }
 function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
  if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
- const sub=Array.isArray(node.children)?node.children:[],collapsed=collapsedIds.has(node.id);
- return `<li class="timeline-item" data-timeline-id="${esc(node.id)}"><div class="campaign-flow-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
- <div class="campaign-flow-card"><span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>
- ${sub.length?`<div class="campaign-flow-actions"><button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button></div>`:''}</div></div>
- ${sub.length?`<ol class="timeline-children" ${collapsed?'hidden':''}>${sub.map((child,i)=>readonlyTimelineNode(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}</li>`;
+ const sub=node.children||[],hasChildren=sub.length>0,collapsed=collapsedIds.has(node.id),id=esc(node.id);
+ return `<li class="timeline-item" data-timeline-id="${id}"><div class="campaign-flow-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
+ <div class="campaign-flow-card${hasChildren?' timeline-card-has-children':''}"${hasChildren?` data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens."`:''}>
+ <span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>${hasChildren?timelineChildrenIndicator():''}
+ ${hasChildren?`<div class="campaign-flow-actions">${timelineDisclosure(node,collapsed)}</div>`:''}</div></div>
+ ${hasChildren?`<ol class="timeline-children" id="timeline-list-children-${id}" ${collapsed?'hidden':''}>${sub.map((child,i)=>readonlyTimelineNode(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}</li>`;
 }
 function flow(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
  const nodes=projectCampaignTimeline(c,adventures),mode=view==='flowchart'?'flowchart':'list';
