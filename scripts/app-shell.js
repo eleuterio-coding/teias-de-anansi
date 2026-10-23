@@ -107,7 +107,7 @@ function breadcrumbTrail(label){
  if(page==="sessoes.html"&&new URLSearchParams(location.search).get("id")){
   const context=document.querySelector('#sessions-list .campaign-product-kicker')?.textContent||'';
   const name=document.querySelector('#sessions-list .campaign-product-title-row h1')?.textContent?.trim()||"Sessão";
-  const adventure=context.includes(' · ')?context.split(' · ').slice(1).join(' · '):'';
+  const adventure=context.includes(' · Aventura: ')?context.split(' · Aventura: ')[1]:'';
   return[...start,{label:"Sessões",href:"sessoes.html"},...(adventure?[{label:adventure,href:"aventuras.html?"+new URLSearchParams({id:new URLSearchParams(location.search).get('adventure')||'',campaign:new URLSearchParams(location.search).get('campaign')||''}).toString()}]:[]),{label:name}]
  }
  if(page==="usuarios.html")return[...start,{label:"Usuários",href:"usuario.html"},{label:"Gerenciar acessos"}];
