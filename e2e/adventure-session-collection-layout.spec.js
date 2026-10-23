@@ -136,6 +136,37 @@ test('Clique no corpo e na imagem de cada card abre diretamente a entidade corre
    :/sessoes\.html\?.*id=collection-s1/);
  }
 });
+test('Abrir e Excluir permanecem sem ícones, incluindo versões antigas injetadas',async({page})=>{
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  const links=card.locator('.campaign-card-actions>a.btn');
+  const buttons=card.locator('.campaign-card-actions>button.danger');
+  await expect(links).toHaveText('Abrir');
+  await expect(buttons).toHaveText('Excluir');
+  await expect(card.locator('.campaign-card-actions :is(svg,i,img,.campaign-card-actions-icon)')).toHaveCount(0);
+  const coverage=await card.evaluate(node=>{
+   const controls=[...node.querySelectorAll('.campaign-card-actions>a.btn,.campaign-card-actions>button.danger')];
+   return controls.map(control=>{
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('aria-hidden','true');
+    control.appendChild(svg);
+    const hidden=getComputedStyle(svg).display==='none';
+    const before=getComputedStyle(control,'::before').content;
+    const after=getComputedStyle(control,'::after').content;
+    svg.remove();
+    return {hidden,before,after};
+   });
+  });
+  expect(coverage).toHaveLength(2);
+  for(const check of coverage){
+   expect(check.hidden).toBe(true);
+   expect(['none','normal','""']).toContain(check.before);
+   expect(['none','normal','""']).toContain(check.after);
+  }
+ }
+});
 test('desktop: Aventuras e Sessões aparecem em duas colunas de cards',async({page})=>{
  await page.setViewportSize({width:1600,height:1000});
  for(const item of cases){
