@@ -384,6 +384,13 @@ function bindAdventureVisibilityAndOrder(){
  bindStructuredDetails({getCampaign:()=>adventure(),getNpcs:()=>[],save:(patch,{message}={})=>commit(updateAdventure(adventures,adventureId,patch),message||'Linha do tempo atualizada.'),feedback})
 }
 
+function bindAdventureNotes(){
+ const section=document.getElementById('notas-mestre');
+ bindNoteSection(section,{
+  read:()=>adventure()?.dmNoteEntries||[],
+  save:rows=>commit(updateAdventure(adventures,adventureId,{dmNoteEntries:rows}),'Notas da Aventura atualizadas.')
+ });
+}
 function bind(){const c=campaign();
  const list=$('adventure-list');
  list?.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
