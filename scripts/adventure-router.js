@@ -1,3 +1,7 @@
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-current-adventure1';
+import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
+import{noteSection}from'./hub-notes.js?v=20261022-notes1';
+import{updateAppShellContext}from'./app-shell.js?v=20261022-session-breadcrumb1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
@@ -56,7 +60,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  if(header){
   header.className='campaign-product-hero-content';
   const context=header.querySelector('.mini');
-  if(context)context.className='campaign-product-kicker';
+  if(context){context.className='campaign-product-kicker';context.textContent='Campanha: '+campaignRow.campaign.name}
   const heading=header.querySelector('h2');
   if(heading){const h1=document.createElement('h1');h1.textContent=heading.textContent;heading.replaceWith(h1)}
   const titleRow=document.createElement('div');titleRow.className='campaign-product-title-row';
@@ -83,6 +87,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  const summary=document.createElement('div');summary.className='campaign-product-summary';
  const statistics=[['Status',advStatus(active.status)],['Jogadores',players.length],['Personagens',characters.length],['Missões',arr(active.missions).length],['Sessões',sessions.length]];
  for(const [name,value]of statistics){const metric=document.createElement('div');metric.className='metric';const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=String(value);metric.append(label,count);summary.append(metric)}
+ const planTemplate=document.createElement('template');planTemplate.innerHTML=renderNextCampaignSession(campaignRow.campaign,{canPlan:false,adventures:sharedAdventures()});const plan=planTemplate.content.firstElementChild;
  detailGrid.classList.remove('story-grid','player-adventure-grid');detailGrid.classList.add('campaign-sections','campaign-editor-grid','hub-detail-grid');
  const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
  for(const section of detailGrid.querySelectorAll(':scope > section')){
@@ -105,14 +110,31 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
   card.classList.add('hub-detail-avatar-row');
   card.innerHTML=campaignAvatarHtml(characterAvatarHtml(character),character.name||'Personagem')+'<strong>'+esc(character.name||'Personagem')+'</strong>';
  });
+ const extras=[
+  ['Capítulos','capitulos',arr(active.chapters),c=>`<article class="story-card"><strong>${esc(c.title)}</strong>${c.arc?`<p>${esc(c.arc)}</p>`:''}</article>`],
+  ['Cenas','cenas',arr(active.scenes),sc=>`<article class="story-card"><strong>${esc(sc.title)}</strong></article>`],
+  ['Monstros','monstros',arr(active.monsters),m=>`<article class="story-card"><strong>${esc(m.name)}</strong></article>`]
+ ];
+ for(const [heading,id,rows,renderer] of extras){
+  const tpl=document.createElement('template');tpl.innerHTML=simpleSection(heading,rows,renderer);
+  const section=tpl.content.firstElementChild;section.id=id;section.classList.add('campaign-editor-card');
+  const h=section.querySelector('h3');if(h){const h2=document.createElement('h2');h2.textContent=h.textContent;h.replaceWith(h2)}
+  detailGrid.append(section)
+ }
+ const timeline=document.createElement('template');timeline.innerHTML=renderTimeline(active,'list',null,{readOnly:true});
+ if(timeline.content.firstElementChild)detailGrid.append(timeline.content.firstElementChild);
+ if(active.dmNoteEntries?.length){const notes=document.createElement('template');notes.innerHTML=noteSection(active.dmNoteEntries,{readOnly:true});detailGrid.append(notes.content.firstElementChild)}
+ for(const id of['pistas','materiais'])detailGrid.querySelector('#'+id)?.remove();
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['missoes','Missões'],['npcs','NPCs'],['locais','Locais'],['pistas','Pistas'],['materiais','Materiais'],['sessoes','Sessões'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['capitulos','Capítulos'],['locais','Locais'],['npcs','NPCs'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
- wrapper.append(overview,summary,nav,detailGrid);
+ wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);
  bindCampaignAvatarPreviews(root);
+ root.querySelectorAll('[data-timeline-toggle]').forEach(b=>b.addEventListener('click',()=>{const list=b.closest('.timeline-item')?.querySelector(':scope > .timeline-children');if(list){list.hidden=!list.hidden;b.setAttribute('aria-expanded',String(!list.hidden))}}));
+ updateAppShellContext();
 }
 
 async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261021-shared-order1')}
