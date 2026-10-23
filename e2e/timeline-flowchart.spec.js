@@ -36,6 +36,7 @@ test('campanha alterna lista e fluxograma e preserva os subeventos ao editar',as
  await expect(area.locator('.hub-diagram-node')).toHaveCount(5);
  await expect(area.locator('.hub-diagram-children > .hub-diagram-node-group')).toHaveCount(2);
  await expect(area.locator('[data-diagram-event="root-1"]')).toContainText('Chegada à cidade');
+ await area.locator('[data-diagram-event="root-1"] strong').click();
  await area.locator('[data-diagram-edit="child-1"]').click();
  const input=area.locator('[data-timeline-text="child-1"]');
  await expect(input).toBeFocused();
@@ -102,6 +103,8 @@ test('eventos principais são cartões independentes em Lista e Fluxograma',asyn
 test('recolher e revelar ramificações funciona nas duas visualizações sem alterar dados',async({page})=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo'),toggle=area.locator('[data-timeline-toggle="root-1"]');
+ await expect(toggle).toHaveAttribute('aria-expanded','false');
+ await toggle.click();
  await expect(toggle).toHaveAttribute('aria-expanded','true');
  await toggle.click();
  await expect(toggle).toHaveAttribute('aria-expanded','false');
@@ -120,11 +123,12 @@ test('recolher e revelar ramificações funciona nas duas visualizações sem al
  expect(stored.timelineNodes[0].children).toHaveLength(2);
 });
 
-test('subeventos podem ter seus próprios subeventos e controles de revelação independentes',async({page})=>{
+test('subeventos aninhados podem ser revelados por seus próprios cards, sem criar eventos',async({page})=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
- page.once('dialog',dialog=>dialog.accept('Passagem secreta'));
- await area.locator('[data-timeline-add-child="child-1"]').click();
+ await expect(area.locator('[data-timeline-add-child],[data-timeline-add-root]')).toHaveCount(0);
+ await area.locator('.timeline-tree [data-timeline-card-toggle="root-1"]').click();
+ await area.locator('[data-timeline-move="indent"][data-timeline-target="child-2"]').click();
  await expect(area.locator('#timeline-list-children-child-1 > .timeline-item')).toHaveCount(1);
  const childToggle=area.locator('[data-timeline-toggle="child-1"]');
  await childToggle.click();
@@ -132,16 +136,17 @@ test('subeventos podem ter seus próprios subeventos e controles de revelação 
  await expect(area.locator('#timeline-list-children-root-1')).toBeVisible();
  await area.locator('[data-timeline-view="flowchart"]').click();
  await expect(area.locator('#timeline-diagram-children-child-1')).toBeHidden();
- await area.locator('.hub-diagram-collapse[data-timeline-toggle="child-1"]').click();
+ await area.locator('[data-diagram-toggle="child-1"] strong').click();
  await expect(area.locator('#timeline-diagram-children-child-1')).toBeVisible();
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
- expect(stored.timelineNodes[0].children[0].children[0].text).toBe('Passagem secreta');
+ expect(stored.timelineNodes[0].children[0].children[0].text).toBe('Encontro com o guarda');
 });
 
 test('fluxograma móvel não transborda e subeventos ficam abaixo do pai',async({page},testInfo)=>{
  test.skip(testInfo.project.name!=='mobile-chromium','layout móvel');
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  await page.locator('#linha-tempo [data-timeline-view="flowchart"]').click();
+ await page.locator('#linha-tempo [data-diagram-event="root-1"] strong').click();
  const bounds=await page.locator('#linha-tempo .hub-diagram-scroll--campaign').evaluate(el=>{
   const parent=el.querySelector('[data-diagram-root="root-1"] .hub-diagram-node').getBoundingClientRect();
   const children=el.querySelector('[data-diagram-root="root-1"] .hub-diagram-children').getBoundingClientRect();
@@ -152,49 +157,26 @@ test('fluxograma móvel não transborda e subeventos ficam abaixo do pai',async(
  expect(bounds.scroll).toBeLessThanOrEqual(bounds.visible+2);
 });
 
-test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo após mover e adicionar',async({page})=>{
+test('eventos principais são numerados igualmente em Lista e Fluxograma sem criação manual',async({page})=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
- // A lista é a fonte da ordem; inserir eventos não cria ordem independente.
- for(const title of ['Conselho da cidade','Último encontro']){
-  await area.locator('[data-new-timeline]').fill(title);
-  await area.locator('[data-timeline-add-root]').click();
- }
- const listNumbers=area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic]) > .campaign-flow-step .campaign-flow-node');
- await expect(listNumbers).toHaveText(['2','3','4','5']);
- // Alterar a ordem dos eventos principais renumera os dois modelos.
+ await expect(area.locator('[data-new-timeline],[data-timeline-add-root]')).toHaveCount(0);
+ const manualRows=area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic])');
+ await expect(manualRows).toHaveCount(2);
+ await expect(manualRows.locator(':scope > .campaign-flow-step .campaign-flow-node')).toHaveText(['2','3']);
  await area.locator('[data-timeline-move="up"][data-timeline-target="root-2"]').first().click();
- const reorderedTitles=await area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .timeline-node-text').evaluateAll(inputs=>inputs.map(el=>el.value));
- expect(reorderedTitles).toEqual(['Partida do grupo','Chegada à cidade','Conselho da cidade','Último encontro']);
+ const reorderedTitles=await manualRows.locator(':scope > .campaign-flow-step .timeline-node-text').evaluateAll(inputs=>inputs.map(el=>el.value));
+ expect(reorderedTitles).toEqual(['Partida do grupo','Chegada à cidade']);
  await area.locator('[data-timeline-view="flowchart"]').click();
  const roots=area.locator('.hub-diagram-roots > .hub-diagram-root:not([data-diagram-root^="linked-"])');
- await expect(roots).toHaveCount(4);
- const order=await roots.evaluateAll(elements=>elements.map(el=>{
-  const node=el.querySelector(':scope > .hub-diagram-node-group > .hub-diagram-node');
-  const badge=node.querySelector('.hub-diagram-order');
-  const rect=el.getBoundingClientRect();
-  return {id:el.dataset.diagramRoot,order:el.dataset.diagramOrder,number:badge?.textContent,
-   kind:node.querySelector('.hub-diagram-kind')?.textContent,title:node.querySelector('strong')?.textContent,
-   top:rect.top,left:rect.left};
- }));
- expect(order.map(item=>item.order)).toEqual(['2','3','4','5']);
- expect(order.map(item=>item.number)).toEqual(['2','3','4','5']);
- expect(order.map(item=>item.kind)).toEqual(['Evento','Evento','Evento','Evento']);
- expect(order.map(item=>item.title)).toEqual(reorderedTitles);
- // Em grades multicoluna, ordem de leitura: esquerda > direita; depois próxima linha.
- for(let index=1;index<order.length;index++){
-  const prev=order[index-1],curr=order[index];
-  expect(curr.top>prev.top+2 || (Math.abs(curr.top-prev.top)<=2&&curr.left>prev.left)).toBe(true);
- }
- // Subeventos não recebem numeração de eventos principais.
- await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-order')).toHaveCount(0);
- await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-kind')).toHaveText('Subevento');
+ await expect(roots).toHaveCount(2);
+ await expect(roots.locator(':scope > .hub-diagram-node-group > .hub-diagram-node .hub-diagram-order')).toHaveText(['2','3']);
+ await expect(roots.locator(':scope > .hub-diagram-node-group > .hub-diagram-node strong')).toHaveText(reorderedTitles);
  await area.locator('[data-timeline-view="list"]').click();
- await expect(area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic]) > .campaign-flow-step .campaign-flow-node')).toHaveText(['2','3','4','5']);
+ await expect(area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic]) > .campaign-flow-step .campaign-flow-node')).toHaveText(['2','3']);
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0].timelineNodes.map(x=>x.id));
- expect(stored.slice(0,2)).toEqual(['root-2','root-1']);
+ expect(stored).toEqual(['root-2','root-1']);
 });
-
 
 test('fluxograma abre e recolhe subitens clicando em qualquer área do cartão',async({page})=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
