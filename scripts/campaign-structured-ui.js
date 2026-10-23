@@ -1,4 +1,5 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261022-unified-campaign1';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261023-linked-timeline1';
+import{projectCampaignTimeline}from'./campaign-timeline-projection.js?v=20261023-linked-timeline1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
 import{hydrateMediaImages}from'./image-media.js?v=20261019-disclosure1';
@@ -86,7 +87,23 @@ function bullets(c,id,title,field,{readOnly=false}={}){
  <ul class="campaign-bullet-list campaign-editable-bullets">${values.length?values.map((v,i)=>`<li class="campaign-bullet-entry" data-line-drag="${field}" data-line-index="${i}" draggable="true" tabindex="0" aria-label="${esc(v)}. Arraste para reorganizar ou use as setas."><span class="campaign-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>${field==='importantLocations'?locationThumbnail(locationRows[i]||{id:'old-'+i,name:v}):''}<span class="campaign-list-marker" aria-hidden="true"></span><input type="text" data-edit-line="${field}" data-index="${i}" aria-label="${esc(title)} ${i+1}" value="${esc(v)}" maxlength="500"><div class="campaign-line-actions">${field==='importantLocations'?`<label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-location="${esc(locationRows[i]?.id||'')}" ${locationRows[i]?.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>`:''}<button type="button" class="secondary campaign-move-button" data-line-move="up" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para cima" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-line-move="down" data-line-field="${field}" data-move-index="${i}" aria-label="Mover ${esc(v)} para baixo" ${i===values.length-1?'disabled':''}>↓</button><button type="button" class="secondary campaign-list-remove" data-del-line="${field}" data-index="${i}" aria-label="Remover ${esc(v)}">Remover</button></div></li>`).join(''):'<li class="campaign-blank-state">Nenhum registro.</li>'}</ul>
  <div class="campaign-add-line"><label>Novo ${title==='Atos'?'ato':'local'}<input data-new-line="${field}" autocomplete="off" maxlength="500"></label><button type="button" data-add-line="${field}">Adicionar</button></div></section>`
 }
+function linkedTimelineHtml(node,index,depth=0,collapsedIds=new Set()){
+ const sub=node.children||[],collapsed=collapsedIds.has(node.id);
+ const kind=node.kind==='session'?'Sessão':'Aventura';
+ return `<li class="timeline-item timeline-item-linked" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}" data-timeline-automatic="true">
+  <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
+   <div class="campaign-flow-card campaign-linked-card">
+    <div class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span>
+     <a class="campaign-linked-link" href="${esc(node.href)}">${esc(node.text)}</a>
+    </div>
+    ${sub.length?`<div class="campaign-flow-actions"><button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}" aria-controls="timeline-list-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button></div>`:''}
+   </div>
+  </div>
+  ${sub.length?`<ol class="timeline-children" id="timeline-list-children-${esc(node.id)}" aria-label="Sessões de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>linkedTimelineHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
+ </li>`
+}
 function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
+ if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
  const sub=(node.children||[]),collapsed=collapsedIds.has(node.id);
  return `<li class="timeline-item" data-timeline-id="${esc(node.id)}" data-timeline-depth="${depth}">
   <div class="campaign-flow-step" draggable="true" data-timeline-drag="${esc(node.id)}"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
@@ -114,25 +131,26 @@ function defaultCollapsedTimelineIds(nodes=[]){
  visit(nodes);return hidden
 }
 function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
+ if(node.automatic)return linkedTimelineHtml(node,index,depth,collapsedIds);
  const sub=Array.isArray(node.children)?node.children:[],collapsed=collapsedIds.has(node.id);
  return `<li class="timeline-item" data-timeline-id="${esc(node.id)}"><div class="campaign-flow-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
  <div class="campaign-flow-card"><span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>
  ${sub.length?`<div class="campaign-flow-actions"><button type="button" class="secondary timeline-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${sub.length}" aria-expanded="${!collapsed}">${collapsed?'Mostrar':'Ocultar'} ${sub.length} ${sub.length===1?'subitem':'subitens'}</button></div>`:''}</div></div>
  ${sub.length?`<ol class="timeline-children" ${collapsed?'hidden':''}>${sub.map((child,i)=>readonlyTimelineNode(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}</li>`;
 }
-function flow(c,view='list',collapsedIds=null,{readOnly=false}={}){
- const nodes=c.timelineNodes||[],mode=view==='flowchart'?'flowchart':'list';
+function flow(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
+ const nodes=projectCampaignTimeline(c,adventures),mode=view==='flowchart'?'flowchart':'list';
  collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds,{readOnly}):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>readOnly?readonlyTimelineNode(n,i,0,collapsedIds):nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  ${readOnly?'':`<div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>`}
  </section>`
 }
-export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null,{readOnly=false}={}){
+export function renderStructuredSection(c,npcs,id,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
  if(id==='npcs')return roster(c,npcs,{readOnly});
  if(id==='locais')return bullets(c,'locais','Locais importantes','importantLocations',{readOnly});
 
- if(id==='linha-tempo')return flow(c,view,collapsedIds,{readOnly});
+ if(id==='linha-tempo')return flow(c,view,collapsedIds,{readOnly,adventures});
  return''
 }
 export function renderStructuredDetails(c,npcs,{readOnly=false}={}){
@@ -146,8 +164,8 @@ export function renderStructuredDetails(c,npcs,{readOnly=false}={}){
   </div>
  </div>`
 }
-export function renderTimeline(c,view='list',collapsedIds=null,{readOnly=false}={}){return flow(c,view,collapsedIds,{readOnly})}
-export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
+export function renderTimeline(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){return flow(c,view,collapsedIds,{readOnly,adventures})}
+export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],save,feedback}){
  let timelineView='list';
  const collapsedTimelineIds=defaultCollapsedTimelineIds(getCampaign().timelineNodes||[]);
  const sectionFor=field=>field==='importantLocations'?'locais':'missoes';
@@ -155,7 +173,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
  const refresh=id=>{
   const previous=document.getElementById(id);if(!previous)return;
   const template=document.createElement('template');
-  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list',collapsedTimelineIds);
+  template.innerHTML=renderStructuredSection(getCampaign(),getNpcs(),id,id==='linha-tempo'?timelineView:'list',collapsedTimelineIds,{adventures:getAdventures()});
   const next=template.content.firstElementChild;previous.replaceWith(next);hydrateMediaImages(next).catch(()=>{})
  };
  const persist=(patch,id,message,render=true)=>{
@@ -366,7 +384,7 @@ export function bindStructuredDetails({getCampaign,getNpcs,save,feedback}){
   if(!info||!target)return null;
   if(info.kind==='timeline'){
    const item=target.closest('.timeline-item');
-   if(!item||!item.closest('#linha-tempo'))return null;
+   if(!item||!item.closest('#linha-tempo')||item.dataset.timelineAutomatic==='true')return null;
    return{item,position:dropLocation(item,y),id:item.dataset.timelineId}
   }
   const item=target.closest('.campaign-bullet-entry');
