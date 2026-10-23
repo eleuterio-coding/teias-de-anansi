@@ -140,7 +140,8 @@ function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
 }
 function flow(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={}){
  const nodes=projectCampaignTimeline(c,adventures),mode=view==='flowchart'?'flowchart':'list';
- collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
+ // Registros vinculados começam expandidos; recolher por padrão só eventos manuais.
+ collapsedIds=collapsedIds??defaultCollapsedTimelineIds(c.timelineNodes||[]);
  return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds,{readOnly}):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>readOnly?readonlyTimelineNode(n,i,0,collapsedIds):nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  ${readOnly?'':`<div class="campaign-add-line"><label>Novo evento<input data-new-timeline autocomplete="off" maxlength="2000"></label><button type="button" data-timeline-add-root>Adicionar evento</button></div>`}
