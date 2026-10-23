@@ -122,7 +122,6 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  });
  const extras=[
   ['Cenas','cenas',arr(active.scenes),sc=>`<article class="story-card"><strong>${esc(sc.title)}</strong></article>`],
-  ['Monstros','monstros',arr(active.monsters),m=>`<article class="story-card"><strong>${esc(m.name)}</strong></article>`]
  ];
  for(const [heading,id,rows,renderer] of extras){
   const tpl=document.createElement('template');tpl.innerHTML=simpleSection(heading,rows,renderer);
@@ -137,7 +136,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
  wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);
