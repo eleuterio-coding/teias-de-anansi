@@ -90,11 +90,11 @@ function bullets(c,id,title,field,{readOnly=false}={}){
 function linkedTimelineHtml(node,index,depth=0,collapsedIds=new Set()){
  const sub=node.children||[],hasChildren=sub.length>0,collapsed=collapsedIds.has(node.id);
  const kind=node.kind==='session'?'Sessão':'Aventura',id=esc(node.id);
- const title=`<span class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span><strong class="campaign-linked-name">${esc(node.text)}</strong></span>`;
- // A sessão é um link de card inteiro; pais com filhos expandem por clique no card.
+ const title=`<span class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span><a class="campaign-linked-name campaign-timeline-title-link" href="${esc(node.href)}" aria-label="Abrir ${kind}: ${esc(node.text)}">${esc(node.text)}</a></span>`;
+ // O título abre a entidade; a superfície do card com filhos alterna a ramificação.
  const card=hasChildren
   ?`<div class="campaign-flow-card campaign-linked-card timeline-card-has-children" data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens.">${title}${timelineDisclosure(node,collapsed)}</div>`
-  :`<a class="campaign-flow-card campaign-linked-card campaign-linked-link-card" href="${esc(node.href)}" aria-label="Abrir ${kind}: ${esc(node.text)}">${title}</a>`;
+  :`<div class="campaign-flow-card campaign-linked-card">${title}</div>`;
  return `<li class="timeline-item timeline-item-linked" data-timeline-id="${id}" data-timeline-depth="${depth}" data-timeline-automatic="true">
  <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>${card}</div>
  ${hasChildren?`<ol class="timeline-children" id="timeline-list-children-${id}" aria-label="Sessões de ${esc(node.text)}" ${collapsed?'hidden':''}>${sub.map((child,i)=>linkedTimelineHtml(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}
