@@ -37,34 +37,28 @@ test('Locais permitem editar nomes sem exibir Atos antigos',async({page})=>{
  expect(persisted.importantLocations).toContain('Sharn revisitada');
  expect(persisted.activeMissions).toBe('Encontrar a Coroa');
 });
-test('Linha do tempo permite editar texto, criar subitem, rearranjar e persistir hierarquia',async({page})=>{
+test('Linha do tempo preserva eventos legados, edita e organiza sem botão de criação',async({page})=>{
  await page.goto('/mesa.html?id=edit-tree-test');
  const area=page.locator('#linha-tempo');
- await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(2);
- await area.locator('.timeline-tree > .timeline-item').first().locator('[data-timeline-text]').first().fill('Chegada à Citadela');
- await area.locator('.timeline-tree > .timeline-item').first().locator('[data-timeline-text]').first().press('Tab');
- page.once('dialog',dialog=>dialog.accept('Encontro com o guarda'));
- await area.locator('.timeline-tree > .timeline-item').first().locator('[data-timeline-add-child]').first().click();
- await expect(area.locator('.timeline-tree > .timeline-item').first().locator('.timeline-children > .timeline-item')).toHaveCount(1);
- const nested=area.locator('.timeline-children [data-timeline-text]').first();
- await nested.fill('Encontro com o guarda ferido');
- await nested.press('Tab');
- await area.locator('[data-new-timeline]').fill('Chegada dos reforços');
- await area.locator('[data-timeline-add-root]').click();
- await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(3);
- const handle=area.locator('.timeline-tree > .timeline-item').nth(2).locator('[data-timeline-drag]').first();
- const destination=area.locator('.timeline-tree > .timeline-item').nth(1).locator('.campaign-flow-card').first();
- await handle.dragTo(destination);
- await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(2);
- await expect(area.locator('.timeline-tree > .timeline-item').nth(1).locator('.timeline-children > .timeline-item')).toHaveCount(1);
- let data=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
- expect(data.timelineNodes).toHaveLength(2);
- expect(data.timelineNodes[1].children[0].text).toBe('Chegada dos reforços');
- expect(data.timelineNodes[0].children[0].text).toBe('Encontro com o guarda ferido');
+ const roots=area.locator('.timeline-tree > .timeline-item');
+ await expect(roots).toHaveCount(2);
+ await expect(area.locator('[data-timeline-add-root],[data-timeline-add-child],[data-new-timeline]')).toHaveCount(0);
+ await roots.first().locator('[data-timeline-text]').first().fill('Chegada à Citadela');
+ await roots.first().locator('[data-timeline-text]').first().press('Tab');
+ await roots.nth(1).locator('[data-timeline-move="indent"]').click();
+ await expect(roots).toHaveCount(1);
+ await expect(roots.first().locator(':scope > .timeline-children > .timeline-item')).toHaveCount(1);
+ const data=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
+ expect(data.timelineNodes).toHaveLength(1);
+ expect(data.timelineNodes[0].text).toBe('Chegada à Citadela');
+ expect(data.timelineNodes[0].children[0].text).toBe('Descoberta do portal');
  await page.reload();
- await expect(page.locator('#linha-tempo .timeline-children > .timeline-item')).toHaveCount(2);
- await expect(page.locator('#linha-tempo [data-timeline-text]').first()).toHaveValue('Chegada à Citadela');
+ await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(1);
+ await expect(area.locator('#timeline-list-children-legacy-timeline-1')).toBeHidden();
+ await area.locator('[data-timeline-card-toggle="legacy-timeline-1"]').click();
+ await expect(area.locator('#timeline-list-children-legacy-timeline-1')).toBeVisible();
 });
+
 test('Controles acessíveis reorganizam subeventos no mobile',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await page.goto('/mesa.html?id=edit-tree-test');
