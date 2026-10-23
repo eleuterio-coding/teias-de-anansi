@@ -1,5 +1,5 @@
-import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261022-roster2';
-import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20261016-current-status2';
+import{readCampaigns,writeCampaigns,updateCampaign,removeCampaign}from'./campaign-state.js?v=20261022-chronicles1';
+import{readAdventures,writeAdventures,removeAdventuresForCampaign}from'./adventure-state.js?v=20261022-chronicles1';
 import{deleteImage,imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows}from'./collaboration-view.js?v=20261016-master-preview1';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
