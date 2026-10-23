@@ -1,0 +1,47 @@
+/* Exploração de Aventuras: escopo isolado para não afetar listas e fichas. */
+#adventure-root .hub-detail-grid>.adventure-exploration{grid-column:1/-1;display:grid;gap:16px;min-width:0}
+.adventure-exploration .explore-title{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}
+.adventure-exploration :is(h2,h3,h4,p){margin-top:0}
+.adventure-exploration .explore-summary{display:flex;flex-wrap:wrap;gap:10px}
+.adventure-exploration .explore-summary span{border:1px solid var(--hub-border,#4a5664);border-radius:10px;padding:10px 14px;background:var(--hub-surface-2,#17293a);font-size:.85rem}
+.adventure-exploration .explore-summary strong{font-size:1.13rem;margin-right:4px}
+.adventure-exploration .explore-toolbar{display:grid;grid-template-columns:1fr 1fr minmax(180px,2fr) auto;gap:10px;align-items:end}
+.adventure-exploration .explore-toolbar label{display:grid;gap:5px;min-width:0}
+.adventure-exploration .explore-view-switch{display:flex;gap:5px;align-items:end}
+.adventure-exploration .explore-map-shell{min-width:0;border:1px solid var(--hub-border,#4a5664);border-radius:12px;padding:12px}
+.adventure-exploration .explore-map{position:relative;max-width:100%;width:max-content;margin:auto;overflow:hidden;border-radius:9px;background:#1a2934}
+.adventure-exploration .explore-map img{max-width:100%;max-height:min(72vh,780px);width:auto;height:auto;display:block;object-fit:contain}
+.adventure-exploration .explore-map-pin{position:absolute;transform:translate(-50%,-50%);min-width:30px;min-height:30px;padding:4px 7px;border-radius:999px;background:#163e57;color:white;border:2px solid #e2efff;font-weight:800;box-shadow:0 2px 9px #0009;z-index:1}
+.adventure-exploration .explore-map-pin:hover,.adventure-exploration .explore-map-pin:focus-visible,.adventure-exploration .explore-map-pin.is-selected{background:#f1d18e;color:#1d2730;z-index:2;outline-offset:2px}
+.adventure-exploration .explore-area-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px}
+.adventure-exploration .explore-area-card{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:12px;border-radius:10px;background:var(--hub-surface-2,#17293a);border:1px solid var(--hub-border,#4a5664)}
+.adventure-exploration .explore-area-card.is-selected{border-color:var(--hub-accent,#88abd0);box-shadow:0 0 0 1px var(--hub-accent,#88abd0)}
+.adventure-exploration .explore-area-card>div:first-child{display:grid;gap:4px;min-width:0}
+.adventure-exploration .explore-area-card small{opacity:.7}
+.adventure-exploration .explore-area-card strong{overflow-wrap:anywhere}
+.adventure-exploration .explore-card-actions{display:flex;align-items:end;flex-direction:column;gap:8px;flex-shrink:0}
+.adventure-exploration .explore-detail{padding:16px;border:1px solid var(--hub-border,#4a5664);border-radius:12px;min-width:0}
+.adventure-exploration .explore-detail-heading,.adventure-exploration .explore-faction-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.adventure-exploration .explore-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.adventure-exploration .explore-fields label{display:grid;align-content:start;gap:5px;min-width:0}
+.adventure-exploration .explore-fields textarea{min-height:72px;resize:vertical}
+.adventure-exploration .explore-fields label:has(textarea){grid-column:1/-1}
+.adventure-exploration .explore-fields .explore-check{display:flex;flex-direction:row;align-items:center;gap:8px;grid-column:1/-1}
+.adventure-exploration .explore-check input{width:auto;min-width:16px;flex:none}
+.adventure-exploration .explore-create,.adventure-exploration .explore-references{border:1px solid var(--hub-border,#4a5664);border-radius:10px;padding:12px;min-width:0}
+.adventure-exploration :is(.explore-create,.explore-references)>summary{cursor:pointer;font-weight:700}
+.adventure-exploration .explore-create-form{display:flex;flex-wrap:wrap;align-items:end;gap:10px;margin-top:12px}
+.adventure-exploration .explore-create-form label{display:grid;gap:5px;flex:1 1 165px;min-width:0}
+.adventure-exploration .explore-reference-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;margin-top:12px}
+.adventure-exploration .explore-reference{min-width:0;max-height:280px;overflow:auto;border:1px solid var(--hub-border,#4a5664);border-radius:8px;padding:8px}
+.adventure-exploration .explore-reference legend{font-weight:700}
+.adventure-exploration .explore-reference label{display:flex;gap:6px;align-items:start;margin:5px 0;font-size:.87rem}
+.adventure-exploration .explore-detail-actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.adventure-exploration .explore-visit-panel{border-top:1px solid var(--hub-border,#4a5664);padding-top:14px}
+.adventure-exploration .explore-history{display:grid;gap:8px;margin-top:12px}
+.adventure-exploration .explore-history-item{border-left:3px solid var(--hub-accent,#88abd0);padding:7px 11px;background:var(--hub-surface-2,#17293a)}
+.adventure-exploration .explore-history-item p{margin:6px 0 0}
+.adventure-exploration .explore-level-grid,.adventure-exploration .explore-faction-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr));gap:12px;margin:10px 0}
+.adventure-exploration .explore-faction-section{min-width:0}
+@media(max-width:850px){.adventure-exploration .explore-toolbar{grid-template-columns:1fr 1fr}.adventure-exploration .explore-toolbar label:nth-child(3){grid-column:1/-1}}
+@media(max-width:550px){.adventure-exploration .explore-toolbar,.adventure-exploration .explore-fields{grid-template-columns:1fr}.adventure-exploration .explore-toolbar label:nth-child(3){grid-column:auto}.adventure-exploration .explore-card-actions{align-items:start}.adventure-exploration .explore-area-card{flex-direction:column;align-items:stretch}.adventure-exploration .explore-map-pin{min-width:26px;min-height:26px;font-size:.75rem}}
