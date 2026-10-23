@@ -1,7 +1,7 @@
 import{rememberAvatars,photoDataUrl,validPortrait}from'./profile-images.js?v=20261021-user1';
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261021-users-admin1';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261022-chronicles1';
 import{effectiveCollaborationSession,masterPreviewMode}from'./collaboration-view.js?v=20261016-master-preview1';
-import{updateAppShellContext}from'./app-shell.js?v=20261021-player-self-profile1';
+import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles1';
 
 const $=id=>document.getElementById(id);
 const input=$('user-avatar-input'),remove=$('user-avatar-remove'),preview=$('user-avatar-preview'),feedback=$('user-avatar-feedback');
