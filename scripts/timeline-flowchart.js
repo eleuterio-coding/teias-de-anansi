@@ -8,22 +8,32 @@ export function timelineViewToggle(mode='list'){
  <button type="button" class="secondary" data-timeline-view="flowchart" aria-pressed="${mode==='flowchart'}">Fluxograma</button>
  </div>`
 }
-// Eventos principais independentes; conexões limitadas à hierarquia de cada evento.
+// Eventos principais independentes; subeventos ligados apenas ao seu pai.
+// Cards com filhos alternam a ramificação. Cards vinculados sem filhos abrem a entidade.
+export function timelineDisclosure(node,collapsed,view='list'){
+ const id=esc(node.id),label=collapsed?'Revelar subitens':'Ocultar subitens';
+ const childrenId=(view==='flowchart'?'timeline-diagram-children-':'timeline-list-children-')+id;
+ return `<button type="button" class="${view==='flowchart'?'hub-diagram-collapse':'secondary timeline-collapse'} timeline-icon-toggle" data-timeline-toggle="${id}" data-timeline-count="${array(node.children).length}" aria-label="${label}" title="${label}" aria-expanded="${!collapsed}" aria-controls="${childrenId}"><span class="timeline-toggle-chevron" aria-hidden="true"></span></button>`;
+}
+export const timelineChildrenIndicator=()=>'<span class="timeline-child-indicator" aria-hidden="true"></span>';
 function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly=false}={}){
- const children=array(node.children),collapsed=collapsedIds.has(node.id);
- const toggle=children.length
-  ?`<button type="button" class="hub-diagram-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${children.length}" aria-expanded="${!collapsed}" aria-controls="timeline-diagram-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${children.length} ${children.length===1?'subitem':'subitens'}</button>`
-  :'';
+ const children=array(node.children),hasChildren=children.length>0,collapsed=collapsedIds.has(node.id);
+ const kind=node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento';
+ const title=esc(node.text),id=esc(node.id);
+ const linked=Boolean(node.automatic&&node.href),isLink=linked&&!hasChildren;
+ const nodeClass=`hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}${hasChildren?' timeline-card-has-children':''}${isLink?' hub-diagram-node-link':''}`;
+ const interaction=hasChildren?` data-diagram-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${title}. Enter ou Espaço para revelar ou ocultar subitens."`:'';
+ const tag=isLink?'a':'div',linkAttrs=isLink?` href="${esc(node.href)}" aria-label="Abrir ${kind}: ${title}"`:'';
+ const controls=(readOnly||node.automatic?'':`<button type="button" class="hub-diagram-visibility" data-timeline-visibility="${id}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${id}" aria-label="Editar evento: ${title}">Editar</button>`);
+ const toggle=hasChildren?timelineDisclosure(node,collapsed,'flowchart'):'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
- <div class="hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}" data-diagram-event="${esc(node.id)}"${children.length?` data-diagram-toggle="${esc(node.id)}" tabindex="0" role="group" aria-label="${node.automatic?(node.kind==='session'?'Sessão':'Aventura'):'Evento'}: ${esc(node.text)}. Pressione Enter ou Espaço para expandir ou recolher os subitens."`:``}>
- <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
- ${node.automatic?`<a class="hub-diagram-linked-name" href="${esc(node.href)}">${esc(node.text)}</a>`:`<strong>${esc(node.text)}</strong>`}
- <div class="hub-diagram-actions">
- ${readOnly||node.automatic?'':`<button type="button" class="hub-diagram-visibility" data-timeline-visibility="${esc(node.id)}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>`}${toggle}
- </div>
- </div>
- ${children.length?`<div id="timeline-diagram-children-${esc(node.id)}" class="hub-diagram-children" role="group" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${children.map(child=>campaignNode(child,depth+1,collapsedIds,null,{readOnly})).join('')}</div>`:''}
- </div>`
+ <${tag} class="${nodeClass}" data-diagram-event="${id}"${interaction}${linkAttrs}>
+ <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${kind}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}${hasChildren?timelineChildrenIndicator():''}</div>
+ <strong>${title}</strong>
+ ${controls||toggle?`<div class="hub-diagram-actions">${controls}${toggle}</div>`:''}
+ </${tag}>
+ ${hasChildren?`<div id="timeline-diagram-children-${id}" class="hub-diagram-children" role="group" aria-label="Subitens de ${title}" ${collapsed?'hidden':''}>${children.map(child=>campaignNode(child,depth+1,collapsedIds,null,{readOnly})).join('')}</div>`:''}
+ </div>`;
 }
 export function renderCampaignTimelineDiagram(nodes=[],collapsedIds=new Set(),{readOnly=false}={}){
  const rows=array(nodes);
