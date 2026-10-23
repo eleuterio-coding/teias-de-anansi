@@ -4,8 +4,8 @@ test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
  await page.addInitScript(()=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'test-master',username:'rafael',isMaster:true,memberships:[]}));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([{id:'cmp-explore',name:'Mesa de teste',dmName:'Rafael',sessions:[],members:[],npcs:[],locations:[]}]));
-  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([{id:'adv-explore',campaignId:'cmp-explore',title:'Aventura para testar exploração',status:'planned',chapters:[],scenes:[]}]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([{id:'cmp-explore',name:'Mesa de teste',dmName:'Rafael',sessions:[],members:[],npcs:[],locations:[]}]));
+  if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([{id:'adv-explore',campaignId:'cmp-explore',title:'Aventura para testar exploração',status:'planned',chapters:[],scenes:[]}]));
  });
 });
 
