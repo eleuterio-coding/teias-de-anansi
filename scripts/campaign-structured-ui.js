@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram,timelineDisclosure,timelineChildrenIndicator}from'./timeline-flowchart.js?v=20261023-cards-toggle2';
+import{timelineViewToggle,renderCampaignTimelineDiagram,timelineDisclosure}from'./timeline-flowchart.js?v=20261023-cards-toggle2';
 import{projectCampaignTimeline}from'./campaign-timeline-projection.js?v=20261023-linked-timeline1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
@@ -93,7 +93,7 @@ function linkedTimelineHtml(node,index,depth=0,collapsedIds=new Set()){
  const title=`<span class="campaign-linked-title"><span class="campaign-linked-kind">${kind}</span><strong class="campaign-linked-name">${esc(node.text)}</strong></span>`;
  // A sessão é um link de card inteiro; pais com filhos expandem por clique no card.
  const card=hasChildren
-  ?`<div class="campaign-flow-card campaign-linked-card timeline-card-has-children" data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens.">${title}${timelineChildrenIndicator()}${timelineDisclosure(node,collapsed)}</div>`
+  ?`<div class="campaign-flow-card campaign-linked-card timeline-card-has-children" data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens.">${title}${timelineDisclosure(node,collapsed)}</div>`
   :`<a class="campaign-flow-card campaign-linked-card campaign-linked-link-card" href="${esc(node.href)}" aria-label="Abrir ${kind}: ${esc(node.text)}">${title}</a>`;
  return `<li class="timeline-item timeline-item-linked" data-timeline-id="${id}" data-timeline-depth="${depth}" data-timeline-automatic="true">
  <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>${card}</div>
@@ -108,7 +108,7 @@ function nodeHtml(node,index,depth=0,collapsedIds=new Set()){
    <div class="campaign-flow-card${hasChildren?' timeline-card-has-children':''}"${hasChildren?` data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens."`:''}>
     <span class="campaign-reorder-grip timeline-reorder-grip" aria-hidden="true" title="Segure e arraste para mover">⠿</span>
     <input class="timeline-node-text" data-timeline-text="${id}" value="${esc(node.text)}" maxlength="2000" aria-label="Texto do evento">
-    ${hasChildren?timelineChildrenIndicator():''}
+    
     <div class="campaign-flow-actions">
       <label class="campaign-disclosure-toggle"><input type="checkbox" data-visible-event="${id}" ${node.visibleToPlayers===true?'checked':''}><span>Mostrar aos jogadores</span></label>
       ${hasChildren?timelineDisclosure(node,collapsed):''}
@@ -136,7 +136,7 @@ function readonlyTimelineNode(node,index,depth=0,collapsedIds=new Set()){
  const sub=node.children||[],hasChildren=sub.length>0,collapsed=collapsedIds.has(node.id),id=esc(node.id);
  return `<li class="timeline-item" data-timeline-id="${id}"><div class="campaign-flow-step"><span class="campaign-flow-node" aria-hidden="true">${depth?'•':index+1}</span>
  <div class="campaign-flow-card${hasChildren?' timeline-card-has-children':''}"${hasChildren?` data-timeline-card-toggle="${id}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para revelar subitens."`:''}>
- <span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>${hasChildren?timelineChildrenIndicator():''}
+ <span class="timeline-node-text campaign-readonly-timeline-text">${esc(node.text)}</span>
  ${hasChildren?`<div class="campaign-flow-actions">${timelineDisclosure(node,collapsed)}</div>`:''}</div></div>
  ${hasChildren?`<ol class="timeline-children" id="timeline-list-children-${id}" ${collapsed?'hidden':''}>${sub.map((child,i)=>readonlyTimelineNode(child,i,depth+1,collapsedIds)).join('')}</ol>`:''}</li>`;
 }
