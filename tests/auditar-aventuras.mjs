@@ -4,6 +4,7 @@ import{ADVENTURE_KEY,ADVENTURE_SCHEMA,sanitizeAdventure,readAdventures,writeAdve
 import{sanitizeCampaign,addCampaignNpc,addCampaignLocation,removeCampaignLocation}from'../scripts/campaign-state.js';
 import{reconcileAdventureCampaignRefs}from'../scripts/adventure-integrity.js';
 import{revealedAdventureProjection}from'../scripts/collaboration-model.js';
+import{deriveAdventureTimelineEvents}from'../scripts/timeline-flowchart.js';
 
 class MemoryStorage{constructor(){this.map=new Map}getItem(key){return this.map.has(key)?this.map.get(key):null}setItem(key,value){this.map.set(key,String(value))}}
 
@@ -32,6 +33,16 @@ r=startAdventureScene(list,adventureId,sceneId);assert.equal(r.ok,true);list=r.l
 r=addAdventureScene(list,adventureId,{title:'Segunda cena'});list=r.list;const scene2=r.entity.id;r=startAdventureScene(list,adventureId,scene2);list=r.list;r=skipAdventureScene(list,adventureId,scene2);list=r.list;assert.equal(r.adventure.activeSceneId,null);
 
 r=setAdventureClueStatus(list,adventureId,clueId,'discovered');list=r.list;assert.equal(r.entity.status,'discovered');r=setAdventureHandoutRevealed(list,adventureId,materialId,true);list=r.list;assert.equal(r.entity.revealed,true);r=setAdventureTreasureStatus(list,adventureId,treasureId,'found');list=r.list;assert.equal(r.entity.status,'found');r=setAdventureMissionStatus(list,adventureId,missionId,'completed');list=r.list;assert.equal(r.entity.status,'completed');r=addAdventureTimelineEntry(list,adventureId,{title:'Registro manual',text:'Teste'});list=r.list;assert.equal(r.entity.automatic,false);
+const autoTimeline=deriveAdventureTimelineEvents(r.adventure);
+assert.equal(autoTimeline.filter(event=>event.virtualScene).length,2,'Toda Cena cadastrada deve aparecer automaticamente na Linha do Tempo.');
+assert.equal(autoTimeline.filter(event=>event.title==='Registro manual').length,1,'Registros manuais permanecem na Linha do Tempo.');
+assert.equal(autoTimeline.filter(event=>event.automatic&&event.type==='scene'&&!event.virtualScene).length,0,'Transições antigas de Cena não devem duplicar a Cena na visualização.');
+assert.equal(autoTimeline.find(event=>event.sceneId===sceneId&&event.virtualScene)?.sceneStatus,'Concluída');
+assert.equal(autoTimeline.find(event=>event.sceneId===scene2&&event.virtualScene)?.sceneStatus,'Ignorada');
+const renamedTimeline=deriveAdventureTimelineEvents({...r.adventure,scenes:r.adventure.scenes.map(scene=>scene.id===sceneId?{...scene,title:'Cena renomeada'}:scene)});
+assert.equal(renamedTimeline.find(event=>event.sceneId===sceneId&&event.virtualScene)?.title,'Cena renomeada','O título da Cena muda na Linha do Tempo sem recriar o evento.');
+assert.equal(r.adventure.timelineEvents.filter(event=>event.title==='Registro manual').length,1,'A derivação não pode alterar os dados salvos.');
+
 
 const malformed=sanitizeAdventure({campaignId:'cmp-1',characterIds:['pc-1'],npcIds:['n1'],locationIds:['l1'],chapters:[{id:'c1',title:'Um'}],missions:[{id:'m1',title:'M',characterIds:['pc-1','pc-x']}],clues:[{id:'q1',title:'Q',npcId:'n-x',locationId:'l-x',discoveredByCharacterId:'pc-x'}],treasures:[{id:'t1',name:'T',recipientCharacterId:'pc-x'}],scenes:[{id:'s1',title:'Cena 1',status:'active',chapterId:'c1',npcIds:['n1','n-x'],locationId:'l1'},{id:'s2',title:'Cena 2',status:'active',chapterId:'inexistente'}],activeSceneId:'s1'});assert.equal(malformed.scenes.filter(x=>x.status==='active').length,1);assert.equal(malformed.scenes.find(x=>x.id==='s2').chapterId,null);assert.deepEqual(malformed.missions[0].characterIds,['pc-1']);assert.equal(malformed.clues[0].npcId,null);assert.equal(malformed.clues[0].locationId,null);assert.equal(malformed.treasures[0].recipientCharacterId,null);
 
