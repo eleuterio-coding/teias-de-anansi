@@ -1,6 +1,6 @@
 import{numberedSessionTitle}from'./narrative-labels.js';
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const statusLabels={planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento'};
+const statusLabels={completed:'Concluída',cancelled:'Cancelada',planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento'};
 const statusPriority={current:0,active:1,next:2,planned:3};
 export function findCurrentCampaignSession(campaign){
  const sessions=Array.isArray(campaign?.sessions)?campaign.sessions:[];
@@ -49,15 +49,15 @@ function nextSessionBackdrop(session){
  if(fallback)return `<img class="campaign-next-backdrop" src="${escapeHtml(fallback)}" alt="" aria-hidden="true">`;
  return'';
 }
-export function renderNextCampaignSession(campaign,{canPlan=false}={}){
- const current=findCurrentCampaignSession(campaign),next=current||findNextCampaignSession(campaign),isCurrent=Boolean(current),heading=isCurrent?'Sessão Atual':'Próxima Sessão',id=encodeURIComponent(campaign?.id||''),base='sessoes.html?campaign='+id;
+export function renderNextCampaignSession(campaign,{canPlan=false,adventures=[]}={}){
+ const current=findCurrentCampaignSession(campaign),next=current||findNextCampaignSession(campaign),id=encodeURIComponent(campaign?.id||''),base='sessoes.html?campaign='+id;const linked=Array.isArray(adventures)?adventures.find(a=>a.id===next?.adventureId):null;const heading=linked?'Aventura Atual - '+(Number(linked.order)?'Aventura '+linked.order+' · ':'')+(linked.title||''):'Planejamento de Campanha';
  if(!next)return`<section id="proxima-sessao" class="card campaign-next-highlight" aria-labelledby="proxima-sessao-titulo">
-  <div class="campaign-next-content"><span class="campaign-next-kicker">PLANEJAMENTO DA CAMPANHA</span><h2 id="proxima-sessao-titulo">${heading}</h2>
+  <div class="campaign-next-content"><span class="campaign-next-kicker">SESSÃO EM DESTAQUE</span><h2 id="proxima-sessao-titulo">${escapeHtml(heading)}</h2>
   <p class="campaign-next-empty">Nenhuma próxima sessão definida.</p></div><a class="btn campaign-next-action" href="${base}">${canPlan?'Planejar sessão':'Ver sessões'}</a>
  </section>`;
  const date=readableSessionDate(next.date),backdrop=nextSessionBackdrop(next);
  return`<section id="proxima-sessao" class="card campaign-next-highlight" aria-labelledby="proxima-sessao-titulo"${backdrop?' data-has-session-cover="true"':''}>
-  ${backdrop}<div class="campaign-next-content"><span class="campaign-next-kicker">PLANEJAMENTO DA CAMPANHA</span><h2 id="proxima-sessao-titulo">${heading}</h2>
+  ${backdrop}<div class="campaign-next-content"><span class="campaign-next-kicker">PLANEJAMENTO DA CAMPANHA</span><h2 id="proxima-sessao-titulo">${escapeHtml(heading)}</h2>
   <p class="campaign-next-name">${escapeHtml(numberedSessionTitle(next))}</p>
   <div class="campaign-next-meta"><span class="campaign-next-status status-${escapeHtml(next.status||'planned')}">${escapeHtml(statusLabels[next.status]||'Planejada')}</span>${date?`<span class="campaign-next-date"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><time datetime="${escapeHtml(next.date)}">${escapeHtml(date)}</time></span>`:''}</div>
   </div><a class="btn campaign-next-action" href="${base}&id=${encodeURIComponent(next.id||'')}"><span class="campaign-next-action-copy"><strong>Abrir sessão</strong></span><span class="campaign-next-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
