@@ -62,6 +62,13 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  await expect(page.locator('#missoes .story-card')).toHaveCount(1);
  await expect(page.locator('#npcs .story-card')).toHaveCount(1);
  await expect(page.locator('#cenas .story-card')).toHaveCount(1);
+ await expect(page.locator('#exploracao > .explore-title h2')).toHaveText('Locais');
+ await expect(page.locator('#mapas > .explore-title h2')).toHaveText('Mapas');
+ await expect(page.locator('#cenas [data-adventure-visible="scenes"]')).toHaveCount(1);
+ await expect(page.locator('#npcs [data-adventure-visible],#missoes [data-adventure-visible],#faccoes [data-ex-publish],#monstros [data-adventure-visible]')).toHaveCount(0);
+ await expect(page.locator('#cenas [data-scene-field="areaId"]')).toHaveCount(1);
+ await page.locator('#cenas [data-adventure-visible="scenes"]').check();
+ await expect.poll(async()=> (await getAdventure(page)).scenes[0].visibleToPlayers).toBe(true);
  expect(errors.filter(message=>/ReferenceError|bindAdventureNotes/.test(message))).toEqual([]);
 });
 
@@ -89,6 +96,10 @@ test('cena existente permite editar, iniciar, concluir e preservar o conteúdo',
  await expect(page.locator('#linha-tempo .timeline-row')).toHaveCount(2);
  await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
  await expect(page.locator('#linha-tempo .adventure-timeline-list')).toContainText('Registo manual');
+ await expect(page.locator('#linha-tempo [data-adventure-visible="timelineEvents"]')).toHaveCount(1);
+ await page.locator('#linha-tempo [data-adventure-visible="timelineEvents"]').check();
+ await expect.poll(async()=> (await getAdventure(page)).timelineEvents.some(event=>event.title==='Registo manual'&&event.visibleToPlayers===true)).toBe(true);
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene [data-adventure-visible]')).toHaveCount(0);
  await page.locator('#linha-tempo [data-timeline-view="flowchart"]').click();
  await expect(page.locator('#linha-tempo .hub-diagram-sequence-step')).toHaveCount(2);
  await expect(page.locator('#linha-tempo .hub-diagram-kind').first()).toContainText(/Cena|Evento/);
