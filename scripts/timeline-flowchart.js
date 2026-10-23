@@ -15,7 +15,6 @@ export function timelineDisclosure(node,collapsed,view='list'){
  const childrenId=(view==='flowchart'?'timeline-diagram-children-':'timeline-list-children-')+id;
  return `<button type="button" class="${view==='flowchart'?'hub-diagram-collapse':'secondary timeline-collapse'} timeline-icon-toggle" data-timeline-toggle="${id}" data-timeline-count="${array(node.children).length}" aria-label="${label}" title="${label}" aria-expanded="${!collapsed}" aria-controls="${childrenId}"><span class="timeline-toggle-chevron" aria-hidden="true"></span></button>`;
 }
-export const timelineChildrenIndicator=()=>'<span class="timeline-child-indicator" aria-hidden="true"></span>';
 function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly=false}={}){
  const children=array(node.children),hasChildren=children.length>0,collapsed=collapsedIds.has(node.id);
  const kind=node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento';
@@ -28,7 +27,7 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly
  const toggle=hasChildren?timelineDisclosure(node,collapsed,'flowchart'):'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
  <${tag} class="${nodeClass}" data-diagram-event="${id}"${interaction}${linkAttrs}>
- <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${kind}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}${hasChildren?timelineChildrenIndicator():''}</div>
+ <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${kind}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
  <strong>${title}</strong>
  ${controls||toggle?`<div class="hub-diagram-actions">${controls}${toggle}</div>`:''}
  </${tag}>
