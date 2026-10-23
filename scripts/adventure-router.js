@@ -1,6 +1,6 @@
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
-import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{renderAdventureTimelineDiagram,deriveAdventureTimelineEvents}from'./timeline-flowchart.js?v=20261023-player-visibility6';
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
@@ -90,7 +90,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  for(const [name,value]of statistics){const metric=document.createElement('div');metric.className='metric';const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=String(value);metric.append(label,count);summary.append(metric)}
  const planTemplate=document.createElement('template');planTemplate.innerHTML=renderNextCampaignSession(campaignRow.campaign,{canPlan:false,adventures:sharedAdventures()});const plan=planTemplate.content.firstElementChild;
  detailGrid.classList.remove('story-grid','player-adventure-grid');detailGrid.classList.add('campaign-sections','campaign-editor-grid','hub-detail-grid');
- const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Áreas conhecidas':'areas-conhecidas','Facções':'faccoes','Crônica da exploração':'cronica-exploracao','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
+ const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Áreas conhecidas':'locais','Facções':'faccoes','Crônica da exploração':'cronica-exploracao','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
  for(const section of detailGrid.querySelectorAll(':scope > section')){
   const title=section.querySelector('h3')?.textContent?.trim()||'';
   section.id=sectionNames[title]||'';section.classList.add('campaign-editor-card');
@@ -129,14 +129,17 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
   const h=section.querySelector('h3');if(h){const h2=document.createElement('h2');h2.textContent=h.textContent;h.replaceWith(h2)}
   detailGrid.append(section)
  }
- const timeline=document.createElement('template');timeline.innerHTML=renderTimeline(active,'list',null,{readOnly:true});
+ const shownEvents=deriveAdventureTimelineEvents(active);
+ const timeline=document.createElement('template');
+ timeline.innerHTML='<section id="linha-tempo" class="card campaign-editor-card"><h2>Linha do Tempo</h2>'+
+  (shownEvents.length?renderAdventureTimelineDiagram(shownEvents,{readOnly:true}):'<div class="story-empty">Nenhum evento publicado nesta Aventura.</div>')+'</section>';
  if(timeline.content.firstElementChild)detailGrid.append(timeline.content.firstElementChild);
  if(active.dmNoteEntries?.length){const notes=document.createElement('template');notes.innerHTML=noteSection(active.dmNoteEntries,{readOnly:true});detailGrid.append(notes.content.firstElementChild)}
- for(const id of['pistas','materiais','locais','tesouros','capitulos'])detailGrid.querySelector('#'+id)?.remove();
+ for(const id of['pistas','materiais','tesouros','capitulos'])detailGrid.querySelector('#'+id)?.remove();
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['locais','Locais'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
  wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);
