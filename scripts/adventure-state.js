@@ -1,4 +1,4 @@
-import{sanitizeCampaign}from'./campaign-state.js?v=20261019-location-images1';
+import{sanitizeCampaign}from'./campaign-state.js?v=20261022-chronicles2';
 export const ADVENTURE_KEY='hub-rpg:adventures:v1';
 export const ADVENTURE_SCHEMA='hub-rpg/adventure/v2';
 export const ADVENTURE_STATUS=Object.freeze(['planned','active','paused','completed','archived']);
