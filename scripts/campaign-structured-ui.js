@@ -207,11 +207,11 @@ export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],
  root.addEventListener('click',event=>{
   const section=event.target.closest('#npcs,#locais,#missoes,#linha-tempo');
   if(!section)return;
-  // O cartão completo expande/recolhe a ramificação. Botões internos
-  // continuam executando exclusivamente suas próprias ações.
-  const diagramCard=event.target.closest('.hub-diagram-node[data-diagram-toggle]');
-  if(section.id==='linha-tempo'&&diagramCard&&!event.target.closest('button,a,input,textarea,select,[contenteditable="true"]')){
-   diagramCard.querySelector(':scope > .hub-diagram-actions > [data-timeline-toggle]')?.click();
+  // Qualquer ponto não interativo de um card com filhos revela/recolhe os subitens.
+  // Links integrais das Sessões não interceptam a navegação.
+  const expandable=event.target.closest('.campaign-flow-card[data-timeline-card-toggle],.hub-diagram-node[data-diagram-toggle]');
+  if(section.id==='linha-tempo'&&expandable&&!event.target.closest('button,a,input,textarea,select,label,[contenteditable="true"]')){
+   expandable.querySelector('[data-timeline-toggle]')?.click();
    return;
   }
   const target=event.target.closest('button');if(!target)return;
@@ -231,8 +231,8 @@ export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],
    children.hidden=closing;
    if(closing)collapsedTimelineIds.add(id);else collapsedTimelineIds.delete(id);
    target.setAttribute('aria-expanded',String(!closing));
-   const count=Number(target.dataset.timelineCount);
-   target.textContent=`${closing?'Mostrar':'Ocultar'} ${count} ${count===1?'subitem':'subitens'}`;
+   const label=closing?'Revelar subitens':'Ocultar subitens';
+   target.setAttribute('aria-label',label);target.title=label;
    return
   }else if(target.matches('[data-timeline-view]')){
    timelineView=target.dataset.timelineView==='flowchart'?'flowchart':'list';
@@ -278,13 +278,6 @@ export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],
    persist(field==='importantLocations'?locationPatch(reordered):{[field]:reordered},id,'Ordem atualizada.');
    const moved=document.querySelector('#'+id+' [data-line-index="'+adjacent+'"]');
    showReorderConfirmation(id,moved);
-  }else if(target.matches('[data-timeline-add-root],[data-timeline-add-child]')){
-   const parent=target.dataset.timelineAddChild||null;
-   let name=parent?window.prompt('Nome do subevento:'):clean(section.querySelector('[data-new-timeline]')?.value);
-   if(!name)return;
-   const added=addTimelineNode(c.timelineNodes,name,parent);if(!added)return;
-   if(parent)collapsedTimelineIds.delete(parent);
-   saveTree(added.nodes,'Evento adicionado.')
   }else if(target.matches('[data-timeline-delete]')){
    const id=target.dataset.timelineDelete,node=findNode(c.timelineNodes,id);
    if(node?.children?.length&&!confirm('Remover este evento e todos os seus subeventos?'))return;
@@ -328,16 +321,15 @@ export function bindStructuredDetails({getCampaign,getNpcs,getAdventures=()=>[],
  });
  root.addEventListener('keydown',event=>{
   // O cartão também funciona com teclado sem interceptar Editar/Mostrar.
-  const diagramCard=event.target.closest?.('.hub-diagram-node[data-diagram-toggle]');
+  const diagramCard=event.target.closest?.('.hub-diagram-node[data-diagram-toggle],.campaign-flow-card[data-timeline-card-toggle]');
   if(diagramCard&&event.target===diagramCard&&['Enter',' '].includes(event.key)){
    event.preventDefault();
-   diagramCard.querySelector(':scope > .hub-diagram-actions > [data-timeline-toggle]')?.click();
+   diagramCard.querySelector('[data-timeline-toggle]')?.click();
    return;
   }
-  if(event.key!=='Enter'||!event.target.matches('[data-new-line],[data-new-timeline],[data-edit-line],[data-timeline-text]'))return;
+  if(event.key!=='Enter'||!event.target.matches('[data-new-line],[data-edit-line],[data-timeline-text]'))return;
   event.preventDefault();
   if(event.target.matches('[data-new-line]'))event.target.closest('section').querySelector('[data-add-line]')?.click();
-  else if(event.target.matches('[data-new-timeline]'))event.target.closest('section').querySelector('[data-timeline-add-root]')?.click();
   else event.target.blur()
  });
  let dragging=null,touch=null,pen=null,mouse=null,floating=null;
