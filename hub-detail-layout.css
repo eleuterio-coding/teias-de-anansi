@@ -289,3 +289,12 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 }
 
 
+
+/* Alças de arrasto e estados de destino no mesmo idioma visual do editor de Campanha. */
+#adventure-root .campaign-reorder-grip{display:inline-grid;place-items:center;flex:0 0 28px;min-width:28px;height:36px;padding:0;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--hub-accent-2,#91cfff);font-size:1.35rem;font-weight:800;line-height:1;touch-action:none;user-select:none;cursor:grab}
+#adventure-root .campaign-reorder-grip:hover,#adventure-root .campaign-reorder-grip:focus-visible{border-color:var(--hub-border,#456687);background:var(--hub-surface-2,#17283b)}
+#adventure-root .campaign-reorder-grip:active{cursor:grabbing}
+#adventure-root .campaign-bullet-entry.adventure-dragging{opacity:.5;border-color:var(--hub-accent,#379cff);cursor:grabbing}
+#adventure-root .campaign-bullet-entry.adventure-drop-target{border-color:var(--hub-accent,#379cff);box-shadow:inset 0 3px 0 var(--hub-accent,#379cff)}
+#adventure-root .campaign-disclosure-toggle{display:inline-flex;align-items:center;justify-content:flex-start;gap:7px;flex:none;margin:0;padding:5px 8px;min-height:32px;border:1px solid var(--hub-border,#344d64);border-radius:8px;background:var(--hub-surface-2,#152536);color:var(--hub-text-2,inherit);white-space:nowrap;font-size:.73rem;font-weight:600;line-height:1.2;cursor:pointer}
+#adventure-root .campaign-disclosure-toggle input{flex:0 0 16px;width:16px;height:16px;min-height:16px;margin:0;padding:0;accent-color:#319bff;cursor:pointer}
