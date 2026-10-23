@@ -1,4 +1,4 @@
-import{sanitizeCampaign}from'./campaign-state.js?v=20261022-chronicles2';
+import{sanitizeCampaign}from'./campaign-state.js?v=20261022-chronicles-final3';
 export const ADVENTURE_KEY='hub-rpg:adventures:v1';
 export const ADVENTURE_SCHEMA='hub-rpg/adventure/v2';
 export const ADVENTURE_STATUS=Object.freeze(['planned','active','paused','completed','archived']);
