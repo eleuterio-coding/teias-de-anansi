@@ -85,4 +85,6 @@ assert.equal(moved.adventure.exploration.history[0].sessionId,null,'Não apontar
 assert.equal(moved.adventure.exploration.areas.length,2,'Preservar conteúdo narrativo na troca de campanha');
 assert.equal(moved.adventure.exploration.factions.length,1);
 assert.equal(revealedAdventureProjection(sanitizeAdventure({campaignId:'c1'}),{}).exploration.areas.length,0);
+const hiddenScene=sanitizeAdventure({id:'hidden-scene',campaignId:'c1',locationIds:['secret-room'],scenes:[{id:'scene-hidden',title:'Cena oculta',status:'active',locationId:'secret-room'}],activeSceneId:'scene-hidden'});
+assert.equal(revealedAdventureProjection(hiddenScene,{locations:[{id:'secret-room',name:'LOCAL SECRETO'}]}).currentLocation,'','Local de cena não publicada deve permanecer oculto');
 console.log('OK — exploração genérica, integridade de vínculos, migração, publicação explícita e retenção de crônica.');
