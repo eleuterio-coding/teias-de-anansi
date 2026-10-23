@@ -92,9 +92,9 @@ test('A hierarquia acompanha alterações nas entidades sem duplicar dados e fun
  const branch=roots.nth(0).locator('.hub-diagram-children');
  await expect(branch).toBeHidden();
  const parent=roots.nth(0).locator('.hub-diagram-node[data-diagram-toggle]');
- await parent.locator('strong').click();
+ await parent.locator('.hub-diagram-event-heading').click();
  await expect(branch).toBeVisible();
- await parent.locator('strong').click();
+ await parent.locator('.hub-diagram-event-heading').click();
  await expect(branch).toBeHidden();
  await expect(parent.locator('[data-timeline-toggle]')).toHaveText('');
  await parent.locator('[data-timeline-toggle]').click();
