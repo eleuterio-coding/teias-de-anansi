@@ -156,13 +156,26 @@ body.hub-shell-enabled #campaign-list .campaign-create-tile{
  border:2px dashed #435a70!important;border-radius:16px!important;
  gap:16px;font-size:1.1rem;font-weight:750;letter-spacing:.01em;text-decoration:none;
 }
+/* O glifo "+" varia com a fonte e deslocava visualmente o ícone.
+   Duas barras geométricas, posicionadas no centro real do círculo,
+   evitam correções frágeis por padding ou alinhamento de linha. */
 #campaign-list .campaign-create-tile .campaign-create-plus{
- display:grid;place-items:center;flex:0 0 58px;
- padding:0 0 5px!important;box-sizing:border-box;
- font-family:Arial,system-ui,sans-serif;
- width:58px;height:58px;border-radius:50%;
- border:1px solid currentColor;
- font-size:2.6rem;font-weight:300;line-height:1;
+ position:relative;display:grid;place-items:center;flex:0 0 58px;
+ padding:0!important;box-sizing:border-box;
+ width:58px;height:58px;border:1px solid currentColor;border-radius:50%;
+ font-size:0;line-height:0;
+}
+#campaign-list .campaign-create-tile .campaign-create-plus::before,
+#campaign-list .campaign-create-tile .campaign-create-plus::after{
+ content:"";position:absolute;top:50%;left:50%;
+ background:currentColor;border-radius:2px;
+ transform:translate(-50%,-50%);pointer-events:none;
+}
+#campaign-list .campaign-create-tile .campaign-create-plus::before{
+ width:24px;height:2px;
+}
+#campaign-list .campaign-create-tile .campaign-create-plus::after{
+ width:2px;height:24px;
 }
 #campaign-list .campaign-create-tile .campaign-create-tile-label{
  font-size:1.1rem;font-weight:750;line-height:1.25;
