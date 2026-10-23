@@ -61,7 +61,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  if(header){
   header.className='campaign-product-hero-content';
   const context=header.querySelector('.mini');
-  if(context){context.className='campaign-product-kicker';context.textContent='Campanha: '+campaignRow.campaign.name}
+  if(context){context.className='campaign-product-kicker';context.textContent='Campanha · '+campaignRow.campaign.name}
   const heading=header.querySelector('h2');
   if(heading){const h1=document.createElement('h1');h1.textContent=heading.textContent;heading.replaceWith(h1)}
   const titleRow=document.createElement('div');titleRow.className='campaign-product-title-row';
