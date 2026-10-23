@@ -30,12 +30,12 @@ test('campanha alterna lista e fluxograma e preserva os subeventos ao editar',as
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
  await expect(area.locator('[data-timeline-view="list"]')).toHaveAttribute('aria-pressed','true');
- await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(2);
+ await expect(area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic])')).toHaveCount(2);
  await area.locator('[data-timeline-view="flowchart"]').click();
  await expect(area.locator('[data-timeline-view="flowchart"]')).toHaveAttribute('aria-pressed','true');
- await expect(area.locator('.hub-diagram-node')).toHaveCount(4);
+ await expect(area.locator('.hub-diagram-node')).toHaveCount(5);
  await expect(area.locator('.hub-diagram-children > .hub-diagram-node-group')).toHaveCount(2);
- await expect(area.locator('.hub-diagram-node').first()).toContainText('Chegada à cidade');
+ await expect(area.locator('[data-diagram-event="root-1"]')).toContainText('Chegada à cidade');
  await area.locator('[data-diagram-edit="child-1"]').click();
  const input=area.locator('[data-timeline-text="child-1"]');
  await expect(input).toBeFocused();
@@ -70,7 +70,7 @@ test('aventura alterna lista e fluxograma cronológico sem duplicar registros',a
 test('eventos principais são cartões independentes em Lista e Fluxograma',async({page},testInfo)=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
- const roots=area.locator('.timeline-tree > .timeline-item');
+ const roots=area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic])');
  await expect(roots).toHaveCount(2);
  const list=await roots.evaluateAll(items=>{
   const a=items[0].getBoundingClientRect(),b=items[1].getBoundingClientRect();
@@ -82,9 +82,9 @@ test('eventos principais são cartões independentes em Lista e Fluxograma',asyn
  expect(list.rootConnector).toBe('none');
  await area.locator('[data-timeline-view="flowchart"]').click();
  const diagram=area.locator('.hub-diagram-roots');
- await expect(diagram.locator(':scope > .hub-diagram-root')).toHaveCount(2);
+ await expect(diagram.locator(':scope > .hub-diagram-root:not([data-diagram-root^="linked-"])')).toHaveCount(2);
  const geometry=await diagram.evaluate(el=>{
-  const roots=[...el.querySelectorAll(':scope > .hub-diagram-root')];
+  const roots=[...el.querySelectorAll(':scope > .hub-diagram-root:not([data-diagram-root^="linked-"])')];
   const first=roots[0].getBoundingClientRect(),second=roots[1].getBoundingClientRect();
   const parent=roots[0].querySelector(':scope > .hub-diagram-node-group > .hub-diagram-node').getBoundingClientRect();
   const children=roots[0].querySelector(':scope > .hub-diagram-node-group > .hub-diagram-children').getBoundingClientRect();
@@ -143,8 +143,8 @@ test('fluxograma móvel não transborda e subeventos ficam abaixo do pai',async(
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  await page.locator('#linha-tempo [data-timeline-view="flowchart"]').click();
  const bounds=await page.locator('#linha-tempo .hub-diagram-scroll--campaign').evaluate(el=>{
-  const parent=el.querySelector('.hub-diagram-root .hub-diagram-node').getBoundingClientRect();
-  const children=el.querySelector('.hub-diagram-root .hub-diagram-children').getBoundingClientRect();
+  const parent=el.querySelector('[data-diagram-root="root-1"] .hub-diagram-node').getBoundingClientRect();
+  const children=el.querySelector('[data-diagram-root="root-1"] .hub-diagram-children').getBoundingClientRect();
   return {parentBottom:parent.bottom,childrenTop:children.top,
    scroll:el.scrollWidth,visible:el.clientWidth};
  });
@@ -160,14 +160,14 @@ test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo ap
   await area.locator('[data-new-timeline]').fill(title);
   await area.locator('[data-timeline-add-root]').click();
  }
- const listNumbers=area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .campaign-flow-node');
- await expect(listNumbers).toHaveText(['1','2','3','4']);
+ const listNumbers=area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic]) > .campaign-flow-step .campaign-flow-node');
+ await expect(listNumbers).toHaveText(['2','3','4','5']);
  // Alterar a ordem dos eventos principais renumera os dois modelos.
  await area.locator('[data-timeline-move="up"][data-timeline-target="root-2"]').first().click();
  const reorderedTitles=await area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .timeline-node-text').evaluateAll(inputs=>inputs.map(el=>el.value));
  expect(reorderedTitles).toEqual(['Partida do grupo','Chegada à cidade','Conselho da cidade','Último encontro']);
  await area.locator('[data-timeline-view="flowchart"]').click();
- const roots=area.locator('.hub-diagram-roots > .hub-diagram-root');
+ const roots=area.locator('.hub-diagram-roots > .hub-diagram-root:not([data-diagram-root^="linked-"])');
  await expect(roots).toHaveCount(4);
  const order=await roots.evaluateAll(elements=>elements.map(el=>{
   const node=el.querySelector(':scope > .hub-diagram-node-group > .hub-diagram-node');
@@ -177,8 +177,8 @@ test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo ap
    kind:node.querySelector('.hub-diagram-kind')?.textContent,title:node.querySelector('strong')?.textContent,
    top:rect.top,left:rect.left};
  }));
- expect(order.map(item=>item.order)).toEqual(['1','2','3','4']);
- expect(order.map(item=>item.number)).toEqual(['1','2','3','4']);
+ expect(order.map(item=>item.order)).toEqual(['2','3','4','5']);
+ expect(order.map(item=>item.number)).toEqual(['2','3','4','5']);
  expect(order.map(item=>item.kind)).toEqual(['Evento','Evento','Evento','Evento']);
  expect(order.map(item=>item.title)).toEqual(reorderedTitles);
  // Em grades multicoluna, ordem de leitura: esquerda > direita; depois próxima linha.
@@ -190,7 +190,7 @@ test('fluxograma numera eventos principais em ordem crescente da Lista, mesmo ap
  await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-order')).toHaveCount(0);
  await expect(area.locator('[data-diagram-event="child-1"] .hub-diagram-kind')).toHaveText('Subevento');
  await area.locator('[data-timeline-view="list"]').click();
- await expect(area.locator('.timeline-tree > .timeline-item > .campaign-flow-step .campaign-flow-node')).toHaveText(['1','2','3','4']);
+ await expect(area.locator('.timeline-tree > .timeline-item:not([data-timeline-automatic]) > .campaign-flow-step .campaign-flow-node')).toHaveText(['2','3','4','5']);
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0].timelineNodes.map(x=>x.id));
  expect(stored.slice(0,2)).toEqual(['root-2','root-1']);
 });
