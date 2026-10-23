@@ -78,7 +78,7 @@ const files={
 };
 for(const token of['playerMode','sharedCampaignRows'])assert.ok(files.campaigns.includes(token),`Lista de Campanhas sem ${token}`);
 assert.ok(files.campaigns.includes('Somente leitura'));
-assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('somente leitura'));
+assert.ok(files.table.includes('sharedCampaignById')&&files.table.includes('readOnlyTable(')&&files.table.includes('renderPlayerCampaign('),'O roteador da Mesa deve usar a projeção compartilhada e uma visualização sem edição.');
 assert.equal(files.table.includes('Conteúdo atribuído a você'),false,'Mesa do Jogador não deve exibir tutorial de permissão.');
 assert.ok(files.sessions.includes('sharedCampaignRows')&&files.sessions.includes('Nenhuma sessão foi atribuída'));
 assert.ok(files.adventures.includes('sharedAdventures')&&files.adventures.includes('somente leitura'));
