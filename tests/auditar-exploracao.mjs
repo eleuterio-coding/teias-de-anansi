@@ -1,11 +1,11 @@
 import assert from'node:assert/strict';
-import{normalizeExploration,createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,explorationProgress}from'../scripts/adventure-exploration-state.js';
+import{normalizeExploration,createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'../scripts/adventure-exploration-state.js';
 import{sanitizeAdventure,createAdventure,updateAdventure,addAdventureScene,reassignAdventureCampaign}from'../scripts/adventure-state.js';
 import{sanitizeCampaign}from'../scripts/campaign-state.js';
 import{revealedAdventureProjection,sharedExplorationProjection}from'../scripts/collaboration-model.js';
 
 let old=sanitizeAdventure({id:'old',campaignId:'c1',title:'Aventura anterior',chapters:[{id:'chapter-1',title:'Capítulo'}],scenes:[{id:'scene-1',title:'Cena antiga'}]});
-assert.deepEqual(old.exploration,{levels:[],areas:[],factions:[],history:[]},'Migrar registros antigos sem perder cenas');
+assert.deepEqual(old.exploration,{levels:[],areas:[],factions:[],history:[],activeAreaId:null},'Migrar registros antigos sem perder cenas');
 assert.equal(old.scenes.length,1);
 assert.equal(old.title,'Aventura anterior');
 
@@ -26,6 +26,8 @@ assert.equal(e.history.length,1);
 assert.equal(e.history[0].sessionId,'session-1');
 assert.equal(e.areas[0].status,'visited');
 assert.equal(e.areas[1].status,'unknown','Áreas não avançam automaticamente');
+e=setCurrentExplorationArea(e,gateId).exploration;
+assert.equal(e.activeAreaId,gateId,'Área atual é separada do status narrativo');
 assert.ok(changeAreaStatus(e,gateId,'invalido').error);
 assert.ok(removeExplorationEntity(e,'level',levelId).error,'Impedir remoção de nível com áreas');
 
@@ -61,6 +63,7 @@ ret=removeExplorationEntity(before,'area',gateId);
 assert.equal(ret.exploration.history[0].areaId,null,'Manter crônica órfã sem expor área removida');
 const after=updateAdventure(sceneRet.list,adventure.id,{exploration:ret.exploration}).adventure;
 assert.equal(after.scenes[0].areaId,null,'Limpar vínculo da cena excluída');
+assert.equal(after.exploration.activeAreaId,null,'Ao excluir a área atual, limpar o foco');
 assert.equal(after.exploration.areas[0].parentId,null,'Limpar hierarquia de áreas');
 assert.deepEqual(after.exploration.areas[0].connectionIds,[]);
 
