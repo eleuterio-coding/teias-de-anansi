@@ -399,3 +399,20 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
  #sessions-list .session-adventure-scroll-actions{margin-left:0}
  #sessions-list .session-adventure-scroll-actions>span{display:none}
 }
+
+
+/* Lista de Aventuras: manter a imagem e o card imóveis durante o hover.
+   A translação de -2px herdada de campaigns.css fazia o alvo do mouse
+   atravessar a borda do card no carrossel, criando oscilação visual. */
+#adventure-root #adventure-list .campaign-card[data-adventure-card]{
+ transform:none!important;
+ transition:border-color .18s ease,background-color .18s ease,box-shadow .18s ease!important;
+}
+#adventure-root #adventure-list .campaign-card[data-adventure-card]:hover,
+#adventure-root #adventure-list .campaign-card[data-adventure-card]:focus-within{
+ transform:none!important;
+}
+#adventure-root #adventure-list .campaign-card[data-adventure-card] .campaign-card-cover{
+ transform:none!important;
+ transition:none!important;
+}
