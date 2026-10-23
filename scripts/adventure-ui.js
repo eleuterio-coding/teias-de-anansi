@@ -22,7 +22,7 @@ const advStatus=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',
 const campaign=()=>campaignById(campaigns,campaignId),adventure=()=>adventureById(adventures,adventureId);
 let monsterCatalog=[],monsterCatalogReady=false;
 const visibleToggle=(kind,id,visible)=>`<label class="campaign-disclosure-toggle"><input type="checkbox" data-adventure-visible="${esc(kind)}" data-visible-id="${esc(id)}" ${visible?'checked':''}><span>Mostrar aos jogadores</span></label>`;
-const moveTools=(kind,id,i,length)=>`<button type="button" class="secondary campaign-move-button" data-adventure-move="up" data-kind="${esc(kind)}" data-id="${esc(id)}" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-adventure-move="down" data-kind="${esc(kind)}" data-id="${esc(id)}" ${i===length-1?'disabled':''}>↓</button>`;
+const moveTools=(kind,id,i,length)=>`<button type="button" class="campaign-reorder-grip" data-adventure-grip="${esc(id)}" aria-label="Arrastar para reorganizar" title="Arrastar para reorganizar" style="touch-action:none">⠿</button><button type="button" class="secondary campaign-move-button" data-adventure-move="up" data-kind="${esc(kind)}" data-id="${esc(id)}" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary campaign-move-button" data-adventure-move="down" data-kind="${esc(kind)}" data-id="${esc(id)}" ${i===length-1?'disabled':''}>↓</button>`;
 const ordered=(rows=[])=>[...rows].sort((a,b)=>(a.order||0)-(b.order||0));
 const chapterOptions=(a,current='')=>entitySelect(ordered(a.chapters),current,'— Sem capítulo —');
 const objectiveOptions=(a,current='')=>entitySelect(ordered(a.missions),current,'— Sem objetivo —');
@@ -345,6 +345,34 @@ function bindAdventureVisibilityAndOrder(){
   row.addEventListener('drop',event=>{event.preventDefault();const kind=row.dataset.reorderAdventure,target=row.dataset.entityRow||row.dataset.campaignNpc||row.dataset.campaignLocation||row.querySelector('[data-visible-id]')?.dataset.visibleId;if(drag&&kind===drag.kind&&target&&drag.id!==target)move(kind,drag.id,'down',target);drag=null});
   row.addEventListener('dragend',()=>{drag=null})
  });
+ // O mesmo padrão de arrastar por toque/mouse dos Locais importantes:
+ // ação iniciada na alça, sem interceptar a edição de campos.
+ let lifted=null;
+ const rowId=node=>node?.dataset.entityRow||node?.dataset.campaignNpc||node?.dataset.campaignLocation||node?.dataset.sceneRow||node?.querySelector('[data-visible-id]')?.dataset.visibleId||'';
+ const clearTargets=()=>root?.querySelectorAll('.adventure-drop-target,.adventure-dragging').forEach(node=>node.classList.remove('adventure-drop-target','adventure-dragging'));
+ for(const grip of root?.querySelectorAll('[data-adventure-grip]')||[]){
+  grip.addEventListener('pointerdown',event=>{
+   if(event.pointerType==='mouse'&&event.button!==0)return;
+   const node=grip.closest('[data-reorder-adventure]');if(!node)return;
+   lifted={kind:node.dataset.reorderAdventure,id:rowId(node),pointerId:event.pointerId,startY:event.clientY,target:null,moved:false};
+   grip.setPointerCapture?.(event.pointerId);
+  });
+  grip.addEventListener('pointermove',event=>{
+   if(!lifted||event.pointerId!==lifted.pointerId)return;
+   if(!lifted.moved&&Math.abs(event.clientY-lifted.startY)<7)return;
+   lifted.moved=true;clearTargets();
+   const node=grip.closest('[data-reorder-adventure]');node?.classList.add('adventure-dragging');
+   const candidate=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-reorder-adventure]');
+   lifted.target=candidate&&candidate.dataset.reorderAdventure===lifted.kind&&rowId(candidate)!==lifted.id?rowId(candidate):null;
+   if(lifted.target)candidate.classList.add('adventure-drop-target');
+  });
+  grip.addEventListener('pointerup',event=>{
+   if(!lifted||event.pointerId!==lifted.pointerId)return;
+   const info=lifted;lifted=null;clearTargets();
+   if(info.moved&&info.target){event.preventDefault();move(info.kind,info.id,'down',info.target)}
+  });
+  grip.addEventListener('pointercancel',()=>{lifted=null;clearTargets()});
+ }
  $('add-adventure-monster')?.addEventListener('click',async()=>{
   const id=$('new-adventure-monster')?.value,row=monsterCatalog.find(x=>x.id===id);
   if(!row)return feedback('Selecione um monstro da Biblioteca.',false);
