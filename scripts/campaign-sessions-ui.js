@@ -10,7 +10,7 @@ import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-sta
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261023-panoramic3';
-import{cardMetricIcon,cardOpenArrow,cardDeleteIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
+import{cardMetricIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -266,8 +266,8 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
    </div>
   </div>
   <div class="row-actions campaign-card-actions">
-   <a class="btn" href="${href}">Abrir ${cardOpenArrow}</a>
-   ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">${cardDeleteIcon} Excluir</button>`}
+   <a class="btn" href="${href}">Abrir</a>
+   ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">>Excluir</button>`}
   </div>
  </article>`;
 }
