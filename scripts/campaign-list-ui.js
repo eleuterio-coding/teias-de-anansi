@@ -10,7 +10,6 @@ function statusLabel(status){return({planned:'Planejada',active:'Em andamento',p
 
 const CAMPAIGN_STATUSES=['active','paused','finished','cancelled','planned'];
 const statusPriority=status=>{const rank=CAMPAIGN_STATUSES.indexOf(status);return rank<0?CAMPAIGN_STATUSES.length:rank};
-const amount=(count,singular,plural)=>`${count} ${count===1?singular:plural}`;
 function card(c){
  const sessions=Array.isArray(c.sessions)?c.sessions:[];
  const active=sessions.find(s=>s.id===c.activeSessionId);
@@ -18,7 +17,7 @@ function card(c){
  const adventureCount=visibleAdventures.filter(row=>row.campaignId===c.id).length;
  const cover=imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const npcCount=readOnly?new Set([...(c.npcPublicEntries||[]),...(c.importantNpcEntries||[])].map(n=>n.id).filter(Boolean)).size:new Set([...(c.npcDirectory||[]),...(c.npcs||[]),...(c.importantNpcIds||[]).map(id=>({id}))].map(n=>n.id).filter(Boolean)).size;
- const counts=[amount(players,'jogador','jogadores'),amount(characters,'personagem','personagens'),amount(npcCount,'NPC','NPCs'),amount(adventureCount,'aventura','aventuras'),amount(sessions.length,'sessão','sessões')].join(' · ');
+ const metrics=[['Jogador','Jogadores',players],['Personagem','Personagens',characters],['NPC','NPCs',npcCount],['Aventura','Aventuras',adventureCount],['Sessão','Sessões',sessions.length]].map(([singular,plural,count])=>`<div class="campaign-card-stat"><strong>${count}</strong><span>${count===1?singular:plural}</span></div>`).join('');
  const status=CAMPAIGN_STATUSES.includes(c.status)?c.status:'planned';
  const statusControl=readOnly
   ?`<span class="campaign-status-value" aria-label="Status da campanha: ${esc(statusLabel(status))}">${esc(statusLabel(status))}</span>`
@@ -30,13 +29,19 @@ function card(c){
       ${CAMPAIGN_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-campaign-status="${esc(c.id)}" data-next-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
      </div>
     </details>`;
- return `<article class="campaign-card" data-campaign-card="${esc(c.id)}"><a class="campaign-card-stretched-link" href="mesa.html?id=${encodeURIComponent(c.id)}" aria-label="Abrir campanha ${esc(c.name)}"></a>
+ return `<article class="campaign-card campaign-card-featured" data-campaign-card="${esc(c.id)}"><a class="campaign-card-stretched-link" href="mesa.html?id=${encodeURIComponent(c.id)}" aria-label="Abrir campanha ${esc(c.name)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
-  <div class="campaign-card-main">${cover}<div class="campaign-card-details">
-   <h2>${esc(c.name)}</h2>
-   ${c.description?`<p>${esc(c.description)}</p>`:''}
-   <p class="mini">${esc(counts)}${active?` · <strong>Em andamento: ${esc(active.title)}</strong>`:''}</p>
-  </div></div>
+  <div class="campaign-card-main">
+   <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
+   <div class="campaign-card-details">
+    <div class="campaign-card-intro"><span class="campaign-card-eyebrow">Campanha</span>
+     <h2>${esc(c.name)}</h2>
+     ${c.description?`<p class="campaign-card-description">${esc(c.description)}</p>`:''}
+    </div>
+    <div class="campaign-card-metrics" role="group" aria-label="Resumo da campanha">${metrics}</div>
+    ${active?`<div class="campaign-card-current"><span>Sessão em andamento</span><strong>${esc(active.title)}</strong></div>`:''}
+   </div>
+  </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="mesa.html?id=${encodeURIComponent(c.id)}">Abrir</a>
    <a class="btn secondary" href="lista-personagens.html?mode=campanhas&campaign=${encodeURIComponent(c.id)}">Personagens</a>
@@ -46,7 +51,7 @@ function card(c){
  </article>`
 }
 function createTile(){
- return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html" aria-label="Nova campanha"><span class="campaign-create-plus" aria-hidden="true">+</span><span class="campaign-create-tile-label">Nova campanha</span></a>'
+ return '<a class="campaign-card campaign-create-tile" id="open-campaign-create" href="nova-campanha.html" aria-label="Nova campanha"><span class="campaign-create-plus" aria-hidden="true">+</span><span class="campaign-create-tile-copy"><span class="campaign-create-tile-label">Nova campanha</span><span class="campaign-create-tile-description">Comece uma nova jornada para o seu grupo.</span></span></a>'
 }
 function render(){
  const box=$('campaign-list');if(!box)return;
