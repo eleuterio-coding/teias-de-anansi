@@ -20,7 +20,8 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=qa-six-panels&id=qa-six-adventure');
  await expect(page.locator('#adventure-assignment')).toHaveValue('qa-six-panels');
- for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
+ for(const id of ['#capitulos','#locais','#tesouros','#monstros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
+ await expect(page.locator('.section-nav a[href="#monstros"]')).toHaveCount(0);
  await expect(page.locator('#criar-area,#criar-mapa')).toHaveCount(2);
 
  await page.locator('#ex-new-level input[name="name"]').fill('Palácio');
@@ -40,14 +41,15 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  await expect.poll(async()=> (await getCampaign(page)).npcs.length).toBe(1);
  await expect.poll(async()=> (await getAdventure(page)).npcIds.length).toBe(1);
 
- await page.locator('#add-adventure-monster').click();
- await expect(page.locator('#adventure-feedback')).toContainText('Selecione um monstro');
+ await expect(page.locator('#add-adventure-monster')).toHaveCount(0);
 
  await page.locator('#new-scene-title').fill('Conselho Real');
  await page.locator('#new-scene-area').selectOption((await getAdventure(page)).exploration.areas[0].id);
  await page.locator('#add-scene').click();
  await expect.poll(async()=> (await getAdventure(page)).scenes.length).toBe(1);
  expect((await getAdventure(page)).scenes[0].title).toBe('Conselho Real');
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Conselho Real');
 
  await expect(page.locator('#exploracao .explore-area-card')).toHaveCount(1);
  await expect(page.locator('#mapas .explore-level-card')).toHaveCount(1);
@@ -72,6 +74,20 @@ test('cena existente permite editar, iniciar, concluir e preservar o conteúdo',
  await expect.poll(async()=> (await getAdventure(page)).scenes[0].status).toBe('active');
  await page.locator('#cenas [data-complete-scene]').first().click();
  await expect.poll(async()=> (await getAdventure(page)).scenes[0].status).toBe('completed');
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Concluída');
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Encontro das Rainhas');
+ await page.locator('#new-timeline-title').fill('Registo manual');
+ await page.locator('#new-timeline-text').fill('Os heróis encontraram a trilha.');
+ await page.locator('#add-timeline').click();
+ await expect(page.locator('#linha-tempo .timeline-row')).toHaveCount(2);
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
+ await expect(page.locator('#linha-tempo .adventure-timeline-list')).toContainText('Registo manual');
+ await page.locator('#linha-tempo [data-timeline-view="flowchart"]').click();
+ await expect(page.locator('#linha-tempo .hub-diagram-sequence-step')).toHaveCount(2);
+ await expect(page.locator('#linha-tempo .hub-diagram-kind').first()).toContainText(/Cena|Evento/);
+ await page.locator('#linha-tempo [data-timeline-view="list"]').click();
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
 });
 
 test('Notas do Mestre não bloqueiam as demais ações e são persistidas',async({page})=>{
