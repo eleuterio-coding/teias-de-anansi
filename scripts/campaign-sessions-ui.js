@@ -247,15 +247,23 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
       ${SESSION_CARD_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-session-status-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-next-session-status="${value}" aria-pressed="${status===value}">${esc(statusLabel(value))}</button>`).join('')}
      </div>
     </details>`;
- return `<article class="campaign-card" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
+ return `<article class="campaign-card campaign-card-featured" data-session-list-id="${esc(s.id)}" data-session-list-source="${esc(s.source)}">
   <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir sessão ${esc(s.title)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
-  <div class="campaign-card-main">${cover}<div class="campaign-card-details">
-   <h2>${esc(numberedSessionTitle(s))}</h2>
-   ${description?`<p>${esc(description)}</p>`:''}
-   ${context}
-   <p class="mini">${s.date?`${esc(s.date)} · `:''}${counts}</p>
-  </div></div>
+  <div class="campaign-card-main">
+   <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
+   <div class="campaign-card-details">
+    <div class="campaign-card-intro">
+     <h2>${esc(numberedSessionTitle(s))}</h2>
+     ${description?`<p class="campaign-card-description">${esc(description)}</p>`:''}
+     ${context}
+    </div>
+    <div class="campaign-card-metrics" role="group" aria-label="Cenas e encontros da sessão">
+     <div class="campaign-card-stat"><strong>${scenes}</strong><span>${scenes===1?'Cena':'Cenas'}</span></div>
+     <div class="campaign-card-stat"><strong>${encounters}</strong><span>${encounters===1?'Encontro':'Encontros'}</span></div>
+    </div>
+   </div>
+  </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="${href}">Abrir</a>
    ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">Excluir</button>`}
