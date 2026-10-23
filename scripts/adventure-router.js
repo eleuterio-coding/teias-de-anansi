@@ -6,10 +6,10 @@ import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
-import{adventureListCard}from'./adventure-list-card.js?v=20261023-session-count8';
+import{adventureListCard}from'./adventure-list-card.js?v=20261023-text-buttons10';
 import{rememberAvatars,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
-import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-session-count8';
+import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-text-buttons10';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text=v=>String(v??'').trim(),arr=v=>Array.isArray(v)?v:[];
 const params=new URLSearchParams(location.search),requestedCampaign=params.get('campaign')||'',requestedAdventure=params.get('id')||'';
@@ -144,5 +144,5 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  updateAppShellContext();
 }
 
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261022-chronicles-final3');await import('./adventure-ui.js?v=20261023-session-count8')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261022-chronicles-final3');await import('./adventure-ui.js?v=20261023-text-buttons10')}
 start();
