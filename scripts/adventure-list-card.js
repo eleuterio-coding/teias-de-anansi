@@ -1,5 +1,6 @@
 import{numberedAdventureTitle}from'./narrative-labels.js';
 import{imageElementHtml}from'./image-media.js?v=20260925-media2';
+import{cardMetricIcon,cardOpenArrow,cardDeleteIcon}from'./campaign-card-icons.js?v=20261023-panoramic1';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const arr=value=>Array.isArray(value)?value:[];
@@ -39,14 +40,14 @@ export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
      <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></div>
     </div>
     <div class="campaign-card-metrics" role="group" aria-label="Capítulos e cenas da aventura">
-     <div class="campaign-card-stat"><strong>${arr(a.chapters).length}</strong><span>${arr(a.chapters).length===1?'Capítulo':'Capítulos'}</span></div>
-     <div class="campaign-card-stat"><strong>${arr(a.scenes).length}</strong><span>${arr(a.scenes).length===1?'Cena':'Cenas'}</span></div>
+     <div class="campaign-card-stat">${cardMetricIcon("book")}<span class="campaign-card-stat-copy"><strong>${arr(a.chapters).length}</strong><span>${arr(a.chapters).length===1?'Capítulo':'Capítulos'}</span></span></div>
+     <div class="campaign-card-stat">${cardMetricIcon("scenes")}<span class="campaign-card-stat-copy"><strong>${arr(a.scenes).length}</strong><span>${arr(a.scenes).length===1?'Cena':'Cenas'}</span></span></div>
     </div>
    </div>
   </div>
   <div class="row-actions campaign-card-actions">
-   <a class="btn" href="${href}">Abrir</a>
-   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">Excluir</button>`}
+   <a class="btn" href="${href}">Abrir ${cardOpenArrow}</a>
+   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">${cardDeleteIcon} Excluir</button>`}
   </div>
  </article>`;
 }
