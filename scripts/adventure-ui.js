@@ -1,14 +1,14 @@
-import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles1';
-import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261022-chronicles1';
-import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles1';
-import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles1';
+import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
+import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{timelineViewToggle,renderAdventureTimelineDiagram}from'./timeline-flowchart.js?v=20261019-flowchart1';
-import{readCampaigns,writeCampaigns,campaignById,addCampaignNpc,updateCampaignNpc,removeCampaignNpc,addCampaignLocation,updateCampaignLocation,removeCampaignLocation,updateCampaignSession,updateSessionScene}from'./campaign-state.js?v=20261022-chronicles1';
+import{readCampaigns,writeCampaigns,campaignById,addCampaignNpc,updateCampaignNpc,removeCampaignNpc,addCampaignLocation,updateCampaignLocation,removeCampaignLocation,updateCampaignSession,updateSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read as readCharacters,write as writeCharacters,readNpcs as readRegisteredNpcs}from'./character-builder/state.js';
-import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureMonster,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261022-chronicles1';
+import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureMonster,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261022-chronicles-final3';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261019-reassign1';
 
