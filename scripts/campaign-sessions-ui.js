@@ -267,7 +267,7 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
   </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="${href}">Abrir</a>
-   ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">>Excluir</button>`}
+   ${restricted?'':`<button type="button" class="danger" data-delete-session-list="${esc(s.id)}" data-session-source="${esc(s.source)}" aria-label="Excluir sessão ${esc(s.title)}">Excluir</button>`}
   </div>
  </article>`;
 }
