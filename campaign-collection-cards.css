@@ -211,6 +211,19 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
   border:1px solid rgba(219,89,106,.55)!important;
   color:#ff8d9c!important;background:rgba(100,35,45,.12)!important
 }
+/* Remoção definitiva dos pictogramas das AÇÕES dos cards.
+   Protege contra ícones antigos injetados via CSS/JS e cache parcial.
+   Não afeta os ícones dos indicadores nem o seletor de status. */
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>a.btn :is(svg,i,img,.icon,[class*="icon"],[class*="arrow"],[class*="chevron"]),
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>button :is(svg,i,img,.icon,[class*="icon"],[class*="arrow"],[class*="chevron"]){
+  display:none!important;
+}
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>a.btn::before,
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>a.btn::after,
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>button::before,
+:is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions>button::after{
+  display:none!important;content:none!important;
+}
 /* A capa é a área dominante; apenas o conteúdo realmente interativo
    (status/ações) bloqueia a âncora que cobre o card. */
 :is(#adventure-list,#sessions-list) .campaign-card-featured .hub-ancestry{
