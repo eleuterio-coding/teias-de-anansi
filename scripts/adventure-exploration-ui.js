@@ -123,32 +123,13 @@ export function renderAdventureFactions(a,c){
 export function renderAdventureExploration(a,c){
  const exploration=a.exploration||{levels:[],areas:[],factions:[],history:[]};
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
- const selected=areas.find(area=>area.id===selectedAreaId)||areas[0]||null;
  const progress=explorationProgress(exploration);
  const areaList='<section class="card adventure-exploration adventure-areas" id="exploracao">'+
   '<div class="explore-title"><h2>Áreas e Salas</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
-  '<div class="explore-area-grid">'+(areas.length?areas.map(area=>{
-   const level=levels.find(l=>l.id===area.levelId);
-   return '<article class="explore-area-card'+(selected?.id===area.id?' is-selected':'')+'">'+
-    '<div><small>'+esc(level?.name||'Sem mapa')+'</small><strong>'+esc(areaLabel(area))+'</strong><span class="mini">'+esc(area.type||'Ambiente não definido')+'</span></div>'+
-    '<div class="explore-card-actions"><label>Status<select data-ex-quick-status="'+esc(area.id)+'" aria-label="Status de '+esc(areaLabel(area))+'">'+selectOptions(STATUS,area.status)+'</select></label>'+
-    '<button type="button" class="secondary" data-ex-open-area="'+esc(area.id)+'">Abrir</button></div>'+
-   '</article>';
-  }).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div>'+
-  (selected?areaDetail(selected,a,c,exploration):'<div class="story-empty">Selecione ou adicione uma área para editar suas informações.</div>')+
-  '</section>';
+  '<div class="explore-area-grid">'+(areas.length?areas.map(area=>areaDetail(area,a,c,exploration)).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div></section>';
  const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
   '<div class="explore-title"><h2>Mapas e Níveis</h2><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
-  '<div class="explore-level-grid">'+(levels.length?levels.map(l=>
-   '<article data-ex-level="'+esc(l.id)+'" class="story-card explore-level-card">'+
-   '<div class="explore-fields">'+
-   field('Nome do mapa','name',l.name)+
-   '<div class="explore-map-upload"><strong>Mapa</strong>'+imagePickerHtml({media:l.mapImage,legacyUrl:l.mapUrl,alt:'Mapa de '+l.name,className:'explore-map-image'})+'</div>'+
-   field('URL do mapa','mapUrl',l.mapUrl,'input','placeholder="https://... ou caminho relativo"')+
-   field('Tipo','type',l.type)+
-   field('Descrição','description',l.description,'textarea','rows="2"')+
-   '</div><div class="row-actions"><button type="button" data-ex-save-level>Salvar mapa</button><button type="button" class="secondary" data-ex-delete="level" data-ex-id="'+esc(l.id)+'">Excluir mapa</button></div></article>'
-  ).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
+  '<div class="explore-level-grid">'+(levels.length?levels.map(levelDetail).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
  const areaCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-area">'+
   '<h2>Adicionar área / sala</h2>'+
   '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
