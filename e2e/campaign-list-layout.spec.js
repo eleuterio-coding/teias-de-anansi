@@ -22,7 +22,8 @@ test('cards desktop: largura total, capa em toda a altura e controles com margen
  const grid=page.locator('#campaign-list>.campaign-list-grid');
  const cards=grid.locator('[data-campaign-card]');
  await expect(cards).toHaveCount(2);
- await expect(grid.locator('.campaign-create-tile')).toHaveText('Nova Campanha');
+ await expect(grid.locator('.campaign-create-tile .campaign-create-plus')).toHaveText('+');
+ await expect(grid.locator('.campaign-create-tile .campaign-create-tile-label')).toHaveText('Nova Campanha');
  await expect(cards.first().locator('.campaign-card-stat')).toHaveCount(2);
  await expect(cards.first().locator('.campaign-card-stat span')).toHaveText(['Aventuras','Sessão']);
  await expect(cards.first().locator('.campaign-card-actions a')).toHaveCount(1);
@@ -47,6 +48,7 @@ test('cards desktop: largura total, capa em toda a altura e controles com margen
    artHeight:art.height,artBottom:art.bottom,imgHeight:img.height,
    artLeft:art.left,cardLeft:card.left,
    detailsLeft:detail.left,detailsRight:detail.right,
+   artWidth:art.width,detailsWidth:detail.width,
    openLeft:open.left,delRight:del.right,
    bottomGap:card.bottom-del.bottom,
    rightGap:card.right-del.right,
@@ -60,6 +62,8 @@ test('cards desktop: largura total, capa em toda a altura e controles com margen
  expect(layout.columns).toBe(1);
  expect(layout.cardWidth).toBeGreaterThanOrEqual(layout.gridWidth-2);
  expect(layout.cardHeight).toBeGreaterThanOrEqual(450);
+ expect(layout.artWidth).toBeGreaterThan(layout.detailsWidth);
+ expect(layout.artWidth/layout.cardWidth).toBeGreaterThan(0.64);
  expect(layout.artHeight).toBeGreaterThanOrEqual(layout.cardHeight-2);
  expect(layout.imgHeight).toBeGreaterThanOrEqual(layout.artHeight-2);
  expect(Math.abs(layout.artBottom-layout.cardBottom)).toBeLessThanOrEqual(2);
@@ -81,7 +85,8 @@ test('mobile: imagem horizontal, dois indicadores, duas ações e nenhuma rolage
  await expect(cards.first().locator('.campaign-card-stat')).toHaveCount(2);
  await expect(cards.first().locator('.campaign-card-actions a')).toHaveCount(1);
  await expect(cards.first().locator('.campaign-card-actions button')).toHaveCount(1);
- await expect(grid.locator('.campaign-create-tile')).toHaveText('Nova Campanha');
+ await expect(grid.locator('.campaign-create-tile .campaign-create-plus')).toHaveText('+');
+ await expect(grid.locator('.campaign-create-tile .campaign-create-tile-label')).toHaveText('Nova Campanha');
  const layout=await grid.evaluate(node=>{
   const first=node.querySelector('[data-campaign-card]'),
    rows=[...node.children].map(x=>x.getBoundingClientRect()),
