@@ -1,6 +1,6 @@
 import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261021-user-profiles1';
 import{readCampaigns}from'./campaign-state.js?v=20260925-media1';
-import{readAdventures}from'./adventure-state.js?v=20260925-media1';
+import{readAdventures}from'./adventure-state.js?v=20261023-simplified2';
 
 const MAX_INPUT_BYTES=20*1024*1024;
 const MAX_OUTPUT_BYTES=1800000;
