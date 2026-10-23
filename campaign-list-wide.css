@@ -1,4 +1,6 @@
 /* Campanhas — cards panorâmicos exclusivos da lista, sem alterar Aventuras/Sessões. */
+/* A lista pode usar toda a área útil, sem o limite global de 1540px. */
+body.hub-shell-enabled:has(#campaign-list) .hub-app-content{width:100%;max-width:none!important}
 #campaign-list>.campaign-list-grid,
 body.hub-shell-enabled #campaign-list>.campaign-list-grid{
  grid-template-columns:minmax(0,1fr)!important;
