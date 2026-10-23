@@ -94,7 +94,7 @@ export function renderPlayerCampaign(row){
  document.title=`${c.name} - Campanha - Teias de Anansi`;
  root.dataset.campaignAccess='player';
  root.innerHTML=`${renderCampaignOverview(c,adventures,{readOnly:true})}
- ${renderNextCampaignSession(c,{canPlan:false})}${navigation(c)}
+ ${renderNextCampaignSession(c,{canPlan:false,adventures})}${navigation(c)}
  <div id="table-feedback" class="status" hidden></div>
  <div class="campaign-sections campaign-editor-grid">
  ${renderCampaignSettings(c,{readOnly:true})}
