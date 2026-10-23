@@ -44,16 +44,17 @@ export function renderCampaignSettings(c,{readOnly=false,imagePickerHtml=null}={
 }
 const section=(id,title,action,content,extra='')=>`<section id="${id}" class="card campaign-editor-card campaign-reference-section ${extra}"><div class="top campaign-reference-head"><h2>${title}</h2>${action}</div>${content}</section>`;
 /** Card, cabeçalho, espaçamento e classe de grid idênticos para as duas contas. */
-export function renderCampaignAdventuresSection(campaignId,allAdventures=[]){
+export function renderCampaignAdventuresSection(campaignId,allAdventures=[],{readOnly=false}={}){
  const adventures=featuredCampaignAdventures(allAdventures);
- const action=`<a class="btn secondary campaign-reference-header-action" href="aventuras.html?campaign=${encodeURIComponent(campaignId)}">Abrir Aventuras</a>`;
+ const cid=encodeURIComponent(campaignId),listHref=`aventuras.html?campaign=${cid}`;
+ const action=readOnly?`<a class="btn secondary campaign-reference-header-action" href="${listHref}">Abrir Aventuras</a>`:`<a class="btn secondary campaign-reference-header-action" href="${listHref}&new=1#adventure-create-card">Planejar Aventura</a>`;
  const content=`<div class="list campaign-player-story-grid campaign-adventures-feature-grid">${adventures.length?adventures.map(a=>renderCampaignAdventureCard(a,campaignId)).join(''):'<div class="empty">Nenhuma aventura em andamento ou concluída nesta Campanha.</div>'}</div>`;
- return section('aventuras','Aventuras da Campanha',action,content);
+ return section('aventuras',`<a class="campaign-reference-title-link" href="${listHref}">Aventuras da Campanha</a>`,action,content);
 }
 export function renderCampaignSessionsSection(campaign,allAdventures=[],{readOnly=false}={}){
  const running=allAdventures.filter(a=>['active','current'].includes(a.status));
  const sessions=recentCampaignSessions(campaign.sessions||[],{limit:5,activeAdventureIds:new Set(running.map(a=>a.id))});
  const cid=encodeURIComponent(campaign.id),action=readOnly?`<a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${cid}">Abrir Sessões</a>`:`<a class="btn secondary campaign-reference-header-action" href="sessoes.html?campaign=${cid}&new=1#session-create-card">Planejar Sessão</a>`;
  const cards=sessions.length?sessions.map((s,i)=>renderCampaignSessionCard(s,campaign.id,{featured:i===0&&s.status==='current'})).join(''):'<div class="empty">Nenhuma sessão próxima ou concluída vinculada a uma Aventura em andamento.</div>';
- return section('sessoes','Sessões da Campanha',action,`<div class="campaign-player-story-grid campaign-player-sessions-grid">${cards}</div>`);
+ return section('sessoes',`<a class="campaign-reference-title-link" href="sessoes.html?campaign=${cid}">Sessões da Campanha</a>`,action,`<div class="campaign-player-story-grid campaign-player-sessions-grid">${cards}</div>`);
 }
