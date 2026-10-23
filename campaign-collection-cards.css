@@ -269,7 +269,7 @@ body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .ca
     padding:70px var(--campaign-card-edge) 0!important;gap:18px
   }
   :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-status{
-    top:260px;max-width:calc(100% - 2*var(--campaign-card-edge))
+    top:260px;max-width:calc(100% - 36px)
   }
   :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions,
   body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions{
