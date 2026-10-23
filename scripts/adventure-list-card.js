@@ -9,15 +9,14 @@ export const ADVENTURE_STATUSES=['active','paused','completed','archived','plann
 const labels={active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada',planned:'Planejada'};
 const types={main:'Aventura principal',side:'Aventura secundária',oneshot:'One-shot',secondary:'Arco secundário'};
 
-export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
+export function adventureListCard(adventure,{parentName='',readOnly=false,sessions=[]}={}){
  const a=adventure;
  const name=String(a.title||'Aventura'),heading=numberedAdventureTitle(a);
  const status=ADVENTURE_STATUSES.includes(a.status)?a.status:'planned';
  const href=`aventuras.html?campaign=${encodeURIComponent(a.campaignId)}&id=${encodeURIComponent(a.id)}`;
- const campaignHref=`mesa.html?id=${encodeURIComponent(a.campaignId)}`;
+ const sessionCount=(Array.isArray(sessions)?sessions:[]).filter(s=>String(s?.adventureId||'')===String(a.id)).length;
  const cover=imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const description=a.description||a.summary||a.pitch||'';
- const counts=[amount(arr(a.chapters).length,'capítulo','capítulos'),amount(arr(a.scenes).length,'cena','cenas'),amount(arr(a.missions).length,'missão','missões')].join(' · ');
  const statusControl=readOnly
   ?`<span class="campaign-status-value" aria-label="Status da aventura: ${esc(labels[status])}">${esc(labels[status])}</span>`
   :`<details class="campaign-status-disclosure" data-status-disclosure="${esc(a.id)}">
@@ -37,11 +36,10 @@ export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
     <div class="campaign-card-intro">
      <h2>${esc(heading)}</h2>
      ${description?`<p class="campaign-card-description">${esc(description)}</p>`:''}
-     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></div>
+     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<strong>${esc(parentName)}</strong>`:'<strong>Campanha não encontrada</strong>'}</span></div>
     </div>
-    <div class="campaign-card-metrics" role="group" aria-label="Capítulos e cenas da aventura">
-     <div class="campaign-card-stat">${cardMetricIcon("book")}<span class="campaign-card-stat-copy"><strong>${arr(a.chapters).length}</strong><span>${arr(a.chapters).length===1?'Capítulo':'Capítulos'}</span></span></div>
-     <div class="campaign-card-stat">${cardMetricIcon("scenes")}<span class="campaign-card-stat-copy"><strong>${arr(a.scenes).length}</strong><span>${arr(a.scenes).length===1?'Cena':'Cenas'}</span></span></div>
+    <div class="campaign-card-metrics campaign-card-metrics-single" role="group" aria-label="Sessões da aventura">
+     <div class="campaign-card-stat">${cardMetricIcon("scenes")}<span class="campaign-card-stat-copy"><strong>${sessionCount}</strong><span>${sessionCount===1?'Sessão':'Sessões'}</span></span></div>
     </div>
    </div>
   </div>
