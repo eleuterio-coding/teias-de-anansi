@@ -72,20 +72,36 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await expect(page.locator('#exploracao .explore-area-card')).toHaveCount(1);
  const editor=page.locator('#exploracao [data-ex-area-editor]');
  await expect(editor).toHaveAttribute('open','');
- await expect(page.locator('#exploracao .explore-editor-group')).toHaveCount(4);
- await expect(page.locator('#exploracao .explore-editor-group h4')).toHaveText(['Identificação e estrutura','Exploração e recompensas','Narrativa e visibilidade','Vínculos']);
+ await expect(page.locator('#exploracao .explore-editor-group')).toHaveCount(3);
+ await expect(page.locator('#exploracao .explore-editor-group h4')).toHaveText(['Identificação','Desafios e recompensas','Narrativa e notas']);
  await expect(page.locator('#exploracao .explore-record-status')).toHaveText('Descoberta');
  await expect(page.locator('#mapas .explore-record-summary')).toContainText('1 área vinculada');
- const areaFields=[
-  'code','name','status','levelId','parentId','locationId','chapterId',
-  'type','order','xp','mapX','mapY','enemies','hazards','treasure',
-  'checks','features','outcomes','readAloud','description',
-  'publicDescription','dmNotes'
- ];
+ const areaFields=['code','name','status','levelId','type','xp','enemies','hazards','treasure','checks','readAloud','description','dmNotes'];
  for(const field of areaFields)await expect(editor.locator('[data-ex-field="'+field+'"]')).toHaveCount(1);
- // O editor reúne também os oito grupos de vínculos entre entidades.
- await expect(editor.locator('.explore-reference')).toHaveCount(8);
- await expect(editor.locator('[data-ex-publish]')).toHaveCount(1);
+ const removed=['parentId','locationId','chapterId','order','mapX','mapY','features','outcomes','publicDescription'];
+ for(const field of removed)await expect(editor.locator('[data-ex-field="'+field+'"]')).toHaveCount(0);
+ await expect(editor.locator('.explore-reference, [data-ex-ref], .explore-reference-grid')).toHaveCount(0);
+ await expect(editor.locator('[data-ex-publish]')).toHaveCount(0);
+ const visibility=page.locator('#exploracao [data-ex-area-visibility]');
+ await expect(visibility).toBeVisible();
+ // A opção é independente do editor, inclusive quando os campos estão recolhidos.
+ await page.locator('#exploracao [data-ex-close-record="area"]').click();
+ await expect(editor).not.toHaveAttribute('open','');
+ await expect(visibility).toBeVisible();
+ await visibility.check();
+ await expect.poll(async()=>page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0].exploration.areas[0].visibleToPlayers)).toBe(true);
+ await expect(editor).not.toHaveAttribute('open','');
+ // Valores legados ainda existem no armazenamento, mas ficam fora da interface.
+ await page.evaluate(()=>{
+  const key='hub-rpg:adventures:v1',rows=JSON.parse(localStorage.getItem(key));
+  Object.assign(rows[0].exploration.areas[0],{mapX:45.5,mapY:72,order:7,features:'Três portas.',outcomes:'Uma pista é revelada.',publicDescription:'Uma torre antiga.'});
+  localStorage.setItem(key,JSON.stringify(rows));
+ });
+ await page.reload();
+ await expect(page.locator('#exploracao [data-ex-area-visibility]')).toBeChecked();
+ await expect(page.locator('#exploracao [data-ex-area-editor]')).not.toHaveAttribute('open','');
+ await page.locator('#exploracao [data-ex-area-editor] summary').click();
+ await expect(page.locator('#exploracao [data-ex-field="name"]')).toBeVisible();
  await editor.locator('[data-ex-field="name"]').fill('Salão de entrada');
  await editor.locator('[data-ex-field="enemies"]').fill('Dois goblins');
  await editor.locator('[data-ex-field="hazards"]').fill('Armadilha de dardos');
@@ -93,19 +109,13 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await editor.locator('[data-ex-field="checks"]').fill('Percepção CD 13');
  await editor.locator('[data-ex-field="readAloud"]').fill('Uma porta range.');
  await editor.locator('[data-ex-field="description"]').fill('Entrada da fortaleza');
- await editor.locator('[data-ex-field="publicDescription"]').fill('Uma torre antiga.');
- await editor.locator('[data-ex-field="features"]').fill('Três portas.');
- await editor.locator('[data-ex-field="outcomes"]').fill('Uma pista é revelada.');
  await editor.locator('[data-ex-field="dmNotes"]').fill('Armadilha secreta.');
  await editor.locator('[data-ex-field="xp"]').fill('150');
- await editor.locator('[data-ex-field="mapX"]').fill('45.5');
- await editor.locator('[data-ex-field="mapY"]').fill('72');
  await editor.locator('[data-ex-field="status"]').selectOption('visited');
- await editor.locator('[data-ex-publish]').check();
  await editor.locator('[data-ex-save-area]').click();
  const state=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0]);
  expect(state.exploration.levels[0]).toMatchObject({name:'Primeiro andar',type:'Masmorra',mapUrl:'https://example.org/primeiro-andar.png',notes:'Mapa de uso privado.',order:2,visibleToPlayers:true});
- expect(state.exploration.areas[0]).toMatchObject({code:'A01',name:'Salão de entrada',type:'Sala',status:'visited',xp:150,mapX:45.5,mapY:72,enemies:'Dois goblins',treasure:'20 moedas de ouro',hazards:'Armadilha de dardos',visibleToPlayers:true,dmNotes:'Armadilha secreta.'});
+ expect(state.exploration.areas[0]).toMatchObject({code:'A01',name:'Salão de entrada',type:'Sala',status:'visited',xp:150,mapX:45.5,mapY:72,order:7,features:'Três portas.',outcomes:'Uma pista é revelada.',publicDescription:'Uma torre antiga.',enemies:'Dois goblins',treasure:'20 moedas de ouro',hazards:'Armadilha de dardos',visibleToPlayers:true,dmNotes:'Armadilha secreta.'});
  expect(state.exploration.history).toHaveLength(1);
  await expect(page.locator('#exploracao .explore-record-status')).toHaveText('Visitada');
  expect(state.scenes).toHaveLength(0);
@@ -119,7 +129,8 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await expect(page.locator('#exploracao .explore-area-card')).toContainText('Salão de entrada');
  await page.locator('#exploracao [data-ex-area-editor] summary').click();
  await expect(page.locator('#exploracao [data-ex-field="xp"]')).toHaveValue('150');
- await expect(page.locator('#exploracao [data-ex-field="mapX"]')).toHaveValue('45.5');
+ await expect(page.locator('#exploracao [data-ex-area-visibility]')).toBeChecked();
+ await expect(page.locator('#exploracao [data-ex-field="mapX"]')).toHaveCount(0);
  await page.locator('#mapas [data-ex-level-editor] summary').click();
  await expect(page.locator('#mapas [data-ex-field="notes"]')).toHaveValue('Mapa de uso privado.');
  expect(errors).toEqual([]);
