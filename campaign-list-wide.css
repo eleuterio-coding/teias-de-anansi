@@ -146,67 +146,26 @@ body.hub-shell-enabled #campaign-list .campaign-card-featured>.campaign-card-act
 #campaign-list .campaign-card-featured .campaign-card-actions>button[data-delete]{
  margin-left:auto!important;
 }
-/* Nova Campanha: convite visual de largura total com somente + e texto. */
+/* Adicionar campanha mantém o + circular e somente o rótulo, sem subtítulo. */
 #campaign-list .campaign-create-tile,
 body.hub-shell-enabled #campaign-list .campaign-create-tile{
- position:relative;isolation:isolate;overflow:hidden!important;
  display:flex!important;flex-direction:row!important;
- align-items:center;justify-content:center;gap:18px;
- width:100%;height:auto!important;min-height:124px!important;
- margin:0;padding:24px 28px!important;
- border:1px solid rgba(102,171,227,.42)!important;
- border-radius:18px!important;
- background:
-  radial-gradient(ellipse at 17% 45%,rgba(38,119,195,.20),transparent 46%),
-  linear-gradient(115deg,#142a40 0%,#102034 48%,#0e1b2b 100%)!important;
- color:#eaf4ff!important;
- box-shadow:inset 0 1px 0 rgba(202,232,255,.075),0 8px 24px rgba(0,0,0,.15)!important;
- text-decoration:none!important;text-align:left;
- cursor:pointer;
- transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,background .18s ease;
+ justify-content:center;align-items:center;
+ width:100%;height:auto!important;min-height:104px!important;
+ padding:20px!important;
+ border:2px dashed #435a70!important;border-radius:16px!important;
+ gap:16px;font-size:1.1rem;font-weight:750;letter-spacing:.01em;text-decoration:none;
 }
-#campaign-list .campaign-create-tile .campaign-create-plus,
-body.hub-shell-enabled #campaign-list .campaign-create-tile .campaign-create-plus{
- display:grid;place-items:center;flex:0 0 60px;
- width:60px;height:60px;
- border:1px solid rgba(145,206,255,.66)!important;
- border-radius:50%;background:linear-gradient(145deg,#297fc5,#1d5893)!important;
- color:#fff!important;
- box-shadow:0 5px 18px rgba(23,106,184,.24),inset 0 1px 0 rgba(255,255,255,.20);
- font-size:2.75rem;font-weight:310;line-height:1;
- transition:transform .18s ease,background .18s ease,box-shadow .18s ease;
+#campaign-list .campaign-create-tile .campaign-create-plus{
+ display:grid;place-items:center;flex:0 0 58px;
+ padding:0 0 5px!important;box-sizing:border-box;
+ font-family:Arial,system-ui,sans-serif;
+ width:58px;height:58px;border-radius:50%;
+ border:1px solid currentColor;
+ font-size:2.6rem;font-weight:300;line-height:1;
 }
-#campaign-list .campaign-create-tile .campaign-create-tile-label,
-body.hub-shell-enabled #campaign-list .campaign-create-tile .campaign-create-tile-label{
- color:inherit!important;
- font-size:clamp(1.15rem,1.45vw,1.38rem);
- font-weight:760;letter-spacing:-.012em;line-height:1.25;
-}
-#campaign-list .campaign-create-tile:hover,
-#campaign-list .campaign-create-tile:focus-visible,
-body.hub-shell-enabled #campaign-list .campaign-create-tile:is(:hover,:focus-visible){
- transform:translateY(-2px);
- border-color:rgba(112,191,255,.8)!important;
- background:
-  radial-gradient(ellipse at 17% 45%,rgba(49,139,219,.28),transparent 49%),
-  linear-gradient(115deg,#17344e 0%,#132b43 48%,#10243a 100%)!important;
- color:#fff!important;
- box-shadow:inset 0 1px 0 rgba(202,232,255,.12),0 12px 30px rgba(0,0,0,.22)!important;
-}
-#campaign-list .campaign-create-tile:is(:hover,:focus-visible) .campaign-create-plus{
- transform:scale(1.07);
- background:linear-gradient(145deg,#3598e0,#2570b6)!important;
- box-shadow:0 6px 22px rgba(35,124,203,.36),inset 0 1px 0 rgba(255,255,255,.28);
-}
-#campaign-list .campaign-create-tile:active{transform:translateY(0)}
-body.hub-shell-enabled.hub-content-light #campaign-list .campaign-create-tile{
- background:linear-gradient(115deg,#f2f8fe,#e9f4fd)!important;
- border-color:#b0cee7!important;color:#205681!important;
- box-shadow:0 6px 19px rgba(30,74,112,.08)!important;
-}
-body.hub-shell-enabled.hub-content-light #campaign-list .campaign-create-tile:is(:hover,:focus-visible){
- background:linear-gradient(115deg,#e6f4ff,#d8ecfc)!important;
- border-color:#469cd4!important;color:#16496e!important;
+#campaign-list .campaign-create-tile .campaign-create-tile-label{
+ font-size:1.1rem;font-weight:750;line-height:1.25;
 }
 body.hub-shell-enabled.hub-content-light #campaign-list .campaign-card-featured{
  border-color:#c8d7e5!important;
@@ -274,20 +233,9 @@ body.hub-shell-enabled.hub-content-light #campaign-list .campaign-card-descripti
   min-width:99px;max-width:48%;padding:9px 15px!important;
  }
  #campaign-list .campaign-create-tile,
- body.hub-shell-enabled #campaign-list .campaign-create-tile{
-  min-height:102px!important;padding:18px 16px!important;gap:14px;
- }
- #campaign-list .campaign-create-tile .campaign-create-plus,
- body.hub-shell-enabled #campaign-list .campaign-create-tile .campaign-create-plus{
-  width:52px;height:52px;flex-basis:52px;font-size:2.45rem;
- }
- #campaign-list .campaign-create-tile .campaign-create-tile-label{font-size:1.12rem;}
+ body.hub-shell-enabled #campaign-list .campaign-create-tile{min-height:88px!important}
 }
 @media(prefers-reduced-motion:reduce){
  #campaign-list .campaign-card-featured .campaign-card-cover{transition:none}
  #campaign-list .campaign-card-featured:hover .campaign-card-cover{transform:none}
- #campaign-list .campaign-create-tile,
- #campaign-list .campaign-create-tile .campaign-create-plus{transition:none}
- #campaign-list .campaign-create-tile:is(:hover,:focus-visible){transform:none}
- #campaign-list .campaign-create-tile:is(:hover,:focus-visible) .campaign-create-plus{transform:none}
 }
