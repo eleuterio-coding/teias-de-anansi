@@ -5,7 +5,7 @@ import{playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-image
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles1';
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261022-chronicles1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
@@ -305,7 +305,8 @@ function sessionRosterHtml(session,{readOnly=false}={}){
   const memberActions=readOnly?'':`<div class="row-actions roster-player-actions"><button type="button" class="secondary" data-session-roster-action="up" data-username="${esc(m.username)}" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary" data-session-roster-action="down" data-username="${esc(m.username)}" ${i===selected.length-1?'disabled':''}>↓</button><button type="button" class="danger" data-session-roster-action="remove" data-username="${esc(m.username)}">Remover</button></div>`;
   return `<article class="member-row roster-player session-roster-item" data-session-roster-row="${esc(m.username)}" draggable="${!readOnly}">
    <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(m.username,profiles),name)}<div class="roster-player-display"><span class="roster-player-label">Jogador</span><div class="roster-player-name-line"><span class="roster-player-name">${esc(name)}</span><a class="roster-player-profile-link" href="${profile}" aria-label="Abrir perfil de ${esc(name)}">↗</a></div></div></div>
-   <div class="roster-player-character"><div class="roster-player-display"><span class="roster-player-label">Personagem</span><div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'Personagem')}<a class="roster-player-profile-link roster-character-name" href="${character?`ficha-personagem.html?id=${encodeURIComponent(character.id)}`:'#'}" ${character?'':'aria-disabled="true"'}>${esc(character?.name||'Sem personagem')} ↗</a></div></div></div>${memberActions}
+   <div class="roster-player-character"><div class="roster-player-display"><span class="roster-player-label">Personagem</span><div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'Personagem')}${readOnly?`<a class="roster-player-profile-link roster-character-name" href="${character?`ficha-personagem.html?id=${encodeURIComponent(character.id)}`:'#'}" ${character?'':'aria-disabled="true"'}>${esc(character?.name||'Sem personagem')} ↗</a>`:
+`<select class="session-character-assignment" data-session-character-link="${esc(m.id)}" aria-label="Personagem de ${esc(name)} na Campanha"><option value="">— Sem personagem —</option>${characters.filter(c=>c.id===m.characterId||!campaigns.some(camp=>camp.members?.some(member=>member.characterId===c.id))).map(c=>`<option value="${esc(c.id)}" ${c.id===m.characterId?'selected':''}>${esc(c.name||'Personagem')}</option>`).join('')}</select>${character?`<a class="roster-player-profile-link" href="ficha-personagem.html?id=${encodeURIComponent(character.id)}" aria-label="Abrir ficha de ${esc(character.name)}">↗</a>`:''}`}</div></div></div>${memberActions}
   </article>`;
  }).join('');
  return`<section id="participantes" class="card campaign-editor-card roster-section session-participant-roster"><div class="roster-heading"><h2>Jogadores da Sessão</h2></div><div class="list roster-list session-roster-list">${rows||'<div class="empty">Nenhum jogador atribuído.</div>'}</div>
@@ -317,6 +318,16 @@ function bindSessionRoster(card,ref){
   const c=campaignById(ref.campaignId),members=c?.members||[],characters=members.filter(m=>usernames.includes(m.username)&&m.characterId).map(m=>m.characterId);
   saveSession(ref,{participantUsernames:usernames,participantCharacterIds:characters},'Jogadores da sessão atualizados.')
  };
+ card.querySelectorAll('[data-session-character-link]').forEach(select=>select.addEventListener('change',()=>{
+  const campaignId=ref.campaignId,memberId=select.dataset.sessionCharacterLink,charId=select.value,current=readCampaigns();
+  const change=charId?assignCharacterToMember(current,campaignId,memberId,charId):unassignCharacterFromMember(current,campaignId,memberId);
+  if(!change.ok){feedback(change.reason||'Não foi possível atribuir a ficha.',false);render();return}
+  campaigns=writeCampaigns(change.list);
+  const assignment=campaignById(campaignId)?.members||[];
+  const usernames=[...card.querySelectorAll('[data-session-roster-row]')].map(node=>node.dataset.sessionRosterRow);
+  const characterIds=assignment.filter(m=>usernames.includes(m.username)&&m.characterId).map(m=>m.characterId);
+  saveSession(ref,{participantUsernames:usernames,participantCharacterIds:characterIds},'Personagem atualizado na Campanha e na Sessão.')
+ }));
  card.querySelector('[data-session-add-button]')?.addEventListener('click',()=>{const name=card.querySelector('[data-session-add-member]')?.value;if(!name)return;update([...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow).concat(name).filter((v,i,a)=>a.indexOf(v)===i))});
  for(const b of card.querySelectorAll('[data-session-roster-action]'))b.addEventListener('click',()=>{
   let names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow),user=b.dataset.username,i=names.indexOf(user);
