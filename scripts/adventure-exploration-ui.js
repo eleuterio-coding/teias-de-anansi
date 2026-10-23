@@ -106,13 +106,13 @@ export function renderAdventureExploration(a,c){
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
  const progress=explorationProgress(exploration);
  const areaList='<section class="card adventure-exploration adventure-areas" id="exploracao">'+
-  '<div class="explore-title"><div class="explore-title-copy"><h2>Áreas e Salas</h2><p>Selecione um registro para editar informações, status, narrativa e vínculos.</p></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Locais</h2><p>Selecione um local para editar informações, desafios e notas.</p></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
   '<div class="explore-area-grid">'+(areas.length?areas.map(area=>areaDetail(area,a,c,exploration)).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div></section>';
  const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
-  '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas e Níveis</h2><p>Organize os níveis e gerencie suas imagens em cada registro.</p></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas</h2><p>Organize os mapas e gerencie suas imagens em cada registro.</p></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
   '<div class="explore-level-grid">'+(levels.length?levels.map(level=>levelDetail(level,areas.filter(area=>area.levelId===level.id).length)).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
  const areaCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-area">'+
-  '<h2>Adicionar área / sala</h2>'+
+  '<h2>Adicionar local</h2>'+
   '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
   '<label>Identificador<input name="code" required placeholder="A01, Sala 1, Torre norte..."></label>'+
   '<label>Status<select name="status">'+selectOptions(STATUS,'unknown')+'</select></label>'+
@@ -120,7 +120,7 @@ export function renderAdventureExploration(a,c){
   '<label>Tipo de ambiente<input name="type" placeholder="Sala, corredor, floresta..."></label>'+
   '<button type="submit">Criar área</button></form></section>';
  const mapCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-mapa">'+
-  '<h2>Adicionar mapa / nível</h2>'+
+  '<h2>Adicionar mapa</h2>'+
   '<form id="ex-new-level" class="explore-create-form explore-create-map">'+
   '<label>Nome do mapa<input name="name" required placeholder="Primeiro andar, Floresta..."></label>'+
   '<label>Mapa<input type="file" name="mapFile" accept="image/jpeg,image/png,image/webp"></label>'+
@@ -170,7 +170,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    if(!statusResult?.exploration)return feedback(statusResult?.error||'Não foi possível atualizar o status.',false);
    return apply(statusResult,'Área e status atualizados.');
   }
-  apply(next,kind==='area'?'Área atualizada.':'Mapa atualizado.');
+  apply(next,kind==='area'?'Local atualizado.':'Mapa atualizado.');
  };
  const syncMap=async(levelId,{file=null,remove=false}={})=>{
   const adventure=getAdventure(),before=get(),previous=before?.levels.find(l=>l.id===levelId);
@@ -215,7 +215,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   event.preventDefault();
   const form=event.target,code=form.elements.code.value.trim();if(!code)return;
   const result=createExplorationEntity(get(),'area',{code,name:code,status:form.elements.status.value,levelId:form.elements.levelId.value||null,type:form.elements.type.value});
-  if(result){selectedAreaId=result.entity.id;expandedAreaIds.add(result.entity.id);apply(result,'Área criada.')}
+  if(result){selectedAreaId=result.entity.id;expandedAreaIds.add(result.entity.id);apply(result,'Local criado.')}
  });
  factions?.querySelector('#ex-new-faction')?.addEventListener('submit',event=>{
   event.preventDefault();
@@ -237,7 +237,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  }));
  root?.querySelectorAll('[data-ex-focus-area]').forEach(button=>button.addEventListener('click',event=>{
   const id=event.target.dataset.exFocusArea;
-  apply(setCurrentExplorationArea(get(),get()?.activeAreaId===id?null:id),'Área atualizada.');
+  apply(setCurrentExplorationArea(get(),get()?.activeAreaId===id?null:id),'Local atualizado.');
  }));
  mapRoot?.querySelectorAll('[data-ex-level] .explore-map-upload [data-image-picker]').forEach(picker=>{
   const id=picker.closest('[data-ex-level]')?.dataset.exLevel;if(!id)return;
