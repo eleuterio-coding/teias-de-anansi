@@ -43,7 +43,7 @@ export function adventureGroupsHtml(adventures,campaigns,{campaign='all',status=
   const ordered=sortCampaignAdventures(items);
   const showArrows=ordered.length>1;
   const visible=Math.min(3,ordered.length);
-  const cards=ordered.map(a=>adventureListCard(a,{parentName:known.get(id)?.name||'',readOnly})).join('');
+  const cards=ordered.map(a=>adventureListCard(a,{parentName:known.get(id)?.name||'',readOnly,sessions:known.get(id)?.sessions||[]})).join('');
   return `<section class="adventure-campaign-group" data-adventure-campaign-group="${esc(id)}" aria-label="Aventuras da campanha ${esc(name)}">
    <div class="adventure-campaign-group-heading">
     <div class="adventure-campaign-group-identity">
