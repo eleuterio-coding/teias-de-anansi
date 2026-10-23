@@ -70,7 +70,8 @@ function progress(a){const total=a.scenes.length,done=a.scenes.filter(s=>['compl
 function operationalHtml(a){
  const c=campaign(),chapter=a.chapters.find(x=>x.id===a.currentChapterId),active=a.scenes.find(x=>x.id===a.activeSceneId),next=a.scenes.find(x=>x.status==='planned');
  const activeMissions=a.missions.filter(m=>m.status==='active').length,hiddenClues=a.clues.filter(x=>x.status==='hidden').length;
- const metrics=[['Capítulo atual',chapter?.title||'—'],['Cena atual',active?.title||'—'],['Próxima cena',next?.title||'—'],['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)],['Pistas ocultas',String(hiddenClues)]];
+ const focus=a.exploration?.areas?.find(area=>area.id===a.exploration.activeAreaId);
+  const metrics=[['Capítulo atual',chapter?.title||'—'],['Cena atual',active?.title||'—'],['Área atual',focus?.name||'—'],['Próxima cena',next?.title||'—'],['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)],['Pistas ocultas',String(hiddenClues)]];
  return `<section class="campaign-product-hero adventure-product-hero">
  ${imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-product-hero-media',alt:''})}
  <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a></div>
