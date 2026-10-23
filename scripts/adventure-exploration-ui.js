@@ -65,7 +65,7 @@ function areaDetail(area,a,c,exploration){
   (histories.length?'<div class="explore-history">'+histories.map(h=>'<article class="explore-history-item"><small>'+esc(new Date(h.at).toLocaleString('pt-BR'))+' · '+esc(STATUS[h.status]||h.status)+(h.sessionId?' · Sessão vinculada':'')+'</small><p>'+esc(h.text||'Estado atualizado.')+'</p></article>').join('')+'</div>':'<p class="mini">Sem registros nesta área.</p>')+
   '</div></article>'
 }
-function factionSection(exploration){
+function factionSection(exploration,a,c){
  return '<section class="card explore-faction-section" id="exploracao-faccoes"><h3>Facções e relações</h3><p class="mini">Facções pertencem à Aventura. NPCs e áreas podem ser associados sem duplicar fichas.</p>'+
  '<div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
@@ -76,6 +76,7 @@ function factionSection(exploration){
     field('Descrição interna','description',f.description,'textarea')+
     field('Descrição pública','publicDescription',f.publicDescription,'textarea')+
     field('Notas privadas','dmNotes',f.dmNotes,'textarea')+
+    referenceChecks('npcIds',arr(c?.npcs).filter(n=>a.npcIds.includes(n.id)),f.npcIds)+
     '<label class="explore-check"><input type="checkbox" data-ex-publish'+checked(f.visibleToPlayers)+'>Publicar facção aos jogadores</label>'+
     '</div><div class="row-actions"><button type="button" data-ex-save-faction>Salvar facção</button><button type="button" class="secondary" data-ex-delete="faction" data-ex-id="'+esc(f.id)+'">Excluir</button><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Fechar</button></div>':
     '<p class="mini">'+esc(f.relationship||f.publicDescription||'Sem relação registrada.')+'</p><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Editar facção</button>')+
@@ -114,7 +115,7 @@ export function renderAdventureExploration(a,c){
  '<label class="explore-check"><input type="checkbox" data-ex-publish'+checked(l.visibleToPlayers)+'>Publicar nome do nível</label>'+
  '</div><div class="row-actions"><button type="button" data-ex-save-level>Salvar nível</button><button type="button" class="secondary" data-ex-delete="level" data-ex-id="'+esc(l.id)+'">Excluir nível</button></div></article>').join('')+'</div>'+
  '<form id="ex-new-level" class="explore-create-form"><label>Nome do novo nível<input name="name" required placeholder="Região, distrito, andar, setor..."></label><button type="submit">Adicionar nível</button></form></details>'+
- factionSection(exploration)+'</section>'
+ factionSection(exploration,a,c)+'</section>'
 }
 export function bindAdventureExploration({getAdventure,getCampaign,save,feedback}){
  const root=document.getElementById('exploracao');if(!root)return;
