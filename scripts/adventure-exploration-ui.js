@@ -175,7 +175,18 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    const key=input.dataset.exRef;
    if(!Object.hasOwn(changes,key))changes[key]=[...node.querySelectorAll('[data-ex-ref="'+key+'"]:checked')].map(x=>x.value);
   });
-  apply(updateExplorationEntity(get(),kind,id,changes),kind==='area'?'Área atualizada.':'Registro atualizado.');
+  const previous=get();
+  const next=updateExplorationEntity(previous,kind,id,changes);
+  if(!next?.exploration)return feedback('Não foi possível atualizar o registro.',false);
+  if(kind==='area'){
+   const former=previous?.areas?.find(row=>row.id===id);
+   if(former&&former.status!==changes.status){
+    const statusResult=changeAreaStatus(next.exploration,id,changes.status);
+    if(!statusResult?.exploration)return feedback(statusResult?.error||'Não foi possível atualizar o status.',false);
+    return apply(statusResult,'Área e status atualizados.');
+   }
+  }
+  apply(next,kind==='area'?'Área atualizada.':'Mapa atualizado.');
  };
  const syncMap=async(levelId,{file=null,remove=false}={})=>{
   const adventure=getAdventure(),before=get(),previous=before?.levels.find(l=>l.id===levelId);
