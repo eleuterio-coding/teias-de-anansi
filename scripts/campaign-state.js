@@ -1,5 +1,5 @@
-import{sanitizeEncounterSessionFields}from'./encounter-state.js?v=20261022-chronicles2';
-import{sanitizeCombatSessionFields}from'./combat-state.js?v=20261022-chronicles2';
+import{sanitizeEncounterSessionFields}from'./encounter-state.js?v=20261022-chronicles-final3';
+import{sanitizeCombatSessionFields}from'./combat-state.js?v=20261022-chronicles-final3';
 
 export const CAMPAIGN_KEY='hub-rpg:campaigns:v1';
 export const CAMPAIGN_SCHEMA='hub-rpg/campaign/v1';
