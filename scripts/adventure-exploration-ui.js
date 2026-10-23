@@ -1,7 +1,7 @@
 /* Espaço de exploração para o Mestre: mapas opcionais, áreas persistentes,
    referências ao restante do Hub, facções e crônica de visitas.
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
-import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,explorationProgress,EXPLORATION_STATUS,FACTION_STANCE}from'./adventure-exploration-state.js?v=20261023-exploration1';
+import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,setCurrentExplorationArea,explorationProgress,EXPLORATION_STATUS,FACTION_STANCE}from'./adventure-exploration-state.js?v=20261023-exploration1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[];
 const STATUS={unknown:'Não descoberta',discovered:'Descoberta',visited:'Visitada',resolved:'Resolvida',blocked:'Bloqueada'};
@@ -55,7 +55,7 @@ function areaDetail(area,a,c,exploration){
    referenceChecks('handoutIds',a.handouts,area.handoutIds)+
    referenceChecks('treasureIds',a.treasures,area.treasureIds)+
   '</div></details>'+
-  '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar dados da área</button><a class="btn secondary" href="#cenas">Cenas vinculadas: '+sceneLinks.length+'</a></div>'+
+  '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar dados da área</button><button type="button" class="secondary" data-ex-focus-area="'+esc(area.id)+'">'+(exploration.activeAreaId===area.id?'Limpar área atual':'Definir como área atual')+'</button><a class="btn secondary" href="#cenas">Cenas vinculadas: '+sceneLinks.length+'</a></div>'+
   '<div class="explore-visit-panel"><h4>Estado e crônica da área</h4><p class="mini">Atualizar uma área não conclui cenas nem encontros automaticamente.</p>'+
   '<div class="explore-fields"><label>Estado<select id="ex-area-status">'+selectOptions(STATUS,area.status)+'</select></label>'+
   '<label>Sessão relacionada<select id="ex-area-session">'+choices(sessions.map(s=>({...s,name:s.title||'Sessão '+s.number})),null,'— Sem sessão —')+'</select></label>'+
@@ -88,10 +88,11 @@ export function renderAdventureExploration(a,c){
  const search=areaQuery.toLocaleLowerCase('pt-BR');
  const filtered=areas.filter(area=>(levelFilter==='all'||area.levelId===levelFilter)&&(areaFilter==='all'||area.status===areaFilter)&&(!search||[area.name,area.code,area.type,area.description].some(s=>String(s||'').toLocaleLowerCase('pt-BR').includes(search))));
  const selected=areas.find(area=>area.id===selectedAreaId)||null;
+ const focused=areas.find(area=>area.id===exploration.activeAreaId)||null;
  const mapLevel=levels.find(l=>l.id===levelFilter)||null;
  const displayAreas=(view==='map'&&mapLevel)?filtered.filter(x=>x.levelId===mapLevel.id&&x.mapX!==null&&x.mapY!==null):[];
  return '<section class="card adventure-exploration" id="exploracao"><div class="explore-title"><div><h2>Exploração</h2><p class="mini">Áreas persistentes, exploração não linear e mapas opcionais. Nada é revelado automaticamente.</p></div><span class="badge">'+progress.visited+' / '+progress.total+' áreas visitadas</span></div>'+
- '<div class="explore-summary"><span><strong>'+progress.discovered+'</strong> descobertas</span><span><strong>'+progress.visited+'</strong> visitadas</span><span><strong>'+progress.resolved+'</strong> resolvidas</span><span><strong>'+levels.length+'</strong> níveis</span></div>'+
+ '<div class="explore-summary">'+(focused?'<span><strong>Área atual:</strong> '+esc((focused.code?focused.code+' — ':'')+focused.name)+'</span>':'')+'<span><strong>'+progress.discovered+'</strong> descobertas</span><span><strong>'+progress.visited+'</strong> visitadas</span><span><strong>'+progress.resolved+'</strong> resolvidas</span><span><strong>'+levels.length+'</strong> níveis</span></div>'+
  '<div class="explore-toolbar"><label>Nível<select id="ex-level-filter"><option value="all">Todos os níveis</option>'+levels.map(l=>'<option value="'+esc(l.id)+'"'+(levelFilter===l.id?' selected':'')+'>'+esc(l.name)+'</option>').join('')+'</select></label>'+
  '<label>Estado<select id="ex-status-filter"><option value="all">Todos os estados</option>'+selectOptions(STATUS,areaFilter)+'</select></label>'+
  '<label>Buscar área<input id="ex-area-search" value="'+esc(areaQuery)+'" placeholder="Número, nome, tipo..."></label>'+
@@ -146,6 +147,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  root.querySelector('#ex-new-faction')?.addEventListener('submit',e=>{e.preventDefault();const name=e.target.elements.name.value.trim();if(!name)return;const result=createExplorationEntity(get(),'faction',{name});if(result){expandedFactionId=result.entity.id;apply(result,'Facção criada.')}});
  root.querySelectorAll('[data-ex-save-level]').forEach(b=>b.addEventListener('click',()=>{const node=b.closest('[data-ex-level]');edit('level',node.dataset.exLevel,node)}));
  root.querySelector('[data-ex-save-area]')?.addEventListener('click',e=>{const node=e.target.closest('[data-ex-area]');edit('area',node.dataset.exArea,node)});
+ root.querySelector('[data-ex-focus-area]')?.addEventListener('click',e=>{const id=e.target.dataset.exFocusArea;apply(setCurrentExplorationArea(get(),get()?.activeAreaId===id?null:id),'Área atualizada.')} );
  root.querySelectorAll('[data-ex-save-faction]').forEach(b=>b.addEventListener('click',()=>{const node=b.closest('[data-ex-faction]');edit('faction',node.dataset.exFaction,node)}));
  root.querySelectorAll('[data-ex-expand-faction]').forEach(b=>b.addEventListener('click',()=>{expandedFactionId=expandedFactionId===b.dataset.exExpandFaction?null:b.dataset.exExpandFaction;save(null,null,true)}));
  root.querySelectorAll('[data-ex-delete]').forEach(b=>b.addEventListener('click',()=>{
