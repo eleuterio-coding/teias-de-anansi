@@ -102,14 +102,14 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
 :is(#adventure-list,#sessions-list) .campaign-cover-caption{
   font-size:.7rem;letter-spacing:.19em;text-transform:uppercase
 }
-/* Painel descritivo, com régua de título reservada para o seletor de status. */
+/* Painel descritivo: status integrado ao vínculo da campanha ou aventura. */
 :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details,
 body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-details{
   grid-column:2;grid-row:1;
   display:flex;flex-direction:column;justify-content:space-between;
   gap:10px;min-width:0;min-height:0;
   margin:0;
-  padding:57px var(--campaign-card-edge) 0!important;
+  padding:18px var(--campaign-card-edge) 0!important;
   background:transparent
 }
 :is(#adventure-list,#sessions-list) .campaign-card-intro{min-width:0}
@@ -139,7 +139,7 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
 :is(#adventure-list,#sessions-list) .campaign-card-featured .hub-ancestry .hub-parent-link{
   max-width:100%;min-width:0;overflow-wrap:anywhere
 }
-/* Indicadores: ícone, número e legenda como no modelo. */
+/* Indicadores textuais: números e legendas, sem ícones. */
 :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-metrics{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:7px;width:100%;min-width:0;
@@ -150,13 +150,6 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
   gap:7px;min-width:0;min-height:58px;padding:8px 9px;
   background:rgba(65,105,145,.13);
   border:1px solid rgba(146,179,212,.2);border-radius:10px
-}
-:is(#adventure-list,#sessions-list) .campaign-card-stat-icon{
-  display:grid;place-items:center;flex:0 0 18px;color:#79b9f0
-}
-:is(#adventure-list,#sessions-list) .campaign-card-stat-icon svg{
-  width:18px;height:18px;stroke:currentColor;fill:none;
-  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round
 }
 :is(#adventure-list,#sessions-list) .campaign-card-stat-copy{
   display:flex;flex-direction:column;align-items:flex-start;
@@ -170,14 +163,27 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
   color:var(--hub-muted,#aac0d3);font-size:.75rem;
   font-weight:650;line-height:1.25
 }
-/* Estado sempre no canto superior direito; o menu mantém interatividade. */
-:is(#adventure-list,#sessions-list) .campaign-card-featured > .campaign-card-status{
-  position:absolute;top:11px;right:var(--campaign-card-edge);
-  z-index:5;max-width:calc(40% - 16px);
-  margin:0
+/* Estado imediatamente abaixo do nome do vínculo.
+   O controle permanece interativo mesmo com o link que cobre o card. */
+:is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-ancestry-status{
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:7px;min-width:0;max-width:100%;
+}
+:is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-ancestry-status>.campaign-card-status{
+  position:relative!important;top:auto!important;right:auto!important;
+  display:inline-flex!important;align-self:flex-start;justify-self:start;
+  max-width:100%!important;margin:0!important;
+  z-index:5;pointer-events:auto!important
+}
+:is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-ancestry-status .campaign-status-disclosure,
+:is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-ancestry-status .campaign-status-trigger{
+  pointer-events:auto!important
 }
 :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-status-menu{
   z-index:50
+}
+#sessions-list .campaign-card-featured .session-adventure-context{
+  flex:1 1 auto;min-width:0
 }
 /* Rodapé simétrico: botões textuais, de mesma largura, altura e alinhamento. */
 :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions,
@@ -290,15 +296,12 @@ body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .ca
     grid-template-columns:minmax(0,53%) minmax(0,47%)!important;
     min-height:430px!important
   }
-  :is(#adventure-list,#sessions-list) .campaign-card-featured > .campaign-card-status{
-    max-width:calc(47% - 16px)
-  }
   :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details h2{
     font-size:clamp(.98rem,1.23vw,1.32rem)!important
   }
   :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details,
   body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-details{
-    padding-top:52px!important
+    padding-top:16px!important
   }
 }
 /* Celulares e tablets estreitos: uma coluna de cards, sem perder a capa lateral
@@ -332,9 +335,6 @@ body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .ca
   body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-details{
     grid-column:1!important;grid-row:2!important;
     padding:70px var(--campaign-card-edge) 0!important;gap:18px
-  }
-  :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-status{
-    top:206px;max-width:calc(100% - 36px)
   }
   :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions,
   body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions{
