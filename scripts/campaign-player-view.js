@@ -1,6 +1,6 @@
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-chronicles-final3';
-import{renderStructuredDetails,renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
@@ -41,7 +41,7 @@ function readonlyText(id,title,value){
  <textarea class="campaign-large-text" aria-label="${title}" readonly>${esc(value||'')}</textarea></section>`;
 }
 function navigation(c){
- const links=[['proxima-sessao',findCurrentCampaignSession(c)?'Sessão Atual':'Próxima Sessão'],['campanha','Campanha'],['jogadores','Jogadores'],['aventuras','Aventuras'],['sessoes','Sessões'],['historia','História'],['npcs','NPCs'],['locais','Locais'],['linha-tempo','Linha do tempo']];
+ const links=[['proxima-sessao',findCurrentCampaignSession(c)?'Sessão Atual':'Próxima Sessão'],['campanha','Campanha'],['jogadores','Jogadores'],['aventuras','Aventuras'],['sessoes','Sessões'],['historia','História'],['linha-tempo','Linha do tempo']];
  if(c.sharedNotes)links.push(['notas-compartilhadas','Notas compartilhadas']);
  return `<nav class="section-nav">${links.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>`;
 }
@@ -100,9 +100,8 @@ export function renderPlayerCampaign(row){
  <div class="campaign-sections campaign-editor-grid">
  ${renderCampaignSettings(c,{readOnly:true})}
  ${playerRoster(c,characters,profiles,row.membership?.username||'')}
- ${renderCampaignAdventuresSection(c.id,adventures)}
+ ${renderCampaignAdventuresSection(c.id,adventures,{readOnly:true})}
  ${renderCampaignSessionsSection(c,adventures,{readOnly:true})}
- ${renderStructuredDetails(c,[],{readOnly:true})}
  ${renderTimeline(c,'list',null,{readOnly:true})}
  ${c.sharedNotes?readonlyText('notas-compartilhadas','Notas compartilhadas',c.sharedNotes):''}
  ${c.dmNoteEntries?.length?noteSection(c.dmNoteEntries,{readOnly:true}):''}
