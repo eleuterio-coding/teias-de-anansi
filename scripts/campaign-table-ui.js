@@ -1,5 +1,5 @@
 import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
-import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261022-chronicles-final3';
+import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261023-campaign-links2';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{numberedSessionTitle}from'./narrative-labels.js';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
