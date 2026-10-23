@@ -500,3 +500,42 @@
   grid-column:2 / 4;grid-row:5;
  }
 }
+
+/* Campanha: alinhamento vertical do planejamento e prévias de capa dos indicadores. */
+#table-root #proxima-sessao.campaign-next-highlight{
+ align-items:stretch;min-height:155px
+}
+#table-root #proxima-sessao .campaign-next-content{
+ display:flex;flex:1;flex-direction:column;align-items:flex-start;
+ justify-content:center;align-self:stretch;min-width:0;gap:7px
+}
+#table-root #proxima-sessao .campaign-next-action{
+ align-self:center
+}
+#table-root .campaign-product-summary .campaign-summary-session-card{
+ position:relative;isolation:isolate;overflow:hidden
+}
+#table-root .campaign-product-summary .campaign-summary-session-backdrop{
+ position:absolute;inset:0;display:block;width:100%;height:100%;
+ object-fit:cover;object-position:center;
+ opacity:.66;filter:saturate(.73) brightness(.72) contrast(.96);
+ z-index:0;pointer-events:none
+}
+#table-root .campaign-product-summary .campaign-summary-session-card::before{
+ content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:linear-gradient(90deg,rgba(9,19,31,.85) 0%,rgba(9,19,31,.62) 100%)
+}
+#table-root .campaign-product-summary .campaign-summary-session-card > :is(span,strong){
+ position:relative;z-index:2
+}
+#table-root .campaign-product-summary .campaign-summary-session-card::after{
+ z-index:3
+}
+@media(max-width:710px){
+ #table-root #proxima-sessao .campaign-next-content{
+  width:100%;min-height:0
+ }
+ #table-root #proxima-sessao .campaign-next-action{
+  align-self:stretch
+ }
+}
