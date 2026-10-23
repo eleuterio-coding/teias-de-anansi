@@ -34,9 +34,10 @@ function areaDetail(area,a,c,exploration){
  return '<article class="explore-area-card explore-record-card'+(selectedAreaId===area.id?' is-selected':'')+'" data-ex-area="'+esc(area.id)+'">'+
   '<details class="explore-record-editor" data-ex-area-editor="'+esc(area.id)+'"'+(expandedAreaIds.has(area.id)?' open':'')+'>'+
    '<summary class="explore-record-summary">'+recordTitle(name,(level?.name||'Sem mapa')+' · '+(area.type||'Ambiente não definido'))+
+    '<span class="explore-record-status">'+esc(STATUS[area.status]||STATUS.unknown)+'</span>'+
     '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>'+
    '<div class="explore-record-body">'+
-    '<div class="explore-fields explore-area-detail-fields">'+
+    '<section class="explore-editor-group"><header><h4>Identificação e estrutura</h4><p>Informações principais e organização da área.</p></header><div class="explore-fields explore-area-detail-fields">'+
      field('Identificador','code',area.code)+
      field('Nome','name',area.name)+
      '<label>Status<select data-ex-field="status">'+selectOptions(STATUS,area.status)+'</select></label>'+
@@ -46,6 +47,7 @@ function areaDetail(area,a,c,exploration){
      '<label>Capítulo vinculado<select data-ex-field="chapterId">'+choices(arr(a.chapters),area.chapterId,'— Sem capítulo —')+'</select></label>'+
      field('Tipo de ambiente','type',area.type)+
      field('Ordem','order',area.order??1,'input','type="number" min="1" step="1"')+
+     '</div></section><section class="explore-editor-group"><header><h4>Exploração e recompensas</h4><p>Posição, desafios e resultados possíveis.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
      field('Posição X no mapa (%)','mapX',area.mapX??'','input','type="number" min="0" max="100" step="any"')+
      field('Posição Y no mapa (%)','mapY',area.mapY??'','input','type="number" min="0" max="100" step="any"')+
@@ -55,13 +57,14 @@ function areaDetail(area,a,c,exploration){
      field('Testes e mecânicas','checks',area.checks,'textarea','rows="2"')+
      field('Características','features',area.features,'textarea','rows="2"')+
      field('Consequências / resultados','outcomes',area.outcomes,'textarea','rows="2"')+
+     '</div></section><section class="explore-editor-group"><header><h4>Narrativa e visibilidade</h4><p>Separe o conteúdo público das notas exclusivas do Mestre.</p></header><div class="explore-fields">'+
      field('Texto para narração','readAloud',area.readAloud,'textarea','rows="3"')+
      field('Descrição para o Mestre','description',area.description,'textarea','rows="3"')+
      field('Descrição pública','publicDescription',area.publicDescription,'textarea','rows="3"')+
      field('Notas privadas do Mestre','dmNotes',area.dmNotes,'textarea','rows="3"')+
      '<label class="explore-publish"><input type="checkbox" data-ex-publish'+checked(area.visibleToPlayers)+'>Visível para jogadores</label>'+
-    '</div>'+
-    '<div class="explore-reference-grid">'+
+    '</div></section>'+
+    '<section class="explore-editor-group"><header><h4>Vínculos</h4><p>Associe cenas, personagens, facções e outros registros existentes.</p></header><div class="explore-reference-grid">'+
      referenceChecks('connectionIds',areas.filter(x=>x.id!==area.id),area.connectionIds)+
      referenceChecks('npcIds',arr(c?.npcs).filter(x=>arr(a.npcIds).includes(x.id)),area.npcIds)+
      referenceChecks('monsterIds',arr(a.monsters),area.monsterIds)+
@@ -70,29 +73,29 @@ function areaDetail(area,a,c,exploration){
      referenceChecks('clueIds',arr(a.clues),area.clueIds)+
      referenceChecks('handoutIds',arr(a.handouts),area.handoutIds)+
      referenceChecks('treasureIds',arr(a.treasures),area.treasureIds)+
-    '</div>'+
+    '</div></section>'+
     '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar área</button>'+
      '<button type="button" class="secondary" data-ex-focus-area="'+esc(area.id)+'">'+(exploration.activeAreaId===area.id?'Limpar área atual':'Definir como área atual')+'</button>'+
      '<button type="button" class="danger" data-ex-delete="area" data-ex-id="'+esc(area.id)+'">Excluir área</button>'+
      '<button type="button" class="secondary" data-ex-close-record="area">Recolher</button></div>'+
    '</div></details></article>';
 }
-function levelDetail(level){
+function levelDetail(level,areaCount=0){
  return '<article data-ex-level="'+esc(level.id)+'" class="story-card explore-level-card explore-record-card">'+
   '<details class="explore-record-editor" data-ex-level-editor="'+esc(level.id)+'"'+(expandedLevelIds.has(level.id)?' open':'')+'>'+
-   '<summary class="explore-record-summary">'+recordTitle(level.name,(level.type||'Tipo não definido')+' · Mapa / nível')+
+   '<summary class="explore-record-summary">'+recordTitle(level.name,(level.type||'Tipo não definido')+' · '+areaCount+' '+(areaCount===1?'área':'áreas')+' vinculadas')+
     '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>'+
    '<div class="explore-record-body">'+
-    '<div class="explore-fields">'+
+    '<section class="explore-editor-group"><header><h4>Dados do mapa</h4><p>Identificação, tipo e endereço da imagem.</p></header><div class="explore-fields">'+
      field('Nome do mapa','name',level.name)+
      field('Tipo','type',level.type)+
      field('Ordem','order',level.order??1,'input','type="number" min="1" step="1"')+
      field('URL do mapa','mapUrl',level.mapUrl,'input','placeholder="https://... ou caminho relativo"')+
+     '</div></section><section class="explore-editor-group"><header><h4>Descrição e acesso</h4><p>Notas para o Mestre e controle de visibilidade.</p></header><div class="explore-fields">'+
      field('Descrição','description',level.description,'textarea','rows="2"')+
      field('Notas privadas','notes',level.notes,'textarea','rows="3"')+
      '<label class="explore-publish"><input type="checkbox" data-ex-publish'+checked(level.visibleToPlayers)+'>Visível para jogadores</label>'+
-     '<div class="explore-map-upload"><strong>Imagem do mapa</strong>'+imagePickerHtml({media:level.mapImage,legacyUrl:level.mapUrl,alt:'Mapa de '+level.name,className:'explore-map-image'})+'</div>'+
-    '</div>'+
+     '</div></section><section class="explore-editor-group"><header><h4>Imagem do mapa</h4><p>Adicione, visualize ou substitua a imagem deste nível.</p></header><div class="explore-map-upload"><strong>Arquivo e visualização</strong>'+imagePickerHtml({media:level.mapImage,legacyUrl:level.mapUrl,alt:'Mapa de '+level.name,className:'explore-map-image'})+'</div></section>'+
     '<div class="explore-detail-actions"><button type="button" data-ex-save-level>Salvar mapa</button>'+
      '<button type="button" class="danger" data-ex-delete="level" data-ex-id="'+esc(level.id)+'">Excluir mapa</button>'+
      '<button type="button" class="secondary" data-ex-close-record="level">Recolher</button></div>'+
@@ -125,11 +128,11 @@ export function renderAdventureExploration(a,c){
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
  const progress=explorationProgress(exploration);
  const areaList='<section class="card adventure-exploration adventure-areas" id="exploracao">'+
-  '<div class="explore-title"><h2>Áreas e Salas</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Áreas e Salas</h2><p>Selecione um registro para editar informações, status, narrativa e vínculos.</p></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
   '<div class="explore-area-grid">'+(areas.length?areas.map(area=>areaDetail(area,a,c,exploration)).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div></section>';
  const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
-  '<div class="explore-title"><h2>Mapas e Níveis</h2><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
-  '<div class="explore-level-grid">'+(levels.length?levels.map(levelDetail).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas e Níveis</h2><p>Organize os níveis e gerencie suas imagens em cada registro.</p></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
+  '<div class="explore-level-grid">'+(levels.length?levels.map(level=>levelDetail(level,areas.filter(area=>area.levelId===level.id).length)).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
  const areaCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-area">'+
   '<h2>Adicionar área / sala</h2>'+
   '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
