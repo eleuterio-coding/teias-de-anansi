@@ -37,7 +37,7 @@ function areaDetail(area,a,c,exploration){
      field('Identificador','code',area.code)+
      field('Nome','name',area.name)+
      '<label>Status<select data-ex-field="status">'+selectOptions(STATUS,area.status)+'</select></label>'+
-     '<label>Mapa / nível<select data-ex-field="levelId">'+choices(levels,area.levelId,'— Sem mapa —')+'</select></label>'+
+     '<label>Mapa<select data-ex-field="levelId">'+choices(levels,area.levelId,'— Sem mapa —')+'</select></label>'+
      field('Tipo de ambiente','type',area.type)+
      '</div></section><section class="explore-editor-group"><header><h4>Desafios e recompensas</h4><p>XP, inimigos, perigos, tesouros e testes.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
@@ -50,9 +50,9 @@ function areaDetail(area,a,c,exploration){
      field('Descrição para o Mestre','description',area.description,'textarea','rows="3"')+
      field('Notas privadas do Mestre','dmNotes',area.dmNotes,'textarea','rows="3"')+
      '</div></section>'+ 
-     '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar área</button>'+
-     '<button type="button" class="secondary" data-ex-focus-area="'+esc(area.id)+'">'+(exploration.activeAreaId===area.id?'Limpar área atual':'Definir como área atual')+'</button>'+
-     '<button type="button" class="danger" data-ex-delete="area" data-ex-id="'+esc(area.id)+'">Excluir área</button>'+
+     '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar local</button>'+
+     '<button type="button" class="secondary" data-ex-focus-area="'+esc(area.id)+'">'+(exploration.activeAreaId===area.id?'Limpar local atual':'Definir como local atual')+'</button>'+
+     '<button type="button" class="danger" data-ex-delete="area" data-ex-id="'+esc(area.id)+'">Excluir local</button>'+
      '<button type="button" class="secondary" data-ex-close-record="area">Recolher</button></div>'+
    '</div></details>'+
    '<div class="explore-record-visibility-bar"><label class="explore-card-publish"><input type="checkbox" data-ex-publish data-ex-area-visibility="'+esc(area.id)+'"'+checked(area.visibleToPlayers)+'>Visível para jogadores</label></div>'+
@@ -118,7 +118,7 @@ export function renderAdventureExploration(a,c){
   '<label>Status<select name="status">'+selectOptions(STATUS,'unknown')+'</select></label>'+
   '<label>Mapa<select name="levelId">'+choices(levels,null,'— Sem mapa —')+'</select></label>'+
   '<label>Tipo de ambiente<input name="type" placeholder="Sala, corredor, floresta..."></label>'+
-  '<button type="submit">Criar área</button></form></section>';
+  '<button type="submit">Criar local</button></form></section>';
  const mapCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-mapa">'+
   '<h2>Adicionar mapa</h2>'+
   '<form id="ex-new-level" class="explore-create-form explore-create-map">'+
