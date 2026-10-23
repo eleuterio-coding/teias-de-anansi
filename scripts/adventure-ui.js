@@ -191,7 +191,7 @@ function timelineCard(row){
  <div class="adventure-timeline-row-head"><span class="adventure-timeline-kind">${scene?'Cena · '+esc(row.sceneStatus):row.automatic?'Automático':'Registro'}</span>${validDate?`<time class="mini" datetime="${esc(row.at)}">${esc(date.toLocaleString('pt-BR'))}</time>`:''}</div>
  <strong>${esc(row.title)}</strong>
  ${row.text?`<p class="mini">${esc(row.text)}</p>`:''}
- ${scene?`<a class="adventure-timeline-scene-link" href="#cenas">Ver nas Cenas</a>`:row.automatic?'':`<div class="row-actions"><button class="danger" data-remove-entity="${esc(row.id)}" data-key="timelineEvents">Excluir registro</button></div>`}
+ ${scene?`<a class="adventure-timeline-scene-link" href="#cenas">Ver nas Cenas</a>`:row.automatic?'':`<div class="row-actions">${visibleToggle('timelineEvents',row.id,row.visibleToPlayers)}<button class="danger" data-remove-entity="${esc(row.id)}" data-key="timelineEvents">Excluir registro</button></div>`}
  </article>`;
 }
 function adventureTimelineHtml(a){
@@ -209,7 +209,8 @@ function linkedSessionsHtml(a){
  const ids=new Set(a.scenes.map(s=>s.sessionId).filter(Boolean));
  const rows=(campaign()?.sessions||[]).filter(s=>s.adventureId===a.id||ids.has(s.id)).sort((x,y)=>(x.order||x.number)-(y.order||y.number));
  return`<section id="sessoes" class="card campaign-editor-card"><h2>Sessões da Aventura</h2>
- <div class="list campaign-player-story-grid">${rows.length?rows.map(s=>renderCampaignSessionCard(s,a.campaignId)).join(''):'<div class="empty">Nenhuma sessão vinculada à Aventura.</div>'}</div></section>`;
+ <p class="mini">Escolha quais sessões ficam disponíveis para os jogadores desta Aventura.</p>
+ <div class="list campaign-player-story-grid">${rows.length?rows.map(s=>`<div class="adventure-linked-session" data-adventure-session="${esc(s.id)}">${renderCampaignSessionCard(s,a.campaignId)}${visibleToggle('sessions',s.id,a.sessionVisibility?.[s.id]===true)}</div>`).join(''):'<div class="empty">Nenhuma sessão vinculada à Aventura.</div>'}</div></section>`;
 }
 function monstersHtml(a){
  const current=ordered(a.monsters||[]);
@@ -406,7 +407,7 @@ function bindAdventureVisibilityAndOrder(){
   const items=['npcs','locations'].includes(kind)?rows:rows.map(rowId=>current[kind].find(x=>x.id===rowId)).filter(Boolean);
   saveList(kind,items,'Ordem atualizada.');
  };
- document.querySelectorAll('[data-adventure-visible]').forEach(input=>input.addEventListener('change',()=>{
+ document.querySelectorAll('[data-adventure-visible]:not([data-adventure-visible="sessions"])').forEach(input=>input.addEventListener('change',()=>{
   const a=adventure(),id=input.dataset.visibleId,key=input.dataset.adventureVisible,on=input.checked;
   if(key==='npcs'||key==='locations'){
    const mapKey=key==='npcs'?'npcVisibility':'locationVisibility',patch={[mapKey]:{...(a[mapKey]||{}),[id]:on}};
@@ -470,6 +471,11 @@ function bindAdventureNotes(){
 }
 function bind(){
  bindAdventureMonsterLibrary();
+ document.querySelectorAll('#sessoes [data-adventure-visible="sessions"]').forEach(input=>input.addEventListener('change',()=>{
+  const a=adventure(),id=input.dataset.visibleId;
+  const sessionVisibility={...(a.sessionVisibility||{}),[id]:input.checked};
+  commit(updateAdventure(adventures,adventureId,{sessionVisibility}),'Visibilidade da sessão atualizada.');
+ }));
  document.querySelectorAll('#linha-tempo [data-timeline-view]').forEach(button=>button.addEventListener('click',()=>{
   const next=button.dataset.timelineView==='flowchart'?'flowchart':'list';
   if(adventureTimelineView===next)return;
