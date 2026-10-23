@@ -1,18 +1,33 @@
-name: Verificar seis cards de Aventuras
+name: Validar cards e exploração de Aventuras
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-exploration-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'adventure-exploration.css'
+      - 'aventuras.html'
+      - 'e2e/adventure-exploration.spec.js'
+      - 'e2e/adventure-six-panels-actions.spec.js'
+      - '.github/workflows/validar-cards-aventura.yml'
   pull_request:
     paths:
       - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-exploration-ui.js'
       - 'scripts/adventure-router.js'
       - 'scripts/collaboration-model.js'
+      - 'adventure-exploration.css'
       - 'hub-detail-layout.css'
+      - 'aventuras.html'
+      - 'e2e/adventure-exploration.spec.js'
       - 'e2e/adventure-six-panels-actions.spec.js'
       - '.github/workflows/validar-cards-aventura.yml'
   workflow_dispatch:
 jobs:
-  six-panels:
+  explore-cards:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -20,12 +35,12 @@ jobs:
           node-version: '22'
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
-      - name: Abrir e operar Capítulos, Locais, Objetivos, NPCs, Monstros e Cenas
-        run: npx playwright test e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium
+      - name: Validar cards independentes e persistência em desktop e celular
+        run: npx playwright test e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: always()
         with:
-          name: aventura-six-panels-failure
+          name: aventura-exploracao-playwright
           path: |
             test-results/
             playwright-report/
