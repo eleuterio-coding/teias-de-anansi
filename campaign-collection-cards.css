@@ -172,7 +172,7 @@ body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featur
 /* Estado sempre no canto superior direito; o menu mantém interatividade. */
 :is(#adventure-list,#sessions-list) .campaign-card-featured > .campaign-card-status{
   position:absolute;top:24px;right:var(--campaign-card-edge);
-  z-index:5;max-width:calc(35% - 2*var(--campaign-card-edge));
+  z-index:5;max-width:calc(35% - 50px);
   margin:0
 }
 :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-status-menu{
