@@ -1,6 +1,6 @@
 import{imageElementHtml}from'./image-media.js?v=20261019-disclosure1';
 import{numberedSessionTitle}from'./narrative-labels.js';
-import{findPreviousCampaignSession,findUpcomingCampaignSession}from'./campaign-next-session-ui.js?v=20261022-status-palette2';
+import{findPreviousCampaignSession,findUpcomingCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{featuredCampaignAdventures,recentCampaignSessions}from'./campaign-recent-items.js?v=20261021-adventure-featured2';
 import{renderCampaignAdventureCard}from'./campaign-adventure-card.js?v=20261021-shared-order1';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
