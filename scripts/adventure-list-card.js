@@ -27,15 +27,23 @@ export function adventureListCard(adventure,{parentName='',readOnly=false}={}){
       ${ADVENTURE_STATUSES.map(value=>`<button type="button" class="campaign-status-option status-${value}" data-adventure-status-id="${esc(a.id)}" data-next-adventure-status="${value}" aria-pressed="${status===value}">${esc(labels[value])}</button>`).join('')}
      </div>
     </details>`;
- return `<article class="campaign-card" data-adventure-card="${esc(a.id)}">
+ return `<article class="campaign-card campaign-card-featured" data-adventure-card="${esc(a.id)}">
   <a class="campaign-card-stretched-link" href="${href}" aria-label="Abrir ${esc(heading)}"></a>
   <div class="campaign-card-status status-${esc(status)}">${statusControl}</div>
-  <div class="campaign-card-main">${cover}<div class="campaign-card-details">
-   <h2>${esc(heading)}</h2>
-   ${description?`<p>${esc(description)}</p>`:''}
-   <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></div>
-   <p class="mini">${esc(types[a.type]||'Aventura')} ${a.arc?`· ${esc(a.arc)} `:''}· ${esc(counts)}</p>
-  </div></div>
+  <div class="campaign-card-main">
+   <div class="campaign-card-art">${cover||'<div class="campaign-card-cover-placeholder" aria-hidden="true"><span class="campaign-cover-crest">✦</span><span class="campaign-cover-caption">Teias de Anansi</span></div>'}</div>
+   <div class="campaign-card-details">
+    <div class="campaign-card-intro">
+     <h2>${esc(heading)}</h2>
+     ${description?`<p class="campaign-card-description">${esc(description)}</p>`:''}
+     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<a href="${campaignHref}" aria-label="Abrir campanha ${esc(parentName)}">${esc(parentName)}</a>`:'<strong>Campanha não encontrada</strong>'}</span></div>
+    </div>
+    <div class="campaign-card-metrics" role="group" aria-label="Capítulos e cenas da aventura">
+     <div class="campaign-card-stat"><strong>${arr(a.chapters).length}</strong><span>${arr(a.chapters).length===1?'Capítulo':'Capítulos'}</span></div>
+     <div class="campaign-card-stat"><strong>${arr(a.scenes).length}</strong><span>${arr(a.scenes).length===1?'Cena':'Cenas'}</span></div>
+    </div>
+   </div>
+  </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="${href}">Abrir</a>
    ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">Excluir</button>`}
