@@ -78,7 +78,7 @@ function operationalHtml(a){
  return `<section class="campaign-product-hero adventure-product-hero">
  ${imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-product-hero-media',alt:''})}
  <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a></div>
- <div class="campaign-product-hero-content"><div class="campaign-product-kicker">Campanha: ${esc(c?.name||'Campanha')}</div>
+ <div class="campaign-product-hero-content"><div class="campaign-product-kicker">Campanha · ${esc(c?.name||'Campanha')}</div>
  <div class="campaign-product-title-row"><h1>${esc(numberedAdventureTitle(a))}</h1><span class="badge ${esc(a.status)}">${esc(advStatus(a.status))}</span></div>
  <p class="campaign-product-description">${esc(a.description||a.summary||'Resumo da Aventura')}</p>
  <div class="campaign-product-meta"><span class="badge">${esc(advType(a.type))}</span><span class="badge">${a.participantUsernames.length} ${a.participantUsernames.length===1?'jogador':'jogadores'}</span><span class="badge">${a.scenes.length} ${a.scenes.length===1?'cena':'cenas'}</span></div>
