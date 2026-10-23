@@ -1,7 +1,7 @@
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
-import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261022-stable-listeners1';
-import{readCampaigns}from'./campaign-state.js?v=20261022-roster2';
-import{readAdventures}from'./adventure-state.js?v=20260925-media1';
+import{createFirebaseCollaborationProvider,loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261022-chronicles1';
+import{readCampaigns}from'./campaign-state.js?v=20261022-chronicles1';
+import{readAdventures}from'./adventure-state.js?v=20261022-chronicles1';
 import{read as readCharacters}from'./character-builder/state.js';
 import{syncAll,publishLocalCampaign}from'./collaboration-sync.js?v=20261022-idempotent1';
 import{writeCollaborationSession,clearCollaborationSession}from'./collaboration-view.js?v=20260917-player-catalog1';
