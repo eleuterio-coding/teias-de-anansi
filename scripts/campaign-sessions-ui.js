@@ -294,7 +294,7 @@ function sessionRosterHtml(session,{readOnly=false}={}){
  const profiles=readOnly?sharedCampaignRows().find(x=>x.campaign.id===cid)?.participants||[]:[];
  const members=(campaign?.members||[]).filter(m=>m.role!=='dm'&&m.active!==false);
  const sessionNames=new Set(session.participantUsernames||[]);
- const selected=members.filter(m=>sessionNames.has(m.username)||((session.participantCharacterIds||[]).includes(m.characterId)&&!sessionNames.size));
+ const selected=members.filter(m=>sessionNames.has(m.username)||((session.participantCharacterIds||[]).includes(m.characterId)&&!sessionNames.size)).sort((a,b)=>(session.participantUsernames||[]).indexOf(a.username)-(session.participantUsernames||[]).indexOf(b.username));
  const available=members.filter(m=>!selected.some(s=>s.username===m.username));
  const characterRows=readOnly?sharedCampaignRows().find(x=>x.campaign.id===cid)?.characters||[]:characters;
  rememberAvatars(profiles);
@@ -317,9 +317,9 @@ function bindSessionRoster(card,ref){
   const c=campaignById(ref.campaignId),members=c?.members||[],characters=members.filter(m=>usernames.includes(m.username)&&m.characterId).map(m=>m.characterId);
   saveSession(ref,{participantUsernames:usernames,participantCharacterIds:characters},'Jogadores da sessão atualizados.')
  };
- card.querySelector('[data-session-add-button]')?.addEventListener('click',()=>{const name=card.querySelector('[data-session-add-member]')?.value;if(!name)return;update([...(ref.participantUsernames||[]),name].filter((v,i,a)=>a.indexOf(v)===i))});
+ card.querySelector('[data-session-add-button]')?.addEventListener('click',()=>{const name=card.querySelector('[data-session-add-member]')?.value;if(!name)return;update([...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow).concat(name).filter((v,i,a)=>a.indexOf(v)===i))});
  for(const b of card.querySelectorAll('[data-session-roster-action]'))b.addEventListener('click',()=>{
-  let names=[...(ref.participantUsernames||[])],user=b.dataset.username,i=names.indexOf(user);
+  let names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow),user=b.dataset.username,i=names.indexOf(user);
   if(b.dataset.sessionRosterAction==='remove')names=names.filter(n=>n!==user);
   else{const j=i+(b.dataset.sessionRosterAction==='up'?-1:1);if(i<0||j<0||j>=names.length)return;[names[i],names[j]]=[names[j],names[i]]}
   update(names)
@@ -328,7 +328,7 @@ function bindSessionRoster(card,ref){
  for(const row of card.querySelectorAll('[data-session-roster-row]')){
   row.addEventListener('dragstart',event=>{moving=row.dataset.sessionRosterRow;event.dataTransfer?.setData('text/plain',moving)});
   row.addEventListener('dragover',event=>{if(moving&&moving!==row.dataset.sessionRosterRow)event.preventDefault()});
-  row.addEventListener('drop',event=>{event.preventDefault();const to=row.dataset.sessionRosterRow,names=[...(ref.participantUsernames||[])];const i=names.indexOf(moving),j=names.indexOf(to);if(i<0||j<0)return;names.splice(j,0,names.splice(i,1)[0]);update(names);moving=''});
+  row.addEventListener('drop',event=>{event.preventDefault();const to=row.dataset.sessionRosterRow,names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);const i=names.indexOf(moving),j=names.indexOf(to);if(i<0||j<0)return;names.splice(j,0,names.splice(i,1)[0]);update(names);moving=''});
  }
 }
 function sessionCard(s,restricted=false){
@@ -355,7 +355,7 @@ function sessionCard(s,restricted=false){
  ${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}
  <nav class="section-nav hub-detail-nav" aria-label="Seções da Sessão">
  <a href="#visao-geral">Visão geral</a><a href="#participantes">Jogadores da Sessão</a>
- ${restricted?'':`<a href="#cenas">Cenas</a><a href="#encontros">Encontros</a><a href="#combates">Combates</a>`}
+ <a href="#cenas">Cenas</a>${restricted?'':`<a href="#encontros">Encontros</a><a href="#combates">Combates</a>`}
  <a href="#linha-tempo">Linha do tempo</a></nav>
  <div class="campaign-sections campaign-editor-grid hub-detail-grid">
  ${restricted?`
@@ -363,6 +363,8 @@ function sessionCard(s,restricted=false){
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
   ${s.summary?`<p>${esc(s.summary)}</p>`:''}
   </section>${sessionRosterHtml(s,{readOnly:true})}
+  <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><div class="story-list">
+  ${(adv?.scenes||[]).length?(adv.scenes||[]).map(scene=>`<article class="story-card"><strong>${esc(scene.title)}</strong></article>`).join(''):'<p class="mini">Nenhuma cena revelada nesta Aventura.</p>'}</div></section>
  `:`
  <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2><div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
@@ -380,6 +382,10 @@ function sessionCard(s,restricted=false){
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar</button></div>
  </section>${sessionRosterHtml(s,{readOnly:false})}
 <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><section class="session-subsection">
+ ${adv?`<div class="story-list adventure-scene-source-list">${adv.scenes.map(scene=>{
+  const linked=s.scenes?.some(row=>row.adventureSceneId===scene.id),other=scene.sessionId&&scene.sessionId!==s.id;
+  return`<div class="campaign-reference-row"><div><strong>${esc(scene.title)}</strong><p class="mini">Cena da Aventura${linked?' · Adicionada à Sessão':other?' · Vinculada a outra Sessão':''}</p></div>
+  <button type="button" class="secondary" data-include-adventure-scene="${esc(scene.id)}" ${linked||other?'disabled':''}>${linked?'Adicionada':'Adicionar à Sessão'}</button></div>`}).join('')}</div>` : ''}
  ${adv?`<div class="form-grid two" style="margin:8px 0 10px"><label>Cena da Aventura<select data-adventure-scene-picker>${adventureScenePickerOptions(s)}</select></label><div style="align-self:end"><button type="button" data-add-adventure-scene ${availableAdventureScenes(s).length?'':'disabled'}>Adicionar cena da Aventura</button></div></div>`:'<p class="mini">Esta Sessão não está vinculada a uma Aventura. Você ainda pode criar Cenas próprias da Sessão.</p>'}
  <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
  <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div>
@@ -549,6 +555,7 @@ function bindSessionCards(){
   card.querySelector('[data-save-session-participants]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionParticipantsFromCard(ref,card)});
   card.querySelector('[data-save-session-scenes]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionScenesFromCard(ref,card)});
   card.querySelector('[data-remove-session]')?.addEventListener('click',()=>{if(confirm('Excluir esta sessão?'))removeSession(ref)});
+  card.querySelectorAll('[data-include-adventure-scene]').forEach(button=>button.addEventListener('click',()=>addAdventureSceneToSession(ref,button.dataset.includeAdventureScene)));
   card.querySelector('[data-add-adventure-scene]')?.addEventListener('click',()=>{
    const sceneId=card.querySelector('[data-adventure-scene-picker]')?.value||'';addAdventureSceneToSession(ref,sceneId)
   });
