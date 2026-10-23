@@ -110,6 +110,25 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
     {body:await card.screenshot(),contentType:'image/png'});
  }
 });
+test('notebook: a capa permanece à esquerda mesmo com o painel lateral do Hub',async({page},testInfo)=>{
+ await page.setViewportSize({width:1120,height:900});
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  const g=await geometry(card);
+  expect(g.card.width).toBeGreaterThan(700);
+  expect(g.display).toBe('grid');
+  expect(g.art.width/g.card.width).toBeGreaterThan(.55);
+  expect(g.art.width/g.card.width).toBeLessThan(.63);
+  expect(g.art.right).toBeLessThanOrEqual(g.detail.left+3);
+  expect(g.art.bottom).toBeGreaterThan(g.actions.bottom-4);
+  expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
+  expect(g.open.left).toBeLessThan(g.del.left);
+  await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-notebook',
+    {body:await card.screenshot(),contentType:'image/png'});
+ }
+});
 test('celular: capa acima das informações, ações abaixo e sem overflow horizontal',async({page},testInfo)=>{
  await page.setViewportSize({width:390,height:844});
  for(const item of cases){
