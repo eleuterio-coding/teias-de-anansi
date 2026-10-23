@@ -230,21 +230,6 @@
 #table-root #linha-tempo .campaign-linked-link-card:hover .campaign-linked-name,
 #table-root #linha-tempo .hub-diagram-node-link:hover strong{color:#94d8ff}
 #table-root #linha-tempo .campaign-linked-name{font-size:1.03rem;line-height:1.35;font-weight:750;color:#e0f2ff;overflow-wrap:anywhere}
-/* Pequeno símbolo de três nós conectados: indica a existência de subitens. */
-#table-root #linha-tempo .timeline-child-indicator{
- position:relative;display:inline-block;flex:0 0 21px;
- width:21px;height:21px;border-radius:7px;
- border:1px solid rgba(96,176,236,.45);
- background:rgba(48,115,167,.15);vertical-align:middle;pointer-events:none
-}
-#table-root #linha-tempo .timeline-child-indicator::before{
- content:"";position:absolute;width:4px;height:4px;border-radius:50%;
- left:8px;top:4px;background:#9edbff;box-shadow:-5px 8px 0 #9edbff,5px 8px 0 #9edbff
-}
-#table-root #linha-tempo .timeline-child-indicator::after{
- content:"";position:absolute;left:5px;top:9px;width:10px;height:5px;
- border:1.5px solid #9edbff;border-top:0;border-radius:0 0 3px 3px;opacity:.8
-}
 /* Chevron sem rótulo visual; descrição completa permanece no aria-label. */
 #table-root #linha-tempo :is(.timeline-icon-toggle,.hub-diagram-roots .hub-diagram-collapse.timeline-icon-toggle){
  display:inline-grid!important;place-items:center!important;
