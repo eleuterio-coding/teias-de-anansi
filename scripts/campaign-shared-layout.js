@@ -7,7 +7,14 @@ import{renderCampaignSessionCard}from'./campaign-session-card.js';
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const count=(number,singular,plural)=>`${number} ${number===1?singular:plural}`;
 export const campaignStatusLabel=status=>({planned:'Planejada',current:'Atual',active:'Em andamento',paused:'Pausada',finished:'Concluída',cancelled:'Cancelada'}[status]||status||'');
-const metric=(label,value,href='')=>{const inner=`<span>${esc(label)}</span><strong>${esc(value)}</strong>`;return href?`<a class="metric campaign-summary-link" href="${esc(href)}" aria-label="${esc(label)}: ${esc(value)}">${inner}</a>`:`<div class="metric">${inner}</div>`};
+const metric=(label,value,href='',{session=null,key=''}={})=>{
+ const cover=session?imageElementHtml(session.coverImage,session.coverImageUrl,{className:'campaign-summary-session-backdrop',alt:''}):'';
+ const inner=`${cover}<span>${esc(label)}</span><strong>${esc(value)}</strong>`;
+ const attrs=`${key?' data-campaign-summary="'+esc(key)+'"':''}${cover?' data-has-session-cover="true"':''}`;
+ return href
+  ?`<a class="metric campaign-summary-link${cover?' campaign-summary-session-card':''}"${attrs} href="${esc(href)}" aria-label="${esc(label)}: ${esc(value)}">${inner}</a>`
+  :`<div class="metric"${attrs}>${inner}</div>`;
+};
 /** A mesma árvore de elementos do cabeçalho para Mestre e Jogador. As ações de criação são exclusivas do Mestre. */
 export function renderCampaignOverview(campaign,adventures=[],{readOnly=false}={}){
  const cid=encodeURIComponent(campaign.id),previous=findPreviousCampaignSession(campaign),upcoming=findUpcomingCampaignSession(campaign);
@@ -22,7 +29,7 @@ export function renderCampaignOverview(campaign,adventures=[],{readOnly=false}={
  <div class="campaign-product-title-row"><h1>${esc(campaign.name)}</h1><span class="badge ${esc(campaign.status)}">${esc(campaignStatusLabel(campaign.status))}</span></div>
  <p class="campaign-product-description">${esc(campaign.historySummary||campaign.description||'Organize aventuras, sessões, personagens e o mundo desta campanha.')}</p>
  <div class="campaign-product-meta"><span class="badge">${esc(campaign.setting||campaign.system||'D&D 5.5e')}</span><span class="badge">${count((campaign.members||[]).length,'jogador','jogadores')}</span><span class="badge">${count(adventures.length,'aventura','aventuras')}</span></div>
- </div></section><div class="campaign-product-summary">${metric('Status',campaignStatusLabel(campaign.status))}${metric('Sessões',(campaign.sessions||[]).length,'#sessoes')}${metric('Personagens',linked,'#jogadores')}${metric('Sessão Anterior',previous?numberedSessionTitle(previous):'Nenhuma sessão anterior',href(previous))}${metric('Próxima Sessão',upcoming?numberedSessionTitle(upcoming):'Nenhuma próxima sessão',href(upcoming))}</div>`;
+ </div></section><div class="campaign-product-summary">${metric('Aventuras',adventures.length,'#aventuras',{key:'adventures'})}${metric('Sessões',(campaign.sessions||[]).length,'#sessoes',{key:'sessions'})}${metric('Personagens',linked,'#jogadores',{key:'characters'})}${metric('Sessão Anterior',previous?numberedSessionTitle(previous):'Nenhuma sessão anterior',href(previous),{session:previous,key:'previous-session'})}${metric('Próxima Sessão',upcoming?numberedSessionTitle(upcoming):'Nenhuma próxima sessão',href(upcoming),{session:upcoming,key:'upcoming-session'})}</div>`;
 }
 /** Mesma geometria de labels, linhas e capa. Jogador recebe campos somente de leitura, nunca data-campaign-field. */
 export function renderCampaignSettings(c,{readOnly=false,imagePickerHtml=null}={}){
