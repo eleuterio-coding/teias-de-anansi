@@ -1,8 +1,8 @@
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
-import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles1';
-import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles1';
-import{noteSection}from'./hub-notes.js?v=20261022-chronicles1';
-import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles1';
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
+import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{imageElementHtml,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
@@ -144,5 +144,5 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  updateAppShellContext();
 }
 
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261022-chronicles1')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261016-campaign-geography1');await import('./adventure-ui.js?v=20261022-chronicles-final3')}
 start();
