@@ -53,7 +53,7 @@ test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editá
  expect(stored.timelineNodes.map(n=>n.text)).toEqual(['Registro do Mestre','Novo evento']);
  expect(stored.timelineNodes.some(n=>String(n.id).startsWith('linked-'))).toBe(false);
  await page.reload();
- await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(3);
+ await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(4);
  await expect(area.locator('.timeline-tree > .timeline-item').last()).toContainText('Registro do Mestre');
 });
 
