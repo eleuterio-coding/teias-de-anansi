@@ -27,58 +27,36 @@ function recordTitle(label,subtitle){
 function areaDetail(area,a,c,exploration){
  const levels=arr(exploration.levels),areas=arr(exploration.areas),name=areaLabel(area);
  const level=levels.find(x=>x.id===area.levelId);
- const locations=arr(c?.locations).filter(x=>arr(a.locationIds).includes(x.id));
- const parentOptions=areas.filter(x=>x.id!==area.id&&x.levelId===area.levelId);
- const linkedEnemies=arr(area.monsterIds).map(id=>arr(a.monsters).find(x=>x.id===id)?.name).filter(Boolean).join(', ');
- const linkedTreasure=arr(area.treasureIds).map(id=>arr(a.treasures).find(x=>x.id===id)?.name).filter(Boolean).join(', ');
  return '<article class="explore-area-card explore-record-card'+(selectedAreaId===area.id?' is-selected':'')+'" data-ex-area="'+esc(area.id)+'">'+
   '<details class="explore-record-editor" data-ex-area-editor="'+esc(area.id)+'"'+(expandedAreaIds.has(area.id)?' open':'')+'>'+
    '<summary class="explore-record-summary">'+recordTitle(name,(level?.name||'Sem mapa')+' · '+(area.type||'Ambiente não definido'))+
     '<span class="explore-record-status">'+esc(STATUS[area.status]||STATUS.unknown)+'</span>'+
     '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>'+
    '<div class="explore-record-body">'+
-    '<section class="explore-editor-group"><header><h4>Identificação e estrutura</h4><p>Informações principais e organização da área.</p></header><div class="explore-fields explore-area-detail-fields">'+
+    '<section class="explore-editor-group"><header><h4>Identificação</h4><p>Dados principais e mapa associado.</p></header><div class="explore-fields explore-area-detail-fields">'+
      field('Identificador','code',area.code)+
      field('Nome','name',area.name)+
      '<label>Status<select data-ex-field="status">'+selectOptions(STATUS,area.status)+'</select></label>'+
      '<label>Mapa / nível<select data-ex-field="levelId">'+choices(levels,area.levelId,'— Sem mapa —')+'</select></label>'+
-     '<label>Área principal<select data-ex-field="parentId">'+choices(parentOptions,area.parentId,'— Sem área principal —')+'</select></label>'+
-     '<label>Local vinculado<select data-ex-field="locationId">'+choices(locations,area.locationId,'— Sem local —')+'</select></label>'+
-     '<label>Capítulo vinculado<select data-ex-field="chapterId">'+choices(arr(a.chapters),area.chapterId,'— Sem capítulo —')+'</select></label>'+
      field('Tipo de ambiente','type',area.type)+
-     field('Ordem','order',area.order??1,'input','type="number" min="1" step="1"')+
-     '</div></section><section class="explore-editor-group"><header><h4>Exploração e recompensas</h4><p>Posição, desafios e resultados possíveis.</p></header><div class="explore-fields">'+
+     '</div></section><section class="explore-editor-group"><header><h4>Desafios e recompensas</h4><p>XP, inimigos, perigos, tesouros e testes.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
-     field('Posição X no mapa (%)','mapX',area.mapX??'','input','type="number" min="0" max="100" step="any"')+
-     field('Posição Y no mapa (%)','mapY',area.mapY??'','input','type="number" min="0" max="100" step="any"')+
-     field('Inimigos','enemies',area.enemies||linkedEnemies,'textarea','rows="2"')+
+     field('Inimigos','enemies',area.enemies,'textarea','rows="2"')+
      field('Armadilhas e perigos','hazards',area.hazards,'textarea','rows="2"')+
-     field('Tesouro','treasure',area.treasure||linkedTreasure,'textarea','rows="2"')+
+     field('Tesouro','treasure',area.treasure,'textarea','rows="2"')+
      field('Testes e mecânicas','checks',area.checks,'textarea','rows="2"')+
-     field('Características','features',area.features,'textarea','rows="2"')+
-     field('Consequências / resultados','outcomes',area.outcomes,'textarea','rows="2"')+
-     '</div></section><section class="explore-editor-group"><header><h4>Narrativa e visibilidade</h4><p>Separe o conteúdo público das notas exclusivas do Mestre.</p></header><div class="explore-fields">'+
+     '</div></section><section class="explore-editor-group"><header><h4>Narrativa e notas</h4><p>Texto de narração e informações exclusivas do Mestre.</p></header><div class="explore-fields">'+
      field('Texto para narração','readAloud',area.readAloud,'textarea','rows="3"')+
      field('Descrição para o Mestre','description',area.description,'textarea','rows="3"')+
-     field('Descrição pública','publicDescription',area.publicDescription,'textarea','rows="3"')+
      field('Notas privadas do Mestre','dmNotes',area.dmNotes,'textarea','rows="3"')+
-     '<label class="explore-publish"><input type="checkbox" data-ex-publish'+checked(area.visibleToPlayers)+'>Visível para jogadores</label>'+
-    '</div></section>'+
-    '<section class="explore-editor-group"><header><h4>Vínculos</h4><p>Associe cenas, personagens, facções e outros registros existentes.</p></header><div class="explore-reference-grid">'+
-     referenceChecks('connectionIds',areas.filter(x=>x.id!==area.id),area.connectionIds)+
-     referenceChecks('npcIds',arr(c?.npcs).filter(x=>arr(a.npcIds).includes(x.id)),area.npcIds)+
-     referenceChecks('monsterIds',arr(a.monsters),area.monsterIds)+
-     referenceChecks('factionIds',arr(exploration.factions),area.factionIds)+
-     referenceChecks('missionIds',arr(a.missions),area.missionIds)+
-     referenceChecks('clueIds',arr(a.clues),area.clueIds)+
-     referenceChecks('handoutIds',arr(a.handouts),area.handoutIds)+
-     referenceChecks('treasureIds',arr(a.treasures),area.treasureIds)+
-    '</div></section>'+
-    '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar área</button>'+
+     '</div></section>'+ 
+     '<div class="explore-detail-actions"><button type="button" data-ex-save-area>Salvar área</button>'+
      '<button type="button" class="secondary" data-ex-focus-area="'+esc(area.id)+'">'+(exploration.activeAreaId===area.id?'Limpar área atual':'Definir como área atual')+'</button>'+
      '<button type="button" class="danger" data-ex-delete="area" data-ex-id="'+esc(area.id)+'">Excluir área</button>'+
      '<button type="button" class="secondary" data-ex-close-record="area">Recolher</button></div>'+
-   '</div></details></article>';
+   '</div></details>'+
+   '<div class="explore-record-visibility-bar"><label class="explore-card-publish"><input type="checkbox" data-ex-publish data-ex-area-visibility="'+esc(area.id)+'"'+checked(area.visibleToPlayers)+'>Visível para jogadores</label></div>'+
+   '</article>';
 }
 function levelDetail(level,areaCount=0){
  return '<article data-ex-level="'+esc(level.id)+'" class="story-card explore-level-card explore-record-card">'+
@@ -247,6 +225,12 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  });
  mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
   const node=button.closest('[data-ex-level]');if(node)edit('level',node.dataset.exLevel,node);
+ }));
+ // Alterar a visibilidade independe da abertura do editor e não sobrescreve outros dados.
+ root?.querySelectorAll('[data-ex-area-visibility]').forEach(input=>input.addEventListener('change',()=>{
+  const id=input.dataset.exAreaVisibility;
+  const result=updateExplorationEntity(get(),'area',id,{visibleToPlayers:input.checked});
+  if(!apply(result,'Visibilidade da área atualizada.'))input.checked=!input.checked;
  }));
  root?.querySelectorAll('[data-ex-save-area]').forEach(button=>button.addEventListener('click',event=>{
   const node=event.target.closest('[data-ex-area]');if(node)edit('area',node.dataset.exArea,node);
