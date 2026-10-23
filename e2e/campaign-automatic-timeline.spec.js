@@ -24,8 +24,8 @@ test.beforeEach(async({page})=>{
 function asMaster(page){
  return page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
-  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(data.adventures));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(data.adventures));
  },{campaign,adventures});
 }
 test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editáveis preservados',async({page})=>{
