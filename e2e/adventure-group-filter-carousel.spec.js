@@ -4,9 +4,10 @@ const campaigns=[
  {id:'c-1',name:'A Cidadela',status:'active',members:[],sessions:[]},
  {id:'c-2',name:'Reinos de Prata',status:'active',members:[],sessions:[]}
 ];
+const coverUrl='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect width="600" height="400" fill="#375676"/></svg>');
 const adventures=[
  ...Array.from({length:5},(_,i)=>({
-  id:'c1-a'+(i+1),campaignId:'c-1',title:'Aventura '+(i+1),
+  id:'c1-a'+(i+1),campaignId:'c-1',title:'Aventura '+(i+1),coverImageUrl:coverUrl,
   status:i===0?'active':i===1?'completed':i===2?'paused':'planned',
   order:i+1,type:'main',chapters:[],scenes:[],missions:[]
  })),
@@ -130,4 +131,29 @@ test('Jogador recebe grupos filtráveis somente das campanhas autorizadas',async
  await expect(page.locator('#adventure-list [data-adventure-card]')).toHaveCount(1);
  await expect(page.locator('#adventure-list [data-adventure-card="c1-a2"]')).toBeVisible();
  await expect(page.getByText('Reinos de Prata')).toHaveCount(0);
+});
+
+
+test('Imagem da Aventura não treme nem altera posição no hover do carrossel',async({page,isMobile})=>{
+ test.skip(isMobile,'Hover de mouse é verificado apenas no desktop');
+ await page.setViewportSize({width:1440,height:1000});
+ await page.goto('/aventuras.html');
+ const card=page.locator('[data-adventure-card="c1-a1"]');
+ const cover=card.locator('.campaign-card-cover');
+ await expect(cover).toBeVisible();
+ const initial=await card.evaluate(node=>{
+  const image=node.querySelector('.campaign-card-cover');
+  const a=node.getBoundingClientRect(),b=image.getBoundingClientRect();
+  return{card:{x:a.x,y:a.y},image:{x:b.x,y:b.y},
+   transform:getComputedStyle(node).transform,imageTransform:getComputedStyle(image).transform};
+ });
+ await card.hover();
+ await expect.poll(()=>card.evaluate(node=>getComputedStyle(node).transform)).toBe('none');
+ const after=await card.evaluate(node=>{
+  const image=node.querySelector('.campaign-card-cover');
+  const a=node.getBoundingClientRect(),b=image.getBoundingClientRect();
+  return{card:{x:a.x,y:a.y},image:{x:b.x,y:b.y},
+   transform:getComputedStyle(node).transform,imageTransform:getComputedStyle(image).transform};
+ });
+ expect(after).toEqual(initial);
 });
