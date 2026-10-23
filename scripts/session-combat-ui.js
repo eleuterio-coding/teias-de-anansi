@@ -1,3 +1,5 @@
+import{readAdventures}from'./adventure-state.js?v=20261022-adventure-visibility1';
+import{createEncounter}from'./encounter-state.js?v=20261022-resolution1';
 import{read,write}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-roster2';
 import{createCombat,createCombatFromEncounter,updateCombat,removeCombat,startCombat,finishCombat,cancelCombat,addCombatant,addCombatants,updateCombatant,removeCombatant,setCombatantInitiative,setGroupInitiative,nextCombatTurn,previousCombatTurn,addCondition,removeCondition,setConcentration,setReactionAvailable,applyCombatDamage,applyCombatHealing,setTemporaryHp,combatSummary,initiativeOrder,reorderCombatant,reorderCombatantTo,sortCombatInitiative}from'./combat-state.js?v=20260925-initiative-table1';
@@ -14,12 +16,12 @@ let monsterIndex=null,monsterLoad=null;
 function announce(message,ok=true){const box=document.getElementById('session-feedback');if(!box)return;box.hidden=false;box.className='status '+(ok?'ok':'warning');box.textContent=message;clearTimeout(announce.timer);announce.timer=setTimeout(()=>box.hidden=true,3600)}
 function contextForCard(card){
  const id=card.dataset.sessionId,source=card.dataset.sessionSource,campaigns=readCampaigns(),standalone=readStandaloneSessions(),characters=read();
- if(source==='campaign'){const campaign=campaigns.find(c=>(c.sessions||[]).some(s=>s.id===id)),session=campaign?.sessions.find(s=>s.id===id)||null;return{source,campaign,campaigns,standalone,characters,session}}
- return{source,campaign:null,campaigns,standalone,characters,session:standalone.find(s=>s.id===id)||null}
+ if(source==='campaign'){const campaign=campaigns.find(c=>(c.sessions||[]).some(s=>s.id===id)),session=campaign?.sessions.find(s=>s.id===id)||null;return{source,campaign,campaigns,standalone,characters,session,adventure:readAdventures().find(a=>a.id===session?.adventureId)||null}}
+ return{source,campaign:null,campaigns,standalone,characters,session:standalone.find(s=>s.id===id)||null,adventure:null}
 }
 function persist(ctx,message='Combate salvo.'){
  if(!ctx?.session)return false;
- const patch={combats:ctx.session.combats,activeCombatId:ctx.session.activeCombatId,summary:ctx.session.summary};
+ const patch={combats:ctx.session.combats,activeCombatId:ctx.session.activeCombatId,summary:ctx.session.summary,encounters:ctx.session.encounters};
  if(ctx.source==='campaign'){const r=updateCampaignSession(ctx.campaigns,ctx.campaign.id,ctx.session.id,patch);if(!r.ok){announce(r.reason,false);return false}writeCampaigns(r.list)}
  else{const r=updateStandaloneSession(ctx.standalone,ctx.session.id,patch);if(!r.ok){announce(r.reason,false);return false}writeStandaloneSessions(r.list)}
  window.dispatchEvent(new CustomEvent('hub-rpg:sessions-local-updated'));announce(message,true);return true
@@ -94,11 +96,18 @@ function combatHeader(combat,ctx){
  return'<div class="combat-live-header"><div><span class="combat-kicker">COMBATE ATIVO</span><h3>'+esc(combat.title)+'</h3><div class="mini">'+esc(sceneName(ctx.session,combat.sessionSceneId)||'Sem cena')+(combat.encounterId?' · '+esc(encounterName(ctx.session,combat.encounterId)):'')+'</div></div><div class="combat-live-metrics"><div><span>Rodada</span><strong>'+combat.round+'</strong></div><div><span>Turno</span><strong>'+esc(current?.name||'—')+'</strong></div><div><span>Inimigos</span><strong>'+foes+'</strong></div><div><span>Derrotados</span><strong>'+dead+'</strong></div></div></div>'+
  '<div class="combat-main-toolbar"><button type="button" class="secondary" data-prev-combat-turn>← Turno anterior</button><button type="button" data-next-combat-turn>Próximo turno →</button><button type="button" class="secondary" data-sort-initiative>Ordenar pela iniciativa</button><button type="button" class="secondary" data-roll-all-enemies>Rolar inimigos</button><button type="button" class="secondary" data-refresh-characters>Atualizar fichas</button><span class="badge combat-order-mode">'+(combat.manualInitiativeOrder?'Ordem manual':'Ordem por iniciativa')+'</span><button type="button" class="danger" data-open-finish>Finalizar combate</button></div>'
 }
+function adventureCombatOptions(ctx){
+ const npcs=(ctx.campaign?.npcs||[]).filter(n=>ctx.adventure?.npcIds?.includes(n.id)),monsters=ctx.adventure?.monsters||[];
+ const npcOptions='<option value="">— NPC da Aventura —</option>'+npcs.map(n=>'<option value="'+esc(n.id)+'">'+esc(n.name)+'</option>').join('');
+ const monsterOptions='<option value="">— Monstro da Aventura —</option>'+monsters.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.name)+'</option>').join('');
+ return'<div class="combat-add-grid"><div><label>NPC da Aventura<select data-add-combat-adventure-npc>'+npcOptions+'</select></label><button type="button" data-add-combat-adventure-npc-button>Adicionar NPC</button></div>'+
+ '<div><label>Monstro da Aventura<select data-add-combat-adventure-monster>'+monsterOptions+'</select></label><button type="button" data-add-combat-adventure-monster-button>Adicionar monstro</button></div></div>'
+}
 function addCombatantsHtml(combat,ctx){
  const used=new Set(combat.combatants.filter(c=>c.kind==='character').map(c=>c.characterId)),characterOptions=(ctx.session.participantCharacterIds||[]).filter(id=>!used.has(id)).map(id=>{const c=ctx.characters.find(x=>x.id===id);return'<option value="'+esc(id)+'">'+esc(c?.name||id)+'</option>'}).join(''),listId='combat-monsters-'+combat.id;
  return'<details class="combat-add-panel"><summary>+ Adicionar combatente</summary><div class="combat-add-grid"><div><label>Personagem da Sessão<select data-add-combat-character><option value="">— Selecione —</option>'+characterOptions+'</select></label><button type="button" data-add-combat-character-button>Adicionar personagem</button></div>'+
  '<div><label>Monstro da Biblioteca<input type="search" data-combat-monster-search list="'+esc(listId)+'" placeholder="Nome do monstro"><datalist id="'+esc(listId)+'"></datalist></label><div class="combat-quantity-row"><label>Quantidade<input type="number" min="1" max="20" value="1" data-monster-quantity></label><label class="check"><input type="checkbox" data-group-initiative> Iniciativa em grupo</label><button type="button" data-add-combat-monster>Adicionar</button></div><p class="mini" data-combat-monster-status></p></div>'+
- '<div><div class="npc-grid"><label>NPC personalizado<input data-combat-npc-name placeholder="Nome"></label><label>CA<input data-combat-npc-ac type="number" min="0" value="10"></label><label>PV<input data-combat-npc-hp type="number" min="1" value="10"></label><label>Mod. iniciativa<input data-combat-npc-init type="number" value="0"></label></div><button type="button" class="secondary" data-add-combat-npc>Adicionar NPC</button></div></div></details>'
+ '<div><div class="npc-grid"><label>NPC personalizado<input data-combat-npc-name placeholder="Nome"></label><label>CA<input data-combat-npc-ac type="number" min="0" value="10"></label><label>PV<input data-combat-npc-hp type="number" min="1" value="10"></label><label>Mod. iniciativa<input data-combat-npc-init type="number" value="0"></label></div><button type="button" class="secondary" data-add-combat-npc>Adicionar NPC</button></div>'+adventureCombatOptions(ctx)+'</div></details>'
 }
 function finishPanel(combat){
  return'<div class="combat-finish-panel" data-finish-panel hidden><h4>Finalizar combate</h4><label>Resultado / desfecho<textarea data-combat-outcome>'+esc(combat.outcome||'')+'</textarea></label><label class="check"><input type="checkbox" data-finish-history checked> Registrar no resumo da Sessão</label><label class="check"><input type="checkbox" data-finish-sync checked> Sincronizar PV, PV temporários, condições e estado de combate dos personagens com a Ficha Digital</label><div class="row-actions"><button type="button" class="secondary" data-close-finish>Cancelar</button><button type="button" data-confirm-finish>Finalizar combate</button></div></div>'
@@ -117,7 +126,7 @@ function encounterOptions(session){return'<option value="">— Selecione —</op
 function managerHtml(ctx){
  const active=activeCombat(ctx.session),drafts=(ctx.session.combats||[]).filter(c=>c.status==='draft'),history=(ctx.session.combats||[]).filter(c=>c.status==='completed'||c.status==='cancelled').sort((a,b)=>String(b.endedAt||b.updatedAt).localeCompare(String(a.endedAt||a.updatedAt)));
  return'<section id="combates" class="session-subsection session-combat-manager"><div class="combat-section-title"><div><span class="combat-kicker">⚔ CONTROLE DE COMBATE</span><h4>Combates da Sessão</h4></div></div>'+
- (active?activeCombatHtml(active,ctx):'<div class="combat-empty-state"><strong>Nenhum combate em andamento</strong><div class="combat-create-grid"><label>Combate rápido<input data-new-combat-title placeholder="Nome do combate"></label><button type="button" data-create-quick-combat>Criar combate rápido</button><label>Usar Encontro existente<select data-combat-encounter>'+encounterOptions(ctx.session)+'</select></label><button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button></div></div>')+
+ (active?activeCombatHtml(active,ctx):'<div class="combat-empty-state"><strong>Nenhum combate em andamento</strong><div class="combat-create-grid"><label>Combate rápido<input data-new-combat-title placeholder="Nome do combate"></label><button type="button" data-create-quick-combat>Criar combate rápido</button><button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro do zero e preparar combate</button><label>Usar Encontro existente<select data-combat-encounter>'+encounterOptions(ctx.session)+'</select></label><button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button></div></div>')+
  (drafts.length?'<div class="combat-history-section"><h4>Preparados</h4>'+drafts.map(c=>draftCombatHtml(c,ctx)).join('')+'</div>':'')+
  '<div class="combat-history-section"><h4>Histórico</h4>'+(history.length?history.map(c=>historyHtml(c,ctx)).join(''):'<div class="encounter-empty">Nenhum combate finalizado nesta Sessão.</div>')+'</div></section>'
 }
@@ -131,7 +140,7 @@ function appendCombatRecap(session,combat){
  const s=combatSummary(combat),parts=['Combate: '+s.title,'Rodadas: '+s.rounds];if(s.defeated.length)parts.push('Derrotados: '+s.defeated.map(x=>x.name).join(', '));if(s.outcome)parts.push('Resultado: '+s.outcome);const line=parts.join(' · ');session.summary=[String(session.summary||'').trim(),line].filter(Boolean).join('\n')
 }
 function addSessionCharacters(ctx,combat){
- for(const id of ctx.session.participantCharacterIds||[]){const character=ctx.characters.find(c=>c.id===id);if(character)addCombatant(combat,characterSnapshot(character))}
+ for(const id of ctx.session.participantCharacterIds||[]){if((combat.combatants||[]).some(unit=>unit.kind==='character'&&unit.characterId===id))continue;const character=ctx.characters.find(c=>c.id===id);if(character)addCombatant(combat,characterSnapshot(character))}
 }
 function saveCombatNotes(ctx,node,combat){updateCombat(ctx.session,combat.id,{notes:node.querySelector('[data-combat-notes]')?.value||combat.notes});persist(ctx,'Notas do combate salvas.')}
 function bindCombatantNode(ctx,combat,node){
@@ -167,6 +176,15 @@ function bindInitiativeDrag(ctx,node,combat){
  }
 }
 function bindAddPanel(ctx,node,combat){
+ node.querySelector('[data-add-combat-adventure-npc-button]')?.addEventListener('click',()=>{
+  const id=node.querySelector('[data-add-combat-adventure-npc]')?.value,npc=ctx.campaign?.npcs?.find(n=>n.id===id);if(!npc)return announce('Selecione um NPC da Aventura.',false);
+  const r=addCombatant(combat,{kind:'npc',name:npc.name,source:'NPC da Aventura',ac:10,maxHp:10,currentHp:10});if(!r.ok)return announce(r.reason,false);persist(ctx,'NPC da Aventura adicionado ao combate.')
+ });
+ node.querySelector('[data-add-combat-adventure-monster-button]')?.addEventListener('click',()=>{
+  const id=node.querySelector('[data-add-combat-adventure-monster]')?.value,monster=ctx.adventure?.monsters.find(m=>m.id===id);if(!monster)return announce('Selecione um monstro da Aventura.',false);
+  const r=addCombatant(combat,{kind:'monster',name:monster.name,monsterId:monster.monsterId||monster.id,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier});if(!r.ok)return announce(r.reason,false);persist(ctx,'Monstro da Aventura adicionado ao combate.')
+ });
+
  node.querySelector('[data-add-combat-character-button]')?.addEventListener('click',()=>{const id=node.querySelector('[data-add-combat-character]')?.value,character=ctx.characters.find(c=>c.id===id);if(!character)return announce('Selecione um personagem da Sessão.',false);const r=addCombatant(combat,characterSnapshot(character));if(!r.ok)return announce(r.reason,false);persist(ctx,'Personagem adicionado ao combate.')});
  const search=node.querySelector('[data-combat-monster-search]');search?.addEventListener('focus',()=>ensureMonsters(node));search?.addEventListener('input',()=>ensureMonsters(node));
  node.querySelector('[data-add-combat-monster]')?.addEventListener('click',async()=>{try{const rows=await ensureMonsters(node),value=search?.value.trim(),row=rows.find(r=>r.name.toLocaleLowerCase('pt-BR')===value?.toLocaleLowerCase('pt-BR'));if(!row)return announce('Selecione um monstro existente na Biblioteca.',false);const detail=await loadEncounterMonsterDetail(row),quantity=node.querySelector('[data-monster-quantity]')?.value||1,group=node.querySelector('[data-group-initiative]')?.checked===true,data={...detail,kind:'monster',monsterId:detail.id,currentHp:detail.maxHp,actions:monsterActions(detail)};const r=addCombatants(combat,data,quantity,{groupInitiative:group});if(!r.ok)return announce('Não foi possível adicionar o monstro.',false);persist(ctx,detail.name+' adicionado ao combate.')}catch(error){announce(error.message||'Não foi possível carregar o monstro.',false)}});
@@ -190,9 +208,17 @@ function bindCombatNode(ctx,node,combat){
  node.querySelector('[data-confirm-finish]')?.addEventListener('click',()=>{const outcome=node.querySelector('[data-combat-outcome]')?.value||'',notes=node.querySelector('[data-combat-notes]')?.value||combat.notes,history=node.querySelector('[data-finish-history]')?.checked!==false,sync=node.querySelector('[data-finish-sync]')?.checked!==false;combat.outcome=outcome;combat.notes=notes;if(history)appendCombatRecap(ctx.session,combat);const synced=sync?syncCharactersToSheets(ctx,combat):[];const r=finishCombat(ctx.session,combat.id,{outcome,notes});if(!r.ok)return announce(r.reason,false);persist(ctx,'Combate finalizado'+(synced.length?' · '+synced.length+' ficha(s) sincronizada(s).':'.'))})
 }
 function bindManager(card,ctx){
- const manager=card.querySelector('.session-combat-manager');if(!manager)return;
+ const manager=card.querySelector('.session-combat-manager');
+ manager?.querySelector('[data-create-new-encounter-combat]')?.addEventListener('click',()=>{
+  const title=manager.querySelector('[data-new-combat-title]')?.value.trim()||'Encontro da Sessão',encounter=createEncounter(ctx.session,{title,kind:'combat'});
+  if(!encounter.ok)return announce(encounter.reason,false);
+  const r=createCombatFromEncounter(ctx.session,encounter.encounter?.id||ctx.session.encounters.at(-1)?.id);if(!r.ok)return announce(r.reason,false);
+  addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Encontro criado e combate preparado. Agora adicione NPCs e monstros da Aventura.')
+ });
+
+ if(!manager)return;
  manager.querySelector('[data-create-quick-combat]')?.addEventListener('click',()=>{const title=manager.querySelector('[data-new-combat-title]')?.value.trim(),r=createCombat(ctx.session,{title:title||'Combate rápido'});if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);persist(ctx,'Combate rápido preparado.')});
- manager.querySelector('[data-create-from-encounter]')?.addEventListener('click',()=>{const id=manager.querySelector('[data-combat-encounter]')?.value;if(!id)return announce('Selecione um Encontro.',false);const r=createCombatFromEncounter(ctx.session,id);if(!r.ok)return announce(r.reason,false);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.')});
+ manager.querySelector('[data-create-from-encounter]')?.addEventListener('click',()=>{const id=manager.querySelector('[data-combat-encounter]')?.value;if(!id)return announce('Selecione um Encontro.',false);const r=createCombatFromEncounter(ctx.session,id);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.')});
  for(const node of manager.querySelectorAll('[data-combat]')){const combat=combatForNode(ctx,node);if(combat)bindCombatNode(ctx,node,combat)}
 }
 function createFromEncounterEvent(event){
