@@ -25,3 +25,26 @@
 
 .hub-roster-menu [data-master-only]{display:none!important}
 .hub-roster-menu [data-master-only][data-authorized="true"]:not([hidden]){display:list-item!important}
+
+
+/* Personagens e NPCs: exatamente duas colunas iguais ocupando a largura disponível. */
+body.hub-shell-enabled:has(.hub-roster-menu-page) .hub-app-content,
+body.hub-shell-enabled:has(.hub-directory) .hub-app-content{
+ width:100%;max-width:none!important
+}
+.hub-roster-menu-page,.hub-roster-menu,.hub-directory,#roster-results {
+ width:100%!important;max-width:none!important;min-width:0
+}
+.hub-roster-menu,.hub-roster-choice-grid,.hub-directory-grid:not(.is-list){
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ width:100%;max-width:none;align-items:stretch
+}
+.hub-roster-menu>li,.hub-roster-menu>li>a,
+.hub-directory-grid>.hub-directory-card,.hub-roster-choice-grid>*{
+ min-width:0;width:100%;max-width:none
+}
+@media(max-width:720px){
+ .hub-roster-menu,.hub-roster-choice-grid,.hub-directory-grid:not(.is-list){
+  grid-template-columns:minmax(0,1fr)!important
+ }
+}
