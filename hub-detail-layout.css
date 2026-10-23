@@ -360,3 +360,17 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 @media(max-width:700px){
  #adventure-root .hub-detail-grid .hub-scene-editor .form-grid.two{grid-template-columns:1fr}
 }
+
+
+/* Aventura: status na mesma linha e alinhado ao centro do título numerado. */
+#adventure-root .hub-detail-page .campaign-product-title-row{
+ display:flex;align-items:center;align-content:center;
+ flex-wrap:wrap;column-gap:12px;row-gap:8px;min-width:0
+}
+#adventure-root .hub-detail-page .campaign-product-title-row h1{
+ min-width:0;margin:0!important;line-height:1.18!important
+}
+#adventure-root .hub-detail-page .campaign-product-title-row > .badge{
+ align-self:center!important;flex-shrink:0;transform:none!important;
+ margin:0!important;vertical-align:middle
+}
