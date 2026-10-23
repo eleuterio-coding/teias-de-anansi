@@ -41,13 +41,43 @@ export function renderCampaignTimelineDiagram(nodes=[],collapsedIds=new Set(),{r
  <div class="hub-diagram-roots">${rows.map((node,index)=>`<div class="hub-diagram-root" data-diagram-root="${esc(node.id)}" data-diagram-order="${index+1}">${campaignNode(node,0,collapsedIds,index+1,{readOnly})}</div>`).join('')}</div>
  </div>`
 }
+// Itens vivos das Cenas: a Linha do Tempo acompanha criação, edição e estado,
+// mas não grava cópias das Cenas na coleção de eventos.
+export function deriveAdventureTimelineEvents(adventure={}){
+ const scenes=array(adventure?.scenes);
+ const historical=array(adventure?.timelineEvents);
+ const labels={planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'};
+ const sceneItems=scenes.map((scene,index)=>({
+  id:'derived-scene-'+String(scene.id),
+  sceneId:scene.id,
+  type:'scene',
+  virtualScene:true,
+  automatic:true,
+  title:scene.title||'Cena '+(index+1),
+  sceneStatus:labels[scene.status]||'Planejada',
+  text:scene.status==='completed'?(scene.outcome||scene.description||scene.objective||''):(scene.objective||scene.description||''),
+  at:scene.createdAt||scene.updatedAt||'',
+  sequence:Number.isFinite(Number(scene.order))?Number(scene.order):index+1
+ }));
+ // Históricos automáticos de transição de Cenas permanecem armazenados,
+ // porém não competem com o registro atual da Cena na visualização.
+ const log=historical.filter(event=>!(event.automatic===true&&event.type==='scene'&&
+  scenes.some(scene=>scene.id===event.sceneId)));
+ return [...sceneItems,...log].sort((a,b)=>{
+  const ta=Date.parse(a.at||''),tb=Date.parse(b.at||'');
+  if(Number.isFinite(ta)&&Number.isFinite(tb)&&ta!==tb)return ta-tb;
+  if(Number.isFinite(ta)!==Number.isFinite(tb))return Number.isFinite(ta)?-1:1;
+  if(a.virtualScene&&b.virtualScene)return a.sequence-b.sequence;
+  return String(a.id).localeCompare(String(b.id));
+ });
+}
 export function renderAdventureTimelineDiagram(events=[]){
  const rows=array(events).slice().sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
  if(!rows.length)return '<div class="hub-diagram-empty">Nenhum registro.</div>';
  return `<div class="hub-diagram-scroll" role="region" aria-label="Fluxograma da aventura" tabindex="0">
  <ol class="hub-diagram-sequence">${rows.map((event,index)=>`<li class="hub-diagram-sequence-step">
  <div class="hub-diagram-node" data-diagram-event="${esc(event.id)}">
- <span class="hub-diagram-kind">Evento ${index+1}${event.automatic?' · Automático':''}</span>
+ <span class="hub-diagram-kind">${event.virtualScene?'Cena · '+esc(event.sceneStatus):'Evento '+(index+1)+(event.automatic?' · Automático':'')}</span>
  <strong>${esc(event.title)}</strong>
  ${safeDate(event.at)?`<time class="hub-diagram-date">${esc(safeDate(event.at))}</time>`:''}
  ${event.text?`<p>${esc(event.text)}</p>`:''}
