@@ -176,15 +176,18 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    if(!Object.hasOwn(changes,key))changes[key]=[...node.querySelectorAll('[data-ex-ref="'+key+'"]:checked')].map(x=>x.value);
   });
   const previous=get();
+  const former=kind==='area'?previous?.areas?.find(row=>row.id===id):null;
+  const requestedStatus=changes.status;
+  const statusChanged=Boolean(former&&requestedStatus&&former.status!==requestedStatus);
+  // Não antecipa a mudança: changeAreaStatus precisa ler o estado anterior
+  // para registrar corretamente a crônica da exploração.
+  if(statusChanged)delete changes.status;
   const next=updateExplorationEntity(previous,kind,id,changes);
   if(!next?.exploration)return feedback('Não foi possível atualizar o registro.',false);
-  if(kind==='area'){
-   const former=previous?.areas?.find(row=>row.id===id);
-   if(former&&former.status!==changes.status){
-    const statusResult=changeAreaStatus(next.exploration,id,changes.status);
-    if(!statusResult?.exploration)return feedback(statusResult?.error||'Não foi possível atualizar o status.',false);
-    return apply(statusResult,'Área e status atualizados.');
-   }
+  if(statusChanged){
+   const statusResult=changeAreaStatus(next.exploration,id,requestedStatus);
+   if(!statusResult?.exploration)return feedback(statusResult?.error||'Não foi possível atualizar o status.',false);
+   return apply(statusResult,'Área e status atualizados.');
   }
   apply(next,kind==='area'?'Área atualizada.':'Mapa atualizado.');
  };
