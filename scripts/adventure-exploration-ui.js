@@ -12,6 +12,7 @@ const choices=(rows,selected,blank='— Nenhum —')=>'<option value="">'+esc(bl
 const selectOptions=(labels,selected)=>Object.entries(labels).map(([value,label])=>'<option value="'+esc(value)+'" '+(value===selected?'selected':'')+'>'+esc(label)+'</option>').join('');
 const field=(label,key,value,kind='input',extra='')=>'<label>'+esc(label)+(kind==='textarea'?'<textarea data-ex-field="'+key+'" '+extra+'>'+esc(value)+'</textarea>':'<input data-ex-field="'+key+'" value="'+esc(value)+'" '+extra+'>')+'</label>';
 const checked=(value)=>value?' checked':'';
+const areaLabel=area=>area.code&&area.name&&area.code!==area.name?area.code+' — '+area.name:area.code||area.name;
 function referenceChecks(key,rows,selected=[]){
  const set=new Set(arr(selected));
  return '<fieldset class="explore-reference"><legend>'+esc(({npcIds:'NPCs',monsterIds:'Monstros',factionIds:'Facções',missionIds:'Objetivos',clueIds:'Pistas',handoutIds:'Materiais',treasureIds:'Tesouros',connectionIds:'Conexões'})[key]||key)+'</legend>'+
@@ -20,7 +21,7 @@ function referenceChecks(key,rows,selected=[]){
 }
 function areaDetail(area,a,c,exploration){
  const level=exploration.levels.find(x=>x.id===area.levelId);
- const name=area.code||area.name;
+ const name=areaLabel(area);
  const linkedEnemies=arr(area.monsterIds).map(id=>a.monsters.find(monster=>monster.id===id)?.name).filter(Boolean).join(', ');
  const linkedTreasure=arr(area.treasureIds).map(id=>a.treasures.find(t=>t.id===id)?.name).filter(Boolean).join(', ');
  return '<article class="explore-detail card" id="explore-area-detail" data-ex-area="'+esc(area.id)+'">'+
@@ -77,8 +78,8 @@ export function renderAdventureExploration(a,c){
  '<div class="explore-area-grid">'+(areas.length?areas.map(area=>{
   const level=levels.find(l=>l.id===area.levelId);
   return '<article class="explore-area-card'+(selected?.id===area.id?' is-selected':'')+'">'+
-   '<div><small>'+esc(level?.name||'Sem mapa')+'</small><strong>'+esc(area.code||area.name)+'</strong><span class="mini">'+esc(area.type||'Ambiente não definido')+'</span></div>'+
-   '<div class="explore-card-actions"><label>Status<select data-ex-quick-status="'+esc(area.id)+'" aria-label="Status de '+esc(area.code||area.name)+'">'+selectOptions(STATUS,area.status)+'</select></label>'+
+   '<div><small>'+esc(level?.name||'Sem mapa')+'</small><strong>'+esc(areaLabel(area))+'</strong><span class="mini">'+esc(area.type||'Ambiente não definido')+'</span></div>'+
+   '<div class="explore-card-actions"><label>Status<select data-ex-quick-status="'+esc(area.id)+'" aria-label="Status de '+esc(areaLabel(area))+'">'+selectOptions(STATUS,area.status)+'</select></label>'+
    '<button type="button" class="secondary" data-ex-open-area="'+esc(area.id)+'">Abrir</button></div>'+
   '</article>';
  }).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div>'+
