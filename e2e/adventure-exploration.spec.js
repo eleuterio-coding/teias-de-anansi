@@ -48,6 +48,8 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await page.locator('#ex-new-level button[type="submit"]').click();
  await expect(page.locator('.explore-level-card')).toHaveCount(1);
  await expect(page.locator('#mapas [data-ex-level-editor][open]')).toHaveCount(1);
+ await expect(page.locator('#mapas .explore-editor-group')).toHaveCount(3);
+ await expect(page.locator('#mapas .explore-editor-group h4')).toHaveText(['Dados do mapa','Descrição e acesso','Imagem do mapa']);
  await expect(page.locator('#mapas [data-ex-level-editor] [data-ex-field="name"]')).toHaveValue('Primeiro andar');
  await expect(page.locator('.explore-level-card .explore-map-upload [data-image-picker]')).toHaveCount(1);
  await page.locator('#mapas [data-ex-field="notes"]').fill('Mapa de uso privado.');
@@ -70,6 +72,10 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await expect(page.locator('#exploracao .explore-area-card')).toHaveCount(1);
  const editor=page.locator('#exploracao [data-ex-area-editor]');
  await expect(editor).toHaveAttribute('open','');
+ await expect(page.locator('#exploracao .explore-editor-group')).toHaveCount(4);
+ await expect(page.locator('#exploracao .explore-editor-group h4')).toHaveText(['Identificação e estrutura','Exploração e recompensas','Narrativa e visibilidade','Vínculos']);
+ await expect(page.locator('#exploracao .explore-record-status')).toHaveText('Descoberta');
+ await expect(page.locator('#mapas .explore-record-summary')).toContainText('1 área vinculada');
  const areaFields=[
   'code','name','status','levelId','parentId','locationId','chapterId',
   'type','order','xp','mapX','mapY','enemies','hazards','treasure',
@@ -101,6 +107,7 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  expect(state.exploration.levels[0]).toMatchObject({name:'Primeiro andar',type:'Masmorra',mapUrl:'https://example.org/primeiro-andar.png',notes:'Mapa de uso privado.',order:2,visibleToPlayers:true});
  expect(state.exploration.areas[0]).toMatchObject({code:'A01',name:'Salão de entrada',type:'Sala',status:'visited',xp:150,mapX:45.5,mapY:72,enemies:'Dois goblins',treasure:'20 moedas de ouro',hazards:'Armadilha de dardos',visibleToPlayers:true,dmNotes:'Armadilha secreta.'});
  expect(state.exploration.history).toHaveLength(1);
+ await expect(page.locator('#exploracao .explore-record-status')).toHaveText('Visitada');
  expect(state.scenes).toHaveLength(0);
  await page.locator('#exploracao [data-ex-close-record="area"]').click();
  await expect(page.locator('#exploracao [data-ex-area-editor]')).not.toHaveAttribute('open','');
