@@ -1,11 +1,11 @@
-import{readAdventures}from'./adventure-state.js?v=20261022-chronicles2';
-import{createEncounter}from'./encounter-state.js?v=20261022-chronicles2';
+import{readAdventures}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{createEncounter}from'./encounter-state.js?v=20261022-chronicles-final3';
 import{read,write}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles2';
-import{createCombat,createCombatFromEncounter,updateCombat,removeCombat,startCombat,finishCombat,cancelCombat,addCombatant,addCombatants,updateCombatant,removeCombatant,setCombatantInitiative,setGroupInitiative,nextCombatTurn,previousCombatTurn,addCondition,removeCondition,setConcentration,setReactionAvailable,applyCombatDamage,applyCombatHealing,setTemporaryHp,combatSummary,initiativeOrder,reorderCombatant,reorderCombatantTo,sortCombatInitiative}from'./combat-state.js?v=20261022-chronicles2';
+import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles-final3';
+import{createCombat,createCombatFromEncounter,updateCombat,removeCombat,startCombat,finishCombat,cancelCombat,addCombatant,addCombatants,updateCombatant,removeCombatant,setCombatantInitiative,setGroupInitiative,nextCombatTurn,previousCombatTurn,addCondition,removeCondition,setConcentration,setReactionAvailable,applyCombatDamage,applyCombatHealing,setTemporaryHp,combatSummary,initiativeOrder,reorderCombatant,reorderCombatantTo,sortCombatInitiative}from'./combat-state.js?v=20261022-chronicles-final3';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20260902-encounters1';
 import{rollD20}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
-import{creatureTargetForResolution}from'./encounter-state.js?v=20261022-chronicles2';
+import{creatureTargetForResolution}from'./encounter-state.js?v=20261022-chronicles-final3';
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const DAMAGE_TYPES=['Ácido','Frio','Fogo','Força','Elétrico','Necrótico','Veneno','Psíquico','Radiante','Trovejante','Concussão','Perfurante','Cortante'];
