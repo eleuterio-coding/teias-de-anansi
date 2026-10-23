@@ -19,18 +19,18 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly
  const children=array(node.children),hasChildren=children.length>0,collapsed=collapsedIds.has(node.id);
  const kind=node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento';
  const title=esc(node.text),id=esc(node.id);
- const linked=Boolean(node.automatic&&node.href),isLink=linked&&!hasChildren;
- const nodeClass=`hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}${hasChildren?' timeline-card-has-children':''}${isLink?' hub-diagram-node-link':''}`;
+ const linked=Boolean(node.automatic&&node.href);
+ const nodeClass=`hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}${hasChildren?' timeline-card-has-children':''}`;
  const interaction=hasChildren?` data-diagram-toggle="${id}" tabindex="0" role="group" aria-label="${kind}: ${title}. Enter ou Espaço para revelar ou ocultar subitens."`:'';
- const tag=isLink?'a':'div',linkAttrs=isLink?` href="${esc(node.href)}" aria-label="Abrir ${kind}: ${title}"`:'';
+ const heading=linked?`<a class="hub-diagram-linked-name campaign-timeline-title-link" href="${esc(node.href)}" aria-label="Abrir ${kind}: ${title}">${title}</a>`:`<strong>${title}</strong>`;
  const controls=(readOnly||node.automatic?'':`<button type="button" class="hub-diagram-visibility" data-timeline-visibility="${id}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${id}" aria-label="Editar evento: ${title}">Editar</button>`);
  const toggle=hasChildren?timelineDisclosure(node,collapsed,'flowchart'):'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
- <${tag} class="${nodeClass}" data-diagram-event="${id}"${interaction}${linkAttrs}>
+ <div class="${nodeClass}" data-diagram-event="${id}"${interaction}>
  <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${kind}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
- <strong>${title}</strong>
+ ${heading}
  ${controls||toggle?`<div class="hub-diagram-actions">${controls}${toggle}</div>`:''}
- </${tag}>
+ </div>
  ${hasChildren?`<div id="timeline-diagram-children-${id}" class="hub-diagram-children" role="group" aria-label="Subitens de ${title}" ${collapsed?'hidden':''}>${children.map(child=>campaignNode(child,depth+1,collapsedIds,null,{readOnly})).join('')}</div>`:''}
  </div>`;
 }
