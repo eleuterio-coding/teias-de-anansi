@@ -1,12 +1,12 @@
-import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles1';
-import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles1';
-import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles1';
+import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
+import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles1';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261022-chronicles1';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles-final3';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261022-chronicles-final3';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261021-shared-order1';
