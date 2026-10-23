@@ -37,6 +37,8 @@ jobs:
         with:
           node-version: '22'
       - run: node tests/auditar-release-v1.mjs
+      - name: Auditar exploração genérica e publicação seletiva
+        run: node tests/auditar-exploracao.mjs
       - run: node tests/auditar-diretorios-personagens-npcs.mjs
       - run: node tests/auditar-elencos-contextuais.mjs
       - name: Testar idempotência e estabilidade de listeners sem Firebase real
