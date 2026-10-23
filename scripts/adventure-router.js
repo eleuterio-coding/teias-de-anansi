@@ -90,7 +90,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  for(const [name,value]of statistics){const metric=document.createElement('div');metric.className='metric';const label=document.createElement('span');label.textContent=name;const count=document.createElement('strong');count.textContent=String(value);metric.append(label,count);summary.append(metric)}
  const planTemplate=document.createElement('template');planTemplate.innerHTML=renderNextCampaignSession(campaignRow.campaign,{canPlan:false,adventures:sharedAdventures()});const plan=planTemplate.content.firstElementChild;
  detailGrid.classList.remove('story-grid','player-adventure-grid');detailGrid.classList.add('campaign-sections','campaign-editor-grid','hub-detail-grid');
- const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Áreas conhecidas':'areas-conhecidas','Facções conhecidas':'faccoes-conhecidas','Crônica da exploração':'cronica-exploracao','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
+ const sectionNames={'Jogadores':'participantes','Personagens':'personagens','Missões / Objetivos':'missoes','NPCs':'npcs','Locais':'locais','Áreas conhecidas':'areas-conhecidas','Facções conhecidas':'faccoes','Crônica da exploração':'cronica-exploracao','Pistas reveladas':'pistas','Materiais para os Jogadores':'materiais','Sessões da Aventura':'sessoes'};
  for(const section of detailGrid.querySelectorAll(':scope > section')){
   const title=section.querySelector('h3')?.textContent?.trim()||'';
   section.id=sectionNames[title]||'';section.classList.add('campaign-editor-card');
@@ -98,6 +98,9 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
   if(heading){const h2=document.createElement('h2');h2.textContent=heading.textContent;heading.replaceWith(h2)}
  }
  rememberAvatars(campaignRow.participants);
+ const npcSection=detailGrid.querySelector('#npcs');
+ const factionSection=detailGrid.querySelector('#faccoes');
+ if(npcSection&&factionSection)npcSection.after(factionSection);
  const playerSection=detailGrid.querySelector('#participantes');
  const characterSection=detailGrid.querySelector('#personagens');
  const sessionsSection=detailGrid.querySelector('#sessoes');
@@ -135,7 +138,7 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['capitulos','Capítulos'],['locais','Locais'],['npcs','NPCs'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['capitulos','Capítulos'],['locais','Locais'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
  wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);
