@@ -48,12 +48,15 @@ for(const secret of ['SEGREDO INTERNO','PLANO SIGILOSO','mapa.png','mapX','mapY'
 assert.equal(payload0.includes('Um portão.'),true);
 
 const updated=updateExplorationEntity(e,'level',levelId,{visibleToPlayers:true});e=updated.exploration;
-const factionUpdate=updateExplorationEntity(e,'faction',factionId,{visibleToPlayers:true});e=factionUpdate.exploration;
+const factionUpdate=updateExplorationEntity(e,'faction',factionId,{visibleToPlayers:true,npcIds:['npc-1','npc-invalid']});e=factionUpdate.exploration;
+const withFactionNpcs=sanitizeAdventure({id:'a-npc',campaignId:'c1',npcIds:['npc-1'],exploration:e});
+assert.deepEqual(withFactionNpcs.exploration.factions[0].npcIds,['npc-1'],'Facções referenciam somente NPCs válidos');
 const publicProjection=sharedExplorationProjection(e);
 assert.equal(publicProjection.levels[0].name,'Distrito superior');
 assert.equal(publicProjection.factions[0].name,'Aliança Local');
 assert.equal(publicProjection.factions[0].description,'Grupo reconhecido');
 assert.equal(JSON.stringify(publicProjection).includes('PLANO SIGILOSO'),false);
+assert.equal(JSON.stringify(publicProjection).includes('npc-1'),false,'IDs de NPCs vinculados a facções são privados');
 assert.equal(JSON.stringify(publicProjection).includes('https://example.org'),false);
 
 let sceneRet=addAdventureScene([adventure],adventure.id,{title:'Interrogatório',areaId:gateId});
