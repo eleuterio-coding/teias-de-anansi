@@ -97,3 +97,49 @@
  #adventure-root .adventure-exploration .explore-card-actions{align-items:stretch}
  #adventure-root .adventure-exploration .explore-card-actions label{min-width:0}
 }
+
+/* Formulários de criação independentes: dois cards lado a lado.
+   Áreas e Salas / Mapas e Níveis continuam com listagens em largura total. */
+#adventure-root .hub-detail-grid>#criar-area,
+#adventure-root .hub-detail-grid>#criar-mapa{
+  grid-column:auto;
+  align-content:start;
+  gap:10px;
+  min-width:0;
+}
+#adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa)>h2{
+  margin:0 0 6px;
+}
+#adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa) .explore-create-form{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  align-content:start;
+  margin:0;
+}
+#adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa) .explore-create-form>label{
+  min-width:0;
+  display:grid;
+  align-content:start;
+  gap:5px;
+}
+#adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa) .explore-create-form>button{
+  grid-column:1/-1;
+  justify-self:start;
+  min-height:42px;
+}
+#adventure-root .hub-detail-grid>#criar-mapa .explore-create-map label:has(textarea){
+  grid-column:1/-1;
+}
+@media(max-width:860px){
+  #adventure-root .hub-detail-grid>#criar-area,
+  #adventure-root .hub-detail-grid>#criar-mapa{grid-column:1/-1}
+}
+@media(max-width:550px){
+  #adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa) .explore-create-form{
+    grid-template-columns:minmax(0,1fr)
+  }
+  #adventure-root .hub-detail-grid>:is(#criar-area,#criar-mapa) .explore-create-form>button{
+    width:100%;
+  }
+}
