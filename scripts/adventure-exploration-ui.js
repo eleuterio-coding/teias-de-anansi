@@ -163,8 +163,11 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   const changes={};
   node.querySelectorAll('[data-ex-field]').forEach(input=>{
    let value=input.value;
-   if(['order','mapX','mapY','xp'].includes(input.dataset.exField))value=value===''?0:Number(value);
-   changes[input.dataset.exField]=value;
+   const key=input.dataset.exField;
+   if(['mapX','mapY'].includes(key))value=value===''?null:Number(value);
+   else if(['order','xp'].includes(key))value=value===''?0:Number(value);
+   else if(['levelId','parentId','locationId','chapterId'].includes(key))value=value||null;
+   changes[key]=value;
   });
   const toggle=node.querySelector('[data-ex-publish]');
   if(toggle)changes.visibleToPlayers=toggle.checked;
@@ -192,27 +195,32 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   }
   if(previous.mapImage?.id&&(remove||media?.id!==previous.mapImage.id))await deleteImage(previous.mapImage).catch(()=>{});
  };
- root?.querySelectorAll('[data-ex-open-area]').forEach(button=>button.addEventListener('click',()=>{
-  selectedAreaId=button.dataset.exOpenArea;save(null,null,true);
-  document.getElementById('explore-area-detail')?.scrollIntoView({block:'nearest'});
- }));
- root?.querySelectorAll('[data-ex-quick-status]').forEach(select=>select.addEventListener('change',()=>{
-  apply(changeAreaStatus(get(),select.dataset.exQuickStatus,select.value),'Status da área atualizado.');
- }));
+ for(const [scope,kind,attr,set] of [[root,'area','data-ex-area-editor',expandedAreaIds],[mapRoot,'level','data-ex-level-editor',expandedLevelIds]]){
+  scope?.querySelectorAll('['+attr+']').forEach(details=>{
+   const id=details.getAttribute(attr);
+   details.addEventListener('toggle',()=>{
+    if(details.open){set.add(id);if(kind==='area')selectedAreaId=id}
+    else set.delete(id);
+   });
+  });
+  scope?.querySelectorAll('[data-ex-close-record="'+kind+'"]').forEach(button=>button.addEventListener('click',()=>{
+   const details=button.closest('details');if(details)details.open=false;
+  }));
+ }
  document.getElementById('ex-new-level')?.addEventListener('submit',async event=>{
   event.preventDefault();
   const form=event.target,name=form.elements.name.value.trim();if(!name)return;
   const file=form.elements.mapFile.files?.[0]||null;
   const result=createExplorationEntity(get(),'level',{name,mapUrl:form.elements.mapUrl.value,type:form.elements.type.value,description:form.elements.description.value});
   if(!result)return;
-  apply(result,'Mapa criado.');
+  expandedLevelIds.add(result.entity.id);apply(result,'Mapa criado.');
   if(file)try{await syncMap(result.entity.id,{file})}catch(error){feedback(error.message,false)}
  });
  document.getElementById('ex-new-area')?.addEventListener('submit',event=>{
   event.preventDefault();
   const form=event.target,code=form.elements.code.value.trim();if(!code)return;
   const result=createExplorationEntity(get(),'area',{code,name:code,status:form.elements.status.value,levelId:form.elements.levelId.value||null,type:form.elements.type.value});
-  if(result){selectedAreaId=result.entity.id;apply(result,'Área criada.')}
+  if(result){selectedAreaId=result.entity.id;expandedAreaIds.add(result.entity.id);apply(result,'Área criada.')}
  });
  factions?.querySelector('#ex-new-faction')?.addEventListener('submit',event=>{
   event.preventDefault();
@@ -223,13 +231,13 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
   const node=button.closest('[data-ex-level]');if(node)edit('level',node.dataset.exLevel,node);
  }));
- root?.querySelector('[data-ex-save-area]')?.addEventListener('click',event=>{
+ root?.querySelectorAll('[data-ex-save-area]').forEach(button=>button.addEventListener('click',event=>{
   const node=event.target.closest('[data-ex-area]');if(node)edit('area',node.dataset.exArea,node);
- });
- root?.querySelector('[data-ex-focus-area]')?.addEventListener('click',event=>{
+ }));
+ root?.querySelectorAll('[data-ex-focus-area]').forEach(button=>button.addEventListener('click',event=>{
   const id=event.target.dataset.exFocusArea;
   apply(setCurrentExplorationArea(get(),get()?.activeAreaId===id?null:id),'Área atualizada.');
- });
+ }));
  mapRoot?.querySelectorAll('[data-ex-level] .explore-map-upload [data-image-picker]').forEach(picker=>{
   const id=picker.closest('[data-ex-level]')?.dataset.exLevel;if(!id)return;
   bindImagePicker(picker,{
@@ -251,7 +259,8 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    const kind=button.dataset.exDelete,id=button.dataset.exId;
    const previousMap=kind==='level'?get()?.levels.find(level=>level.id===id)?.mapImage:null;
    const result=removeExplorationEntity(get(),kind,id);
-   if(kind==='area'&&selectedAreaId===id)selectedAreaId=null;
+   if(kind==='area'){expandedAreaIds.delete(id);if(selectedAreaId===id)selectedAreaId=null}
+   if(kind==='level')expandedLevelIds.delete(id);
    if(kind==='faction'&&expandedFactionId===id)expandedFactionId=null;
    if(apply(result,'Registro excluído.')&&previousMap)deleteImage(previousMap).catch(()=>{});
   }));
