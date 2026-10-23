@@ -1,3 +1,4 @@
+import{updateAppShellContext}from'./app-shell.js?v=20261022-session-breadcrumb1';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-current-adventure1';
 import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-unified-campaign1';
 import{playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-images.js?v=20261021-user1';
@@ -406,7 +407,7 @@ function render(){
   const selected=sessions.find(s=>s.id===sessionId)||rows.find(s=>s.id===sessionId)||null;
   if(!box)return;
   box.innerHTML=selected?sessionCard(selected,restricted):`<div class="status warning">Sessão não encontrada.</div><div class="hub-collection-detail-back"><a class="btn secondary" href="${listHref()}">← Lista de Sessões</a></div>`;
-  if(!restricted&&selected)bindSessionCards();if(selected){bindCampaignAvatarPreviews(box);if(!restricted)bindStructuredDetails({getCampaign:()=>sessionRef(selected.id,selected.source),getNpcs:()=>[],save:(patch,{message}={})=>saveSession(sessionRef(selected.id,selected.source),patch,message||'Linha do tempo salva.'),feedback});else box.querySelectorAll('[data-timeline-toggle]').forEach(button=>button.addEventListener('click',()=>{const children=button.closest('.timeline-item')?.querySelector(':scope > .timeline-children');if(children){children.hidden=!children.hidden;button.setAttribute('aria-expanded',String(!children.hidden))}}))}hydrateMediaImages(box).catch(()=>{});
+  if(!restricted&&selected)bindSessionCards();if(selected){updateAppShellContext();bindCampaignAvatarPreviews(box);if(!restricted)bindStructuredDetails({getCampaign:()=>sessionRef(selected.id,selected.source),getNpcs:()=>[],save:(patch,{message}={})=>saveSession(sessionRef(selected.id,selected.source),patch,message||'Linha do tempo salva.'),feedback});else box.querySelectorAll('[data-timeline-toggle]').forEach(button=>button.addEventListener('click',()=>{const children=button.closest('.timeline-item')?.querySelector(':scope > .timeline-children');if(children){children.hidden=!children.hidden;button.setAttribute('aria-expanded',String(!children.hidden))}}))}hydrateMediaImages(box).catch(()=>{});
   return
  }
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
