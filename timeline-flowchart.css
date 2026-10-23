@@ -183,24 +183,28 @@
 #table-root #linha-tempo .timeline-item-linked[data-timeline-depth="1"] .campaign-linked-kind{
  color:#c3addf;
 }
-#table-root #linha-tempo .campaign-linked-link{
- position:relative;z-index:2;
- color:#e0f2ff;text-decoration:none;
- font-size:1.03rem;line-height:1.35;font-weight:750;
- overflow-wrap:anywhere;
-}
-#table-root #linha-tempo .campaign-linked-link:is(:hover,:focus-visible),
-#table-root #linha-tempo .hub-diagram-linked-name:is(:hover,:focus-visible){
- color:#9bd6ff;text-decoration:underline;text-underline-offset:3px;
+/* Títulos reais de Aventuras e Sessões: sublinhado apenas sobre o link. */
+#table-root #linha-tempo .campaign-linked-name{
+ font-size:1.03rem;line-height:1.35;font-weight:750;overflow-wrap:anywhere
 }
 #table-root #linha-tempo .hub-diagram-node-linked{
  border-color:rgba(99,173,227,.43);
- background:linear-gradient(140deg,#172f46,#132334);
+ background:linear-gradient(140deg,#172f46,#132334)
 }
 #table-root #linha-tempo .hub-diagram-linked-name{
- position:relative;z-index:3;color:#e0f2ff;
- text-decoration:none;font-weight:750;line-height:1.38;
- overflow-wrap:anywhere;
+ font-weight:750;line-height:1.38;overflow-wrap:anywhere
+}
+#table-root #linha-tempo .campaign-timeline-title-link{
+ display:inline-block;width:fit-content;max-width:100%;
+ color:#e0f2ff;text-decoration:none;
+ text-decoration-thickness:1.5px;text-underline-offset:3px;
+ cursor:pointer;position:relative;z-index:2
+}
+#table-root #linha-tempo .campaign-timeline-title-link:is(:hover,:focus-visible){
+ color:#9bd6ff;text-decoration:underline;text-decoration-thickness:1.5px
+}
+#table-root #linha-tempo .campaign-timeline-title-link:focus-visible{
+ outline:2px solid #82caff;outline-offset:3px;border-radius:2px
 }
 @media(max-width:680px){
  #table-root #linha-tempo .campaign-linked-card{align-items:flex-start;flex-wrap:wrap;gap:10px}
@@ -217,19 +221,20 @@
  border-color:#69b8f2;box-shadow:0 3px 14px rgba(37,127,209,.16)
 }
 #table-root #linha-tempo :is(.campaign-flow-card[data-timeline-card-toggle],.hub-diagram-node[data-diagram-toggle]):focus-visible,
-#table-root #linha-tempo :is(.campaign-linked-link-card,.hub-diagram-node-link):focus-visible{
+/* Animação de hover em toda a superfície, navegação somente no título.
+   Cards com ramificações continuam alternando subitens por clique. */
+#table-root #linha-tempo :is(.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node){
+ transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background-color .2s ease;
+ transform:translateY(0)
+}
+#table-root #linha-tempo :is(.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node):hover{
+ transform:translateY(-3px);
+ box-shadow:0 8px 22px rgba(28,122,210,.22);
+ border-color:#6bbef5
+}
+#table-root #linha-tempo :is(.campaign-flow-card[data-timeline-card-toggle],.hub-diagram-node[data-diagram-toggle]):focus-visible{
  outline:3px solid #82caff;outline-offset:3px
 }
-#table-root #linha-tempo :is(.campaign-linked-link-card,.hub-diagram-node-link){
- cursor:pointer;color:inherit;text-decoration:none
-}
-#table-root #linha-tempo :is(.campaign-linked-link-card,.hub-diagram-node-link):hover{
- border-color:#6ac0ff;box-shadow:0 4px 18px rgba(39,135,215,.18);
- background-color:rgba(30,80,120,.29)
-}
-#table-root #linha-tempo .campaign-linked-link-card:hover .campaign-linked-name,
-#table-root #linha-tempo .hub-diagram-node-link:hover strong{color:#94d8ff}
-#table-root #linha-tempo .campaign-linked-name{font-size:1.03rem;line-height:1.35;font-weight:750;color:#e0f2ff;overflow-wrap:anywhere}
 /* Chevron sem rótulo visual; descrição completa permanece no aria-label. */
 #table-root #linha-tempo :is(.timeline-icon-toggle,.hub-diagram-roots .hub-diagram-collapse.timeline-icon-toggle){
  display:inline-grid!important;place-items:center!important;
@@ -251,5 +256,6 @@
 }
 #table-root #linha-tempo .hub-diagram-event-heading{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 @media(prefers-reduced-motion:reduce){
- #table-root #linha-tempo :is(.timeline-toggle-chevron,.campaign-flow-card[data-timeline-card-toggle],.hub-diagram-node[data-diagram-toggle]){transition:none}
+ #table-root #linha-tempo :is(.timeline-toggle-chevron,.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node){transition:none}
+ #table-root #linha-tempo :is(.timeline-tree .campaign-flow-card,.hub-diagram-roots .hub-diagram-node):hover{transform:none}
 }
