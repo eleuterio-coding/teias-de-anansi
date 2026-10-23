@@ -91,7 +91,7 @@ function factionSection(exploration,a,c){
     field('Descrição pública','publicDescription',f.publicDescription,'textarea')+
     field('Notas privadas','dmNotes',f.dmNotes,'textarea')+
     referenceChecks('npcIds',arr(c?.npcs).filter(n=>a.npcIds.includes(n.id)),f.npcIds)+
-    '<label class="explore-check"><input type="checkbox" data-ex-publish'+checked(f.visibleToPlayers)+'>Publicar facção aos jogadores</label>'+
+
     '</div><div class="row-actions"><button type="button" data-ex-save-faction>Salvar facção</button><button type="button" class="secondary" data-ex-delete="faction" data-ex-id="'+esc(f.id)+'">Excluir</button><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Fechar</button></div>':
     '<p class="mini">'+esc(f.relationship||f.publicDescription||'Sem relação registrada.')+'</p><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Editar facção</button>')+
   '</article>').join('')+'</div>'+
