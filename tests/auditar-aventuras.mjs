@@ -50,6 +50,24 @@ const safe=revealedAdventureProjection(list.find(x=>x.id===adventureId),campaign
 
 let c2=sanitizeCampaign({id:'cmp-x',locations:[{id:'loc-x',name:'X'}],npcs:[{id:'npc-x',name:'N',currentLocationId:'loc-x'}]});let removedLocation=removeCampaignLocation([c2],'cmp-x','loc-x');assert.equal(removedLocation.ok,true);assert.equal(removedLocation.campaign.npcs[0].currentLocationId,null,'Excluir Local deve limpar localização atual dos NPCs.');
 
+// Permissões de jogadores: eventos vivos seguem a Cena; registros manuais e sessões exigem publicação própria.
+const hiddenProjection=revealedAdventureProjection(list.find(x=>x.id===adventureId),campaign);
+assert.equal(hiddenProjection.scenes.some(scene=>scene.id===sceneId),false,'Cenas ocultas não podem aparecer aos jogadores.');
+assert.equal(hiddenProjection.timelineEvents.length,0,'Registros manuais ocultos não podem ser publicados.');
+assert.equal(hiddenProjection.sessionIds.includes('session-1'),false,'A sessão não deve ser publicada sem autorização explícita.');
+let visibilityResult=updateAdventureEntity(list,adventureId,'scenes',sceneId,{visibleToPlayers:true});
+const manualEvent=visibilityResult.adventure.timelineEvents.find(event=>event.title==='Registro manual');
+assert.ok(manualEvent,'Registro manual para validação de visibilidade.');
+visibilityResult=updateAdventureEntity(visibilityResult.list,adventureId,'timelineEvents',manualEvent.id,{visibleToPlayers:true});
+visibilityResult=updateAdventure(visibilityResult.list,adventureId,{sessionVisibility:{'session-1':true}});
+const playerProjection=revealedAdventureProjection(visibilityResult.adventure,campaign);
+assert.ok(playerProjection.scenes.some(scene=>scene.id===sceneId),'A Cena publicada deve aparecer.');
+assert.ok(playerProjection.timelineEvents.some(event=>event.id===manualEvent.id),'O evento manual publicado deve aparecer.');
+assert.ok(playerProjection.sessionIds.includes('session-1'),'Sessão autorizada deve aparecer.');
+const publicTimeline=deriveAdventureTimelineEvents(playerProjection);
+assert.ok(publicTimeline.some(event=>event.virtualScene&&event.sceneId===sceneId),'Linha do Tempo herda publicação da Cena.');
+assert.ok(!publicTimeline.some(event=>event.virtualScene&&event.sceneId===scene2),'Cena não publicada não deve aparecer na Linha do Tempo do jogador.');
+
 const storage=new MemoryStorage;writeAdventures(list,storage);assert.ok(storage.getItem(ADVENTURE_KEY));const roundtrip=readAdventures(storage);assert.equal(roundtrip.length,1);assert.equal(roundtrip[0].campaignId,'cmp-1');assert.equal(roundtrip[0].participantAccessConfigured,true);assert.ok(roundtrip[0].missions.length);assert.ok(roundtrip[0].timelineEvents.length);
 const payload=JSON.stringify(roundtrip);for(const forbidden of['currentHp','spellSlotsUsed','inventoryCampaign','progressionHistory','initiativeOrder'])assert.equal(payload.includes(forbidden),false,`Aventura não deve copiar estado mecânico: ${forbidden}`);
 let other=createAdventure(list,{campaignId:'cmp-2',title:'Outra Campanha'});const cleaned=removeAdventuresForCampaign(other.list,'cmp-1');assert.equal(cleaned.some(x=>x.campaignId==='cmp-1'),false);assert.equal(cleaned.some(x=>x.campaignId==='cmp-2'),true);assert.equal(removeAdventure(updateAdventure(list,adventureId,{summary:'Resumo consolidado.'}).list,adventureId).ok,true);
