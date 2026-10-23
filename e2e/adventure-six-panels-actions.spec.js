@@ -16,20 +16,20 @@ test.beforeEach(async({page})=>{
  },{campaign,adventure});
 });
 
-test('os seis cards registram ações e salvam os vínculos sem interromper a inicialização',async({page})=>{
+test('cards restantes registram ações sem depender de Capítulos, Locais ou Tesouros',async({page})=>{
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=qa-six-panels&id=qa-six-adventure');
  await expect(page.locator('#adventure-assignment')).toHaveValue('qa-six-panels');
- await expect(page.locator('#add-chapter')).toBeVisible();
+ for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
+ await expect(page.locator('#criar-area,#criar-mapa')).toHaveCount(2);
 
- await page.locator('#new-chapter-title').fill('A chegada');
- await page.locator('#add-chapter').click();
- await expect.poll(async()=> (await getAdventure(page)).chapters.length).toBe(1);
-
- await page.locator('#new-location-name').fill('Palácio das Rainhas');
- await page.locator('#add-campaign-location').click();
- await expect.poll(async()=> (await getCampaign(page)).locations.length).toBe(1);
- await expect.poll(async()=> (await getAdventure(page)).locationIds.length).toBe(1);
+ await page.locator('#ex-new-level input[name="name"]').fill('Palácio');
+ await page.locator('#ex-new-level button[type="submit"]').click();
+ await expect.poll(async()=> (await getAdventure(page)).exploration.levels.length).toBe(1);
+ await page.locator('#ex-new-area input[name="code"]').fill('Salão do Conselho');
+ await page.locator('#ex-new-area select[name="levelId"]').selectOption((await getAdventure(page)).exploration.levels[0].id);
+ await page.locator('#ex-new-area button[type="submit"]').click();
+ await expect.poll(async()=> (await getAdventure(page)).exploration.areas.length).toBe(1);
 
  await page.locator('#new-mission-title').fill('Proteger o palácio');
  await page.locator('#add-mission').click();
@@ -40,19 +40,17 @@ test('os seis cards registram ações e salvam os vínculos sem interromper a in
  await expect.poll(async()=> (await getCampaign(page)).npcs.length).toBe(1);
  await expect.poll(async()=> (await getAdventure(page)).npcIds.length).toBe(1);
 
- // Sem monstro selecionado, o clique deve produzir feedback (e não ser ignorado).
  await page.locator('#add-adventure-monster').click();
  await expect(page.locator('#adventure-feedback')).toContainText('Selecione um monstro');
 
  await page.locator('#new-scene-title').fill('Conselho Real');
- await page.locator('#new-scene-chapter').selectOption((await getAdventure(page)).chapters[0].id);
- await page.locator('#new-scene-location').selectOption((await getAdventure(page)).locationIds[0]);
+ await page.locator('#new-scene-area').selectOption((await getAdventure(page)).exploration.areas[0].id);
  await page.locator('#add-scene').click();
  await expect.poll(async()=> (await getAdventure(page)).scenes.length).toBe(1);
  expect((await getAdventure(page)).scenes[0].title).toBe('Conselho Real');
 
- await expect(page.locator('#capitulos .story-card')).toHaveCount(1);
- await expect(page.locator('#locais .story-card')).toHaveCount(1);
+ await expect(page.locator('#exploracao .explore-area-card')).toHaveCount(1);
+ await expect(page.locator('#mapas .explore-level-card')).toHaveCount(1);
  await expect(page.locator('#missoes .story-card')).toHaveCount(1);
  await expect(page.locator('#npcs .story-card')).toHaveCount(1);
  await expect(page.locator('#cenas .story-card')).toHaveCount(1);
@@ -82,7 +80,8 @@ test('Notas do Mestre não bloqueiam as demais ações e são persistidas',async
  await page.locator('#notas-mestre [data-note-add]').click();
  await expect.poll(async()=> (await getAdventure(page)).dmNoteEntries.length).toBe(1);
  expect((await getAdventure(page)).dmNoteEntries[0].text).toBe('Pista exclusiva do mestre');
- await page.locator('#new-chapter-title').fill('Capítulo após nota');
- await page.locator('#add-chapter').click();
- await expect.poll(async()=> (await getAdventure(page)).chapters.length).toBe(1);
+ await page.locator('#ex-new-area input[name="code"]').fill('Área após nota');
+ await page.locator('#ex-new-area button[type="submit"]').click();
+ await expect.poll(async()=> (await getAdventure(page)).exploration.areas.length).toBe(1);
+ expect((await getAdventure(page)).dmNoteEntries).toHaveLength(1);
 });
