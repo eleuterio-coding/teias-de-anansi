@@ -100,7 +100,7 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   expect(g.art.bottom).toBeGreaterThan(g.card.bottom-4);
   expect(g.detail.left).toBeGreaterThanOrEqual(g.art.right-3);
   expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
-  expect(g.badge.top).toBeLessThan(g.detail.top+5);
+  expect(g.badge.top-g.card.top).toBeLessThan(45);
   expect(g.actions.left).toBeGreaterThanOrEqual(g.art.right-2);
   expect(g.actions.bottom).toBeLessThanOrEqual(g.card.bottom+3);
   expect(g.actions.top).toBeGreaterThanOrEqual(g.stats.bottom-2);
