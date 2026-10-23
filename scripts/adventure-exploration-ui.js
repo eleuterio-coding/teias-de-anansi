@@ -66,36 +66,21 @@ export function renderAdventureExploration(a,c){
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
  const selected=areas.find(area=>area.id===selectedAreaId)||areas[0]||null;
  const progress=explorationProgress(exploration);
- return '<section class="card adventure-exploration adventure-areas" id="exploracao">'+
- '<div class="explore-title"><h2>Áreas e Salas</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
- '<details class="explore-create" id="ex-create-area" open><summary>Adicionar área / sala</summary>'+
- '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
- '<label>Identificador<input name="code" required placeholder="A01, Sala 1, Torre norte..."></label>'+
- '<label>Status<select name="status">'+selectOptions(STATUS,'unknown')+'</select></label>'+
- '<label>Mapa<select name="levelId">'+choices(levels,null,'— Sem mapa —')+'</select></label>'+
- '<label>Tipo de ambiente<input name="type" placeholder="Sala, corredor, floresta..."></label>'+
- '<button type="submit">Criar área</button></form></details>'+
- '<div class="explore-area-grid">'+(areas.length?areas.map(area=>{
-  const level=levels.find(l=>l.id===area.levelId);
-  return '<article class="explore-area-card'+(selected?.id===area.id?' is-selected':'')+'">'+
-   '<div><small>'+esc(level?.name||'Sem mapa')+'</small><strong>'+esc(areaLabel(area))+'</strong><span class="mini">'+esc(area.type||'Ambiente não definido')+'</span></div>'+
-   '<div class="explore-card-actions"><label>Status<select data-ex-quick-status="'+esc(area.id)+'" aria-label="Status de '+esc(areaLabel(area))+'">'+selectOptions(STATUS,area.status)+'</select></label>'+
-   '<button type="button" class="secondary" data-ex-open-area="'+esc(area.id)+'">Abrir</button></div>'+
-  '</article>';
- }).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div>'+
- (selected?areaDetail(selected,a,c,exploration):'<div class="story-empty">Selecione ou adicione uma área para editar suas informações.</div>')+
- '</section>'+
- '<section class="card adventure-exploration adventure-maps" id="mapas">'+
- '<div class="explore-title"><h2>Mapas e Níveis</h2><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
- '<details class="explore-create" id="ex-level-manager" open><summary>Adicionar mapa / nível</summary>'+
- '<form id="ex-new-level" class="explore-create-form explore-create-map">'+
- '<label>Nome do mapa<input name="name" required placeholder="Primeiro andar, Floresta..."></label>'+
- '<label>Mapa<input type="file" name="mapFile" accept="image/jpeg,image/png,image/webp"></label>'+
- '<label>URL do mapa<input name="mapUrl" placeholder="https://... ou caminho relativo"></label>'+
- '<label>Tipo<input name="type" placeholder="Masmorra, região, cidade..."></label>'+
- '<label>Descrição<textarea name="description" rows="2"></textarea></label>'+
- '<button type="submit">Adicionar mapa</button></form>'+
- '<div class="explore-level-grid">'+levels.map(l=>
+ const areaList='<section class="card adventure-exploration adventure-areas" id="exploracao">'+
+  '<div class="explore-title"><h2>Áreas e Salas</h2><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
+  '<div class="explore-area-grid">'+(areas.length?areas.map(area=>{
+   const level=levels.find(l=>l.id===area.levelId);
+   return '<article class="explore-area-card'+(selected?.id===area.id?' is-selected':'')+'">'+
+    '<div><small>'+esc(level?.name||'Sem mapa')+'</small><strong>'+esc(areaLabel(area))+'</strong><span class="mini">'+esc(area.type||'Ambiente não definido')+'</span></div>'+
+    '<div class="explore-card-actions"><label>Status<select data-ex-quick-status="'+esc(area.id)+'" aria-label="Status de '+esc(areaLabel(area))+'">'+selectOptions(STATUS,area.status)+'</select></label>'+
+    '<button type="button" class="secondary" data-ex-open-area="'+esc(area.id)+'">Abrir</button></div>'+
+   '</article>';
+  }).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div>'+
+  (selected?areaDetail(selected,a,c,exploration):'<div class="story-empty">Selecione ou adicione uma área para editar suas informações.</div>')+
+  '</section>';
+ const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
+  '<div class="explore-title"><h2>Mapas e Níveis</h2><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
+  '<div class="explore-level-grid">'+(levels.length?levels.map(l=>
    '<article data-ex-level="'+esc(l.id)+'" class="story-card explore-level-card">'+
    '<div class="explore-fields">'+
    field('Nome do mapa','name',l.name)+
@@ -104,7 +89,25 @@ export function renderAdventureExploration(a,c){
    field('Tipo','type',l.type)+
    field('Descrição','description',l.description,'textarea','rows="2"')+
    '</div><div class="row-actions"><button type="button" data-ex-save-level>Salvar mapa</button><button type="button" class="secondary" data-ex-delete="level" data-ex-id="'+esc(l.id)+'">Excluir mapa</button></div></article>'
-  ).join('')+'</div></details></section>';
+  ).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
+ const areaCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-area">'+
+  '<h2>Adicionar área / sala</h2>'+
+  '<form id="ex-new-area" class="explore-create-form explore-create-area">'+
+  '<label>Identificador<input name="code" required placeholder="A01, Sala 1, Torre norte..."></label>'+
+  '<label>Status<select name="status">'+selectOptions(STATUS,'unknown')+'</select></label>'+
+  '<label>Mapa<select name="levelId">'+choices(levels,null,'— Sem mapa —')+'</select></label>'+
+  '<label>Tipo de ambiente<input name="type" placeholder="Sala, corredor, floresta..."></label>'+
+  '<button type="submit">Criar área</button></form></section>';
+ const mapCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-mapa">'+
+  '<h2>Adicionar mapa / nível</h2>'+
+  '<form id="ex-new-level" class="explore-create-form explore-create-map">'+
+  '<label>Nome do mapa<input name="name" required placeholder="Primeiro andar, Floresta..."></label>'+
+  '<label>Mapa<input type="file" name="mapFile" accept="image/jpeg,image/png,image/webp"></label>'+
+  '<label>URL do mapa<input name="mapUrl" placeholder="https://... ou caminho relativo"></label>'+
+  '<label>Tipo<input name="type" placeholder="Masmorra, região, cidade..."></label>'+
+  '<label>Descrição<textarea name="description" rows="2"></textarea></label>'+
+  '<button type="submit">Adicionar mapa</button></form></section>';
+ return areaList+mapList+areaCreate+mapCreate;
 }
 export function bindAdventureExploration({getAdventure,getCampaign,save,feedback}){
  const root=document.getElementById('exploracao');
@@ -156,7 +159,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  root?.querySelectorAll('[data-ex-quick-status]').forEach(select=>select.addEventListener('change',()=>{
   apply(changeAreaStatus(get(),select.dataset.exQuickStatus,select.value),'Status da área atualizado.');
  }));
- mapRoot?.querySelector('#ex-new-level')?.addEventListener('submit',async event=>{
+ document.getElementById('ex-new-level')?.addEventListener('submit',async event=>{
   event.preventDefault();
   const form=event.target,name=form.elements.name.value.trim();if(!name)return;
   const file=form.elements.mapFile.files?.[0]||null;
@@ -165,7 +168,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   apply(result,'Mapa criado.');
   if(file)try{await syncMap(result.entity.id,{file})}catch(error){feedback(error.message,false)}
  });
- root?.querySelector('#ex-new-area')?.addEventListener('submit',event=>{
+ document.getElementById('ex-new-area')?.addEventListener('submit',event=>{
   event.preventDefault();
   const form=event.target,code=form.elements.code.value.trim();if(!code)return;
   const result=createExplorationEntity(get(),'area',{code,name:code,status:form.elements.status.value,levelId:form.elements.levelId.value||null,type:form.elements.type.value});
