@@ -124,7 +124,7 @@ function syncRosterControls({rebuildRows=false}={}){
  }
  const heroPlayers=document.querySelector('.campaign-product-meta .badge:nth-child(2)');
  if(heroPlayers)heroPlayers.textContent=countLabel(campaign.members.length,'jogador','jogadores');
- const countLinked=document.querySelector('.campaign-product-summary .metric:nth-child(3) strong');
+ const countLinked=document.querySelector('[data-campaign-summary="characters"] strong');
  if(countLinked)countLinked.textContent=String(campaign.members.filter(m=>m.characterId).length);
 }
 function commitRoster(list,message,{rebuildRows=false}={}){
