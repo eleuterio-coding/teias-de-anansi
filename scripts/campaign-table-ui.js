@@ -7,7 +7,7 @@ import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-prev
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
-import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261023-linked-timeline1';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261022-chronicles-final3';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261022-chronicles-final3';
@@ -49,7 +49,7 @@ function referenceSectionsHtml(){return renderCampaignAdventuresSection(campaign
 function detailsSectionsHtml(){
 
  const text=(id,title,field)=>`<section id="${id}" class="card campaign-editor-card"><h2>${esc(title)}</h2><textarea class="campaign-large-text" data-campaign-field="${field}">${esc(campaign[field])}</textarea><div class="row-actions" style="margin-top:10px"><button type="button" data-save-campaign-section>Salvar</button></div></section>`;
- return renderTimeline(campaign)
+ return renderTimeline(campaign,'list',null,{adventures:adventuresForCampaign(readAdventures(),campaignId)})
   +noteSection(campaign.dmNoteEntries)
 }
 
@@ -365,7 +365,7 @@ function bindCampaignSaveButtons(){
  }))
 }
 
-function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindCampaignNotes();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
+function bind(){updateTextFields();bindMembers();bindCampaignCover();bindCampaignSaveButtons();bindCampaignNotes();bindStructuredDetails({getCampaign:()=>campaign,getNpcs:readNpcs,getAdventures:()=>adventuresForCampaign(readAdventures(),campaignId),save:savePatch,feedback});$('new-member-user')?.addEventListener('change',event=>{const select=$('new-member-character');if(select)select.innerHTML=characterOptions('',null,event.target.value)});$('add-member')?.addEventListener('click',()=>{const username=$('new-member-user')?.value,characterId=$('new-member-character')?.value||null,participant=hubParticipants.find(p=>p.username===username);if(!participant)return feedback('Selecione um jogador do Hub.',false);const added=addCampaignMember(campaigns,campaignId,{username:participant.username,name:participant.displayName,role:'player'});if(!added.ok)return feedback(added.reason,false);if(!characterId)return commitRoster(added.list,'Jogador adicionado.',{rebuildRows:true});const linked=assignCharacterToMember(added.list,campaignId,added.member.id,characterId);if(!linked.ok)return feedback(linked.reason,false);commitRoster(linked.list,'Jogador e personagem vinculados.',{rebuildRows:true})})}
 async function init(){
  if(!campaignId){$('table-root').innerHTML='<div class="status warning">Abra uma campanha pela lista de Campanhas.</div>';return}
  campaigns=readCampaigns();campaign=campaignById(campaigns,campaignId);characters=read();
