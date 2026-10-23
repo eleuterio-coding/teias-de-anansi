@@ -41,10 +41,13 @@ function campaignOptions(selected=campaignId){return campaigns.map(c=>option(c.i
 function topHtml(){
  return `<div class="top hub-collection-top"><header><h1>Aventuras</h1></header></div>`
 }
+function nextAdventureOrder(targetCampaignId){
+ return adventures.filter(row=>row.campaignId===targetCampaignId).reduce((max,row)=>Math.max(max,Number(row.order)||0),0)+1;
+}
 function selectorHtml(){
  if(!campaigns.length)return '<div class="status warning">Crie uma Campanha antes de criar uma Aventura. <a href="campanhas.html">Abrir Campanhas</a></div>';
  return `<section id="adventure-create-card" class="card hub-collection-create-panel" ${createPanelOpen?'':'hidden'}><div class="campaign-create-header"><h2>Nova aventura</h2><button type="button" class="secondary" id="cancel-adventure-create">Fechar</button></div>
- <div class="form-grid two"><label>Campanha da aventura<select id="adventure-campaign">${campaignOptions()}</select></label><label>Nome da aventura<input id="new-adventure-title"></label><label>Status<select id="new-adventure-status"><option value="planned">Planejada</option><option value="active">Em andamento</option></select></label></div>
+ <div class="form-grid two"><label>Campanha da aventura<select id="adventure-campaign">${campaignOptions()}</select></label><label>Nome da aventura<input id="new-adventure-title"></label><label>Status<select id="new-adventure-status"><option value="planned">Planejada</option><option value="active">Em andamento</option></select></label><label>Ordem da aventura<input id="new-adventure-order" type="number" min="1" value="${nextAdventureOrder(campaignId)}" readonly aria-label="Próxima ordem da aventura na Campanha"></label></div>
  <div class="row-actions" style="margin-top:12px"><button id="create-adventure" type="button">Criar aventura</button></div></section>`
 }
 function listHtml(){
