@@ -443,3 +443,13 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
 #adventure-root #sessoes .adventure-linked-session{display:grid;gap:8px;min-width:0}
 #adventure-root #sessoes .adventure-linked-session>.campaign-disclosure-toggle{justify-self:start;padding:9px 11px;border:1px solid var(--hub-border,#40546c);border-radius:9px;background:rgba(80,130,180,.07)}
 @media(max-width:620px){#adventure-root #monstros .adventure-monster-preview dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Mapas publicados: imagem integral sem revelar dados privados do mapa. */
+#adventure-root .adventure-detail-readonly .adventure-published-map{
+ display:grid;gap:10px;align-content:start;min-width:0;
+}
+#adventure-root .adventure-detail-readonly .adventure-shared-map-image{
+ display:block;width:100%;max-height:480px;object-fit:contain;
+ border:1px solid var(--hub-border,#40546c);border-radius:9px;
+ background:rgba(13,28,42,.35)
+}
