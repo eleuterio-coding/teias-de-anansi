@@ -154,3 +154,42 @@ test('Nova Campanha usa CTA elegante com apenas o símbolo + e o título',async(
  expect(mobile.height).toBeGreaterThanOrEqual(102);
  expect(mobile.pageWidth).toBeLessThanOrEqual(mobile.viewportWidth+2);
 });
+
+
+test('Nova Campanha: cruz do ícone fica centrada em desktop e mobile, sem ajuste por fonte',async({page})=>{
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:900});
+  await page.goto('/campanhas.html');
+  const plus=page.locator('#open-campaign-create .campaign-create-plus');
+  await expect(plus).toBeVisible();
+  const layout=await plus.evaluate(node=>{
+   const circle=node.getBoundingClientRect(),style=getComputedStyle(node);
+   const h=getComputedStyle(node,'::before');
+   const v=getComputedStyle(node,'::after');
+   function center(stroke){
+    const matrix=new DOMMatrixReadOnly(stroke.transform);
+    return{
+     x:parseFloat(stroke.left)+matrix.m41+parseFloat(stroke.width)/2,
+     y:parseFloat(stroke.top)+matrix.m42+parseFloat(stroke.height)/2
+    }
+   }
+   return{
+    circleWidth:circle.width,circleHeight:circle.height,
+    fontSize:style.fontSize,padding:style.padding,
+    horizontal:{width:parseFloat(h.width),height:parseFloat(h.height),...center(h)},
+    vertical:{width:parseFloat(v.width),height:parseFloat(v.height),...center(v)}
+   }
+  });
+  expect(layout.circleWidth).toBe(layout.circleHeight);
+  expect(layout.fontSize).toBe('0px');
+  expect(layout.padding).toBe('0px');
+  expect(layout.horizontal.width).toBe(24);
+  expect(layout.horizontal.height).toBe(2);
+  expect(layout.vertical.width).toBe(2);
+  expect(layout.vertical.height).toBe(24);
+  expect(Math.abs(layout.horizontal.x-layout.vertical.x)).toBeLessThan(0.1);
+  expect(Math.abs(layout.horizontal.y-layout.vertical.y)).toBeLessThan(0.1);
+  expect(Math.abs(layout.horizontal.x-layout.circleWidth/2)).toBeLessThanOrEqual(1);
+  expect(Math.abs(layout.horizontal.y-layout.circleHeight/2)).toBeLessThanOrEqual(1);
+ }
+});
