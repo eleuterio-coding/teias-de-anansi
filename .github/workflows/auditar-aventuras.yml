@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'scripts/adventure-state.js'
+      - 'scripts/adventure-exploration-state.js'
+      - 'scripts/adventure-exploration-ui.js'
       - 'scripts/adventure-integrity.js'
       - 'scripts/adventure-integrity-ui.js'
       - 'scripts/adventure-ui.js'
@@ -13,6 +15,8 @@ on:
       - 'mesa.html'
       - 'index.html'
       - 'tests/auditar-aventuras.mjs'
+      - 'tests/auditar-exploracao.mjs'
+      - 'adventure-exploration.css'
       - 'ROADMAP-V1.md'
       - '.github/workflows/auditar-aventuras.yml'
   workflow_dispatch:
@@ -27,6 +31,9 @@ jobs:
       - name: Validar sintaxe
         run: |
           node --check scripts/adventure-state.js
+          node --check scripts/adventure-exploration-state.js
+          node --check scripts/adventure-exploration-ui.js
+          node --check tests/auditar-exploracao.mjs
           node --check scripts/adventure-integrity.js
           node --check scripts/adventure-integrity-ui.js
           node --check scripts/adventure-ui.js
@@ -35,6 +42,8 @@ jobs:
           node --check tests/auditar-aventuras.mjs
       - name: 13A–13H · Conteúdo narrativo, vínculos e condução
         run: node tests/auditar-aventuras.mjs
+      - name: Exploração · Integridade, privacidade e migração
+        run: node tests/auditar-exploracao.mjs
       - name: 13I · Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
       - name: 13J · Regressão Encontros

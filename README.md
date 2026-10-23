@@ -47,6 +47,8 @@ O Jogador não altera Sessões nem suas próprias atribuições.
 
 ## Aventuras
 
+O espaço de Aventuras inclui **Exploração genérica**, com níveis e mapas opcionais, áreas persistentes, facções, vínculos com cenas e histórico de visitas. Jogadores só recebem áreas e registros explicitamente publicados; mapas privados não são sincronizados para a visão do Jogador. Guia: [Exploração de Aventuras](docs/EXPLORACAO-AVENTURAS.md).
+
 Rafael escolhe explicitamente quais Aventuras cada Jogador poderá ver. Estar em uma Campanha ou em uma Sessão não libera automaticamente outras Aventuras.
 
 A visão compartilhada da Aventura continua omitindo notas exclusivas do Mestre, pistas ocultas e handouts ainda não revelados. Jogadores não alteram Aventuras.

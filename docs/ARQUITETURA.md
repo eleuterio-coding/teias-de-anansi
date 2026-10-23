@@ -25,6 +25,10 @@ O código JavaScript é organizado por estado, regras e UI. Os módulos `*-state
 
 A criação de personagem possui uma subdivisão própria em `scripts/character-builder/`, com catálogos, estado e mecânicas por classe/subclasse. O Modo de Jogo usa módulos específicos para progressão, combate, economia, magias e demais estados persistentes da ficha.
 
+## Exploração não linear de Aventuras
+
+O registro de Aventura evolui para o schema interno v3, mantendo a chave local antiga e migração transparente. As coleções de níveis, áreas, facções e crônica são normalizadas em scripts/adventure-exploration-state.js. A interface de exploração apresenta mapas opcionais, áreas editáveis e registros. A cena continua entidade distinta da área e usa referência opcional areaId. Na projeção compartilhada, sharedExplorationProjection filtra explicitamente os dados públicos sem enviar mapas, coordenadas ou segredos. Detalhes em docs/EXPLORACAO-AVENTURAS.md.
+
 ## Persistência local
 
 A camada local usa `localStorage` com chaves versionadas. Entre as principais:

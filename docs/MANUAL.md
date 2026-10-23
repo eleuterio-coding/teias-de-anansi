@@ -80,6 +80,10 @@ Mesmo dentro de uma Aventura visível, a visão do Jogador não inclui notas pri
 
 O Jogador não altera a Aventura.
 
+### Exploração por áreas e níveis
+
+Em **Aventura → Exploração**, o Mestre pode cadastrar níveis com mapas opcionais, áreas persistentes e facções. A lista de áreas permite filtrar, abrir, configurar marcadores em percentuais e registrar estados e visitas. No editor de cenas, associe uma cena à área quando necessário. Áreas não descobertas permanecem invisíveis ao Jogador; publicar uma área exige marcação explícita, e o mapa privado não é transmitido. Consulte docs/EXPLORACAO-AVENTURAS.md.
+
 ## 8. Bibliotecas
 
 As Bibliotecas expõem os catálogos congelados para a linha v1: regras, classes, espécies, antecedentes, talentos, equipamentos, magias e demais entidades suportadas.
