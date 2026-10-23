@@ -251,8 +251,37 @@ body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .ca
   background:#edf4fa;border-color:#d4e0ec
 }
 body.hub-shell-enabled.hub-content-light :is(#adventure-list,#sessions-list) .campaign-card-stat strong{color:#16314a}
-/* Responsivo: sem colunas comprimidas no tablet ou no celular. */
-@media(max-width:1060px){
+/* Em notebooks, a capa continua à esquerda; o painel recebe mais espaço.
+   O empilhamento só começa quando a tela realmente não comporta duas áreas. */
+@media(min-width:701px) and (max-width:1200px){
+  #adventure-root #adventure-list .campaign-card-featured,
+  #sessions-list .campaign-card-featured,
+  body.hub-shell-enabled #adventure-list .campaign-card-featured,
+  body.hub-shell-enabled #sessions-list .campaign-card-featured{
+    grid-template-columns:minmax(0,58%) minmax(0,42%)!important;
+    min-height:350px!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured > .campaign-card-status{
+    max-width:calc(42% - 46px)
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details h2{
+    font-size:clamp(1.35rem,2.3vw,2rem)!important;
+    line-height:1.2!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-details,
+  body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-main>.campaign-card-details{
+    padding-top:69px!important
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured .campaign-card-stat{
+    min-height:64px;gap:8px;padding:9px 11px
+  }
+  :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions,
+  body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured>.campaign-card-actions{
+    padding:10px var(--campaign-card-edge) 17px!important
+  }
+}
+/* Empilhamento reservado para telas pequenas (celulares). */
+@media(max-width:700px){
   :is(#adventure-list,#sessions-list) .campaign-card-featured,
   body.hub-shell-enabled :is(#adventure-list,#sessions-list) .campaign-card-featured{
     grid-template-columns:minmax(0,1fr)!important;
