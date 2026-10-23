@@ -116,3 +116,10 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
  #adventure-root .hub-detail-page .section-nav,#sessions-list .hub-detail-page .section-nav{position:sticky;overflow-x:auto;flex-wrap:nowrap}
  #sessions-list .session-roster-list .roster-player{grid-template-columns:1fr;align-items:start;gap:10px}
 }
+
+/* Planejamento de Campanha: selo junto ao nome da sessão, sem título duplicado. */
+.campaign-next-highlight .campaign-next-session-line{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+.campaign-next-highlight .campaign-next-session-line .campaign-next-name{margin:0;min-width:0}
+.campaign-next-highlight .campaign-next-session-line .campaign-next-status{flex:none;border:1px solid #a5c8e97a;border-radius:8px;padding:5px 9px;font-weight:750}
+/* Sessões do jogador dentro da Aventura usam as mesmas imagens/status do Mestre. */
+#adventure-root .campaign-player-story-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px}
