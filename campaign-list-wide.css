@@ -14,7 +14,7 @@ body.hub-shell-enabled #campaign-list .campaign-card-featured{
  --campaign-card-edge:clamp(20px,2.2vw,30px);
  position:relative;
  display:grid!important;
- grid-template-columns:minmax(245px,34%) minmax(0,1fr);
+ grid-template-columns:minmax(0,66%) minmax(0,34%);
  grid-template-rows:minmax(0,1fr) auto;
  gap:0!important;align-items:stretch;
  width:100%;max-width:none;height:auto!important;min-height:450px;
@@ -99,7 +99,7 @@ body.hub-shell-enabled #campaign-list .campaign-card-featured .campaign-card-mai
  white-space:pre-line;overflow-wrap:anywhere;
 }
 #campaign-list .campaign-card-metrics{
- display:grid;grid-template-columns:repeat(2,minmax(0,185px));
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
  gap:12px;width:100%;min-width:0;margin-top:auto;
 }
 #campaign-list .campaign-card-stat{
@@ -146,7 +146,7 @@ body.hub-shell-enabled #campaign-list .campaign-card-featured>.campaign-card-act
 #campaign-list .campaign-card-featured .campaign-card-actions>button[data-delete]{
  margin-left:auto!important;
 }
-/* Adicionar campanha é somente texto; sem ícone e sem subtítulo. */
+/* Adicionar campanha mantém o + circular e somente o rótulo, sem subtítulo. */
 #campaign-list .campaign-create-tile,
 body.hub-shell-enabled #campaign-list .campaign-create-tile{
  display:flex!important;flex-direction:row!important;
@@ -154,7 +154,16 @@ body.hub-shell-enabled #campaign-list .campaign-create-tile{
  width:100%;height:auto!important;min-height:104px!important;
  padding:20px!important;
  border:2px dashed #435a70!important;border-radius:16px!important;
- font-size:1.1rem;font-weight:750;letter-spacing:.01em;text-decoration:none;
+ gap:16px;font-size:1.1rem;font-weight:750;letter-spacing:.01em;text-decoration:none;
+}
+#campaign-list .campaign-create-tile .campaign-create-plus{
+ display:grid;place-items:center;flex:0 0 58px;
+ width:58px;height:58px;border-radius:50%;
+ border:1px solid currentColor;
+ font-size:2.6rem;font-weight:300;line-height:1;
+}
+#campaign-list .campaign-create-tile .campaign-create-tile-label{
+ font-size:1.1rem;font-weight:750;line-height:1.25;
 }
 body.hub-shell-enabled.hub-content-light #campaign-list .campaign-card-featured{
  border-color:#c8d7e5!important;
