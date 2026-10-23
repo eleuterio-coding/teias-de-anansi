@@ -45,7 +45,7 @@ export function adventureListCard(adventure,{parentName='',readOnly=false,sessio
   </div>
   <div class="row-actions campaign-card-actions">
    <a class="btn" href="${href}">Abrir</a>
-   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">>Excluir</button>`}
+   ${readOnly?'':`<button type="button" class="danger" data-delete-adventure="${esc(a.id)}">Excluir</button>`}
   </div>
  </article>`;
 }
