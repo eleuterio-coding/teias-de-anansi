@@ -1,6 +1,6 @@
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261023-summary-covers4';
-import{renderTimeline}from'./campaign-structured-ui.js?v=20261023-linked-timeline1';
+import{renderTimeline,campaignTimelineCollapsedIds}from'./campaign-structured-ui.js?v=20261023-cards-toggle2';
 import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
@@ -46,11 +46,12 @@ function navigation(c){
  return `<nav class="section-nav">${links.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>`;
 }
 function bindReadOnly(root,c,adventures=[]){
+ const collapsedTimelineIds=campaignTimelineCollapsedIds(c,adventures);
  root.onclick=event=>{
   const view=event.target.closest('[data-timeline-view]');
   if(view){
    const mode=view.dataset.timelineView==='flowchart'?'flowchart':'list',old=root.querySelector('#linha-tempo'),temp=document.createElement('template');
-   temp.innerHTML=renderTimeline(c,mode,null,{readOnly:true,adventures});old?.replaceWith(temp.content.firstElementChild);
+   temp.innerHTML=renderTimeline(c,mode,collapsedTimelineIds,{readOnly:true,adventures});old?.replaceWith(temp.content.firstElementChild);
    return;
   }
   const location=event.target.closest('[data-player-location-preview]');
@@ -65,24 +66,28 @@ function bindReadOnly(root,c,adventures=[]){
    dialog.showModal();void hydrateMediaImages(dialog).catch(()=>{});
    return;
   }
-  const diagram=event.target.closest('[data-diagram-toggle]');
-  if(diagram&&!event.target.closest('button,a,input')){
-   diagram.querySelector('[data-timeline-toggle]')?.click();return
+  // O card inteiro controla a expansão, sem interceptar botões nem links.
+  const expandable=event.target.closest('.campaign-flow-card[data-timeline-card-toggle],.hub-diagram-node[data-diagram-toggle]');
+  if(expandable&&!event.target.closest('button,a,input,textarea,select,label,[contenteditable="true"]')){
+   expandable.querySelector('[data-timeline-toggle]')?.click();return;
   }
   const toggle=event.target.closest('[data-timeline-toggle]');
   if(!toggle)return;
   const container=toggle.closest('.timeline-item,.hub-diagram-node-group');
   const children=container?.querySelector(':scope > .timeline-children, :scope > .hub-diagram-children');
   if(!children)return;
-  children.hidden=!children.hidden;
-  toggle.setAttribute('aria-expanded',String(!children.hidden));
-  const count=Number(toggle.dataset.timelineCount)||children.children.length;
-  toggle.textContent=`${children.hidden?'Mostrar':'Ocultar'} ${count} ${count===1?'subitem':'subitens'}`;
+  const closing=toggle.getAttribute('aria-expanded')==='true';
+  children.hidden=closing;
+  if(closing)collapsedTimelineIds.add(toggle.dataset.timelineToggle);
+  else collapsedTimelineIds.delete(toggle.dataset.timelineToggle);
+  toggle.setAttribute('aria-expanded',String(!closing));
+  const label=closing?'Revelar subitens':'Ocultar subitens';
+  toggle.setAttribute('aria-label',label);toggle.title=label;
  };
  root.onkeydown=event=>{
   if(!['Enter',' '].includes(event.key))return;
-  const node=event.target.closest('[data-diagram-toggle]');
-  if(!node)return;
+  const node=event.target.closest('[data-diagram-toggle],[data-timeline-card-toggle]');
+  if(!node||event.target!==node)return;
   const button=node.querySelector('[data-timeline-toggle]');
   if(button){event.preventDefault();button.click()}
  };
