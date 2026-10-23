@@ -118,3 +118,39 @@ test('mobile: imagem horizontal, dois indicadores, duas ações e nenhuma rolage
  expect(layout.pageWidth).toBeLessThanOrEqual(layout.viewportWidth+2);
  await expect(cards.nth(1).locator('.campaign-card-cover-placeholder')).toBeVisible();
 });
+
+test('Nova Campanha usa CTA elegante com apenas o símbolo + e o título',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/campanhas.html');
+ const tile=page.locator('#open-campaign-create');
+ await expect(tile).toHaveAttribute('href','nova-campanha.html');
+ await expect(tile.locator(':scope > *')).toHaveCount(2);
+ await expect(tile.locator('.campaign-create-plus')).toHaveText('+');
+ await expect(tile.locator('.campaign-create-tile-label')).toHaveText('Nova Campanha');
+ const desktop=await tile.evaluate(node=>{
+  const css=getComputedStyle(node),plus=node.querySelector('.campaign-create-plus');
+  const circle=getComputedStyle(plus),bounds=node.getBoundingClientRect();
+  return{display:css.display,direction:css.flexDirection,
+   borderStyle:css.borderTopStyle,background:css.backgroundImage,
+   height:bounds.height,circleWidth:plus.getBoundingClientRect().width,
+   circleHeight:plus.getBoundingClientRect().height,
+   circleRadius:circle.borderRadius};
+ });
+ expect(desktop.display).toBe('flex');
+ expect(desktop.direction).toBe('row');
+ expect(desktop.borderStyle).toBe('solid');
+ expect(desktop.background).toContain('gradient');
+ expect(desktop.height).toBeGreaterThanOrEqual(124);
+ expect(desktop.circleWidth).toBe(desktop.circleHeight);
+ expect(desktop.circleRadius).toBe('50%');
+ await page.setViewportSize({width:390,height:844});
+ const mobile=await tile.evaluate(node=>({
+  height:node.getBoundingClientRect().height,
+  columns:getComputedStyle(node).flexDirection,
+  pageWidth:document.documentElement.scrollWidth,
+  viewportWidth:document.documentElement.clientWidth
+ }));
+ expect(mobile.columns).toBe('row');
+ expect(mobile.height).toBeGreaterThanOrEqual(102);
+ expect(mobile.pageWidth).toBeLessThanOrEqual(mobile.viewportWidth+2);
+});
