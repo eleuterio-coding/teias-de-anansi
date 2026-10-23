@@ -71,7 +71,7 @@ export function deriveAdventureTimelineEvents(adventure={}){
   return String(a.id).localeCompare(String(b.id));
  });
 }
-export function renderAdventureTimelineDiagram(events=[]){
+export function renderAdventureTimelineDiagram(events=[],{readOnly=false}={}){
  const rows=array(events).slice().sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
  if(!rows.length)return '<div class="hub-diagram-empty">Nenhum registro.</div>';
  return `<div class="hub-diagram-scroll" role="region" aria-label="Fluxograma da aventura" tabindex="0">
@@ -81,7 +81,7 @@ export function renderAdventureTimelineDiagram(events=[]){
  <strong>${esc(event.title)}</strong>
  ${safeDate(event.at)?`<time class="hub-diagram-date">${esc(safeDate(event.at))}</time>`:''}
  ${event.text?`<p>${esc(event.text)}</p>`:''}
- <button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(event.id)}">Ver registro</button>
+ ${readOnly?'':`<button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(event.id)}">Ver registro</button>`}
  </div></li>`).join('')}</ol>
  </div>`
 }
