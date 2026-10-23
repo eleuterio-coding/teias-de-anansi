@@ -82,6 +82,10 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(card.locator('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')).toHaveCount(0);
   await expect(card.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
   await expect(card.getByRole('button',{name:/Excluir/})).toHaveCount(1);
+  const actions=card.locator('.campaign-card-actions');
+  await expect(actions.locator('a.btn')).toHaveText('Abrir');
+  await expect(actions.locator('button.danger')).toHaveText('Excluir');
+  await expect(actions.locator('svg,.campaign-card-actions-icon')).toHaveCount(0);
   const create=page.locator(item.create);
   await expect(create).toBeVisible();
   await expect(create).toHaveClass(/campaign-create-tile/);
@@ -172,7 +176,10 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   expect(g.actions.bottom).toBeLessThanOrEqual(g.card.bottom+3);
   expect(g.actions.top).toBeGreaterThanOrEqual(g.stats.bottom-2);
   expect(g.open.left).toBeLessThan(g.del.left);
-  expect(g.open.width).toBeGreaterThan(80);
+  expect(Math.abs(g.open.width-g.del.width)).toBeLessThan(2);
+  expect(Math.abs(g.open.height-g.del.height)).toBeLessThan(2);
+  expect(Math.abs(g.open.top-g.del.top)).toBeLessThan(2);
+  expect(g.open.height).toBeGreaterThanOrEqual(42);
   await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-desktop',
     {body:await card.screenshot(),contentType:'image/png'});
  }
@@ -197,6 +204,8 @@ test('notebook: a capa permanece à esquerda mesmo com o painel lateral do Hub',
   expect(g.art.bottom).toBeGreaterThan(g.actions.bottom-4);
   expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
   expect(g.open.left).toBeLessThan(g.del.left);
+  expect(Math.abs(g.open.width-g.del.width)).toBeLessThan(2);
+  expect(Math.abs(g.open.top-g.del.top)).toBeLessThan(2);
   await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-notebook',
     {body:await card.screenshot(),contentType:'image/png'});
  }
@@ -213,7 +222,9 @@ test('celular: capa acima das informações, ações abaixo e sem overflow horiz
   expect(g.art.bottom).toBeLessThanOrEqual(g.detail.top+3);
   expect(g.actions.top).toBeGreaterThanOrEqual(g.detail.bottom-2);
   expect(g.open.width).toBeGreaterThanOrEqual(80);
-  expect(g.open.height).toBeGreaterThanOrEqual(40);
+  expect(g.open.height).toBeGreaterThanOrEqual(42);
+  expect(Math.abs(g.open.width-g.del.width)).toBeLessThan(2);
+  expect(Math.abs(g.open.top-g.del.top)).toBeLessThan(2);
   expect(g.del.right).toBeLessThanOrEqual(g.card.right+2);
   await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-celular',
     {body:await card.screenshot(),contentType:'image/png'});
