@@ -120,16 +120,16 @@ test('Clique no corpo e na imagem de cada card abre diretamente a entidade corre
   expect(image).toBeTruthy();
   await page.mouse.click(image.x+image.width/2,image.y+image.height/2);
   await expect(page).toHaveURL(item.url.includes('aventuras')
-   ?/aventuras\\.html\\?.*id=collection-a1/
-   :/sessoes\\.html\\?.*id=collection-s1/);
+   ?/aventuras\.html\?.*id=collection-a1/
+   :/sessoes\.html\?.*id=collection-s1/);
   await page.goto(item.url);
   const title=page.locator(item.selector+' .campaign-card-details h2');
   await title.scrollIntoViewIfNeeded();
   const b=await title.boundingBox();
   await page.mouse.click(b.x+b.width/2,b.y+b.height/2);
   await expect(page).toHaveURL(item.url.includes('aventuras')
-   ?/aventuras\\.html\\?.*id=collection-a1/
-   :/sessoes\\.html\\?.*id=collection-s1/);
+   ?/aventuras\.html\?.*id=collection-a1/
+   :/sessoes\.html\?.*id=collection-s1/);
  }
 });
 test('desktop: Aventuras e Sessões aparecem em duas colunas de cards',async({page})=>{
