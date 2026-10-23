@@ -9,7 +9,7 @@ test.beforeEach(async({page})=>{
  });
 });
 
-test('cadastro enxuto de mapa e área, XP/status persistidos e cards preservados',async({page})=>{
+test('cadastro em cards separados de mapa e área, XP/status persistidos',async({page},testInfo)=>{
  const errors=[];
  page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=cmp-explore&id=adv-explore');
@@ -18,13 +18,29 @@ test('cadastro enxuto de mapa e área, XP/status persistidos e cards preservados
  await expect(page.locator('.hub-detail-grid > #exploracao')).toHaveCount(1);
  await expect(page.locator('.hub-detail-grid > #mapas')).toHaveCount(1);
  await expect(page.locator('#exploracao #ex-new-level')).toHaveCount(0);
+ await expect(page.locator('#mapas #ex-new-level')).toHaveCount(0);
  await expect(page.locator('#mapas #ex-new-area')).toHaveCount(0);
+ await expect(page.locator('.hub-detail-grid > #criar-area')).toHaveCount(1);
+ await expect(page.locator('.hub-detail-grid > #criar-mapa')).toHaveCount(1);
  await expect(page.locator('.section-nav a[href="#exploracao"]')).toHaveText('Áreas e Salas');
  await expect(page.locator('.section-nav a[href="#mapas"]')).toHaveText('Mapas e Níveis');
- await expect(page.locator('#ex-create-area summary')).toHaveText('Adicionar área / sala');
- await expect(page.locator('#mapas #ex-level-manager summary')).toHaveText('Adicionar mapa / nível');
+ await expect(page.locator('#criar-area > h2')).toHaveText('Adicionar área / sala');
+ await expect(page.locator('#criar-area #ex-new-area')).toHaveCount(1);
+ await expect(page.locator('#criar-mapa > h2')).toHaveText('Adicionar mapa / nível');
+ await expect(page.locator('#criar-mapa #ex-new-level')).toHaveCount(1);
  await expect(page.locator('#ex-new-area :is(input,select)')).toHaveCount(4);
+ await expect(page.locator('.section-nav a[href="#criar-area"]')).toHaveText('Adicionar área');
+ await expect(page.locator('.section-nav a[href="#criar-mapa"]')).toHaveText('Adicionar mapa');
+ for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
  await expect(page.locator('#ex-new-level :is(input,textarea)')).toHaveCount(5);
+ if(testInfo.project.name==='desktop-chromium'){
+  const positions=await page.locator('#criar-area,#criar-mapa').evaluateAll(elements=>elements.map(el=>{
+   const rect=el.getBoundingClientRect();return {left:rect.left,top:rect.top,width:rect.width};
+  }));
+  expect(positions).toHaveLength(2);
+  expect(Math.abs(positions[0].top-positions[1].top)).toBeLessThan(5);
+  expect(positions[1].left).toBeGreaterThan(positions[0].left+positions[0].width);
+ }
  await page.locator('#ex-new-level input[name="name"]').fill('Primeiro andar');
  await page.locator('#ex-new-level input[name="type"]').fill('Masmorra');
  await page.locator('#ex-new-level input[name="mapUrl"]').fill('https://example.org/primeiro-andar.png');
