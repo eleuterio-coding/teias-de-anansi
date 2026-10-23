@@ -2253,3 +2253,31 @@ body.hub-shell-enabled:not(.hub-content-light) :is(#adventure-list,#sessions-lis
 
 /* Nota compartilhada: mesma largura do bloco final de Notas do Mestre. */
 #table-root .campaign-editor-grid > #notas-compartilhadas{grid-column:1/-1;min-width:0}
+
+/* Campanha — navegação por títulos e alinhamento permanente dos cards (23/10/2026). */
+#table-root .campaign-reference-head h2 .campaign-reference-title-link{
+ color:inherit;text-decoration:none;display:inline-block
+}
+#table-root .campaign-reference-head h2 .campaign-reference-title-link:hover,
+#table-root .campaign-reference-head h2 .campaign-reference-title-link:focus-visible{
+ color:var(--hub-accent-2,#8bcaff);text-decoration:none
+}
+#table-root .campaign-reference-head h2 .campaign-reference-title-link:focus-visible{
+ outline:2px solid currentColor;outline-offset:4px;border-radius:2px
+}
+#table-root #aventuras .campaign-adventures-feature-grid .campaign-player-story-footer{
+ display:flex;align-items:flex-end;justify-content:space-between;
+ gap:9px;min-width:0;width:100%;margin-top:auto
+}
+#table-root #aventuras .campaign-adventures-feature-grid .campaign-player-story-footer .campaign-player-story-open{
+ margin-left:auto;align-self:flex-end;white-space:nowrap
+}
+#table-root #aventuras .campaign-adventures-feature-grid .campaign-player-story-content h3{
+ font-size:1.19rem;line-height:1.3;font-weight:760;overflow-wrap:anywhere
+}
+#table-root #sessoes .campaign-player-sessions-grid .campaign-player-story-content h3{
+ font-size:1.11rem;line-height:1.3;font-weight:750;overflow-wrap:anywhere
+}
+#table-root :is(#aventuras,#sessoes) .campaign-player-story-footer .campaign-player-story-status{
+ flex:0 1 auto;align-self:flex-end
+}
