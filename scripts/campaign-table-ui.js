@@ -7,7 +7,7 @@ import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-prev
 import{read,readNpcs}from'./character-builder/state.js';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
 import{findPreviousCampaignSession,findUpcomingCampaignSession,findCurrentCampaignSession,renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
-import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261023-cards-toggle2';
+import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261023-no-indicator3';
 import{readCampaigns,writeCampaigns,campaignById,updateCampaign,addCampaignMember,updateCampaignMember,removeCampaignMember,reorderCampaignMember,assignCharacterToMember,unassignCharacterFromMember,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,cancelCampaignSession,removeCampaignSession}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{readAdventures,adventuresForCampaign}from'./adventure-state.js?v=20261022-chronicles-final3';
 import{loadFirebaseConfig}from'./firebase-collaboration-provider.js?v=20261022-chronicles-final3';
