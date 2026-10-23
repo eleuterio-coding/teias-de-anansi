@@ -45,7 +45,15 @@ test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editá
  await expect(roots.nth(0).locator('[data-timeline-text],[data-timeline-delete],[data-timeline-drag]')).toHaveCount(0);
  await expect(roots.nth(2).locator('[data-timeline-text="manual-history"]')).toBeVisible();
  await expect(roots.nth(0).locator(':scope > .campaign-flow-step [data-timeline-card-toggle]')).toHaveCount(1);
- await expect(roots.nth(0).locator('.timeline-children a.campaign-linked-link-card').first()).toHaveAttribute('href',`sessoes.html?campaign=${cid}&id=s-early`);
+ await expect(roots.nth(0).locator(':scope > .campaign-flow-step a.campaign-timeline-title-link')).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
+ await expect(roots.nth(0).locator(':scope > .campaign-flow-step .campaign-linked-card')).toHaveCount(1);
+ await expect(roots.nth(0).locator(':scope > .campaign-flow-step .campaign-linked-card')).not.toHaveAttribute('href',/./);
+ const linkedTitle=roots.nth(0).locator(':scope > .campaign-flow-step a.campaign-timeline-title-link');
+ const linkedCard=roots.nth(0).locator(':scope > .campaign-flow-step .campaign-linked-card');
+ await linkedTitle.hover();
+ await expect.poll(()=>linkedTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toContain('underline');
+ await expect.poll(()=>linkedCard.evaluate(node=>getComputedStyle(node).transform)).not.toBe('none');
+ await expect(roots.nth(0).locator('.timeline-children a.campaign-timeline-title-link').first()).toHaveAttribute('href',`sessoes.html?campaign=${cid}&id=s-early`);
  await expect(area.locator('[data-new-timeline],[data-timeline-add-root],[data-timeline-add-child]')).toHaveCount(0);
  await expect(roots.nth(0).locator(':scope > .timeline-children')).toBeHidden();
  await expect(area.locator('.timeline-child-indicator')).toHaveCount(0);
@@ -59,7 +67,9 @@ test('Mestre: Aventuras no primeiro nível, Sessões no segundo e eventos editá
  await expect(roots.nth(0).locator(':scope > .timeline-children')).toBeHidden();
  await toggle.click();
  await expect(roots.nth(0).locator(':scope > .timeline-children')).toBeVisible();
- await expect(roots.nth(0).locator(':scope > .timeline-children a.campaign-linked-link-card')).toHaveCount(2);
+ await expect(roots.nth(0).locator(':scope > .timeline-children a.campaign-timeline-title-link')).toHaveCount(2);
+ await expect(roots.nth(0).locator(':scope > .timeline-children .campaign-linked-card a.campaign-timeline-title-link')).toHaveCount(2);
+ await expect(roots.nth(0).locator(':scope > .timeline-children .campaign-linked-card[href]')).toHaveCount(0);
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
  expect(stored.timelineNodes.map(n=>n.text)).toEqual(['Registro do Mestre']);
  expect(stored.timelineNodes.some(n=>String(n.id).startsWith('linked-'))).toBe(false);
@@ -89,7 +99,12 @@ test('A hierarquia acompanha alterações nas entidades sem duplicar dados e fun
  await expect(parent.locator('[data-timeline-toggle]')).toHaveText('');
  await parent.locator('[data-timeline-toggle]').click();
  await expect(branch).toBeVisible();
- await expect(roots.nth(0).locator('a.hub-diagram-node-link')).toHaveCount(2);
+ await expect(roots.nth(0).locator('a.hub-diagram-linked-name')).toHaveCount(2);
+ await expect(parent.locator('a.hub-diagram-linked-name')).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
+ await expect(roots.nth(0).locator('a.hub-diagram-linked-name').first()).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
+ const flowTitle=parent.locator('a.hub-diagram-linked-name');
+ await flowTitle.hover();
+ await expect.poll(()=>flowTitle.evaluate(node=>getComputedStyle(node).textDecorationLine)).toContain('underline');
  await page.evaluate(ids=>{
   const list=JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'));
   list.find(row=>row.id===ids.a1).title='As Rainhas Renomeadas';
@@ -132,6 +147,7 @@ test('Jogador: árvore automática usa somente aventuras do pacote compartilhado
  await expect(area.locator('[data-new-timeline],[data-timeline-add-root],[data-timeline-delete]')).toHaveCount(0);
  await area.locator('[data-timeline-view="flowchart"]').click();
  await expect(area.locator('.hub-diagram-node-linked')).toHaveCount(2);
+ await expect(area.locator('.hub-diagram-node-linked a.campaign-timeline-title-link')).toHaveCount(2);
  await expect(area.locator('.hub-diagram-root').first().locator('.hub-diagram-children')).toBeHidden();
  await area.locator('.hub-diagram-root').first().locator('.hub-diagram-node[data-diagram-toggle]').click();
  await expect(area.locator('.hub-diagram-root').first().locator('.hub-diagram-children')).toBeVisible();
