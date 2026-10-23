@@ -1,6 +1,6 @@
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261023-summary-covers4';
-import{renderTimeline}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{renderTimeline}from'./campaign-structured-ui.js?v=20261023-linked-timeline1';
 import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
@@ -45,12 +45,12 @@ function navigation(c){
  if(c.sharedNotes)links.push(['notas-compartilhadas','Notas compartilhadas']);
  return `<nav class="section-nav">${links.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>`;
 }
-function bindReadOnly(root,c){
+function bindReadOnly(root,c,adventures=[]){
  root.onclick=event=>{
   const view=event.target.closest('[data-timeline-view]');
   if(view){
    const mode=view.dataset.timelineView==='flowchart'?'flowchart':'list',old=root.querySelector('#linha-tempo'),temp=document.createElement('template');
-   temp.innerHTML=renderTimeline(c,mode,null,{readOnly:true});old?.replaceWith(temp.content.firstElementChild);
+   temp.innerHTML=renderTimeline(c,mode,null,{readOnly:true,adventures});old?.replaceWith(temp.content.firstElementChild);
    return;
   }
   const location=event.target.closest('[data-player-location-preview]');
@@ -102,11 +102,11 @@ export function renderPlayerCampaign(row){
  ${playerRoster(c,characters,profiles,row.membership?.username||'')}
  ${renderCampaignAdventuresSection(c.id,adventures,{readOnly:true})}
  ${renderCampaignSessionsSection(c,adventures,{readOnly:true})}
- ${renderTimeline(c,'list',null,{readOnly:true})}
+ ${renderTimeline(c,'list',null,{readOnly:true,adventures})}
  ${c.sharedNotes?readonlyText('notas-compartilhadas','Notas compartilhadas',c.sharedNotes):''}
  ${c.dmNoteEntries?.length?noteSection(c.dmNoteEntries,{readOnly:true}):''}
  </div>`;
- bindReadOnly(root,c);
+ bindReadOnly(root,c,adventures);
  bindCampaignAvatarPreviews(root);
  void hydrateMediaImages(root).catch(()=>{});
 }
