@@ -1,4 +1,4 @@
-import{timelineViewToggle,renderCampaignTimelineDiagram,timelineDisclosure}from'./timeline-flowchart.js?v=20261023-cards-toggle2';
+import{timelineViewToggle,renderCampaignTimelineDiagram,timelineDisclosure}from'./timeline-flowchart.js?v=20261023-no-indicator3';
 import{projectCampaignTimeline}from'./campaign-timeline-projection.js?v=20261023-linked-timeline1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 import{locationPatch,reorderLocationRows,locationThumbnail,bindLocationImages}from'./campaign-important-location-ui.js?v=20261019-location-images1';
