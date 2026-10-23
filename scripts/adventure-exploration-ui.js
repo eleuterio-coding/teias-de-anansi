@@ -133,6 +133,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   if(file)media=await uploadImage({campaignId:adventure.campaignId,entityType:'adventure',entityId:adventure.id,file});
   const result=updateExplorationEntity(before,'level',levelId,{mapImage:remove?null:media,mapUrl:remove?'':previous.mapUrl});
   if(!result?.exploration){if(media)await deleteImage(media).catch(()=>{});throw new Error('Não foi possível salvar o mapa.')}
+  if(remove&&!previous.mapImage?.id){apply(result,'URL do mapa removida.');return}
   save(result.exploration,remove?'Imagem removida do mapa.':'Imagem do mapa salva.');
   try{
    await persistCampaignMediaState(adventure.campaignId,{entityType:'adventure',entityId:adventure.id});
