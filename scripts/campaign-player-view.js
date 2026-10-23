@@ -1,6 +1,6 @@
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{renderCampaignOverview,renderCampaignSettings,renderCampaignAdventuresSection,renderCampaignSessionsSection}from'./campaign-shared-layout.js?v=20261023-summary-covers4';
-import{renderTimeline,campaignTimelineCollapsedIds}from'./campaign-structured-ui.js?v=20261023-cards-toggle2';
+import{renderTimeline,campaignTimelineCollapsedIds}from'./campaign-structured-ui.js?v=20261023-no-indicator3';
 import{renderNextCampaignSession,findCurrentCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{rememberAvatars,playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
