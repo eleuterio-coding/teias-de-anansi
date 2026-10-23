@@ -42,7 +42,7 @@ function sanitizeNpcDirectoryEntry(row={}){return{
  publicLocation:text(row.publicLocation).slice(0,200),publicDescription:String(row.publicDescription??'').slice(0,2000),
  publicPortraitUrl:String(row.publicPortraitUrl??'').slice(0,1000),updatedAt:text(row.updatedAt)||now()
 }}
-function sanitizeCampaignNpc(row={}){return{id:text(row.id)||campaignUid('npc'),name:text(row.name)||'NPC',role:String(row.role??''),faction:String(row.faction??''),relationship:String(row.relationship??''),status:String(row.status??''),currentLocationId:text(row.currentLocationId)||null,portraitUrl:String(row.portraitUrl??''),monsterId:text(row.monsterId)||null,source:String(row.source??''),description:String(row.description??''),notes:String(row.notes??''),createdAt:text(row.createdAt)||now(),updatedAt:text(row.updatedAt)||now()}}
+function sanitizeCampaignNpc(row={}){return{id:text(row.id)||campaignUid('npc'),sheetId:text(row.sheetId)||null,name:text(row.name)||'NPC',role:String(row.role??''),faction:String(row.faction??''),relationship:String(row.relationship??''),status:String(row.status??''),currentLocationId:text(row.currentLocationId)||null,portraitUrl:String(row.portraitUrl??''),monsterId:text(row.monsterId)||null,source:String(row.source??''),description:String(row.description??''),notes:String(row.notes??''),createdAt:text(row.createdAt)||now(),updatedAt:text(row.updatedAt)||now()}}
 function sanitizeImportantLocationEntries(row={}){
  const names=String(row.importantLocations??'').split(/\r?\n/).map(name=>name.trim().replace(/^[•*\-]\s*/, '')).filter(Boolean);
  const existing=arr(row.importantLocationEntries).filter(item=>item&&typeof item==='object');
