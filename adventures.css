@@ -416,3 +416,30 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
  transform:none!important;
  transition:none!important;
 }
+
+/* Aventura — Biblioteca de Monstros: catálogo pesquisável, sem controles de publicação. */
+#adventure-root #monstros .explore-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#adventure-root #monstros .explore-title-copy{display:grid;gap:5px;min-width:0}
+#adventure-root #monstros .explore-title-copy>h2,
+#adventure-root #monstros .explore-title-copy>p{margin:0}
+#adventure-root #monstros .adventure-monster-search{display:grid;gap:7px;margin:16px 0 8px}
+#adventure-root #monstros .adventure-monster-search>input{min-width:0;width:100%}
+#adventure-root #monstros #adventure-monster-count{margin:8px 0}
+#adventure-root #monstros .adventure-monster-results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px}
+#adventure-root #monstros .adventure-monster-library-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0;padding:12px;border:1px solid var(--hub-border,#3b5267);border-radius:10px;background:var(--hub-surface-2,#182939)}
+#adventure-root #monstros .adventure-monster-library-row>div{display:grid;gap:6px;min-width:0}
+#adventure-root #monstros .adventure-monster-library-row strong,
+#adventure-root #monstros .adventure-monster-library-row .mini{overflow-wrap:anywhere}
+#adventure-root #monstros .adventure-monster-preview:not(:empty){margin:15px 0;padding:16px;border:1px solid var(--hub-border,#40546c);border-radius:11px;background:rgba(85,138,183,.07)}
+#adventure-root #monstros .adventure-monster-preview-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#adventure-root #monstros .adventure-monster-preview dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+#adventure-root #monstros .adventure-monster-preview dl>div{padding:9px;border:1px solid var(--hub-border,#40546c);border-radius:7px;text-align:center}
+#adventure-root #monstros .adventure-monster-preview dt{font-size:.74rem;opacity:.8}
+#adventure-root #monstros .adventure-monster-preview dd{margin:4px 0 0;font-weight:800}
+#adventure-root #monstros .adventure-monsters-attached{margin-top:15px;padding-top:14px;border-top:1px solid var(--hub-border,#40546c)}
+#adventure-root #monstros .adventure-monsters-attached>summary{font-weight:700;cursor:pointer;padding:8px 0}
+#adventure-root #monstros .adventure-monsters-attached .story-list{margin:12px 0}
+#adventure-root #monstros #adventure-monster-more{margin-top:12px}
+#adventure-root #sessoes .adventure-linked-session{display:grid;gap:8px;min-width:0}
+#adventure-root #sessoes .adventure-linked-session>.campaign-disclosure-toggle{justify-self:start;padding:9px 11px;border:1px solid var(--hub-border,#40546c);border-radius:9px;background:rgba(80,130,180,.07)}
+@media(max-width:620px){#adventure-root #monstros .adventure-monster-preview dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
