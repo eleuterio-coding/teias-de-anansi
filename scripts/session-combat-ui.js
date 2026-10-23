@@ -180,9 +180,11 @@ function bindAddPanel(ctx,node,combat){
   const id=node.querySelector('[data-add-combat-adventure-npc]')?.value,npc=ctx.campaign?.npcs?.find(n=>n.id===id);if(!npc)return announce('Selecione um NPC da Aventura.',false);
   const r=addCombatant(combat,{kind:'npc',name:npc.name,source:'NPC da Aventura',ac:10,maxHp:10,currentHp:10});if(!r.ok)return announce(r.reason,false);persist(ctx,'NPC da Aventura adicionado ao combate.')
  });
- node.querySelector('[data-add-combat-adventure-monster-button]')?.addEventListener('click',()=>{
+ node.querySelector('[data-add-combat-adventure-monster-button]')?.addEventListener('click',async()=>{
   const id=node.querySelector('[data-add-combat-adventure-monster]')?.value,monster=ctx.adventure?.monsters.find(m=>m.id===id);if(!monster)return announce('Selecione um monstro da Aventura.',false);
-  const r=addCombatant(combat,{kind:'monster',name:monster.name,monsterId:monster.monsterId||monster.id,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier});if(!r.ok)return announce(r.reason,false);persist(ctx,'Monstro da Aventura adicionado ao combate.')
+  let data={kind:'monster',name:monster.name,monsterId:monster.monsterId||monster.id,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier};
+  try{const catalog=await ensureMonsters(node),source=catalog.find(row=>row.id===monster.monsterId);if(source){const detail=await loadEncounterMonsterDetail(source);data={...detail,kind:'monster',monsterId:detail.id||monster.monsterId,currentHp:detail.maxHp,actions:monsterActions(detail)}}}catch(error){console.warn('[Hub] Monstro: usando estatísticas salvas da Aventura.',error)}
+  const r=addCombatant(combat,data);if(!r.ok)return announce(r.reason,false);persist(ctx,'Monstro da Aventura adicionado ao combate.')
  });
 
  node.querySelector('[data-add-combat-character-button]')?.addEventListener('click',()=>{const id=node.querySelector('[data-add-combat-character]')?.value,character=ctx.characters.find(c=>c.id===id);if(!character)return announce('Selecione um personagem da Sessão.',false);const r=addCombatant(combat,characterSnapshot(character));if(!r.ok)return announce(r.reason,false);persist(ctx,'Personagem adicionado ao combate.')});
