@@ -100,6 +100,16 @@ function breadcrumbTrail(label){
   "personagens.html":"Personagens","lista-personagens.html":"Personagens","npcs.html":"NPCs","lista-npcs.html":"NPCs",
   "bibliotecas.html":"Biblioteca","usuario.html":userAreaLabel(),"usuarios.html":"Gerenciar acessos","configuracoes.html":"Configurações"
  };
+ if(page==="aventuras.html"&&new URLSearchParams(location.search).get("id")){
+  const name=document.querySelector('#adventure-root .campaign-product-title-row h1')?.textContent?.trim();
+  return[...start,{label:"Aventuras",href:"aventuras.html"},{label:name||"Aventura"}]
+ }
+ if(page==="sessoes.html"&&new URLSearchParams(location.search).get("id")){
+  const context=document.querySelector('#sessions-list .campaign-product-kicker')?.textContent||'';
+  const name=document.querySelector('#sessions-list .campaign-product-title-row h1')?.textContent?.trim()||"Sessão";
+  const adventure=context.includes(' · ')?context.split(' · ').slice(1).join(' · '):'';
+  return[...start,{label:"Sessões",href:"sessoes.html"},...(adventure?[{label:adventure,href:"aventuras.html?"+new URLSearchParams({id:new URLSearchParams(location.search).get('adventure')||'',campaign:new URLSearchParams(location.search).get('campaign')||''}).toString()}]:[]),{label:name}]
+ }
  if(page==="usuarios.html")return[...start,{label:"Usuários",href:"usuario.html"},{label:"Gerenciar acessos"}];
  if(sections[page])return[...start,{label:sections[page]}];
  if(page==="nova-campanha.html")return[...start,{label:"Campanhas",href:"campanhas.html"},{label:"Nova campanha"}];
