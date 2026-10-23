@@ -15,11 +15,11 @@ function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly
   ?`<button type="button" class="hub-diagram-collapse" data-timeline-toggle="${esc(node.id)}" data-timeline-count="${children.length}" aria-expanded="${!collapsed}" aria-controls="timeline-diagram-children-${esc(node.id)}">${collapsed?'Mostrar':'Ocultar'} ${children.length} ${children.length===1?'subitem':'subitens'}</button>`
   :'';
  return `<div class="hub-diagram-node-group" data-diagram-depth="${depth}">
- <div class="hub-diagram-node" data-diagram-event="${esc(node.id)}"${children.length?` data-diagram-toggle="${esc(node.id)}" tabindex="0" role="group" aria-label="Evento: ${esc(node.text)}. Pressione Enter ou Espaço para expandir ou recolher os subitens."`:``}>
- <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
- <strong>${esc(node.text)}</strong>
+ <div class="hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}" data-diagram-event="${esc(node.id)}"${children.length?` data-diagram-toggle="${esc(node.id)}" tabindex="0" role="group" aria-label="${node.automatic?(node.kind==='session'?'Sessão':'Aventura'):'Evento'}: ${esc(node.text)}. Pressione Enter ou Espaço para expandir ou recolher os subitens."`:``}>
+ <div class="hub-diagram-event-heading"><span class="hub-diagram-kind">${node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento'}</span>${depth?'':`<span class="hub-diagram-order">${ordinal}</span>`}</div>
+ ${node.automatic?`<a class="hub-diagram-linked-name" href="${esc(node.href)}">${esc(node.text)}</a>`:`<strong>${esc(node.text)}</strong>`}
  <div class="hub-diagram-actions">
- ${readOnly?'':`<button type="button" class="hub-diagram-visibility" data-timeline-visibility="${esc(node.id)}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>`}${toggle}
+ ${readOnly||node.automatic?'':`<button type="button" class="hub-diagram-visibility" data-timeline-visibility="${esc(node.id)}" aria-pressed="${node.visibleToPlayers===true}">${node.visibleToPlayers===true?'Visível aos jogadores':'Oculto dos jogadores'}</button><button type="button" class="hub-diagram-edit" data-diagram-edit="${esc(node.id)}" aria-label="Editar evento: ${esc(node.text)}">Editar</button>`}${toggle}
  </div>
  </div>
  ${children.length?`<div id="timeline-diagram-children-${esc(node.id)}" class="hub-diagram-children" role="group" aria-label="Subeventos de ${esc(node.text)}" ${collapsed?'hidden':''}>${children.map(child=>campaignNode(child,depth+1,collapsedIds,null,{readOnly})).join('')}</div>`:''}
