@@ -28,11 +28,11 @@ export function renderCampaignOverview(campaign,adventures=[],{readOnly=false}={
 export function renderCampaignSettings(c,{readOnly=false,imagePickerHtml=null}={}){
  const input=(name,value,{wide=false,maxlength=160}={})=>`<label class="${wide?'wide':''}">${name}<input ${readOnly?'readonly':''} ${readOnly?'':'data-campaign-field="'+({ 'Nome da campanha':'name','Cenário de Campanha':'setting','Mundo / Plano':'worldPlane','Principal Continente / Região':'mainRegion'}[name]||'')+'"'} maxlength="${maxlength}" value="${esc(value||'')}"></label>`;
  // Preserva o campo antigo para registros legados, mas prioriza o resumo histórico.
- const description=`<label id="historia" class="wide campaign-history-summary">Resumo da história<textarea maxlength="4000" ${readOnly?'readonly':'data-campaign-field="historySummary"'}>${esc(c.historySummary||c.description||'')}</textarea></label>`;
+ const description=`<label id="historia" class="wide campaign-history-summary">Resumo da Campanha<textarea maxlength="4000" ${readOnly?'readonly':'data-campaign-field="historySummary"'}>${esc(c.historySummary||c.description||'')}</textarea></label>`;
  const cover=readOnly?`<div class="image-picker campaign-readonly-picker"><div class="image-picker-preview">${imageElementHtml(c.coverImage,c.coverImageUrl,{className:'campaign-cover-image',alt:`Capa de ${c.name}`})||'<span class="mini">Sem imagem</span>'}</div></div>`:imagePickerHtml?.({media:c.coverImage,legacyUrl:c.coverImageUrl,alt:`Capa de ${c.name}`,className:'campaign-cover-image'})||'';
  const status=readOnly?`<input value="${esc(campaignStatusLabel(c.status))}" aria-label="Status" readonly>`:`<select data-campaign-field="status">${[['planned','Planejada'],['active','Em andamento'],['paused','Pausada'],['finished','Concluída'],['cancelled','Cancelada']].map(([value,label])=>`<option value="${value}" ${c.status===value?'selected':''}>${label}</option>`).join('')}</select>`;
  return `<section id="campanha" class="card campaign-editor-card">
-  <h2>Campanha</h2><div class="campaign-settings-layout"><div class="campaign-settings-primary">
+  <h2>Visão geral</h2><div class="campaign-settings-layout"><div class="campaign-settings-primary">
   ${input('Nome da campanha',c.name)}<div class="campaign-settings-cover"><strong>Imagem/capa</strong>${cover}</div>
   </div><div class="campaign-settings-details form-grid two">
   ${description}${input('Cenário de Campanha',c.setting,{wide:true})}
