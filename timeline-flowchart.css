@@ -183,7 +183,7 @@
 #table-root #linha-tempo .timeline-item-linked[data-timeline-depth="1"] .campaign-linked-kind{
  color:#c3addf;
 }
-/* Títulos reais de Aventuras e Sessões: sublinhado apenas sobre o link. */
+/* Títulos clicáveis de Aventuras e Sessões, sem sublinhado em nenhum estado. */
 #table-root #linha-tempo .campaign-linked-name{
  font-size:1.03rem;line-height:1.35;font-weight:750;overflow-wrap:anywhere
 }
@@ -201,7 +201,7 @@
  cursor:pointer;position:relative;z-index:2
 }
 #table-root #linha-tempo .campaign-timeline-title-link:is(:hover,:focus-visible){
- color:#9bd6ff;text-decoration:underline;text-decoration-thickness:1.5px
+ color:#9bd6ff;text-decoration:none!important
 }
 #table-root #linha-tempo .campaign-timeline-title-link:focus-visible{
  outline:2px solid #82caff;outline-offset:3px;border-radius:2px
