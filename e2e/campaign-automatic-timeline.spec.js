@@ -99,7 +99,7 @@ test('A hierarquia acompanha alterações nas entidades sem duplicar dados e fun
  await expect(parent.locator('[data-timeline-toggle]')).toHaveText('');
  await parent.locator('[data-timeline-toggle]').click();
  await expect(branch).toBeVisible();
- await expect(roots.nth(0).locator('a.hub-diagram-linked-name')).toHaveCount(2);
+ await expect(roots.nth(0).locator('.hub-diagram-children a.hub-diagram-linked-name')).toHaveCount(2);
  await expect(parent.locator('a.hub-diagram-linked-name')).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
  await expect(roots.nth(0).locator('a.hub-diagram-linked-name').first()).toHaveAttribute('href',`aventuras.html?campaign=${cid}&id=${a1}`);
  const flowTitle=parent.locator('a.hub-diagram-linked-name');
