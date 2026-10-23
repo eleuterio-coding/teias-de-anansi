@@ -6,6 +6,8 @@ on:
       - 'campaigns.css'
       - 'hub-ux.css'
       - 'hub-collections.css'
+      - 'campaign-collection-cards.css'
+      - 'scripts/campaign-card-icons.js'
       - 'campanhas.html'
       - 'aventuras.html'
       - 'sessoes.html'
@@ -22,6 +24,8 @@ on:
       - 'campaigns.css'
       - 'hub-ux.css'
       - 'hub-collections.css'
+      - 'campaign-collection-cards.css'
+      - 'scripts/campaign-card-icons.js'
       - 'campanhas.html'
       - 'aventuras.html'
       - 'sessoes.html'
@@ -57,3 +61,12 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Validar layout, navegação e ausência de verbetes
         run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js --project=desktop-chromium --project=mobile-chromium
+      - name: Publicar evidências do teste visual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cards-panoramicos-playwright
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
