@@ -9,13 +9,19 @@ const campaign={
  id:'collection-c1',name:'Reinos de Prata',status:'active',members:[],
  sessions:[{id:'collection-s1',number:1,order:1,title:'A convocação',
    status:'current',adventureId:'collection-a1',
-   summary:'Os heróis são convocados.',scenes:[{id:'scene-1',title:'O encontro'}],encounters:[]}]
+   summary:'Os heróis são convocados.',scenes:[{id:'scene-1',title:'O encontro'}],encounters:[]},
+ {id:'collection-s2',number:2,order:2,title:'A emboscada',
+   status:'planned',adventureId:'collection-a1',
+   summary:'A jornada continua.',scenes:[],encounters:[]}]
 };
 const adventure={
  id:'collection-a1',title:'As Rainhas',order:2,campaignId:campaign.id,
  status:'planned',type:'main',description:'As intrigas de um reino antigo.',
  chapters:[{id:'ch-1',title:'Primeiro ato'}],scenes:[],missions:[]
 };
+const secondAdventure={id:'collection-a2',title:'O Cerco',order:3,
+ campaignId:campaign.id,status:'active',type:'side',
+ description:'Uma nova ameaça à fortaleza.',chapters:[],scenes:[],missions:[]};
 test.beforeEach(async({page})=>{
  await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
   status:200,contentType:'application/json',
@@ -25,9 +31,9 @@ test.beforeEach(async({page})=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',
    JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
-  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([data.adventure]));
+  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([data.adventure,data.secondAdventure]));
   localStorage.setItem('hub-rpg:standalone-sessions:v1',JSON.stringify([]));
- },{campaign,adventure});
+ },{campaign,adventure,secondAdventure});
 });
 const cases=[
  {url:'/aventuras.html',selector:'[data-adventure-card="collection-a1"]',
@@ -85,6 +91,26 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(page.locator(item.panel)).toBeHidden();
  }
 });
+test('desktop: Aventuras e Sessões aparecem em duas colunas de cards',async({page})=>{
+ await page.setViewportSize({width:1600,height:1000});
+ for(const item of cases){
+  await page.goto(item.url);
+  const track=page.locator(item.url.includes('aventuras')
+   ?'#adventure-list .adventure-campaign-track'
+   :'#sessions-list .session-adventure-track').first();
+  await expect(track).toBeVisible();
+  const cards=track.locator('.campaign-card-featured');
+  await expect(cards).toHaveCount(2);
+  const columns=await track.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(' ').filter(Boolean));
+  expect(columns).toHaveLength(2);
+  const bounds=await cards.evaluateAll(nodes=>nodes.map(x=>{
+   const r=x.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}
+  }));
+  expect(Math.abs(bounds[0].y-bounds[1].y)).toBeLessThan(3);
+  expect(Math.abs(bounds[0].width-bounds[1].width)).toBeLessThan(3);
+  expect(bounds[1].x).toBeGreaterThan(bounds[0].x+bounds[0].width);
+ }
+});
 test('desktop: capa à esquerda, painel à direita, status no alto e ações na base',async({page},testInfo)=>{
  await page.setViewportSize({width:1600,height:1000});
  for(const item of cases){
@@ -93,8 +119,8 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   await expect(card).toBeVisible();
   const g=await geometry(card);
   expect(g.display).toBe('grid');
-  expect(g.art.width/g.card.width).toBeGreaterThan(.60);
-  expect(g.art.width/g.card.width).toBeLessThan(.69);
+  expect(g.art.width/g.card.width).toBeGreaterThan(.40);
+  expect(g.art.width/g.card.width).toBeLessThan(.45);
   expect(Math.abs(g.art.left-g.card.left)).toBeLessThan(3);
   expect(Math.abs(g.art.top-g.card.top)).toBeLessThan(3);
   expect(g.art.bottom).toBeGreaterThan(g.card.bottom-4);
@@ -117,10 +143,15 @@ test('notebook: a capa permanece à esquerda mesmo com o painel lateral do Hub',
   const card=page.locator(item.selector);
   await expect(card).toBeVisible();
   const g=await geometry(card);
-  expect(g.card.width).toBeGreaterThan(700);
+  const track=page.locator(item.url.includes('aventuras')
+    ?'#adventure-list .adventure-campaign-track'
+    :'#sessions-list .session-adventure-track').first();
+  const cols=await track.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(' ').filter(Boolean));
+  expect(cols).toHaveLength(2);
+  expect(g.card.width).toBeGreaterThan(320);
   expect(g.display).toBe('grid');
-  expect(g.art.width/g.card.width).toBeGreaterThan(.55);
-  expect(g.art.width/g.card.width).toBeLessThan(.63);
+  expect(g.art.width/g.card.width).toBeGreaterThan(.31);
+  expect(g.art.width/g.card.width).toBeLessThan(.36);
   expect(g.art.right).toBeLessThanOrEqual(g.detail.left+3);
   expect(g.art.bottom).toBeGreaterThan(g.actions.bottom-4);
   expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
