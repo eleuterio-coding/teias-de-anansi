@@ -77,8 +77,8 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(card.locator('.campaign-card-description')).toContainText(item.description);
   await expect(card.locator('.campaign-card-status')).toContainText(item.status);
   await expect(card.locator('.campaign-card-art')).toHaveCount(1);
-  await expect(card.locator('.campaign-card-metrics .campaign-card-stat')).toHaveCount(2);
-  await expect(card.locator('.campaign-card-stat-icon svg')).toHaveCount(2);
+  await expect(card.locator('.campaign-card-metrics .campaign-card-stat')).toHaveCount(item.url.includes('aventuras')?1:2);
+  await expect(card.locator('.campaign-card-stat-icon svg')).toHaveCount(item.url.includes('aventuras')?1:2);
   await expect(card.locator('a.hub-ref,a[data-ref-id],a[href^="referencia.html?id="]')).toHaveCount(0);
   await expect(card.getByRole('link',{name:'Abrir',exact:true})).toHaveCount(1);
   await expect(card.getByRole('button',{name:/Excluir/})).toHaveCount(1);
@@ -89,6 +89,47 @@ test('cards panorâmicos preservam conteúdo, vínculos, ações e criação',as
   await expect(page.locator(item.panel)).toBeVisible();
   await page.locator(item.cancel).click();
   await expect(page.locator(item.panel)).toBeHidden();
+ }
+});
+test('Aventuras: exibir apenas quantidade real de sessões à esquerda',async({page})=>{
+ await page.goto('/aventuras.html');
+ const own=page.locator('[data-adventure-card="collection-a1"]');
+ const other=page.locator('[data-adventure-card="collection-a2"]');
+ for(const [card,count] of [[own,'2'],[other,'0']]){
+  await expect(card.locator('.campaign-card-metrics .campaign-card-stat')).toHaveCount(1);
+  await expect(card.locator('.campaign-card-metrics strong')).toHaveText(count);
+  await expect(card.locator('.campaign-card-metrics')).toContainText('Sessões');
+  await expect(card.locator('.campaign-card-metrics')).not.toContainText('Capítulos');
+  await expect(card.locator('.campaign-card-metrics')).not.toContainText('Cenas');
+  const styles=await card.locator('.campaign-card-metrics').evaluate(n=>({
+   columns:getComputedStyle(n).gridTemplateColumns.split(' ').filter(Boolean),
+   statLeft:n.querySelector('.campaign-card-stat').getBoundingClientRect().left,
+   containerLeft:n.getBoundingClientRect().left
+  }));
+  expect(styles.columns).toHaveLength(2);
+  expect(Math.abs(styles.statLeft-styles.containerLeft)).toBeLessThanOrEqual(2);
+ }
+});
+test('Clique no corpo e na imagem de cada card abre diretamente a entidade correspondente',async({page})=>{
+ for(const item of cases){
+  await page.goto(item.url);
+  const card=page.locator(item.selector);
+  await expect(card).toBeVisible();
+  await card.scrollIntoViewIfNeeded();
+  const image=await card.locator('.campaign-card-art').boundingBox();
+  expect(image).toBeTruthy();
+  await page.mouse.click(image.x+image.width/2,image.y+image.height/2);
+  await expect(page).toHaveURL(item.url.includes('aventuras')
+   ?/aventuras\\.html\\?.*id=collection-a1/
+   :/sessoes\\.html\\?.*id=collection-s1/);
+  await page.goto(item.url);
+  const title=page.locator(item.selector+' .campaign-card-details h2');
+  await title.scrollIntoViewIfNeeded();
+  const b=await title.boundingBox();
+  await page.mouse.click(b.x+b.width/2,b.y+b.height/2);
+  await expect(page).toHaveURL(item.url.includes('aventuras')
+   ?/aventuras\\.html\\?.*id=collection-a1/
+   :/sessoes\\.html\\?.*id=collection-s1/);
  }
 });
 test('desktop: Aventuras e Sessões aparecem em duas colunas de cards',async({page})=>{
@@ -119,8 +160,8 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   await expect(card).toBeVisible();
   const g=await geometry(card);
   expect(g.display).toBe('grid');
-  expect(g.art.width/g.card.width).toBeGreaterThan(.40);
-  expect(g.art.width/g.card.width).toBeLessThan(.45);
+  expect(g.art.width/g.card.width).toBeGreaterThan(.58);
+  expect(g.art.width/g.card.width).toBeLessThan(.62);
   expect(Math.abs(g.art.left-g.card.left)).toBeLessThan(3);
   expect(Math.abs(g.art.top-g.card.top)).toBeLessThan(3);
   expect(g.art.bottom).toBeGreaterThan(g.card.bottom-4);
@@ -150,8 +191,8 @@ test('notebook: a capa permanece à esquerda mesmo com o painel lateral do Hub',
   expect(cols).toHaveLength(2);
   expect(g.card.width).toBeGreaterThan(320);
   expect(g.display).toBe('grid');
-  expect(g.art.width/g.card.width).toBeGreaterThan(.31);
-  expect(g.art.width/g.card.width).toBeLessThan(.36);
+  expect(g.art.width/g.card.width).toBeGreaterThan(.51);
+  expect(g.art.width/g.card.width).toBeLessThan(.55);
   expect(g.art.right).toBeLessThanOrEqual(g.detail.left+3);
   expect(g.art.bottom).toBeGreaterThan(g.actions.bottom-4);
   expect(g.badge.right).toBeLessThanOrEqual(g.card.right-5);
