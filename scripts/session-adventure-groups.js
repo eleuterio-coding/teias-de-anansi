@@ -42,7 +42,7 @@ export function sessionAdventureGroupsHtml(sessions,adventures,renderCard,campai
     ${buttons}
    </div>
    <div class="session-adventure-track" data-session-track data-visible="${visible}"
-        role="region" tabindex="0" aria-label="Lista rolável de sessões de ${esc(label)}">
+        role="region" aria-label="Sessões de ${esc(label)}">
     ${group.items.map(renderCard).join('')}
    </div>
   </section>`;
