@@ -12,7 +12,7 @@ import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,create
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261023-simplified3';
 
-import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261023-simplified3';
+import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261023-split-cards1';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261023-simplified3';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261019-gender1';
 import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-status-context12';
@@ -213,7 +213,7 @@ ${visibleToggle('monsters',monster.id,monster.visibleToPlayers)}${moveTools('mon
 function section(title,id,body,form=''){return`<section id="${id}" class="card"><h2>${esc(title)}</h2><div class="story-list">${body||'<div class="story-empty">Nenhum registro.</div>'}</div>${form}<div class="row-actions" style="margin-top:10px"><button type="button" data-save-adventure-section>Salvar</button></div></section>`}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
- const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['exploracao','Exploração'],['capitulos','Capítulos'],['locais','Locais'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['tesouros','Tesouros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
+ const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['exploracao','Áreas e Salas'],['mapas','Mapas e Níveis'],['capitulos','Capítulos'],['locais','Locais'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['tesouros','Tesouros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
  const chapters=section('Capítulos','capitulos',ordered(a.chapters).map((v,i,rows)=>chapterCard(v,i,rows)).join(''),`<div class="form-grid two"><label>Título<input id="new-chapter-title"></label><label>Capítulo<input id="new-chapter-arc"></label><button type="button" id="add-chapter">Adicionar capítulo</button></div>`);
  const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
  const locationPanel=section('Locais','locais',locations.map((l,i)=>locationCard(l,a,i)).join(''),`<div class="form-grid two"><label>Nome<input id="new-location-name"></label><label>Tipo<input id="new-location-type"></label><button type="button" id="add-campaign-location">Adicionar local</button></div>`);
