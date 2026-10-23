@@ -20,8 +20,9 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=qa-six-panels&id=qa-six-adventure');
  await expect(page.locator('#adventure-assignment')).toHaveValue('qa-six-panels');
- for(const id of ['#capitulos','#locais','#tesouros','#monstros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
- await expect(page.locator('.section-nav a[href="#monstros"]')).toHaveCount(0);
+ for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
+ await expect(page.locator('.section-nav a[href="#monstros"]')).toHaveText('Monstros');
+ await expect(page.locator('#monstros #adventure-monster-search')).toHaveCount(1);
  await expect(page.locator('#criar-area,#criar-mapa')).toHaveCount(2);
 
  await page.locator('#ex-new-level input[name="name"]').fill('Palácio');
@@ -41,13 +42,18 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  await expect.poll(async()=> (await getCampaign(page)).npcs.length).toBe(1);
  await expect.poll(async()=> (await getAdventure(page)).npcIds.length).toBe(1);
 
- await expect(page.locator('#add-adventure-monster')).toHaveCount(0);
+ await expect(page.locator('#add-adventure-monster')).toHaveCount(1);
 
  await page.locator('#new-scene-title').fill('Conselho Real');
- await page.locator('#new-scene-area').selectOption((await getAdventure(page)).exploration.areas[0].id);
+ await page.locator('#new-scene-location').selectOption((await getAdventure(page)).exploration.areas[0].id);
  await page.locator('#add-scene').click();
+ await expect(page.locator('#cenas [data-scene-row]')).toHaveCount(1);
+ await expect(page.locator('#cenas [data-scene-row] [data-scene-field="areaId"]')).toHaveCount(1);
  await expect.poll(async()=> (await getAdventure(page)).scenes.length).toBe(1);
  expect((await getAdventure(page)).scenes[0].title).toBe('Conselho Real');
+ expect((await getAdventure(page)).scenes[0].areaId).toBe((await getAdventure(page)).exploration.areas[0].id);
+ await expect(page.locator('#new-scene-monster,#new-scene-chapter,#new-scene-area')).toHaveCount(0);
+ await expect(page.locator('#cenas [data-scene-field="chapterId"],#cenas [data-scene-field="locationId"],#cenas [data-scene-link="monsterIds"]')).toHaveCount(0);
  await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
  await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Conselho Real');
 
