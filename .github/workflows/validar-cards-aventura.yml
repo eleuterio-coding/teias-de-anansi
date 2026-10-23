@@ -1,0 +1,32 @@
+name: Verificar seis cards de Aventuras
+on:
+  pull_request:
+    paths:
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/collaboration-model.js'
+      - 'hub-detail-layout.css'
+      - 'e2e/adventure-six-panels-actions.spec.js'
+      - '.github/workflows/validar-cards-aventura.yml'
+  workflow_dispatch:
+jobs:
+  six-panels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Abrir e operar Capítulos, Locais, Objetivos, NPCs, Monstros e Cenas
+        run: npx playwright test e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: aventura-six-panels-failure
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
