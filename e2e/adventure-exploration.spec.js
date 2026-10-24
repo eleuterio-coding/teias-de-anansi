@@ -71,7 +71,17 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
  await page.locator('#ex-new-area button[type="submit"]').click();
  await expect(page.locator('#exploracao .explore-area-card')).toHaveCount(1);
  const editor=page.locator('#exploracao [data-ex-area-editor]');
+ await expect(editor).not.toHaveAttribute('open','');
+ await expect(page.locator('#exploracao [data-ex-field="name"]')).toBeHidden();
+ const square=await page.locator('#exploracao .explore-area-card').evaluate(card=>{
+  const box=card.getBoundingClientRect();
+  return {width:box.width,height:box.height};
+ });
+ expect(Math.abs(square.width-square.height),'O card de Local recolhido deve ser quadrado').toBeLessThanOrEqual(3);
+ await expect(page.locator('#exploracao [data-ex-area-visibility]')).toBeVisible();
+ await editor.locator('summary').click();
  await expect(editor).toHaveAttribute('open','');
+ await expect(page.locator('#exploracao [data-ex-field="name"]')).toBeVisible();
  await expect(page.locator('#exploracao .explore-editor-group')).toHaveCount(3);
  await expect(page.locator('#exploracao .explore-editor-group h4')).toHaveText(['Identificação','Desafios e recompensas','Narrativa e notas']);
  await expect(page.locator('#exploracao .explore-record-status')).toHaveText('Descoberta');
