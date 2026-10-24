@@ -22,7 +22,9 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  await expect(page.locator('#adventure-assignment')).toHaveValue('qa-six-panels');
  for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
  await expect(page.locator('.section-nav a[href="#monstros"]')).toHaveText('Monstros');
- await expect(page.locator('#monstros #adventure-monster-search')).toHaveCount(1);
+ await expect(page.locator('#monstros #new-adventure-monster')).toHaveCount(1);
+ await expect(page.locator('#monstros #adventure-monster-search, #monstros .adventure-monster-results')).toHaveCount(0);
+ await expect(page.locator('#monstros #adventure-monster-consult')).toHaveCount(1);
  await expect(page.locator('#criar-area,#criar-mapa')).toHaveCount(2);
 
  await page.locator('#ex-new-level input[name="name"]').fill('Palácio');
