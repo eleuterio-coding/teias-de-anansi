@@ -491,3 +491,74 @@
     padding:10px 13px 12px;
   }
 }
+
+
+/* Locais: cards fechados quadrados. Somente o card em edição
+   se expande para apresentar os campos completos. */
+#adventure-root #exploracao .explore-area-grid{
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));
+  align-items:start;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])){
+  aspect-ratio:1 / 1;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) auto;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open]))>.explore-record-editor{
+  min-height:0;
+  height:100%;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-summary{
+  min-height:0;
+  height:100%;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  flex-wrap:nowrap;
+  justify-content:flex-start;
+  align-items:stretch;
+  gap:10px;
+  padding:16px;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-title{
+  flex:none;
+  min-width:0;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-title strong{
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  line-clamp:3;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-title .mini{
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-status{
+  margin-top:auto;
+  max-width:100%;
+  align-self:flex-start;
+  order:initial;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-toggle-label{
+  align-self:flex-end;
+  border-left:0;
+  padding-left:0;
+  order:initial;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open]))>.explore-record-visibility-bar{
+  min-width:0;
+  padding:8px 14px;
+}
+@media(max-width:450px){
+  #adventure-root #exploracao .explore-area-grid{
+    grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
+  }
+}
