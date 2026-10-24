@@ -1,7 +1,7 @@
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
-import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
+import{bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20261023-adventure-library7';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
@@ -286,7 +286,7 @@ function workspaceHtml(a){
  <nav class="section-nav adventure-nav hub-detail-nav">${nav.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>
  <div class="campaign-sections campaign-editor-grid hub-detail-grid">${basicsHtml(a)}${participantsHtml(a)}
  ${renderAdventureExploration(a,c)}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}${scenes}
- ${linkedSessionsHtml(a)}${renderTimeline(a)}${noteSection(a.dmNoteEntries)}</div>`;
+ ${linkedSessionsHtml(a)}${adventureTimelineHtml(a)}${noteSection(a.dmNoteEntries)}</div>`;
 }
 
 function render(){const root=$('adventure-root');if(!root)return;campaigns=readCampaigns();characters=readCharacters();if(campaignId&&!campaignById(campaigns,campaignId))campaignId=campaigns[0]?.id||'';normalizeRefs();if(adventureId&&!adventureById(adventures,adventureId)){adventureId='';expandedSceneIds.clear()}const a=adventure();if(a)campaignId=a.campaignId;root.innerHTML=`${a?"":topHtml()}<div id="adventure-feedback" class="status" hidden></div><div class="adventure-shell ${a?"hub-detail-page":""}">${a?`${workspaceHtml(a)}`:listHtml()}</div>`;bind();updateAppShellContext();hydrateMediaImages(root).catch(()=>{})}
