@@ -1,7 +1,7 @@
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
-import{playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-images.js?v=20261021-user1';
+import{playerTerm,playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-images.js?v=20261021-user1';
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
@@ -296,6 +296,7 @@ function updateSessionCardStatus(session,status){
  }
  reload();render();return true;
 }
+
 function sessionRosterHtml(session,{readOnly=false}={}){
  const cid=session.campaignId,campaign=readOnly?sharedCampaignRows().find(x=>x.campaign.id===cid)?.campaign:campaignById(cid);
  const profiles=readOnly?sharedCampaignRows().find(x=>x.campaign.id===cid)?.participants||[]:[];
@@ -304,20 +305,38 @@ function sessionRosterHtml(session,{readOnly=false}={}){
  const selected=members.filter(m=>sessionNames.has(m.username)||((session.participantCharacterIds||[]).includes(m.characterId)&&!sessionNames.size)).sort((a,b)=>(session.participantUsernames||[]).indexOf(a.username)-(session.participantUsernames||[]).indexOf(b.username));
  const available=members.filter(m=>!selected.some(s=>s.username===m.username));
  const characterRows=readOnly?sharedCampaignRows().find(x=>x.campaign.id===cid)?.characters||[]:characters;
+ const freeCharacters=characters.filter(character=>!campaigns.some(c=>(c.members||[]).some(m=>m.characterId===character.id)));
  rememberAvatars(profiles);
+ const externalIcon='<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 5h6v6M19 5l-9 9"/><path d="M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
+ const openIcon=externalIcon+'<span class="roster-action-label">Abrir</span>';
+ const removeIcon='<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6h17M9 6V4h6v2m-9 0 .8 14h10.4L18 6M10 10v6m4-6v6"/></svg><span class="roster-action-label">Remover</span>';
  const rows=selected.map((m,i)=>{
   const name=profiles.find(p=>p.username===m.username)?.displayName||m.name||m.username;
   const character=characterRows.find(c=>c.id===m.characterId);
-  const profile=`usuario.html?user=${encodeURIComponent(m.username)}&campaign=${encodeURIComponent(cid||'')}`;
-  const memberActions=readOnly?'':`<div class="row-actions roster-player-actions"><button type="button" class="secondary" data-session-roster-action="up" data-username="${esc(m.username)}" ${i===0?'disabled':''}>↑</button><button type="button" class="secondary" data-session-roster-action="down" data-username="${esc(m.username)}" ${i===selected.length-1?'disabled':''}>↓</button><button type="button" class="danger" data-session-roster-action="remove" data-username="${esc(m.username)}">Remover</button></div>`;
-  return `<article class="member-row roster-player session-roster-item" data-session-roster-row="${esc(m.username)}" draggable="${!readOnly}">
-   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(m.username,profiles),name)}<div class="roster-player-display"><span class="roster-player-label">Jogador</span><div class="roster-player-name-line"><span class="roster-player-name">${esc(name)}</span><a class="roster-player-profile-link" href="${profile}" aria-label="Abrir perfil de ${esc(name)}">↗</a></div></div></div>
-   <div class="roster-player-character"><div class="roster-player-display"><span class="roster-player-label">Personagem</span><div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'Personagem')}${readOnly?`<a class="roster-player-profile-link roster-character-name" href="${character?`ficha-personagem.html?id=${encodeURIComponent(character.id)}`:'#'}" ${character?'':'aria-disabled="true"'}>${esc(character?.name||'Sem personagem')} ↗</a>`:
-`<select class="session-character-assignment" data-session-character-link="${esc(m.id)}" aria-label="Personagem de ${esc(name)} na Campanha"><option value="">— Sem personagem —</option>${characters.filter(c=>c.id===m.characterId||!campaigns.some(camp=>camp.members?.some(member=>member.characterId===c.id))).map(c=>`<option value="${esc(c.id)}" ${c.id===m.characterId?'selected':''}>${esc(c.name||'Personagem')}</option>`).join('')}</select>${character?`<a class="roster-player-profile-link" href="ficha-personagem.html?id=${encodeURIComponent(character.id)}" aria-label="Abrir ficha de ${esc(character.name)}">↗</a>`:''}`}</div></div></div>${memberActions}
-  </article>`;
+  const profile='usuario.html?user='+encodeURIComponent(m.username)+'&campaign='+encodeURIComponent(cid||'');
+  const ficha=character?'ficha-personagem.html?id='+encodeURIComponent(character.id):'';
+  const characterOptions=characters.filter(c=>c.id===m.characterId||!campaigns.some(camp=>(camp.members||[]).some(member=>member.characterId===c.id)));
+  const picker=readOnly
+   ?(character?`<a class="roster-character-name roster-player-profile-link" href="${ficha}" aria-label="Abrir ficha de ${esc(character.name)}">${esc(character.name)} ${externalIcon}</a>`:'<span class="roster-character-name">Sem personagem</span>')
+   :`<select class="session-character-assignment" data-session-character-link="${esc(m.id)}" aria-label="Personagem de ${esc(name)} na Campanha"><option value="">— Sem personagem —</option>${characterOptions.map(c=>`<option value="${esc(c.id)}" ${c.id===m.characterId?'selected':''}>${esc(c.name||'Personagem')}</option>`).join('')}</select>`;
+  const actions=readOnly?'':`<div class="row-actions roster-player-actions">
+   <button type="button" class="secondary roster-move-button" data-session-roster-action="up" data-username="${esc(m.username)}" aria-label="Mover ${esc(name)} para cima" ${i===0?'disabled':''}>↑</button>
+   <button type="button" class="secondary roster-move-button" data-session-roster-action="down" data-username="${esc(m.username)}" aria-label="Mover ${esc(name)} para baixo" ${i===selected.length-1?'disabled':''}>↓</button>
+   ${character?`<a class="btn secondary roster-open-button" href="${ficha}" aria-label="Abrir ficha de ${esc(character.name)}">${openIcon}</a>`:`<button type="button" class="secondary roster-open-button" disabled title="Associe um personagem para abrir a ficha" aria-label="Sem ficha vinculada">${openIcon}</button>`}
+   <button type="button" class="danger roster-remove-button" data-session-roster-action="remove" data-username="${esc(m.username)}" aria-label="Remover jogador ${esc(name)} da sessão">${removeIcon}</button>
+   </div>`;
+  return `<article class="member-row roster-player session-roster-item" data-session-roster-row="${esc(m.username)}" draggable="${!readOnly}" tabindex="0" aria-label="${esc(name)}. ${readOnly?'Jogador da sessão.':'Arraste para reorganizar ou use as setas.'}">
+   ${readOnly?'':`<button type="button" class="roster-grip" title="Reordenar jogador" aria-label="Reordenar ${esc(name)}: arraste ou use as setas"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.7"/><circle cx="16" cy="5" r="1.7"/><circle cx="8" cy="12" r="1.7"/><circle cx="16" cy="12" r="1.7"/><circle cx="8" cy="19" r="1.7"/><circle cx="16" cy="19" r="1.7"/></svg></button>`}
+   <div class="roster-player-identity">${campaignAvatarHtml(playerAvatarHtml(m.username,profiles),name)}<div class="roster-player-display" aria-label="${esc(playerTerm(m.username||name))}: ${esc(name)}"><span class="roster-player-label">${esc(playerTerm(m.username||name))}</span><div class="roster-player-name-line"><span class="roster-player-name">${esc(name)}</span><a class="roster-player-profile-link" href="${profile}" title="Abrir perfil de ${esc(name)}" aria-label="Abrir perfil de ${esc(name)}">${externalIcon}</a></div></div></div>
+   <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}${picker}</div></label></div>
+   ${actions}</article>`;
  }).join('');
- return`<section id="participantes" class="card campaign-editor-card roster-section session-participant-roster"><div class="roster-heading"><h2>Jogadores da Sessão</h2></div><div class="list roster-list session-roster-list">${rows||'<div class="empty">Nenhum jogador atribuído.</div>'}</div>
- ${readOnly?'':`<div class="roster-add-panel"><h3>Adicionar jogador</h3><div class="roster-add-fields"><label>Jogador<select data-session-add-member><option value="">— Selecione —</option>${available.map(m=>`<option value="${esc(m.username)}">${esc(m.name||m.username)}</option>`).join('')}</select></label><button type="button" data-session-add-button>Adicionar jogador</button></div><button type="button" data-save-session-participants>Salvar participantes</button></div>`}
+ return `<section id="participantes" class="card campaign-editor-card roster-section session-participant-roster"><div class="roster-heading"><h2>Jogadores da Sessão</h2></div>
+ <div class="list roster-list session-roster-list">${rows||'<div class="empty">Nenhum jogador atribuído.</div>'}</div>
+ ${readOnly?'':`<div class="roster-add-panel"><h3>Adicionar jogador</h3>
+  <div class="roster-add-fields"><label>Jogador<select data-session-add-member><option value="">— Selecione —</option>${available.map(m=>`<option value="${esc(m.username)}">${esc(m.name||m.username)}</option>`).join('')}</select></label>
+  <label>Personagem<select data-session-add-character><option value="">— Manter personagem da Campanha —</option>${freeCharacters.map(c=>`<option value="${esc(c.id)}">${esc(c.name||'Personagem')}</option>`).join('')}</select></label></div>
+  <div class="row-actions roster-add-actions"><button type="button" data-session-add-button>Adicionar jogador</button><button type="button" class="secondary" data-save-session-participants>Salvar</button></div></div>`}
  </section>`;
 }
 function bindSessionRoster(card,ref){
