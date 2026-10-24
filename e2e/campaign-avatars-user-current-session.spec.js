@@ -158,3 +158,70 @@ test('Jogador: sessão Atual no topo e no máximo três sessões segundo priorid
  await expect(page.locator('#sessoes')).not.toContainText('Preparação futura');
  await expect(page.locator('#sessoes')).not.toContainText('Memórias passadas');
 });
+
+test('Sessão replica o layout de Jogadores da Campanha e preserva as ações',async({page})=>{
+ const prepared={
+  ...campaign,
+  members:[...campaign.members,{id:'b1',username:'bruno',name:'Bruno',role:'player',characterId:null,active:true}],
+  sessions:campaign.sessions.map(row=>row.id==='current'?{
+   ...row,participantUsernames:['fernanda','gustavo'],participantCharacterIds:['char-f','char-g']
+  }:row)
+ };
+ const extraCharacter={id:'char-extra',name:'Taren',refSnapshots:{class:{name:'Bardo'}}};
+ await page.addInitScript(data=>{
+  localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'dm-user',username:'rafael',isMaster:true,memberships:[]}));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.prepared]));
+  localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([...data.chars,data.extraCharacter]));
+  localStorage.setItem('hub-rpg:user-avatar-cache:v1',JSON.stringify(data.people));
+ },{prepared,chars,people,extraCharacter});
+
+ await page.goto('/mesa.html?id='+campaign.id);
+ const reference=page.locator('#jogadores .roster-player').first();
+ await expect(reference).toBeVisible();
+ await expect(reference.locator('.roster-grip')).toHaveCount(1);
+ await expect(reference.locator('.roster-player-identity')).toHaveCount(1);
+ await expect(reference.locator('.roster-player-character')).toHaveCount(1);
+ await expect(reference.locator('.roster-player-actions .roster-open-button')).toHaveCount(1);
+ await expect(reference.locator('.roster-player-actions .roster-remove-button')).toHaveCount(1);
+
+ await page.goto('/sessoes.html?campaign='+campaign.id+'&id=current');
+ const roster=page.locator('#sessions-list .session-participant-roster');
+ await expect(roster.locator('.session-roster-item')).toHaveCount(2);
+ await expect(roster.locator('.roster-heading h2')).toHaveText('Jogadores da Sessão');
+ const first=roster.locator('.session-roster-item').first();
+ await expect(first.locator('.roster-grip')).toHaveCount(1);
+ await expect(first.locator('.roster-player-identity')).toHaveCount(1);
+ await expect(first.locator('.roster-player-character')).toHaveCount(1);
+ await expect(first.locator('.roster-player-actions .roster-move-button')).toHaveCount(2);
+ await expect(first.locator('.roster-player-actions .roster-open-button')).toHaveCount(1);
+ await expect(first.locator('.roster-player-actions .roster-remove-button')).toHaveCount(1);
+ await expect(first.locator('.roster-player-profile-link')).toHaveAttribute('href',/usuario\.html\?user=fernanda&campaign=/);
+ await expect(first.locator('.roster-character-picker select')).toHaveValue('char-f');
+ await expect(roster.locator('.roster-add-fields>label')).toHaveCount(2);
+ await expect(roster.locator('[data-session-add-character] option[value="char-extra"]')).toHaveCount(1);
+
+ const desktop=await first.evaluate(el=>{
+  const row=getComputedStyle(el),actions=[...el.querySelectorAll('.roster-open-button,.roster-remove-button')].map(node=>Math.round(node.getBoundingClientRect().width));
+  return {display:row.display,columns:row.gridTemplateColumns.split(' ').length,width:el.clientWidth,scroll:el.scrollWidth,actions};
+ });
+ expect(desktop.display).toBe('grid');
+ expect(desktop.width).toBeGreaterThan(0);
+ expect(desktop.scroll).toBeLessThanOrEqual(desktop.width+3);
+ expect(desktop.actions).toEqual([44,44]);
+
+ await roster.locator('[data-session-add-member]').selectOption('bruno');
+ await roster.locator('[data-session-add-character]').selectOption('char-extra');
+ await roster.locator('[data-session-add-button]').click();
+ await expect(page.locator('#sessions-list .session-roster-item')).toHaveCount(3);
+ const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]')[0]);
+ expect(saved.members.find(row=>row.username==='bruno').characterId).toBe('char-extra');
+ expect(saved.sessions.find(row=>row.id==='current').participantUsernames).toContain('bruno');
+ const bruno=page.locator('#sessions-list .session-roster-item[data-session-roster-row="bruno"]');
+ await expect(bruno.locator('[data-session-character-link]')).toHaveValue('char-extra');
+ await expect(bruno.locator('.roster-open-button')).toHaveAttribute('href',/ficha-personagem\.html\?id=char-extra/);
+
+ await page.setViewportSize({width:390,height:844});
+ const small=await bruno.evaluate(el=>({width:el.clientWidth,scroll:el.scrollWidth,columns:getComputedStyle(el).gridTemplateColumns.split(' ').length}));
+ expect(small.width).toBeGreaterThan(0);
+ expect(small.scroll).toBeLessThanOrEqual(small.width+3);
+});
