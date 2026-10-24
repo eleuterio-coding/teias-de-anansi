@@ -246,7 +246,7 @@ function bindAdventureMonsterLibrary(){
  const populate=()=>{
   if(!monsterCatalogReady||!monsterCatalog.length||picker.options.length>1)return;
   const selected=picker.value;
-  picker.innerHTML='<option value="">— Selecione um monstro —</option>'+monsterCatalog.map(monster=>option(monster.id,monster.name+' · '+(monster.sourceTitle||monster.sourceId||'Biblioteca'),'')).join('');
+  picker.innerHTML='<option value="">— Selecione um monstro —</option>'+monsterCatalog.map(monster=>option(monster.id,monster.name,'')).join('');
   if(selected)picker.value=selected;
  };
  picker.addEventListener('pointerdown',populate);
