@@ -368,6 +368,10 @@ function bindSessionRoster(card,ref){
   const names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
   update([...new Set([...names,name])]);
  });
+ card.querySelector('[data-save-session-participants]')?.addEventListener('click',()=>{
+  const usernames=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
+  update(usernames);
+ });
  for(const b of card.querySelectorAll('[data-session-roster-action]'))b.addEventListener('click',()=>{
   let names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow),user=b.dataset.username,i=names.indexOf(user);
   if(b.dataset.sessionRosterAction==='remove')names=names.filter(n=>n!==user);
