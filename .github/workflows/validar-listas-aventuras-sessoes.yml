@@ -20,6 +20,7 @@ on:
       - 'scripts/hub-ux.js'
       - 'e2e/adventure-session-collection-layout.spec.js'
       - 'e2e/adventure-list-layout.spec.js'
+      - 'e2e/session-roster-campaign-parity.spec.js'
       - '.github/workflows/validar-listas-aventuras-sessoes.yml'
   pull_request:
     paths:
@@ -40,6 +41,7 @@ on:
       - 'scripts/hub-ux.js'
       - 'e2e/adventure-session-collection-layout.spec.js'
       - 'e2e/adventure-list-layout.spec.js'
+      - 'e2e/session-roster-campaign-parity.spec.js'
       - '.github/workflows/validar-listas-aventuras-sessoes.yml'
   workflow_dispatch:
 jobs:
@@ -64,7 +66,7 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Validar layout, navegação e ausência de verbetes
-        run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js e2e/campaign-avatars-user-current-session.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js e2e/campaign-avatars-user-current-session.spec.js e2e/session-roster-campaign-parity.spec.js --project=desktop-chromium --project=mobile-chromium
       - name: Publicar evidências do teste visual
         if: always()
         uses: actions/upload-artifact@v4
