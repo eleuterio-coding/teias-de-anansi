@@ -519,17 +519,27 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 #sessions-list .session-participant-roster .roster-add-panel .roster-add-actions button{
   min-height:44px;
 }
-@container session-roster (max-width:710px){
-  #sessions-list .session-participant-roster .session-roster-item{
-    grid-template-columns:24px 40px minmax(0,1fr);
-    grid-template-rows:18px 44px 18px 44px 44px;
+/* Mesma quebra de colunas e posições do roster da Campanha (565px). */
+@container session-roster (max-width:565px){
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item{
+    grid-template-columns:24px 40px minmax(0,1fr) 170px;
+    grid-template-rows:18px 44px 18px 44px;
     gap:6px 8px;
   }
   #sessions-list .session-participant-roster .session-roster-item .roster-grip{grid-column:1;grid-row:2}
   #sessions-list .session-participant-roster .session-roster-item .roster-player-identity>:is(.campaign-avatar-trigger,.roster-avatar){grid-column:2;grid-row:2}
-  #sessions-list .session-participant-roster .session-roster-item .roster-player-identity>.roster-player-display{grid-column:3;grid-row:1/3}
-  #sessions-list .session-participant-roster .session-roster-item .roster-player-character{grid-column:2/-1;grid-row:3/5}
-  #sessions-list .session-participant-roster .session-roster-item .roster-player-actions{grid-column:2/-1;grid-row:5;justify-content:flex-end}
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-identity>.roster-player-display{grid-column:3/-1;grid-row:1/3}
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-character{grid-column:2/4;grid-row:3/5}
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-actions{grid-column:4;grid-row:4;justify-content:flex-end}
+}
+@container session-roster (max-width:405px){
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item{
+    grid-template-columns:24px 40px minmax(0,1fr);
+    grid-template-rows:18px 44px 18px 44px 44px;
+  }
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-identity>.roster-player-display{grid-column:3;grid-row:1/3}
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-character{grid-column:2/-1;grid-row:3/5}
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item .roster-player-actions{grid-column:2/-1;grid-row:5}
 }
 #sessions-list .session-participant-roster.roster-readonly .session-roster-item{
   cursor:default;
@@ -566,4 +576,54 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
  #sessions-list .session-participant-roster .roster-add-panel .roster-add-fields{
   grid-template-columns:minmax(0,1fr);
  }
+}
+
+/* Paridade visual do card Jogadores da Campanha e Jogadores da Sessão. */
+#sessions-list .session-participant-roster{
+  display:grid;
+  gap:0;
+  grid-column:1/-1;
+  min-width:0;
+}
+#sessions-list .session-participant-roster .roster-heading{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap
+}
+#sessions-list .session-participant-roster .roster-list{gap:9px}
+#sessions-list .session-participant-roster .session-roster-item{
+  grid-template-columns:24px 40px minmax(0,.9fr) minmax(0,1.12fr) 170px;
+  grid-template-rows:18px 44px;
+  gap:6px 10px;
+  padding:12px;
+}
+#sessions-list .session-participant-roster .session-roster-item .roster-player-identity>.roster-player-display{
+  grid-template-rows:18px 44px;gap:6px
+}
+#sessions-list .session-participant-roster .session-roster-item .roster-character-picker>select{
+  min-height:44px;height:44px
+}
+#sessions-list .session-participant-roster .roster-add-panel{
+  display:grid;gap:12px
+}
+#sessions-list .session-participant-roster .roster-add-panel .roster-add-fields{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
+}
+#sessions-list .session-participant-roster .roster-add-panel .roster-add-actions{
+  justify-content:flex-start;gap:9px
+}
+@container session-roster (max-width:565px){
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item{
+    grid-template-columns:24px 40px minmax(0,1fr) 170px;
+    grid-template-rows:18px 44px 18px 44px;
+    gap:6px 8px;
+  }
+}
+@container session-roster (max-width:405px){
+  #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item{
+    grid-template-columns:24px 40px minmax(0,1fr);
+    grid-template-rows:18px 44px 18px 44px 44px
+  }
+  #sessions-list .session-participant-roster .roster-add-panel .roster-add-fields{
+    grid-template-columns:minmax(0,1fr)
+  }
 }
