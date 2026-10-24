@@ -331,7 +331,7 @@ function sessionRosterHtml(session,{readOnly=false}={}){
    <div class="roster-player-character"><label>Personagem<div class="roster-character-picker">${campaignAvatarHtml(characterAvatarHtml(character),character?.name||'personagem')}${picker}</div></label></div>
    ${actions}</article>`;
  }).join('');
- return `<section id="participantes" class="card campaign-editor-card roster-section session-participant-roster"><div class="roster-heading"><h2>Jogadores da Sessão</h2></div>
+ return `<section id="participantes" class="card campaign-editor-card roster-section session-participant-roster${readOnly?' roster-readonly':''}"><div class="roster-heading"><h2>Jogadores da Sessão</h2></div>
  <div class="list roster-list session-roster-list">${rows||'<div class="empty">Nenhum jogador atribuído.</div>'}</div>
  ${readOnly?'':`<div class="roster-add-panel"><h3>Adicionar jogador</h3>
   <div class="roster-add-fields"><label>Jogador<select data-session-add-member><option value="">— Selecione —</option>${available.map(m=>`<option value="${esc(m.username)}">${esc(m.name||m.username)}</option>`).join('')}</select></label>
@@ -354,7 +354,20 @@ function bindSessionRoster(card,ref){
   const characterIds=assignment.filter(m=>usernames.includes(m.username)&&m.characterId).map(m=>m.characterId);
   saveSession(ref,{participantUsernames:usernames,participantCharacterIds:characterIds},'Personagem atualizado na Campanha e na Sessão.')
  }));
- card.querySelector('[data-session-add-button]')?.addEventListener('click',()=>{const name=card.querySelector('[data-session-add-member]')?.value;if(!name)return;update([...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow).concat(name).filter((v,i,a)=>a.indexOf(v)===i))});
+ card.querySelector('[data-session-add-button]')?.addEventListener('click',()=>{
+  const name=card.querySelector('[data-session-add-member]')?.value;
+  const chosenCharacter=card.querySelector('[data-session-add-character]')?.value||'';
+  if(!name)return feedback('Selecione um jogador da Campanha.',false);
+  if(chosenCharacter){
+   const member=campaignById(ref.campaignId)?.members.find(m=>m.username===name);
+   if(!member)return feedback('Jogador não encontrado na Campanha.',false);
+   const assigned=assignCharacterToMember(readCampaigns(),ref.campaignId,member.id,chosenCharacter);
+   if(!assigned.ok)return feedback(assigned.reason||'Não foi possível atribuir o personagem.',false);
+   campaigns=writeCampaigns(assigned.list);
+  }
+  const names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
+  update([...new Set([...names,name])]);
+ });
  for(const b of card.querySelectorAll('[data-session-roster-action]'))b.addEventListener('click',()=>{
   let names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow),user=b.dataset.username,i=names.indexOf(user);
   if(b.dataset.sessionRosterAction==='remove')names=names.filter(n=>n!==user);
