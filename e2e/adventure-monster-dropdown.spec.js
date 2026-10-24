@@ -26,6 +26,7 @@ test('card Monstros usa seleção suspensa sem renderizar o catálogo inteiro',a
  await expect(card.locator('#add-adventure-monster')).toBeDisabled();
  await picker.focus();
  await expect(picker.locator('option')).toHaveCount(2);
+ await expect(picker.locator('option').nth(1)).toHaveText('Goblin de teste');
  await picker.selectOption('srd:goblin-teste');
  await expect(card.locator('#adventure-monster-consult')).toBeEnabled();
  await expect(card.locator('#add-adventure-monster')).toBeEnabled();
