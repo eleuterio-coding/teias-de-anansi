@@ -15,6 +15,8 @@ on:
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-router.js'
       - 'scripts/campaign-sessions-ui.js'
+      - 'hub-detail-layout.css'
+      - 'e2e/campaign-avatars-user-current-session.spec.js'
       - 'scripts/hub-ux.js'
       - 'e2e/adventure-session-collection-layout.spec.js'
       - 'e2e/adventure-list-layout.spec.js'
@@ -33,6 +35,8 @@ on:
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-router.js'
       - 'scripts/campaign-sessions-ui.js'
+      - 'hub-detail-layout.css'
+      - 'e2e/campaign-avatars-user-current-session.spec.js'
       - 'scripts/hub-ux.js'
       - 'e2e/adventure-session-collection-layout.spec.js'
       - 'e2e/adventure-list-layout.spec.js'
@@ -60,7 +64,7 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Validar layout, navegação e ausência de verbetes
-        run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js e2e/campaign-avatars-user-current-session.spec.js --project=desktop-chromium --project=mobile-chromium
       - name: Publicar evidências do teste visual
         if: always()
         uses: actions/upload-artifact@v4
