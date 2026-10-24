@@ -215,7 +215,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   event.preventDefault();
   const form=event.target,code=form.elements.code.value.trim();if(!code)return;
   const result=createExplorationEntity(get(),'area',{code,name:code,status:form.elements.status.value,levelId:form.elements.levelId.value||null,type:form.elements.type.value});
-  if(result){selectedAreaId=result.entity.id;expandedAreaIds.add(result.entity.id);apply(result,'Local criado.')}
+  if(result){selectedAreaId=result.entity.id;expandedAreaIds.delete(result.entity.id);apply(result,'Local criado.')}
  });
  factions?.querySelector('#ex-new-faction')?.addEventListener('submit',event=>{
   event.preventDefault();
