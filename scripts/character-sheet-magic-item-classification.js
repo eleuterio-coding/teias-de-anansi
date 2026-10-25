@@ -74,6 +74,10 @@ const responsibility=category=>({
 
 export function classifyMagicItemResponsibility(item){
  const id=item?.id||item?.refId||'';
+ // Entradas com fonte Sane foram criadas apenas como referência bibliográfica/de preço.
+ // O PDF não reproduz as regras mecânicas desses itens; por isso elas não podem ser
+ // inferidas nem delegadas aos Blocos 10/11 como se houvesse um contrato mecânico.
+ if(fold(item?.fonte)==='sane')return{category:'reference-only',block10:false,block11:false,review:false,explicit:true};
  if(EXPLICIT_RESPONSIBILITY[id])return responsibility(EXPLICIT_RESPONSIBILITY[id]);
  const text=fold(`${item?.bloco||''} ${item?.bloco_original||''} ${item?.descricao||''}`);
  const persistent=matchesAny(text,PERSISTENT_PATTERNS);
