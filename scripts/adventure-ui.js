@@ -423,9 +423,10 @@ function bindAdventureVisibilityAndOrder(){
   const rows=['npcs','locations'].includes(kind)?[...(kind==='npcs'?current.npcIds:current.locationIds)]:ordered(current[kind]||[]).map(x=>x.id);
   const from=rows.indexOf(id),neighbor=from+(direction==='up'?-1:1),to=targetId?rows.indexOf(targetId):neighbor;
   if(from<0||to<0||to>=rows.length||from===to)return false;
-  const target=rows[to],position=targetId?direction:(direction==='up'?'before':'after');
+  const before=rows.join('\u0000'),target=rows[to],position=targetId?direction:(direction==='up'?'before':'after');
   rows.splice(from,1);
   rows.splice(rows.indexOf(target)+(position==='after'?1:0),0,id);
+  if(before===rows.join('\u0000'))return false;
   const items=['npcs','locations'].includes(kind)?rows:rows.map(rowId=>current[kind].find(x=>x.id===rowId)).filter(Boolean);
   saveList(kind,items,'Ordem atualizada.');
   return true;
@@ -487,6 +488,7 @@ function bindAdventureNotes(){
    const [picked]=notes.splice(from,1),to=notes.findIndex(row=>row.id===target);
    if(to<0)return false;
    notes.splice(to+(position==='after'?1:0),0,picked);
+   if(notes.every((row,index)=>row.id===adventure().dmNoteEntries[index]?.id))return false;
    commit(updateAdventure(adventures,adventureId,{dmNoteEntries:notes}),'Ordem das notas atualizada.');
    return true;
   }
