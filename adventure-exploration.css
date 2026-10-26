@@ -562,3 +562,116 @@
     grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));
   }
 }
+
+
+/* Locais — hierarquia clara entre identificação, mapa, ambiente e ações. */
+#adventure-root #exploracao .explore-area-overview{
+  display:grid;
+  align-content:start;
+  gap:14px;
+  min-width:0;
+  flex:1 1 auto;
+}
+#adventure-root #exploracao .explore-area-heading{
+  display:grid;
+  justify-items:start;
+  gap:7px;
+  min-width:0;
+}
+#adventure-root #exploracao .explore-area-code{
+  display:inline-flex;
+  max-width:100%;
+  padding:4px 7px;
+  border:1px solid var(--hub-border,#344a60);
+  border-radius:6px;
+  color:var(--hub-text-2,#d3deed);
+  background:rgba(119,160,195,.10);
+  font-size:.7rem;
+  font-weight:750;
+  letter-spacing:.03em;
+  overflow-wrap:anywhere;
+}
+#adventure-root #exploracao .explore-area-name{
+  font-size:1.07rem;
+  line-height:1.32;
+  overflow-wrap:anywhere;
+}
+#adventure-root #exploracao .explore-area-context{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  min-width:0;
+}
+#adventure-root #exploracao .explore-area-context>span{
+  display:grid;
+  align-content:start;
+  gap:4px;
+  min-width:0;
+  overflow-wrap:anywhere;
+  font-size:.82rem;
+  line-height:1.35;
+}
+#adventure-root #exploracao .explore-area-context small{
+  font-size:.69rem;
+  font-weight:700;
+  letter-spacing:.025em;
+  color:var(--hub-muted,#a7bbce);
+}
+#adventure-root #exploracao .explore-area-summary-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:9px;
+  min-width:0;
+}
+#adventure-root #exploracao .explore-area-summary-actions .explore-record-status{
+  max-width:100%;
+  margin:0;
+}
+#adventure-root #exploracao .explore-area-summary-actions .explore-record-toggle-label{
+  order:initial;
+  margin-left:auto;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-record-summary{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:space-between;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-area-overview{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  min-height:0;
+  flex:1 1 auto;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-area-name{
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  line-clamp:2;
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-area-context{
+  overflow:hidden;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-area-context>span>span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+#adventure-root #exploracao .explore-area-grid>.explore-record-card:not(:has(>.explore-record-editor[open])) .explore-area-summary-actions{
+  width:100%;
+  margin-top:auto;
+}
+@media(max-width:620px){
+  #adventure-root #exploracao .explore-record-editor[open]>.explore-record-summary{
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+  }
+  #adventure-root #exploracao .explore-area-summary-actions{
+    width:100%;
+  }
+}
