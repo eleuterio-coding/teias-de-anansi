@@ -1,7 +1,7 @@
 /* Espaço de exploração para o Mestre: mapas opcionais, áreas persistentes,
    referências ao restante do Hub, facções e crônica de visitas.
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
-import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261026-reorder1';
+import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,reorderExplorationEntities,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261026-reorder1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20261023-simplified3';
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified2';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -66,6 +66,7 @@ function areaDetail(area,a,c,exploration){
 }
 function levelDetail(level,areaCount=0){
  return '<article data-ex-level="'+esc(level.id)+'" class="story-card explore-level-card explore-record-card">'+
+  '<button type="button" class="explore-area-drag-handle explore-level-drag-handle" data-ex-level-grip="'+esc(level.id)+'" title="Arraste para reorganizar este mapa" aria-label="Arrastar mapa '+esc(level.name)+' para reorganizar">⠿</button>'+
   '<details class="explore-record-editor" data-ex-level-editor="'+esc(level.id)+'"'+(expandedLevelIds.has(level.id)?' open':'')+'>'+
    '<summary class="explore-record-summary">'+recordTitle(level.name,(level.type||'Tipo não definido')+' · '+areaCount+' '+(areaCount===1?'área':'áreas')+' vinculadas')+
     '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>'+
@@ -87,7 +88,7 @@ function levelDetail(level,areaCount=0){
 }
 function factionSection(exploration,a,c){
  return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
- '<div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
+ '<div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
     '<label>Relação com o grupo<select data-ex-field="stance">'+selectOptions(STANCES,f.stance)+'</select></label>'+
@@ -238,7 +239,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  const areaGrid=root?.querySelector('.explore-area-grid');
  if(areaGrid)bindAdventureAnimatedReorder({
   container:areaGrid,itemSelector:'[data-ex-area]',handleSelector:'[data-ex-area-grip]',
-  idFor:node=>node.dataset.exArea,axis:'horizontal',allowSurface:false,
+  idFor:node=>node.dataset.exArea,axis:'horizontal',allowSurface:true,allowSummaryDrag:true,
   confirmScope:'#exploracao',
   onMove:(from,to,position)=>{
    const result=reorderExplorationAreas(get(),from,to,position);
@@ -247,6 +248,25 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    return apply(result,'Ordem dos Locais atualizada.');
   }
  });
+
+ // Mapas e Facções seguem exatamente o mesmo arrasta-e-solta dos Locais.
+ for(const entry of [
+  {scope:mapRoot,selector:'.explore-level-grid',item:'[data-ex-level]',grip:'[data-ex-level-grip]',kind:'level',id:'exLevel',confirm:'#mapas'},
+  {scope:factions,selector:'.explore-faction-grid',item:'[data-ex-faction]',grip:'[data-ex-faction-grip]',kind:'faction',id:'exFaction',confirm:'#faccoes'}
+ ]){
+  const grid=entry.scope?.querySelector(entry.selector);
+  if(!grid)continue;
+  bindAdventureAnimatedReorder({
+   container:grid,itemSelector:entry.item,handleSelector:entry.grip,
+   idFor:node=>node.dataset[entry.id],allowSurface:true,allowSummaryDrag:true,confirmScope:entry.confirm,
+   onMove:(from,to,position)=>{
+    const result=reorderExplorationEntities(get(),entry.kind,from,to,position);
+    if(!result?.exploration||result.error){feedback(result?.error||'Não foi possível reorganizar os registros.',false);return false}
+    if(!result.changed)return false;
+    return apply(result,'Ordem atualizada.');
+   }
+  });
+ }
  // Alterar a visibilidade independe da abertura do editor e não sobrescreve outros dados.
  root?.querySelectorAll('[data-ex-area-visibility]').forEach(input=>input.addEventListener('change',()=>{
   const id=input.dataset.exAreaVisibility;
