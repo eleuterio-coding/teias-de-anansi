@@ -71,21 +71,28 @@ export function bindAdventureAnimatedReorder({
   if(ghost)ghost.node.style.transform='translate3d('+(x-ghost.x)+'px,'+(y-ghost.y)+'px,0) rotate(-1deg) scale(1.018)';
  }
  function destination(source,x,y){
+  const siblings=rows(),sourceIndex=siblings.findIndex(row=>keyFor(row)===source);
+  if(sourceIndex<0)return null;
+  const region=container.getBoundingClientRect();
+  if(x<region.left-18||x>region.right+18||y<region.top-18||y>region.bottom+18)return null;
   let target=rowFor(document.elementFromPoint(x,y));
   if(!target){
-   // Aceitar espaços entre cards, nunca soltura fora da lista.
-   const region=container.getBoundingClientRect();
-   if(x<region.left-12||x>region.right+12||y<region.top-12||y>region.bottom+12)return null;
-   const other=rows().filter(row=>keyFor(row)!==source);
-   if(!other.length)return null;
-   target=other.map(row=>{
+   // Espaços entre cards: encontrar o destino mais próximo DENTRO da lista.
+   target=siblings.filter(row=>keyFor(row)!==source).map(row=>{
     const r=row.getBoundingClientRect();
-    return{row,d:Math.hypot(x-(r.left+r.width/2),y-(r.top+r.height/2))};
-   }).sort((a,b)=>a.d-b.d)[0]?.row;
+    const nearestX=Math.max(r.left,Math.min(x,r.right));
+    const nearestY=Math.max(r.top,Math.min(y,r.bottom));
+    return{row,d:Math.hypot(x-nearestX,y-nearestY)};
+   }).sort((a,b)=>a.d-b.d)[0]?.row||null;
   }
   if(!target||keyFor(target)===source)return null;
-  const r=target.getBoundingClientRect();
-  const position=axis==='horizontal'?(x<r.left+r.width/2?'before':'after'):(y<r.top+r.height/2?'before':'after');
+  const to=siblings.indexOf(target);
+  if(to<0)return null;
+  // "Soltar neste card" o coloca no lugar do card atingido. A lógica
+  // antiga usava metade superior/inferior e produzia frequentemente NO-OP
+  // (ex.: arrastar o 2º item para o 1º, mas escolher "depois" do 1º).
+  // A direção define o lado: subindo -> antes; descendo -> depois.
+  const position=sourceIndex>to?'before':'after';
   return{row:target,id:keyFor(target),position};
  }
  function mark(source,target){
