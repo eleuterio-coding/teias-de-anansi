@@ -45,7 +45,7 @@ test('Locais, Mapas e Sessões têm a hierarquia solicitada no desktop e no celu
  await expect(local.locator('.explore-area-context')).toContainText('Salão');
  await expect(local.locator('.explore-record-status')).toContainText('Descoberta');
  const dimensions=await local.evaluate(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height}));
- expect(Math.abs(dimensions.width-dimensions.height)).toBeLessThanOrEqual(4);
+ expect(dimensions.height).toBeLessThan(dimensions.width-10);
  await expect(page.locator('#mapas')).not.toContainText('Organize os mapas e gerencie suas imagens em cada registro.');
  await expect(page.locator('#monstros')).not.toContainText('Selecione uma criatura da Biblioteca para consultar sua ficha ou adicioná-la à Aventura.');
  await expect(page.locator('#linha-tempo')).not.toContainText('As Cenas aparecem automaticamente e acompanham as alterações.');
@@ -157,7 +157,8 @@ test('Cards de Locais compactos mantêm identificação, edição e publicação
  const uniqueColumns=new Set(metrics.rows.map(row=>Math.round(row.x))).size;
  expect(uniqueColumns).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?2:4);
  for(const row of metrics.rows){
-  expect(Math.abs(row.width-row.height)).toBeLessThanOrEqual(3);
+  expect(row.height).toBeLessThanOrEqual(testInfo.project.name==='mobile-chromium'?150:162);
+  expect(row.width-row.height).toBeGreaterThanOrEqual(10);
   expect(row.width).toBeLessThanOrEqual(testInfo.project.name==='mobile-chromium'?185:235);
   expect(row.footerBottom).toBeLessThanOrEqual(row.cardBottom+2);
   expect(row.summaryScrollHeight).toBeLessThanOrEqual(row.summaryHeight+3);
