@@ -58,7 +58,7 @@ export function updateExplorationEntity(exploration,kind,id,changes={}){
 export function reorderExplorationAreas(exploration,sourceId,targetId,placement='before'){
  const e=clone(exploration);
  if(!['before','after'].includes(placement))return{error:'Posição de destino inválida.'};
- const ordered=sorted(e.areas);
+ const ordered=sorted(e.areas.slice());
  const from=ordered.findIndex(row=>row.id===sourceId);
  if(from<0||!ordered.some(row=>row.id===targetId))return{error:'Local de origem ou destino não encontrado.'};
  if(sourceId===targetId)return{exploration:e,changed:false};
