@@ -1,6 +1,6 @@
 import{playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
-import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-drag-fix2';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-drop-position1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const lower=value=>String(value||'').trim().toLowerCase();
 const sortText=(a,b)=>String(a).localeCompare(String(b),'pt-BR',{sensitivity:'base'});
