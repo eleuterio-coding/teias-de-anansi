@@ -210,7 +210,6 @@ function linkedSessionsHtml(a){
  const ids=new Set(a.scenes.map(s=>s.sessionId).filter(Boolean));
  const rows=(campaign()?.sessions||[]).filter(s=>s.adventureId===a.id||ids.has(s.id)).sort((x,y)=>(x.order||x.number)-(y.order||y.number));
  return`<section id="sessoes" class="card campaign-editor-card"><h2>Sessões da Aventura</h2>
- <p class="mini">Escolha quais sessões ficam disponíveis para os jogadores desta Aventura.</p>
  <div class="list campaign-player-story-grid">${rows.length?rows.map(s=>`<div class="adventure-linked-session" data-adventure-session="${esc(s.id)}"><div class="adventure-session-card-wrap">${renderCampaignSessionCard(s,a.campaignId)}<div class="adventure-session-visibility">${visibleToggle('sessions',s.id,a.sessionVisibility?.[s.id]===true)}</div></div></div>`).join(''):'<div class="empty">Nenhuma sessão vinculada à Aventura.</div>'}</div></section>`;
 }
 function monstersHtml(a){
@@ -277,14 +276,14 @@ function bindAdventureMonsterLibrary(){
  panel.addEventListener('adventure-monster-catalog-ready',updateAvailability);
  updateAvailability();
 }
-function section(title,id,body,form=''){return`<section id="${id}" class="card"><h2>${esc(title)}</h2><div class="story-list">${body||'<div class="story-empty">Nenhum registro.</div>'}</div>${form}<div class="row-actions" style="margin-top:10px"><button type="button" data-save-adventure-section>Salvar</button></div></section>`}
+function section(title,id,body,form=''){return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2><div class="story-list">${body||''}</div>${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['exploracao','Locais'],['mapas','Mapas'],['criar-area','Adicionar área'],['criar-mapa','Adicionar mapa'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
  const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
- const npcPanel=section('NPCs','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="form-grid two"><label>Nome<input id="new-npc-name"></label><label>Papel<input id="new-npc-role"></label><button type="button" id="add-campaign-npc">Adicionar NPC</button><a class="btn secondary" href="criacao-personagem.html?npc=1">Criar NPC</a>
+ const npcPanel=section('NPCs','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="form-grid two adventure-npc-create"><label>Nome<input id="new-npc-name"></label><label>Papel<input id="new-npc-role"></label><button type="button" id="add-campaign-npc">Adicionar NPC</button><a class="btn secondary" href="criacao-personagem.html?npc=1">Criar NPC</a>
  <label>NPC cadastrado<select id="attach-existing-npc"><option value="">— Selecione um NPC —</option>${readRegisteredNpcs().filter(n=>!(c?.npcs||[]).some(row=>row.sheetId===n.id)).map(n=>option(n.id,n.name||'NPC sem nome','')).join('')}</select></label><button type="button" id="add-registered-npc">Vincular NPC</button></div>`);
- const scenes=section('Cenas','cenas',ordered(a.scenes).map((scene,i)=>sceneCard(scene,a,i)).join(''),`<div class="form-grid two"><label>Nome da cena<input id="new-scene-title"></label>
+ const scenes=section('Cenas','cenas',ordered(a.scenes).map((scene,i)=>sceneCard(scene,a,i)).join(''),`<div class="form-grid two adventure-scene-create"><label>Nome da cena<input id="new-scene-title"></label>
   <label>Objetivo<select id="new-scene-objective">${objectiveOptions(a)}</select></label>
  <label>Local<select id="new-scene-location">${entitySelect(a.exploration?.areas||[],'','— Sem local —')}</select></label>
  <label>NPC<select id="new-scene-npc">${npcOptions(a)}</select></label>
