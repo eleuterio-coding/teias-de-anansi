@@ -1,5 +1,5 @@
 import assert from'node:assert/strict';
-import{normalizeExploration,createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'../scripts/adventure-exploration-state.js';
+import{normalizeExploration,createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'../scripts/adventure-exploration-state.js';
 import{sanitizeAdventure,createAdventure,updateAdventure,addAdventureScene,reassignAdventureCampaign}from'../scripts/adventure-state.js';
 import{sanitizeCampaign}from'../scripts/campaign-state.js';
 import{revealedAdventureProjection,sharedExplorationProjection}from'../scripts/collaboration-model.js';
@@ -75,6 +75,26 @@ assert.equal(invalid.levels[0].mapUrl,'','Bloquear URL inadequada');
 assert.equal(invalid.areas[0].mapX,100);assert.equal(invalid.areas[0].mapY,0);
 assert.deepEqual(invalid.areas[0].connectionIds,[]);
 assert.equal(invalid.areas.some(a=>a.parentId===null),true,'Romper ciclo hierárquico');
+
+// Arrastar Locais deve conservar dados narrativos, IDs e vínculos ao persistir.
+const reorderBase=normalizeExploration({levels:[{id:'l-reorder',name:'Mapa'}],areas:[
+ {id:'a-first',code:'A01',name:'Entrada',order:1,levelId:'l-reorder',description:'Segredo privado',visibleToPlayers:true,connectionIds:['a-third']},
+ {id:'a-second',code:'A02',name:'Pátio',order:2,levelId:'l-reorder',status:'visited',xp:120},
+ {id:'a-third',code:'A03',name:'Torre',order:3,levelId:'l-reorder'}
+]});
+const reorderSnapshot=JSON.stringify(reorderBase);
+let reordered=reorderExplorationAreas(reorderBase,'a-third','a-first','before');
+assert.equal(reordered.changed,true);
+assert.deepEqual(reordered.exploration.areas.map(a=>[a.id,a.order]),[['a-third',1],['a-first',2],['a-second',3]]);
+assert.equal(reordered.exploration.areas[1].description,'Segredo privado');
+assert.deepEqual(reordered.exploration.areas[1].connectionIds,['a-third']);
+assert.equal(reordered.exploration.areas[2].xp,120);
+assert.equal(JSON.stringify(reorderBase),reorderSnapshot,'Ordenação não pode modificar o registro original');
+reordered=reorderExplorationAreas(reordered.exploration,'a-third','a-second','after');
+assert.deepEqual(normalizeExploration(reordered.exploration).areas.map(a=>a.id),['a-first','a-second','a-third']);
+assert.equal(reorderExplorationAreas(reorderBase,'a-first','a-first').changed,false);
+assert.ok(reorderExplorationAreas(reorderBase,'inexistente','a-first').error);
+assert.ok(reorderExplorationAreas(reorderBase,'a-first','a-second','invalid').error);
 
 const migrated=createAdventure([],{campaignId:'c1',title:'Exemplo',exploration:e});
 const c1=sanitizeCampaign({id:'c1',name:'Origem'});
