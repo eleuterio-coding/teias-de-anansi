@@ -271,6 +271,8 @@ async function seedAnimatedOrderData(page){
   a.scenes=[{id:'scene-1',title:'Conselho',status:'planned',order:1},{id:'scene-2',title:'Torre',status:'planned',order:2}];
   a.monsters=[{id:'monster-1',name:'Golem',monsterId:'m1',source:'Biblioteca',order:1},{id:'monster-2',name:'Espectro',monsterId:'m2',source:'Biblioteca',order:2}];
   a.dmNoteEntries=[{id:'note-1',text:'Nota privada um',visibleToPlayers:false},{id:'note-2',text:'Nota privada dois',visibleToPlayers:false}];
+  a.exploration.levels=[{id:'qa-map-1',name:'Castelo',order:1},{id:'qa-map-2',name:'Jardim',order:2}];
+  a.exploration.factions=[{id:'faction-1',name:'Realeza',order:1},{id:'faction-2',name:'Guarda',order:2}];
   a.exploration.areas=[
    {id:'area-1',code:'A01',name:'Salão',order:1,levelId:'qa-map-1',status:'discovered'},
    {id:'area-2',code:'A02',name:'Pátio',order:2,levelId:'qa-map-1',status:'unknown'}
@@ -329,4 +331,28 @@ test('Locais, Jogadores da Aventura e Notas do Mestre recebem a mesma animação
  expect(state.exploration.areas.map(x=>x.id)).toEqual(['area-2','area-1']);
  expect(state.participantAssignments.map(x=>x.username)).toEqual(['beto','ana']);
  expect(state.dmNoteEntries.map(x=>x.id)).toEqual(['note-2','note-1']);
+});
+
+
+test('Todo o card de Local pode ser arrastado com o mouse sem acionar Editar',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Teste de mouse no desktop');
+ await seedAnimatedOrderData(page);
+ await checkAnimatedMouseDrag(page,'#exploracao [data-ex-area="area-2"] .explore-record-summary','#exploracao [data-ex-area="area-1"]');
+ await expect.poll(async()=>(await savedAdventure(page)).exploration.areas.map(x=>x.id)).toEqual(['area-2','area-1']);
+ await expect(page.locator('#exploracao [data-ex-area="area-2"] details')).not.toHaveAttribute('open','');
+ await page.locator('#exploracao [data-ex-area="area-2"] summary').click();
+ await expect(page.locator('#exploracao [data-ex-area="area-2"] details')).toHaveAttribute('open','');
+});
+
+test('Mapas e Facções também aceitam arrastar e soltar no corpo do cartão',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Teste de mouse no desktop');
+ await seedAnimatedOrderData(page);
+ await checkAnimatedMouseDrag(page,'#mapas [data-ex-level="qa-map-2"] .explore-record-summary','#mapas [data-ex-level="qa-map-1"]');
+ await expect.poll(async()=>(await savedAdventure(page)).exploration.levels.map(x=>x.id)).toEqual(['qa-map-2','qa-map-1']);
+ await checkAnimatedMouseDrag(page,'#faccoes [data-ex-faction="faction-2"] .explore-faction-head','#faccoes [data-ex-faction="faction-1"]');
+ await expect.poll(async()=>(await savedAdventure(page)).exploration.factions.map(x=>x.id)).toEqual(['faction-2','faction-1']);
+ await page.reload();
+ const a=await savedAdventure(page);
+ expect(a.exploration.levels.map(x=>x.id)).toEqual(['qa-map-2','qa-map-1']);
+ expect(a.exploration.factions.map(x=>x.id)).toEqual(['faction-2','faction-1']);
 });
