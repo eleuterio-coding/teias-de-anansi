@@ -4,9 +4,11 @@ on:
     branches: [main]
     paths:
       - 'e2e/adventure-cards-20261026.spec.js'
+      - 'tests/reordenar-locais.mjs'
       - 'e2e/adventure-layout-audit-20261026.spec.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-exploration-ui.js'
+      - 'scripts/adventure-exploration-state.js'
       - 'scripts/character-builder/ui.js'
       - 'adventures.css'
       - 'adventure-exploration.css'
@@ -24,6 +26,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validar persistência da ordem dos Locais
+        run: node tests/reordenar-locais.mjs
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Validar layout e ações de Aventuras no desktop e mobile
