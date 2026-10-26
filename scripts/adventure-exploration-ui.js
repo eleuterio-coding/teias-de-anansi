@@ -3,7 +3,7 @@
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
 import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,reorderExplorationEntities,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261026-unified-all1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20261023-simplified3';
-import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified-all1';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-drag-fix1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[];
 const STATUS={unknown:'Não descoberta',discovered:'Descoberta',visited:'Visitada',resolved:'Resolvida',blocked:'Bloqueada'};
