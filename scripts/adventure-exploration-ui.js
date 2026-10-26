@@ -244,7 +244,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
    if(!result?.exploration||result.error){feedback(result?.error||'Não foi possível reordenar os Locais.',false);return}
    if(!result.changed)return;
    apply(result,'Ordem dos Locais atualizada.');
-   if(restoreFocus)requestAnimationFrame(()=>root?.querySelectorAll('[data-ex-area-grip]').forEach(node=>{
+   if(restoreFocus)requestAnimationFrame(()=>document.querySelectorAll('#exploracao [data-ex-area-grip]').forEach(node=>{
     if(node.dataset.exAreaGrip===from)node.focus({preventScroll:true});
    }));
   };
