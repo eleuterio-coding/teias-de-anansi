@@ -253,3 +253,80 @@ test('Arrastar Local por toque no celular mantém a ordem',async({page},testInfo
  await page.reload();
  await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
 });
+
+
+async function seedAnimatedOrderData(page){
+ await page.goto('/aventuras.html?campaign='+campaignId+'&id='+adventureId);
+ await page.evaluate(()=>{
+  const cKey='hub-rpg:campaigns:v1',aKey='hub-rpg:adventures:v1';
+  const campaigns=JSON.parse(localStorage.getItem(cKey)),adventures=JSON.parse(localStorage.getItem(aKey));
+  const c=campaigns.find(row=>row.id==='qa-adventure-cards-20261026');
+  const a=adventures.find(row=>row.id==='qa-cards-adventure');
+  c.members=[{username:'ana',name:'Ana',role:'player',active:true},{username:'beto',name:'Beto',role:'player',active:true}];
+  c.npcs=[{id:'npc-1',name:'Capitã',role:'Aliada'},{id:'npc-2',name:'Escriba',role:'Conselheira'}];
+  a.npcIds=['npc-1','npc-2'];
+  a.participantUsernames=['ana','beto'];
+  a.participantAssignments=[{username:'ana',characterId:null},{username:'beto',characterId:null}];
+  a.missions=[{id:'mission-1',title:'Investigar',status:'active',order:1},{id:'mission-2',title:'Proteger',status:'active',order:2}];
+  a.scenes=[{id:'scene-1',title:'Conselho',status:'planned',order:1},{id:'scene-2',title:'Torre',status:'planned',order:2}];
+  a.monsters=[{id:'monster-1',name:'Golem',monsterId:'m1',source:'Biblioteca',order:1},{id:'monster-2',name:'Espectro',monsterId:'m2',source:'Biblioteca',order:2}];
+  a.dmNoteEntries=[{id:'note-1',text:'Nota privada um',visibleToPlayers:false},{id:'note-2',text:'Nota privada dois',visibleToPlayers:false}];
+  a.exploration.areas=[
+   {id:'area-1',code:'A01',name:'Salão',order:1,levelId:'qa-map-1',status:'discovered'},
+   {id:'area-2',code:'A02',name:'Pátio',order:2,levelId:'qa-map-1',status:'unknown'}
+  ];
+  localStorage.setItem(cKey,JSON.stringify(campaigns));
+  localStorage.setItem(aKey,JSON.stringify(adventures));
+ });
+ await page.reload();
+}
+async function checkAnimatedMouseDrag(page,sourceSelector,destSelector){
+ const source=page.locator(sourceSelector),destination=page.locator(destSelector);
+ await source.scrollIntoViewIfNeeded();
+ const a=await source.boundingBox(),b=await destination.boundingBox();
+ expect(a).toBeTruthy();expect(b).toBeTruthy();
+ const sx=a.x+a.width/2,sy=a.y+a.height/2,tx=b.x+b.width*.25,ty=b.y+b.height*.3;
+ await page.mouse.move(sx,sy);await page.mouse.down();
+ await page.mouse.move(sx+8,sy+8,{steps:5});
+ await expect(page.locator('body>.adventure-floating-card.campaign-floating-card')).toHaveCount(1);
+ await page.mouse.move(tx,ty,{steps:12});
+ await expect(destination).toHaveClass(/adventure-sort-before/);
+ await expect(page.locator('body>.adventure-floating-card')).toHaveCSS('pointer-events','none');
+ await page.mouse.up();
+ await expect(page.locator('body>.adventure-floating-card')).toHaveCount(0);
+}
+test('NPCs, Objetivos, Cenas e Monstros usam a cópia elevada e o marcador de soltura da Campanha',async({page})=>{
+ await seedAnimatedOrderData(page);
+ const sections=[
+  {section:'#npcs',kind:'npcs',attr:'data-campaign-npc',first:'npc-1',second:'npc-2',get:a=>a.npcIds},
+  {section:'#missoes',kind:'missions',attr:'data-entity-row',first:'mission-1',second:'mission-2',get:a=>a.missions.map(x=>x.id)},
+  {section:'#cenas',kind:'scenes',attr:'data-scene-row',first:'scene-1',second:'scene-2',get:a=>a.scenes.map(x=>x.id)},
+  {section:'#monstros',kind:'monsters',attr:'data-monster-row',first:'monster-1',second:'monster-2',get:a=>a.monsters.map(x=>x.id)}
+ ];
+ for(const section of sections){
+  if(section.kind==='monsters')await page.locator('#monstros .adventure-monsters-attached summary').click();
+  const src=section.section+' ['+section.attr+'="'+section.second+'"] [data-adventure-grip]';
+  const dst=section.section+' ['+section.attr+'="'+section.first+'"]';
+  await checkAnimatedMouseDrag(page,src,dst);
+  await expect.poll(async()=>section.get(await savedAdventure(page))).toEqual([section.second,section.first]);
+  await expect(page.locator(section.section+' .adventure-sort-feedback')).toContainText('Ordem atualizada');
+ }
+ await page.reload();
+ for(const section of sections){
+  await expect.poll(async()=>section.get(await savedAdventure(page))).toEqual([section.second,section.first]);
+ }
+});
+test('Locais, Jogadores da Aventura e Notas do Mestre recebem a mesma animação',async({page})=>{
+ await seedAnimatedOrderData(page);
+ await checkAnimatedMouseDrag(page,'#exploracao [data-ex-area="area-2"] [data-ex-area-grip]','#exploracao [data-ex-area="area-1"]');
+ await expect.poll(async()=>(await savedAdventure(page)).exploration.areas.map(x=>x.id)).toEqual(['area-2','area-1']);
+ await checkAnimatedMouseDrag(page,'#participantes [data-member-row="beto"] .roster-grip','#participantes [data-member-row="ana"]');
+ await expect.poll(async()=>(await savedAdventure(page)).participantAssignments.map(x=>x.username)).toEqual(['beto','ana']);
+ await checkAnimatedMouseDrag(page,'#notas-mestre [data-note-id="note-2"] .hub-note-grip','#notas-mestre [data-note-id="note-1"]');
+ await expect.poll(async()=>(await savedAdventure(page)).dmNoteEntries.map(x=>x.id)).toEqual(['note-2','note-1']);
+ await page.reload();
+ const state=await savedAdventure(page);
+ expect(state.exploration.areas.map(x=>x.id)).toEqual(['area-2','area-1']);
+ expect(state.participantAssignments.map(x=>x.username)).toEqual(['beto','ana']);
+ expect(state.dmNoteEntries.map(x=>x.id)).toEqual(['note-2','note-1']);
+});
