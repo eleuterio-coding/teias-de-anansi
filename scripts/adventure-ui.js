@@ -13,7 +13,7 @@ import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-c
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261023-simplified3';
 
 import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261026-unified3';
-import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified2';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified-all1';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261023-simplified3';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261026-unified3';
 import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-status-context12';
