@@ -3,6 +3,7 @@
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
 import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261026-reorder1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20261023-simplified3';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[];
 const STATUS={unknown:'Não descoberta',discovered:'Descoberta',visited:'Visitada',resolved:'Resolvida',blocked:'Bloqueada'};
@@ -232,66 +233,20 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   const node=button.closest('[data-ex-level]');if(node)edit('level',node.dataset.exLevel,node);
  }));
 
- // Arrastar pelo puxador com mouse, caneta ou toque, sem interceptar edição.
+ // O Local conserva seus dados e a posição. O feedback visual é compartilhado
+ // com Jogadores da Campanha (cópia elevada, marcação e confirmação).
  const areaGrid=root?.querySelector('.explore-area-grid');
- if(areaGrid){
-  const handles=[...areaGrid.querySelectorAll('[data-ex-area-grip]')];
-  const orderedIds=()=>arr(get()?.areas).slice().sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name,'pt-BR')).map(row=>row.id);
-  const clearDrag=()=>areaGrid.querySelectorAll('.explore-area-dragging,.explore-area-drop-before,.explore-area-drop-after')
-   .forEach(node=>node.classList.remove('explore-area-dragging','explore-area-drop-before','explore-area-drop-after'));
-  const moveArea=(from,to,position,restoreFocus=false)=>{
+ if(areaGrid)bindAdventureAnimatedReorder({
+  container:areaGrid,itemSelector:'[data-ex-area]',handleSelector:'[data-ex-area-grip]',
+  idFor:node=>node.dataset.exArea,axis:'horizontal',allowSurface:false,
+  confirmScope:'#exploracao',
+  onMove:(from,to,position)=>{
    const result=reorderExplorationAreas(get(),from,to,position);
-   if(!result?.exploration||result.error){feedback(result?.error||'Não foi possível reordenar os Locais.',false);return}
-   if(!result.changed)return;
-   apply(result,'Ordem dos Locais atualizada.');
-   if(restoreFocus)requestAnimationFrame(()=>document.querySelectorAll('#exploracao [data-ex-area-grip]').forEach(node=>{
-    if(node.dataset.exAreaGrip===from)node.focus({preventScroll:true});
-   }));
-  };
-  for(const grip of handles){
-   const sourceId=grip.dataset.exAreaGrip;
-   grip.addEventListener('keydown',event=>{
-    const direction=['ArrowUp','ArrowLeft'].includes(event.key)?-1:['ArrowDown','ArrowRight'].includes(event.key)?1:0;
-    if(!direction)return;
-    event.preventDefault();
-    const ids=orderedIds(),i=ids.indexOf(sourceId),target=ids[i+direction];
-    if(target)moveArea(sourceId,target,direction<0?'before':'after',true);
-   });
-   let active=null;
-   grip.addEventListener('pointerdown',event=>{
-    if(event.pointerType==='mouse'&&event.button!==0)return;
-    active={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false,target:null,position:'before'};
-    grip.setPointerCapture?.(event.pointerId);
-   });
-   grip.addEventListener('pointermove',event=>{
-    if(!active||event.pointerId!==active.id)return;
-    if(!active.moved&&Math.hypot(event.clientX-active.x,event.clientY-active.y)<7)return;
-    active.moved=true;
-    clearDrag();
-    grip.closest('[data-ex-area]')?.classList.add('explore-area-dragging');
-    let target=document.elementFromPoint(event.clientX,event.clientY)?.closest('#exploracao [data-ex-area]');
-    if(!target&&areaGrid.getBoundingClientRect().left<=event.clientX&&areaGrid.getBoundingClientRect().right>=event.clientX){
-     const other=[...areaGrid.querySelectorAll('[data-ex-area]')].filter(node=>node.dataset.exArea!==sourceId);
-     target=other.map(node=>{
-      const rect=node.getBoundingClientRect();
-      return{node,d:Math.hypot(event.clientX-(rect.left+rect.width/2),event.clientY-(rect.top+rect.height/2))};
-     }).sort((a,b)=>a.d-b.d)[0]?.node||null;
-    }
-    if(!target||target.dataset.exArea===sourceId){active.target=null;return}
-    const rect=target.getBoundingClientRect();
-    active.target=target.dataset.exArea;
-    active.position=event.clientX<rect.left+rect.width/2?'before':'after';
-    target.classList.add(active.position==='before'?'explore-area-drop-before':'explore-area-drop-after');
-   });
-   grip.addEventListener('pointerup',event=>{
-    if(!active||event.pointerId!==active.id)return;
-    const drop=active;active=null;clearDrag();
-    if(drop.moved){event.preventDefault();if(drop.target)moveArea(sourceId,drop.target,drop.position)}
-   });
-   grip.addEventListener('pointercancel',()=>{active=null;clearDrag()});
-   grip.addEventListener('lostpointercapture',()=>{active=null;clearDrag()});
+   if(!result?.exploration||result.error){feedback(result?.error||'Não foi possível reordenar os Locais.',false);return false}
+   if(!result.changed)return false;
+   return apply(result,'Ordem dos Locais atualizada.');
   }
- }
+ });
  // Alterar a visibilidade independe da abertura do editor e não sobrescreve outros dados.
  root?.querySelectorAll('[data-ex-area-visibility]').forEach(input=>input.addEventListener('change',()=>{
   const id=input.dataset.exAreaVisibility;
