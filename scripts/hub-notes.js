@@ -36,7 +36,7 @@ export function bindNoteSection(section,{read,save}){
   modify(rows=>rows.map(n=>n.id===id?{...n,...(input.matches('[data-note-text]')?{text:input.value}:{visibleToPlayers:input.checked})}:n))
  });
  let dragged='';
- section.addEventListener('dragstart',event=>{const row=event.target.closest('[data-note-id]');dragged=row?.dataset.noteId||'';if(dragged)event.dataTransfer?.setData('text/plain',dragged)});
+ section.addEventListener('dragstart',event=>{const row=event.target.closest('[data-note-id]');if(!row?.draggable)return;dragged=row.dataset.noteId||'';if(dragged)event.dataTransfer?.setData('text/plain',dragged)});
  section.addEventListener('dragover',event=>{if(dragged&&event.target.closest('[data-note-id]'))event.preventDefault()});
  section.addEventListener('drop',event=>{const row=event.target.closest('[data-note-id]'),id=row?.dataset.noteId;event.preventDefault();if(!dragged||!id||dragged===id)return;modify(rows=>{const from=rows.findIndex(x=>x.id===dragged),to=rows.findIndex(x=>x.id===id);if(from<0||to<0)return null;rows.splice(to,0,rows.splice(from,1)[0]);return rows})});
 }
