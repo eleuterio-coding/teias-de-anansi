@@ -128,11 +128,8 @@ export function bindAdventureAnimatedReorder({
   if(!row||!permitted(event.target))return;
   const info={row,source:keyFor(row),id:event.pointerId,x:event.clientX,y:event.clientY,active:false,timer:null};
   pointer=info;
-  if(event.pointerType==='mouse'&&allowSurface){
-   info.timer=setTimeout(()=>{
-    if(pointer===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
-   },160);
-  }
+  // Desktop: só iniciar o arraste quando houve deslocamento real.
+  // Segurar o botão sem mover não deve impedir a abertura/edição do card.
   // Não capturar o ponteiro durante um clique comum; a captura antecipada
   // redirecionava o click para o artigo e impedia abrir/fechar <summary>.
   // A captura só acontece quando o usuário realmente começa a arrastar.
