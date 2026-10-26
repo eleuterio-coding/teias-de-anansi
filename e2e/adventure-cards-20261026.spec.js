@@ -114,3 +114,65 @@ test('Adicionar NPC oferece Abrir ficha e vincula a ficha salva à Campanha',asy
  await expect(page.locator('#npcs [data-campaign-npc="'+entry.id+'"] a').filter({hasText:'Abrir ficha'}))
   .toHaveAttribute('href',new RegExp('ficha-personagem\\.html\\?npc=1&id='+saved.sheetId));
 });
+
+
+test('Cards de Locais compactos mantêm identificação, edição e publicação',async({page},testInfo)=>{
+ await page.goto('/aventuras.html?campaign='+campaignId+'&id='+adventureId);
+ await page.evaluate(()=>{
+  const key='hub-rpg:adventures:v1',all=JSON.parse(localStorage.getItem(key)||'[]');
+  const adventure=all.find(item=>item.id==='qa-cards-adventure');
+  for(let i=2;i<=7;i++)adventure.exploration.areas.push({
+   id:'qa-area-'+i,code:'A'+String(i).padStart(2,'0'),
+   name:i===4?'Galeria dos retratos da antiga dinastia das Rainhas':'Local '+i,
+   type:i===5?'Ala administrativa do palácio':'Sala',
+   levelId:'qa-map-1',status:'discovered'
+  });
+  localStorage.setItem(key,JSON.stringify(all));
+ });
+ await page.reload();
+ const grid=page.locator('#exploracao .explore-area-grid');
+ const cards=grid.locator(':scope > .explore-area-card');
+ await expect(cards).toHaveCount(7);
+ const metrics=await cards.evaluateAll(nodes=>{
+  const rect=el=>el.getBoundingClientRect();
+  const rows=nodes.map(el=>{
+   const box=rect(el),summary=el.querySelector('.explore-record-summary'),foot=el.querySelector('.explore-record-visibility-bar');
+   const sr=rect(summary),fr=rect(foot);
+   return {
+    x:box.x,y:box.y,width:box.width,height:box.height,
+    summaryHeight:sr.height,summaryScrollHeight:summary.scrollHeight,
+    footerTop:fr.top,footerBottom:fr.bottom,cardBottom:box.bottom,
+    codeVisible:!!el.querySelector('.explore-area-code'),
+    nameVisible:!!el.querySelector('.explore-area-name'),
+    mapVisible:!!el.querySelector('.explore-area-context'),
+    statusVisible:!!el.querySelector('.explore-record-status'),
+    editVisible:!!el.querySelector('.explore-record-toggle-label'),
+    publishVisible:!!el.querySelector('[data-ex-area-visibility]')
+   };
+  });
+  return{rows,documentWidth:document.documentElement.scrollWidth,viewportWidth:window.innerWidth};
+ });
+ console.log('LOCALS_COMPACT_METRICS '+JSON.stringify(metrics));
+ expect(metrics.documentWidth).toBeLessThanOrEqual(metrics.viewportWidth+2);
+ const uniqueColumns=new Set(metrics.rows.map(row=>Math.round(row.x))).size;
+ expect(uniqueColumns).toBeGreaterThanOrEqual(testInfo.project.name==='mobile-chromium'?2:4);
+ for(const row of metrics.rows){
+  expect(Math.abs(row.width-row.height)).toBeLessThanOrEqual(3);
+  expect(row.width).toBeLessThanOrEqual(testInfo.project.name==='mobile-chromium'?185:235);
+  expect(row.footerBottom).toBeLessThanOrEqual(row.cardBottom+2);
+  expect(row.summaryScrollHeight).toBeLessThanOrEqual(row.summaryHeight+3);
+  for(const key of ['codeVisible','nameVisible','mapVisible','statusVisible','editVisible','publishVisible'])expect(row[key]).toBe(true);
+ }
+ await page.screenshot({path:testInfo.outputPath('locais-compactos.png'),fullPage:true});
+ const first=cards.first();
+ await first.locator('[data-ex-area-visibility]').check();
+ await expect.poll(async()=>page.evaluate(()=>
+  JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0].exploration.areas[0].visibleToPlayers
+ )).toBe(true);
+ await first.locator('summary').click();
+ await expect(first.locator('[data-ex-area-editor]')).toHaveAttribute('open','');
+ const areaRect=await first.boundingBox(),gridRect=await grid.boundingBox();
+ expect(areaRect.width).toBeGreaterThan(gridRect.width*.9);
+ await first.locator('[data-ex-close-record="area"]').click();
+ await expect(first.locator('[data-ex-area-editor]')).not.toHaveAttribute('open','');
+});
