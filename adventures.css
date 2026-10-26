@@ -450,3 +450,107 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
  border:1px solid var(--hub-border,#40546c);border-radius:9px;
  background:rgba(13,28,42,.35)
 }
+
+
+/* Refinamentos exclusivos do painel da Aventura — NPCs e Sessões vinculadas. */
+#adventure-root #npcs :is(#add-campaign-npc,#add-registered-npc),
+#adventure-root #npcs .form-grid.two>a.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  height:42px;
+  box-sizing:border-box;
+  padding:8px 12px;
+  line-height:1.2;
+}
+#adventure-root #sessoes .adventure-linked-session{
+  display:block;
+  min-width:0;
+}
+#adventure-root #sessoes .adventure-session-card-wrap{
+  position:relative;
+  height:100%;
+  min-width:0;
+}
+#adventure-root #sessoes .adventure-session-card-wrap>.campaign-player-story-card{
+  display:flex;
+  align-items:stretch;
+  min-height:214px;
+  height:100%;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-content{
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:stretch;
+  gap:18px;
+  min-height:0;
+  padding:18px;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information{
+  display:grid;
+  align-content:start;
+  justify-items:start;
+  gap:5px;
+  min-width:0;
+  padding-right:155px;
+  text-align:left;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information h3{
+  margin:0;
+  overflow-wrap:anywhere;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-footer{
+  display:flex;
+  flex-direction:row-reverse;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:10px;
+  width:100%;
+  margin-top:auto;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-status{
+  margin-left:auto;
+}
+#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-open{
+  margin-right:auto;
+}
+#adventure-root #sessoes .adventure-session-visibility{
+  position:absolute;
+  z-index:3;
+  top:12px;
+  right:12px;
+  max-width:calc(100% - 24px);
+  pointer-events:none;
+}
+#adventure-root #sessoes .adventure-session-visibility>.campaign-disclosure-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  min-height:34px;
+  margin:0;
+  padding:7px 10px;
+  border:1px solid rgba(188,217,244,.72);
+  border-radius:9px;
+  background:rgba(8,23,39,.9);
+  color:#f1f7ff;
+  font-size:.78rem;
+  cursor:pointer;
+  pointer-events:auto;
+}
+#adventure-root #sessoes .adventure-session-visibility input{
+  margin:0;
+  accent-color:#69b7ff;
+  cursor:pointer;
+}
+@media(max-width:620px){
+  #adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information{
+    padding-right:0;
+    padding-top:43px;
+  }
+  #adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-content{
+    padding:14px;
+  }
+}
