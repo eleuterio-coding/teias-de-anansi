@@ -56,18 +56,24 @@ export function updateExplorationEntity(exploration,kind,id,changes={}){
 }
 /** Reordena Locais sem alterar seus vínculos, conteúdos, status ou visibilidade. */
 export function reorderExplorationAreas(exploration,sourceId,targetId,placement='before'){
+ return reorderExplorationEntities(exploration,'area',sourceId,targetId,placement);
+}
+/** Mesma reordenação estável para Locais, Mapas e Facções. */
+export function reorderExplorationEntities(exploration,kind,sourceId,targetId,placement='before'){
+ const field=kind==='area'?'areas':kind==='level'?'levels':kind==='faction'?'factions':null;
+ if(!field)return{error:'Tipo de registro inválido.'};
  const e=clone(exploration);
  if(!['before','after'].includes(placement))return{error:'Posição de destino inválida.'};
- const ordered=sorted(e.areas.slice());
+ const ordered=sorted(e[field].slice());
  const from=ordered.findIndex(row=>row.id===sourceId);
  if(from<0||!ordered.some(row=>row.id===targetId))return{error:'Local de origem ou destino não encontrado.'};
  if(sourceId===targetId)return{exploration:e,changed:false};
  const [moved]=ordered.splice(from,1);
  const to=ordered.findIndex(row=>row.id===targetId);
  ordered.splice(to+(placement==='after'?1:0),0,moved);
- const changed=ordered.some((row,i)=>e.areas[i]?.id!==row.id);
+ const changed=ordered.some((row,i)=>e[field][i]?.id!==row.id);
  if(!changed)return{exploration:e,changed:false};
- e.areas=ordered.map((row,i)=>({...row,order:i+1}));
+ e[field]=ordered.map((row,i)=>({...row,order:i+1}));
  return{exploration:e,changed:true};
 }
 export function removeExplorationEntity(exploration,kind,id){
