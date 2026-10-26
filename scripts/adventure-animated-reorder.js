@@ -15,7 +15,7 @@ export function bindAdventureAnimatedReorder({
  };
  const keyFor=row=>row?idFor(row):'';
  const inHandle=node=>Boolean(handleSelector&&node?.closest?.(handleSelector));
- const interactive=node=>Boolean(node?.closest?.('input,textarea,select,a,summary,[contenteditable="true"],button:not(.roster-grip):not(.campaign-reorder-grip):not(.explore-area-drag-handle)'));
+ const interactive=node=>Boolean(node?.closest?.('label,input,textarea,select,a,summary,[contenteditable="true"],button:not(.roster-grip):not(.campaign-reorder-grip):not(.explore-area-drag-handle)'));
  const permitted=node=>inHandle(node)||(allowSurface&&!interactive(node));
  let pointer=null,touch=null,ghost=null;
  const classes='adventure-sort-moving adventure-sort-before adventure-sort-after adventure-dragging adventure-drop-target explore-area-dragging explore-area-drop-before explore-area-drop-after';
@@ -56,7 +56,9 @@ export function bindAdventureAnimatedReorder({
  function destination(source,x,y){
   let target=rowFor(document.elementFromPoint(x,y));
   if(!target){
-   // Entre cards de uma grade também é possível soltar.
+   // Aceitar espaços entre cards, nunca soltura fora da lista.
+   const region=container.getBoundingClientRect();
+   if(x<region.left-12||x>region.right+12||y<region.top-12||y>region.bottom+12)return null;
    const other=rows().filter(row=>keyFor(row)!==source);
    if(!other.length)return null;
    target=other.map(row=>{
