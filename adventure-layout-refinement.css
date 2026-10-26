@@ -31,6 +31,18 @@
   padding:6px 10px;
 }
 
+/* Resumo operacional: menos altura vertical sem eliminar nenhum indicador. */
+#adventure-root .adventure-shell.hub-detail-page .campaign-product-summary{
+  gap:8px;
+}
+#adventure-root .adventure-shell.hub-detail-page .campaign-product-summary .metric{
+  min-height:63px;
+  padding:9px 11px;
+}
+#adventure-root .adventure-shell.hub-detail-page .campaign-product-summary .metric strong{
+  margin-top:2px;
+  line-height:1.3;
+}
 /* Grupos e formulários: margens previsíveis, sem somatório de espaços
    de story-list, campos e rodapés independentes. */
 #adventure-root .adventure-shell.hub-detail-page .adventure-entity-section{
@@ -232,6 +244,14 @@
   }
   #adventure-root .adventure-shell.hub-detail-page #npcs .campaign-line-actions{
     gap:5px;
+  }
+  #adventure-root .adventure-shell.hub-detail-page .campaign-product-hero,
+  #adventure-root .adventure-shell.hub-detail-page .campaign-product-hero-content{
+    min-height:238px;
+  }
+  #adventure-root .adventure-shell.hub-detail-page .campaign-product-summary .metric{
+    min-height:58px;
+    padding:8px 9px;
   }
   #adventure-root .adventure-shell.hub-detail-page #visao-geral .image-picker-preview{
     min-height:118px;
