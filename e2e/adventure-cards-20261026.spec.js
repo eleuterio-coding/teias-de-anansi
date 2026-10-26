@@ -177,3 +177,78 @@ test('Cards de Locais compactos mantêm identificação, edição e publicação
  await first.locator('[data-ex-close-record="area"]').click();
  await expect(first.locator('[data-ex-area-editor]')).not.toHaveAttribute('open','');
 });
+
+
+async function seedReorderAreas(page){
+ await page.goto('/aventuras.html?campaign='+campaignId+'&id='+adventureId);
+ await page.evaluate(()=>{
+  const key='hub-rpg:adventures:v1',rows=JSON.parse(localStorage.getItem(key)||'[]');
+  const adventure=rows.find(row=>row.id==='qa-cards-adventure');
+  adventure.exploration.areas=[
+   {id:'qa-area-1',code:'A01',name:'Entrada',order:1,status:'discovered',levelId:'qa-map-1',visibleToPlayers:true,description:'Segredo preservado'},
+   {id:'qa-area-2',code:'A02',name:'Pátio',order:2,status:'visited',levelId:'qa-map-1',xp:150},
+   {id:'qa-area-3',code:'A03',name:'Torre',order:3,status:'unknown',levelId:'qa-map-1'},
+   {id:'qa-area-4',code:'A04',name:'Salão',order:4,status:'blocked',levelId:'qa-map-1'}
+  ];
+  localStorage.setItem(key,JSON.stringify(rows));
+ });
+ await page.reload();
+ await expect(page.locator('#exploracao [data-ex-area-grip]')).toHaveCount(4);
+}
+const areaOrder=page=>page.locator('#exploracao .explore-area-grid>.explore-area-card')
+ .evaluateAll(nodes=>nodes.map(node=>node.dataset.exArea));
+
+test('Locais podem ser reorganizados por teclado e mantêm vínculos, status e visibilidade',async({page})=>{
+ await seedReorderAreas(page);
+ const grip=page.locator('[data-ex-area-grip="qa-area-3"]');
+ await grip.focus();
+ await grip.press('ArrowLeft');
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-1','qa-area-3','qa-area-2','qa-area-4']);
+ await expect(page.locator('[data-ex-area-grip="qa-area-3"]')).toBeFocused();
+ await page.locator('[data-ex-area-grip="qa-area-3"]').press('ArrowUp');
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
+ await page.reload();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
+ const original=await savedAdventure(page);
+ expect(original.exploration.areas.map(a=>a.order)).toEqual([1,2,3,4]);
+ expect(original.exploration.areas.find(a=>a.id==='qa-area-1')).toMatchObject({description:'Segredo preservado',visibleToPlayers:true});
+ expect(original.exploration.areas.find(a=>a.id==='qa-area-2')).toMatchObject({status:'visited',xp:150});
+ await page.locator('#exploracao [data-ex-area="qa-area-1"] summary').click();
+ await expect(page.locator('#exploracao [data-ex-area="qa-area-1"] [data-ex-area-editor]')).toHaveAttribute('open','');
+ await expect(page.locator('#exploracao [data-ex-area="qa-area-1"] [data-ex-field="description"]')).toHaveValue('Segredo preservado');
+});
+
+test('Arrastar Local com mouse entre colunas salva a nova ordem',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','O teste de toque cobre a versão mobile');
+ await seedReorderAreas(page);
+ const source=page.locator('[data-ex-area-grip="qa-area-4"]');
+ const dest=page.locator('#exploracao [data-ex-area="qa-area-2"]');
+ await source.scrollIntoViewIfNeeded();
+ const from=await source.boundingBox(),to=await dest.boundingBox();
+ await page.mouse.move(from.x+from.width/2,from.y+from.height/2);
+ await page.mouse.down();
+ await page.mouse.move(from.x+from.width/2+10,from.y+from.height/2,{steps:4});
+ await page.mouse.move(to.x+to.width*.23,to.y+to.height*.5,{steps:12});
+ await expect(dest).toHaveClass(/explore-area-drop-before/);
+ await page.mouse.up();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-1','qa-area-4','qa-area-2','qa-area-3']);
+ await page.reload();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-1','qa-area-4','qa-area-2','qa-area-3']);
+});
+
+test('Arrastar Local por toque no celular mantém a ordem',async({page},testInfo)=>{
+ test.skip(testInfo.project.name!=='mobile-chromium','Este teste usa a entrada touch real do Chromium mobile');
+ await seedReorderAreas(page);
+ const source=page.locator('[data-ex-area-grip="qa-area-3"]');
+ const dest=page.locator('#exploracao [data-ex-area="qa-area-1"]');
+ await source.scrollIntoViewIfNeeded();
+ const from=await source.boundingBox(),to=await dest.boundingBox();
+ const sx=from.x+from.width/2,sy=from.y+from.height/2,tx=to.x+to.width*.25,ty=to.y+to.height/2;
+ const cdp=await page.context().newCDPSession(page);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:1}]});
+ for(let i=1;i<=10;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+(tx-sx)*i/10,y:sy+(ty-sy)*i/10,id:1}]});
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
+ await page.reload();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
+});
