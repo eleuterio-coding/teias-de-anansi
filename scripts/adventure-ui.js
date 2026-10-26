@@ -13,6 +13,7 @@ import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-c
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261023-simplified3';
 
 import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261026-reorder1';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified1';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261023-simplified3';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261019-gender1';
 import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-status-context12';
@@ -223,7 +224,7 @@ function monstersHtml(a){
  </div>
  <div id="adventure-monster-preview" class="adventure-monster-preview" role="status" aria-live="polite"></div>
  <details class="adventure-monsters-attached"><summary>Monstros adicionados à Aventura (${current.length})</summary>
- <div class="story-list">${current.length?current.map(monster=>`<article class="story-card" data-reorder-adventure="monsters"><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Biblioteca')}</p><button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div>
+ <div class="story-list">${current.length?current.map((monster,i)=>`<article class="story-card campaign-bullet-entry" data-reorder-adventure="monsters" data-monster-row="${esc(monster.id)}" tabindex="0"><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Biblioteca')}</p><div class="campaign-line-actions">${moveTools('monsters',monster.id,i,current.length)}<button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></div></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div>
  </details>
  </section>`;
 }
@@ -416,13 +417,16 @@ function bindAdventureVisibilityAndOrder(){
   commit(result,message)
  };
  const move=(kind,id,direction,targetId='')=>{
-  const current=adventure();if(!current)return;
+  const current=adventure();if(!current)return false;
   const rows=['npcs','locations'].includes(kind)?[...(kind==='npcs'?current.npcIds:current.locationIds)]:ordered(current[kind]||[]).map(x=>x.id);
-  const from=rows.indexOf(id),to=targetId?rows.indexOf(targetId):from+(direction==='up'?-1:1);
-  if(from<0||to<0||to>=rows.length||from===to)return;
-  rows.splice(to,0,rows.splice(from,1)[0]);
+  const from=rows.indexOf(id),neighbor=from+(direction==='up'?-1:1),to=targetId?rows.indexOf(targetId):neighbor;
+  if(from<0||to<0||to>=rows.length||from===to)return false;
+  const target=rows[to],position=targetId?direction:(direction==='up'?'before':'after');
+  rows.splice(from,1);
+  rows.splice(rows.indexOf(target)+(position==='after'?1:0),0,id);
   const items=['npcs','locations'].includes(kind)?rows:rows.map(rowId=>current[kind].find(x=>x.id===rowId)).filter(Boolean);
   saveList(kind,items,'Ordem atualizada.');
+  return true;
  };
  document.querySelectorAll('[data-adventure-visible]:not([data-adventure-visible="sessions"])').forEach(input=>input.addEventListener('change',()=>{
   const a=adventure(),id=input.dataset.visibleId,key=input.dataset.adventureVisible,on=input.checked;
@@ -432,41 +436,19 @@ function bindAdventureVisibilityAndOrder(){
   }else commit(updateAdventureEntity(adventures,adventureId,key,id,{visibleToPlayers:on}),'Visibilidade atualizada.')
  }));
  document.querySelectorAll('[data-adventure-move]').forEach(button=>button.addEventListener('click',()=>move(button.dataset.kind,button.dataset.id,button.dataset.adventureMove)));
- let drag=null;
+ // Todos os cards reorganizáveis compartilham a animação de Jogadores da Campanha.
  const root=$('adventure-root');
- root?.querySelectorAll('[data-reorder-adventure]').forEach(row=>{
-  row.addEventListener('dragstart',event=>{drag={kind:row.dataset.reorderAdventure,id:row.dataset.entityRow||row.dataset.campaignNpc||row.dataset.campaignLocation||row.querySelector('[data-id]')?.dataset.id};if(!drag.id)drag.id=row.querySelector('[data-visible-id]')?.dataset.visibleId;if(event.dataTransfer)event.dataTransfer.effectAllowed='move'});
-  row.addEventListener('dragover',event=>{if(drag?.kind===row.dataset.reorderAdventure)event.preventDefault()});
-  row.addEventListener('drop',event=>{event.preventDefault();const kind=row.dataset.reorderAdventure,target=row.dataset.entityRow||row.dataset.campaignNpc||row.dataset.campaignLocation||row.querySelector('[data-visible-id]')?.dataset.visibleId;if(drag&&kind===drag.kind&&target&&drag.id!==target)move(kind,drag.id,'down',target);drag=null});
-  row.addEventListener('dragend',()=>{drag=null})
- });
- // O mesmo padrão de arrastar por toque/mouse dos Locais importantes:
- // ação iniciada na alça, sem interceptar a edição de campos.
- let lifted=null;
- const rowId=node=>node?.dataset.entityRow||node?.dataset.campaignNpc||node?.dataset.campaignLocation||node?.dataset.sceneRow||node?.querySelector('[data-visible-id]')?.dataset.visibleId||'';
- const clearTargets=()=>root?.querySelectorAll('.adventure-drop-target,.adventure-dragging').forEach(node=>node.classList.remove('adventure-drop-target','adventure-dragging'));
- for(const grip of root?.querySelectorAll('[data-adventure-grip]')||[]){
-  grip.addEventListener('pointerdown',event=>{
-   if(event.pointerType==='mouse'&&event.button!==0)return;
-   const node=grip.closest('[data-reorder-adventure]');if(!node)return;
-   lifted={kind:node.dataset.reorderAdventure,id:rowId(node),pointerId:event.pointerId,startY:event.clientY,target:null,moved:false};
-   grip.setPointerCapture?.(event.pointerId);
+ for(const kind of ['chapters','missions','npcs','locations','scenes','monsters']){
+  const itemSelector='[data-reorder-adventure="'+kind+'"]';
+  const group=root?.querySelector(itemSelector)?.closest('.story-list');
+  if(!group)continue;
+  bindAdventureAnimatedReorder({
+   container:group,itemSelector,handleSelector:'[data-adventure-grip]',
+   idFor:node=>node.dataset.entityRow||node.dataset.campaignNpc||node.dataset.campaignLocation||node.dataset.sceneRow||node.dataset.monsterRow||'',
+   onMove:(source,target,position)=>move(kind,source,position,target),
+   confirmScope:'#'+({chapters:'capitulos',missions:'missoes',npcs:'npcs',locations:'locais',scenes:'cenas',monsters:'monstros'}[kind]),
+   allowSurface:true
   });
-  grip.addEventListener('pointermove',event=>{
-   if(!lifted||event.pointerId!==lifted.pointerId)return;
-   if(!lifted.moved&&Math.abs(event.clientY-lifted.startY)<7)return;
-   lifted.moved=true;clearTargets();
-   const node=grip.closest('[data-reorder-adventure]');node?.classList.add('adventure-dragging');
-   const candidate=document.elementFromPoint(event.clientX,event.clientY)?.closest('[data-reorder-adventure]');
-   lifted.target=candidate&&candidate.dataset.reorderAdventure===lifted.kind&&rowId(candidate)!==lifted.id?rowId(candidate):null;
-   if(lifted.target)candidate.classList.add('adventure-drop-target');
-  });
-  grip.addEventListener('pointerup',event=>{
-   if(!lifted||event.pointerId!==lifted.pointerId)return;
-   const info=lifted;lifted=null;clearTargets();
-   if(info.moved&&info.target){event.preventDefault();move(info.kind,info.id,'down',info.target)}
-  });
-  grip.addEventListener('pointercancel',()=>{lifted=null;clearTargets()});
  }
  $('add-adventure-monster')?.addEventListener('click',async()=>{
   const id=$('new-adventure-monster')?.value,row=monsterCatalog.find(x=>x.id===id);
