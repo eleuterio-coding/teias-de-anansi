@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { normalizeExploration, reorderExplorationAreas } from '../scripts/adventure-exploration-state.js';
+import { normalizeExploration, reorderExplorationAreas, reorderExplorationEntities } from '../scripts/adventure-exploration-state.js';
 import { sanitizeAdventure, updateAdventure } from '../scripts/adventure-state.js';
 
 const initial=normalizeExploration({
@@ -37,4 +37,19 @@ assert.deepEqual(persisted.adventure.exploration.areas.map(x=>x.id),['area-1','a
 assert.equal(persisted.adventure.exploration.areas[0].description,'Anotação privada');
 assert.equal(persisted.adventure.exploration.areas[0].visibleToPlayers,true);
 assert.equal(persisted.adventure.exploration.areas[1].status,'visited');
-console.log('OK — Reordenação de Locais: antes/depois, posições sequenciais, vínculos, privacidade e persistência.');
+
+const explorationWithGroups=normalizeExploration({
+ levels:[{id:'map-a',name:'Castelo',order:1},{id:'map-b',name:'Jardim',order:2}],
+ factions:[{id:'faction-a',name:'Realeza',order:1,description:'Privado'},{id:'faction-b',name:'Guarda',order:2}],
+ areas:[{id:'area-x',name:'Sala',order:1,levelId:'map-a',factionIds:['faction-a']}]
+},{factionIds:['faction-a','faction-b']});
+const movedMaps=reorderExplorationEntities(explorationWithGroups,'level','map-b','map-a','before');
+assert.deepEqual(normalizeExploration(movedMaps.exploration).levels.map(x=>x.id),['map-b','map-a']);
+assert.equal(movedMaps.exploration.areas[0].levelId,'map-a','O mapa de cada Local continua vinculado');
+const movedFactions=reorderExplorationEntities(movedMaps.exploration,'faction','faction-b','faction-a','before');
+assert.deepEqual(normalizeExploration(movedFactions.exploration).factions.map(x=>x.id),['faction-b','faction-a']);
+assert.equal(movedFactions.exploration.factions.find(x=>x.id==='faction-a').description,'Privado');
+assert.equal(movedFactions.exploration.areas[0].factionIds[0],'faction-a');
+assert.ok(reorderExplorationEntities(movedFactions.exploration,'unknown','faction-a','faction-b').error);
+
+console.log('OK — Reordenação de Locais, Mapas e Facções: antes/depois, posições sequenciais, vínculos, privacidade e persistência.');
