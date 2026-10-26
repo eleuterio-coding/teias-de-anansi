@@ -26,7 +26,7 @@ export function bindAdventureAnimatedReorder({
   if(performance.now()-blocked.at>350)return;
   // Nunca consumir um clique posterior em outro card ou em botão de ação.
   const target=rowFor(event.target);
-  if(target&&keyFor(target)!==blocked.source)return;
+  if(!target||keyFor(target)!==blocked.source)return;
   event.preventDefault();event.stopImmediatePropagation();
  },true);
  const blockNextClick=source=>{
