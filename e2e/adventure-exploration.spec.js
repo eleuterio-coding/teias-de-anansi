@@ -77,7 +77,7 @@ test('cadastro em cards separados de mapa e área, XP/status persistidos',async(
   const box=card.getBoundingClientRect();
   return {width:box.width,height:box.height};
  });
- expect(Math.abs(square.width-square.height),'O card de Local recolhido deve ser quadrado').toBeLessThanOrEqual(3);
+ expect(square.width-square.height,'O card de Local recolhido deve ser retangular e mais baixo').toBeGreaterThanOrEqual(10);
  await expect(page.locator('#exploracao [data-ex-area-visibility]')).toBeVisible();
  await editor.locator('summary').click();
  await expect(editor).toHaveAttribute('open','');
