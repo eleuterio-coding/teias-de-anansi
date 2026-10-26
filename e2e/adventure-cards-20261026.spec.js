@@ -356,3 +356,44 @@ test('Mapas e Facções também aceitam arrastar e soltar no corpo do cartão',a
  expect(a.exploration.levels.map(x=>x.id)).toEqual(['qa-map-2','qa-map-1']);
  expect(a.exploration.factions.map(x=>x.id)).toEqual(['faction-2','faction-1']);
 });
+
+
+test('Clicar e segurar sem mover abre o editor, sem iniciar arrasto nem alterar ordem',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Verificação de ponteiro de mouse no desktop');
+ await seedAnimatedOrderData(page);
+ for(const {kind,id,summary} of [
+  {kind:'local',id:'area-1',summary:'#exploracao [data-ex-area="area-1"] summary'},
+  {kind:'mapa',id:'qa-map-1',summary:'#mapas [data-ex-level="qa-map-1"] summary'}
+ ]){
+  const before=await savedAdventure(page);
+  const node=page.locator(summary);
+  await node.scrollIntoViewIfNeeded();
+  const box=await node.boundingBox();
+  await page.mouse.move(box.x+box.width*.4,box.y+box.height*.45);
+  await page.mouse.down();
+  await page.waitForTimeout(240);
+  await expect(page.locator('body>.adventure-floating-card')).toHaveCount(0);
+  await page.mouse.up();
+  await expect(node.locator('xpath=..')).toHaveAttribute('open','');
+  const after=await savedAdventure(page);
+  expect(after.exploration.areas.map(x=>x.id)).toEqual(before.exploration.areas.map(x=>x.id));
+  expect(after.exploration.levels.map(x=>x.id)).toEqual(before.exploration.levels.map(x=>x.id));
+ }
+});
+
+test('Arrastar para a posição que já ocupa não produz confirmação falsa',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Verificação de ponteiro de mouse no desktop');
+ await seedAnimatedOrderData(page);
+ const origin=page.locator('#missoes [data-entity-row="mission-1"] [data-adventure-grip]');
+ const next=page.locator('#missoes [data-entity-row="mission-2"]');
+ await origin.scrollIntoViewIfNeeded();
+ const a=await origin.boundingBox(),b=await next.boundingBox();
+ await page.mouse.move(a.x+a.width/2,a.y+a.height/2);
+ await page.mouse.down();
+ await page.mouse.move(a.x+a.width/2+10,a.y+a.height/2+9,{steps:4});
+ await page.mouse.move(b.x+b.width*.35,b.y+b.height*.22,{steps:10});
+ await expect(next).toHaveClass(/adventure-sort-before/);
+ await page.mouse.up();
+ await expect.poll(async()=>(await savedAdventure(page)).missions.map(x=>x.id)).toEqual(['mission-1','mission-2']);
+ await expect(page.locator('#missoes .adventure-sort-feedback')).toHaveCount(0);
+});
