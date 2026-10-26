@@ -1,0 +1,37 @@
+name: Validar ajustes dos cards de Aventuras (2026-10-26)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'e2e/adventure-cards-20261026.spec.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-exploration-ui.js'
+      - 'scripts/character-builder/ui.js'
+      - 'adventures.css'
+      - 'adventure-exploration.css'
+      - '.github/workflows/validar-cards-aventura-20261026.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Validar layout e ações de Aventuras no desktop e mobile
+        run: npx playwright test e2e/adventure-cards-20261026.spec.js --project=desktop-chromium --project=mobile-chromium
+      - name: Guardar resultados da auditoria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cards-aventura-20261026-playwright
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
