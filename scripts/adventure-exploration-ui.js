@@ -29,9 +29,13 @@ function areaDetail(area,a,c,exploration){
  const level=levels.find(x=>x.id===area.levelId);
  return '<article class="explore-area-card explore-record-card'+(selectedAreaId===area.id?' is-selected':'')+'" data-ex-area="'+esc(area.id)+'">'+
   '<details class="explore-record-editor" data-ex-area-editor="'+esc(area.id)+'"'+(expandedAreaIds.has(area.id)?' open':'')+'>'+
-   '<summary class="explore-record-summary">'+recordTitle(name,(level?.name||'Sem mapa')+' · '+(area.type||'Ambiente não definido'))+
-    '<span class="explore-record-status">'+esc(STATUS[area.status]||STATUS.unknown)+'</span>'+
-    '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>'+
+   '<summary class="explore-record-summary"><span class="explore-area-overview">'+
+     '<span class="explore-area-heading">'+(area.code&&area.code!==area.name?'<span class="explore-area-code">'+esc(area.code)+'</span>':'')+
+     '<strong class="explore-area-name">'+esc(area.name||area.code)+'</strong></span>'+
+     '<span class="explore-area-context"><span><small>Mapa</small><span>'+esc(level?.name||'Sem mapa')+'</span></span>'+
+     '<span><small>Ambiente</small><span>'+esc(area.type||'Não definido')+'</span></span></span></span>'+
+    '<span class="explore-area-summary-actions"><span class="explore-record-status">'+esc(STATUS[area.status]||STATUS.unknown)+'</span>'+
+    '<span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></span></summary>'+
    '<div class="explore-record-body">'+
     '<section class="explore-editor-group"><header><h4>Identificação</h4><p>Dados principais e mapa associado.</p></header><div class="explore-fields explore-area-detail-fields">'+
      field('Identificador','code',area.code)+
@@ -109,7 +113,7 @@ export function renderAdventureExploration(a,c){
   '<div class="explore-title"><div class="explore-title-copy"><h2>Locais</h2><p>Selecione um local para editar informações, desafios e notas.</p></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
   '<div class="explore-area-grid">'+(areas.length?areas.map(area=>areaDetail(area,a,c,exploration)).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div></section>';
  const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
-  '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas</h2><p>Organize os mapas e gerencie suas imagens em cada registro.</p></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas</h2></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
   '<div class="explore-level-grid">'+(levels.length?levels.map(level=>levelDetail(level,areas.filter(area=>area.levelId===level.id).length)).join(''):'<div class="story-empty">Nenhum mapa cadastrado.</div>')+'</div></section>';
  const areaCreate='<section class="card adventure-exploration adventure-create-panel" id="criar-area">'+
   '<h2>Adicionar local</h2>'+
