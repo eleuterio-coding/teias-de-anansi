@@ -49,6 +49,8 @@ export function bindAdventureAnimatedReorder({
   const box=row.getBoundingClientRect(),clone=row.cloneNode(true),style=getComputedStyle(row);
   clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
   clone.querySelectorAll('input,select,textarea,a,button,[tabindex]').forEach(el=>el.setAttribute('tabindex','-1'));
+  const hadOpenEditor=Boolean(clone.querySelector('details[open]'));
+  clone.querySelectorAll('details[open]').forEach(el=>el.removeAttribute('open'));
   clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
   clone.setAttribute('aria-hidden','true');clone.inert=true;
   clone.classList.remove(...classes.split(' '));
@@ -61,7 +63,7 @@ export function bindAdventureAnimatedReorder({
   clone.style.gridTemplateRows=style.gridTemplateRows;
   clone.style.gap=style.gap;
   clone.style.left=box.left+'px';clone.style.top=box.top+'px';
-  clone.style.width=box.width+'px';clone.style.height=box.height+'px';
+  clone.style.width=box.width+'px';clone.style.height=(hadOpenEditor?Math.min(box.height,188):box.height)+'px';
   document.body.appendChild(clone);
   ghost={node:clone,x,y};
  }
