@@ -477,7 +477,7 @@ function bindAdventureNotes(){
   span.replaceWith(grip);
  });
  bindAdventureAnimatedReorder({
-  container:list,itemSelector:'[data-note-id]',handleSelector:'.hub-note-grip',allowSurface:false,
+  container:list,itemSelector:'[data-note-id]',handleSelector:'.hub-note-grip',allowSurface:true,
   idFor:row=>row.dataset.noteId,confirmScope:'#notas-mestre',
   onMove:(source,target,position)=>{
    const notes=[...(adventure()?.dmNoteEntries||[])],from=notes.findIndex(row=>row.id===source);
