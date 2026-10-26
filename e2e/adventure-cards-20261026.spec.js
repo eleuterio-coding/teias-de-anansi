@@ -246,6 +246,7 @@ test('Arrastar Local por toque no celular mantém a ordem',async({page},testInfo
  const sx=from.x+from.width/2,sy=from.y+from.height/2,tx=to.x+to.width*.25,ty=to.y+to.height/2;
  const cdp=await page.context().newCDPSession(page);
  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:sx,y:sy,id:1}]});
+ await page.waitForTimeout(340); // Mesma ativação por pressão prolongada de Jogadores da Campanha.
  for(let i=1;i<=10;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:sx+(tx-sx)*i/10,y:sy+(ty-sy)*i/10,id:1}]});
  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-3','qa-area-1','qa-area-2','qa-area-4']);
