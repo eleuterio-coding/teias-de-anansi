@@ -18,14 +18,20 @@ export function bindAdventureAnimatedReorder({
  const inHandle=node=>Boolean(handleSelector&&node?.closest?.(handleSelector));
  const interactive=node=>Boolean(node?.closest?.('label,input,textarea,select,a,[contenteditable="true"],button:not(.roster-grip):not(.campaign-reorder-grip):not(.explore-area-drag-handle)'))||(!allowSummaryDrag&&Boolean(node?.closest?.('summary')));
  const permitted=node=>inHandle(node)||(allowSurface&&!interactive(node));
- let pointer=null,touch=null,ghost=null,suppressClick=false;
+ let pointer=null,touch=null,ghost=null,suppressClick=null;
  container.addEventListener('click',event=>{
-  if(!suppressClick)return;
-  suppressClick=false;event.preventDefault();event.stopImmediatePropagation();
+  const blocked=suppressClick;
+  if(!blocked)return;
+  suppressClick=null;
+  if(performance.now()-blocked.at>350)return;
+  // Nunca consumir um clique posterior em outro card ou em botão de ação.
+  const target=rowFor(event.target);
+  if(target&&keyFor(target)!==blocked.source)return;
+  event.preventDefault();event.stopImmediatePropagation();
  },true);
- const blockNextClick=()=>{
-  suppressClick=true;
-  setTimeout(()=>{suppressClick=false},250);
+ const blockNextClick=source=>{
+  suppressClick={source,at:performance.now()};
+  setTimeout(()=>{if(suppressClick?.source===source)suppressClick=null},350);
  };
  const classes='adventure-sort-moving adventure-sort-before adventure-sort-after adventure-dragging adventure-drop-target explore-area-dragging explore-area-drop-before explore-area-drop-after';
  function clearHighlight(){
@@ -127,13 +133,19 @@ export function bindAdventureAnimatedReorder({
     if(pointer===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
    },160);
   }
-  row.setPointerCapture?.(event.pointerId);
-  if(event.pointerType==='mouse'&&!event.target.closest?.('summary'))event.preventDefault();
+  // Não capturar o ponteiro durante um clique comum; a captura antecipada
+  // redirecionava o click para o artigo e impedia abrir/fechar <summary>.
+  // A captura só acontece quando o usuário realmente começa a arrastar.
+  if(event.pointerType==='mouse'&&!event.target.closest?.('summary,button'))event.preventDefault();
  });
  container.addEventListener('pointermove',event=>{
   if(!pointer||pointer.id!==event.pointerId)return;
   if(!pointer.active&&Math.hypot(event.clientX-pointer.x,event.clientY-pointer.y)<6)return;
-  pointer.active=true;clearTimeout(pointer.timer);
+  if(!pointer.active){
+   pointer.active=true;
+   pointer.row.setPointerCapture?.(event.pointerId);
+  }
+  clearTimeout(pointer.timer);
   event.preventDefault();
   lift(pointer.row,pointer.x,pointer.y);
   moveLift(event.clientX,event.clientY);
@@ -144,7 +156,7 @@ export function bindAdventureAnimatedReorder({
   const info=pointer,drop=info.active?destination(info.source,event.clientX,event.clientY):null;
   pointer=null;clearTimeout(info.timer);
   if(info.row.hasPointerCapture?.(event.pointerId))info.row.releasePointerCapture(event.pointerId);
-  if(info.active){blockNextClick();event.preventDefault();finish(info.source,drop)}else release();
+  if(info.active){blockNextClick(info.source);event.preventDefault();finish(info.source,drop)}else release();
  });
  container.addEventListener('pointercancel',()=>{
   if(pointer)clearTimeout(pointer.timer);
@@ -179,7 +191,7 @@ export function bindAdventureAnimatedReorder({
   if(!p)return;
   const info=touch;touch=null;clearTimeout(info.timer);
   const drop=info.active?destination(info.source,p.clientX,p.clientY):null;
-  if(info.active){blockNextClick();event.preventDefault();finish(info.source,drop)}else release();
+  if(info.active){blockNextClick(info.source);event.preventDefault();finish(info.source,drop)}else release();
  },{passive:false});
  container.addEventListener('touchcancel',()=>{
   if(touch)clearTimeout(touch.timer);
