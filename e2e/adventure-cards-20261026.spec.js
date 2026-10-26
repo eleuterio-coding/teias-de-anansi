@@ -381,21 +381,34 @@ test('Clicar e segurar sem mover abre o editor, sem iniciar arrasto nem alterar 
  }
 });
 
-test('Arrastar para a posição que já ocupa não produz confirmação falsa',async({page},testInfo)=>{
+test('Arrastar o primeiro card sobre a parte superior ou inferior do segundo muda a posição',async({page},testInfo)=>{
  test.skip(testInfo.project.name==='mobile-chromium','Verificação de ponteiro de mouse no desktop');
  await seedAnimatedOrderData(page);
- const origin=page.locator('#missoes [data-entity-row="mission-1"] [data-adventure-grip]');
- const next=page.locator('#missoes [data-entity-row="mission-2"]');
- await origin.scrollIntoViewIfNeeded();
- const a=await origin.boundingBox(),b=await next.boundingBox();
- await page.mouse.move(a.x+a.width/2,a.y+a.height/2);
- await page.mouse.down();
- await page.mouse.move(a.x+a.width/2+10,a.y+a.height/2+9,{steps:4});
- await page.mouse.move(b.x+b.width*.35,b.y+b.height*.22,{steps:10});
- await expect(next).toHaveClass(/adventure-sort-before/);
- await page.mouse.up();
- await expect.poll(async()=>(await savedAdventure(page)).missions.map(x=>x.id)).toEqual(['mission-1','mission-2']);
- await expect(page.locator('#missoes .adventure-sort-feedback')).toHaveCount(0);
+ const ids=()=>savedAdventure(page).then(a=>a.missions.map(m=>m.id));
+ const drag=async(sourceId,targetId,targetFraction)=>{
+  const source=page.locator('#missoes [data-entity-row="'+sourceId+'"] [data-adventure-grip]');
+  const target=page.locator('#missoes [data-entity-row="'+targetId+'"]');
+  await source.scrollIntoViewIfNeeded();
+  const a=await source.boundingBox(),b=await target.boundingBox();
+  await page.mouse.move(a.x+a.width/2,a.y+a.height/2);
+  await page.mouse.down();
+  await page.mouse.move(a.x+a.width/2+10,a.y+a.height/2+9,{steps:4});
+  await page.mouse.move(b.x+b.width*.35,b.y+b.height*targetFraction,{steps:10});
+  await expect(target).toHaveClass(/adventure-sort-(before|after)/);
+  await page.mouse.up();
+ };
+ // O bug anterior ocorria ao arrastar o segundo para a metade INFERIOR do primeiro:
+ // a interface animava, mas escolhia "depois" e terminava na mesma ordem.
+ await drag('mission-2','mission-1',.86);
+ await expect.poll(ids).toEqual(['mission-2','mission-1']);
+ await expect.poll(()=>page.locator('#missoes [data-reorder-adventure]').evaluateAll(nodes=>nodes.map(n=>n.dataset.entityRow)))
+  .toEqual(['mission-2','mission-1']);
+ await drag('mission-2','mission-1',.15);
+ await expect.poll(ids).toEqual(['mission-1','mission-2']);
+ await expect.poll(()=>page.locator('#missoes [data-reorder-adventure]').evaluateAll(nodes=>nodes.map(n=>n.dataset.entityRow)))
+  .toEqual(['mission-1','mission-2']);
+ await page.reload();
+ await expect.poll(ids).toEqual(['mission-1','mission-2']);
 });
 
 
@@ -413,4 +426,22 @@ test('Mover o ponteiro para fora da lista cancela o arrasto sem perder o mouse',
  await page.mouse.up();
  await expect(page.locator('body>.adventure-floating-card')).toHaveCount(0);
  await expect.poll(async()=>(await savedAdventure(page)).missions.map(m=>m.id)).toEqual(['mission-1','mission-2']);
+});
+
+
+test('Soltar Locais em qualquer metade de outro card altera a ordem e atualiza a grade',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Verificação de mouse desktop');
+ await seedReorderAreas(page);
+ const source=page.locator('#exploracao [data-ex-area="qa-area-2"] [data-ex-area-grip]');
+ const dest=page.locator('#exploracao [data-ex-area="qa-area-1"]');
+ await source.scrollIntoViewIfNeeded();
+ const a=await source.boundingBox(),b=await dest.boundingBox();
+ await page.mouse.move(a.x+a.width/2,a.y+a.height/2);await page.mouse.down();
+ await page.mouse.move(a.x+12,a.y+12,{steps:4});
+ await page.mouse.move(b.x+b.width*.85,b.y+b.height*.85,{steps:12});
+ await expect(dest).toHaveClass(/adventure-sort-before/);
+ await page.mouse.up();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-2','qa-area-1','qa-area-3','qa-area-4']);
+ await page.reload();
+ await expect.poll(()=>areaOrder(page)).toEqual(['qa-area-2','qa-area-1','qa-area-3','qa-area-4']);
 });
