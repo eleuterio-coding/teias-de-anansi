@@ -84,7 +84,7 @@ function levelDetail(level,areaCount=0){
    '</div></details></article>';
 }
 function factionSection(exploration,a,c){
- return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2><p class="mini">Gerencie as facções, suas relações e os NPCs vinculados.</p>'+
+ return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
  '<div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
@@ -110,7 +110,7 @@ export function renderAdventureExploration(a,c){
  const levels=arr(exploration.levels),areas=arr(exploration.areas);
  const progress=explorationProgress(exploration);
  const areaList='<section class="card adventure-exploration adventure-areas" id="exploracao">'+
-  '<div class="explore-title"><div class="explore-title-copy"><h2>Locais</h2><p>Selecione um local para editar informações, desafios e notas.</p></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
+  '<div class="explore-title"><div class="explore-title-copy"><h2>Locais</h2></div><span class="badge">'+progress.total+' '+(progress.total===1?'área':'áreas')+'</span></div>'+
   '<div class="explore-area-grid">'+(areas.length?areas.map(area=>areaDetail(area,a,c,exploration)).join(''):'<div class="story-empty">Nenhuma área cadastrada.</div>')+'</div></section>';
  const mapList='<section class="card adventure-exploration adventure-maps" id="mapas">'+
   '<div class="explore-title"><div class="explore-title-copy"><h2>Mapas</h2></div><span class="badge">'+levels.length+' '+(levels.length===1?'mapa':'mapas')+'</span></div>'+
