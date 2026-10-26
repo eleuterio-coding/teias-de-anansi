@@ -525,3 +525,71 @@
     height:156px;
   }
 }
+
+/* Locais: alça de reordenação independente da abertura do editor.
+   Os cards continuam baixos e o controle de publicação permanece clicável. */
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-card{
+  position:relative;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-drag-handle{
+  position:absolute;
+  z-index:3;
+  top:5px;
+  right:5px;
+  display:grid;
+  place-items:center;
+  width:30px;
+  height:30px;
+  min-width:30px;
+  min-height:30px;
+  padding:3px;
+  margin:0;
+  border:1px solid var(--hub-border,#405b76);
+  border-radius:7px;
+  background:var(--hub-surface,#122234);
+  color:var(--hub-accent-2,#9fd4ff);
+  cursor:grab;
+  touch-action:none;
+  user-select:none;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-drag-handle svg{
+  width:17px;
+  height:18px;
+  pointer-events:none;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-drag-handle:is(:hover,:focus-visible){
+  background:var(--hub-surface-3,#1a374d);
+  border-color:var(--hub-accent,#62b4f8);
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-drag-handle:active{
+  cursor:grabbing;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-card .explore-record-summary{
+  padding-right:43px;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-grid>.explore-area-card:not(:has(>.explore-record-editor[open])) .explore-record-summary{
+  padding-right:42px;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-card.explore-area-dragging{
+  opacity:.6;
+  border-style:dashed;
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-card.explore-area-drop-before{
+  box-shadow:inset 4px 0 0 var(--hub-accent,#59b6ff),0 0 0 1px var(--hub-accent,#59b6ff);
+}
+#adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-card.explore-area-drop-after{
+  box-shadow:inset -4px 0 0 var(--hub-accent,#59b6ff),0 0 0 1px var(--hub-accent,#59b6ff);
+}
+@media(max-width:620px){
+  #adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-drag-handle{
+    width:28px;
+    height:28px;
+    min-width:28px;
+    min-height:28px;
+    top:4px;
+    right:4px;
+  }
+  #adventure-root .adventure-shell.hub-detail-page #exploracao .explore-area-grid>.explore-area-card:not(:has(>.explore-record-editor[open])) .explore-record-summary{
+    padding-right:37px;
+  }
+}
