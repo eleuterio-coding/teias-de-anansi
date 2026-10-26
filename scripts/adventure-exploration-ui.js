@@ -1,7 +1,7 @@
 /* Espaço de exploração para o Mestre: mapas opcionais, áreas persistentes,
    referências ao restante do Hub, facções e crônica de visitas.
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
-import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261023-simplified3';
+import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261023-simplified3';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20261023-simplified3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const arr=v=>Array.isArray(v)?v:[];
@@ -28,6 +28,7 @@ function areaDetail(area,a,c,exploration){
  const levels=arr(exploration.levels),areas=arr(exploration.areas),name=areaLabel(area);
  const level=levels.find(x=>x.id===area.levelId);
  return '<article class="explore-area-card explore-record-card'+(selectedAreaId===area.id?' is-selected':'')+'" data-ex-area="'+esc(area.id)+'">'+
+  '<button type="button" class="explore-area-drag-handle" data-ex-area-grip="'+esc(area.id)+'" aria-label="Reorganizar '+esc(name)+': arraste ou use as setas do teclado" title="Arraste para reorganizar; use as setas do teclado" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/></svg></button>'+
   '<details class="explore-record-editor" data-ex-area-editor="'+esc(area.id)+'"'+(expandedAreaIds.has(area.id)?' open':'')+'>'+
    '<summary class="explore-record-summary"><span class="explore-area-overview">'+
      '<span class="explore-area-heading">'+(area.code&&area.code!==area.name?'<span class="explore-area-code">'+esc(area.code)+'</span>':'')+
@@ -230,6 +231,67 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
   const node=button.closest('[data-ex-level]');if(node)edit('level',node.dataset.exLevel,node);
  }));
+
+ // Arrastar pelo puxador com mouse, caneta ou toque, sem interceptar edição.
+ const areaGrid=root?.querySelector('.explore-area-grid');
+ if(areaGrid){
+  const handles=[...areaGrid.querySelectorAll('[data-ex-area-grip]')];
+  const orderedIds=()=>arr(get()?.areas).slice().sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name,'pt-BR')).map(row=>row.id);
+  const clearDrag=()=>areaGrid.querySelectorAll('.explore-area-dragging,.explore-area-drop-before,.explore-area-drop-after')
+   .forEach(node=>node.classList.remove('explore-area-dragging','explore-area-drop-before','explore-area-drop-after'));
+  const moveArea=(from,to,position,restoreFocus=false)=>{
+   const result=reorderExplorationAreas(get(),from,to,position);
+   if(!result?.exploration||result.error){feedback(result?.error||'Não foi possível reordenar os Locais.',false);return}
+   if(!result.changed)return;
+   apply(result,'Ordem dos Locais atualizada.');
+   if(restoreFocus)requestAnimationFrame(()=>root?.querySelectorAll('[data-ex-area-grip]').forEach(node=>{
+    if(node.dataset.exAreaGrip===from)node.focus({preventScroll:true});
+   }));
+  };
+  for(const grip of handles){
+   const sourceId=grip.dataset.exAreaGrip;
+   grip.addEventListener('keydown',event=>{
+    const direction=['ArrowUp','ArrowLeft'].includes(event.key)?-1:['ArrowDown','ArrowRight'].includes(event.key)?1:0;
+    if(!direction)return;
+    event.preventDefault();
+    const ids=orderedIds(),i=ids.indexOf(sourceId),target=ids[i+direction];
+    if(target)moveArea(sourceId,target,direction<0?'before':'after',true);
+   });
+   let active=null;
+   grip.addEventListener('pointerdown',event=>{
+    if(event.pointerType==='mouse'&&event.button!==0)return;
+    active={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false,target:null,position:'before'};
+    grip.setPointerCapture?.(event.pointerId);
+   });
+   grip.addEventListener('pointermove',event=>{
+    if(!active||event.pointerId!==active.id)return;
+    if(!active.moved&&Math.hypot(event.clientX-active.x,event.clientY-active.y)<7)return;
+    active.moved=true;
+    clearDrag();
+    grip.closest('[data-ex-area]')?.classList.add('explore-area-dragging');
+    let target=document.elementFromPoint(event.clientX,event.clientY)?.closest('#exploracao [data-ex-area]');
+    if(!target&&areaGrid.getBoundingClientRect().left<=event.clientX&&areaGrid.getBoundingClientRect().right>=event.clientX){
+     const other=[...areaGrid.querySelectorAll('[data-ex-area]')].filter(node=>node.dataset.exArea!==sourceId);
+     target=other.map(node=>{
+      const rect=node.getBoundingClientRect();
+      return{node,d:Math.hypot(event.clientX-(rect.left+rect.width/2),event.clientY-(rect.top+rect.height/2))};
+     }).sort((a,b)=>a.d-b.d)[0]?.node||null;
+    }
+    if(!target||target.dataset.exArea===sourceId){active.target=null;return}
+    const rect=target.getBoundingClientRect();
+    active.target=target.dataset.exArea;
+    active.position=event.clientX<rect.left+rect.width/2?'before':'after';
+    target.classList.add(active.position==='before'?'explore-area-drop-before':'explore-area-drop-after');
+   });
+   grip.addEventListener('pointerup',event=>{
+    if(!active||event.pointerId!==active.id)return;
+    const drop=active;active=null;clearDrag();
+    if(drop.moved){event.preventDefault();if(drop.target)moveArea(sourceId,drop.target,drop.position)}
+   });
+   grip.addEventListener('pointercancel',()=>{active=null;clearDrag()});
+   grip.addEventListener('lostpointercapture',()=>{active=null;clearDrag()});
+  }
+ }
  // Alterar a visibilidade independe da abertura do editor e não sobrescreve outros dados.
  root?.querySelectorAll('[data-ex-area-visibility]').forEach(input=>input.addEventListener('change',()=>{
   const id=input.dataset.exAreaVisibility;
