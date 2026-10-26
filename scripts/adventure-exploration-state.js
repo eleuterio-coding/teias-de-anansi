@@ -54,6 +54,22 @@ export function updateExplorationEntity(exploration,kind,id,changes={}){
  e[key][index]=(kind==='level'?level:kind==='area'?area:faction)(merged,index);
  return{exploration:e,entity:e[key][index]}
 }
+/** Reordena Locais sem alterar seus vínculos, conteúdos, status ou visibilidade. */
+export function reorderExplorationAreas(exploration,sourceId,targetId,placement='before'){
+ const e=clone(exploration);
+ if(!['before','after'].includes(placement))return{error:'Posição de destino inválida.'};
+ const ordered=sorted(e.areas);
+ const from=ordered.findIndex(row=>row.id===sourceId);
+ if(from<0||!ordered.some(row=>row.id===targetId))return{error:'Local de origem ou destino não encontrado.'};
+ if(sourceId===targetId)return{exploration:e,changed:false};
+ const [moved]=ordered.splice(from,1);
+ const to=ordered.findIndex(row=>row.id===targetId);
+ ordered.splice(to+(placement==='after'?1:0),0,moved);
+ const changed=ordered.some((row,i)=>e.areas[i]?.id!==row.id);
+ if(!changed)return{exploration:e,changed:false};
+ e.areas=ordered.map((row,i)=>({...row,order:i+1}));
+ return{exploration:e,changed:true};
+}
 export function removeExplorationEntity(exploration,kind,id){
  const e=clone(exploration);
  if(kind==='level'){
