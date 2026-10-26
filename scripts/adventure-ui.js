@@ -467,6 +467,28 @@ function bindAdventureNotes(){
   read:()=>adventure()?.dmNoteEntries||[],
   save:rows=>commit(updateAdventure(adventures,adventureId,{dmNoteEntries:rows}),'Notas da Aventura atualizadas.')
  });
+ const list=section?.querySelector('.hub-note-list');if(!list)return;
+ // A alça, antes decorativa, também aceita teclado para reorganizar as notas.
+ list.querySelectorAll('[data-note-id]>.campaign-reorder-grip').forEach(span=>{
+  const grip=document.createElement('button');
+  grip.type='button';grip.className='campaign-reorder-grip hub-note-grip';
+  grip.textContent=span.textContent;grip.title='Arraste para reorganizar ou use as setas do teclado';
+  grip.setAttribute('aria-label','Reorganizar nota: arraste ou use as setas');
+  span.replaceWith(grip);
+ });
+ bindAdventureAnimatedReorder({
+  container:list,itemSelector:'[data-note-id]',handleSelector:'.hub-note-grip',allowSurface:false,
+  idFor:row=>row.dataset.noteId,confirmScope:'#notas-mestre',
+  onMove:(source,target,position)=>{
+   const notes=[...(adventure()?.dmNoteEntries||[])],from=notes.findIndex(row=>row.id===source);
+   if(from<0||source===target)return false;
+   const [picked]=notes.splice(from,1),to=notes.findIndex(row=>row.id===target);
+   if(to<0)return false;
+   notes.splice(to+(position==='after'?1:0),0,picked);
+   commit(updateAdventure(adventures,adventureId,{dmNoteEntries:notes}),'Ordem das notas atualizada.');
+   return true;
+  }
+ });
 }
 function bind(){
  bindAdventureMonsterLibrary();
