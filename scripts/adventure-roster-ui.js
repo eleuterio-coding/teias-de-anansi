@@ -70,6 +70,7 @@ export function bindAdventureRoster({getAdventure,getCampaign,characters=[],save
   if(from<0||to<0||from===to)return;
   const next=[...current],item=next.splice(from,1)[0];
   next.splice(to+(position==='after'?1:0)-(from<to?1:0),0,item);
+  if(next.every((row,index)=>row.username===current[index]?.username))return false;
   persist(next,'Ordem dos jogadores salva.');
   return true;
  };
