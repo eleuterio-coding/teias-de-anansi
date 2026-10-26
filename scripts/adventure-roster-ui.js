@@ -1,5 +1,6 @@
 import{playerTerm,playerAvatarHtml,characterAvatarHtml}from'./profile-images.js?v=20261021-user1';
 import{characterIdentity}from'./character-gender.js?v=20261019-gender1';
+import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261026-unified1';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const lower=value=>String(value||'').trim().toLowerCase();
 const sortText=(a,b)=>String(a).localeCompare(String(b),'pt-BR',{sensitivity:'base'});
@@ -70,6 +71,7 @@ export function bindAdventureRoster({getAdventure,getCampaign,characters=[],save
   const next=[...current],item=next.splice(from,1)[0];
   next.splice(to+(position==='after'?1:0)-(from<to?1:0),0,item);
   persist(next,'Ordem dos jogadores salva.');
+  return true;
  };
  const rowFor=target=>target?.closest?.('#adventure-member-list [data-member-row]')||null;
  const interactive=target=>Boolean(target?.closest?.('input,textarea,select,a,button:not(.roster-grip),[contenteditable="true"]'));
@@ -103,79 +105,11 @@ export function bindAdventureRoster({getAdventure,getCampaign,characters=[],save
    persist(rows().filter(m=>m.username!==remove.dataset.adventureRemoveMember),'Jogador removido.');
   }else if(move)moveNeighbor(rowFor(move),move.dataset.rosterMove);
  });
- list.addEventListener('keydown',event=>{
-  if(!['ArrowUp','ArrowDown'].includes(event.key))return;
-  if(!event.target.closest('.roster-grip')&&!event.target.matches('[data-member-row]'))return;
-  event.preventDefault();moveNeighbor(rowFor(event.target),event.key==='ArrowUp'?'up':'down')
+ bindAdventureAnimatedReorder({
+  container:list,itemSelector:'[data-member-row]',handleSelector:'.roster-grip',
+  idFor:row=>row.dataset.memberRow,
+  onMove:(source,target,position)=>reorder(source,target,position),
+  confirmScope:'#participantes',allowSurface:true
  });
- let dragging=null,pointer=null,touch=null;
- const mark=(source,target)=>{
-  list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(node=>node.classList.remove('roster-order-moving','roster-order-before','roster-order-after'));
-  [...list.querySelectorAll('[data-member-row]')].find(row=>row.dataset.memberRow===source)?.classList.add('roster-order-moving');
-  if(target?.row)target.row.classList.add(target.position==='before'?'roster-order-before':'roster-order-after');
- };
- const dropAt=(source,node,y)=>{
-  const row=rowFor(node);
-  if(!row||row.dataset.memberRow===source)return null;
-  const bounds=row.getBoundingClientRect();
-  return{row,target:row.dataset.memberRow,position:y<bounds.top+bounds.height/2?'before':'after'};
- };
- const finish=(source,target)=>{mark(null,null);if(target)reorder(source,target.target,target.position)};
- list.addEventListener('dragstart',event=>{
-  const row=rowFor(event.target);
-  if(!row||interactive(event.target)){event.preventDefault();return}
-  dragging=row.dataset.memberRow;
-  if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',dragging)}
-  mark(dragging,null)
- });
- list.addEventListener('dragover',event=>{
-  if(!dragging)return;const drop=dropAt(dragging,event.target,event.clientY);
-  if(!drop)return;event.preventDefault();mark(dragging,drop)
- });
- list.addEventListener('drop',event=>{
-  if(!dragging)return;event.preventDefault();
-  const source=dragging,drop=dropAt(source,event.target,event.clientY);dragging=null;finish(source,drop)
- });
- list.addEventListener('dragend',()=>{dragging=null;mark(null,null)});
- // Arraste por toque ou ponteiro: a superfície inteira funciona, sem impedir o uso dos controles.
- list.addEventListener('pointerdown',event=>{
-  if(event.pointerType==='touch'||event.button!==0||interactive(event.target))return;
-  const row=rowFor(event.target);if(!row)return;
-  pointer={row,id:row.dataset.memberRow,pointerId:event.pointerId,x:event.clientX,y:event.clientY,active:false};
-  row.setPointerCapture?.(event.pointerId);
-  if(event.pointerType==='mouse')event.preventDefault();
- });
- list.addEventListener('pointermove',event=>{
-  if(!pointer||pointer.pointerId!==event.pointerId)return;
-  if(!pointer.active&&Math.hypot(event.clientX-pointer.x,event.clientY-pointer.y)<7)return;
-  pointer.active=true;event.preventDefault();
-  mark(pointer.id,dropAt(pointer.id,document.elementFromPoint(event.clientX,event.clientY),event.clientY))
- });
- list.addEventListener('pointerup',event=>{
-  if(!pointer||pointer.pointerId!==event.pointerId)return;
-  const{id,active}=pointer,drop=dropAt(id,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
-  pointer=null;if(active)finish(id,drop);else mark(null,null)
- });
- list.addEventListener('pointercancel',()=>{pointer=null;mark(null,null)});
- list.addEventListener('touchstart',event=>{
-  if(touch||interactive(event.target))return;
-  const row=rowFor(event.target),point=event.changedTouches[0];if(!row||!point)return;
-  touch={id:row.dataset.memberRow,identifier:point.identifier,x:point.clientX,y:point.clientY,active:false};
-  const current=touch;
-  current.timer=setTimeout(()=>{if(touch===current){current.active=true;mark(current.id,null)}},280)
- },{passive:true});
- list.addEventListener('touchmove',event=>{
-  if(!touch)return;
-  const point=[...event.touches].find(t=>t.identifier===touch.identifier);if(!point)return;
-  if(!touch.active){if(Math.hypot(point.clientX-touch.x,point.clientY-touch.y)>9){clearTimeout(touch.timer);touch=null}return}
-  event.preventDefault();mark(touch.id,dropAt(touch.id,document.elementFromPoint(point.clientX,point.clientY),point.clientY))
- },{passive:false});
- list.addEventListener('touchend',event=>{
-  if(!touch)return;
-  const point=[...event.changedTouches].find(t=>t.identifier===touch.identifier);if(!point)return;
-  const current=touch;clearTimeout(current.timer);touch=null;
-  const drop=dropAt(current.id,document.elementFromPoint(point.clientX,point.clientY),point.clientY);
-  if(current.active){event.preventDefault();finish(current.id,drop)}
- },{passive:false});
- list.addEventListener('touchcancel',()=>{if(touch)clearTimeout(touch.timer);touch=null;mark(null,null)});
+
 }
