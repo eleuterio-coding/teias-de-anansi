@@ -3,11 +3,12 @@
    Não altera dados; a persistência pertence ao componente chamador. */
 export function bindAdventureAnimatedReorder({
  container,itemSelector,idFor,handleSelector='',onMove,axis='vertical',
- allowSurface=true,confirmScope=null
+ allowSurface=true,allowSummaryDrag=false,confirmScope=null
 }){
  if(!container||container.dataset.adventureAnimatedOrderBound==='true')return;
  container.dataset.adventureAnimatedOrderBound='true';
  container.dataset.sortAxis=axis;
+ container.classList.add('adventure-sortable');
  const rows=()=>[...container.querySelectorAll(itemSelector)];
  const rowFor=node=>{
   const row=node?.closest?.(itemSelector);
@@ -15,9 +16,17 @@ export function bindAdventureAnimatedReorder({
  };
  const keyFor=row=>row?idFor(row):'';
  const inHandle=node=>Boolean(handleSelector&&node?.closest?.(handleSelector));
- const interactive=node=>Boolean(node?.closest?.('label,input,textarea,select,a,summary,[contenteditable="true"],button:not(.roster-grip):not(.campaign-reorder-grip):not(.explore-area-drag-handle)'));
+ const interactive=node=>Boolean(node?.closest?.('label,input,textarea,select,a,[contenteditable="true"],button:not(.roster-grip):not(.campaign-reorder-grip):not(.explore-area-drag-handle)'))||(!allowSummaryDrag&&Boolean(node?.closest?.('summary')));
  const permitted=node=>inHandle(node)||(allowSurface&&!interactive(node));
- let pointer=null,touch=null,ghost=null;
+ let pointer=null,touch=null,ghost=null,suppressClick=false;
+ container.addEventListener('click',event=>{
+  if(!suppressClick)return;
+  suppressClick=false;event.preventDefault();event.stopImmediatePropagation();
+ },true);
+ const blockNextClick=()=>{
+  suppressClick=true;
+  setTimeout(()=>{suppressClick=false},250);
+ };
  const classes='adventure-sort-moving adventure-sort-before adventure-sort-after adventure-dragging adventure-drop-target explore-area-dragging explore-area-drop-before explore-area-drop-after';
  function clearHighlight(){
   rows().forEach(row=>{
@@ -119,7 +128,7 @@ export function bindAdventureAnimatedReorder({
    },160);
   }
   row.setPointerCapture?.(event.pointerId);
-  if(event.pointerType==='mouse')event.preventDefault();
+  if(event.pointerType==='mouse'&&!event.target.closest?.('summary'))event.preventDefault();
  });
  container.addEventListener('pointermove',event=>{
   if(!pointer||pointer.id!==event.pointerId)return;
@@ -135,7 +144,7 @@ export function bindAdventureAnimatedReorder({
   const info=pointer,drop=info.active?destination(info.source,event.clientX,event.clientY):null;
   pointer=null;clearTimeout(info.timer);
   if(info.row.hasPointerCapture?.(event.pointerId))info.row.releasePointerCapture(event.pointerId);
-  if(info.active){event.preventDefault();finish(info.source,drop)}else release();
+  if(info.active){blockNextClick();event.preventDefault();finish(info.source,drop)}else release();
  });
  container.addEventListener('pointercancel',()=>{
   if(pointer)clearTimeout(pointer.timer);
@@ -170,7 +179,7 @@ export function bindAdventureAnimatedReorder({
   if(!p)return;
   const info=touch;touch=null;clearTimeout(info.timer);
   const drop=info.active?destination(info.source,p.clientX,p.clientY):null;
-  if(info.active){event.preventDefault();finish(info.source,drop)}else release();
+  if(info.active){blockNextClick();event.preventDefault();finish(info.source,drop)}else release();
  },{passive:false});
  container.addEventListener('touchcancel',()=>{
   if(touch)clearTimeout(touch.timer);
