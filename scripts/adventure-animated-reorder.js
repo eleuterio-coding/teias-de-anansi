@@ -122,42 +122,52 @@ export function bindAdventureAnimatedReorder({
  container.addEventListener('dragstart',e=>{
   if(rowFor(e.target))e.preventDefault();
  });
- container.addEventListener('pointerdown',event=>{
-  if(event.pointerType==='touch'||(event.pointerType==='mouse'&&event.button!==0))return;
-  const row=rowFor(event.target);
-  if(!row||!permitted(event.target))return;
-  const info={row,source:keyFor(row),id:event.pointerId,x:event.clientX,y:event.clientY,active:false,timer:null};
-  pointer=info;
-  // Desktop: só iniciar o arraste quando houve deslocamento real.
-  // Segurar o botão sem mover não deve impedir a abertura/edição do card.
-  // Não capturar o ponteiro durante um clique comum; a captura antecipada
-  // redirecionava o click para o artigo e impedia abrir/fechar <summary>.
-  // A captura só acontece quando o usuário realmente começa a arrastar.
-  if(event.pointerType==='mouse'&&!event.target.closest?.('summary,button'))event.preventDefault();
- });
- container.addEventListener('pointermove',event=>{
+ // Ouvir o ponteiro no documento SOMENTE durante a operação evita perder
+ // pointermove/pointerup quando o cursor sai do card ou da lista.
+ const stopPointerTracking=()=>{
+  document.removeEventListener('pointermove',pointerMove,true);
+  document.removeEventListener('pointerup',pointerUp,true);
+  document.removeEventListener('pointercancel',pointerCancel,true);
+ };
+ function pointerMove(event){
   if(!pointer||pointer.id!==event.pointerId)return;
   if(!pointer.active&&Math.hypot(event.clientX-pointer.x,event.clientY-pointer.y)<6)return;
   if(!pointer.active){
    pointer.active=true;
-   pointer.row.setPointerCapture?.(event.pointerId);
+   // Capturar apenas depois de reconhecer um arrasto real; o clique
+   // simples no summary precisa continuar abrindo/fechando a edição.
+   try{pointer.row.setPointerCapture?.(event.pointerId)}catch{}
   }
-  clearTimeout(pointer.timer);
   event.preventDefault();
   lift(pointer.row,pointer.x,pointer.y);
   moveLift(event.clientX,event.clientY);
   mark(pointer.source,destination(pointer.source,event.clientX,event.clientY));
- });
- container.addEventListener('pointerup',event=>{
+ }
+ function pointerUp(event){
   if(!pointer||pointer.id!==event.pointerId)return;
   const info=pointer,drop=info.active?destination(info.source,event.clientX,event.clientY):null;
-  pointer=null;clearTimeout(info.timer);
-  if(info.row.hasPointerCapture?.(event.pointerId))info.row.releasePointerCapture(event.pointerId);
-  if(info.active){blockNextClick(info.source);event.preventDefault();finish(info.source,drop)}else release();
- });
- container.addEventListener('pointercancel',()=>{
-  if(pointer)clearTimeout(pointer.timer);
-  pointer=null;release();
+  pointer=null;stopPointerTracking();
+  if(info.row.hasPointerCapture?.(event.pointerId)){
+   try{info.row.releasePointerCapture(event.pointerId)}catch{}
+  }
+  if(info.active){blockNextClick(info.source);event.preventDefault();finish(info.source,drop)}
+  else release();
+ }
+ function pointerCancel(event){
+  if(pointer&&event.pointerId!==pointer.id)return;
+  pointer=null;stopPointerTracking();release();
+ }
+ container.addEventListener('pointerdown',event=>{
+  if(event.pointerType==='touch'||(event.pointerType==='mouse'&&event.button!==0))return;
+  if(pointer)return;
+  const row=rowFor(event.target);
+  if(!row||!permitted(event.target))return;
+  pointer={row,source:keyFor(row),id:event.pointerId,x:event.clientX,y:event.clientY,active:false};
+  document.addEventListener('pointermove',pointerMove,true);
+  document.addEventListener('pointerup',pointerUp,true);
+  document.addEventListener('pointercancel',pointerCancel,true);
+  // O clique normal continua disponível em botões, links e <summary>.
+  if(event.pointerType==='mouse'&&!event.target.closest?.('summary,button'))event.preventDefault();
  });
  container.addEventListener('touchstart',event=>{
   if(touch||!permitted(event.target))return;
