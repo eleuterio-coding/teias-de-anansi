@@ -10,6 +10,7 @@ on:
       - 'scripts/character-builder/ui.js'
       - 'adventures.css'
       - 'adventure-exploration.css'
+      - 'adventure-layout-refinement.css'
       - '.github/workflows/validar-cards-aventura-20261026.yml'
   workflow_dispatch:
 permissions:
