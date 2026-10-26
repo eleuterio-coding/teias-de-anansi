@@ -1,5 +1,5 @@
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
-import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
+import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261026-drag-fix1';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
