@@ -397,3 +397,20 @@ test('Arrastar para a posição que já ocupa não produz confirmação falsa',a
  await expect.poll(async()=>(await savedAdventure(page)).missions.map(x=>x.id)).toEqual(['mission-1','mission-2']);
  await expect(page.locator('#missoes .adventure-sort-feedback')).toHaveCount(0);
 });
+
+
+test('Mover o ponteiro para fora da lista cancela o arrasto sem perder o mouse',async({page},testInfo)=>{
+ test.skip(testInfo.project.name==='mobile-chromium','Valida o ponteiro de mouse');
+ await seedAnimatedOrderData(page);
+ const handle=page.locator('#missoes [data-entity-row="mission-2"] [data-adventure-grip]');
+ await handle.scrollIntoViewIfNeeded();
+ const box=await handle.boundingBox();
+ await page.mouse.move(box.x+box.width/2,box.y+box.height/2);
+ await page.mouse.down();
+ await page.mouse.move(box.x+box.width/2+10,box.y+box.height/2+10,{steps:4});
+ await expect(page.locator('body>.adventure-floating-card')).toHaveCount(1);
+ await page.mouse.move(5,5,{steps:9});
+ await page.mouse.up();
+ await expect(page.locator('body>.adventure-floating-card')).toHaveCount(0);
+ await expect.poll(async()=>(await savedAdventure(page)).missions.map(m=>m.id)).toEqual(['mission-1','mission-2']);
+});
