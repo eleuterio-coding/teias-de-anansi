@@ -829,3 +829,74 @@
  margin:0;
 }
 .adventure-floating-card.explore-area-card>.explore-area-drag-handle{display:none}
+
+
+/* A mesma interação de arrastar e soltar em TODOS os cartões ordenáveis.
+   Abrir, editar, selecionar e publicar permanecem ações independentes. */
+#adventure-root .adventure-sortable>[data-reorder-adventure],
+#adventure-root .adventure-sortable>[data-member-row],
+#adventure-root .adventure-sortable>[data-ex-area],
+#adventure-root .adventure-sortable>[data-ex-level],
+#adventure-root .adventure-sortable>[data-ex-faction],
+#adventure-root .adventure-sortable>[data-note-id]{
+ cursor:grab;
+ touch-action:pan-y;
+}
+#adventure-root .adventure-sortable> :is([data-reorder-adventure],[data-member-row],[data-ex-area],[data-ex-level],[data-ex-faction],[data-note-id]):active{
+ cursor:grabbing;
+}
+#adventure-root .adventure-sortable :is(input,textarea,select,button,a,label){
+ cursor:auto;
+}
+#adventure-root :is(#mapas,#faccoes) :is(.explore-level-card,[data-ex-faction]){
+ position:relative;
+ min-width:0;
+}
+#adventure-root :is(#mapas,#faccoes) .explore-area-drag-handle{
+ position:absolute;
+ z-index:4;
+ top:6px;
+ right:6px;
+ display:grid;
+ place-items:center;
+ box-sizing:border-box;
+ width:30px;
+ height:30px;
+ min-width:30px;
+ min-height:30px;
+ margin:0;
+ padding:0;
+ background:var(--hub-surface,#142337);
+ border:1px solid var(--hub-border,#405b76);
+ border-radius:7px;
+ color:var(--hub-accent-2,#9fd4ff);
+ font-size:1.25rem;
+ cursor:grab;
+ user-select:none;
+ touch-action:none;
+}
+#adventure-root :is(#mapas,#faccoes) .explore-area-drag-handle:hover,
+#adventure-root :is(#mapas,#faccoes) .explore-area-drag-handle:focus-visible{
+ border-color:var(--hub-accent,#62b4f8);
+ background:var(--hub-surface-3,#1a374d);
+}
+#adventure-root #mapas .explore-record-summary{
+ padding-right:43px;
+}
+#adventure-root #faccoes .explore-faction-head{
+ padding-right:38px;
+}
+#adventure-root #exploracao .explore-record-summary{
+ cursor:grab;
+}
+#adventure-root #exploracao .explore-record-body :is(input,textarea,select,button,label),
+#adventure-root #mapas .explore-record-body :is(input,textarea,select,button,label){
+ cursor:auto;
+}
+.adventure-floating-card .explore-area-drag-handle{pointer-events:none!important}
+@media(max-width:620px){
+ #adventure-root :is(#mapas,#faccoes) .explore-area-drag-handle{
+  width:28px;min-width:28px;height:28px;min-height:28px;
+  top:4px;right:4px;
+ }
+}
