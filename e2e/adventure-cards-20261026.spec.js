@@ -27,10 +27,10 @@ test.beforeEach(async({page})=>{
  }));
  await page.addInitScript(({campaign,adventure})=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'qa-master-cards',username:'rafael',isMaster:true,memberships:[]}));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
-  localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([adventure]));
-  localStorage.setItem('hub-rpg:characters:v4','[]');
-  localStorage.setItem('hub-rpg:npcs:v1','[]');
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([campaign]));
+  if(!localStorage.getItem('hub-rpg:adventures:v1'))localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify([adventure]));
+  if(!localStorage.getItem('hub-rpg:characters:v4'))localStorage.setItem('hub-rpg:characters:v4','[]');
+  if(!localStorage.getItem('hub-rpg:npcs:v1'))localStorage.setItem('hub-rpg:npcs:v1','[]');
  },{campaign,adventure});
 });
 
@@ -91,6 +91,7 @@ test('Monstros podem ser definidos em uma nova Cena e alterados em uma Cena exis
 
 test('Adicionar NPC oferece Abrir ficha e vincula a ficha salva à Campanha',async({page})=>{
  await page.goto('/aventuras.html?campaign='+campaignId+'&id='+adventureId);
+ await expect(page.locator('#npcs #add-campaign-npc')).toBeVisible();
  const controls=await page.locator('#npcs #add-campaign-npc,#npcs .form-grid>a.btn,#npcs #add-registered-npc')
   .evaluateAll(els=>els.map(el=>Math.round(el.getBoundingClientRect().height)));
  expect(controls).toHaveLength(3);
