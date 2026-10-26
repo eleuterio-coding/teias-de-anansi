@@ -20,7 +20,8 @@ import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20
 import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-status-context12';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const params=new URLSearchParams(location.search);let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1',listCampaignFilter=params.get('campaign')||'all',listStatusFilter='all';
+const params=new URLSearchParams(location.search);let attachedMonstersExpanded=false;
+let campaigns=readCampaigns(),adventures=readAdventures().filter(a=>a.campaignId!=='e2e-explicit-player-access'),characters=readCharacters(),campaignId=params.get('campaign')||campaigns[0]?.id||'',adventureId=params.get('id')||'',saveTimer=null,magicItems=[],adventureTimelineView='list',createPanelOpen=params.get('new')==='1',listCampaignFilter=params.get('campaign')||'all',listStatusFilter='all';
 const advStatus=s=>({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'}[s]||s),advType=s=>({main:'Aventura principal',side:'Aventura secundária',oneshot:'One-shot',secondary:'Arco secundário'}[s]||s),sceneStatus=s=>({planned:'Planejada',active:'Em cena',completed:'Concluída',skipped:'Ignorada'}[s]||s),clueStatus=s=>({hidden:'Oculta',discovered:'Descoberta',resolved:'Resolvida'}[s]||s),treasureStatus=s=>({planned:'Planejado',found:'Encontrado',claimed:'Distribuído'}[s]||s),missionStatus=s=>({hidden:'Não descoberta',active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'}[s]||s);
 const campaign=()=>campaignById(campaigns,campaignId),adventure=()=>adventureById(adventures,adventureId);
 let monsterCatalog=[],monsterCatalogReady=false;
@@ -223,7 +224,7 @@ function monstersHtml(a){
  <p id="adventure-monster-status" class="mini" role="status" aria-live="polite">Carregando Biblioteca...</p>
  </div>
  <div id="adventure-monster-preview" class="adventure-monster-preview" role="status" aria-live="polite"></div>
- <details class="adventure-monsters-attached"><summary>Monstros adicionados à Aventura (${current.length})</summary>
+ <details class="adventure-monsters-attached" ${attachedMonstersExpanded?'open':''}><summary>Monstros adicionados à Aventura (${current.length})</summary>
  <div class="story-list">${current.length?current.map((monster,i)=>`<article class="story-card campaign-bullet-entry" data-reorder-adventure="monsters" data-monster-row="${esc(monster.id)}" tabindex="0"><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Biblioteca')}</p><div class="campaign-line-actions">${moveTools('monsters',monster.id,i,current.length)}<button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></div></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div>
  </details>
  </section>`;
@@ -233,6 +234,7 @@ function bindAdventureMonsterLibrary(){
  const picker=panel.querySelector('#new-adventure-monster'),status=panel.querySelector('#adventure-monster-status');
  const consult=panel.querySelector('#adventure-monster-consult'),add=panel.querySelector('#add-adventure-monster');
  const preview=panel.querySelector('#adventure-monster-preview');
+ panel.querySelector('.adventure-monsters-attached')?.addEventListener('toggle',event=>{attachedMonstersExpanded=event.currentTarget.open});
  let requestId=0;
  const selectedMonster=()=>monsterCatalog.find(monster=>monster.id===picker.value);
  const updateActions=()=>{const enabled=Boolean(selectedMonster());consult.disabled=!enabled;add.disabled=!enabled};
