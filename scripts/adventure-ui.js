@@ -166,32 +166,43 @@ function sceneCast(rows,selected,visible,kind,visibility){
 }
 function sceneCard(scene,a,i=0){
  const linkedNpcs=(campaign()?.npcs||[]).filter(n=>a.npcIds.includes(n.id));
- const linkedLocations=a.exploration?.areas||[];
- return`<article class="story-card campaign-bullet-entry adventure-scene-record" data-reorder-adventure="scenes" draggable="true" tabindex="0" data-scene-row="${esc(scene.id)}">
- <div class="adventure-scene-record-main"><strong>${esc(scene.title)}</strong><span class="mini">${esc(sceneStatus(scene.status))} · ${esc(linkedLocations.find(l=>l.id===scene.areaId)?[linkedLocations.find(l=>l.id===scene.areaId).code,linkedLocations.find(l=>l.id===scene.areaId).name].filter(Boolean).join(' - '):'Sem local')}${scene.missionIds?.length?' · '+esc(a.missions.find(m=>m.id===scene.missionIds[0])?.title||''):''}</span></div>
- <div class="campaign-line-actions">${visibleToggle('scenes',scene.id,scene.visibleToPlayers)}${moveTools('scenes',scene.id,i,a.scenes.length)}
- ${scene.status==='planned'? `<button type="button" data-start-scene="${esc(scene.id)}">Iniciar</button><button type="button" class="secondary" data-skip-scene="${esc(scene.id)}">Ignorar</button>`:''}
- ${scene.status==='active'?`<button type="button" data-complete-scene="${esc(scene.id)}">Concluir</button>`:''}
- <button type="button" class="danger campaign-list-remove" data-remove-entity="${esc(scene.id)}" data-key="scenes">Excluir cena</button></div>
- <details class="hub-scene-editor" data-scene-editor ${expandedSceneIds.has(scene.id)?'open':''}>
- <summary>Editar cena</summary>
- <div class="form-grid two">
- <label>Nome<input data-scene-field="title" value="${esc(scene.title)}"></label>
-  <label>Local<select data-scene-field="areaId">${areaChoices(a,scene.areaId)}</select></label>
- <label>Cena da sessão<select data-scene-session-scene>${sessionSceneOptionsForAdventure(a,scene)}</select></label>
- <label>Encontro<select data-scene-encounter>${encounterOptions(scene)}</select></label>
- <label>Objetivo da cena<input data-scene-field="objective" value="${esc(scene.objective)}"></label>
- <label class="wide">Texto para narração<textarea data-scene-field="readAloud">${esc(scene.readAloud||'')}</textarea></label>
-  <label class="wide">Descrição para o Mestre<textarea data-scene-field="description">${esc(scene.description)}</textarea></label>
- <label class="wide">Desfecho<textarea data-scene-field="outcome">${esc(scene.outcome)}</textarea></label>
- <label class="wide">Notas do Mestre<textarea data-scene-field="notes">${esc(scene.notes)}</textarea></label>
- </div>
- <div class="form-grid two">
- <fieldset><legend>NPCs presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(linkedNpcs,scene.npcIds,scene.visibleNpcIds,'npcIds','visibleNpcIds')}</div></fieldset>
- <fieldset><legend>Monstros presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(ordered(a.monsters||[]),scene.monsterIds,scene.visibleMonsterIds,'monsterIds','visibleMonsterIds')}</div></fieldset>
- <fieldset class="adventure-private-objectives"><legend>Objetivos (exclusivos do Mestre)</legend><p class="mini">Estes vínculos nunca aparecem aos jogadores.</p><div class="entity-checks">${checks(a.missions||[],scene.missionIds,'missionIds')}</div></fieldset>
- </div>
- </details></article>`
+ const location=(a.exploration?.areas||[]).find(l=>l.id===scene.areaId);
+ const locationLabel=location?[location.code,location.name].filter(Boolean).join(' - '):'Sem local';
+ const total=ordered(a.scenes).length;
+ return `<article class="story-card explore-level-card explore-record-card adventure-scene-record" data-reorder-adventure="scenes" draggable="true" tabindex="0" data-scene-row="${esc(scene.id)}">
+ <button type="button" class="explore-area-drag-handle adventure-scene-drag-handle" data-adventure-grip aria-label="Arrastar cena ${esc(scene.title)} para reorganizar" title="Arraste para reorganizar">⠿</button>
+ <details class="explore-record-editor hub-scene-editor" data-scene-editor ${expandedSceneIds.has(scene.id)?'open':''}>
+  <summary class="explore-record-summary"><span class="explore-record-title"><strong>${esc(scene.title)}</strong><span class="mini">${esc(sceneStatus(scene.status))} · ${esc(locationLabel)}</span></span><span class="explore-record-toggle-label">Editar <span class="explore-record-chevron" aria-hidden="true"></span></span></summary>
+  <div class="explore-record-body">
+   <section class="explore-editor-group"><header><h4>Identificação e narrativa</h4><p>Dados da cena, narração e informações reservadas ao Mestre.</p></header>
+    <div class="form-grid two">
+     <label>Nome<input data-scene-field="title" value="${esc(scene.title)}"></label>
+     <label>Local<select data-scene-field="areaId">${areaChoices(a,scene.areaId)}</select></label>
+     <label>Cena da sessão<select data-scene-session-scene>${sessionSceneOptionsForAdventure(a,scene)}</select></label>
+     <label>Encontro<select data-scene-encounter>${encounterOptions(scene)}</select></label>
+     <label class="wide">Objetivo da cena (privado)<input data-scene-field="objective" value="${esc(scene.objective)}"></label>
+     <label class="wide">Texto para narração<textarea data-scene-field="readAloud">${esc(scene.readAloud||'')}</textarea></label>
+     <label class="wide">Descrição para o Mestre<textarea data-scene-field="description">${esc(scene.description)}</textarea></label>
+     <label class="wide">Desfecho<textarea data-scene-field="outcome">${esc(scene.outcome)}</textarea></label>
+     <label class="wide">Notas do Mestre<textarea data-scene-field="notes">${esc(scene.notes)}</textarea></label>
+    </div></section>
+   <section class="explore-editor-group"><header><h4>Participantes e objetivos</h4><p>Selecione os presentes na cena e defina quais são revelados aos jogadores.</p></header>
+    <div class="form-grid two adventure-scene-presence">
+     <fieldset><legend>NPCs presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(linkedNpcs,scene.npcIds,scene.visibleNpcIds,'npcIds','visibleNpcIds')}</div></fieldset>
+     <fieldset><legend>Monstros presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(ordered(a.monsters||[]),scene.monsterIds,scene.visibleMonsterIds,'monsterIds','visibleMonsterIds')}</div></fieldset>
+     <fieldset class="adventure-private-objectives"><legend>Objetivos (exclusivos do Mestre)</legend><p class="mini">Estes vínculos nunca aparecem aos jogadores.</p><div class="entity-checks">${checks(a.missions||[],scene.missionIds,'missionIds')}</div></fieldset>
+    </div></section>
+   <div class="explore-detail-actions adventure-scene-record-actions">
+    ${moveTools('scenes',scene.id,i,total)}
+    ${scene.status==='planned'?`<button type="button" data-start-scene="${esc(scene.id)}">Iniciar</button><button type="button" class="secondary" data-skip-scene="${esc(scene.id)}">Ignorar</button>`:''}
+    ${scene.status==='active'?`<button type="button" data-complete-scene="${esc(scene.id)}">Concluir</button>`:''}
+    <button type="button" class="danger campaign-list-remove" data-remove-entity="${esc(scene.id)}" data-key="scenes">Excluir cena</button>
+    <button type="button" class="secondary" data-scene-close>Recolher</button>
+   </div>
+  </div>
+ </details>
+ <div class="explore-record-visibility-bar">${visibleToggle('scenes',scene.id,scene.visibleToPlayers)}</div>
+ </article>`;
 }
 function adventureTimelineHtml(a){
  // A única fonte é a coleção de Cenas. Não criar eventos paralelos e
@@ -328,7 +339,7 @@ function bindParticipants(){
   }),message)})
 }
 function bindEntityRows(){document.querySelectorAll('[data-entity-row]').forEach(row=>{const id=row.dataset.entityRow,key=row.dataset.entityKey;row.querySelectorAll('[data-entity-field]').forEach(input=>input.addEventListener('change',()=>commit(updateAdventureEntity(adventures,adventureId,key,id,{[input.dataset.entityField]:input.type==='number'?Number(input.value):input.value}),'Registro atualizado.')));row.querySelector('[data-clue-status]')?.addEventListener('change',e=>commit(setAdventureClueStatus(adventures,adventureId,id,e.target.value),'Pista atualizada.'));row.querySelector('[data-material-revealed]')?.addEventListener('change',e=>commit(setAdventureHandoutRevealed(adventures,adventureId,id,e.target.value==='true'),'Material atualizado.'));row.querySelector('[data-treasure-status]')?.addEventListener('change',e=>commit(setAdventureTreasureStatus(adventures,adventureId,id,e.target.value),'Tesouro atualizado.'));row.querySelector('[data-mission-status]')?.addEventListener('change',e=>commit(setAdventureMissionStatus(adventures,adventureId,id,e.target.value),'Missão atualizada.'));row.querySelectorAll('[data-mission-character]').forEach(input=>input.addEventListener('change',()=>{const characterIds=[...row.querySelectorAll('[data-mission-character]:checked')].map(el=>el.dataset.missionCharacter);commit(updateAdventureEntity(adventures,adventureId,'missions',id,{characterIds}),'Missão atualizada.')}))})}
-function bindScenes(){document.querySelectorAll('[data-scene-row]').forEach(row=>{const id=row.dataset.sceneRow;row.querySelector('[data-scene-editor]')?.addEventListener('toggle',event=>{if(event.target.open)expandedSceneIds.add(id);else expandedSceneIds.delete(id)});row.querySelectorAll('[data-scene-field]').forEach(input=>input.addEventListener('change',()=>{const field=input.dataset.sceneField,value=input.type==='number'?Number(input.value):input.value;commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{[field]:value}),'Cena atualizada.')}));row.querySelector('[data-scene-session-scene]')?.addEventListener('change',e=>syncAdventureSceneToSessionScene(id,e.target.value));row.querySelector('[data-scene-encounter]')?.addEventListener('change',e=>{const scene=adventure()?.scenes.find(s=>s.id===id);commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{encounterRef:{sessionId:scene?.sessionId||null,encounterId:e.target.value||null}}),'Encontro vinculado à cena.')});row.querySelectorAll('[data-scene-link],[data-scene-reveal]').forEach(input=>input.addEventListener('change',()=>{
+function bindScenes(){document.querySelectorAll('[data-scene-row]').forEach(row=>{row.querySelector('[data-scene-close]')?.addEventListener('click',()=>{row.querySelector('[data-scene-editor]').open=false});const id=row.dataset.sceneRow;row.querySelector('[data-scene-editor]')?.addEventListener('toggle',event=>{if(event.target.open)expandedSceneIds.add(id);else expandedSceneIds.delete(id)});row.querySelectorAll('[data-scene-field]').forEach(input=>input.addEventListener('change',()=>{const field=input.dataset.sceneField,value=input.type==='number'?Number(input.value):input.value;commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{[field]:value}),'Cena atualizada.')}));row.querySelector('[data-scene-session-scene]')?.addEventListener('change',e=>syncAdventureSceneToSessionScene(id,e.target.value));row.querySelector('[data-scene-encounter]')?.addEventListener('change',e=>{const scene=adventure()?.scenes.find(s=>s.id===id);commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{encounterRef:{sessionId:scene?.sessionId||null,encounterId:e.target.value||null}}),'Encontro vinculado à cena.')});row.querySelectorAll('[data-scene-link],[data-scene-reveal]').forEach(input=>input.addEventListener('change',()=>{
  const patch={};
  for(const field of ['npcIds','monsterIds','missionIds'])patch[field]=[...row.querySelectorAll('[data-scene-link="'+field+'"]:checked')].map(el=>el.value);
  for(const [field,relation] of [['visibleNpcIds','npcIds'],['visibleMonsterIds','monsterIds']])patch[field]=[...row.querySelectorAll('[data-scene-reveal="'+field+'"]:checked')].map(el=>el.value).filter(id=>patch[relation].includes(id));
