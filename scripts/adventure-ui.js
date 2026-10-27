@@ -5,7 +5,7 @@ import{bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronic
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20261023-adventure-library7';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
-import{timelineViewToggle,renderAdventureTimelineDiagram,deriveAdventureTimelineEvents}from'./timeline-flowchart.js?v=20261023-adventure-library7';
+import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261027-scenes-timeline1';
 import{readCampaigns,writeCampaigns,campaignById,addCampaignNpc,updateCampaignNpc,removeCampaignNpc,addCampaignLocation,updateCampaignLocation,removeCampaignLocation,updateCampaignSession,updateSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read as readCharacters,write as writeCharacters,readNpcs as readRegisteredNpcs}from'./character-builder/state.js';
 import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureMonster,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,startAdventureScene,completeAdventureScene,skipAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261023-adventure-library7';
@@ -193,25 +193,15 @@ function sceneCard(scene,a,i=0){
  </div>
  </details></article>`
 }
-function timelineCard(row){
- const date=new Date(row.at),validDate=Number.isFinite(date.getTime());
- const scene=row.virtualScene===true;
- return `<article class="story-card timeline-row${scene?' adventure-timeline-scene':''}" data-entity-row="${esc(row.id)}" data-entity-key="timelineEvents">
- <div class="adventure-timeline-row-head"><span class="adventure-timeline-kind">${scene?'Cena · '+esc(row.sceneStatus):row.automatic?'Automático':'Registro'}</span>${validDate?`<time class="mini" datetime="${esc(row.at)}">${esc(date.toLocaleString('pt-BR'))}</time>`:''}</div>
- <strong>${esc(row.title)}</strong>
- ${row.text?`<p class="mini">${esc(row.text)}</p>`:''}
- ${scene?`<a class="adventure-timeline-scene-link" href="#cenas">Ver nas Cenas</a>`:row.automatic?'':`<div class="row-actions">${visibleToggle('timelineEvents',row.id,row.visibleToPlayers)}<button class="danger" data-remove-entity="${esc(row.id)}" data-key="timelineEvents">Excluir registro</button></div>`}
- </article>`;
-}
 function adventureTimelineHtml(a){
- const events=deriveAdventureTimelineEvents(a);
+ // A única fonte é a coleção de Cenas. Não criar eventos paralelos e
+ // não duplicar alterações de status ou objetivos do Mestre na linha do tempo.
+ const nodes=ordered(a.scenes).map(scene=>({id:scene.id,text:scene.title,kind:'scene',automatic:true,href:'#cenas',children:[],visibleToPlayers:scene.visibleToPlayers}));
  const flowchart=adventureTimelineView==='flowchart';
- const body=flowchart?renderAdventureTimelineDiagram(events):`<div class="story-list adventure-timeline-list">${events.length?events.map(timelineCard).join(''):'<div class="story-empty">Nenhum registro.</div>'}</div>`;
- return `<section id="linha-tempo" class="card adventure-timeline-section">
- <div class="hub-timeline-heading"><h2>Linha do tempo</h2>${timelineViewToggle(adventureTimelineView)}</div>
- ${body}
- <div class="form-grid" style="margin-top:10px"><label>Título<input id="new-timeline-title"></label><label>Registro<input id="new-timeline-text"></label><div style="align-self:end"><button id="add-timeline" type="button">Adicionar registro</button></div></div>
- <div class="row-actions" style="margin-top:10px"><button type="button" data-save-adventure-section>Salvar</button></div>
+ const list=nodes.map((node,index)=>`<li class="timeline-item timeline-item-linked" data-timeline-id="${esc(node.id)}"><div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${index+1}</span><div class="campaign-flow-card campaign-linked-card"><span class="campaign-linked-title"><span class="campaign-linked-kind">Cena</span><a class="campaign-linked-name campaign-timeline-title-link" href="#cenas" aria-label="Ver cena: ${esc(node.text)}">${esc(node.text)}</a></span></div></div></li>`).join('');
+ return`<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section adventure-timeline-section">
+  <div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(adventureTimelineView)}</div>
+  ${flowchart?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):`<ol class="campaign-timeline-flow timeline-tree">${list||'<li class="campaign-blank-state">Nenhuma cena criada.</li>'}</ol>`}
  </section>`;
 }
 function linkedSessionsHtml(a){
