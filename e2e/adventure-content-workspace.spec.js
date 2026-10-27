@@ -65,7 +65,8 @@ test('Mapa, Local e NPC são criados com seus formulários originais e reaparece
  await page.locator('#add-campaign-npc').click();
  await expect(page.locator('#npcs [data-campaign-npc]')).toHaveCount(1);
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
- await page.locator('#npcs .adventure-attached-list summary').click();
+ const npcList=page.locator('#npcs .adventure-attached-list');
+ if(await npcList.getAttribute('open')===null)await npcList.locator('summary').click();
  await page.locator('#npcs [data-adventure-open-editor="npc"]').click();
  await expect(page.locator('.adventure-creation-slot.is-editing [data-campaign-npc-field="name"]')).toBeVisible();
  await expect(page.locator('#adventure-overview-content')).toBeHidden();
