@@ -1,5 +1,5 @@
 import{sortCampaignAdventures}from'./campaign-recent-items.js?v=20261019-order-desc3';
-import{adventureListCard,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-status-context12';
+import{adventureListCard,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261027-campaign-adventure-layout3';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const labels={active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada',planned:'Planejada'};
