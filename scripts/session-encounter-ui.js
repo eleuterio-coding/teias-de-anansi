@@ -1,4 +1,5 @@
-import{readAdventures}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{readAdventures}from'./adventure-state.js?v=20261027-scene-types1';
+import{combatSceneOptions,resolveCombatScene,ensureSceneEncounter,populateSceneOpponents,syncAdventureCombatLink}from'./adventure-combat-scenes.js?v=20261027-scene-combat1';
 import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles-final3';
@@ -21,24 +22,9 @@ function persist(ctx,message='Encontro salvo.'){
  else{const result=updateStandaloneSession(ctx.standalone,ctx.session.id,{encounters:ctx.session.encounters,activeEncounterId:ctx.session.activeEncounterId});if(!result.ok){announce(result.reason,false);return false}writeStandaloneSessions(result.list)}
  window.dispatchEvent(new CustomEvent('hub-rpg:sessions-local-updated'));announce(message,true);return true
 }
-function sceneOptions(session,current='',adventure=null){
- const rows=session.scenes||[],linked=new Set(rows.map(s=>s.adventureSceneId).filter(Boolean));
- const base=rows.map(scene=>`<option value="${esc(scene.id)}" ${scene.id===current?'selected':''}>${esc(scene.title)}</option>`).join('');
- const extras=(adventure?.scenes||[]).filter(scene=>!linked.has(scene.id)).map(scene=>`<option value="adventure:${esc(scene.id)}">Aventura · ${esc(scene.title)}</option>`).join('');
- return'<option value="">— Sem cena —</option>'+base+extras;
-}
-function resolveAdventureScene(ctx,value){
- if(!String(value||'').startsWith('adventure:'))return value||null;
- const sceneId=value.slice(10),scene=ctx.adventure?.scenes.find(x=>x.id===sceneId);
- if(!scene)return null;
- const existing=ctx.session.scenes?.find(x=>x.adventureSceneId===sceneId);
- if(existing)return existing.id;
- const result=addSessionScene(ctx.session,{title:scene.title,adventureSceneId:scene.id,locationId:scene.locationId,npcIds:scene.npcIds,missionIds:scene.missionIds,order:(ctx.session.scenes?.length||0)+1});
- return result.ok?result.scene.id:null
-}
 const adventureNpcOptions=ctx=>'<option value="">— NPC da Aventura —</option>'+(ctx.campaign?.npcs||[]).filter(n=>ctx.adventure?.npcIds?.includes(n.id)).map(n=>`<option value="${esc(n.id)}">${esc(n.name)}</option>`).join('');
 const adventureMonsterOptions=ctx=>'<option value="">— Monstro da Aventura —</option>'+(ctx.adventure?.monsters||[]).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
-function kindOptions(current='combat'){return Object.entries(KIND_LABEL).map(([value,label])=>`<option value="${value}" ${value===current?'selected':''}>${label}</option>`).join('')}
+function kindOptions(current='combat'){return `<option value="combat" ${current==='combat'?'selected':''}>Combate</option>`+(current!=='combat'?`<option value="${esc(current)}" selected>${esc(KIND_LABEL[current]||current)} (legado)</option>`:'')}
 function participantOptions(ctx,encounter){const existing=new Set((encounter.combatants||[]).filter(c=>c.kind==='character').map(c=>c.characterId));return'<option value="">— Selecione —</option>'+((ctx.session.participantCharacterIds||[]).filter(id=>!existing.has(id)).map(id=>{const c=ctx.characters.find(x=>x.id===id);return`<option value="${esc(id)}">${esc(c?.name||id)}</option>`}).join(''))}
 function blueprintRow(c){const meta=c.kind==='character'?'Personagem':c.kind==='monster'?'Monstro':'NPC';const details=c.kind==='character'?'Dados de combate vêm da Ficha Digital':[c.ac?'CA '+c.ac:'',c.maxHp?'PV '+c.maxHp:'',c.cr?'CR '+c.cr:''].filter(Boolean).join(' · ');return`<div class="encounter-blueprint-row" data-encounter-combatant="${esc(c.id)}"><div><strong>${esc(c.name)}</strong> <span class="badge">${meta}</span><div class="encounter-source">${esc(details||c.source||'')}</div></div><button type="button" class="danger" data-remove-encounter-combatant>Remover</button></div>`}
 function addToolsHtml(encounter,ctx){
@@ -54,7 +40,7 @@ function addToolsHtml(encounter,ctx){
 function encounterCard(encounter,ctx){
  const legacy=encounter.status!=='planned';
  return`<article class="encounter-card" data-encounter="${esc(encounter.id)}"><div class="encounter-head"><div><h3>${esc(encounter.title)}</h3><span class="badge">${esc(KIND_LABEL[encounter.kind]||'Encontro')}</span>${legacy?`<span class="badge">Estado legado: ${esc(encounter.status)}</span>`:''}</div><div class="encounter-actions"><button type="button" data-create-combat-from-encounter>Preparar combate</button><button type="button" class="danger" data-remove-encounter>Excluir</button></div></div>
- <div class="form-grid two" style="margin-top:8px"><label>Nome<input data-encounter-title value="${esc(encounter.title)}"></label><label>Tipo<select data-encounter-kind>${kindOptions(encounter.kind)}</select></label><label class="wide">Cena da Aventura / Sessão<select data-encounter-scene>${sceneOptions(ctx.session,encounter.sessionSceneId,ctx.adventure)}</select></label></div>
+ <div class="form-grid two" style="margin-top:8px"><label>Nome<input data-encounter-title value="${esc(encounter.title)}"></label><label>Tipo<select data-encounter-kind>${kindOptions(encounter.kind)}</select></label><label class="wide">Cena de combate da Aventura / Sessão<select data-encounter-scene>${combatSceneOptions(ctx.session,ctx.adventure,encounter.sessionSceneId)}</select></label></div>
  <div class="form-grid two"><label>Status<select data-encounter-resolution-status>
  ${[['pending','Pendente'],['resolved','Resolvido'],['failed','Fracassado'],['escaped','Fugiram'],['not-found','Não encontrado'],['avoided','Evitado']].map(([v,label])=>`<option value="${v}" ${encounter.resolutionStatus===v?'selected':''}>${label}</option>`).join('')}</select></label>
  <label>Como foi resolvido<select data-encounter-resolution-method>${[['combat','Combate'],['social','Social'],['other','Outro']].map(([v,label])=>`<option value="${v}" ${encounter.resolutionMethod===v?'selected':''}>${label}</option>`).join('')}</select></label></div>
@@ -63,34 +49,43 @@ function encounterCard(encounter,ctx){
  ${addToolsHtml(encounter,ctx)}
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-encounter>Salvar encontro</button></div></article>`
 }
-function managerHtml(ctx){const rows=[...(ctx.session.encounters||[])].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));return`<section id="encontros" class="session-subsection encounter-shell session-encounter-manager"><div class="encounter-head"><div><h4>Encontros</h4></div></div><div class="form-grid two" style="margin-top:8px"><label>Nome do encontro<input data-new-encounter-title placeholder="Novo encontro"></label><label>Tipo<select data-new-encounter-kind>${kindOptions('combat')}</select></label><label class="wide">Cena da Sessão<select data-new-encounter-scene>${sceneOptions(ctx.session,'',ctx.adventure)}</select></label></div><label class="campaign-disclosure-toggle"><input type="checkbox" data-encounter-auto-combat> Criar combate automaticamente com os jogadores</label><div class="row-actions" style="margin-top:8px"><button type="button" data-create-encounter>Criar encontro</button></div><div class="encounter-list">${rows.length?rows.map(e=>encounterCard(e,ctx)).join(''):'<div class="encounter-empty">Nenhum encontro nesta Sessão.</div>'}</div></section>`}
+function managerHtml(ctx){const rows=[...(ctx.session.encounters||[])].sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));return`<section id="encontros" class="session-subsection encounter-shell session-encounter-manager"><div class="encounter-head"><div><h4>Encontros</h4></div></div><div class="form-grid two" style="margin-top:8px"><label>Nome do encontro<input data-new-encounter-title placeholder="Novo encontro"></label><label>Tipo<select data-new-encounter-kind>${kindOptions('combat')}</select></label><label class="wide">Cena de combate da Aventura / Sessão<select data-new-encounter-scene>${combatSceneOptions(ctx.session,ctx.adventure)}</select></label></div><label class="campaign-disclosure-toggle"><input type="checkbox" data-encounter-auto-combat> Criar combate automaticamente com os jogadores</label><div class="row-actions" style="margin-top:8px"><button type="button" data-create-encounter>Criar encontro</button></div><p class="mini">Selecione uma Cena classificada como Combate (encontro) na Aventura. NPCs e monstros vinculados entram na preparação. A mesma cena reutiliza seu encontro.</p><div class="encounter-list">${rows.length?rows.map(e=>encounterCard(e,ctx)).join(''):'<div class="encounter-empty">Nenhum encontro nesta Sessão.</div>'}</div></section>`}
 function injectSceneLinks(card,ctx){for(const node of card.querySelectorAll('[data-session-scene]')){node.querySelector('.scene-encounter-links')?.remove();const id=node.dataset.sessionScene,rows=(ctx.session.encounters||[]).filter(e=>e.sessionSceneId===id);if(!rows.length)continue;const box=document.createElement('div');box.className='story-status scene-encounter-links';box.style.marginTop='8px';box.innerHTML='<span class="mini">Encontros:</span> '+rows.map(e=>`<span class="badge">${esc(e.title)}</span>`).join('');const actions=node.querySelector('.row-actions');if(actions)node.insertBefore(box,actions);else node.appendChild(box)}}
 function injectCard(card){if(!card.querySelector('[data-save-session-main]')||card.querySelector('.session-encounter-manager'))return;const ctx=contextForCard(card);if(!ctx.session)return;for(const section of card.querySelectorAll('.session-subsection'))if(section.querySelector('h4')?.textContent.trim()==='Encontros')section.remove();card.insertAdjacentHTML('beforeend',managerHtml(ctx));injectSceneLinks(card,ctx);bindManager(card,ctx)}
 function injectAll(){for(const card of document.querySelectorAll('[data-session-id]'))injectCard(card)}
-function inheritAdventureSceneActors(ctx,encounter,sessionSceneId){
- const linked=ctx.session.scenes?.find(s=>s.id===sessionSceneId),scene=ctx.adventure?.scenes?.find(s=>s.id===linked?.adventureSceneId);
- if(!scene)return;
- const existing=()=>encounter.combatants||[];
- for(const id of scene.npcIds||[]){
-  const npc=ctx.campaign?.npcs?.find(n=>n.id===id);if(!npc||existing().some(c=>c.kind==='npc'&&c.name===npc.name))continue;
-  addCreatureCombatant(encounter,{kind:'npc',name:npc.name,source:'NPC da Cena',ac:10,maxHp:10,currentHp:10})
- }
- for(const id of scene.monsterIds||[]){
-  const monster=ctx.adventure?.monsters?.find(m=>m.id===id);if(!monster||existing().some(c=>c.kind==='monster'&&c.monsterId===(monster.monsterId||monster.id)))continue;
-  addCreatureCombatant(encounter,{kind:'monster',name:monster.name,monsterId:monster.monsterId||monster.id,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier})
- }
+function nodeData(node,ctx){
+ const resolved=resolveCombatScene(ctx,node.querySelector('[data-encounter-scene]')?.value||'');
+ if(!resolved.ok)return{error:resolved.reason};
+ return{resolved,patch:{title:node.querySelector('[data-encounter-title]')?.value||'',kind:node.querySelector('[data-encounter-kind]')?.value||'combat',resolutionStatus:node.querySelector('[data-encounter-resolution-status]')?.value||'pending',resolutionMethod:node.querySelector('[data-encounter-resolution-method]')?.value||'other',sessionSceneId:resolved.sessionSceneId,summary:node.querySelector('[data-encounter-summary]')?.value||''}};
 }
-function nodeData(node,ctx){return{title:node.querySelector('[data-encounter-title]')?.value||'',kind:node.querySelector('[data-encounter-kind]')?.value||'combat',resolutionStatus:node.querySelector('[data-encounter-resolution-status]')?.value||'pending',resolutionMethod:node.querySelector('[data-encounter-resolution-method]')?.value||'other',sessionSceneId:resolveAdventureScene(ctx,node.querySelector('[data-encounter-scene]')?.value||''),summary:node.querySelector('[data-encounter-summary]')?.value||''}}
-function saveNode(ctx,node,message='Encontro salvo.'){const previous=ctx.session.encounters?.find(e=>e.id===node.dataset.encounter)?.sessionSceneId,changes=nodeData(node,ctx),r=updateEncounter(ctx.session,node.dataset.encounter,changes);if(!r.ok)return announce(r.reason,false);if(previous!==changes.sessionSceneId)inheritAdventureSceneActors(ctx,r.encounter,changes.sessionSceneId);persist(ctx,message)}
+function saveNode(ctx,node,message='Encontro salvo.'){
+ const previous=ctx.session.encounters?.find(e=>e.id===node.dataset.encounter)?.sessionSceneId;
+ const result=nodeData(node,ctx);
+ if(result.error)return announce(result.error,false);
+ const r=updateEncounter(ctx.session,node.dataset.encounter,result.patch);
+ if(!r.ok)return announce(r.reason,false);
+ if(previous!==result.resolved.sessionSceneId)populateSceneOpponents(ctx,r.encounter,result.resolved.adventureScene);
+ if(persist(ctx,message))syncAdventureCombatLink(ctx,{...result.resolved,encounter:r.encounter});
+}
 async function ensureMonsters(node){if(!monsterIndex&&!monsterLoad)monsterLoad=loadEncounterMonsterIndex().then(rows=>(monsterIndex=rows));const status=node.querySelector('[data-encounter-monster-status]');if(status)status.textContent='Carregando catálogo...';try{const rows=monsterIndex||await monsterLoad,list=node.querySelector('datalist');if(list)list.innerHTML=rows.map(r=>`<option value="${esc(r.name)}"></option>`).join('');if(status)status.textContent=rows.length+' monstros disponíveis.';return rows}catch(error){if(status)status.textContent='Falha ao carregar monstros.';throw error}}
 function findEncounter(ctx,id){return ctx.session.encounters.find(e=>e.id===id)||null}
 function bindManager(card,ctx){
  const manager=card.querySelector('.session-encounter-manager');if(!manager)return;
- manager.querySelector('[data-create-encounter]')?.addEventListener('click',()=>{const r=createEncounter(ctx.session,{title:manager.querySelector('[data-new-encounter-title]')?.value.trim()||undefined,kind:manager.querySelector('[data-new-encounter-kind]')?.value||'combat',sessionSceneId:resolveAdventureScene(ctx,manager.querySelector('[data-new-encounter-scene]')?.value||'')});if(!r.ok)return announce(r.reason,false);inheritAdventureSceneActors(ctx,r.encounter,r.encounter?.sessionSceneId);const auto=manager.querySelector('[data-encounter-auto-combat]')?.checked===true;persist(ctx,'Encontro criado.');if(auto)window.dispatchEvent(new CustomEvent('hub-rpg:create-combat-from-encounter',{detail:{sessionId:ctx.session.id,encounterId:r.encounter?.id||r.entity?.id||ctx.session.encounters.at(-1)?.id}}))});
+ manager.querySelector('[data-create-encounter]')?.addEventListener('click',()=>{
+  const choice=manager.querySelector('[data-new-encounter-scene]')?.value||'';
+  const title=manager.querySelector('[data-new-encounter-title]')?.value.trim()||'';
+  const result=ensureSceneEncounter(ctx,choice,{title});
+  if(!result.ok)return announce(result.reason||'Não foi possível criar o Encontro.',false);
+  const auto=manager.querySelector('[data-encounter-auto-combat]')?.checked===true;
+  if(persist(ctx,result.created?'Encontro de combate criado.':'Encontro existente localizado.')){
+   syncAdventureCombatLink(ctx,result);
+   if(auto&&result.created)window.dispatchEvent(new CustomEvent('hub-rpg:create-combat-from-encounter',{detail:{sessionId:ctx.session.id,encounterId:result.encounter.id}}));
+  }
+ });
  for(const node of manager.querySelectorAll('[data-encounter]')){
   const encounter=findEncounter(ctx,node.dataset.encounter);if(!encounter)continue;
   node.querySelector('[data-save-encounter]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveNode(ctx,node)});
-  node.querySelector('[data-create-combat-from-encounter]')?.addEventListener('click',()=>{const previous=encounter.sessionSceneId,changes=nodeData(node,ctx),r=updateEncounter(ctx.session,encounter.id,changes);if(!r.ok)return announce(r.reason,false);if(previous!==changes.sessionSceneId)inheritAdventureSceneActors(ctx,r.encounter,changes.sessionSceneId);persist(ctx,'Encontro salvo.');window.dispatchEvent(new CustomEvent('hub-rpg:create-combat-from-encounter',{detail:{sessionId:ctx.session.id,encounterId:encounter.id}}))});
+  node.querySelector('[data-create-combat-from-encounter]')?.addEventListener('click',()=>{const previous=encounter.sessionSceneId,result=nodeData(node,ctx);if(result.error)return announce(result.error,false);const r=updateEncounter(ctx.session,encounter.id,result.patch);if(!r.ok)return announce(r.reason,false);if(previous!==result.resolved.sessionSceneId)populateSceneOpponents(ctx,r.encounter,result.resolved.adventureScene);if(persist(ctx,'Encontro salvo.')){syncAdventureCombatLink(ctx,{...result.resolved,encounter:r.encounter});window.dispatchEvent(new CustomEvent('hub-rpg:create-combat-from-encounter',{detail:{sessionId:ctx.session.id,encounterId:encounter.id}}))}});
   node.querySelector('[data-remove-encounter]')?.addEventListener('click',()=>{if(!confirm('Excluir este encontro? O histórico de combates já realizados não será apagado.'))return;const r=removeEncounter(ctx.session,encounter.id);if(!r.ok)return announce(r.reason,false);persist(ctx,'Encontro excluído.')});
   node.querySelector('[data-add-encounter-character-button]')?.addEventListener('click',()=>{const characterId=node.querySelector('[data-add-encounter-character]')?.value,character=ctx.characters.find(c=>c.id===characterId),r=addCharacterCombatant(encounter,{characterId,name:character?.name||characterId});if(!r.ok)return announce(r.reason,false);persist(ctx,'Personagem adicionado ao Encontro.')});
   const search=node.querySelector('[data-encounter-monster-search]');search?.addEventListener('focus',()=>ensureMonsters(node));search?.addEventListener('input',()=>ensureMonsters(node));
