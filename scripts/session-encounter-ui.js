@@ -56,7 +56,7 @@ function injectAll(){for(const card of document.querySelectorAll('[data-session-
 function nodeData(node,ctx){
  const selected=node.querySelector('[data-encounter-scene]')?.value||'';
  const existing=ctx.session.encounters?.find(e=>e.id===node.dataset.encounter);
- const allowLegacy=existing?.kind!=='combat'&&existing?.sessionSceneId===selected;
+ const allowLegacy=existing?.kind!=='combat'&&node.querySelector('[data-encounter-kind]')?.value!=='combat'&&existing?.sessionSceneId===selected;
  const resolved=resolveCombatScene(ctx,selected,{allowLegacy});
  if(!resolved.ok)return{error:resolved.reason};
  return{resolved,patch:{title:node.querySelector('[data-encounter-title]')?.value||'',kind:node.querySelector('[data-encounter-kind]')?.value||'combat',resolutionStatus:node.querySelector('[data-encounter-resolution-status]')?.value||'pending',resolutionMethod:node.querySelector('[data-encounter-resolution-method]')?.value||'other',sessionSceneId:resolved.sessionSceneId,summary:node.querySelector('[data-encounter-summary]')?.value||''}};
