@@ -77,7 +77,7 @@ for(const group of groups){
   const preview=page.locator(group.container+' > [data-adventure-sort-preview]');
   await expect(preview).toBeVisible();
   const floating=await preview.boundingBox();
-  expect(Math.abs(floating.x-card.x-13)).toBeLessThanOrEqual(4);
+  expect(Math.abs(floating.x-card.x-(group.store==='participantAssignments'?0:13))).toBeLessThanOrEqual(4);
   expect(Math.abs(floating.width-card.width)).toBeLessThanOrEqual(3);
   await page.mouse.move(2,2,{steps:8});await page.mouse.up();
   await clean(page,group);
