@@ -992,3 +992,12 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
  #adventure-root #proxima-sessao .campaign-next-action{transition:none}
  #adventure-root #proxima-sessao .campaign-next-action:hover{transform:none}
 }
+
+/* Na Campanha, as margens de destaque/nav colapsam; na Aventura,
+   o contêiner grid tem gap de 12px. Ajustar a soma ao mesmo vão de 16px. */
+#adventure-root .adventure-shell.hub-detail-page>#proxima-sessao{
+ margin-bottom:0;
+}
+body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-detail-nav{
+ margin-top:4px!important;
+}
