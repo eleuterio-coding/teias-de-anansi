@@ -543,3 +543,6 @@
   align-self:stretch
  }
 }
+
+/* Alinhamento vertical do texto de Planejamento de Campanha. */
+#table-root #proxima-sessao .campaign-next-content{margin-block:auto}
