@@ -1,6 +1,6 @@
 import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
-import{renderAdventureTimelineDiagram,deriveAdventureTimelineEvents}from'./timeline-flowchart.js?v=20261023-adventure-library7';
+import{renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261027-scenes-timeline1';
 import{noteSection}from'./hub-notes.js?v=20261022-chronicles-final3';
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
@@ -121,25 +121,26 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
   card.innerHTML=campaignAvatarHtml(characterAvatarHtml(character),character.name||'Personagem')+'<strong>'+esc(character.name||'Personagem')+'</strong>';
  });
  const extras=[
-  ['Cenas','cenas',arr(active.scenes),sc=>`<article class="story-card"><strong>${esc(sc.title)}</strong></article>`],
+  ['Cenas','cenas',arr(active.scenes),sc=>`<article class="story-card"><strong>${esc(sc.title)}</strong>${sc.readAloud?`<p>${esc(sc.readAloud)}</p>`:''}${arr(sc.npcNames).length?`<p><strong>NPCs presentes:</strong> ${esc(sc.npcNames.join(', '))}</p>`:''}${arr(sc.monsterNames).length?`<p><strong>Monstros presentes:</strong> ${esc(sc.monsterNames.join(', '))}</p>`:''}</article>`],
  ];
  for(const [heading,id,rows,renderer] of extras){
   const tpl=document.createElement('template');tpl.innerHTML=simpleSection(heading,rows,renderer);
   const section=tpl.content.firstElementChild;section.id=id;section.classList.add('campaign-editor-card');
   const h=section.querySelector('h3');if(h){const h2=document.createElement('h2');h2.textContent=h.textContent;h.replaceWith(h2)}
-  detailGrid.append(section)
+  detailGrid.append(section);
+  if(id==='cenas')detailGrid.querySelector('#locais')?.before(section);
  }
- const shownEvents=deriveAdventureTimelineEvents(active);
+ const nodes=arr(active.scenes).slice().sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0)).map(sc=>({id:sc.id,text:sc.title,kind:'scene',automatic:true,href:'#cenas',children:[]}));
  const timeline=document.createElement('template');
  timeline.innerHTML='<section id="linha-tempo" class="card campaign-editor-card"><h2>Linha do Tempo</h2>'+
-  (shownEvents.length?renderAdventureTimelineDiagram(shownEvents,{readOnly:true}):'<div class="story-empty">Nenhum evento publicado nesta Aventura.</div>')+'</section>';
+  (nodes.length?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):'<div class="story-empty">Nenhuma cena publicada nesta Aventura.</div>')+'</section>';
  if(timeline.content.firstElementChild)detailGrid.append(timeline.content.firstElementChild);
  if(active.dmNoteEntries?.length){const notes=document.createElement('template');notes.innerHTML=noteSection(active.dmNoteEntries,{readOnly:true});detailGrid.append(notes.content.firstElementChild)}
  for(const id of['pistas','materiais','tesouros','capitulos'])detailGrid.querySelector('#'+id)?.remove();
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['locais','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['cenas','Cenas'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['cenas','Cenas'],['locais','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
  wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);
