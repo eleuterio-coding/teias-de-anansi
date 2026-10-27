@@ -47,10 +47,9 @@ export function adventureGroupsHtml(adventures,campaigns,{campaign='all',status=
   return `<section class="adventure-campaign-group" data-adventure-campaign-group="${esc(id)}" aria-label="Aventuras da campanha ${esc(name)}">
    <div class="adventure-campaign-group-heading">
     <div class="adventure-campaign-group-identity">
-     <span class="adventure-campaign-group-kicker">Campanha</span>
-     <h3>${campaignLink}</h3>
-     <span class="adventure-campaign-group-count">${countLabel(ordered.length)}</span>
+     <h3><span class="adventure-campaign-group-kicker">Campanha:</span> ${campaignLink}</h3>
     </div>
+    <span class="adventure-campaign-group-count" aria-label="${countLabel(ordered.length)}">${countLabel(ordered.length)}</span>
     ${showArrows?`<div class="adventure-campaign-scroll-actions" aria-label="Navegação de aventuras" hidden>
       <span>Arraste ou role para ver mais</span>
       <button class="secondary" type="button" data-adventure-scroll="-1" aria-label="Ver aventuras anteriores de ${esc(name)}">‹</button>
