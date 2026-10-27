@@ -22,7 +22,7 @@ export function combatSceneOptions(session,adventure,current=''){
   +(fromAdventure?'<optgroup label="Cenas de combate da Aventura">'+fromAdventure+'</optgroup>':'')
   +(attached?'<optgroup label="Cenas da Sessão">'+attached+'</optgroup>':'');
 }
-export function resolveCombatScene(ctx,value){
+export function resolveCombatScene(ctx,value,{allowLegacy=false}={}){
  const id=String(value||'');
  if(!id)return{ok:true,sessionSceneId:null,adventureScene:null};
  if(id.startsWith('adventure:')){
@@ -39,7 +39,7 @@ export function resolveCombatScene(ctx,value){
  const row=ctx.session?.scenes?.find(s=>s.id===id);
  if(!row)return{ok:false,reason:'Cena da Sessão não encontrada.'};
  const origin=ctx.adventure?.scenes?.find(s=>s.id===row.adventureSceneId)||null;
- if(origin&&!isCombatScene(origin))return{ok:false,reason:'Esta cena não é de combate. Escolha uma cena do tipo Combate (encontro).'};
+ if(origin&&!isCombatScene(origin)&&!allowLegacy)return{ok:false,reason:'Esta cena não é de combate. Escolha uma cena do tipo Combate (encontro).'};
  return{ok:true,sessionSceneId:row.id,adventureScene:origin};
 }
 export function populateSceneOpponents(ctx,encounter,adventureScene){
