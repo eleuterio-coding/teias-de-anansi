@@ -224,7 +224,7 @@ function linkedSessionsHtml(a){
 function monstersHtml(a){
  const current=ordered(a.monsters||[]);
  return `<section id="monstros" class="card adventure-monster-library">
- <div class="explore-title"><div class="explore-title-copy"><h2>Monstros</h2></div><span class="badge">${monsterCatalogReady?monsterCatalog.length:'…'} na Biblioteca</span></div>
+ <div class="explore-title"><div class="explore-title-copy"><h2>Adicionar Monstros</h2></div><span class="badge">${monsterCatalogReady?monsterCatalog.length:'…'} na Biblioteca</span></div>
  <div class="adventure-monster-picker">
  <label>Monstro da Biblioteca<select id="new-adventure-monster" aria-describedby="adventure-monster-status" disabled><option value="">Carregando Biblioteca...</option></select></label>
  <div class="row-actions adventure-monster-actions"><button type="button" class="secondary" id="adventure-monster-consult" disabled>Consultar ficha</button><button type="button" id="add-adventure-monster" disabled>Adicionar à Aventura</button></div>
@@ -301,8 +301,8 @@ function section(title,id,body,form=''){
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['criar-area','Adicionar área'],['criar-mapa','Adicionar mapa'],['criar-cena','Adicionar cena'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
- const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
- const npcPanel=section('NPCs','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="form-grid two adventure-npc-create"><label>Nome<input id="new-npc-name"></label><label>Papel<input id="new-npc-role"></label><button type="button" id="add-campaign-npc">Adicionar NPC</button><a class="btn secondary" href="criacao-personagem.html?npc=1">Criar NPC</a>
+ const objectives=section('Adicionar Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
+ const npcPanel=section('Adicionar NPC','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="form-grid two adventure-npc-create"><label>Nome<input id="new-npc-name"></label><label>Papel<input id="new-npc-role"></label><button type="button" id="add-campaign-npc">Adicionar NPC</button><a class="btn secondary" href="criacao-personagem.html?npc=1">Criar NPC</a>
  <label>NPC cadastrado<select id="attach-existing-npc"><option value="">— Selecione um NPC —</option>${readRegisteredNpcs().filter(n=>!(c?.npcs||[]).some(row=>row.sheetId===n.id)).map(n=>option(n.id,n.name||'NPC sem nome','')).join('')}</select></label><button type="button" id="add-registered-npc">Vincular NPC</button></div>`);
  const scenes=section('Cenas','cenas',ordered(a.scenes).map((scene,i)=>sceneCard(scene,a,i)).join(''));
  const addScene=`<section id="criar-cena" class="card adventure-exploration adventure-create-panel">
