@@ -86,10 +86,15 @@ test('Cenas usam mesmo cadastro e edição, mantém narração e vínculos priva
  expect(projection.description).toBeUndefined();
  await page.locator('#criar-cena #new-scene-title').fill('Cena seguinte');
  await page.locator('#criar-cena #new-scene-location').selectOption('area-2');
- await page.locator('#criar-cena #new-scene-read-aloud').fill('O portão se abre.');
- await page.locator('#criar-cena #new-scene-description').fill('Há um segredo.');
+ await expect(page.locator('#criar-cena [id="new-scene-read-aloud"]')).toHaveCount(0);
  await page.locator('#criar-cena #add-scene').click();
  await expect(page.locator('#cenas [data-scene-row]')).toHaveCount(2);
+ const newScene=page.locator('#cenas [data-scene-row]').filter({has:page.locator('strong', {hasText:'Cena seguinte'})});
+ await newScene.locator('[data-scene-editor] summary').click();
+ await newScene.locator('[data-scene-field="readAloud"]').fill('O portão se abre.');
+ await newScene.locator('[data-scene-field="readAloud"]').blur();
+ await newScene.locator('[data-scene-field="description"]').fill('Há um segredo.');
+ await newScene.locator('[data-scene-field="description"]').blur();
  const second=(await stored(page)).scenes.find(s=>s.title==='Cena seguinte');
  expect(second.areaId).toBe('area-2');
  expect(second.readAloud).toBe('O portão se abre.');
