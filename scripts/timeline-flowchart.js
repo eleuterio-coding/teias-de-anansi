@@ -17,7 +17,7 @@ export function timelineDisclosure(node,collapsed,view='list'){
 }
 function campaignNode(node,depth=0,collapsedIds=new Set(),ordinal=null,{readOnly=false}={}){
  const children=array(node.children),hasChildren=children.length>0,collapsed=collapsedIds.has(node.id);
- const kind=node.automatic?(node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento';
+ const kind=node.automatic?(node.kind==='scene'?'Cena':node.kind==='session'?'Sessão':'Aventura'):depth?'Subevento':'Evento';
  const title=esc(node.text),id=esc(node.id);
  const linked=Boolean(node.automatic&&node.href);
  const nodeClass=`hub-diagram-node${node.automatic?' hub-diagram-node-linked':''}${hasChildren?' timeline-card-has-children':''}`;
