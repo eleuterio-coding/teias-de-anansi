@@ -16,8 +16,8 @@ import{renderAdventureExploration,renderAdventureFactions,bindAdventureExplorati
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261027-release-reset3';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261027-scenes-cast-v1';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261027-release-reset3';
-import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261023-status-context12';
-import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261023-status-context12';
+import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261027-campaign-adventure-layout3';
+import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261027-campaign-adventure-layout3';
 
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search);let attachedMonstersExpanded=false;
