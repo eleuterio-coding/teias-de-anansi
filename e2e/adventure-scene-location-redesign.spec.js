@@ -105,6 +105,31 @@ test('Cenas usam mesmo cadastro e edição, mantém narração e vínculos priva
  await expect(page.locator('#linha-tempo .campaign-timeline-flow > .timeline-item')).toHaveCount(2);
 });
 
+test('Alternar Lista e Fluxograma mantém as cenas e não remonta a Aventura',async({page})=>{
+ await visit(page);
+ const timeline=page.locator('#linha-tempo');
+ const sceneEditor=page.locator('#cenas [data-scene-row="scene-1"] [data-scene-editor]');
+ await sceneEditor.locator('summary').click();
+ await expect(sceneEditor).toHaveAttribute('open','');
+ // Esta marca no DOM sinaliza regressões que substituem a página inteira.
+ await page.locator('#cenas').evaluate(node=>{node.dataset.timelinePreserve='yes'});
+ for(const mode of ['flowchart','list','flowchart','list']){
+  await timeline.locator('[data-timeline-view="'+mode+'"]').click();
+  await expect(timeline.locator('[data-timeline-view="'+mode+'"]')).toHaveAttribute('aria-pressed','true');
+  if(mode==='flowchart'){
+   await expect(timeline.locator('.hub-diagram-root')).toHaveCount(1);
+   await expect(timeline.locator('.hub-diagram-linked-name')).toHaveText('A chegada');
+  }else{
+   await expect(timeline.locator('.timeline-item-linked')).toHaveCount(1);
+   await expect(timeline.locator('.campaign-linked-name')).toHaveText('A chegada');
+  }
+  await expect(page.locator('#cenas')).toHaveAttribute('data-timeline-preserve','yes');
+  await expect(sceneEditor).toHaveAttribute('open','');
+ }
+ const saved=await stored(page);
+ expect(saved.scenes.find(scene=>scene.id==='scene-1')?.title).toBe('A chegada');
+});
+
 test('Locais vinculam NPCs e monstros como inimigos ou aliados e filtram publicação',async({page})=>{
  await visit(page);
  const details=page.locator('#exploracao [data-ex-area="area-1"] [data-ex-area-editor]');
