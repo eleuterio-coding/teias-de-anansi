@@ -12,7 +12,7 @@ import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,create
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261023-simplified3';
 
-import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261027-scenes-cast-v2';
+import{renderAdventureExploration,renderAdventureFactions,bindAdventureExploration}from'./adventure-exploration-ui.js?v=20261027-remove-extra-enemies1';
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261027-release-reset3';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261027-scenes-cast-v1';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261027-release-reset3';
