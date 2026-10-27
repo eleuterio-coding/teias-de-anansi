@@ -7,6 +7,12 @@ on:
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-router.js'
       - 'scripts/adventure-state.js'
+      - 'scripts/adventure-combat-scenes.js'
+      - 'scripts/session-encounter-ui.js'
+      - 'scripts/session-combat-ui.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'sessoes.html'
+      - 'tests/auditar-cenas-combate.mjs'
       - 'scripts/adventure-exploration-ui.js'
       - 'scripts/adventure-exploration-state.js'
       - 'scripts/collaboration-model.js'
@@ -32,6 +38,12 @@ jobs:
           node --check scripts/adventure-ui.js
           node --check scripts/adventure-router.js
           node --check scripts/adventure-state.js
+          node --check scripts/adventure-combat-scenes.js
+          node --check scripts/session-encounter-ui.js
+          node --check scripts/session-combat-ui.js
+          node --check scripts/campaign-sessions-ui.js
+          node --check tests/auditar-cenas-combate.mjs
+          node tests/auditar-cenas-combate.mjs
           node --check scripts/adventure-exploration-ui.js
           node --check scripts/adventure-exploration-state.js
           node --check scripts/collaboration-model.js
