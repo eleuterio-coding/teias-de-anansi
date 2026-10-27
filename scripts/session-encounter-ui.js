@@ -1,5 +1,5 @@
-import{readAdventures}from'./adventure-state.js?v=20261027-scene-types1';
-import{combatSceneOptions,resolveCombatScene,ensureSceneEncounter,populateSceneOpponents,populateScenePlayers,syncAdventureCombatLink}from'./adventure-combat-scenes.js?v=20261027-scene-combat1';
+import{readAdventures}from'./adventure-state.js?v=20261027-auto-combat-roster1';
+import{combatSceneOptions,resolveCombatScene,ensureSceneEncounter,populateSceneOpponents,populateScenePlayers,syncAdventureCombatLink}from'./adventure-combat-scenes.js?v=20261027-auto-combat-roster1';
 import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles-final3';
