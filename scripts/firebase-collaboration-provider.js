@@ -1,4 +1,4 @@
-import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20261023-adventure-visibility8';
+import{normalizeAccount,normalizeMembership,normalizeUsername,campaignSharedCoreProjection,sessionSharedProjection,adventureSharedRecord,collaborationMemberBundle}from'./collaboration-model.js?v=20261027-scenes-cast-v1';
 import{canonicalJson,samePersistedFields}from'./collaboration-quota-utils.js?v=20261022-quota1';
 const CONFIG_URL='dados/firebase-config.json?v=20260917-player-catalog1';
 const text=v=>String(v??'').trim(),now=()=>new Date().toISOString(),arr=v=>Array.isArray(v)?v:[],unique=v=>[...new Set(arr(v).map(text).filter(Boolean))];
