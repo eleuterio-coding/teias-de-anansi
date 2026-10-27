@@ -140,7 +140,8 @@ export function renderAdventureExploration(a,c){
   '<label>Mapa<input type="file" name="mapFile" accept="image/jpeg,image/png,image/webp"></label>'+
   '<label>URL do mapa<input name="mapUrl" placeholder="https://... ou caminho relativo"></label>'+
   '<label>Tipo<input name="type" placeholder="Masmorra, região, cidade..."></label>'+
-  '<label>Descrição<textarea name="description" rows="2"></textarea></label>'+
+
+
   '<button type="submit">Adicionar mapa</button></form></section>';
  return areaList+mapList+areaCreate+mapCreate;
 }
@@ -226,7 +227,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   event.preventDefault();
   const form=event.target,name=form.elements.name.value.trim();if(!name)return;
   const file=form.elements.mapFile.files?.[0]||null;
-  const result=createExplorationEntity(get(),'level',{name,mapUrl:form.elements.mapUrl.value,type:form.elements.type.value,description:form.elements.description.value});
+  const result=createExplorationEntity(get(),'level',{name,mapUrl:form.elements.mapUrl.value,type:form.elements.type.value,description:''});
   if(!result)return;
   expandedLevelIds.add(result.entity.id);apply(result,'Mapa criado.');
   if(file)try{await syncMap(result.entity.id,{file})}catch(error){feedback(error.message,false)}
