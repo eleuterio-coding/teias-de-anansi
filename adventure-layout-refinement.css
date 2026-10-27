@@ -720,116 +720,13 @@
  .adventure-floating-card{animation:none!important;transition:none!important}
 }
 
-/* O preview de Locais é deslocado para body durante o arrasto; por isso
-   replica a composição do card original fora do escopo #adventure-root. */
-.adventure-floating-card.explore-area-card{
- display:grid!important;
- grid-template-rows:minmax(0,1fr) auto;
- padding:0!important;
- align-items:stretch;
- gap:0!important;
+/* O preview agora é filho da lista de origem: herda o mesmo grid e
+   os estilos responsivos do card, sem reconstruir sua aparência fora do DOM. */
+#adventure-root .adventure-sortable > [data-adventure-sort-preview]{
+ pointer-events:none!important;
+ z-index:10080!important;
+ touch-action:none;
 }
-.adventure-floating-card.explore-area-card .explore-record-editor{
- min-height:0;
- height:100%;
- overflow:hidden;
-}
-.adventure-floating-card.explore-area-card .explore-record-summary{
- box-sizing:border-box;
- display:flex;
- flex-direction:column;
- justify-content:space-between;
- height:100%;
- min-height:0;
- padding:7px 40px 7px 9px;
- gap:5px;
- list-style:none;
-}
-.adventure-floating-card.explore-area-card .explore-area-overview{
- display:flex;
- flex-direction:column;
- gap:5px;
- min-width:0;
- overflow:hidden;
-}
-.adventure-floating-card.explore-area-card .explore-area-heading{
- display:flex;
- align-items:flex-start;
- gap:5px;
- min-width:0;
-}
-.adventure-floating-card.explore-area-card .explore-area-code{
- flex:none;
- font-size:.65rem;
- font-weight:750;
- border:1px solid var(--hub-border,#344a60);
- border-radius:6px;
- padding:2px 4px;
-}
-.adventure-floating-card.explore-area-card .explore-area-name{
- min-width:0;
- font-size:.83rem;
- font-weight:750;
- line-height:1.2;
- overflow:hidden;
- display:-webkit-box;
- -webkit-box-orient:vertical;
- -webkit-line-clamp:2;
-}
-.adventure-floating-card.explore-area-card .explore-area-context{
- display:grid;
- gap:2px;
- min-width:0;
-}
-.adventure-floating-card.explore-area-card .explore-area-context>span{
- display:flex;
- gap:4px;
- font-size:.68rem;
- min-width:0;
-}
-.adventure-floating-card.explore-area-card .explore-area-context small{
- font-size:.61rem;
- color:var(--hub-muted,#b0c3d6);
-}
-.adventure-floating-card.explore-area-card .explore-area-context>span>span{
- overflow:hidden;
- white-space:nowrap;
- text-overflow:ellipsis;
-}
-.adventure-floating-card.explore-area-card .explore-area-summary-actions{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:5px;
- font-size:.68rem;
-}
-.adventure-floating-card.explore-area-card .explore-record-status{
- border:1px solid var(--hub-border,#52677d);
- border-radius:7px;
- padding:3px 5px;
-}
-.adventure-floating-card.explore-area-card .explore-record-toggle-label{
- color:var(--hub-accent-2,#8bccff);
-}
-.adventure-floating-card.explore-area-card .explore-record-visibility-bar{
- display:flex;
- align-items:center;
- border-top:1px solid var(--hub-border,#344a60);
- padding:3px 8px;
- font-size:.7rem;
-}
-.adventure-floating-card.explore-area-card .explore-card-publish{
- display:inline-flex;
- align-items:center;
- gap:5px;
-}
-.adventure-floating-card.explore-area-card .explore-card-publish input{
- width:18px;
- height:18px;
- margin:0;
-}
-.adventure-floating-card.explore-area-card>.explore-area-drag-handle{display:none}
-
 
 /* A mesma interação de arrastar e soltar em TODOS os cartões ordenáveis.
    Abrir, editar, selecionar e publicar permanecem ações independentes. */
