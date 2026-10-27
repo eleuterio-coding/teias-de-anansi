@@ -404,6 +404,10 @@
    Os controles ocupam somente suas próprias colunas, sem reservar largura
    fantasma entre o seletor do personagem e as quatro ações. No container
    estreito, jogador/personagem ocupam duas linhas sem rolagem horizontal. */
+/* Ancora o cartão flutuante à seção original durante o arraste. */
+#table-root:not([data-campaign-access="player"]) #jogadores{
+ position:relative;
+}
 #table-root:not([data-campaign-access="player"]) #jogadores .roster-list{
  gap:8px;
  min-width:0;
