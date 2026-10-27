@@ -1,4 +1,5 @@
-import{readAdventures}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{readAdventures}from'./adventure-state.js?v=20261027-scene-types1';
+import{combatSceneOptions,ensureSceneEncounter,syncAdventureCombatLink}from'./adventure-combat-scenes.js?v=20261027-scene-combat1';
 import{createEncounter}from'./encounter-state.js?v=20261022-chronicles-final3';
 import{read,write}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,updateCampaignSession,readStandaloneSessions,writeStandaloneSessions,updateStandaloneSession}from'./campaign-state.js?v=20261022-chronicles-final3';
@@ -21,7 +22,7 @@ function contextForCard(card){
 }
 function persist(ctx,message='Combate salvo.'){
  if(!ctx?.session)return false;
- const patch={combats:ctx.session.combats,activeCombatId:ctx.session.activeCombatId,summary:ctx.session.summary,encounters:ctx.session.encounters};
+ const patch={combats:ctx.session.combats,activeCombatId:ctx.session.activeCombatId,summary:ctx.session.summary,encounters:ctx.session.encounters,scenes:ctx.session.scenes};
  if(ctx.source==='campaign'){const r=updateCampaignSession(ctx.campaigns,ctx.campaign.id,ctx.session.id,patch);if(!r.ok){announce(r.reason,false);return false}writeCampaigns(r.list)}
  else{const r=updateStandaloneSession(ctx.standalone,ctx.session.id,patch);if(!r.ok){announce(r.reason,false);return false}writeStandaloneSessions(r.list)}
  window.dispatchEvent(new CustomEvent('hub-rpg:sessions-local-updated'));announce(message,true);return true
@@ -126,7 +127,7 @@ function encounterOptions(session){return'<option value="">— Selecione —</op
 function managerHtml(ctx){
  const active=activeCombat(ctx.session),drafts=(ctx.session.combats||[]).filter(c=>c.status==='draft'),history=(ctx.session.combats||[]).filter(c=>c.status==='completed'||c.status==='cancelled').sort((a,b)=>String(b.endedAt||b.updatedAt).localeCompare(String(a.endedAt||a.updatedAt)));
  return'<section id="combates" class="session-subsection session-combat-manager"><div class="combat-section-title"><div><span class="combat-kicker">⚔ CONTROLE DE COMBATE</span><h4>Combates da Sessão</h4></div></div>'+
- (active?activeCombatHtml(active,ctx):'<div class="combat-empty-state"><strong>Nenhum combate em andamento</strong><div class="combat-create-grid"><label>Combate rápido<input data-new-combat-title placeholder="Nome do combate"></label><button type="button" data-create-quick-combat>Criar combate rápido</button><button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro do zero e preparar combate</button><label>Usar Encontro existente<select data-combat-encounter>'+encounterOptions(ctx.session)+'</select></label><button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button></div></div>')+
+ (active?activeCombatHtml(active,ctx):'<div class="combat-empty-state"><strong>Nenhum combate em andamento</strong><div class="combat-create-grid"><label>Combate rápido<input data-new-combat-title placeholder="Nome do combate"></label><button type="button" data-create-quick-combat>Criar combate rápido</button><button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro do zero e preparar combate</button><label>Cena de combate da Aventura / Sessão<select data-combat-adventure-scene>'+combatSceneOptions(ctx.session,ctx.adventure)+'</select></label><button type="button" class="secondary" data-create-from-adventure-scene>Preparar combate da cena</button><label>Usar Encontro existente<select data-combat-encounter>'+encounterOptions(ctx.session)+'</select></label><button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button></div></div>')+
  (drafts.length?'<div class="combat-history-section"><h4>Preparados</h4>'+drafts.map(c=>draftCombatHtml(c,ctx)).join('')+'</div>':'')+
  '<div class="combat-history-section"><h4>Histórico</h4>'+(history.length?history.map(c=>historyHtml(c,ctx)).join(''):'<div class="encounter-empty">Nenhum combate finalizado nesta Sessão.</div>')+'</div></section>'
 }
@@ -220,6 +221,17 @@ function bindManager(card,ctx){
 
  if(!manager)return;
  manager.querySelector('[data-create-quick-combat]')?.addEventListener('click',()=>{const title=manager.querySelector('[data-new-combat-title]')?.value.trim(),r=createCombat(ctx.session,{title:title||'Combate rápido'});if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);persist(ctx,'Combate rápido preparado.')});
+ manager.querySelector('[data-create-from-adventure-scene]')?.addEventListener('click',()=>{
+  const choice=manager.querySelector('[data-combat-adventure-scene]')?.value||'';
+  if(!choice)return announce('Selecione uma Cena de combate da Aventura ou Sessão.',false);
+  const result=ensureSceneEncounter(ctx,choice);
+  if(!result.ok)return announce(result.reason||'Não foi possível preparar a cena.',false);
+  if((ctx.session.combats||[]).some(c=>c.encounterId===result.encounter.id&&['draft','active'].includes(c.status)))return announce('Este encontro já possui um combate preparado ou ativo.');
+  const combat=createCombatFromEncounter(ctx.session,result.encounter.id);
+  if(!combat.ok)return announce(combat.reason,false);
+  addSessionCharacters(ctx,combat.combat);hydrateCombatCharacters(ctx,combat.combat);
+  if(persist(ctx,'Combate da Cena preparado.'))syncAdventureCombatLink(ctx,result);
+ });
  manager.querySelector('[data-create-from-encounter]')?.addEventListener('click',()=>{const id=manager.querySelector('[data-combat-encounter]')?.value;if(!id)return announce('Selecione um Encontro.',false);const r=createCombatFromEncounter(ctx.session,id);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.')});
  for(const node of manager.querySelectorAll('[data-combat]')){const combat=combatForNode(ctx,node);if(combat)bindCombatNode(ctx,node,combat)}
 }
