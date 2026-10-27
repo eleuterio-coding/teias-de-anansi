@@ -1,0 +1,45 @@
+name: Validar Aventuras - Cenas, Locais, Mapas e Linha do Tempo
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'aventuras.html'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/adventure-state.js'
+      - 'scripts/adventure-exploration-ui.js'
+      - 'scripts/adventure-exploration-state.js'
+      - 'scripts/collaboration-model.js'
+      - 'scripts/timeline-flowchart.js'
+      - 'adventure-layout-refinement.css'
+      - 'timeline-flowchart.css'
+      - 'e2e/adventure-scene-location-redesign.spec.js'
+      - '.github/workflows/validar-aventura-cenas-locais.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe de todos os módulos modificados
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-router.js
+          node --check scripts/adventure-state.js
+          node --check scripts/adventure-exploration-ui.js
+          node --check scripts/adventure-exploration-state.js
+          node --check scripts/collaboration-model.js
+          node --check scripts/timeline-flowchart.js
+          node --check e2e/adventure-scene-location-redesign.spec.js
+      - name: Instalar navegador para testar a interface
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Verificar gravação, privacidade e comportamento no desktop e no celular
+        run: npx playwright test e2e/adventure-scene-location-redesign.spec.js --project=desktop-chromium --project=mobile-chromium --workers=1 --reporter=line
