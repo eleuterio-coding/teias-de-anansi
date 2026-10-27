@@ -188,7 +188,7 @@ function sceneCard(scene,a,i=0){
      <label class="wide">Desfecho<textarea data-scene-field="outcome">${esc(scene.outcome)}</textarea></label>
      <label class="wide">Notas do Mestre<textarea data-scene-field="notes">${esc(scene.notes)}</textarea></label>
     </div></section>
-   <section class="explore-editor-group"><header><h4>Participantes e objetivos</h4><p>Selecione os presentes na cena e defina quais são revelados aos jogadores.</p></header>
+   <section class="explore-editor-group"><header><h4>Participantes e objetivos</h4><p>Selecione os presentes, marque os inimigos que entrarão no Controle de Combate e defina o que os jogadores podem ver.</p></header>
     <div class="form-grid two adventure-scene-presence">
      <fieldset><legend>NPCs presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(linkedNpcs,scene.npcIds,scene.visibleNpcIds,'npcIds','visibleNpcIds',scene.enemyNpcIds)}</div></fieldset>
      <fieldset><legend>Monstros presentes na cena</legend><div class="entity-checks adventure-cast-list">${sceneCast(ordered(a.monsters||[]),scene.monsterIds,scene.visibleMonsterIds,'monsterIds','visibleMonsterIds',scene.enemyMonsterIds)}</div></fieldset>
