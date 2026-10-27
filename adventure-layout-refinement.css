@@ -1001,3 +1001,13 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
 body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-detail-nav{
  margin-top:4px!important;
 }
+
+/* Mesma largura matemática das células da grade de Aventuras,
+   descontando borda e padding de 16px do grupo da Campanha. */
+#adventure-root .adventure-create-tile-row{
+ padding-inline:17px!important;
+ gap:clamp(14px,1.5vw,22px)!important;
+}
+@media(max-width:680px){
+ #adventure-root .adventure-create-tile-row{padding-inline:12px!important}
+}
