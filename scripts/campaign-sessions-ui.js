@@ -6,7 +6,7 @@ import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-prev
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
 import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles-final3';
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{readAdventures,writeAdventures,updateAdventureEntity,SCENE_TYPE_LABELS}from'./adventure-state.js?v=20261027-scene-types1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
 import{playerMode,sharedCampaignRows,sharedAdventures}from'./collaboration-view.js?v=20261016-master-preview1';
 import{sessionAdventureGroupsHtml,bindSessionAdventureScroll}from'./session-adventure-groups.js?v=20261023-panoramic3';
@@ -198,6 +198,7 @@ function sceneReferenceHtml(session,scene){
  const materials=(linked.handoutIds||[]).map(id=>a?.handouts?.find(x=>x.id===id)?.title).filter(Boolean);
  const treasures=(linked.treasureIds||[]).map(id=>a?.treasures?.find(x=>x.id===id)?.name).filter(Boolean);
  const bits=[];
+ if(linked.sceneType&&linked.sceneType!=='other')bits.push(`<span class="badge">Tipo: ${esc(SCENE_TYPE_LABELS[linked.sceneType]||SCENE_TYPE_LABELS.other)}</span>`);
  if(location)bits.push(`<span class="badge">Local: ${esc(location.name)}</span>`);
  if(npcs.length)bits.push(`<span class="badge">NPCs: ${esc(npcs.join(', '))}</span>`);
  if(clues.length)bits.push(`<span class="badge">Pistas: ${esc(clues.join(', '))}</span>`);
