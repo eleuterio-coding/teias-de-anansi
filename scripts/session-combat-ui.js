@@ -232,11 +232,22 @@ function bindManager(card,ctx){
   addSessionCharacters(ctx,combat.combat);hydrateCombatCharacters(ctx,combat.combat);
   if(persist(ctx,'Combate da Cena preparado.'))syncAdventureCombatLink(ctx,result);
  });
- manager.querySelector('[data-create-from-encounter]')?.addEventListener('click',()=>{const id=manager.querySelector('[data-combat-encounter]')?.value;if(!id)return announce('Selecione um Encontro.',false);const r=createCombatFromEncounter(ctx.session,id);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.')});
+ manager.querySelector('[data-create-from-encounter]')?.addEventListener('click',()=>{const id=manager.querySelector('[data-combat-encounter]')?.value;if(!id)return announce('Selecione um Encontro.',false);if((ctx.session.combats||[]).some(c=>c.encounterId===id&&['draft','active'].includes(c.status)))return announce('Este Encontro já possui um combate preparado ou ativo.');const r=createCombatFromEncounter(ctx.session,id);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.')});
  for(const node of manager.querySelectorAll('[data-combat]')){const combat=combatForNode(ctx,node);if(combat)bindCombatNode(ctx,node,combat)}
 }
 function createFromEncounterEvent(event){
- const detail=event.detail||{};for(const card of document.querySelectorAll('[data-session-id]')){if(card.dataset.sessionId!==detail.sessionId)continue;const ctx=contextForCard(card),r=createCombatFromEncounter(ctx.session,detail.encounterId);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.');break}
+ const detail=event.detail||{};
+ for(const card of document.querySelectorAll('[data-session-id]')){
+  if(card.dataset.sessionId!==detail.sessionId)continue;
+  const ctx=contextForCard(card),encounter=ctx.session?.encounters?.find(e=>e.id===detail.encounterId);
+  if(!encounter)return announce('Encontro não encontrado.',false);
+  if((ctx.session.combats||[]).some(c=>c.encounterId===encounter.id&&['draft','active'].includes(c.status)))return announce('O combate desta Cena já está preparado.');
+  const r=createCombatFromEncounter(ctx.session,encounter.id);
+  if(!r.ok)return announce(r.reason,false);
+  addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);
+  persist(ctx,'Controle de Combate preparado com os inimigos da Cena e os personagens da Sessão.');
+  break;
+ }
 }
 function init(){injectAll();const root=document.getElementById('sessions-list');if(root)new MutationObserver(()=>queueMicrotask(injectAll)).observe(root,{childList:true,subtree:true});window.addEventListener('hub-rpg:create-combat-from-encounter',createFromEncounterEvent)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
