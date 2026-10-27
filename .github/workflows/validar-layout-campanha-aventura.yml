@@ -1,0 +1,42 @@
+name: Validar layout Campanha e Aventura
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'campaign-layout.css'
+      - 'adventure-layout-refinement.css'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-list-card.js'
+      - 'scripts/adventure-list-groups.js'
+      - 'scripts/adventure-router.js'
+      - 'scripts/adventure-exploration-ui.js'
+      - 'aventuras.html'
+      - 'mesa.html'
+      - 'e2e/campaign-adventure-layout-parity.spec.js'
+      - 'e2e/adventure-scene-location-redesign.spec.js'
+      - '.github/workflows/validar-layout-campanha-aventura.yml'
+  workflow_dispatch:
+jobs:
+  layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar JavaScript
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-router.js
+          node --check scripts/adventure-list-card.js
+          node --check scripts/adventure-list-groups.js
+          node --check scripts/adventure-exploration-ui.js
+          node --check e2e/campaign-adventure-layout-parity.spec.js
+          node --check e2e/adventure-scene-location-redesign.spec.js
+      - name: Preparar Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Auditar layout e edição no desktop e celular
+        run: npx playwright test e2e/campaign-adventure-layout-parity.spec.js e2e/adventure-scene-location-redesign.spec.js --project=desktop-chromium --project=mobile-chromium --workers=1 --reporter=line
