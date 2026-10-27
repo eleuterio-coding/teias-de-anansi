@@ -847,3 +847,11 @@
  #adventure-root #exploracao .adventure-cast-choice,
  #adventure-root #cenas .adventure-scene-cast-row{grid-template-columns:minmax(0,1fr);gap:9px}
 }
+
+#adventure-root #exploracao .adventure-presence-summary{
+ grid-column:1/-1;display:grid;gap:5px;min-width:0;padding:12px;
+ border:1px solid var(--hub-border,#344a60);border-radius:9px;
+ background:var(--hub-surface-2,#17293a);
+}
+#adventure-root #exploracao .adventure-presence-summary strong{font-size:.86rem;line-height:1.35}
+#adventure-root #exploracao .adventure-presence-summary p{font-size:.84rem;line-height:1.45;margin:0 0 9px;overflow-wrap:anywhere}
