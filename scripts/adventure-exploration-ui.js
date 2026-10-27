@@ -25,6 +25,11 @@ function referenceChecks(key,rows,selected=[]){
 function recordTitle(label,subtitle){
  return '<span class="explore-record-title"><strong>'+esc(label)+'</strong><span class="mini">'+esc(subtitle)+'</span></span>';
 }
+function castChoices(rows,selected=[],enemies=[],shown=[],kind='npc'){
+ const selectedIds=new Set(selected),enemyIds=new Set(enemies),shownIds=new Set(shown);
+ const key=kind==='npc'?'npcIds':'monsterIds';
+ return rows.length?rows.map(row=>`<div class="adventure-cast-choice"><label><input type="checkbox" data-ex-ref="${key}" value="${esc(row.id)}" ${selectedIds.has(row.id)?'checked':''}>${esc(row.name)}</label><label><input type="checkbox" data-ex-enemy="${kind}" value="${esc(row.id)}" ${enemyIds.has(row.id)?'checked':''}>Inimigo</label><label><input type="checkbox" data-ex-visible="${kind}" value="${esc(row.id)}" ${shownIds.has(row.id)?'checked':''}>Mostrar aos jogadores</label></div>`).join(''):'<p class="mini">Nenhum registro na Aventura. Adicione NPCs ou monstros primeiro.</p>'
+}
 function areaDetail(area,a,c,exploration){
  const levels=arr(exploration.levels),areas=arr(exploration.areas),name=areaLabel(area);
  const level=levels.find(x=>x.id===area.levelId);
@@ -47,7 +52,9 @@ function areaDetail(area,a,c,exploration){
      field('Tipo de ambiente','type',area.type)+
      '</div></section><section class="explore-editor-group"><header><h4>Desafios e recompensas</h4><p>XP, inimigos, perigos, tesouros e testes.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
-     field('Inimigos','enemies',area.enemies,'textarea','rows="2"')+
+     field('Inimigos adicionais / observações','enemies',area.enemies,'textarea','rows="2"')+
+      '<fieldset class="adventure-cast-fieldset"><legend>NPCs presentes no local (inimigos ou aliados)</legend>'+castChoices(arr(c?.npcs).filter(n=>arr(a.npcIds).includes(n.id)),area.npcIds,area.enemyNpcIds,area.visibleNpcIds,'npc')+'</fieldset>'+
+      '<fieldset class="adventure-cast-fieldset"><legend>Monstros presentes no local</legend>'+castChoices(arr(a.monsters),area.monsterIds,area.enemyMonsterIds,area.visibleMonsterIds,'monster')+'</fieldset>'+
      field('Armadilhas e perigos','hazards',area.hazards,'textarea','rows="2"')+
      field('Tesouro','treasure',area.treasure,'textarea','rows="2"')+
      field('Testes e mecânicas','checks',area.checks,'textarea','rows="2"')+
@@ -159,7 +166,13 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
   });
   const toggle=node.querySelector('[data-ex-publish]');
   if(toggle)changes.visibleToPlayers=toggle.checked;
-  node.querySelectorAll('[data-ex-ref]').forEach(input=>{
+  if(kind==='area'){
+    changes.enemyNpcIds=[...node.querySelectorAll('[data-ex-enemy="npc"]:checked')].map(el=>el.value);
+    changes.enemyMonsterIds=[...node.querySelectorAll('[data-ex-enemy="monster"]:checked')].map(el=>el.value);
+    changes.visibleNpcIds=[...node.querySelectorAll('[data-ex-visible="npc"]:checked')].map(el=>el.value);
+    changes.visibleMonsterIds=[...node.querySelectorAll('[data-ex-visible="monster"]:checked')].map(el=>el.value);
+   }
+   node.querySelectorAll('[data-ex-ref]').forEach(input=>{
    const key=input.dataset.exRef;
    if(!Object.hasOwn(changes,key))changes[key]=[...node.querySelectorAll('[data-ex-ref="'+key+'"]:checked')].map(x=>x.value);
   });
