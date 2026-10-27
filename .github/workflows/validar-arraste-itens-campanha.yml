@@ -1,5 +1,13 @@
 name: Validar arraste de Atos, Locais e Linha do Tempo
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/campaign-table-ui.js'
+      - 'campaigns.css'
+      - 'campaign-layout.css'
+      - 'e2e/campaign-roster-drag-preview.spec.js'
+      - '.github/workflows/validar-arraste-itens-campanha.yml'
   pull_request:
     paths:
       - 'scripts/campaign-structured-ui.js'
@@ -10,6 +18,7 @@ on:
       - 'tests/auditar-editor-campanha.mjs'
       - 'e2e/campaign-full-item-drag.spec.js'
       - 'e2e/campaign-liftable-cards.spec.js'
+      - 'e2e/campaign-roster-drag-preview.spec.js'
       - 'e2e/campaign-status-filter.spec.js'
       - '.github/workflows/validar-arraste-itens-campanha.yml'
   workflow_dispatch:
@@ -25,8 +34,10 @@ jobs:
       - name: Verificar sintaxe
         run: |
           node --check scripts/campaign-structured-ui.js
+          node --check scripts/campaign-table-ui.js
           node --check e2e/campaign-full-item-drag.spec.js
           node --check e2e/campaign-liftable-cards.spec.js
+          node --check e2e/campaign-roster-drag-preview.spec.js
           node --check e2e/campaign-status-filter.spec.js
       - name: Testar operações e integridade dos dados
         run: |
@@ -37,4 +48,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Arrastar registros no desktop e celular
-        run: npx playwright test e2e/campaign-full-item-drag.spec.js e2e/campaign-liftable-cards.spec.js e2e/campaign-status-filter.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/campaign-full-item-drag.spec.js e2e/campaign-liftable-cards.spec.js e2e/campaign-roster-drag-preview.spec.js e2e/campaign-status-filter.spec.js --project=desktop-chromium --project=mobile-chromium
