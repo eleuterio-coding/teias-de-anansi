@@ -95,7 +95,7 @@ function levelDetail(level,areaCount=0){
 }
 function factionSection(exploration,a,c){
  return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
- '<div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
+ '<details class="adventure-monsters-attached adventure-attached-list"><summary>Facções adicionadas à Aventura ('+exploration.factions.length+')</summary><div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
     '<label>Relação com o grupo<select data-ex-field="stance">'+selectOptions(STANCES,f.stance)+'</select></label>'+
@@ -108,7 +108,7 @@ function factionSection(exploration,a,c){
 
     '</div><div class="row-actions"><button type="button" data-ex-save-faction>Salvar facção</button><button type="button" class="secondary" data-ex-delete="faction" data-ex-id="'+esc(f.id)+'">Excluir</button><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Fechar</button></div>':
     '<p class="mini">'+esc(f.relationship||f.publicDescription||'Sem relação registrada.')+'</p><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Editar facção</button>')+
-  '</article>').join('')+'</div>'+
+  '</article>').join('')+'</div></details>'+
   '<form id="ex-new-faction" class="explore-create-form"><label>Nova facção<input name="name" required placeholder="Nome da facção"></label><button type="submit">Adicionar facção</button></form></section>'
 }
 export function renderAdventureFactions(a,c){
