@@ -306,18 +306,13 @@ function workspaceHtml(a){
  <label>NPC cadastrado<select id="attach-existing-npc"><option value="">— Selecione um NPC —</option>${readRegisteredNpcs().filter(n=>!(c?.npcs||[]).some(row=>row.sheetId===n.id)).map(n=>option(n.id,n.name||'NPC sem nome','')).join('')}</select></label><button type="button" id="add-registered-npc">Vincular NPC</button></div>`);
  const scenes=section('Cenas','cenas',ordered(a.scenes).map((scene,i)=>sceneCard(scene,a,i)).join(''));
  const addScene=`<section id="criar-cena" class="card adventure-exploration adventure-create-panel">
-  <h2>Adicionar cena</h2><div class="form-grid two adventure-scene-create">
-  <label>Nome da cena<input id="new-scene-title"></label>
-  <label>Local<select id="new-scene-location">${areaChoices(a)}</select></label>
-  <label>Objetivo (somente Mestre)<select id="new-scene-objective">${objectiveOptions(a)}</select></label>
-  <label>NPC presente<select id="new-scene-npc">${npcOptions(a)}</select></label>
-  <label>Monstro presente<select id="new-scene-monster">${monsterOptions(a)}</select></label>
-  <label class="wide">Objetivo da cena (privado)<input id="new-scene-purpose"></label>
-  <label class="wide">Texto para narração<textarea id="new-scene-read-aloud" rows="3"></textarea></label>
-  <label class="wide">Descrição para o Mestre<textarea id="new-scene-description" rows="3"></textarea></label>
-  <label class="wide">Desfecho<textarea id="new-scene-outcome" rows="2"></textarea></label>
-  <label class="wide">Notas do Mestre<textarea id="new-scene-notes" rows="2"></textarea></label>
-  <button type="button" id="add-scene">Criar cena</button></div></section>`;
+  <h2>Adicionar cena</h2>
+  <div class="explore-create-form explore-create-scene">
+   <label>Nome da cena<input id="new-scene-title" required></label>
+   <label>Local<select id="new-scene-location">${areaChoices(a)}</select></label>
+   <button type="button" id="add-scene">Criar cena</button>
+  </div>
+ </section>`;
  return`${operationalHtml(a)}
  ${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)})}
  <nav class="section-nav adventure-nav hub-detail-nav">${nav.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>
