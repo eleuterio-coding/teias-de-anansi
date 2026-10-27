@@ -1,8 +1,8 @@
-import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261023-adventure-visibility8';
-import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261023-adventure-visibility8';
+import{createFirebaseCollaborationProvider}from'./firebase-collaboration-provider.js?v=20261027-scenes-cast-v1';
+import{pullCollaborations,syncOwnCharacters,publishMissingMasterCampaigns}from'./collaboration-sync.js?v=20261027-scenes-cast-v1';
 import{readCollaborationSession,writeCollaborationSession,clearCollaborationSession,readCollaborationCache,editableCharacterIds,playerCharacterIds,playerCharacterInfo}from'./collaboration-view.js?v=20261021-ficha-permissao3';
 import{CAMPAIGN_KEY,readCampaigns}from'./campaign-state.js?v=20261022-chronicles-final3';
-import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261022-chronicles-final3';
+import{ADVENTURE_KEY,readAdventures}from'./adventure-state.js?v=20261027-scenes-cast-v1';
 import{KEY as CHARACTER_KEY,read as readCharacters}from'./character-builder/state.js';
 import{deleteRemoteCampaign,deleteRemoteOwnCharacter,deleteRemoteManagedCharacter,deleteRemoteCharacterAsMaster}from'./firebase-realtime-ops.js?v=20261022-revocation1';
 import{changedEntityIds}from'./collaboration-quota-utils.js?v=20261022-quota1';
