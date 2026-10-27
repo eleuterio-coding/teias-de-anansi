@@ -54,7 +54,10 @@ function injectSceneLinks(card,ctx){for(const node of card.querySelectorAll('[da
 function injectCard(card){if(!card.querySelector('[data-save-session-main]')||card.querySelector('.session-encounter-manager'))return;const ctx=contextForCard(card);if(!ctx.session)return;for(const section of card.querySelectorAll('.session-subsection'))if(section.querySelector('h4')?.textContent.trim()==='Encontros')section.remove();card.insertAdjacentHTML('beforeend',managerHtml(ctx));injectSceneLinks(card,ctx);bindManager(card,ctx)}
 function injectAll(){for(const card of document.querySelectorAll('[data-session-id]'))injectCard(card)}
 function nodeData(node,ctx){
- const resolved=resolveCombatScene(ctx,node.querySelector('[data-encounter-scene]')?.value||'');
+ const selected=node.querySelector('[data-encounter-scene]')?.value||'';
+ const existing=ctx.session.encounters?.find(e=>e.id===node.dataset.encounter);
+ const allowLegacy=existing?.kind!=='combat'&&existing?.sessionSceneId===selected;
+ const resolved=resolveCombatScene(ctx,selected,{allowLegacy});
  if(!resolved.ok)return{error:resolved.reason};
  return{resolved,patch:{title:node.querySelector('[data-encounter-title]')?.value||'',kind:node.querySelector('[data-encounter-kind]')?.value||'combat',resolutionStatus:node.querySelector('[data-encounter-resolution-status]')?.value||'pending',resolutionMethod:node.querySelector('[data-encounter-resolution-method]')?.value||'other',sessionSceneId:resolved.sessionSceneId,summary:node.querySelector('[data-encounter-summary]')?.value||''}};
 }
