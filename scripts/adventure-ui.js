@@ -338,6 +338,21 @@ function bindParticipants(){
 }
 function bindEntityRows(){document.querySelectorAll('[data-entity-row]').forEach(row=>{const id=row.dataset.entityRow,key=row.dataset.entityKey;row.querySelectorAll('[data-entity-field]').forEach(input=>input.addEventListener('change',()=>commit(updateAdventureEntity(adventures,adventureId,key,id,{[input.dataset.entityField]:input.type==='number'?Number(input.value):input.value}),'Registro atualizado.')));row.querySelector('[data-clue-status]')?.addEventListener('change',e=>commit(setAdventureClueStatus(adventures,adventureId,id,e.target.value),'Pista atualizada.'));row.querySelector('[data-material-revealed]')?.addEventListener('change',e=>commit(setAdventureHandoutRevealed(adventures,adventureId,id,e.target.value==='true'),'Material atualizado.'));row.querySelector('[data-treasure-status]')?.addEventListener('change',e=>commit(setAdventureTreasureStatus(adventures,adventureId,id,e.target.value),'Tesouro atualizado.'));row.querySelector('[data-mission-status]')?.addEventListener('change',e=>commit(setAdventureMissionStatus(adventures,adventureId,id,e.target.value),'Missão atualizada.'));row.querySelectorAll('[data-mission-character]').forEach(input=>input.addEventListener('change',()=>{const characterIds=[...row.querySelectorAll('[data-mission-character]:checked')].map(el=>el.dataset.missionCharacter);commit(updateAdventureEntity(adventures,adventureId,'missions',id,{characterIds}),'Missão atualizada.')}))})}
 function bindScenes(){document.querySelectorAll('[data-scene-row]').forEach(row=>{row.querySelector('[data-scene-close]')?.addEventListener('click',()=>{row.querySelector('[data-scene-editor]').open=false});const id=row.dataset.sceneRow;row.querySelector('[data-scene-editor]')?.addEventListener('toggle',event=>{if(event.target.open)expandedSceneIds.add(id);else expandedSceneIds.delete(id)});row.querySelectorAll('[data-scene-field]').forEach(input=>input.addEventListener('change',()=>{const field=input.dataset.sceneField,value=input.type==='number'?Number(input.value):input.value;commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{[field]:value}),'Cena atualizada.')}));row.querySelector('[data-scene-session-scene]')?.addEventListener('change',e=>syncAdventureSceneToSessionScene(id,e.target.value));row.querySelector('[data-scene-encounter]')?.addEventListener('change',e=>{const scene=adventure()?.scenes.find(s=>s.id===id);commit(updateAdventureEntity(adventures,adventureId,'scenes',id,{encounterRef:{sessionId:scene?.sessionId||null,encounterId:e.target.value||null}}),'Encontro vinculado à cena.')});row.querySelectorAll('[data-scene-link],[data-scene-reveal],[data-scene-enemy]').forEach(input=>input.addEventListener('change',()=>{
+ // Um monstro recém-vinculado a uma Cena de combate é inimigo por padrão.
+ // É possível desmarcar "Inimigo" depois para representar um aliado.
+ if(input.matches('[data-scene-link="monsterIds"]')&&input.checked){
+  const scene=adventure()?.scenes.find(s=>s.id===id);
+  if(scene?.sceneType==='combat'){
+   const enemy=[...row.querySelectorAll('[data-scene-enemy="enemyMonsterIds"]')].find(el=>el.value===input.value);
+   if(enemy)enemy.checked=true;
+  }
+ }
+ // Marcar "Inimigo" inclui automaticamente o NPC/monstro na Cena.
+ if(input.matches('[data-scene-enemy]')&&input.checked){
+  const kind=input.dataset.sceneEnemy==='enemyNpcIds'?'npcIds':'monsterIds';
+  const member=[...row.querySelectorAll('[data-scene-link="'+kind+'"]')].find(el=>el.value===input.value);
+  if(member)member.checked=true;
+ }
  const patch={};
  for(const field of ['npcIds','monsterIds','missionIds'])patch[field]=[...row.querySelectorAll('[data-scene-link="'+field+'"]:checked')].map(el=>el.value);
  for(const [field,relation] of [['enemyNpcIds','npcIds'],['enemyMonsterIds','monsterIds'],['visibleNpcIds','npcIds'],['visibleMonsterIds','monsterIds']])patch[field]=[...row.querySelectorAll('['+(field.startsWith('enemy')?'data-scene-enemy':'data-scene-reveal')+'="'+field+'"]:checked')].map(el=>el.value).filter(id=>patch[relation].includes(id));
