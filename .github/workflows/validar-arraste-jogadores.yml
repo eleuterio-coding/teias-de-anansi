@@ -1,0 +1,32 @@
+name: Validar arraste de jogadores
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'campaign-layout.css'
+      - 'scripts/campaign-table-ui.js'
+      - 'scripts/campaign-table-router.js'
+      - 'mesa.html'
+      - 'e2e/campaign-roster-drag-preview.spec.js'
+      - '.github/workflows/validar-arraste-jogadores.yml'
+  workflow_dispatch:
+jobs:
+  arraste-jogadores:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/campaign-table-ui.js
+          node --check scripts/campaign-table-router.js
+          node --check e2e/campaign-roster-drag-preview.spec.js
+      - name: Preparar testes no navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Verificar geometria e persistência da reordenação
+        run: npx playwright test e2e/campaign-roster-drag-preview.spec.js --project=desktop-chromium --workers=1 --reporter=line
