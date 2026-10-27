@@ -34,7 +34,7 @@ export function adventureListCard(adventure,{parentName='',readOnly=false,sessio
     <div class="campaign-card-intro">
      <h2>${esc(heading)}</h2>
      ${description?`<p class="campaign-card-description">${esc(description)}</p>`:''}
-     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><div class="campaign-card-ancestry-status"><span class="hub-parent-link hub-ancestry-campaign"><span>Campanha</span>${parentName?`<strong>${esc(parentName)}</strong>`:'<strong>Campanha não encontrada</strong>'}</span><div class="campaign-card-status status-${esc(status)}">${statusControl}</div></div></div>
+     <div class="mini hub-ancestry adventure-card-campaign" role="group" aria-label="Campanha vinculada"><div class="campaign-card-ancestry-status"><span class="hub-parent-link hub-ancestry-campaign" title="Campanha de origem: ${esc(parentName||'Não encontrada')}"><span>Campanha:</span><strong>${esc(name)}</strong></span><div class="campaign-card-status status-${esc(status)}">${statusControl}</div></div></div>
     </div>
     <div class="campaign-card-metrics campaign-card-metrics-single" role="group" aria-label="Sessões da aventura">
      <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${sessionCount}</strong><span>${sessionCount===1?'Sessão':'Sessões'}</span></span></div>
