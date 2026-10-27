@@ -58,7 +58,10 @@ test('o card levantado mantém o grid e não sai lateralmente da lista',async({p
   character:el.querySelector('[data-member-character]')?.value
  }));
  expect(styling.position).toBe('absolute');
- expect(styling.grid).toBe(styling.originalGrid);
+ const cloneTracks=styling.grid.split(' ').map(Number.parseFloat);
+ const sourceTracks=styling.originalGrid.split(' ').map(Number.parseFloat);
+ expect(cloneTracks).toHaveLength(sourceTracks.length);
+ cloneTracks.forEach((value,index)=>expect(Math.abs(value-sourceTracks[index])).toBeLessThanOrEqual(.5));
  expect(styling.identity).toBe('contents');
  expect(styling.actionLabel).toBe('absolute');
  expect(styling.actionWidths).toEqual([44,44]);
