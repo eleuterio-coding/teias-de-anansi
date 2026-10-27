@@ -56,7 +56,6 @@ function areaDetail(area,a,c,exploration){
      field('Tipo de ambiente','type',area.type)+
      '</div></section><section class="explore-editor-group"><header><h4>Desafios e recompensas</h4><p>XP, inimigos, perigos, tesouros e testes.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
-     field('Inimigos adicionais / observações','enemies',area.enemies,'textarea','rows="2"')+
       '<div class="adventure-presence-summary"><strong>Inimigos cadastrados</strong><p>'+esc(enemyNames.join(', ')||'Nenhum inimigo vinculado')+'</p><strong>NPCs não inimigos</strong><p>'+esc(alliedNames.join(', ')||'Nenhum NPC não inimigo vinculado')+'</p></div>'+
       '<fieldset class="adventure-cast-fieldset"><legend>NPCs presentes no local (inimigos ou aliados)</legend>'+castChoices(arr(c?.npcs).filter(n=>arr(a.npcIds).includes(n.id)),area.npcIds,area.enemyNpcIds,area.visibleNpcIds,'npc')+'</fieldset>'+
       '<fieldset class="adventure-cast-fieldset"><legend>Monstros presentes no local</legend>'+castChoices(arr(a.monsters),area.monsterIds,area.enemyMonsterIds,area.visibleMonsterIds,'monster')+'</fieldset>'+
