@@ -130,6 +130,68 @@ test('Alternar Lista e Fluxograma mantém as cenas e não remonta a Aventura',as
  expect(saved.scenes.find(scene=>scene.id==='scene-1')?.title).toBe('A chegada');
 });
 
+test('Tipos de cena são editáveis e preservados após recarregar',async({page})=>{
+ await visit(page);
+ const row=page.locator('#cenas [data-scene-row="scene-1"]');
+ await row.locator('[data-scene-editor] summary').click();
+ const type=row.locator('[data-scene-field="sceneType"]');
+ await expect(type.locator('option')).toHaveCount(9);
+ await expect(type).toHaveValue('other');
+ await type.selectOption('combat');
+ await expect.poll(async()=>(await stored(page)).scenes[0].sceneType).toBe('combat');
+ await expect(page.locator('#cenas [data-scene-row="scene-1"] .explore-record-summary')).toContainText('Combate (encontro)');
+ await page.locator('#new-scene-title').fill('Conversa com o regente');
+ await page.locator('#new-scene-type').selectOption('dialogue');
+ await page.locator('#add-scene').click();
+ await expect.poll(async()=>(await stored(page)).scenes.find(s=>s.title==='Conversa com o regente')?.sceneType).toBe('dialogue');
+ await page.reload();
+ await expect(page.locator('#cenas [data-scene-row]')).toHaveCount(2);
+ await expect(page.locator('#cenas')).toContainText('Diálogo / interação social');
+});
+
+test('Cena de combate pode ser escolhida em Encontros e Combates sem duplicação',async({page})=>{
+ await visit(page);
+ const row=page.locator('#cenas [data-scene-row="scene-1"]');
+ await row.locator('[data-scene-editor] summary').click();
+ await row.locator('[data-scene-field="sceneType"]').selectOption('combat');
+ await row.locator('[data-scene-link="npcIds"][value="npc-2"]').check();
+ await row.locator('[data-scene-link="monsterIds"][value="monster-1"]').check();
+ await expect.poll(async()=>(await stored(page)).scenes[0].monsterIds).toContain('monster-1');
+ await page.evaluate(()=>{
+  const c=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'));
+  c[0].sessions=[{id:'qa-session-combat',number:1,title:'Emboscada',status:'planned',adventureId:'qa-scene-redesign-adv',scenes:[],encounters:[],combats:[]}];
+  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(c));
+ });
+ await page.goto('/sessoes.html?campaign='+campaignId+'&id=qa-session-combat');
+ const picker=page.locator('#encontros [data-new-encounter-scene]');
+ await expect(picker.locator('option[value="adventure:scene-1"]')).toHaveCount(1);
+ await picker.selectOption('adventure:scene-1');
+ await page.locator('#encontros [data-create-encounter]').click();
+ const getSession=()=>page.evaluate(()=>{
+  const campaigns=JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]');
+  return campaigns[0].sessions.find(s=>s.id==='qa-session-combat');
+ });
+ await expect.poll(async()=>(await getSession()).encounters.length).toBe(1);
+ const session=await getSession();
+ expect(session.scenes).toHaveLength(1);
+ expect(session.scenes[0].adventureSceneId).toBe('scene-1');
+ expect(session.encounters[0].kind).toBe('combat');
+ expect(session.encounters[0].sessionSceneId).toBe(session.scenes[0].id);
+ expect(session.encounters[0].combatants.map(c=>c.name)).toEqual(expect.arrayContaining(['Bandido','Ogro']));
+ await expect.poll(async()=>(await stored(page)).scenes[0].encounterRef.encounterId).toBe(session.encounters[0].id);
+ await page.locator('#encontros [data-new-encounter-scene]').selectOption(session.scenes[0].id);
+ await page.locator('#encontros [data-create-encounter]').click();
+ await expect.poll(async()=>(await getSession()).encounters.length).toBe(1);
+ await page.locator('#combates [data-combat-adventure-scene]').selectOption(session.scenes[0].id);
+ await page.locator('#combates [data-create-from-adventure-scene]').click();
+ await expect.poll(async()=>(await getSession()).combats.length).toBe(1);
+ const combatSession=await getSession();
+ expect(combatSession.combats[0].encounterId).toBe(session.encounters[0].id);
+ await page.locator('#combates [data-combat-adventure-scene]').selectOption(session.scenes[0].id);
+ await page.locator('#combates [data-create-from-adventure-scene]').click();
+ await expect.poll(async()=>(await getSession()).combats.length).toBe(1);
+});
+
 test('Locais vinculam NPCs e monstros como inimigos ou aliados e filtram publicação',async({page})=>{
  await visit(page);
  const details=page.locator('#exploracao [data-ex-area="area-1"] [data-ex-area-editor]');
