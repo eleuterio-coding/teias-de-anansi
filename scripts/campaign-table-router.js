@@ -19,5 +19,5 @@ function renderPlayerTable(){
  lastPlayerSnapshot=snapshot;readOnlyTable(shared)
 }
 function normalizeDm(){const list=readCampaigns();if(!list.some(c=>c.dmName!==DM_NAME))return;writeCampaigns(list.map(c=>({...c,dmName:DM_NAME})))}
-async function start(){if(playerMode()){renderPlayerTable();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();renderPlayerTable()});return}normalizeDm();await Promise.all([import('./campaign-table-ui.js?v=20261023-title-links4'),import('./campaign-table-adventure-ui.js?v=20261022-chronicles-final3')])}
+async function start(){if(playerMode()){renderPlayerTable();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();renderPlayerTable()});return}normalizeDm();await Promise.all([import('./campaign-table-ui.js?v=20261027-roster-drag-fix2'),import('./campaign-table-adventure-ui.js?v=20261022-chronicles-final3')])}
 start();
