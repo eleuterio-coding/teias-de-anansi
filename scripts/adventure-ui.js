@@ -285,7 +285,11 @@ function bindAdventureMonsterLibrary(){
  panel.addEventListener('adventure-monster-catalog-ready',updateAvailability);
  updateAvailability();
 }
-function section(title,id,body,form=''){return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2><div class="story-list">${body||''}</div>${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`}
+function section(title,id,body,form=''){
+ const attached=['npcs','missoes'].includes(id);
+ const list=attached?`<details class="adventure-monsters-attached adventure-attached-list"><summary>${esc(title)} adicionados à Aventura (${(body.match(/<article /g)||[]).length})</summary><div class="story-list">${body||'<div class="story-empty">Nenhum registro associado.</div>'}</div></details>`:`<div class="story-list">${body||''}</div>`;
+ return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2>${list}${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`
+}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['cenas','Cenas'],['criar-cena','Adicionar cena'],['exploracao','Locais'],['mapas','Mapas'],['criar-area','Adicionar área'],['criar-mapa','Adicionar mapa'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
