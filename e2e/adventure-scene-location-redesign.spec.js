@@ -37,7 +37,7 @@ const visit=async page=>{
 test('cards da Aventura na ordem correta, criação independente e listas anexadas',async({page})=>{
  await visit(page);
  const order=await page.locator('.hub-detail-grid > section[id]').evaluateAll(rows=>rows.map(n=>n.id));
- expect(order.indexOf('cenas')).toBeLessThan(order.indexOf('exploracao'));
+ expect(order.indexOf('cenas')+1).toBe(order.indexOf('exploracao'));
  expect(order.indexOf('criar-cena')).toBeGreaterThan(order.indexOf('cenas'));
  await expect(page.locator('#criar-cena #new-scene-title')).toBeVisible();
  await expect(page.locator('#criar-cena #new-scene-location option[value="area-1"]')).toHaveText('A01 - Sala 1');
