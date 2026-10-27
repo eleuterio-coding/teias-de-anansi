@@ -348,11 +348,9 @@ function saveAdventureSection(section){
  for(const row of section.querySelectorAll('[data-scene-row]')){
   const patch={};
   for(const input of row.querySelectorAll('[data-scene-field]'))patch[input.dataset.sceneField]=input.type==='number'?Number(input.value):input.value;
-  for(const input of row.querySelectorAll('[data-scene-link]')){
-   const key=input.dataset.sceneLink;if(key in patch)continue;
-   patch[key]=[...row.querySelectorAll(`[data-scene-link="${key}"]:checked`)].map(el=>el.value)
-  }
-  if(!Object.keys(patch).length)continue;
+  for(const field of ['npcIds','monsterIds','missionIds'])patch[field]=[...row.querySelectorAll('[data-scene-link="'+field+'"]:checked')].map(el=>el.value);
+   for(const [field,relation] of [['visibleNpcIds','npcIds'],['visibleMonsterIds','monsterIds']])patch[field]=[...row.querySelectorAll('[data-scene-reveal="'+field+'"]:checked')].map(el=>el.value).filter(id=>patch[relation].includes(id));
+   if(!Object.keys(patch).length)continue;
   const result=updateAdventureEntity(nextAdventures,adventureId,'scenes',row.dataset.sceneRow,patch);
   if(!result.ok)return feedback(result.reason,false);nextAdventures=result.list;changedAdventure=true
  }
