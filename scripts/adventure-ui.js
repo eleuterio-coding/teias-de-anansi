@@ -525,13 +525,25 @@ function bind(){
   const sessionVisibility={...(a.sessionVisibility||{}),[id]:input.checked};
   commit(updateAdventure(adventures,adventureId,{sessionVisibility}),'Visibilidade da sessão atualizada.');
  }));
- document.querySelectorAll('#linha-tempo [data-timeline-view]').forEach(button=>button.addEventListener('click',()=>{
+ // Atualizar apenas a Linha do Tempo: um render() completo destrói todos os
+ // elementos da Aventura, interrompendo a navegação entre Lista e Fluxograma.
+ // Delegação no contêiner preserva a alternância após trocar seus filhos.
+ const timeline=$('linha-tempo');
+ timeline?.addEventListener('click',event=>{
+  const button=event.target.closest('[data-timeline-view]');
+  if(!button||!timeline.contains(button))return;
   const next=button.dataset.timelineView==='flowchart'?'flowchart':'list';
   if(adventureTimelineView===next)return;
+  const current=adventure();
+  if(!current)return;
+  const template=document.createElement('template');
+  template.innerHTML=adventureTimelineHtml(current);
+  const replacement=template.content.firstElementChild;
+  if(!replacement)return;
   adventureTimelineView=next;
-  render();
-  document.getElementById('linha-tempo')?.scrollIntoView({block:'nearest'});
- }));
+  timeline.replaceChildren(...replacement.childNodes);
+  timeline.querySelector('[data-timeline-view="'+next+'"]')?.focus({preventScroll:true});
+ });
  document.querySelectorAll('#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
   const eventId=button.dataset.diagramEdit;
   adventureTimelineView='list';
