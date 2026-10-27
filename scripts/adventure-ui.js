@@ -289,7 +289,7 @@ function section(title,id,body,form=''){
 }
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
- const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['cenas','Cenas'],['criar-cena','Adicionar cena'],['exploracao','Locais'],['mapas','Mapas'],['criar-area','Adicionar área'],['criar-mapa','Adicionar mapa'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
+ const nav=[['visao-geral','Visão geral'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['criar-area','Adicionar área'],['criar-mapa','Adicionar mapa'],['criar-cena','Adicionar cena'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
  const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
  const npcPanel=section('NPCs','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="form-grid two adventure-npc-create"><label>Nome<input id="new-npc-name"></label><label>Papel<input id="new-npc-role"></label><button type="button" id="add-campaign-npc">Adicionar NPC</button><a class="btn secondary" href="criacao-personagem.html?npc=1">Criar NPC</a>
  <label>NPC cadastrado<select id="attach-existing-npc"><option value="">— Selecione um NPC —</option>${readRegisteredNpcs().filter(n=>!(c?.npcs||[]).some(row=>row.sheetId===n.id)).map(n=>option(n.id,n.name||'NPC sem nome','')).join('')}</select></label><button type="button" id="add-registered-npc">Vincular NPC</button></div>`);
@@ -310,8 +310,8 @@ function workspaceHtml(a){
  return`${operationalHtml(a)}
  ${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)})}
  <nav class="section-nav adventure-nav hub-detail-nav">${nav.map(([id,label])=>`<a href="#${id}">${label}</a>`).join('')}</nav>
- <div class="campaign-sections campaign-editor-grid hub-detail-grid">${basicsHtml(a)}${participantsHtml(a)}${scenes}${addScene}
- ${renderAdventureExploration(a,c)}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}
+ <div class="campaign-sections campaign-editor-grid hub-detail-grid">${basicsHtml(a)}${participantsHtml(a)}${scenes}
+ ${renderAdventureExploration(a,c)}${addScene}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}
  ${linkedSessionsHtml(a)}${adventureTimelineHtml(a)}${noteSection(a.dmNoteEntries)}</div>`;
 }
 
