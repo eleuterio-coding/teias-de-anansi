@@ -1,0 +1,96 @@
+/* Aventura: separar a consulta dos cards da oficina de criação.
+   O JS move os próprios formulários; não há cópia nem nova rota. */
+#adventure-root .adventure-workspace-pane[hidden],
+#adventure-root .adventure-creation-slot[hidden]{display:none!important}
+#adventure-root .adventure-content-tabs{
+ display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+ padding:8px;border:1px solid var(--hub-border,#40546c);
+ border-radius:14px;background:var(--hub-surface,#111f2d);
+}
+#adventure-root .adventure-content-tabs>button{
+ display:inline-flex;justify-content:center;align-items:center;gap:8px;
+ flex:1 1 170px;margin:0;padding:11px 15px;min-height:44px;
+ border:1px solid var(--hub-border,#40546c);border-radius:10px;
+ background:transparent;color:inherit;font-weight:700;cursor:pointer;
+}
+#adventure-root .adventure-content-tabs>button.is-active{
+ background:var(--hub-accent,#2b659a);border-color:var(--hub-accent,#2b659a);color:#fff;
+}
+#adventure-root .adventure-workspace-pane{min-width:0}
+#adventure-root #adventure-overview-content{display:grid;gap:14px}
+#adventure-root .adventure-creation-workspace{
+ display:grid;gap:18px;align-content:start;
+ padding:18px;border:1px solid var(--hub-border,#40546c);
+ border-radius:14px;background:var(--hub-surface,#111f2d)
+}
+#adventure-root .adventure-creation-heading h2{margin:0 0 6px}
+#adventure-root .adventure-creation-heading p{margin:0;opacity:.78;max-width:750px}
+#adventure-root .adventure-creation-choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
+#adventure-root .adventure-creation-choices>button{
+ min-width:0;min-height:56px;padding:11px 7px;text-align:center;
+ border-radius:11px;border:1px solid var(--hub-border,#40546c);
+ background:transparent;color:inherit;font-weight:700;cursor:pointer
+}
+#adventure-root .adventure-creation-choices>button.is-active{
+ border-color:var(--hub-accent,#2b659a);
+ background:rgba(78,148,204,.16);
+ outline:1px solid var(--hub-accent,#2b659a)
+}
+#adventure-root .adventure-creation-choices>button:focus-visible,
+#adventure-root .adventure-content-tabs>button:focus-visible{outline:2px solid #f5a54a;outline-offset:3px}
+#adventure-root .adventure-creation-slot{min-width:0;display:grid;gap:14px}
+#adventure-root .adventure-creation-slot>.adventure-creation-forms,
+#adventure-root .adventure-creation-slot>.adventure-creation-edit{display:grid;gap:14px;min-width:0}
+#adventure-root .adventure-creation-slot.is-editing>.adventure-creation-forms{display:none}
+#adventure-root .adventure-creation-slot:not(.is-editing)>.adventure-creation-edit:empty{display:none}
+#adventure-root .adventure-creation-slot .adventure-create-panel{
+ min-width:0;margin:0;padding:18px;
+ border:1px solid var(--hub-border,#40546c);
+ border-radius:12px;background:var(--hub-surface,#111f2d)
+}
+#adventure-root .adventure-creation-slot .adventure-create-panel>h2{margin:0 0 16px;font-size:1.2rem}
+#adventure-root .adventure-creation-slot .adventure-create-panel .explore-create-form{
+ display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))
+}
+#adventure-root .adventure-creation-slot .adventure-create-panel label{min-width:0}
+#adventure-root .adventure-creation-slot .adventure-create-panel select,
+#adventure-root .adventure-creation-slot .adventure-create-panel input{min-width:0;max-width:100%}
+#adventure-root .adventure-create-npc .adventure-npc-create{display:grid;gap:12px}
+#adventure-root .adventure-create-monster .adventure-monster-picker{display:grid;gap:12px}
+#adventure-root .adventure-create-monster .adventure-monster-picker>label{display:grid;gap:8px;max-width:650px}
+#adventure-root .adventure-create-monster .adventure-monster-actions{display:flex;gap:10px;flex-wrap:wrap}
+#adventure-root .adventure-create-monster .adventure-monster-preview:not(:empty){
+ margin-top:10px;padding:12px;border:1px solid var(--hub-border,#40546c);border-radius:9px
+}
+#adventure-root .adventure-create-monster .adventure-monster-preview dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#adventure-root .adventure-create-monster .adventure-monster-preview dl>div{text-align:center;padding:8px}
+#adventure-root .adventure-editor-context{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#adventure-root .adventure-editor-context p{margin:4px 0 0;opacity:.75}
+#adventure-root .adventure-creation-edit>article{
+ min-width:0;width:100%;margin:0;padding:16px;
+ border:1px solid var(--hub-border,#40546c);border-radius:11px
+}
+#adventure-root .adventure-creation-edit>.adventure-scene-record{display:block}
+#adventure-root .adventure-creation-edit .explore-record-editor{width:100%}
+#adventure-root .adventure-creation-edit .explore-record-body{display:grid;gap:14px}
+#adventure-root .adventure-creation-edit .explore-record-editor[open]>.explore-record-body{display:grid}
+#adventure-root .adventure-creation-edit .explore-editor-group{min-width:0}
+#adventure-root .adventure-creation-edit .explore-record-summary{cursor:pointer}
+#adventure-root .adventure-creation-footer{display:flex;justify-content:flex-start}
+#adventure-root .adventure-npc-card-preview{display:grid;gap:6px}
+#adventure-root .adventure-npc-card-preview>button{justify-self:start}
+#adventure-root #adventure-overview-content #npcs [data-campaign-npc]>.compact-grid,
+#adventure-root #adventure-overview-content #npcs [data-campaign-npc]>.campaign-line-actions{display:none!important}
+#adventure-root .adventure-creation-edit [data-campaign-npc]>.adventure-npc-card-preview{display:none}
+#adventure-root .adventure-creation-edit [data-campaign-npc]>.compact-grid{display:grid;gap:12px}
+#adventure-root .adventure-creation-edit [data-campaign-npc]>.campaign-line-actions{display:flex;gap:9px;flex-wrap:wrap}
+@media(max-width:700px){
+ #adventure-root .adventure-creation-choices{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #adventure-root .adventure-creation-workspace{padding:12px}
+ #adventure-root .adventure-creation-slot .adventure-create-panel .explore-create-form{grid-template-columns:1fr}
+ #adventure-root .adventure-create-monster .adventure-monster-preview dl{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:430px){
+ #adventure-root .adventure-content-tabs>button{flex:1 1 120px;font-size:.9rem}
+ #adventure-root .adventure-creation-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
