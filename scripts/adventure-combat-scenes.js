@@ -2,7 +2,7 @@
 // As opções seguem a Aventura vinculada à Sessão, sem cópias independentes.
 import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261027-scene-types1';
 import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
-import{createEncounter,addCreatureCombatant}from'./encounter-state.js?v=20261022-chronicles-final3';
+import{createEncounter,addCharacterCombatant,addCreatureCombatant}from'./encounter-state.js?v=20261022-chronicles-final3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const isCombatScene=scene=>scene?.sceneType==='combat';
 const currentSessionScene=(session,adventureSceneId)=>(session?.scenes||[]).find(s=>s.adventureSceneId===adventureSceneId);
@@ -42,28 +42,56 @@ export function resolveCombatScene(ctx,value,{allowLegacy=false}={}){
  if(origin&&!isCombatScene(origin)&&!allowLegacy)return{ok:false,reason:'Esta cena não é de combate. Escolha uma cena do tipo Combate (encontro).'};
  return{ok:true,sessionSceneId:row.id,adventureScene:origin};
 }
+// Só personagens selecionados para a Sessão e adversários da Cena
+// participam automaticamente. NPCs aliados/não hostis ficam de fora.
 export function populateSceneOpponents(ctx,encounter,adventureScene){
  if(!adventureScene)return;
  const combatants=()=>encounter.combatants||[];
+ const area=ctx.adventure?.exploration?.areas?.find(a=>a.id===adventureScene.areaId);
+ const enemyNpcIds=new Set([...(adventureScene.enemyNpcIds||[]),...(area?.enemyNpcIds||[])]);
+ const enemyMonsterIds=new Set(adventureScene.enemyMonsterIds??adventureScene.monsterIds??[]);
+ // Contadores preservam dois monstros diferentes da Aventura que usam
+ // a mesma ficha da Biblioteca, sem recriar extras no mesmo Encontro.
+ const expectedNpcs=new Map(),expectedMonsters=new Map();
  for(const id of adventureScene.npcIds||[]){
+  if(!enemyNpcIds.has(id))continue;
   const npc=ctx.campaign?.npcs?.find(n=>n.id===id);
-  if(npc&&!combatants().some(c=>c.kind==='npc'&&c.name===npc.name))
-   addCreatureCombatant(encounter,{kind:'npc',name:npc.name,source:'NPC da Cena',ac:10,maxHp:10,currentHp:10});
+  if(!npc)continue;
+  const key=npc.name;
+  const expected=(expectedNpcs.get(key)||0)+1;
+  expectedNpcs.set(key,expected);
+  if(combatants().filter(c=>c.kind==='npc'&&c.name===key).length>=expected)continue;
+  addCreatureCombatant(encounter,{kind:'npc',name:npc.name,source:'NPC inimigo da Cena',ac:10,maxHp:10,currentHp:10});
  }
  for(const id of adventureScene.monsterIds||[]){
+  if(!enemyMonsterIds.has(id))continue;
   const monster=ctx.adventure?.monsters?.find(m=>m.id===id);
-  if(monster&&!combatants().some(c=>c.kind==='monster'&&c.monsterId===(monster.monsterId||monster.id)))
-   addCreatureCombatant(encounter,{kind:'monster',name:monster.name,monsterId:monster.monsterId||monster.id,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier});
+  if(!monster)continue;
+  const key=monster.monsterId||monster.id;
+  const expected=(expectedMonsters.get(key)||0)+1;
+  expectedMonsters.set(key,expected);
+  if(combatants().filter(c=>c.kind==='monster'&&c.monsterId===key).length>=expected)continue;
+  addCreatureCombatant(encounter,{kind:'monster',name:monster.name,monsterId:key,source:monster.source,ac:monster.ac,maxHp:monster.maxHp,currentHp:monster.maxHp,initiativeModifier:monster.initiativeModifier});
+ }
+}
+// Personagens continuam referenciando a Ficha Digital; PV e condições
+// são buscados pelo controle de combate, não armazenados no Encontro.
+export function populateScenePlayers(ctx,encounter){
+ for(const id of ctx.session?.participantCharacterIds||[]){
+  if((encounter.combatants||[]).some(c=>c.kind==='character'&&c.characterId===id))continue;
+  const pc=ctx.characters?.find(c=>c.id===id);
+  addCharacterCombatant(encounter,{characterId:id,name:pc?.name||'Personagem'});
  }
 }
 export function ensureSceneEncounter(ctx,choice,{title=''}={}){
  const resolved=resolveCombatScene(ctx,choice);
  if(!resolved.ok)return resolved;
  const existing=ctx.session.encounters?.find(e=>e.sessionSceneId&&e.sessionSceneId===resolved.sessionSceneId&&e.kind==='combat');
- if(existing)return{...resolved,encounter:existing,created:false};
+ if(existing){if(resolved.adventureScene){populateSceneOpponents(ctx,existing,resolved.adventureScene);populateScenePlayers(ctx,existing)}return{...resolved,encounter:existing,created:false};}
  const created=createEncounter(ctx.session,{title:title.trim()||resolved.adventureScene?.title||undefined,kind:'combat',sessionSceneId:resolved.sessionSceneId,summary:resolved.adventureScene?.description||''});
  if(!created.ok)return created;
  populateSceneOpponents(ctx,created.encounter,resolved.adventureScene);
+ if(resolved.adventureScene)populateScenePlayers(ctx,created.encounter);
  return{...resolved,encounter:created.encounter,created:true};
 }
 export function syncAdventureCombatLink(ctx,result){
