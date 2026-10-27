@@ -33,6 +33,10 @@ function castChoices(rows,selected=[],enemies=[],shown=[],kind='npc'){
 function areaDetail(area,a,c,exploration){
  const levels=arr(exploration.levels),areas=arr(exploration.areas),name=areaLabel(area);
  const level=levels.find(x=>x.id===area.levelId);
+ const npcsById=new Map(arr(c?.npcs).map(n=>[n.id,n.name]));
+ const monstersById=new Map(arr(a.monsters).map(m=>[m.id,m.name]));
+ const enemyNames=[...arr(area.enemyNpcIds).map(id=>npcsById.get(id)),...arr(area.enemyMonsterIds).map(id=>monstersById.get(id))].filter(Boolean);
+ const alliedNames=arr(area.npcIds).filter(id=>!arr(area.enemyNpcIds).includes(id)).map(id=>npcsById.get(id)).filter(Boolean);
  return '<article class="explore-area-card explore-record-card'+(selectedAreaId===area.id?' is-selected':'')+'" data-ex-area="'+esc(area.id)+'">'+
   '<button type="button" class="explore-area-drag-handle" data-ex-area-grip="'+esc(area.id)+'" aria-label="Reorganizar '+esc(name)+': arraste ou use as setas do teclado" title="Arraste para reorganizar; use as setas do teclado" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="8" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/></svg></button>'+
   '<details class="explore-record-editor" data-ex-area-editor="'+esc(area.id)+'"'+(expandedAreaIds.has(area.id)?' open':'')+'>'+
@@ -53,6 +57,7 @@ function areaDetail(area,a,c,exploration){
      '</div></section><section class="explore-editor-group"><header><h4>Desafios e recompensas</h4><p>XP, inimigos, perigos, tesouros e testes.</p></header><div class="explore-fields">'+
      field('XP','xp',area.xp??0,'input','type="number" min="0" step="1"')+
      field('Inimigos adicionais / observações','enemies',area.enemies,'textarea','rows="2"')+
+      '<div class="adventure-presence-summary"><strong>Inimigos cadastrados</strong><p>'+esc(enemyNames.join(', ')||'Nenhum inimigo vinculado')+'</p><strong>NPCs não inimigos</strong><p>'+esc(alliedNames.join(', ')||'Nenhum NPC não inimigo vinculado')+'</p></div>'+
       '<fieldset class="adventure-cast-fieldset"><legend>NPCs presentes no local (inimigos ou aliados)</legend>'+castChoices(arr(c?.npcs).filter(n=>arr(a.npcIds).includes(n.id)),area.npcIds,area.enemyNpcIds,area.visibleNpcIds,'npc')+'</fieldset>'+
       '<fieldset class="adventure-cast-fieldset"><legend>Monstros presentes no local</legend>'+castChoices(arr(a.monsters),area.monsterIds,area.enemyMonsterIds,area.visibleMonsterIds,'monster')+'</fieldset>'+
      field('Armadilhas e perigos','hazards',area.hazards,'textarea','rows="2"')+
