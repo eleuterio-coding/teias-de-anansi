@@ -109,6 +109,7 @@ test('Locais vinculam NPCs e monstros como inimigos ou aliados e filtram publica
  await visit(page);
  const details=page.locator('#exploracao [data-ex-area="area-1"] [data-ex-area-editor]');
  await details.locator('summary').click();
+ await expect(page.locator('#cenas [data-scene-field="enemies"], #exploracao [data-ex-field="enemies"]')).toHaveCount(0);
  await details.locator('[data-ex-ref="npcIds"][value="npc-1"]').check();
  await details.locator('[data-ex-visible="npc"][value="npc-1"]').check();
  await details.locator('[data-ex-ref="npcIds"][value="npc-2"]').check();
