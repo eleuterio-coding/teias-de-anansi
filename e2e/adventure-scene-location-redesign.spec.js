@@ -120,6 +120,7 @@ test('Locais vinculam NPCs e monstros como inimigos ou aliados e filtram publica
  expect(saved.enemyMonsterIds).toEqual(['monster-1']);
  expect(saved.visibleNpcIds).toEqual(['npc-1']);
  expect(saved.visibleMonsterIds).toEqual(['monster-1']);
+ await expect(page.locator('#exploracao [data-ex-area="area-1"] .adventure-presence-summary')).toContainText('Bandido');
  // Publication is gated by the parent location visibility.
  const output=await page.evaluate(async()=>{
   const {revealedAdventureProjection}=await import('/scripts/collaboration-model.js?v=20261027-scenes-cast-v1');
