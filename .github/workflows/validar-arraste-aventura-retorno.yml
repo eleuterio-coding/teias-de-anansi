@@ -1,0 +1,37 @@
+name: Validar retorno natural dos cards da Aventura
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/adventure-animated-reorder.js'
+      - 'scripts/adventure-roster-ui.js'
+      - 'scripts/adventure-exploration-ui.js'
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'adventure-layout-refinement.css'
+      - 'aventuras.html'
+      - 'e2e/adventure-drag-reset-parity.spec.js'
+      - '.github/workflows/validar-arraste-aventura-retorno.yml'
+  workflow_dispatch:
+jobs:
+  drag-reset:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe
+        run: |
+          node --check scripts/adventure-animated-reorder.js
+          node --check scripts/adventure-roster-ui.js
+          node --check scripts/adventure-exploration-ui.js
+          node --check scripts/adventure-ui.js
+          node --check e2e/adventure-drag-reset-parity.spec.js
+      - name: Preparar Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar retorno, reordenação e toque fora da lista
+        run: npx playwright test e2e/adventure-drag-reset-parity.spec.js --project=desktop-chromium --project=mobile-chromium --workers=1 --reporter=line
