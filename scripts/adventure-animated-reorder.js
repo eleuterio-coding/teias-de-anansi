@@ -3,16 +3,17 @@
    Não altera dados; a persistência pertence ao componente chamador. */
 export function bindAdventureAnimatedReorder({
  container,itemSelector,idFor,handleSelector='',onMove,axis='vertical',
- allowSurface=true,allowSummaryDrag=false,confirmScope=null
+ allowSurface=true,allowSummaryDrag=false,confirmScope=null,lockX=false
 }){
  if(!container||container.dataset.adventureAnimatedOrderBound==='true')return;
  container.dataset.adventureAnimatedOrderBound='true';
  container.dataset.sortAxis=axis;
  container.classList.add('adventure-sortable');
- const rows=()=>[...container.querySelectorAll(itemSelector)];
+ // Mantém a cópia visual no contexto da lista sem torná-la um registro.
+ const rows=()=>[...container.querySelectorAll(itemSelector)].filter(row=>!row.closest('[data-adventure-sort-preview]'));
  const rowFor=node=>{
   const row=node?.closest?.(itemSelector);
-  return row&&container.contains(row)?row:null;
+  return row&&container.contains(row)&&!row.closest('[data-adventure-sort-preview]')?row:null;
  };
  const keyFor=row=>row?idFor(row):'';
  const inHandle=node=>Boolean(handleSelector&&node?.closest?.(handleSelector));
@@ -42,33 +43,40 @@ export function bindAdventureAnimatedReorder({
  }
  function release(){
   clearHighlight();
-  ghost?.remove();ghost=null;
+  ghost?.node.remove();ghost=null;
  }
  function lift(row,x,y){
   if(ghost)return;
-  const box=row.getBoundingClientRect(),clone=row.cloneNode(true),style=getComputedStyle(row);
+  const box=row.getBoundingClientRect(),region=container.getBoundingClientRect(),clone=row.cloneNode(true),style=getComputedStyle(row);
   clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
   clone.querySelectorAll('input,select,textarea,a,button,[tabindex]').forEach(el=>el.setAttribute('tabindex','-1'));
   const hadOpenEditor=Boolean(clone.querySelector('details[open]'));
   clone.querySelectorAll('details[open]').forEach(el=>el.removeAttribute('open'));
   clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
   clone.setAttribute('aria-hidden','true');clone.inert=true;
-  clone.classList.remove(...classes.split(' '));
+  clone.classList.remove(...classes.split(' '),'adventure-sort-confirmed');
+  clone.setAttribute('data-adventure-sort-preview','');
   clone.classList.add('campaign-floating-card','adventure-floating-card');
   if(row.classList.contains('roster-player')){
    clone.classList.add('roster-floating-card','adventure-roster-floating');
   }
+  // Preservar as mesmas regras CSS do card original (avatares, mapas,
+  // editores recolhidos, colunas e media/container queries).
+  if(getComputedStyle(container).position==='static')container.style.position='relative';
+  clone.style.setProperty('position','absolute','important');
   clone.style.setProperty('display',style.display,'important');
   clone.style.gridTemplateColumns=style.gridTemplateColumns;
   clone.style.gridTemplateRows=style.gridTemplateRows;
   clone.style.gap=style.gap;
-  clone.style.left=box.left+'px';clone.style.top=box.top+'px';
+  clone.style.left=(box.left-region.left-container.clientLeft+container.scrollLeft)+'px';
+  clone.style.top=(box.top-region.top-container.clientTop+container.scrollTop)+'px';
   clone.style.width=box.width+'px';clone.style.height=(hadOpenEditor?Math.min(box.height,188):box.height)+'px';
-  document.body.appendChild(clone);
+  container.appendChild(clone);
   ghost={node:clone,x,y};
  }
  function moveLift(x,y){
-  if(ghost)ghost.node.style.transform='translate3d('+(x-ghost.x)+'px,'+(y-ghost.y)+'px,0) rotate(-1deg) scale(1.018)';
+  // No cadastro de jogadores a direção permitida é apenas vertical.
+  if(ghost)ghost.node.style.transform='translate3d('+(lockX?0:x-ghost.x)+'px,'+(y-ghost.y)+'px,0)';
  }
  function destination(source,x,y){
   const siblings=rows(),sourceIndex=siblings.findIndex(row=>keyFor(row)===source);
@@ -137,7 +145,29 @@ export function bindAdventureAnimatedReorder({
   document.removeEventListener('pointermove',pointerMove,true);
   document.removeEventListener('pointerup',pointerUp,true);
   document.removeEventListener('pointercancel',pointerCancel,true);
+  window.removeEventListener('blur',cancelGesture);
+  document.removeEventListener('visibilitychange',cancelWhenHidden);
  };
+ const stopTouchTracking=()=>{
+  document.removeEventListener('touchmove',touchMove,true);
+  document.removeEventListener('touchend',touchEnd,true);
+  document.removeEventListener('touchcancel',touchCancel,true);
+  window.removeEventListener('blur',cancelGesture);
+  document.removeEventListener('visibilitychange',cancelWhenHidden);
+ };
+ function cancelGesture(){
+  const current=pointer;
+  pointer=null;
+  stopPointerTracking();
+  if(current?.row?.hasPointerCapture?.(current.id)){
+   try{current.row.releasePointerCapture(current.id)}catch{}
+  }
+  if(touch?.timer)clearTimeout(touch.timer);
+  touch=null;stopTouchTracking();
+  release();
+ }
+ function cancelWhenHidden(){if(document.hidden)cancelGesture()}
+
  function pointerMove(event){
   if(!pointer||pointer.id!==event.pointerId)return;
   if(!pointer.active&&Math.hypot(event.clientX-pointer.x,event.clientY-pointer.y)<6)return;
@@ -175,6 +205,8 @@ export function bindAdventureAnimatedReorder({
   document.addEventListener('pointermove',pointerMove,true);
   document.addEventListener('pointerup',pointerUp,true);
   document.addEventListener('pointercancel',pointerCancel,true);
+  window.addEventListener('blur',cancelGesture);
+  document.addEventListener('visibilitychange',cancelWhenHidden);
   // O clique normal continua disponível em botões, links e <summary>.
   if(event.pointerType==='mouse'&&!event.target.closest?.('summary,button'))event.preventDefault();
  });
@@ -187,32 +219,37 @@ export function bindAdventureAnimatedReorder({
    if(touch===info){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
   },280);
   touch=info;
+  document.addEventListener('touchmove',touchMove,{capture:true,passive:false});
+  document.addEventListener('touchend',touchEnd,{capture:true,passive:false});
+  document.addEventListener('touchcancel',touchCancel,true);
+  window.addEventListener('blur',cancelGesture);
+  document.addEventListener('visibilitychange',cancelWhenHidden);
  },{passive:true});
- container.addEventListener('touchmove',event=>{
+ function touchMove(event){
   if(!touch)return;
   const p=[...event.touches].find(x=>x.identifier===touch.id);
   if(!p)return;
   if(!touch.active){
    if(Math.hypot(p.clientX-touch.x,p.clientY-touch.y)>9){
-    clearTimeout(touch.timer);touch=null;release();
+    clearTimeout(touch.timer);touch=null;stopTouchTracking();release();
    }
    return;
   }
   event.preventDefault();moveLift(p.clientX,p.clientY);
   mark(touch.source,destination(touch.source,p.clientX,p.clientY));
- },{passive:false});
- container.addEventListener('touchend',event=>{
+ }
+ function touchEnd(event){
   if(!touch)return;
   const p=[...event.changedTouches].find(x=>x.identifier===touch.id);
   if(!p)return;
-  const info=touch;touch=null;clearTimeout(info.timer);
+  const info=touch;touch=null;clearTimeout(info.timer);stopTouchTracking();
   const drop=info.active?destination(info.source,p.clientX,p.clientY):null;
   if(info.active){blockNextClick(info.source);event.preventDefault();finish(info.source,drop)}else release();
- },{passive:false});
- container.addEventListener('touchcancel',()=>{
+ }
+ function touchCancel(){
   if(touch)clearTimeout(touch.timer);
-  touch=null;release();
- });
+  touch=null;stopTouchTracking();release();
+ }
  container.addEventListener('keydown',event=>{
   if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.key))return;
   if(!inHandle(event.target)&&!event.target.matches?.(itemSelector))return;
