@@ -1,7 +1,7 @@
 /* Espaço de exploração para o Mestre: mapas opcionais, áreas persistentes,
    referências ao restante do Hub, facções e crônica de visitas.
    Os formulários não pressupõem nenhuma aventura, cenário ou sistema. */
-import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,reorderExplorationEntities,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261026-unified-all1';
+import{createExplorationEntity,updateExplorationEntity,removeExplorationEntity,reorderExplorationAreas,reorderExplorationEntities,changeAreaStatus,setCurrentExplorationArea,explorationProgress}from'./adventure-exploration-state.js?v=20261027-scenes-cast-v1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imagePickerHtml,bindImagePicker}from'./image-media.js?v=20261023-simplified3';
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261027-release-reset3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
