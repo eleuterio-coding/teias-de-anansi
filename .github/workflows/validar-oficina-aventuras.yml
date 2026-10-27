@@ -1,0 +1,50 @@
+name: Validar oficina de conteúdo da Aventura
+on:
+  push:
+    branches:
+      - feat/aventuras-oficina-conteudo-20261027
+    paths:
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'aventuras.html'
+      - 'adventure-content-workspace.css'
+      - 'e2e/adventure-content-workspace.spec.js'
+      - '.github/workflows/validar-oficina-aventuras.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-router.js'
+      - 'aventuras.html'
+      - 'adventure-content-workspace.css'
+      - 'e2e/adventure-content-workspace.spec.js'
+      - '.github/workflows/validar-oficina-aventuras.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe dos módulos
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-router.js
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Testar criação, edição e navegação no desktop e no celular
+        run: npx playwright test e2e/adventure-content-workspace.spec.js --project=desktop-chromium --project=mobile-chromium
+      - name: Evidências de falhas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oficina-aventura-playwright
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
