@@ -99,7 +99,7 @@ function levelDetail(level,areaCount=0){
    '</div></details></article>';
 }
 function factionSection(exploration,a,c){
- return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
+ return '<section class="card explore-faction-section" id="faccoes"><h2>Adicionar Facções</h2>'+
  '<details class="adventure-monsters-attached adventure-attached-list" '+(factionAttachedOpen?'open':'')+'><summary>Facções adicionadas à Aventura ('+exploration.factions.length+')</summary><div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
