@@ -158,7 +158,7 @@ function syncAdventureSceneToSessionScene(sceneId,value){
  if(!result.ok)return feedback(result.reason,false);
  adventures=writeAdventures(result.list);render();feedback(value?'Cena da Aventura vinculada à Cena da Sessão.':'Vínculo de cenas removido.')
 }
-function encounterOptions(scene){const session=campaign()?.sessions?.find(s=>s.id===scene.sessionId),rows=(session?.encounters||[]).map(e=>({id:e.id,title:e.title}));return entitySelect(rows,scene.encounterRef?.encounterId,'— Sem encontro —')}
+function encounterOptions(scene){const session=campaign()?.sessions?.find(s=>s.id===scene.sessionId),rows=(session?.encounters||[]).filter(e=>e.kind==='combat'||e.id===scene.encounterRef?.encounterId).map(e=>({id:e.id,title:e.title}));return entitySelect(rows,scene.encounterRef?.encounterId,'— Sem encontro de combate —')}
 function checks(rows,selected,type){const set=new Set(selected||[]);return rows.length?rows.map(x=>`<label><input type="checkbox" data-scene-link="${type}" value="${esc(x.id)}" ${set.has(x.id)?'checked':''}>${esc(x.title||x.name)}</label>`).join(''):'<span class="mini">Nenhum registro.</span>'}
 function sceneCast(rows,selected,visible,kind,visibility){
  const members=new Set(selected||[]),shown=new Set(visible||[]);
@@ -181,7 +181,7 @@ function sceneCard(scene,a,i=0){
      <label>Tipo de cena<select data-scene-field="sceneType">${sceneTypeOptions(scene.sceneType)}</select></label>
      <label>Local<select data-scene-field="areaId">${areaChoices(a,scene.areaId)}</select></label>
      <label>Cena da sessão<select data-scene-session-scene>${sessionSceneOptionsForAdventure(a,scene)}</select></label>
-     <label>Encontro<select data-scene-encounter>${encounterOptions(scene)}</select></label>
+     ${scene.sceneType==='combat'||scene.encounterRef?.encounterId?`<label>Encontro de combate<select data-scene-encounter>${encounterOptions(scene)}</select></label>`:''}
      <label class="wide">Objetivo da cena (privado)<input data-scene-field="objective" value="${esc(scene.objective)}"></label>
      <label class="wide">Texto para narração<textarea data-scene-field="readAloud">${esc(scene.readAloud||'')}</textarea></label>
      <label class="wide">Descrição para o Mestre<textarea data-scene-field="description">${esc(scene.description)}</textarea></label>
