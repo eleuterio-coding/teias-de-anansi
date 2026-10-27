@@ -8,7 +8,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const arr=v=>Array.isArray(v)?v:[];
 const STATUS={unknown:'Não descoberta',discovered:'Descoberta',visited:'Visitada',resolved:'Resolvida',blocked:'Bloqueada'};
 const STANCES={unknown:'Indefinida',friendly:'Amigável',neutral:'Neutra',hostile:'Hostil',allied:'Aliada'};
-let selectedAreaId=null,expandedFactionId=null;
+let selectedAreaId=null,expandedFactionId=null,factionAttachedOpen=false;
 const expandedAreaIds=new Set(),expandedLevelIds=new Set();
 const choices=(rows,selected,blank='— Nenhum —')=>'<option value="">'+esc(blank)+'</option>'+rows.map(row=>'<option value="'+esc(row.id)+'" '+(selected===row.id?'selected':'')+'>'+esc(row.code?row.code+' — '+row.name:row.name||row.title)+'</option>').join('');
 const selectOptions=(labels,selected)=>Object.entries(labels).map(([value,label])=>'<option value="'+esc(value)+'" '+(value===selected?'selected':'')+'>'+esc(label)+'</option>').join('');
@@ -95,7 +95,7 @@ function levelDetail(level,areaCount=0){
 }
 function factionSection(exploration,a,c){
  return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
- '<details class="adventure-monsters-attached adventure-attached-list"><summary>Facções adicionadas à Aventura ('+exploration.factions.length+')</summary><div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
+ '<details class="adventure-monsters-attached adventure-attached-list" '+(factionAttachedOpen?'open':'')+'><summary>Facções adicionadas à Aventura ('+exploration.factions.length+')</summary><div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
     '<label>Relação com o grupo<select data-ex-field="stance">'+selectOptions(STANCES,f.stance)+'</select></label>'+
@@ -149,6 +149,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  const root=document.getElementById('exploracao');
  const mapRoot=document.getElementById('mapas');
  const factions=document.getElementById('faccoes');
+  factions?.querySelector('.adventure-attached-list')?.addEventListener('toggle',event=>{factionAttachedOpen=event.currentTarget.open});
  if(!root&&!mapRoot&&!factions)return;
  const get=()=>getAdventure()?.exploration;
  const apply=(result,message)=>{
