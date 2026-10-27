@@ -168,23 +168,30 @@ function bindRosterOrdering(list){
  const interactive=target=>Boolean(target?.closest?.('input,textarea,select,a,button:not(.roster-grip),[contenteditable="true"]'));
  const lift=(row,x,y)=>{
   if(floating)return;
-  const rect=row.getBoundingClientRect(),clone=row.cloneNode(true);
+  const section=list.closest('#jogadores');
+  if(!section)return;
+  const rect=row.getBoundingClientRect(),sectionRect=section.getBoundingClientRect(),clone=row.cloneNode(true);
   clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
   clone.querySelectorAll('input,select,button,a').forEach(el=>{el.tabIndex=-1;el.setAttribute('aria-hidden','true')});
-  clone.removeAttribute('draggable');clone.removeAttribute('tabindex');
+  clone.removeAttribute('draggable');clone.removeAttribute('tabindex');clone.removeAttribute('data-member-row');
   clone.classList.add('campaign-floating-card','roster-floating-card');
-  if(getComputedStyle(row).gridTemplateColumns.split(' ').length===3)clone.classList.add('roster-floating-compact');
   clone.setAttribute('aria-hidden','true');
+  // O card precisa permanecer sob #jogadores para herdar as regras de grid,
+  // os estilos dos botões e as container queries da linha original.
+  // #jogadores possui container-type: inline-size e é o containing block.
+  clone.style.setProperty('position','absolute','important');
   clone.style.display='grid';
   clone.style.gridTemplateColumns=getComputedStyle(row).gridTemplateColumns;
   clone.style.gridTemplateRows=getComputedStyle(row).gridTemplateRows;
-  clone.style.left=rect.left+'px';clone.style.top=rect.top+'px';
+  clone.style.left=(rect.left-sectionRect.left-section.clientLeft+section.scrollLeft)+'px';
+  clone.style.top=(rect.top-sectionRect.top-section.clientTop+section.scrollTop)+'px';
   clone.style.width=rect.width+'px';clone.style.height=rect.height+'px';
-  document.body.appendChild(clone);
-  floating={element:clone,x,y};
+  section.appendChild(clone);
+  floating={element:clone,y};
  };
  const moveLift=(x,y)=>{
-  if(floating)floating.element.style.transform='translate3d('+(x-floating.x)+'px,'+(y-floating.y)+'px,0) rotate(-1deg) scale(1.018)';
+  // A lista é vertical: deslocar o card lateralmente estourava a viewport.
+  if(floating)floating.element.style.transform='translate3d(0,'+(y-floating.y)+'px,0)';
  };
  const clearHighlight=()=>{
   list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>{
