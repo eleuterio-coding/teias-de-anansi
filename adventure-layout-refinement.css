@@ -797,3 +797,53 @@
   top:4px;right:4px;
  }
 }
+
+/* Editor de Aventura — cartões anexados e campos de cena/área. */
+#adventure-root :is(#npcs,#missoes,#faccoes) .adventure-attached-list{
+ display:block;min-width:0;margin:6px 0 12px;padding:12px;
+ border:1px solid var(--hub-border,#344a60);border-radius:11px;
+ background:var(--hub-surface-2,#17293a);
+}
+#adventure-root .adventure-attached-list>summary{
+ cursor:pointer;font-size:.96rem;font-weight:750;line-height:1.4;
+ list-style:revert;padding:3px 4px 9px;
+}
+#adventure-root .adventure-attached-list:not([open])>summary{padding-bottom:3px}
+#adventure-root .adventure-attached-list>.story-list,
+#adventure-root .adventure-attached-list>.explore-faction-grid{display:grid;gap:10px;margin:8px 0 0;min-width:0}
+#adventure-root #criar-cena .adventure-scene-create{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0;
+}
+#adventure-root #criar-cena .adventure-scene-create>label{display:grid;gap:6px;min-width:0}
+#adventure-root #criar-cena .adventure-scene-create>.wide{grid-column:1/-1}
+#adventure-root #criar-cena .adventure-scene-create textarea{min-height:88px;resize:vertical}
+#adventure-root #criar-cena #add-scene{justify-self:start}
+#adventure-root #cenas .adventure-scene-cast-row,
+#adventure-root #exploracao .adventure-cast-choice{
+ display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;
+ gap:8px 12px;padding:9px 10px;margin:5px 0;
+ border:1px solid var(--hub-border,#344a60);border-radius:8px;
+ background:var(--hub-surface-2,#17293a);
+}
+#adventure-root #cenas .adventure-scene-cast-row{grid-template-columns:minmax(0,1fr) auto}
+#adventure-root :is(#cenas,#exploracao) :is(.adventure-scene-cast-row,.adventure-cast-choice)>label{
+ display:flex;flex-direction:row;align-items:center;gap:7px;min-width:0;
+ line-height:1.4;font-size:.84rem;cursor:pointer;
+}
+#adventure-root :is(#cenas,#exploracao) :is(.adventure-scene-cast-row,.adventure-cast-choice) input[type=checkbox]{width:17px;height:17px;flex:0 0 auto;margin:0}
+#adventure-root #exploracao .adventure-cast-fieldset{
+ grid-column:1/-1;min-width:0;border:1px solid var(--hub-border,#344a60);
+ border-radius:9px;padding:10px;margin:0;
+}
+#adventure-root #exploracao .adventure-cast-fieldset>legend{font-weight:750;padding:0 6px}
+#adventure-root #cenas .adventure-private-objectives{border-color:var(--hub-border,#344a60)}
+#adventure-root #cenas .adventure-private-objectives>.mini{margin:0 0 9px}
+#adventure-root #linha-tempo .campaign-timeline-flow{padding:0;margin:12px 0}
+#adventure-root #linha-tempo .campaign-linked-title{min-width:0}
+#adventure-root #linha-tempo .campaign-linked-card{min-width:0}
+@media(max-width:720px){
+ #adventure-root #criar-cena .adventure-scene-create{grid-template-columns:minmax(0,1fr)}
+ #adventure-root #criar-cena .adventure-scene-create>.wide{grid-column:auto}
+ #adventure-root #exploracao .adventure-cast-choice,
+ #adventure-root #cenas .adventure-scene-cast-row{grid-template-columns:minmax(0,1fr);gap:9px}
+}
