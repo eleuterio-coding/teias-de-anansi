@@ -349,6 +349,107 @@ function workspaceHtml(a){
  </section>`;
 }
 
+
+function arrangeAdventureContentWorkspace(){
+ const overview=$('adventure-overview-content'),creation=$('adventure-create-content');
+ if(!overview||!creation)return;
+ const formSlot=kind=>creation.querySelector('[data-adventure-creation-slot="'+kind+'"] .adventure-creation-forms');
+ const move=(node,kind)=>{if(node)formSlot(kind)?.append(node)};
+ // Reaproveitar os formulários reais já vinculados às ações de persistência.
+ move($('criar-cena'),'scene');
+ move($('criar-area'),'area');
+ move($('criar-mapa'),'map');
+ const npcForm=overview.querySelector('#npcs .adventure-npc-create');
+ if(npcForm){
+  const container=document.createElement('section');container.className='card adventure-create-panel adventure-create-npc';
+  container.innerHTML='<h2>Adicionar NPC</h2>';
+  container.append(npcForm);move(container,'npc');
+ }
+ const monsterPanel=$('monstros'),monsterPicker=monsterPanel?.querySelector('.adventure-monster-picker');
+ if(monsterPicker){
+  const container=document.createElement('section');container.className='card adventure-create-panel adventure-create-monster';
+  container.innerHTML='<h2>Adicionar monstro da Biblioteca</h2>';
+  container.append(monsterPicker);
+  const preview=monsterPanel.querySelector('#adventure-monster-preview');
+  if(preview)container.append(preview);
+  move(container,'monster');
+ }
+ // Na Visão Geral, NPCs continuam disponíveis como cards, sem campos de criação.
+ overview.querySelectorAll('#npcs [data-campaign-npc]').forEach(row=>{
+  const name=row.querySelector('[data-campaign-npc-field="name"]')?.value||'NPC';
+  const role=row.querySelector('[data-campaign-npc-field="role"]')?.value||'';
+  const preview=document.createElement('div');preview.className='adventure-npc-card-preview';
+  preview.innerHTML='<strong>'+esc(name)+'</strong>'+(role?'<span class="mini">'+esc(role)+'</span>':'')+
+   '<button type="button" class="secondary" data-adventure-open-editor="npc" data-adventure-editor-id="'+esc(row.dataset.campaignNpc)+'">Editar na área de criação</button>';
+  row.prepend(preview);
+ });
+ overview.querySelectorAll('#monstros [data-monster-row]').forEach(row=>{
+  const button=document.createElement('button');button.type='button';button.className='secondary';
+  button.textContent='Gerenciar monstros';button.dataset.adventureOpenCreation='monster';
+  row.querySelector('.campaign-line-actions')?.prepend(button);
+ });
+ const findRecord=(kind,id)=>{
+  const selector={scene:'[data-scene-row]',area:'[data-ex-area]',map:'[data-ex-level]',npc:'[data-campaign-npc]'}[kind];
+  return selector?[...overview.querySelectorAll(selector)].find(row=>
+   (kind==='scene'?row.dataset.sceneRow:kind==='area'?row.dataset.exArea:kind==='map'?row.dataset.exLevel:row.dataset.campaignNpc)===id):null;
+ };
+ if(adventureEditingContent){
+  const {kind,id}=adventureEditingContent,record=findRecord(kind,id);
+  if(record){
+   const slot=creation.querySelector('[data-adventure-creation-slot="'+kind+'"]'),edit=slot.querySelector('.adventure-creation-edit');
+   const header=document.createElement('div');header.className='adventure-editor-context';
+   const name=record.querySelector('.explore-record-title strong,.explore-area-name,.adventure-npc-card-preview strong')?.textContent||'Registro';
+   const typeName=adventureContentKinds.find(entry=>entry[0]===kind)?.[1]||'conteúdo';
+   header.innerHTML='<div><strong>Editar '+esc(typeName)+'</strong><p>'+esc(name)+'</p></div><button type="button" class="secondary" data-adventure-overview-return>Voltar aos cards</button>';
+   edit.append(header,record);slot.classList.add('is-editing');
+   const details=record.querySelector('details.explore-record-editor');
+   if(details)details.open=true;
+  }else adventureEditingContent=null;
+ }
+ const goTo=(tab,kind=null,edit=null)=>{
+  adventureContentTab=tab;
+  if(kind)adventureCreationKind=kind;
+  adventureEditingContent=edit;
+  render();
+  requestAnimationFrame(()=>document.querySelector('.adventure-content-tabs')?.scrollIntoView({block:'start'}));
+ };
+ document.querySelectorAll('[data-adventure-content-tab]').forEach(button=>button.addEventListener('click',()=>{
+  if(button.dataset.adventureContentTab==='overview')goTo('overview');
+  else goTo('create',adventureCreationKind);
+ }));
+ creation.querySelectorAll('[data-adventure-creation-kind]').forEach(button=>button.addEventListener('click',()=>goTo('create',button.dataset.adventureCreationKind)));
+ creation.querySelectorAll('[data-adventure-overview-return]').forEach(button=>button.addEventListener('click',()=>goTo('overview')));
+ overview.addEventListener('click',event=>{
+  const editorButton=event.target.closest('[data-adventure-open-editor]');
+  if(editorButton){event.preventDefault();goTo('create',editorButton.dataset.adventureOpenEditor,{kind:editorButton.dataset.adventureOpenEditor,id:editorButton.dataset.adventureEditorId});return}
+  const createButton=event.target.closest('[data-adventure-open-creation]');
+  if(createButton){event.preventDefault();goTo('create',createButton.dataset.adventureOpenCreation);return}
+  const summary=event.target.closest('summary');
+  if(!summary)return;
+  const details=summary.closest('details.explore-record-editor');
+  if(!details)return;
+  const row=details.closest('[data-scene-row],[data-ex-area],[data-ex-level]');
+  if(!row)return;
+  event.preventDefault();
+  const kind=row.hasAttribute('data-scene-row')?'scene':row.hasAttribute('data-ex-area')?'area':'map';
+  const id=row.getAttribute(kind==='scene'?'data-scene-row':kind==='area'?'data-ex-area':'data-ex-level');
+  goTo('create',kind,{kind,id});
+ },true);
+ overview.hidden=adventureContentTab!=='overview';
+ creation.hidden=adventureContentTab!=='create';
+ document.querySelectorAll('[data-adventure-content-tab]').forEach(button=>{
+  const active=button.dataset.adventureContentTab===adventureContentTab;
+  button.setAttribute('aria-selected',String(active));button.classList.toggle('is-active',active);
+ });
+ creation.querySelectorAll('[data-adventure-creation-kind]').forEach(button=>{
+  const active=button.dataset.adventureCreationKind===adventureCreationKind;
+  button.setAttribute('aria-pressed',String(active));button.classList.toggle('is-active',active);
+ });
+ creation.querySelectorAll('[data-adventure-creation-slot]').forEach(slot=>{
+  slot.hidden=slot.dataset.adventureCreationSlot!==adventureCreationKind;
+ });
+}
+
 function render(){const root=$('adventure-root');if(!root)return;campaigns=readCampaigns();characters=readCharacters();if(campaignId&&!campaignById(campaigns,campaignId))campaignId=campaigns[0]?.id||'';normalizeRefs();if(adventureId&&!adventureById(adventures,adventureId)){adventureId='';expandedSceneIds.clear()}const a=adventure();if(a)campaignId=a.campaignId;root.innerHTML=`${a?"":topHtml()}<div id="adventure-feedback" class="status" hidden></div><div class="adventure-shell ${a?"hub-detail-page":""}">${a?`${workspaceHtml(a)}`:listHtml()}</div>`;bind();arrangeAdventureContentWorkspace();updateAppShellContext();hydrateMediaImages(root).catch(()=>{})}
 function bindAdventureFields(){document.querySelectorAll('[data-adventure-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'||input.type==='text'||input.type==='url'?'input':'change';input.addEventListener(eventName,()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>commit(updateAdventure(adventures,adventureId,{[input.dataset.adventureField]:input.type==='number'?Number(input.value):input.value}),'Aventura salva.'),eventName==='input'?350:0)})})}
 function bindAdventureCover(){const picker=document.querySelector('#visao-geral [data-image-picker]'),a=adventure();if(!picker||!a)return;bindImagePicker(picker,{onSelect:async file=>{const before=adventures,previous=a.coverImage,media=await uploadImage({campaignId:a.campaignId,entityType:'adventure',entityId:a.id,file}),result=updateAdventure(adventures,a.id,{coverImage:media,coverImageUrl:''});if(!result.ok){deleteImage(media).catch(()=>{});throw new Error(result.reason)}adventures=writeAdventures(result.list);try{await persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})}catch(error){adventures=writeAdventures(before);await deleteImage(media).catch(()=>{});render();throw new Error('A imagem não pôde ser sincronizada. A capa anterior foi preservada.')}render();feedback('Imagem salva e sincronizada.',true);if(previous?.id&&previous.id!==media.id)await deleteImage(previous).catch(()=>{})},onRemove:async()=>{const before=adventures,previous=a.coverImage,result=updateAdventure(adventures,a.id,{coverImage:null,coverImageUrl:''});if(!result.ok)throw new Error(result.reason);adventures=writeAdventures(result.list);try{await persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})}catch(error){adventures=writeAdventures(before);render();throw new Error('A remoção não pôde ser sincronizada. A imagem foi preservada.')}render();feedback('Imagem removida e sincronizada.',true);if(previous?.id)await deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)})}
