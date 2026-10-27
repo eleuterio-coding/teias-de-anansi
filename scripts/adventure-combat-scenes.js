@@ -1,6 +1,6 @@
 // Cena = unidade narrativa. Encontro = preparação exclusiva de combate.
 // As opções seguem a Aventura vinculada à Sessão, sem cópias independentes.
-import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261027-scene-types1';
+import{readAdventures,writeAdventures,updateAdventureEntity}from'./adventure-state.js?v=20261027-auto-combat-roster1';
 import{addSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{createEncounter,addCharacterCombatant,addCreatureCombatant}from'./encounter-state.js?v=20261022-chronicles-final3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
