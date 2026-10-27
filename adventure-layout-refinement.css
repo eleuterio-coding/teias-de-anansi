@@ -825,7 +825,7 @@
  border:1px solid var(--hub-border,#344a60);border-radius:8px;
  background:var(--hub-surface-2,#17293a);
 }
-#adventure-root #cenas .adventure-scene-cast-row{grid-template-columns:minmax(0,1fr) auto}
+#adventure-root #cenas .adventure-scene-cast-row{grid-template-columns:minmax(0,1fr) auto auto}
 #adventure-root :is(#cenas,#exploracao) :is(.adventure-scene-cast-row,.adventure-cast-choice)>label{
  display:flex;flex-direction:row;align-items:center;gap:7px;min-width:0;
  line-height:1.4;font-size:.84rem;cursor:pointer;
