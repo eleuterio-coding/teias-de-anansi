@@ -236,7 +236,7 @@ function bindManager(card,ctx){
  for(const node of manager.querySelectorAll('[data-combat]')){const combat=combatForNode(ctx,node);if(combat)bindCombatNode(ctx,node,combat)}
 }
 function createFromEncounterEvent(event){
- const detail=event.detail||{};for(const card of document.querySelectorAll('[data-session-id]')){if(card.dataset.sessionId!==detail.sessionId)continue;const ctx=contextForCard(card),r=createCombatFromEncounter(ctx.session,detail.encounterId);if(!r.ok)return announce(r.reason,false);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.');break}
+ const detail=event.detail||{};for(const card of document.querySelectorAll('[data-session-id]')){if(card.dataset.sessionId!==detail.sessionId)continue;const ctx=contextForCard(card),r=createCombatFromEncounter(ctx.session,detail.encounterId);if(!r.ok)return announce(r.reason,false);addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Combate preparado a partir do Encontro.');break}
 }
 function init(){injectAll();const root=document.getElementById('sessions-list');if(root)new MutationObserver(()=>queueMicrotask(injectAll)).observe(root,{childList:true,subtree:true});window.addEventListener('hub-rpg:create-combat-from-encounter',createFromEncounterEvent)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
