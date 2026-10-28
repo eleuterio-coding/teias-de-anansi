@@ -407,6 +407,17 @@ function arrangeAdventureContentWorkspace(){
   button.addEventListener('click',()=>switchTo('create',button.dataset.adventureCreationKind)));
  creation.querySelectorAll('[data-adventure-overview-return]').forEach(button=>
   button.addEventListener('click',()=>switchTo('overview')));
+ // Links de cronologia continuam encontrando o editor no grupo correto.
+ creation.addEventListener('click',event=>{
+  const link=event.target.closest('a[href^="#"]');
+  if(!link)return;
+  const id=decodeURIComponent(link.getAttribute('href').slice(1));
+  const target=id?document.getElementById(id):null;
+  const group=target?.dataset.adventureWorkspaceGroup;
+  if(!group||adventureCreationKind===group)return;
+  event.preventDefault();switchTo('create',group);
+  target.scrollIntoView({block:'start'});
+ });
  show();
 }
 
