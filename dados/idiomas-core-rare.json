@@ -27,7 +27,7 @@
     "nome": "Celestial",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
-    "origem": "Celestials",
+    "origem": "Celestiais",
     "descricao": "Idioma raro associado aos celestiais. Em Eberron, é conhecido como a “língua de Siberys” e possui escrita Celestial.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
@@ -35,15 +35,15 @@
     "nome": "Deep Speech",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
-    "origem": "Aberrations",
-    "descricao": "Idioma raro associado a aberrações e influências alienígenas. Na Fronteira Ocidental de Eberron, é relacionado a aberrações e cultistas, e Quickstone registra a forma contextual “Daelkyr (Deep Speech)”.",
+    "origem": "Aberrações",
+    "descricao": "Idioma raro associado a aberrações e influências alienígenas. Na Fronteira Ocidental de Eberron, é relacionado a aberrações e cultistas, e Quickstone registra a forma contextual “Daelkyr (Língua Profunda)”.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
   {
     "nome": "Druidic",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
-    "origem": "Druidic circles",
+    "origem": "Círculos druídicos",
     "descricao": "Idioma secreto ligado às tradições druídicas e classificado como raro nas regras de 2024. Em Quickstone, aparece associado a conjuradores primais e pode ser aprendido por quem é capaz de conjurar uma magia de Druid.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
@@ -59,15 +59,15 @@
     "nome": "Infernal",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
-    "origem": "Devils of the Nine Hells",
-    "descricao": "Idioma raro associado a diabos e outros fiends. Na Fronteira Ocidental de Eberron, magos do Venomous Demesne o estudam como habilidade de ofício e também o utilizam para comunicação privada.",
+    "origem": "Diabos dos Nove Infernos",
+    "descricao": "Idioma raro associado a diabos e outros fiends. Na Fronteira Ocidental de Eberron, magos do Domínio Peçonhento o estudam como habilidade de ofício e também o utilizam para comunicação privada.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
   {
     "nome": "Primordial",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
-    "origem": "Elementals",
+    "origem": "Elementais",
     "descricao": "Idioma raro associado aos elementais. Nas regras de 2024, Aquan, Auran, Ignan e Terran são tratados como seus dialetos; em Eberron, a língua é registrada com escrita Primordial.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
@@ -75,7 +75,7 @@
     "nome": "Sylvan",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
-    "origem": "The Feywild",
+    "origem": "Agreste das Fadas",
     "descricao": "Idioma raro associado às fadas e às tradições do Feywild. Na Fronteira Ocidental de Eberron, é ligado a fey e Greensingers e aparece com escrita élfica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
@@ -91,7 +91,7 @@
     "nome": "Thieves’ Cant",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024)",
-    "origem": "Criminal guilds",
+    "origem": "Guildas Criminosas",
     "descricao": "Linguagem secreta ligada a redes criminosas e à tradição dos ladinos. Nas regras de 2024, é tratada como um idioma raro e serve para comunicação codificada entre pessoas que conhecem suas convenções.",
     "status": "Ativo — 2024"
   },
@@ -99,7 +99,7 @@
     "nome": "Undercommon",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024)",
-    "origem": "The Underdark",
+    "origem": "Subterrâneo",
     "descricao": "Idioma raro amplamente empregado no Subterrâneo e em comunidades que mantêm contato frequente com seus povos. Funciona como língua de comunicação entre diferentes grupos das regiões subterrâneas.",
     "status": "Ativo — 2024"
   }

@@ -38,7 +38,7 @@
   </header>
 
   <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar idioma, fonte ou origem...">
+    <input id="busca" type="search" placeholder="Buscar idioma, categoria ou fonte...">
     <select id="filtro">
       <option value="">Todas as categorias</option>
     </select>
@@ -48,6 +48,15 @@
 
 <script>
 let IDIOMAS = [];
+// Apenas a apresentação pública é traduzida: os identificadores canônicos
+// dos catálogos continuam intactos para as regras de personagem.
+const TRADUCOES_IDIOMAS = [["Common Sign Language","Linguagem de Sinais"],["Thieves’ Cant","Gíria de Ladrões"],["Thieves' Cant","Gíria de Ladrões"],["Venomous Demesne","Domínio Peçonhento"],["Deep Speech","Língua Profunda"],["Expanded","Expandido"],["Standard","Padrão"],["Rare","Raro"],["Core","Base"],["Common","Comum"],["Draconic","Dracônico"],["Dwarvish","Anão"],["Elvish","Élfico"],["Giant","Gigante"],["Gnomish","Gnomo"],["Harpy","Harpia"],["Kharolian","Kharoliano"],["Leonin","Leonino"],["Minotaur","Minotauro"],["Ogre","Ogro"],["Serpentine","Serpentino"],["Stonegrind","Móipedra"],["Sylvan","Silvan"],["Tauric","Taurico"],["Undercommon","Subcomum"],["Druidic","Druídico"],["dragonborn","draconato"]];
+function localizarIdioma(valor) {
+  return TRADUCOES_IDIOMAS.reduce(
+    (texto, [original, traduzido]) => texto.split(original).join(traduzido),
+    String(valor ?? '')
+  );
+}
 // Curadoria da Biblioteca: preservar as fontes integrais para regras de personagem e demais módulos.
 // Idiomas nativos associados às raças em scripts/species-language-rules.js.
 const IDIOMAS_RACIAIS = ["Draconic","Dwarvish","Elvish","Giant","Gnomish","Goblin","Halfling","Orc","Aquan","Celestial","Infernal","Primordial","Sylvan","Gith","Gnoll","Harpy","Minotaur","Quori","Serpentine"];
@@ -62,21 +71,20 @@ const lista = document.getElementById('lista');
 const resultado = document.getElementById('resultado');
 
 function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function texto(i) { return [i.nome,i.categoria,i.fonte,i.origem,i.descricao,i.status].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function texto(i) { return [i.nome,i.categoria,i.fonte,i.descricao,i.status,localizarIdioma(i.nome),localizarIdioma(i.categoria),localizarIdioma(i.descricao)].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
 function render() {
   const termo = busca.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   const itens = IDIOMAS.filter(i => (!termo || texto(i).includes(termo)) && (!filtro.value || i.categoria === filtro.value));
   resultado.textContent = `${itens.length} de ${IDIOMAS.length} idiomas`;
   lista.innerHTML = itens.map(i => `
     <details class="idioma">
-      <summary><strong>${esc(i.nome)}</strong><span class="categoria">${esc(i.categoria)}</span></summary>
+      <summary><strong>${esc(localizarIdioma(i.nome))}</strong><span class="categoria">${esc(localizarIdioma(i.categoria))}</span></summary>
       <div class="corpo">
-        <p>${esc(i.descricao)}</p>
+        <p>${esc(localizarIdioma(i.descricao))}</p>
         <div class="meta">
           <span><strong>Tipo:</strong> Idioma</span>
-          <span><strong>Livro:</strong> ${esc(i.fonte)}</span>
-          <span><strong>Origem:</strong> ${esc(i.origem)}</span>
-          <span><strong>Status:</strong> ${esc(i.status)}</span>
+          <span><strong>Livro:</strong> ${esc(localizarIdioma(i.fonte))}</span>
+          <span><strong>Status:</strong> ${esc(localizarIdioma(i.status))}</span>
         </div>
       </div>
     </details>`).join('');
@@ -85,20 +93,20 @@ function render() {
 async function iniciar() {
   try {
     const urls = [
-      'dados/idiomas-core-standard.json?v=20260923-harpy-aquan1',
-      'dados/idiomas-core-rare.json?v=20261028-primordial-dialects1',
-      'dados/idiomas-forgotten-realms.json?v=20260923-harpy-aquan1',
-      'dados/idiomas-eberron.json?v=20260923-harpy-aquan1',
-      'dados/idiomas-outros.json?v=20260923-harpy-aquan1'
+      'dados/idiomas-core-standard.json?v=20261028-idiomas-localizacao1',
+      'dados/idiomas-core-rare.json?v=20261028-idiomas-localizacao1',
+      'dados/idiomas-forgotten-realms.json?v=20261028-idiomas-localizacao1',
+      'dados/idiomas-eberron.json?v=20261028-idiomas-localizacao1',
+      'dados/idiomas-outros.json?v=20261028-idiomas-localizacao1'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
     if (falha) throw new Error(`HTTP ${falha.status}`);
     const grupos = await Promise.all(respostas.map(r => r.json()));
-    IDIOMAS = grupos.flat().filter(i => IDIOMAS_VISIVEIS.has(i.nome)).sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    IDIOMAS = grupos.flat().filter(i => IDIOMAS_VISIVEIS.has(i.nome)).sort((a,b) => localizarIdioma(a.nome).localeCompare(localizarIdioma(b.nome), 'pt-BR'));
     const categorias = [...new Set(IDIOMAS.map(i => i.categoria))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
     filtro.innerHTML = '<option value="">Todas as categorias</option>' +
-      categorias.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
+      categorias.map(c => `<option value="${esc(c)}">${esc(localizarIdioma(c))}</option>`).join('');
     render();
   } catch (erro) {
     resultado.textContent = 'Falha ao carregar o catálogo.';

@@ -4,7 +4,7 @@
     "categoria": "Expanded — Eberron",
     "fonte": "Eberron: Rising from the Last War (2019)",
     "origem": "Eberron",
-    "descricao": "Idioma de Eberron associado aos daelkyr, a aberrações e a outros habitantes de Khyber. Possui escrita própria Daelkyr; Quickstone também o relaciona contextualmente a Deep Speech sem exigir que os dois sejam tratados como uma única língua.",
+    "descricao": "Idioma de Eberron associado aos daelkyr, a aberrações e a outros habitantes de Khyber. Possui escrita própria Daelkyr; Quickstone também o relaciona contextualmente a Língua Profunda sem exigir que os dois sejam tratados como uma única língua.",
     "status": "Ativo — 5e retido · descrição ampliada pelos PDFs"
   },
   {
@@ -20,7 +20,7 @@
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024) · Regra da Casa — Hub de RPG",
     "origem": "Eberron / Droaam / Fronteira Ocidental",
-    "descricao": "Idioma vocal próprio das harpias no Hub, inspirado nas tradições das harpias de Droaam, cuja identidade cultural é fortemente ligada à voz e ao canto. A língua usa melodia, ritmo, altura, timbre e inflexão como partes significativas da comunicação; falar Harpy não produz, por si só, os efeitos mágicos associados às vozes das harpias.",
+    "descricao": "Idioma vocal próprio das harpias no Hub, inspirado nas tradições das harpias de Droaam, cuja identidade cultural é fortemente ligada à voz e ao canto. A língua usa melodia, ritmo, altura, timbre e inflexão como partes significativas da comunicação; falar Harpia não produz, por si só, os efeitos mágicos associados às vozes das harpias.",
     "status": "Regra da Casa — exclusivo de Harpias"
   },
   {
@@ -28,7 +28,7 @@
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Eberron / Fronteira Ocidental",
-    "descricao": "Idioma opcional falado apenas no Venomous Demesne. Sua formação combina raízes de Draconic, Infernal e Riedran, tornando-o uma língua local altamente especializada.",
+    "descricao": "Idioma opcional falado apenas no Domínio Peçonhento. Sua formação combina raízes de Dracônico, Infernal e Riedran, tornando-o uma língua local altamente especializada.",
     "status": "Opcional — Quickstone 2024 (terceiros)"
   },
   {
@@ -44,7 +44,7 @@
     "categoria": "Expanded — Eberron",
     "fonte": "Eberron: Rising from the Last War (2019)",
     "origem": "Eberron",
-    "descricao": "Idioma dos povos de Sarlona e, em especial, de contextos ligados a Riedra. Em Eberron, aparece entre os idiomas padrão e utiliza a escrita do Common.",
+    "descricao": "Idioma dos povos de Sarlona e, em especial, de contextos ligados a Riedra. Em Eberron, aparece entre os idiomas padrão e utiliza a escrita do Comum.",
     "status": "Ativo — 5e retido · descrição ampliada pelos PDFs"
   },
   {
@@ -75,7 +75,7 @@
     "nome": "Wuura'gaa",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
-    "origem": "Eberron / Fronteira Ocidental",
+    "origem": "Floresta Vigilante",
     "descricao": "Idioma opcional e língua nativa dos worgs de Watching Wood, fortemente restrito a essa comunidade regional.",
     "status": "Opcional — Quickstone 2024 (terceiros)"
   }
