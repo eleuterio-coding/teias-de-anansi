@@ -430,6 +430,8 @@ def main():
 
     root = Path(a.root)
     recs, explicit, struct = [], [], []
+    spell_translation_file = root / "dados/localizacao-ptbr-magias-completo.json"
+    spell_names = json.loads(spell_translation_file.read_text(encoding="utf-8")).get("nomes", {}) if spell_translation_file.exists() else {}
 
     for p, d in docs(root):
         dm = module(p)
@@ -439,12 +441,21 @@ def main():
             if not n or not m:
                 continue
             orig = pick(o, ("original", "nome_original", "original_name"))
+            if m == "Magias" and spell_names:
+                identity = orig or n
+                translated = spell_names.get(identity)
+                if translated:
+                    n = translated
+                    orig = identity
+            alias_list = aliases(o, n)
+            if orig and norm(orig) not in {norm(alias) for alias in alias_list}:
+                alias_list.append(orig)
             rid = o.get("id") if isinstance(o.get("id"), str) and o.get("id").strip() else sid(m, n, orig)
             recs.append({
                 "id": rid,
                 "nome": n,
                 "original": orig,
-                "aliases": aliases(o, n),
+                "aliases": alias_list,
                 "modulo": m,
                 "url": route_for(m, n, str(p)),
                 "fonte_arquivo": str(p.relative_to(root)).replace("\\", "/"),
