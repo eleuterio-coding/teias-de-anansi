@@ -2,16 +2,16 @@
    Estilos limitados ao conteúdo das páginas da Biblioteca: a barra lateral,
    o topo e os diálogos continuam sob responsabilidade de hub-ux.css.
    Os nomes e IDs legados dos catálogos são preservados. */
-html:has(body.hub-shell-enabled.hub-content-light) {
+html:has(body.hub-shell-enabled.hub-content-library) {
   color-scheme: dark !important;
   background: var(--hub-bg, #080d14) !important;
 }
-body.hub-shell-enabled.hub-content-light {
+body.hub-shell-enabled.hub-content-library {
   color-scheme: dark;
   background: var(--hub-bg, #080d14) !important;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content {
+body.hub-shell-enabled.hub-content-library .hub-app-content {
   --b: var(--hub-border, #223245);
   --soft: var(--hub-surface-2, #131f2b);
   --muted: var(--hub-muted, #8290a3);
@@ -23,25 +23,25 @@ body.hub-shell-enabled.hub-content-light .hub-app-content {
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(h1,h2,h3,h4,strong,b,dt) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(h1,h2,h3,h4,strong,b,dt) {
   color: var(--hub-text, #f4f7fb);
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content h1 {
+body.hub-shell-enabled.hub-content-library .hub-app-content h1 {
   margin: 0 0 10px !important;
   font-size: clamp(1.7rem, 2.6vw, 2.1rem) !important;
   font-weight: 760;
   line-height: 1.18 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content h2 { font-size: clamp(1.12rem, 1.6vw, 1.35rem); }
-body.hub-shell-enabled.hub-content-light .hub-app-content > header,
-body.hub-shell-enabled.hub-content-light .hub-app-content > .top {
+body.hub-shell-enabled.hub-content-library .hub-app-content h2 { font-size: clamp(1.12rem, 1.6vw, 1.35rem); }
+body.hub-shell-enabled.hub-content-library .hub-app-content > header,
+body.hub-shell-enabled.hub-content-library .hub-app-content > .top {
   margin: 0 0 20px !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content > p:first-child:has(a[href]) {
+body.hub-shell-enabled.hub-content-library .hub-app-content > p:first-child:has(a[href]) {
   margin: 0 0 18px !important;
   font-size: .85rem;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content > p:first-child > a {
+body.hub-shell-enabled.hub-content-library .hub-app-content > p:first-child > a {
   display: inline-flex;
   align-items: center;
   min-height: 34px;
@@ -51,14 +51,14 @@ body.hub-shell-enabled.hub-content-light .hub-app-content > p:first-child > a {
   background: var(--hub-surface, #101923);
   text-decoration: none;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(a,a:link,a:visited) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(a,a:link,a:visited) {
   color: var(--hub-accent-2, #67b8ff) !important;
   -webkit-text-fill-color: currentColor;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content a:hover {
+body.hub-shell-enabled.hub-content-library .hub-app-content a:hover {
   color: #b7dfff !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   .muted,.resumo,.meta,.contagem,.original,.count,.categoria,.subclasse .classe,.sub,
   .subtitulo,.source-strip,.fonte,.licenca,.resultado,.mini,.tipo-feat,
   .prerequisito,.status,.catalog-results span,.results span
@@ -66,7 +66,7 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(
   color: var(--hub-muted, #8290a3) !important;
   opacity: 1 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   .nota,.aviso,.warning,.warn,.erro,.vazio,.empty,.regras,.auditoria,.roteamento
 ) {
   min-width: 0;
@@ -77,14 +77,14 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(
   background: var(--hub-surface-2, #131f2b) !important;
   color: var(--hub-text-2, #c5cfdb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.erro,.warning,.warn) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.erro,.warning,.warn) {
   border-color: rgba(255,107,107,.42) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.nota,.aviso,.regras,.auditoria) strong {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.nota,.aviso,.regras,.auditoria) strong {
   color: var(--hub-text, #f4f7fb);
 }
 /* Busca e filtragem: mesmos inputs, superfícies e raios do restante do Hub. */
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.catalog-controls) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.controles,.catalog-controls) {
   display: grid;
   gap: 12px !important;
   align-items: end;
@@ -95,19 +95,19 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.catalo
   border-radius: var(--hub-radius, 14px);
   background: var(--hub-surface, #101923) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.tools,.controls) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.tools,.controls) {
   gap: 10px;
   background: transparent !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) > * {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) > * {
   min-width: 0;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) label {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) label {
   color: var(--hub-text-2, #c5cfdb);
   font-size: .86rem;
   font-weight: 650;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,select,textarea) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(input,select,textarea) {
   max-width: 100%;
   min-width: 0;
   border: 1px solid #2b3d50 !important;
@@ -118,17 +118,17 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,select,texta
   color-scheme: dark !important;
   font-family: inherit !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,textarea)::placeholder {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(input,textarea)::placeholder {
   color: #8191a6 !important;
   -webkit-text-fill-color: #8191a6 !important;
   opacity: 1 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,select,textarea):focus-visible {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(input,select,textarea):focus-visible {
   border-color: var(--hub-accent, #2f9cff) !important;
   outline: 2px solid var(--hub-accent-2, #67b8ff) !important;
   outline-offset: 1px !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.badge,.chip,.tag,.pill,.catalog-badge) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.badge,.chip,.tag,.pill,.catalog-badge) {
   display: inline-flex;
   align-items: center;
   border: 1px solid #314459 !important;
@@ -138,23 +138,23 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(.badge,.chip,.tag,
   -webkit-text-fill-color: #bdd9ed !important;
   opacity: 1 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.badge,.chip,.tag,.pill) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.badge,.chip,.tag,.pill) {
   padding: 3px 8px;
 }
 /* Catálogo da página inicial — cartões clicáveis como os menus do Hub. */
-body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page {
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page {
   max-width: 1400px;
   width: 100%;
   margin-inline: auto;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page > header {
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page > header {
   margin: 0 0 20px;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page > header p {
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page > header p {
   margin: 0;
   color: var(--hub-text-2, #c5cfdb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0,1fr)) !important;
   gap: 14px !important;
@@ -163,14 +163,14 @@ body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
   padding: 0;
   list-style: none;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos li {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li {
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--hub-border, #223245) !important;
   border-radius: var(--hub-radius, 14px) !important;
   background: var(--hub-surface, #101923) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a {
   display: flex !important;
   flex-direction: column;
   align-items: flex-start !important;
@@ -185,14 +185,14 @@ body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a {
   text-decoration: none;
   transition: background .16s, transform .16s;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a:hover,
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a:focus-visible {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:hover,
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:focus-visible {
   background: var(--hub-surface-2, #131f2b) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos li:hover {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li:hover {
   border-color: var(--hub-accent, #2f9cff) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .nome {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .nome {
   display: block;
   white-space: normal !important;
   font-size: 1.06rem !important;
@@ -200,36 +200,36 @@ body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .nome {
   line-height: 1.35;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .nome::before {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .nome::before {
   color: var(--hub-accent-2, #67b8ff) !important;
   font-variant-numeric: tabular-nums;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .contagem {
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .contagem {
   display: block;
   white-space: normal;
   font-size: .78rem;
   color: var(--hub-muted, #8290a3) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .catalog-badges {
+body.hub-shell-enabled.hub-content-library .hub-app-content .catalog-badges {
   display: inline-flex;
   flex-wrap: wrap;
   gap: 5px;
   margin-left: 8px;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .catalog-badge {
+body.hub-shell-enabled.hub-content-library .hub-app-content .catalog-badge {
   padding: 2px 7px;
   font-size: .67rem;
   font-weight: 700;
 }
 /* Cartões de seleção e painéis de detalhe internos. */
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   .painel,.panel,.art,.box,.stat,.bloco,.card,.ficha,.registro,.subclasse,
   .antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga,.item,.talento
 ) {
   border-color: var(--hub-border, #223245) !important;
   color: var(--hub-text-2, #c5cfdb);
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   .painel,.panel,.art,.box,.stat,.bloco,.card,.registro,.subclasse,
   .antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) {
@@ -237,175 +237,175 @@ body.hub-shell-enabled.hub-content-light .hub-app-content :is(
   border-radius: var(--hub-radius-sm, 10px);
   box-shadow: none !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   details,.registro,.subclasse,.antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) {
   overflow: hidden;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   details,.registro,.subclasse,.antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) > summary {
   cursor: pointer;
   background: transparent !important;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content details > summary:hover {
+body.hub-shell-enabled.hub-content-library .hub-app-content details > summary:hover {
   background: var(--hub-surface-2, #131f2b) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content details[open] {
+body.hub-shell-enabled.hub-content-library .hub-app-content details[open] {
   border-color: #395775 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content details[open] > summary {
+body.hub-shell-enabled.hub-content-library .hub-app-content details[open] > summary {
   border-bottom: 1px solid var(--hub-border-soft, #1a2837);
   background: #142334 !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.corpo,.detalhe,.detail) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.corpo,.detalhe,.detail) {
   color: var(--hub-text-2, #c5cfdb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.item,.talento) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.item,.talento) {
   background: var(--hub-surface, #101923) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.lista,.list) .item {
   border-color: var(--hub-border, #223245) !important;
   color: var(--hub-text-2, #c5cfdb) !important;
   background: var(--hub-surface, #101923) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:hover,
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.lista,.list) .item:hover,
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
   border-color: var(--hub-accent, #2f9cff) !important;
   background: #183049 !important;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
   box-shadow: inset 3px 0 0 var(--hub-accent, #2f9cff);
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item small {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.lista,.list) .item small {
   color: var(--hub-muted, #8290a3) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .layout {
+body.hub-shell-enabled.hub-content-library .hub-app-content .layout {
   grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) !important;
   gap: 16px !important;
   align-items: start;
   min-width: 0;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .layout > * {
+body.hub-shell-enabled.hub-content-library .hub-app-content .layout > * {
   min-width: 0;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.painel,.panel) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.painel,.panel) {
   border: 1px solid var(--hub-border, #223245) !important;
   padding: 16px;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.painel,.panel) :is(.tools,.controls) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.painel,.panel) :is(.tools,.controls) {
   padding: 0;
   border: 0;
   margin: 0 0 12px;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.stat,.bloco,.ficha) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.stat,.bloco,.ficha) {
   background: var(--hub-surface-2, #131f2b) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(
   .feature,.trait,.linhagem,.mecanica,.secao-regra,.house-override,.kv
 ) {
   border-left-color: var(--hub-accent, #2f9cff) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.meta,.fonte,.source-strip) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.meta,.fonte,.source-strip) {
   border-top-color: var(--hub-border, #223245) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.resultado,.count) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.resultado,.count) {
   font-size: .84rem;
 }
 /* Tabelas e código preservam leitura e rolagem sem estourar o painel. */
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.tabela,.tabela-wrap,.tablewrap,.table-wrap) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.tabela,.tabela-wrap,.tablewrap,.table-wrap) {
   max-width: 100%;
   overflow-x: auto;
   border-color: var(--hub-border, #223245) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content table {
+body.hub-shell-enabled.hub-content-library .hub-app-content table {
   width: 100%;
   border-collapse: collapse;
   background: var(--hub-surface, #101923) !important;
   color: var(--hub-text-2, #c5cfdb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(th,td) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(th,td) {
   border-color: var(--hub-border, #223245) !important;
   color: var(--hub-text-2, #c5cfdb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content th {
+body.hub-shell-enabled.hub-content-library .hub-app-content th {
   background: #192a3b !important;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(pre,code) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(pre,code) {
   color: #c1d9ee !important;
   background: #0b141e !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content pre {
+body.hub-shell-enabled.hub-content-library .hub-app-content pre {
   max-width: 100%;
   overflow-x: auto;
   border: 1px solid var(--hub-border, #223245);
   border-radius: 9px;
   padding: 12px;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-search-results,.results a,.catalog-results a) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.catalog-search-results,.results a,.catalog-results a) {
   border: 1px solid var(--hub-border, #223245) !important;
   border-radius: 11px;
   background: var(--hub-surface, #101923) !important;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.catalog-results a,.results a) {
   text-decoration: none;
   transition: border-color .16s, background .16s;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a,.card[href]):hover {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.catalog-results a,.results a,.card[href]):hover {
   border-color: var(--hub-accent, #2f9cff) !important;
   background: var(--hub-surface-2, #131f2b) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a,.card[href]) :is(strong,span) {
+body.hub-shell-enabled.hub-content-library .hub-app-content :is(.catalog-results a,.results a,.card[href]) :is(strong,span) {
   color: inherit;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content .card[href] {
+body.hub-shell-enabled.hub-content-library .hub-app-content .card[href] {
   text-decoration: none;
   color: var(--hub-text, #f4f7fb) !important;
 }
-body.hub-shell-enabled.hub-content-light .hub-app-content ::selection {
+body.hub-shell-enabled.hub-content-library .hub-app-content ::selection {
   background: #265c8b;
   color: #fff;
 }
 @media (max-width: 1120px) {
-  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+  body.hub-shell-enabled.hub-content-library .hub-app-content .modulos {
     grid-template-columns: repeat(2, minmax(0,1fr)) !important;
   }
 }
 @media (max-width: 900px) {
-  body.hub-shell-enabled.hub-content-light .hub-app-content .layout {
+  body.hub-shell-enabled.hub-content-library .hub-app-content .layout {
     grid-template-columns: minmax(0,1fr) !important;
   }
-  body.hub-shell-enabled.hub-content-light .hub-app-content .layout > :is(.painel,.panel) {
+  body.hub-shell-enabled.hub-content-library .hub-app-content .layout > :is(.painel,.panel) {
     width: 100%;
   }
 }
 @media (max-width: 670px) {
-  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+  body.hub-shell-enabled.hub-content-library .hub-app-content .modulos {
     grid-template-columns: minmax(0,1fr) !important;
   }
-  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a {
+  body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a {
     min-height: 116px !important;
     padding: 16px !important;
   }
-  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.catalog-controls) {
+  body.hub-shell-enabled.hub-content-library .hub-app-content :is(.controles,.catalog-controls) {
     grid-template-columns: 1fr !important;
     padding: 12px;
   }
-  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.filtros,.grade) {
+  body.hub-shell-enabled.hub-content-library .hub-app-content :is(.filtros,.grade) {
     grid-template-columns: 1fr !important;
   }
-  body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  body.hub-shell-enabled.hub-content-library .hub-app-content :is(
     .registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
   ) > summary {
     display: block;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.modulos a,.results a,.catalog-results a) {
+  body.hub-shell-enabled.hub-content-library .hub-app-content :is(.modulos a,.results a,.catalog-results a) {
     transition: none;
   }
 }
