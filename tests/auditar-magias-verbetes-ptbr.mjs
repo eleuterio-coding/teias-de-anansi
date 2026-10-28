@@ -26,7 +26,12 @@ assert.ok(source.includes('spell-original-name'),'Nome original deve ficar dispo
 assert.ok(source.includes('const origName=x.nome_original?'),'Nome inglês deve aparecer diretamente sob o nome português.');
 assert.ok(!source.includes('Nome original:'),'O dropdown original não deve conter cabeçalho de nome.');
 assert.ok(source.includes("return[x.descricao||'',x.niveis_superiores||'']"),'Texto inglês deve conter apenas o texto-fonte aberto.');
-assert.ok(source.includes('Texto original <small>EN</small>'),'Texto inglês deve ficar em seção recolhível.');
+assert.ok(source.includes('<summary>Texto original</summary>'),'O menu recolhível deve se chamar apenas Texto original.');
+assert.ok(!source.includes('<summary>Texto original <small>EN</small>'),'O título do menu não deve ter sufixos.');
+const spellList=source.split('\n').find(line=>line.includes("document.getElementById('lista').innerHTML=rows.map"));
+assert.ok(spellList?.includes('<small>${esc(x.escola)}</small>'),'A lista lateral deve mostrar a escola sem o nome da fonte.');
+assert.ok(!spellList?.includes('sourceTitle(x.fonte)'),'A origem não deve aparecer na lista lateral.');
+assert.ok(source.includes('class="spell-source"'),'A origem deve permanecer na ficha completa da magia.');
 assert.ok(source.includes('spellOriginalText(x)'),'Texto original deve usar dados do registro.');
 assert.ok(source.includes('class="spell-class-link"'),'Classes devem ter links dedicados.');
 assert.ok(source.includes('classes-v3.html?v=20261028-library-hub-layout1'),'Classes-base devem usar o verbete PT-BR.');
