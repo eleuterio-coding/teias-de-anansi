@@ -418,7 +418,10 @@ async function localizeSpellNames(){
  ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
 }
 function initialSpellId(){
- const id=new URLSearchParams(location.search).get('magia');
+ const params=new URLSearchParams(location.search);
+ // IDs semânticos anteriores (ref) e links diretos atuais (magia) devem abrir o mesmo verbete.
+ const hashRef=location.hash.startsWith('#ref-')?decodeURIComponent(location.hash.slice(5)):'';
+ const id=params.get('magia')||params.get('ref')||hashRef;
  return ALL.find(x=>x.id===id)?.id||ALL[0]?.id||'';
 }
 function openInitialSpell(){populateFilters();renderList();const id=initialSpellId();if(id)renderDetail(id)}
