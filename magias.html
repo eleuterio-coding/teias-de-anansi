@@ -462,11 +462,12 @@ const CLASS_TARGETS={"Bárbaro":"barbarian","Bardo":"bard","Clérigo":"cleric","
 let VERIFIED_SPELL_PT={};
 async function loadVerifiedSpellDescriptions(){
  try{
-  const [legacy,updated]=await Promise.all([
+  const [legacy,updated,secondBatch]=await Promise.all([
    getJSON('dados/magias-traducoes-srd-verificadas.json?v=20261028-verified1'),
-   getJSON('dados/magias-ptbr-srd-2024-revisado.json?v=20261028-srd2024-ed1')
+   getJSON('dados/magias-ptbr-srd-2024-revisado.json?v=20261028-srd2024-ed1'),
+   getJSON('dados/magias-ptbr-srd-2024-revisado-lote2.json?v=20261028-srd2024-lote2')
   ]);
-  VERIFIED_SPELL_PT={...(legacy.descricoes||{}),...(updated.descricoes||{})};
+  VERIFIED_SPELL_PT={...(legacy.descricoes||{}),...(updated.descricoes||{}),...(secondBatch.descricoes||{})};
  }catch(error){console.warn('Traduções verificadas indisponíveis:',error)}
 }
 function spellClassLinks(names){
