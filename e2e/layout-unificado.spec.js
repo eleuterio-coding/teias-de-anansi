@@ -31,9 +31,10 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
   for (const [path,menu,reader] of surfaces) {
     await test.step(path,async () => {
       await page.goto(path,{waitUntil:'domcontentloaded'});
-      // O deploy injeta site-light.css em todas as páginas. Validar também essa composição.
-      await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
+      // Módulos dinâmicos podem reconstruir o DOM depois de DOMContentLoaded.
       await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
+      // Injetar CSS de deploy somente depois de o documento final existir.
+      await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
       await expect(page.locator('script[src*="scripts/hub-ux.js"]')).toHaveCount(1);
       await expect(page.locator('.hub-global-topbar')).toBeVisible();
       await expect(page.locator('[data-hub-master-tools]')).toBeVisible();
