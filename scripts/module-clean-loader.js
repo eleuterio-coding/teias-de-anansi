@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
   const VERSION='20260923-race-language-field2';
-  const LAYOUT='biblioteca-light.css?v=20260827-library-layout2';
+  const LAYOUT='biblioteca-light.css?v=20261028-hub-layout1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -42,6 +42,7 @@
   };
   function applySharedLayout(html){
     const tag=`<link id="hub-library-layout" rel="stylesheet" href="${LAYOUT}">`;
+    html=html.replace(/href=(["'])bibliotecas\.html(?:\?v=[^"']*)?\1/gi,'href="bibliotecas.html?v=20261028-library-hub-layout1"');
     html=html.replace(/<link\b[^>]*id=["']hub-library-layout["'][^>]*>\s*/gi,'');
     if(!/<\/head>/i.test(html))throw new Error('HTML do módulo sem </head>.');
     return html.replace(/<\/head>/i,`${tag}</head>`);
@@ -55,7 +56,7 @@
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
     html=applySharedLayout(html);
     // O módulo mantém seus catálogos; navegação e estilo são compartilhados com o Hub.
-    html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261016-breadcrumbs3"></script></body>');
+    html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261028-hub-layout1"></script></body>');
     if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script></body>`);
     document.open();
     document.write(html);

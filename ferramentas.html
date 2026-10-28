@@ -6,10 +6,10 @@
 <style>
 :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}*{box-sizing:border-box}body{max-width:1240px;margin:auto;padding:22px;line-height:1.5}a{color:inherit}.muted{opacity:.72}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.layout{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:16px;align-items:start}.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}.tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:470px}.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.76}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.ativ{width:100%;border-collapse:collapse;margin-top:8px}.ativ th,.ativ td{text-align:left;padding:7px 8px;border-bottom:1px solid #8883}.ativ th:last-child,.ativ td:last-child{text-align:center;width:72px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}@media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:340px}}
 </style>
-  <link rel="stylesheet" href="biblioteca-light.css?v=20260827-library-layout1">
+  <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head>
 <body>
-<p><a href="bibliotecas.html?v=20260819-1029">← Bibliotecas</a></p>
+<p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
 <header>
 <h1>Ferramentas</h1>
 </header>
@@ -25,6 +25,6 @@ function renderDetail(nome){CURRENT=nome;renderList();const x=ALL.find(i=>i.nome
 function renderList(){const q=norm(document.getElementById('q').value),t=document.getElementById('tipo').value;const rows=ALL.filter(x=>(!t||x.subtipo===t)&&(!q||norm([x.nome,x.subtipo,x.descricao,x.componentes,x.pericias,x.especial,x.ref2,x.ref2024].join(' ')).includes(q)));document.getElementById('count').textContent=`${rows.length} de ${ALL.length} ferramentas`;document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.nome?'on':''}" data-name="${esc(x.nome)}"><strong>${esc(x.nome)}</strong><small>${esc(x.subtipo)}</small></button>`).join('')||'<div class="vazio">Nenhuma ferramenta encontrada.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.name))}
 (async()=>{try{const r=await fetch('dados/ferramentas-pdfs.json?v=20260819-1029',{cache:'default'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();ALL=(d.ferramentas||[]).sort((a,b)=>a.nome.localeCompare(b.nome,'en'));if(ALL.length!==25)throw new Error(`catálogo incompleto: ${ALL.length}/25`);const tipos=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('tipo').innerHTML='<option value="">Todos os tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0])renderDetail(ALL[0].nome)}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();document.getElementById('q').addEventListener('input',renderList);document.getElementById('tipo').addEventListener('change',renderList);
 </script>
-<script type="module" src="scripts/hub-ux.js?v=20261022-dropdown-stable1"></script>
+<script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body>
 </html>

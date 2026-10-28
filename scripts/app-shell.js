@@ -1,5 +1,5 @@
 
-const LIBRARY_PAGES=new Set(["regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
+const LIBRARY_PAGES=new Set(["biblioteca-legado.html","regras.html","classes.html","classes-v3.html","subclasses.html","raca.html","especies.html","antecedentes.html","talentos.html","maestrias-de-arma.html","monstros.html","armaduras.html","armas.html","equipamentos-aventura.html","ferramentas.html","montarias-veiculos.html","comercio-e-despesas.html","bugigangas.html","itens-magicos.html","magias.html","idiomas.html","referencia.html"]);
 const CHARACTER_PAGES=new Set(["criacao-personagem.html","ficha-personagem.html"]);
 const SHELL_PAGES=new Set(["index.html","painel.html","campanhas.html","nova-campanha.html","mesa.html","sessoes.html","aventuras.html","personagens.html","lista-personagens.html","npcs.html","lista-npcs.html","bibliotecas.html","usuario.html","usuarios.html","configuracoes.html",...LIBRARY_PAGES,...CHARACTER_PAGES]);
 const RECENT_KEY="hub-rpg:recent-pages:v1";
@@ -215,7 +215,7 @@ export function initAppShell(){
  frame.className="hub-app-frame";content.className="hub-app-content";content.dataset.hubAppContent="";
  frame.appendChild(buildTopbar());frame.appendChild(content);shell.appendChild(sidebar);shell.appendChild(frame);
  document.body.insertBefore(shell,document.body.firstChild);movable.forEach(function(node){content.appendChild(node)});
- document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage()))document.body.classList.add("hub-content-light");if(previewActive())document.body.classList.add("hub-master-preview");buildCommand();bindShell();renderRecents();updateAppShellContext();if(masterSession()?.isMaster)import("./master-tools.js?v=20261021-users-admin1").then(module=>module.initMasterTools?.()).catch(error=>console.warn("[Hub Mestre] topo:",error))
+ document.body.classList.add("hub-shell-enabled");if(currentPage()==="bibliotecas.html"||LIBRARY_PAGES.has(currentPage()))document.body.classList.add("hub-content-library");if(previewActive())document.body.classList.add("hub-master-preview");buildCommand();bindShell();renderRecents();updateAppShellContext();if(masterSession()?.isMaster)import("./master-tools.js?v=20261021-users-admin1").then(module=>module.initMasterTools?.()).catch(error=>console.warn("[Hub Mestre] topo:",error))
 }
 export function updateAppShellContext(){
  const shell=document.querySelector(".hub-app-shell");if(!shell)return;
