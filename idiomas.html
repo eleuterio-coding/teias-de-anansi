@@ -41,16 +41,6 @@
     <input id="busca" type="search" placeholder="Buscar idioma, fonte ou origem...">
     <select id="filtro">
       <option value="">Todas as categorias</option>
-      <option value="Core — Standard">Core — Standard</option>
-      <option value="Core — Rare">Core — Rare</option>
-      <option value="Expanded — Forgotten Realms">Expanded — Forgotten Realms</option>
-      <option value="Expanded — Eberron">Expanded — Eberron</option>
-      <option value="Expanded — Ravnica">Expanded — Ravnica</option>
-      <option value="Expanded — Theros">Expanded — Theros</option>
-      <option value="Expanded — Wildemount">Expanded — Wildemount</option>
-      <option value="Expanded — Planar">Expanded — Planar</option>
-      <option value="Expanded — Spelljammer">Expanded — Spelljammer</option>
-      <option value="Expanded — Dragonlance">Expanded — Dragonlance</option>
     </select>
   </div>
   <p class="resultado" id="resultado">Carregando idiomas...</p>
@@ -58,6 +48,14 @@
 
 <script>
 let IDIOMAS = [];
+// Curadoria da Biblioteca: preservar as fontes integrais para regras de personagem e demais módulos.
+// Idiomas nativos associados às raças em scripts/species-language-rules.js.
+const IDIOMAS_RACIAIS = ["Draconic","Dwarvish","Elvish","Giant","Gnomish","Goblin","Halfling","Orc","Aquan","Celestial","Infernal","Primordial","Sylvan","Gith","Gnoll","Harpy","Minotaur","Quori","Serpentine"];
+// Idiomas adicionais associados a povos e espécies dos cenários.
+const IDIOMAS_DE_POVOS = ["Daelkyr","Stonegrind","Tauric","Wuura'gaa","Kraul","Loxodon","Vedalken","Leonin","Hadozee","Thri-kreen","Kenderspeak","Ogre"];
+// Seleção expressamente mantida na Biblioteca, além dos grupos anteriores.
+const IDIOMAS_ADICIONAIS = ["Undercommon","Common","Thieves’ Cant","Common Sign Language"];
+const IDIOMAS_VISIVEIS = new Set([...IDIOMAS_RACIAIS, ...IDIOMAS_DE_POVOS, ...IDIOMAS_ADICIONAIS]);
 const busca = document.getElementById('busca');
 const filtro = document.getElementById('filtro');
 const lista = document.getElementById('lista');
@@ -97,7 +95,10 @@ async function iniciar() {
     const falha = respostas.find(r => !r.ok);
     if (falha) throw new Error(`HTTP ${falha.status}`);
     const grupos = await Promise.all(respostas.map(r => r.json()));
-    IDIOMAS = grupos.flat().sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    IDIOMAS = grupos.flat().filter(i => IDIOMAS_VISIVEIS.has(i.nome)).sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+    const categorias = [...new Set(IDIOMAS.map(i => i.categoria))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
+    filtro.innerHTML = '<option value="">Todas as categorias</option>' +
+      categorias.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('');
     render();
   } catch (erro) {
     resultado.textContent = 'Falha ao carregar o catálogo.';
