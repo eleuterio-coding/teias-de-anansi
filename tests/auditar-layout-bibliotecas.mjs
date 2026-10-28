@@ -35,7 +35,8 @@ assert.match(index,/scripts\/library-catalog-status\.js/,'Busca e contagem do ca
 const stylesheet=/biblioteca-light\.css\?v=20261028-hub-layout1/;
 for(const file of ['bibliotecas.html',...directModules,...wrappedModules,...nestedPages]){
   const html=read(file);
-  assert.match(html,stylesheet,file+' deve usar o tema compartilhado atualizado.');
+  const theme=file==='bibliotecas.html'?/biblioteca-light\.css\?v=20261028-library-compact-cards1/:stylesheet;
+  assert.match(html,theme,file+' deve usar o tema compartilhado atualizado.');
   if(!wrappedModules.includes(file)){
     assert.match(html,/scripts\/hub-ux\.js\?v=/,file+' deve integrar o shell do Hub.');
   }else{

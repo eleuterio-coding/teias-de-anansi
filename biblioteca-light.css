@@ -143,14 +143,15 @@ body.hub-shell-enabled.hub-content-library .hub-app-content :is(.badge,.chip,.ta
 body.hub-shell-enabled.hub-content-library .hub-app-content :is(.badge,.chip,.tag,.pill) {
   padding: 3px 8px;
 }
-/* Catálogo da página inicial — cartões clicáveis como os menus do Hub. */
+/* Biblioteca / Índice — cards compactos, sem selos ou estados de publicação.
+   Os números vêm do resumo dos registros publicados, não de contagens fixas. */
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page {
   max-width: 1400px;
   width: 100%;
   margin-inline: auto;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page > header {
-  margin: 0 0 20px;
+  margin: 0 0 18px;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page > header p {
   margin: 0;
@@ -158,70 +159,108 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-page > 
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos {
   display: grid !important;
-  grid-template-columns: repeat(3, minmax(0,1fr)) !important;
-  gap: 14px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
   width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li {
+  position: relative;
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--hub-border, #223245) !important;
-  border-radius: var(--hub-radius, 14px) !important;
+  border-radius: 12px !important;
   background: var(--hub-surface, #101923) !important;
+  transition: border-color .16s ease, background-color .16s ease, box-shadow .16s ease;
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 14px;
+  bottom: 14px;
+  left: 0;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--hub-accent, #2f9cff);
+  opacity: .42;
+  transition: opacity .16s ease;
+  pointer-events: none;
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li:hover,
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li:focus-within {
+  border-color: #3d6b8d !important;
+  background: #152332 !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li:is(:hover,:focus-within)::before {
+  opacity: 1;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a {
+  position: relative;
   display: flex !important;
-  flex-direction: column;
+  flex-direction: column !important;
   align-items: flex-start !important;
-  justify-content: space-between;
-  gap: 12px !important;
+  justify-content: center !important;
+  gap: 5px !important;
   width: 100%;
-  min-height: 142px !important;
+  min-height: 86px !important;
   height: 100%;
-  padding: 19px 20px !important;
+  padding: 14px 47px 14px 17px !important;
   background: transparent !important;
   color: var(--hub-text, #f4f7fb) !important;
   text-decoration: none;
-  transition: background .16s, transform .16s;
+  transition: background-color .16s ease;
 }
-body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:hover,
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:is(:hover,:focus-visible) {
+  background: rgba(47,156,255,.055) !important;
+}
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:focus-visible {
-  background: var(--hub-surface-2, #131f2b) !important;
+  outline: 2px solid var(--hub-accent-2, #67b8ff) !important;
+  outline-offset: -3px;
+  border-radius: 11px;
 }
-body.hub-shell-enabled.hub-content-library .hub-app-content .modulos li:hover {
-  border-color: var(--hub-accent, #2f9cff) !important;
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a::after {
+  content: '↗';
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  transform: translateY(-50%);
+  color: var(--hub-muted, #8290a3);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: transform .16s ease, color .16s ease;
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a:is(:hover,:focus-visible)::after {
+  transform: translate(2px,calc(-50% - 2px));
+  color: var(--hub-accent-2, #67b8ff);
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .nome {
   display: block;
+  max-width: 100%;
   white-space: normal !important;
-  font-size: 1.06rem !important;
-  font-weight: 750;
-  line-height: 1.35;
+  overflow-wrap: normal;
+  font-size: .97rem !important;
+  font-weight: 730;
+  letter-spacing: -.015em;
+  line-height: 1.32;
   color: var(--hub-text, #f4f7fb) !important;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .nome::before {
-  color: var(--hub-accent-2, #67b8ff) !important;
-  font-variant-numeric: tabular-nums;
+  content: none !important;
 }
 body.hub-shell-enabled.hub-content-library .hub-app-content .modulos .contagem {
   display: block;
-  white-space: normal;
-  font-size: .78rem;
+  max-width: 100%;
+  white-space: normal !important;
+  font-size: .76rem;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
   color: var(--hub-muted, #8290a3) !important;
-}
-body.hub-shell-enabled.hub-content-library .hub-app-content .catalog-badges {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-left: 8px;
-}
-body.hub-shell-enabled.hub-content-library .hub-app-content .catalog-badge {
-  padding: 2px 7px;
-  font-size: .67rem;
-  font-weight: 700;
+  opacity: 1 !important;
 }
 /* Cartões de seleção e painéis de detalhe internos. */
 body.hub-shell-enabled.hub-content-library .hub-app-content :is(
@@ -390,8 +429,8 @@ body.hub-shell-enabled.hub-content-library .hub-app-content ::selection {
     grid-template-columns: minmax(0,1fr) !important;
   }
   body.hub-shell-enabled.hub-content-library .hub-app-content .modulos a {
-    min-height: 116px !important;
-    padding: 16px !important;
+    min-height: 78px !important;
+    padding: 12px 45px 12px 16px !important;
   }
   body.hub-shell-enabled.hub-content-library .hub-app-content :is(.controles,.catalog-controls) {
     grid-template-columns: 1fr !important;

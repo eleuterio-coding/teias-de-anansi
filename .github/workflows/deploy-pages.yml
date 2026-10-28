@@ -146,6 +146,22 @@ jobs:
           )
           PY
 
+      - name: Gerar resumo leve de quantidades dos cards da Biblioteca
+        shell: bash
+        run: |
+          python scripts/gerar_biblioteca_contagens.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('dados/biblioteca-contagens.json').read_text(encoding='utf-8'))
+          if data.get('schema')!='hub-rpg.biblioteca-contagens.v1' or len(data.get('modulos',{}))!=18:
+              raise RuntimeError('Contagens da Biblioteca incompletas.')
+          catalog=json.loads(Path('dados/magias-catalogo.json').read_text(encoding='utf-8'))
+          if data['modulos']['Magias']!=len(catalog['itens']):
+              raise RuntimeError('Contagem de Magias divergente do catálogo.')
+          print('18/18 contagens validadas; Magias sincronizadas com o catálogo.')
+          PY
+
       - name: Validate self-reference safeguards
         shell: bash
         run: |

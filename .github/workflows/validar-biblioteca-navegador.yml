@@ -10,6 +10,9 @@ on:
       - 'scripts/app-shell.js'
       - 'scripts/module-clean-loader.js'
       - 'e2e/library-layout.spec.js'
+      - 'scripts/library-catalog-status.js'
+      - 'scripts/gerar_biblioteca_contagens.py'
+      - 'tests/auditar-biblioteca-cards.mjs'
       - 'magias.html'
       - 'dados/localizacao-ptbr-magias-completo.json'
       - 'scripts/character-builder/spells.js'
@@ -28,6 +31,9 @@ on:
       - 'scripts/app-shell.js'
       - 'scripts/module-clean-loader.js'
       - 'e2e/library-layout.spec.js'
+      - 'scripts/library-catalog-status.js'
+      - 'scripts/gerar_biblioteca_contagens.py'
+      - 'tests/auditar-biblioteca-cards.mjs'
       - 'magias.html'
       - 'dados/localizacao-ptbr-magias-completo.json'
       - 'scripts/character-builder/spells.js'
@@ -53,6 +59,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Validar 537 nomes e links das magias
         run: node tests/auditar-magias-ptbr.mjs
+      - name: Validar contratos dos cards e catálogo
+        run: node tests/auditar-biblioteca-cards.mjs
       - name: Testar 18 módulos, detalhes e responsividade
         run: npx playwright test e2e/library-layout.spec.js --project=desktop-chromium --project=mobile-chromium
       - uses: actions/upload-artifact@v4

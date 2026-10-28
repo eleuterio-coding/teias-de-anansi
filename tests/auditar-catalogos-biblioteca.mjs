@@ -43,13 +43,18 @@ assert(spells.includes('SPELL_REMOTE_SOURCES')&&spells.includes('SPELL_SOURCE_LO
 assert(!spells.includes("const BASE='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data'"),'Magias voltou a manter base remota paralela.');
 
 const lib=read('bibliotecas.html');
-assert(/scripts\/library-catalog-status\.js\?v=20261028-library-hub-layout1/.test(lib),'Índice da Biblioteca não carrega a UI otimizada de catálogos.');
+assert(/scripts\/library-catalog-status\.js\?v=20261028-library-compact-cards1/.test(lib),'Índice da Biblioteca não carrega a UI otimizada de catálogos.');
 assert((lib.match(/<li><a href=/g)||[]).length===18,'Índice visual não contém exatamente 18 módulos.');
 assert(!/\b(?:159|119|58|172|146|185|109|259|537)\s+(?:itens|magias|registros|classes)/.test(lib),'Biblioteca voltou a anunciar contagens estáticas suscetíveis a deriva.');
 const libraryUi=read('scripts/library-catalog-status.js');
-for(const token of['cobertura_modulos','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope','ensureSemanticIndex'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
+for(const token of['biblioteca-contagens.json','countLabel','loadCounts','referencias-hub-index.json','CATALOG_BY_ROUTE','catalog-search','catalog-scope','ensureSemanticIndex'])assert(libraryUi.includes(token),`UI da Biblioteca sem contrato: ${token}`);
 assert(!libraryUi.includes("fetch('dados/referencias-hub-index.json',{cache:'no-store'})"),'Índice semântico não deve forçar novo download.');
-assert(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);\s*$/.test(libraryUi),'Biblioteca deve abrir sem baixar o índice semântico; a busca carrega o índice sob demanda.');
+assert(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);loadCounts\(\);\s*$/.test(libraryUi),'Biblioteca deve abrir sem baixar o índice semântico; a busca carrega o índice sob demanda.');
+assert(!libraryUi.includes('stageLabel')&&!libraryUi.includes('catalog-badge')&&!libraryUi.includes('consumerBadges'),'Cards da Biblioteca não devem exibir selos nem o estágio Publicado.');
+const countScript=read('scripts/gerar_biblioteca_contagens.py');
+assert(countScript.includes('status')&&countScript.includes('publicado')&&countScript.includes('magias-catalogo.json'),'Contagem deve excluir stubs e usar catálogo canônico de Magias.');
+const deployWorkflow=read('.github/workflows/deploy-pages.yml');
+assert(deployWorkflow.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve produzir as contagens dos 18 módulos.');
 const weaponsPage=read('armas.html');
 assert(weaponsPage.includes("cache/armas-catalogo.json?v=20260922-library-perf2"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
 assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
