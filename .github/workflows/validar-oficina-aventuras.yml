@@ -2,9 +2,10 @@ name: Validar oficina de conteúdo da Aventura
 on:
   push:
     branches:
-      - feat/aventuras-oficina-conteudo-20261027
+      - feat/aventuras-visao-consulta-edicao-20261028
     paths:
       - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-overview-ui.js'
       - 'scripts/adventure-router.js'
       - 'aventuras.html'
       - 'adventure-content-workspace.css'
@@ -14,6 +15,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-overview-ui.js'
       - 'scripts/adventure-router.js'
       - 'aventuras.html'
       - 'adventure-content-workspace.css'
@@ -34,6 +36,7 @@ jobs:
       - name: Validar sintaxe dos módulos
         run: |
           node --check scripts/adventure-ui.js
+          node --check scripts/adventure-overview-ui.js
           node --check scripts/adventure-router.js
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
