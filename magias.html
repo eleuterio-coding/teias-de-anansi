@@ -248,14 +248,6 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells 
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-source{
   font-size:.81rem;color:var(--hub-text-2,#c5cfdb)
 }
-body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-verbetelink{
-  display:inline-flex;align-items:center;min-height:32px;padding:5px 10px;
-  border:1px solid var(--hub-border,#223245);border-radius:8px;
-  font-size:.76rem;font-weight:700;text-decoration:none!important
-}
-body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-verbetelink:hover{
-  background:var(--hub-surface-2,#131f2b)
-}
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .stats{
   grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 22px
 }
@@ -396,8 +388,7 @@ function renderDetail(id){
  const x=ALL.find(i=>i.id===id);if(!x)return;
  const f=DATA.fontes[x.fonte]||{},conc=x.concentracao==null?'Não informado':x.concentracao?'Sim':'Não',rit=x.ritual==null?'Não informado':x.ritual?'Sim':'Não';
  const descTitle=x.descricao_tipo==='texto_aberto_srd_5_2_1'?'Descrição da magia':x.descricao_tipo==='metadados_protegidos'?'Informações disponíveis':'Efeito e descrição';
- const entryLink=`magias.html?magia=${encodeURIComponent(x.id)}`;
- document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2><div class="meta"><span class="badge">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge">${esc(x.escola)}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span><a class="spell-verbetelink" href="${entryLink}" title="Link permanente para esta magia">Link do verbete</a></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${esc(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${esc(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${conc}</span></div><div class="stat"><b>Ritual</b><span>${rit}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${esc(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box"><h3>${descTitle}</h3><p>${esc(x.descricao)}</p>${x.niveis_superiores?`<p><strong>Em círculos superiores:</strong> ${esc(x.niveis_superiores)}</p>`:''}</div><div class="box"><h3>Classes</h3><p>${esc((x.classes_base||[]).join(', ')||'Não há classes associadas a este registro.')}</p></div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
+ document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2><div class="meta"><span class="badge">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge">${esc(x.escola)}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${esc(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${esc(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${conc}</span></div><div class="stat"><b>Ritual</b><span>${rit}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${esc(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box"><h3>${descTitle}</h3><p>${esc(x.descricao)}</p>${x.niveis_superiores?`<p><strong>Em círculos superiores:</strong> ${esc(x.niveis_superiores)}</p>`:''}</div><div class="box"><h3>Classes</h3><p>${esc((x.classes_base||[]).join(', ')||'Não há classes associadas a este registro.')}</p></div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value;
