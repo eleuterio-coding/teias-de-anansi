@@ -9,10 +9,10 @@ const surfaces = [
   ['/sessoes.html','Sessões',false],
   ['/personagens.html','Personagens',false],
   ['/lista-personagens.html','Personagens',false],
-  ['/bibliotecas.html','Biblioteca',true],
-  ['/regras.html','Biblioteca',true],
-  ['/armas.html','Biblioteca',true],
-  ['/classes.html','Biblioteca',true],
+  ['/bibliotecas.html','Biblioteca','library'],
+  ['/regras.html','Biblioteca','library'],
+  ['/armas.html','Biblioteca','library'],
+  ['/classes.html','Biblioteca','library'],
   ['/criacao-personagem.html','Personagens',true],
   ['/ficha-personagem.html','Personagens',true]
 ];
@@ -47,7 +47,8 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
       expect(sidebarRoutes).toEqual(['painel.html','campanhas.html','aventuras.html','sessoes.html','personagens.html','bibliotecas.html']);
       await expect(page.locator('.hub-nav-link[aria-current="page"]').filter({hasText:menu}).first()).toHaveCount(1);
       await expect(page.locator('body')).toHaveClass(/hub-shell-enabled/);
-      if (reader) await expect(page.locator('body')).toHaveClass(/hub-content-light/);
+      if (reader === 'library') await expect(page.locator('body')).toHaveClass(/hub-content-library/);
+      if (reader === true) await expect(page.locator('body')).toHaveClass(/hub-content-light/);
       const layout = await page.evaluate(() => {
         const body=document.body,main=document.querySelector('.hub-app-content');
         return {
@@ -55,13 +56,18 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
           mainBg:getComputedStyle(main).backgroundColor,
           sidebarWidth:document.querySelector('.hub-sidebar').getBoundingClientRect().width,
           topbarHeight:document.querySelector('.hub-global-topbar').getBoundingClientRect().height,
-          bodyHasLight:body.classList.contains('hub-content-light')
+          bodyHasLight:body.classList.contains('hub-content-light'),
+          bodyHasLibrary:body.classList.contains('hub-content-library')
         };
       });
       expect(layout.overflow, path+' overflow horizontal').toBeLessThanOrEqual(3);
       expect(layout.sidebarWidth).toBeGreaterThan(150);
       expect(layout.topbarHeight).toBeGreaterThanOrEqual(56);
-      if (reader) {
+      if (reader === 'library') {
+        expect(layout.bodyHasLibrary,path+' deve usar o tema da Biblioteca').toBe(true);
+        expect(layout.bodyHasLight,path+' não deve usar o leitor claro legado').toBe(false);
+        expect(layout.mainBg,path+' deve ter fundo escuro como o Hub').toBe('rgb(8, 13, 20)');
+      } else if (reader === true) {
         expect(layout.mainBg,path+' deve ter superfície de leitura').toBe('rgb(244, 247, 251)');
       }
       if (['/painel.html','/bibliotecas.html','/criacao-personagem.html','/armas.html'].includes(path)) {

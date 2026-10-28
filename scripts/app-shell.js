@@ -59,7 +59,7 @@ function contextualAction(){
  return null
 }
 function makeLink(item){
- const a=document.createElement("a");a.className="hub-nav-link";a.href=item.page==="bibliotecas.html"?"bibliotecas.html?v=20261028-library-hub-layout1":item.page;
+ const a=document.createElement("a");a.className="hub-nav-link";a.href=item.page;
  if(pageMatches(item))a.setAttribute("aria-current","page");
  a.innerHTML=icon(item.icon)+"<span>"+esc(item.label)+"</span>";return a
 }
