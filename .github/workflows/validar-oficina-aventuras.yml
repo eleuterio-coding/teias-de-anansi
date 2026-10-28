@@ -3,12 +3,16 @@ on:
   push:
     branches:
       - feat/aventuras-visao-consulta-edicao-20261028
+      - fix/aventuras-cards-sessoes-vinculadas-20261028
     paths:
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-overview-ui.js'
       - 'scripts/adventure-router.js'
       - 'aventuras.html'
       - 'adventure-content-workspace.css'
+      - 'adventures.css'
+      - 'hub-detail-layout.css'
+      - 'e2e/adventure-linked-session-cards.spec.js'
       - 'e2e/adventure-content-workspace.spec.js'
       - '.github/workflows/validar-oficina-aventuras.yml'
   pull_request:
@@ -19,6 +23,9 @@ on:
       - 'scripts/adventure-router.js'
       - 'aventuras.html'
       - 'adventure-content-workspace.css'
+      - 'adventures.css'
+      - 'hub-detail-layout.css'
+      - 'e2e/adventure-linked-session-cards.spec.js'
       - 'e2e/adventure-content-workspace.spec.js'
       - '.github/workflows/validar-oficina-aventuras.yml'
   workflow_dispatch:
@@ -41,7 +48,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
       - name: Testar criação, edição e navegação no desktop e no celular
-        run: npx playwright test e2e/adventure-content-workspace.spec.js --project=desktop-chromium --project=mobile-chromium
+        run: npx playwright test e2e/adventure-content-workspace.spec.js e2e/adventure-linked-session-cards.spec.js --project=desktop-chromium --project=mobile-chromium
       - name: Evidências de falhas
         if: always()
         uses: actions/upload-artifact@v4
