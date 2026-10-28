@@ -15,6 +15,13 @@ const slug=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').repl
 const originalFromHeading=h=>String(h||'').replace(/\s+\[(Action|Area of Effect|Attitude|Condition|Hazard)\]\s*$/i,'').trim();
 const tagFromHeading=h=>((String(h||'').match(/\[(Action|Area of Effect|Attitude|Condition|Hazard)\]\s*$/i)||[])[1]||'').trim();
 const familyPT=t=>({'Action':'Ação','Area of Effect':'Área de Efeito','Attitude':'Atitude','Condition':'Condição','Hazard':'Perigo'})[t]||'Regra Geral';
+// Os cinco qualificadores do SRD são parte do título normativo (ex.: Utilize [Action]).
+// A Biblioteca mantém o nome editorial localizado e traduz também o qualificador.
+// Regras sem qualificador no glossário não recebem colchetes por inferência.
+function localizedHeading(entry,rule){
+  const name=rule?.nome||entry.original;
+  return entry.tag ? `${name} [${familyPT(entry.tag)}]` : name;
+}
 
 let PT_RULES=[],HOUSE=[],PATCHES=[],INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
 
@@ -50,9 +57,10 @@ function renderOfficial(entry,maps){
   const entity=maps.byOriginal.get(`Regras|${norm(entry.original)}`)||null;
   const patch=PATCHES.find(x=>norm(x.original)===norm(entry.original));
   const family=entry.tag?familyPT(entry.tag):(rule?.familia||'Regra Geral');
+  const title=localizedHeading(entry,rule);
   const cardId=entity?`ref-${entity.id}`:`regra-${slug(entry.original)}`;
   const ddb=`${DDB_GLOSSARY}#${ddbAnchor(entry.heading)}`;
-  return `<details class="item srd-item" id="${esc(cardId)}" data-hub-original="${esc(entry.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}><summary><span><strong>${esc(rule?.nome||entry.original)}</strong><small class="original">${esc(entry.heading)}</small></span><span class="badge">${esc(family)}</span></summary><div class="corpo"><div class="source-strip"><span>SRD 5.2.1 · CC-BY-4.0</span><span>Tradução editorial PT-BR</span></div>${translatedBody(rule)}${patch?`<aside class="house-override"><strong>Precedência da Regra da Casa</strong><p>${esc(patch.descricao)}</p></aside>`:''}<div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span></div></div></details>`;
+  return `<details class="item srd-item" id="${esc(cardId)}" data-hub-original="${esc(entry.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}><summary><span><strong>${esc(title)}</strong><small class="original">${esc(entry.heading)}</small></span><span class="badge">${esc(family)}</span></summary><div class="corpo"><div class="source-strip"><span>SRD 5.2.1 · CC-BY-4.0</span><span>Tradução editorial PT-BR</span></div>${translatedBody(rule)}${patch?`<aside class="house-override"><strong>Precedência da Regra da Casa</strong><p>${esc(patch.descricao)}</p></aside>`:''}<div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span></div></div></details>`;
 }
 
 function renderSupplemental(rule,maps){
@@ -73,7 +81,7 @@ function renderHouse(rule,maps){
 function allCards(){
   const maps=buildIndexMaps();
   return [
-    ...SRD.map(x=>({kind:'srd',original:x.original,name:ptRule(x.original)?.nome||x.original,family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps)})),
+    ...SRD.map(x=>({kind:'srd',original:x.original,name:localizedHeading(x,ptRule(x.original)),family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps)})),
     ...DDB_ONLY.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
     ...HOUSE.map(x=>({kind:'house',original:x.original,name:x.nome,family:'Regra da Casa',html:renderHouse(x,maps)}))
   ];
