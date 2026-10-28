@@ -96,3 +96,25 @@ test('preferência de movimento reduzido elimina transições nos componentes',a
   });
   expect(duration.split(',').every(item=>parseFloat(item)===0)).toBe(true);
 });
+
+
+test('múltiplos menus horizontais mantêm indicadores independentes',async({page})=>{
+  await page.goto('/painel.html');
+  await expect(page.locator('.hub-app-content')).toBeVisible();
+  await page.evaluate(()=>{
+    const fixture=document.createElement('div');fixture.id='design-system-test-menus';
+    fixture.innerHTML=[
+      '<nav class="section-nav" id="design-test-nav-a"><a href="#design-test-a1">Primeira</a><a href="#design-test-a2">Segunda</a></nav>',
+      '<nav class="section-nav" id="design-test-nav-b"><a href="#design-test-b1">Inicial</a><a href="#design-test-b2">Final</a></nav>',
+      '<section id="design-test-a1">A1</section><section id="design-test-a2">A2</section>',
+      '<section id="design-test-b1">B1</section><section id="design-test-b2">B2</section>'
+    ].join('');
+    document.querySelector('.hub-app-content').append(fixture);
+  });
+  await expect(page.locator('#design-test-nav-a .section-nav-indicator')).toHaveCount(1);
+  await expect(page.locator('#design-test-nav-b .section-nav-indicator')).toHaveCount(1);
+  await page.locator('#design-test-nav-b a[href="#design-test-b2"]').click();
+  await expect(page.locator('#design-test-nav-b a[href="#design-test-b2"]')).toHaveAttribute('aria-current','location');
+  await expect(page.locator('#design-test-nav-a .section-nav-indicator')).toHaveCount(1);
+  await expect(page.locator('#design-test-nav-b')).toHaveAttribute('data-indicator-ready','true');
+});
