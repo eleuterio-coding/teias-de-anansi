@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head>
 <body>
-<p><a href="bibliotecas.html?v=20260821-1434">← Bibliotecas</a></p>
+<p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
 <header><h1>Monstros</h1></header>
 <div id="status" hidden></div>
 <div class="layout">
@@ -47,5 +47,5 @@ function buildActive(){const chosen=new Map();for(const r of ALL){const k=norm(r
 function renderList(){let rows=ACTIVE;const q=norm(document.getElementById('q').value);const f=document.getElementById('fonte').value;rows=rows.filter(x=>(!q||norm(x.name).includes(q))&&(!f||x.sourceId===f));document.getElementById('count').textContent=`${rows.length} exibidos · ${ACTIVE.length} monstros`;document.getElementById('lista').innerHTML=rows.map(r=>`<button class="item ${CURRENT===r.id?'on':''}" data-id="${esc(r.id)}"><strong>${esc(r.name)}</strong><small>${esc(r.sourceTitle)} · ${esc(r.year)}</small></button>`).join('')||'<div class="vazio">Nenhum registro.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>openRow(b.dataset.id))}
 (async()=>{try{const [srdIndex,extras,...sets]=await Promise.all([fetch(`${SRD}?fields=name,slug,source`,{cache:'default'}).then(r=>r.json()),fetch('dados/monstros-pdf-extras.json?v=20260821-1434').then(r=>r.json()),...SOURCES.map(s=>fetch(`dados/monstros-fontes/${s[0]}.json?v=20260821-1434`).then(r=>r.json()))]);const srows=Array.isArray(srdIndex.data)?srdIndex.data:[];if(srows.length!==345)throw new Error(`SRD incompleto: ${srows.length}/345`);ALL=srows.map(x=>({id:`srd:${x.slug}`,kind:'srd',name:x.name,slug:x.slug,sourceId:'srd',sourceTitle:'SRD 5.2.1',year:2025,pdf:'',priority:70}));let rejected=0;sets.forEach((d,i)=>{const s=SRC[SOURCES[i][0]];(d.monster||[]).forEach((m,j)=>{if(!complete5(m)){rejected++;return}ALL.push({id:`${s.id}:${j}:${norm(m.name)}`,kind:'5e',name:m.name,sourceId:s.id,sourceTitle:s.title,year:s.year,pdf:s.pdf,priority:s.priority,record:m})})});(extras.items||[]).forEach((m,i)=>ALL.push({id:`pdf:${i}:${norm(m.name)}`,kind:'pdf',name:m.name,sourceId:m.source||'pdf-extra',sourceTitle:m.source||'PDF',year:m.year||'',pdf:m.pdf,page:m.page,text:m.text,priority:55}));buildActive();const activeSources=new Set(ACTIVE.map(x=>x.sourceId));const options=[['srd','SRD 5.2.1'],...SOURCES.map(x=>[x[0],x[1]]),...new Map((extras.items||[]).map(x=>[x.source,[x.source,x.source]])).values()].filter(x=>activeSources.has(x[0]));document.getElementById('fonte').innerHTML='<option value="">Todas as fontes</option>'+options.map(x=>`<option value="${esc(x[0])}">${esc(x[1])}</option>`).join('');document.getElementById('q').oninput=renderList;document.getElementById('fonte').onchange=renderList;renderList()}catch(e){const status=document.getElementById('status');status.hidden=false;status.className='erro';status.textContent=`Catálogo bloqueado por falha de integridade: ${e.message}`}})();
 </script>
-<script type="module" src="scripts/hub-ux.js?v=20261022-dropdown-stable1"></script>
+<script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>

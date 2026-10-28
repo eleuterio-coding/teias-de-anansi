@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head>
 <body>
-<p><a href="bibliotecas.html?v=20260819-1300">← Bibliotecas</a></p>
+<p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
 <header><h1>Armas</h1></header>
 <div id="status" hidden></div>
 <div class="layout">
@@ -63,5 +63,5 @@ function populate(id,values,labelFn=v=>v){const el=document.getElementById(id),b
   .catch(()=>{});
 }catch(e){const status=document.getElementById('status');status.hidden=false;status.className='nota';status.innerHTML=`<strong>Falha ao carregar:</strong> ${esc(e.message)}`}})();['q','ruleset','categoria','natureza','fonte','maestria','statusf'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
-<script type="module" src="scripts/hub-ux.js?v=20261022-dropdown-stable1"></script>
+<script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>
