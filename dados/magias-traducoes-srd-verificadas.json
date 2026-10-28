@@ -1,0 +1,17 @@
+{
+  "schema": "hub-rpg.magias-traducao-verificada.v1",
+  "base": "SRD 5.2.1 — apenas verbetes cujo texto em inglês é idêntico ao da referência traduzida de 2014",
+  "verificacao": "Comparação exata normalizada entre descrição aberta do catálogo e descrição original (en) do projeto-fonte; não aplicar a outras revisões",
+  "fonte": "https://github.com/eduardopato41/foundryvtt-dnd5e-lang-ptBR",
+  "commit_origem": "eca79bfd6cc69ac7de26820b8fc8d5f74d90cb63",
+  "licenca_traducao": "MIT; ver dados/ATRIBUICAO-TRADUCOES-MAGIAS-PTBR.txt",
+  "total": 6,
+  "descricoes": {
+    "Longstrider": "Você toca uma criatura. O deslocamento do alvo aumenta em 3 metros [10 ft.] enquanto a magia durar.\n\n\nEm Círculos Superiores. Ao conjurar esta magia usando um espaço de magia de 2º círculo ou superior, você pode enfeitiçar uma criatura adicional para cada círculo do espaço acima do 1º.",
+    "Gentle Repose": "Você toca um cadáver ou outros restos mortais. Enquanto a magia durar, o alvo está protegido da decomposição e não pode se tornar um morto-vivo.\n\nA magia também estende efetivamente o tempo limite para trazer o alvo dos mortos, pois os dias passados sob a influência desta magia não contam contra o tempo limite de magias como Reviver os Mortos.",
+    "Protection from Energy": "Você toca uma criatura voluntária. Enquanto a magia durar, o alvo passa a ter resistência a um tipo de dano à sua escolha: ácido, elétrico, ígneo, gélido ou trovejante.",
+    "Remove Curse": "Ao tocar uma criatura ou objeto, todas as maldições lançadas sobre eles se encerram. Se o objeto for um item mágico amaldiçoado, a maldição se mantém, mas a magia quebra a sintonia do dono com o objeto, de modo que ele pode ser removido ou descartado.",
+    "Transport via Plants": "Esta magia cria um vínculo mágico entre uma planta inanimada Grande ou maior no alcance da magia e outra planta, a qualquer distância, no mesmo plano de existência. Você deve ter visto ou tocado a planta de destino pelo menos uma vez antes. Enquanto a magia durar, qualquer criatura pode entrar pela planta alvo e sair na planta de destino usando 1,5 metro [5 ft.] de deslocamento.",
+    "Glibness": "Enquanto a magia durar, quando você realiza um teste de Carisma, pode substituir o número que tirou por 15. Além disso, não importa o que diga, uma magia que determinaria se você está falando a verdade indica que você está sendo honesto."
+  }
+}

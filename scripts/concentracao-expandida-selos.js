@@ -102,6 +102,22 @@
     document.head.appendChild(style);
   }
 
+  const ALLOWED_CE_TYPES = Object.freeze({
+    CM: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2), CI ou CZ — alternativas exclusivas']],
+    CI: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2) ou CM']],
+    CZ: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2) ou CM']],
+    CL: [['5', 'CM, CI ou CZ'], ['10', 'CM, CI ou CZ; ou outra CL no conjunto permitido'], ['20', 'CM, CI ou CZ; ou outra CL no conjunto permitido']]
+  });
+
+  function allowedTypesHTML(category) {
+    const rows = ALLOWED_CE_TYPES[category] || [];
+    if (!rows.length) return '';
+    return `<div class="ce-compat-title">Tipos de CE com os quais pode coexistir</div>
+      <dl class="ce-compat-list">${rows.map(([level,allowed]) =>
+        `<dt>Nível ${level}+</dt><dd>${allowed}</dd>`
+      ).join('')}</dl>`;
+  }
+
   function compatibilityHTML(record) {
     const category = record.limite_coexistencia;
     const label = LABELS[category] || 'Classificação não informada';
@@ -118,7 +134,8 @@
       ? '<p class="ce-guidance">Esta classificação se aplica apenas às conjurações que efetivamente exigem concentração.</p>'
       : '';
     return `<span class="ce-category">${label}</span>
-      <div class="ce-compat-title">Combinações permitidas por nível de conjurador</div>
+      ${allowedTypesHTML(category)}
+      <div class="ce-compat-title">Combinações completas permitidas por nível</div>
       <dl class="ce-compat-list">${rows}</dl>
       <p class="ce-guidance">Cada combinação representa o conjunto completo de magias simultâneas; esta magia ocupa uma das posições de sua categoria. No nível 1, mantém-se apenas uma magia de concentração por vez. As combinações de níveis anteriores continuam permitidas. Outras combinações não estão autorizadas pela regra.</p>${conditional}`;
   }
@@ -251,7 +268,7 @@
         const stat = document.createElement('div');
         stat.className = 'stat ce-stat';
         ensureCompatibilityStyle();
-        stat.innerHTML = `<b>Concentração Expandida</b>${compatibilityHTML(record)}`;
+        stat.innerHTML = `<b><a class="ce-rule-link" href="regras.html#regra-expanded-concentration-house-rule" title="Ler a Regra da Casa — Concentração Expandida">Concentração Expandida</a></b>${compatibilityHTML(record)}`;
         stats.appendChild(stat);
       }
     };
