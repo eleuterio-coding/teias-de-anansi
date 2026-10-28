@@ -203,6 +203,6 @@ assert.ok(script.includes('const title=localizedHeading(entry,rule);'));
 assert.ok(script.includes('name:localizedHeading(x,ptRule(x.original))'));
 assert.ok(script.includes('const ddb='));
 assert.ok(script.includes('data-hub-original'));
-assert.match(page,/scripts\/regras-srd-view-v7\.js\?v=20261028-titulos-categorias-ptbr1/);
+assert.match(page,/scripts\/regras-srd-view-v7\.js\?v=20261028-deeplinks-original1/);
 assert.deepEqual(Object.keys(LABELS).sort(),['Action','Area of Effect','Attitude','Condition','Hazard'].sort());
 console.log('OK: 41 títulos tipados traduzidos; 155 regras, IDs originais, busca e referências preservados.');
