@@ -24,5 +24,8 @@ assert.ok(!styles.includes(' .catalog-badges')&&!styles.includes(' .catalog-badg
 assert.ok(generator.includes('entry.get("status") == "publicado"'),'Contagem não deve incluir referências pendentes.');
 assert.ok(generator.includes('counts["Magias"] = len(valid_ids)'),'Magias deve contar o catálogo unificado exato.');
 assert.ok(generator.includes('glob("talentos-*.json")')&&generator.includes('counts["Talentos"] = len(talent_names)'),'Talentos tabulares devem ser contados diretamente nas fontes, não nos stubs do índice.');
+for(const entry of ['counts["Classes"]','counts["Subclasses"]','counts["Maestrias de Arma"]','counts["Equipamentos de Aventura"]']){
+  assert.ok(generator.includes(entry),`O gerador deve contar ${entry} a partir do catálogo navegável.`);
+}
 assert.ok(deploy.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve gerar resumo das contagens.');
 console.log('Biblioteca: 18 cards compactos, sem selos/status, com contagens de registros publicáveis — OK');

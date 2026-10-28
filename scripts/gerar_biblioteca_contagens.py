@@ -2,8 +2,8 @@
 """Gera o resumo leve de contagens da Biblioteca a partir do índice semântico validado.
 
 Conta registros publicados (e não stubs pendentes), evitando que os cards
-precisem baixar o índice de referências completo. Magias usa a contagem
-canônica do catálogo unificado exibido no próprio módulo.
+precisem baixar o índice de referências completo. Módulos com fontes tabulares
+ou agregações específicas contam os próprios registros navegáveis.
 """
 from __future__ import annotations
 
@@ -49,6 +49,47 @@ def count_records(index: dict, spells: dict) -> dict[str, int]:
                 talent_names.add(name.strip().casefold())
     counts["Talentos"] = len(talent_names)
 
+    # Estes catálogos apresentam listas próprias. O índice semântico também
+    # relaciona características internas, efeitos e referências, que não devem
+    # inflar o número de cards/registros navegáveis nestes quatro módulos.
+    classes_dir = ROOT / "dados/classes-ptbr"
+    class_files = sorted(classes_dir.glob("*.json"))
+    artificer = json.loads((ROOT / "dados/artificer-2025.json").read_text(encoding="utf-8"))
+    if not class_files or not artificer.get("classe", {}).get("nome"):
+        raise ValueError("Fontes de Classes incompletas.")
+    counts["Classes"] = len(class_files) + 1  # 12 classes-base + Artífice
+
+    subclasses = json.loads((ROOT / "dados/subclasses-pdfs.json").read_text(encoding="utf-8"))
+    subclass_rows = subclasses.get("subclasses", [])
+    if not isinstance(subclass_rows, list) or not subclass_rows:
+        raise ValueError("Catálogo de Subclasses vazio.")
+    counts["Subclasses"] = len(subclass_rows)
+
+    masteries = json.loads((ROOT / "dados/maestrias-de-arma-pdfs.json").read_text(encoding="utf-8"))
+    mastery_rows = masteries.get("itens", [])
+    if not isinstance(mastery_rows, list) or not mastery_rows:
+        raise ValueError("Catálogo de Maestrias vazio.")
+    counts["Maestrias de Arma"] = len(mastery_rows)
+
+    gear = json.loads((ROOT / "dados/equipamentos-aventura-pdfs.json").read_text(encoding="utf-8"))
+    core_gear = json.loads((ROOT / "dados/equipamentos-aventura-core-pdfs.json").read_text(encoding="utf-8"))
+    # Equivalente ao expandBase/expandCore de equipamentos-aventura.html:
+    # componente com várias origens é exibido uma única vez.
+    components = {
+        str(nome)
+        for difficulty_map in gear["componentes"]["por_tipo"].values()
+        for names in difficulty_map.values()
+        for nome in names
+    }
+    counts["Equipamentos de Aventura"] = (
+        len(components)
+        + len(gear["essencias"]["itens"])
+        + len(gear["materiais_mundanos"]["itens"])
+        + len(gear["materiais_especiais"]["itens"])
+        + len(core_gear["phb"]["itens"])
+        + len(core_gear["heroes"]["itens"])
+    )
+
     if any(n < 1 for n in counts.values()):
         empty = [module for module, n in counts.items() if n < 1]
         raise ValueError(f"Módulos sem registros publicados: {empty}")
@@ -70,7 +111,7 @@ def main() -> None:
     payload = {
         "schema": "hub-rpg.biblioteca-contagens.v1",
         "origem": "dados/referencias-hub-index.json",
-        "criterio": "Registros publicados, deduplicados por ID dentro de cada módulo; Magias usa o catálogo canônico unificado.",
+        "criterio": "Registros publicados indexados; Classes, Subclasses, Talentos, Maestrias, Equipamentos e Magias usam as fontes navegáveis canônicas.",
         "modulos": counts,
         "total": sum(counts.values()),
     }
