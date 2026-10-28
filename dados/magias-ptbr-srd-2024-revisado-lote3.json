@@ -1,0 +1,166 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v3",
+  "base": "SRD 5.2.1 — Creative Commons BY 4.0",
+  "nota": "Tradução integral independente de 44 magias da edição 2024 com base no texto aberto, com unidades adaptadas para o leitor brasileiro.",
+  "total": 44,
+  "descricoes": {
+    "Detect Evil and Good": {
+      "descricao": "Durante a magia, você percebe a localização de qualquer Aberração, Celestial, Elemental, Fada, Ínfero ou Morto-vivo a até 9 metros de você. Também percebe se a magia Consagrar está ativa nessa área e, em caso afirmativo, onde. O efeito é bloqueado por 30 centímetros de pedra, terra ou madeira; 2,5 centímetros de metal; ou uma folha fina de chumbo."
+    },
+    "Chill Touch": {
+      "descricao": "Canalizando o frio sepulcral, você realiza um ataque mágico corpo a corpo contra um alvo ao seu alcance. Se acertar, o alvo sofre 1d10 de dano necrótico e não pode recuperar Pontos de Vida até o final do seu próximo turno.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d10 nos níveis 5 (2d10), 11 (3d10) e 17 (4d10)."
+    },
+    "Counterspell": {
+      "descricao": "Você tenta interromper uma criatura enquanto ela conjura uma magia. Essa criatura realiza uma salvaguarda de Constituição. Em caso de falha, a magia se dissipa sem produzir efeito, e a Ação, Ação Bônus ou Reação utilizada para conjurá-la é desperdiçada. Se a magia interrompida foi conjurada com um espaço de magia, esse espaço não é gasto."
+    },
+    "Create Food and Water": {
+      "descricao": "Você cria cerca de 20 quilogramas de alimento e 114 litros de água potável no chão ou em recipientes dentro do alcance, suficientes para ajudar a evitar a desnutrição e a desidratação. O alimento é insosso, mas nutritivo, e tem a aparência de um alimento de sua escolha; a água é limpa. O alimento estraga após 24 horas, se não for consumido."
+    },
+    "Fog Cloud": {
+      "descricao": "Você cria uma esfera de névoa com 6 metros de raio, centrada em um ponto dentro do alcance. A área fica totalmente obscurecida. A névoa persiste durante a magia ou até ser dissipada por um vento forte, como o produzido pela magia Lufada de Vento.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o raio da névoa aumenta em 6 metros por círculo acima do 1º."
+    },
+    "Animal Friendship": {
+      "descricao": "Escolha como alvo uma Fera que você possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Sabedoria ou ficará Enfeitiçado durante a magia. Se você ou um de seus aliados causar dano ao alvo, a magia termina.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, você pode escolher uma Fera adicional por círculo acima do 1º."
+    },
+    "Magic Weapon": {
+      "descricao": "Você toca uma arma não mágica. Até o término da magia, ela se torna mágica e recebe um bônus de +1 nas jogadas de ataque e de dano. O efeito termina antecipadamente se você conjurar esta magia novamente.",
+      "niveis_superiores": "O bônus aumenta para +2 quando a magia é conjurada com um espaço de 3º, 4º ou 5º círculo; aumenta para +3 com um espaço de 6º círculo ou superior."
+    },
+    "Finger of Death": {
+      "descricao": "Você lança energia negativa contra uma criatura que possa ver dentro do alcance. O alvo realiza uma salvaguarda de Constituição. Em caso de falha, sofre 7d8 + 30 de dano necrótico; em caso de sucesso, metade desse dano. Um Humanoide morto por esta magia se ergue no início do seu próximo turno como um Zumbi que obedece às suas ordens verbais."
+    },
+    "Comprehend Languages": {
+      "descricao": "Durante a magia, você compreende o significado literal de qualquer idioma que ouvir ou vir sendo sinalizado. Também compreende qualquer idioma escrito que possa ver, desde que esteja tocando a superfície em que as palavras estão inscritas. Você leva cerca de 1 minuto para ler uma página. A magia não decifra símbolos nem mensagens secretas."
+    },
+    "Ray of Frost": {
+      "descricao": "Um raio gelado de luz branco-azulada parte em direção a uma criatura dentro do alcance. Realize um ataque mágico à distância contra o alvo. Se acertar, ele sofre 1d8 de dano de frio, e seu deslocamento diminui em 3 metros até o início do seu próximo turno.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d8 nos níveis 5 (2d8), 11 (3d8) e 17 (4d8)."
+    },
+    "Guiding Bolt": {
+      "descricao": "Você arremessa um raio luminoso contra uma criatura dentro do alcance. Realize um ataque mágico à distância contra o alvo. Se acertar, a criatura sofre 4d6 de dano radiante, e a próxima jogada de ataque realizada contra ela antes do final do seu próximo turno tem vantagem.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d6 por círculo acima do 1º."
+    },
+    "Shocking Grasp": {
+      "descricao": "Uma descarga elétrica parte de você em direção a uma criatura que tenta tocar. Realize um ataque mágico corpo a corpo contra o alvo. Se acertar, ele sofre 1d8 de dano elétrico e não pode realizar ataques de oportunidade até o início do próximo turno dele.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d8 nos níveis 5 (2d8), 11 (3d8) e 17 (4d8)."
+    },
+    "Spider Climb": {
+      "descricao": "Até o término da magia, uma criatura voluntária que você toca pode se deslocar para cima, para baixo e através de superfícies verticais, bem como pelos tetos, mantendo as mãos livres. O alvo também recebe deslocamento de escalada igual ao seu deslocamento normal.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, você pode escolher uma criatura adicional por círculo acima do 2º."
+    },
+    "Power Word Stun": {
+      "descricao": "Você subjuga a mente de uma criatura que possa ver dentro do alcance. Se o alvo tiver 150 Pontos de Vida ou menos, ficará Atordoado. Caso contrário, seu deslocamento será 0 até o início do seu próximo turno. O alvo Atordoado realiza uma salvaguarda de Constituição no final de cada um de seus turnos, encerrando essa condição sobre si em caso de sucesso."
+    },
+    "Enhance Ability": {
+      "descricao": "Você toca uma criatura e escolhe Força, Destreza, Inteligência, Sabedoria ou Carisma. Durante a magia, o alvo tem vantagem em testes de atributo que utilizem o atributo escolhido.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, você pode escolher uma criatura adicional por círculo acima do 2º. É possível escolher um atributo diferente para cada alvo."
+    },
+    "Mass Cure Wounds": {
+      "descricao": "Uma onda de energia curativa se espalha a partir de um ponto que você possa ver dentro do alcance. Escolha até seis criaturas em uma esfera de 9 metros de raio centrada nesse ponto. Cada alvo recupera 5d8 Pontos de Vida mais seu modificador de atributo de conjuração.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 5º, a cura aumenta em 1d8 por círculo acima do 5º."
+    },
+    "Sacred Flame": {
+      "descricao": "Uma luminosidade semelhante a chamas desce sobre uma criatura que você possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Destreza ou sofrerá 1d8 de dano radiante. Cobertura Parcial e Cobertura de Três Quartos não concedem benefício ao alvo nessa salvaguarda.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d8 nos níveis 5 (2d8), 11 (3d8) e 17 (4d8)."
+    },
+    "Shining Smite": {
+      "descricao": "O alvo atingido pelo golpe sofre 2d6 de dano radiante adicional do ataque. Até o término da magia, o alvo emite luz plena em um raio de 1,5 metro, as jogadas de ataque contra ele têm vantagem, e ele não pode se beneficiar da condição Invisível.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, o dano aumenta em 1d6 por círculo acima do 2º."
+    },
+    "Circle of Death": {
+      "descricao": "Uma onda de energia negativa se propaga a partir de um ponto à sua escolha dentro do alcance, preenchendo uma esfera de 18 metros de raio. Cada criatura nessa área realiza uma salvaguarda de Constituição; sofre 8d8 de dano necrótico em caso de falha ou metade desse dano em caso de sucesso.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 6º, o dano aumenta em 2d8 por círculo acima do 6º."
+    },
+    "Enthrall": {
+      "descricao": "Você profere uma sequência de palavras envolventes que distraem as criaturas à sua escolha que possa ver dentro do alcance. Cada uma realiza uma salvaguarda de Sabedoria; criaturas contra as quais você ou seus companheiros estejam lutando obtêm sucesso automático. Em caso de falha, o alvo sofre penalidade de –10 em testes de Sabedoria (Percepção) e em Percepção Passiva até o término da magia."
+    },
+    "Heroism": {
+      "descricao": "Você infunde coragem em uma criatura voluntária que toca. Até o término da magia, a criatura é imune à condição Amedrontado e recebe Pontos de Vida Temporários iguais ao seu modificador de atributo de conjuração no início de cada um de seus turnos.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, você pode escolher uma criatura adicional por círculo acima do 1º."
+    },
+    "Prayer of Healing": {
+      "descricao": "Até cinco criaturas à sua escolha que permaneçam dentro do alcance durante todo o tempo de conjuração recebem os benefícios de um Descanso Curto e recuperam 2d8 Pontos de Vida. Uma criatura não pode ser afetada novamente por esta magia até concluir um Descanso Longo.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, a cura aumenta em 1d8 por círculo acima do 2º."
+    },
+    "Fire Bolt": {
+      "descricao": "Você arremessa uma centelha de fogo contra uma criatura ou objeto dentro do alcance. Realize um ataque mágico à distância contra o alvo. Se acertar, ele sofre 1d10 de dano de fogo. Um objeto inflamável atingido começa a queimar se não estiver sendo vestido ou carregado.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d10 nos níveis 5 (2d10), 11 (3d10) e 17 (4d10)."
+    },
+    "Lightning Bolt": {
+      "descricao": "Um relâmpago irrompe de você na direção escolhida, formando uma linha de 30 metros de comprimento por 1,5 metro de largura. Cada criatura na linha realiza uma salvaguarda de Destreza; sofre 8d6 de dano elétrico em caso de falha ou metade desse dano em caso de sucesso.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 3º, o dano aumenta em 1d6 por círculo acima do 3º."
+    },
+    "Silence": {
+      "descricao": "Durante a magia, nenhum som pode ser produzido dentro de uma esfera de 6 metros de raio centrada em um ponto à sua escolha dentro do alcance, nem atravessar essa esfera. Criaturas e objetos inteiramente dentro da área são imunes a dano trovejante, e criaturas inteiramente na área ficam Surdas. É impossível conjurar ali magias que exijam componente Verbal."
+    },
+    "Hold Monster": {
+      "descricao": "Escolha uma criatura que possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Sabedoria ou ficará Paralisado durante a magia. No final de cada um de seus turnos, o alvo repete a salvaguarda e encerra o efeito sobre si em caso de sucesso.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 5º, você pode escolher uma criatura adicional por círculo acima do 5º."
+    },
+    "Arcane Lock": {
+      "descricao": "Você toca uma porta, janela, portão, recipiente ou escotilha fechados e os tranca magicamente durante a magia. A tranca não pode ser aberta por meios não mágicos. Você e quaisquer criaturas que designar ao conjurar podem abrir e fechar o objeto apesar da tranca. Você também pode definir uma senha que, quando pronunciada a até 1,5 metro do objeto, o destranca por 1 minuto."
+    },
+    "Mind Blank": {
+      "descricao": "Até o término da magia, uma criatura voluntária que você toca é imune a dano psíquico e à condição Enfeitiçado. O alvo também não é afetado por efeitos que percebam suas emoções ou tendência, leiam seus pensamentos ou localizem magicamente sua posição. Nenhuma magia, nem mesmo Desejo, pode obter informações sobre ele, observá-lo à distância ou controlar sua mente."
+    },
+    "Antilife Shell": {
+      "descricao": "Uma aura se estende de você em uma emanação de 3 metros durante a magia. Ela impede a passagem ou o alcance de criaturas que não sejam Constructos ou Mortos-vivos. Uma criatura afetada ainda pode conjurar magias ou realizar ataques com armas de longo alcance ou armas de alcance estendido através da barreira. Se você se mover de modo que uma criatura afetada seja forçada a atravessá-la, a magia termina."
+    },
+    "Burning Hands": {
+      "descricao": "Uma fina cortina de chamas irrompe de você. Cada criatura em um cone de 4,5 metros realiza uma salvaguarda de Destreza; sofre 3d6 de dano de fogo em caso de falha ou metade em caso de sucesso. Objetos inflamáveis na área que não estejam sendo vestidos ou carregados começam a queimar.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d6 por círculo acima do 1º."
+    },
+    "Eldritch Blast": {
+      "descricao": "Você arremessa um feixe de energia crepitante. Realize um ataque mágico à distância contra uma criatura ou objeto dentro do alcance. Se acertar, o alvo sofre 1d10 de dano de energia.",
+      "niveis_superiores": "Aprimoramento do truque: a magia produz dois feixes no nível 5, três no nível 11 e quatro no nível 17. Você pode direcioná-los contra o mesmo alvo ou contra alvos diferentes. Faça uma jogada de ataque separada para cada feixe."
+    },
+    "Harm": {
+      "descricao": "Você libera magia virulenta contra uma criatura que possa ver dentro do alcance. O alvo realiza uma salvaguarda de Constituição. Em caso de falha, sofre 14d6 de dano necrótico e seu máximo de Pontos de Vida é reduzido em uma quantidade igual ao dano necrótico sofrido. Em caso de sucesso, sofre apenas metade do dano, sem redução do máximo. Esta magia não pode reduzir o máximo de Pontos de Vida do alvo para menos de 1."
+    },
+    "Cone of Cold": {
+      "descricao": "Você libera uma rajada de ar congelante. Cada criatura em um cone de 18 metros com origem em você realiza uma salvaguarda de Constituição; sofre 8d8 de dano de frio em caso de falha ou metade desse dano em caso de sucesso. Uma criatura morta pela magia se transforma em estátua congelada até descongelar.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 5º, o dano aumenta em 1d8 por círculo acima do 5º."
+    },
+    "Bane": {
+      "descricao": "Até três criaturas à sua escolha que você possa ver dentro do alcance realizam, cada uma, uma salvaguarda de Carisma. Sempre que um alvo que falhou nessa salvaguarda realizar uma jogada de ataque ou uma salvaguarda antes do término da magia, deverá subtrair 1d4 do resultado.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, você pode escolher uma criatura adicional por círculo acima do 1º."
+    },
+    "Blindness/Deafness": {
+      "descricao": "Uma criatura que você possa ver dentro do alcance deve ser bem-sucedida em uma salvaguarda de Constituição ou ficará Cega ou Surda, à sua escolha, durante a magia. No final de cada um de seus turnos, o alvo repete a salvaguarda e encerra o efeito sobre si em caso de sucesso.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, você pode escolher uma criatura adicional por círculo acima do 2º."
+    },
+    "Message": {
+      "descricao": "Você aponta para uma criatura dentro do alcance e sussurra uma mensagem. Apenas o alvo a ouve e pode responder sussurrando de modo que somente você escute. Você pode conjurar a magia através de objetos sólidos se conhecer o alvo e souber que ele está além da barreira. A magia é bloqueada por silêncio mágico, 30 centímetros de pedra, metal ou madeira, ou uma folha fina de chumbo."
+    },
+    "Vicious Mockery": {
+      "descricao": "Você dirige uma sequência de insultos impregnados de encantamento sutil a uma criatura que possa ver ou ouvir dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Sabedoria ou sofrerá 1d6 de dano psíquico e terá desvantagem na próxima jogada de ataque que realizar antes do final de seu próximo turno.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d6 nos níveis 5 (2d6), 11 (3d6) e 17 (4d6)."
+    },
+    "Grease": {
+      "descricao": "Uma camada de gordura não inflamável cobre o solo em um quadrado de 3 metros de lado, centrado em um ponto dentro do alcance, transformando a área em Terreno Difícil durante a magia. Quando a gordura surge, cada criatura de pé na área deve ser bem-sucedida em uma salvaguarda de Destreza ou ficará Caída. Uma criatura que entrar na área ou terminar seu turno nela também deve obter sucesso nessa salvaguarda ou cairá."
+    },
+    "Mending": {
+      "descricao": "Você repara uma única quebra ou rasgo em um objeto que toca, como um elo partido, as metades de uma chave quebrada, um manto rasgado ou um odre furado. Desde que a quebra ou rasgo tenha no máximo 30 centímetros em qualquer dimensão, você o conserta sem deixar vestígios do dano. A magia pode restaurar fisicamente um item mágico, mas não recuperar suas propriedades mágicas."
+    },
+    "Speak with Animals": {
+      "descricao": "Durante a magia, você compreende e pode se comunicar verbalmente com Feras, podendo usar com elas quaisquer opções de perícia da ação Influenciar. A maioria das Feras tem pouco a dizer sobre assuntos que não estejam relacionados à sobrevivência ou ao companheirismo; no mínimo, porém, uma Fera pode informar sobre locais e monstros próximos, incluindo o que percebeu no último dia."
+    },
+    "Searing Smite": {
+      "descricao": "Ao acertar o alvo, você causa 1d6 de dano de fogo adicional com o ataque. No início de cada um dos turnos do alvo até o término da magia, ele sofre 1d6 de dano de fogo e realiza uma salvaguarda de Constituição. Em caso de falha, a magia continua; em caso de sucesso, termina.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, todos os danos aumentam em 1d6 por círculo acima do 1º."
+    },
+    "Starry Wisp": {
+      "descricao": "Você lança uma centelha luminosa contra uma criatura ou objeto dentro do alcance. Realize um ataque mágico à distância. Se acertar, o alvo sofre 1d8 de dano radiante e, até o final do seu próximo turno, emite luz fraca em um raio de 3 metros e não pode se beneficiar da condição Invisível.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d8 nos níveis 5 (2d8), 11 (3d8) e 17 (4d8)."
+    },
+    "Death Ward": {
+      "descricao": "Você toca uma criatura e lhe concede proteção contra a morte. Na primeira vez que o alvo fosse reduzido a 0 Pontos de Vida antes do término da magia, ele fica com 1 Ponto de Vida em vez disso, e a magia termina. Se ainda estiver ativa quando o alvo for submetido a um efeito que o mataria instantaneamente sem causar dano, esse efeito é anulado contra ele e a magia termina."
+    },
+    "Sanctuary": {
+      "descricao": "Você protege uma criatura dentro do alcance. Até o término da magia, qualquer criatura que escolha o protegido como alvo de uma jogada de ataque ou magia que cause dano deverá ser bem-sucedida em uma salvaguarda de Sabedoria ou escolher outro alvo, ou perder o ataque ou a magia. Esta proteção não se aplica a áreas de efeito. A magia termina se o protegido realizar uma jogada de ataque, conjurar uma magia ou causar dano."
+    }
+  }
+}
