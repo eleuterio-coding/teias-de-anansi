@@ -109,6 +109,7 @@ npm run test:e2e:firebase
 - `ROADMAP-V1.md` — fechamento do escopo da linha v1.
 - `docs/MANUAL.md` — fluxos de uso.
 - `docs/ARQUITETURA.md` — arquitetura web, persistência e Firebase.
+- `docs/DESIGN-SYSTEM-GLOBAL.md` — tokens, famílias de componentes, acessibilidade, cobertura de rotas e homologação visual.
 - `docs/HOMOLOGACAO-V1.md` — evidências de homologação e releases.
 - `FIREBASE-PROVISIONAMENTO.md` — configuração Firebase utilizada pelo Hub.
 
