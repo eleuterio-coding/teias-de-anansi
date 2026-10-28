@@ -1,0 +1,49 @@
+name: Validar Biblioteca no navegador — 18 módulos
+
+on:
+  pull_request:
+    paths:
+      - 'biblioteca-light.css'
+      - 'bibliotecas.html'
+      - 'referencia.html'
+      - 'classes-v3.html'
+      - 'scripts/app-shell.js'
+      - 'scripts/module-clean-loader.js'
+      - 'e2e/library-layout.spec.js'
+      - '.github/workflows/validar-biblioteca-navegador.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'biblioteca-light.css'
+      - 'bibliotecas.html'
+      - 'referencia.html'
+      - 'classes-v3.html'
+      - 'scripts/app-shell.js'
+      - 'scripts/module-clean-loader.js'
+      - 'e2e/library-layout.spec.js'
+      - '.github/workflows/validar-biblioteca-navegador.yml'
+  workflow_dispatch:
+
+jobs:
+  biblioteca:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar 18 módulos, detalhes e responsividade
+        run: npx playwright test e2e/library-layout.spec.js --project=desktop-chromium --project=mobile-chromium
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: biblioteca-layout-playwright
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
