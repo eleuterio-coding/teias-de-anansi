@@ -4,7 +4,8 @@ import{initAppShell,updateAppShellContext}from'./app-shell.js?v=20261022-chronic
 const STYLE_ID='hub-ux-styles';
 const SKIP_ID='hub-skip-link';
 const COLLAB_SESSION_KEY='hub-rpg:collaboration-session:v1';
-let observer=null,navResizeObserver=null,observedNav=null,observedSignature='',enhanceFrame=0,realtimeModule=null,realtimeLoad=null,characterAccessLoad=null;
+let enhanceFrame=0,realtimeModule=null,realtimeLoad=null,characterAccessLoad=null;
+const sectionNavStates=new Map();
 const boundLinks=new WeakSet();
 
 function ensureStyles(){
@@ -17,6 +18,13 @@ function ensureStyles(){
   const layout=document.createElement('link');layout.id='hub-layout-styles';layout.rel='stylesheet';
   layout.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;
   document.head.appendChild(layout);
+ }
+ // Camada final carregada em todas as rotas que utilizam o shell do Hub.
+ // Arquivo próprio: tokens semânticos, famílias de componentes e motion.
+ if(!document.getElementById('hub-design-system-styles')){
+  const design=document.createElement('link');design.id='hub-design-system-styles';design.rel='stylesheet';
+  design.href=new URL('../hub-design-system.css?v=20261028-design-system-global1',import.meta.url).href;
+  document.head.appendChild(design);
  }
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
@@ -76,33 +84,63 @@ function markCurrent(link,links,{center=false}={}){
  }
 }
 function enhanceSectionNav(){
- const nav=document.querySelector('.section-nav');if(!nav){observer?.disconnect();observer=null;navResizeObserver?.disconnect();navResizeObserver=null;observedNav=null;observedSignature='';return}
- nav.setAttribute('aria-label',nav.getAttribute('aria-label')||'Navegação por seções');nav.dataset.horizontalScroll='true';
- const links=sectionLinks(nav);if(!links.length)return;const signature=links.map(a=>a.hash).join('|');
- if(!nav.querySelector('.section-nav-indicator')){
-  const indicator=document.createElement('span');indicator.className='section-nav-indicator';indicator.setAttribute('aria-hidden','true');nav.appendChild(indicator);
+ // Cada menu de seções possui observadores próprios; um menu não desativa
+ // o indicador de outro quando a página contém mais de uma navegação.
+ const navs=[...document.querySelectorAll('.section-nav')];
+ for(const [nav,state] of sectionNavStates){
+  if(!nav.isConnected||!navs.includes(nav)){
+   state.observer?.disconnect();state.resizeObserver?.disconnect();
+   sectionNavStates.delete(nav);
+  }
  }
- for(const link of links)if(!boundLinks.has(link)){boundLinks.add(link);link.addEventListener('click',()=>{
-  nav.dataset.manualNavUntil=String(Date.now()+1000);
-  markCurrent(link,sectionLinks(nav),{center:true});
- })}
- if(nav===observedNav&&signature===observedSignature)return;
- observer?.disconnect();observer=null;navResizeObserver?.disconnect();navResizeObserver=null;observedNav=nav;observedSignature=signature;
- if('ResizeObserver'in window){
-  navResizeObserver=new ResizeObserver(()=>{
-   const active=nav.querySelector('a[aria-current="location"]');if(active)positionSectionIndicator(nav,active);
-  });
-  navResizeObserver.observe(nav);for(const link of links)navResizeObserver.observe(link);
+ for(const nav of navs){
+  nav.setAttribute('aria-label',nav.getAttribute('aria-label')||'Navegação por seções');
+  nav.dataset.horizontalScroll='true';
+  const links=sectionLinks(nav);
+  if(!links.length)continue;
+  const signature=links.map(a=>a.hash).join('|');
+  if(!nav.querySelector('.section-nav-indicator')){
+   const indicator=document.createElement('span');
+   indicator.className='section-nav-indicator';
+   indicator.setAttribute('aria-hidden','true');
+   nav.appendChild(indicator);
+  }
+  for(const link of links)if(!boundLinks.has(link)){
+   boundLinks.add(link);
+   link.addEventListener('click',()=>{
+    nav.dataset.manualNavUntil=String(Date.now()+1000);
+    markCurrent(link,sectionLinks(nav),{center:true});
+   });
+  }
+  const previous=sectionNavStates.get(nav);
+  if(previous?.signature===signature)continue;
+  previous?.observer?.disconnect();previous?.resizeObserver?.disconnect();
+  const state={signature,observer:null,resizeObserver:null};
+  sectionNavStates.set(nav,state);
+  if('ResizeObserver'in window){
+   state.resizeObserver=new ResizeObserver(()=>{
+    const active=nav.querySelector('a[aria-current="location"]');
+    if(active)positionSectionIndicator(nav,active);
+   });
+   state.resizeObserver.observe(nav);
+   for(const link of links)state.resizeObserver.observe(link);
+  }
+  if('IntersectionObserver'in window){
+   const byId=new Map(links.map(a=>[a.hash.slice(1),a]));
+   state.observer=new IntersectionObserver(entries=>{
+    if(Date.now()<Number(nav.dataset.manualNavUntil||0))return;
+    const visible=entries.filter(x=>x.isIntersecting)
+      .sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
+    if(visible)markCurrent(byId.get(visible.target.id),links);
+   },{rootMargin:'-18% 0px -68% 0px',threshold:[0,.05,.25]});
+   for(const id of byId.keys()){
+    const section=document.getElementById(id);
+    if(section)state.observer.observe(section);
+   }
+  }
+  const hashLink=links.find(a=>a.hash===location.hash)||links[0];
+  if(hashLink)markCurrent(hashLink,links,{center:true});
  }
- if('IntersectionObserver'in window){
-  const byId=new Map(links.map(a=>[a.hash.slice(1),a]));observer=new IntersectionObserver(entries=>{
-   if(Date.now()<Number(nav.dataset.manualNavUntil||0))return;
-   const visible=entries.filter(x=>x.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
-   if(visible)markCurrent(byId.get(visible.target.id),links)
-  },{rootMargin:'-18% 0px -68% 0px',threshold:[0,.05,.25]});
-  for(const id of byId.keys()){const section=document.getElementById(id);if(section)observer.observe(section)}
- }
- const hashLink=links.find(a=>a.hash===location.hash)||links[0];if(hashLink)markCurrent(hashLink,links,{center:true})
 }
 function enhanceTouchGroups(){
  for(const group of document.querySelectorAll('.hero .actions,.top .actions,.hero-actions,.pc .actions'))if(group.dataset.mobileStack!=='true')group.dataset.mobileStack='true'

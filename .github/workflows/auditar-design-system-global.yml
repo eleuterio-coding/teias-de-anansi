@@ -1,0 +1,70 @@
+name: Auditar Design System global
+
+on:
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'hub-design-system.css'
+      - 'hub-layout.css'
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/module-clean-loader.js'
+      - 'tests/auditar-design-system-global.mjs'
+      - 'e2e/design-system-global.spec.js'
+      - '.github/workflows/auditar-design-system-global.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'hub-design-system.css'
+      - 'hub-layout.css'
+      - 'hub-ux.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/module-clean-loader.js'
+      - 'tests/auditar-design-system-global.mjs'
+      - 'e2e/design-system-global.spec.js'
+      - '.github/workflows/auditar-design-system-global.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe
+        run: |
+          node --check scripts/hub-ux.js
+          node --check tests/auditar-design-system-global.mjs
+          node --check e2e/design-system-global.spec.js
+      - name: Auditar cobertura de todas as rotas e tokens
+        run: node tests/auditar-design-system-global.mjs
+
+  browser:
+    runs-on: ubuntu-latest
+    needs: static
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar ferramentas
+        run: npm install --no-audit --no-fund
+      - name: Instalar Chromium e dependências
+        run: npx playwright install --with-deps chromium
+      - name: Validar responsividade, menus, tokens e movimento
+        run: npx playwright test e2e/design-system-global.spec.js
+      - name: Publicar evidências em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: design-system-playwright
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore

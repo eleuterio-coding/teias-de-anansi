@@ -1,0 +1,201 @@
+/*
+ * Teias de Anansi — Design System global, v1.
+ *
+ * Camada transversal, carregada por scripts/hub-ux.js DEPOIS dos estilos
+ * específicos. Mantém as duas superfícies intencionais (shell escuro / leitor
+ * claro) e nunca altera permissões, dados, estados ou regras de negócio.
+ *
+ * Os tokens --hub-space-* e --hub-* de hub-layout.css/hub-ux.css são a fonte;
+ * os tokens --hub-ds-* representam contratos semânticos compartilhados.
+ */
+:root {
+  --hub-ds-space-1:var(--hub-space-1,4px);
+  --hub-ds-space-2:var(--hub-space-2,8px);
+  --hub-ds-space-3:var(--hub-space-3,12px);
+  --hub-ds-space-4:var(--hub-space-4,16px);
+  --hub-ds-space-5:var(--hub-space-5,24px);
+  --hub-ds-space-6:var(--hub-space-6,32px);
+  --hub-ds-space-7:40px;
+  --hub-ds-surface-gap:var(--hub-ds-space-4);
+  --hub-ds-card-gap:var(--hub-ds-space-4);
+  --hub-ds-section-nav-space:var(--hub-ds-space-4);
+  --hub-ds-section-nav-height:44px;
+  --hub-ds-control-min-height:44px;
+  --hub-ds-control-radius:var(--hub-control-radius,10px);
+  --hub-ds-card-radius:var(--hub-panel-radius,14px);
+  --hub-ds-focus-width:3px;
+  --hub-ds-focus-offset:3px;
+  --hub-ds-motion-fast:140ms;
+  --hub-ds-motion-standard:180ms;
+  --hub-ds-motion-emphasis:320ms;
+  --hub-ds-ease:cubic-bezier(.22,1,.36,1);
+  --hub-ds-focus-color:var(--hub-accent-2,#67b8ff);
+  --hub-ds-status-current:var(--hub-green,#36d77c);
+  --hub-ds-status-in-progress:var(--hub-green,#36d77c);
+  --hub-ds-status-next:var(--hub-accent-2,#67b8ff);
+  --hub-ds-status-planned:#ffcf85;
+  --hub-ds-status-paused:#e0baff;
+  --hub-ds-status-finished:#caddf0;
+  --hub-ds-status-cancelled:var(--hub-red,#ff6b6b);
+}
+
+
+/* Foco em superfície clara deve manter contraste; o azul claro do shell
+   escuro não oferece contraste suficiente contra branco. */
+body.hub-shell-enabled.hub-content-light,
+body.hub-login-page {
+  --hub-ds-focus-color:#136eac;
+}
+
+/* Camada de composição: espaçamento uniforme por família funcional.
+   Não cria margens em cada card dentro de grids (evita gaps duplos). */
+body.hub-shell-enabled .hub-app-content :is(.section-nav,.wizard-nav) {
+  margin-block:var(--hub-ds-section-nav-space)!important;
+}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-card-grid,.hub-area-menu,.campaign-list-grid
+) {
+  gap:var(--hub-ds-card-gap)!important;
+}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-detail-grid,.campaign-list-section,.hub-area-page .hub-entity-list
+) {
+  row-gap:var(--hub-ds-surface-gap);
+}
+body.hub-shell-enabled .hub-app-content :is(
+  .form-grid,.settings-fields
+) {
+  gap:var(--hub-ds-space-3);
+}
+body.hub-shell-enabled .hub-app-content :is(
+  .top,.actions,.hero-actions,.row-actions,.panel-head
+) {
+  gap:var(--hub-ds-space-3);
+}
+
+
+/* Diretórios de Personagens e NPCs usam as mesmas métricas estruturais;
+   a página de painel permanece propositalmente mais compacta. */
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-grid,.hub-roster-choice-grid
+) {gap:var(--hub-ds-card-gap)!important}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-heading,.hub-area-heading
+) {margin-bottom:var(--hub-ds-space-5)}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-metrics,.hub-directory-filters
+) {margin-bottom:var(--hub-ds-space-5)}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-card,.hub-directory-metric,.hub-directory-filters,
+  .hub-directory-editor,.hub-roster-choice
+) {
+  border-radius:var(--hub-ds-card-radius);
+  transition:border-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             background-color var(--hub-ds-motion-standard) var(--hub-ds-ease);
+}
+
+/* Família de navegação horizontal por seções.
+   O marcador JS já é compartilhado: apenas os tokens visuais são centralizados.
+   Menus de criação (.wizard-nav) são uma variante, não uma cópia da section-nav. */
+body.hub-shell-enabled .hub-app-content .section-nav {
+  min-height:var(--hub-ds-section-nav-height);
+}
+body.hub-shell-enabled .hub-app-content .section-nav > a {
+  min-height:var(--hub-ds-section-nav-height)!important;
+  transition:color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             background-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             border-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             box-shadow var(--hub-ds-motion-standard) var(--hub-ds-ease);
+}
+body.hub-shell-enabled .hub-app-content .section-nav .section-nav-indicator {
+  transition:transform var(--hub-ds-motion-emphasis) var(--hub-ds-ease),
+             width var(--hub-ds-motion-emphasis) var(--hub-ds-ease),
+             opacity var(--hub-ds-motion-fast) ease;
+}
+body.hub-shell-enabled .hub-app-content .wizard-nav > button {
+  transition:color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             background-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             border-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             box-shadow var(--hub-ds-motion-standard) var(--hub-ds-ease);
+}
+
+/* Cards com a mesma função visual compartilham moldura e resposta interativa.
+   Heroes fotográficos, avatares, botões circulares e cartões de status são
+   exceções intencionais: suas geometrias preservam a semântica existente. */
+body.hub-shell-enabled .hub-app-content :is(
+  .card,.panel,.focus-card,.hub-home-card,.campaign-card,
+  .adventure-card,.story-card,.scene-card,.npc-library-card,.pc,
+  .hub-area-menu a
+) {
+  border-radius:var(--hub-ds-card-radius);
+  transition-property:border-color,background-color,box-shadow,transform;
+  transition-duration:var(--hub-ds-motion-standard);
+  transition-timing-function:var(--hub-ds-ease);
+}
+body.hub-shell-enabled .hub-app-content :is(
+  button:not(.hub-icon-button):not(.campaign-status-trigger),
+  .btn:not(.hub-icon-button),.button-link
+) {
+  border-radius:var(--hub-ds-control-radius);
+  transition-property:background-color,border-color,color,box-shadow,transform,opacity;
+  transition-duration:var(--hub-ds-motion-standard);
+  transition-timing-function:var(--hub-ds-ease);
+}
+/* A preferência de dimensões dos controles já existe em hub-layout.css.
+   A regra transversal fixa apenas o contrato mínimo em campos usuais. */
+body.hub-shell-enabled .hub-app-content :is(
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,textarea
+) {
+  min-height:var(--hub-ds-control-min-height);
+  border-radius:var(--hub-ds-control-radius);
+}
+body.hub-shell-enabled .hub-app-content :is(
+  .section-nav a,.wizard-nav button,.hub-area-menu a,
+  .hub-home-card,.btn,button,input,textarea,select
+):focus-visible {
+  outline:var(--hub-ds-focus-width) solid var(--hub-ds-focus-color)!important;
+  outline-offset:var(--hub-ds-focus-offset)!important;
+}
+
+/* Status: geometria compartilhada, paletas semânticas existentes preservadas.
+   Cores de Atual / Em andamento / Planejada / Próxima sessão / Concluída
+   não são neutralizadas pelo tema claro nem pela unificação de cards. */
+body.hub-shell-enabled .hub-app-content :is(.badge,.tag,.pill) {
+  border-radius:var(--hub-ds-control-radius);
+  transition:border-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             background-color var(--hub-ds-motion-standard) var(--hub-ds-ease);
+}
+
+/* Login também é parte do produto; preserva sua superfície clara isolada. */
+body.hub-login-page :is(.card,.top,.row,.status) {
+  border-radius:var(--hub-ds-card-radius);
+}
+body.hub-login-page :is(button,.btn,input,select,textarea) {
+  min-height:var(--hub-ds-control-min-height);
+  border-radius:var(--hub-ds-control-radius);
+}
+
+/* Responsividade contratual: manter rolagem horizontal dos menus, nunca
+   reduzir as áreas clicáveis; elementos de leitura continuam com layout próprio. */
+@media (max-width:760px) {
+  body.hub-shell-enabled .hub-app-content :is(.section-nav,.wizard-nav) {
+    min-width:0;
+    max-width:100%;
+  }
+  body.hub-shell-enabled .hub-app-content .section-nav > a {
+    flex-shrink:0;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.hub-shell-enabled .hub-app-content :is(
+    .section-nav,.wizard-nav,.section-nav a,.wizard-nav button,
+    .section-nav-indicator,.card,.panel,.focus-card,.hub-home-card,
+    .campaign-card,.hub-area-menu a,.btn,button
+  ) {transition:none!important;scroll-behavior:auto!important}
+}
+html[data-hub-motion="reduce"] body.hub-shell-enabled .hub-app-content :is(
+  .section-nav,.wizard-nav,.section-nav a,.wizard-nav button,
+  .section-nav-indicator,.card,.panel,.focus-card,.hub-home-card,
+  .campaign-card,.hub-area-menu a,.btn,button
+) {transition:none!important;scroll-behavior:auto!important}
