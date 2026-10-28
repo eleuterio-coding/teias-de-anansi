@@ -8,6 +8,7 @@ const names=JSON.parse(read('dados/localizacao-ptbr-magias-completo.json')).nome
 const verified=JSON.parse(read('dados/magias-traducoes-srd-verificadas.json'));
 const revised=JSON.parse(read('dados/magias-ptbr-srd-2024-revisado.json'));
 const lot2=JSON.parse(read('dados/magias-ptbr-srd-2024-revisado-lote2.json'));
+const lot3=JSON.parse(read('dados/magias-ptbr-srd-2024-revisado-lote3.json'));
 const html=read('magias.html'),ce=read('scripts/concentracao-expandida-selos.js');
 const source=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 
@@ -46,12 +47,14 @@ assert.equal(verified.total,6,'Manter as seis traduções já verificadas.');
 assert.equal(revised.total,17,'A revisão integral 2024 deve conter 17 traduções editoriais.');
 assert.equal(Object.keys(revised.descricoes).length,17,'Total de traduções 2024 divergente.');
 assert.equal(lot2.total,45,'Segundo lote deve ter 45 traduções novas.');
-const mergedNames=new Set([...Object.keys(verified.descricoes),...Object.keys(revised.descricoes),...Object.keys(lot2.descricoes)]);
-assert.equal(mergedNames.size,67,'Total de traduções completas em PT-BR divergente.');
+assert.equal(lot3.total,44,'Terceiro lote deve ter 44 traduções novas.');
+const mergedNames=new Set([...Object.keys(verified.descricoes),...Object.keys(revised.descricoes),...Object.keys(lot2.descricoes),...Object.keys(lot3.descricoes)]);
+assert.equal(mergedNames.size,111,'Total de traduções completas em PT-BR divergente.');
 assert.ok(source.includes('magias-ptbr-srd-2024-revisado-lote2.json'),'Carregamento do segundo lote ausente.');
+assert.ok(source.includes('magias-ptbr-srd-2024-revisado-lote3.json'),'Carregamento do terceiro lote ausente.');
 assert.equal(Object.keys(verified.descricoes).length,verified.total,'Contagem de traduções verificadas divergente.');
 const byOriginal=new Map(catalog.itens.map(x=>[x.nome_original,x]));
-for(const [name,translation] of [...Object.entries(verified.descricoes),...Object.entries(revised.descricoes),...Object.entries(lot2.descricoes)]){
+for(const [name,translation] of [...Object.entries(verified.descricoes),...Object.entries(revised.descricoes),...Object.entries(lot2.descricoes),...Object.entries(lot3.descricoes)]){
  const x=byOriginal.get(name);
  assert.ok(x?.texto_integral_publicavel,'Não republicar tradução integral de fonte protegida: '+name);
  assert.ok((typeof translation==='string'?translation:translation.descricao).trim().length>30,'Tradução integral suspeita: '+name);
@@ -63,4 +66,4 @@ assert.ok(source.includes('regras.html?original='),'Links devem abrir o termo or
 const glossary=read('scripts/regras-srd-view-v7.js');
 assert.ok(glossary.includes("get('original')"),'Regras deve reconhecer deep links com nome canônico.');
 assert.ok(glossary.includes('data-hub-original'), 'Regras deve preservar IDs originais.');
-console.log('OK: 537 magias, 67 textos PT-BR integrais, 339 originais ingleses SRD, escola sem link e dropdown com titulo inglês.');
+console.log('OK: 537 magias, 111 textos PT-BR integrais, 339 originais ingleses SRD, escola sem link e dropdown com título inglês.');
