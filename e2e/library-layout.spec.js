@@ -116,3 +116,31 @@ test('links semânticos antigos continuam abrindo o verbete de magia traduzido',
     await expect(page.locator('#detalhe .spell-verbetelink')).toHaveAttribute('href','magias.html?magia=fireball');
   }
 });
+
+
+test('cards compactos sem selos exibem contagens de itens em todos os 18 módulos',async({page},testInfo)=>{
+  const modulesWithCounts=['Regras','Classes','Subclasses','Espécies','Antecedentes','Talentos','Maestrias de Arma','Monstros','Armaduras','Armas','Equipamentos de Aventura','Ferramentas','Montarias e Veículos','Comércio e Despesas','Bugigangas','Itens Mágicos','Magias','Idiomas'];
+  // Fixture de interface; em produção os dados são gerados do índice semântico.
+  const modulos=Object.fromEntries(modulesWithCounts.map((name,i)=>[name,i===0?1:i+1]));
+  modulos.Magias=537;
+  await page.route('**/dados/biblioteca-contagens.json*',route=>route.fulfill({
+    status:200,contentType:'application/json',
+    body:JSON.stringify({schema:'hub-rpg.biblioteca-contagens.v1',modulos})
+  }));
+  await checkHubLayout(page,'/bibliotecas.html');
+  await expect(page.locator('.modulos > li')).toHaveCount(18);
+  await expect(page.locator('.modulos > li:first-child .contagem')).toHaveText('1 item');
+  await expect(page.locator('.modulos > li[data-catalog-id="spells"] .contagem')).toHaveText('537 itens');
+  await expect(page.locator('.modulos')).not.toContainText('Publicado');
+  await expect(page.locator('.modulos')).not.toContainText('Criação');
+  await expect(page.locator('.modulos')).not.toContainText('Ficha');
+  await expect(page.locator('.modulos .catalog-badges,.modulos .catalog-badge')).toHaveCount(0);
+  const heights=await page.locator('.modulos > li > a').evaluateAll(nodes=>nodes.map(n=>Math.round(n.getBoundingClientRect().height)));
+  expect(Math.max(...heights)).toBeLessThanOrEqual(112);
+  const columns=await page.locator('.modulos').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').length);
+  if(testInfo.project.name==='mobile-chromium')expect(columns).toBe(1);
+  else expect(columns).toBeGreaterThanOrEqual(2);
+  await page.locator('#catalog-search').fill('magias');
+  await expect(page.locator('.modulos > li:visible')).toHaveCount(1);
+  await expect(page.locator('.modulos > li:visible .contagem')).toHaveText('537 itens');
+});
