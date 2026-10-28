@@ -39,6 +39,14 @@
   --hub-ds-status-cancelled:var(--hub-red,#ff6b6b);
 }
 
+
+/* Foco em superfície clara deve manter contraste; o azul claro do shell
+   escuro não oferece contraste suficiente contra branco. */
+body.hub-shell-enabled.hub-content-light,
+body.hub-login-page {
+  --hub-ds-focus-color:#136eac;
+}
+
 /* Camada de composição: espaçamento uniforme por família funcional.
    Não cria margens em cada card dentro de grids (evita gaps duplos). */
 body.hub-shell-enabled .hub-app-content :is(.section-nav,.wizard-nav) {
