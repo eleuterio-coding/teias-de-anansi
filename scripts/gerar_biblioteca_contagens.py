@@ -30,6 +30,25 @@ def count_records(index: dict, spells: dict) -> dict[str, int]:
             ids[module].add(str(rid))
 
     counts = {module: len(ids[module]) for module in ROUTES}
+
+    # Talentos são catalogados como listas tabulares ([nome, categoria, ...]).
+    # O índice semântico não transforma essas linhas em entidades publicadas,
+    # por isso a contagem precisa vir dos arquivos ativos do próprio módulo.
+    talent_names: set[str] = set()
+    talent_sources = sorted((ROOT / "dados").glob("talentos-*.json"))
+    if not talent_sources:
+        raise ValueError("Fontes do módulo Talentos ausentes.")
+    for path in talent_sources:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        rows = data.get("itens", [])
+        if not isinstance(rows, list):
+            raise ValueError(f"Arquivo de Talentos inválido: {path.name}")
+        for row in rows:
+            name = row[0] if isinstance(row, list) and row else row.get("nome_original", row.get("nome", "")) if isinstance(row, dict) else ""
+            if isinstance(name, str) and name.strip():
+                talent_names.add(name.strip().casefold())
+    counts["Talentos"] = len(talent_names)
+
     if any(n < 1 for n in counts.values()):
         empty = [module for module, n in counts.items() if n < 1]
         raise ValueError(f"Módulos sem registros publicados: {empty}")
