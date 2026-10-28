@@ -14,13 +14,13 @@
   <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head>
 <body>
-  <p><a href="bibliotecas.html?v=20260819-1236">← Bibliotecas</a></p>
+  <p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
   <main id="app"></main>
 <script>
 const params=new URLSearchParams(location.search);
 const modulo=params.get('modulo');
 if(modulo==='Regras'){
-  location.replace('regras.html?v=20260819-1236');
+  location.replace('regras.html?v=20261028-library-hub-layout1');
 }else if(modulo){
   document.title=`${modulo} - Biblioteca - Teias de Anansi`;
   const app=document.getElementById("app");
@@ -29,7 +29,7 @@ if(modulo==='Regras'){
   const empty=document.createElement("div");empty.className="vazio";empty.textContent="0 itens publicados neste módulo.";
   app.replaceChildren(heading,summary,empty);
 }else{
-  location.replace('bibliotecas.html?v=20260819-1236');
+  location.replace('bibliotecas.html?v=20261028-library-hub-layout1');
 }
 </script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-hub-layout1"></script>

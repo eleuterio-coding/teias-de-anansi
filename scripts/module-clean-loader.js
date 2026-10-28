@@ -42,7 +42,8 @@
   };
   function applySharedLayout(html){
     const tag=`<link id="hub-library-layout" rel="stylesheet" href="${LAYOUT}">`;
-    html=html.replace(/<link\b[^>]*id=["']hub-library-layout["'][^>]*>\s*/gi,'');
+    html=html.replace(/href=(["'])bibliotecas\\.html(?:\\?v=[^"']*)?\\1/gi,'href="bibliotecas.html?v=20261028-library-hub-layout1"');
+    html=html.replace(/<link\\b[^>]*id=["']hub-library-layout["'][^>]*>\s*/gi,'');
     if(!/<\/head>/i.test(html))throw new Error('HTML do módulo sem </head>.');
     return html.replace(/<\/head>/i,`${tag}</head>`);
   }
