@@ -1,0 +1,156 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v2",
+  "base": "SRD 5.2.1 — Creative Commons BY 4.0",
+  "nota": "Traduções editoriais autônomas de magias com textos originais de 2024 verificados no catálogo; métricas adaptadas à apresentação em português, sem modificar efeitos ou dados.",
+  "total": 45,
+  "descricoes": {
+    "Greater Invisibility": {
+      "descricao": "Uma criatura que você toca recebe a condição Invisível até o término da magia."
+    },
+    "Darkvision": {
+      "descricao": "Durante a magia, uma criatura voluntária que você toca recebe visão no escuro com alcance de 45 metros."
+    },
+    "True Seeing": {
+      "descricao": "Durante a magia, uma criatura voluntária que você toca recebe visão verdadeira com alcance de 36 metros."
+    },
+    "Divine Favor": {
+      "descricao": "Até o término da magia, seus ataques com armas causam 1d4 de dano radiante adicional quando acertam."
+    },
+    "Lesser Restoration": {
+      "descricao": "Você toca uma criatura e encerra uma destas condições que a afetam: Cego, Surdo, Paralisado ou Envenenado."
+    },
+    "Misty Step": {
+      "descricao": "Uma névoa prateada envolve você brevemente enquanto se teletransporta para um espaço desocupado que possa ver, a até 9 metros de distância."
+    },
+    "Expeditious Retreat": {
+      "descricao": "Você realiza a ação Disparada. Até o término da magia, também pode realizar essa ação como uma Ação Bônus."
+    },
+    "Stoneskin": {
+      "descricao": "Até o término da magia, uma criatura voluntária que você toca recebe resistência aos danos contundente, perfurante e cortante."
+    },
+    "Shield of Faith": {
+      "descricao": "Um campo cintilante envolve uma criatura à sua escolha dentro do alcance, concedendo-lhe +2 de bônus na Classe de Armadura durante a magia."
+    },
+    "Purify Food and Drink": {
+      "descricao": "Você remove venenos e deterioração de alimentos e bebidas não mágicos em uma esfera de 1,5 metro de raio centrada em um ponto dentro do alcance."
+    },
+    "False Life": {
+      "descricao": "Você recebe 2d4 + 4 Pontos de Vida Temporários.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, você recebe 5 Pontos de Vida Temporários adicionais por círculo acima do 1º."
+    },
+    "Power Word Kill": {
+      "descricao": "Você ordena que uma criatura que possa ver dentro do alcance morra. Se o alvo tiver 100 Pontos de Vida ou menos, ele morre. Caso contrário, sofre 12d12 de dano psíquico."
+    },
+    "Barkskin": {
+      "descricao": "Você toca uma criatura voluntária. Até o término da magia, a pele do alvo assume a aparência de casca de árvore, e sua Classe de Armadura passa a ser 17 caso fosse inferior a esse valor."
+    },
+    "Regenerate": {
+      "descricao": "Uma criatura que você toca recupera 4d8 + 15 Pontos de Vida. Durante a magia, o alvo recupera 1 Ponto de Vida no início de cada um de seus turnos, e quaisquer partes do corpo decepadas voltam a crescer após 2 minutos."
+    },
+    "Pass without Trace": {
+      "descricao": "Você emana uma aura de ocultação em um raio de 9 metros durante a magia. Enquanto estiverem nessa emanação, você e cada criatura à sua escolha recebem +10 de bônus em testes de Destreza (Furtividade) e não deixam rastros."
+    },
+    "Blur": {
+      "descricao": "Seu corpo adquire contornos difusos. Durante a magia, criaturas têm desvantagem nas jogadas de ataque contra você. Um atacante não sofre essa desvantagem se puder percebê-lo por visão às cegas ou visão verdadeira."
+    },
+    "See Invisibility": {
+      "descricao": "Durante a magia, você enxerga criaturas e objetos com a condição Invisível como se estivessem visíveis e também pode ver o Plano Etéreo. Criaturas e objetos nesse plano têm aparência fantasmagórica."
+    },
+    "Water Breathing": {
+      "descricao": "Você concede a até dez criaturas voluntárias à sua escolha dentro do alcance a capacidade de respirar debaixo d'água até o término da magia. As criaturas afetadas também conservam sua forma normal de respiração."
+    },
+    "Protection from Poison": {
+      "descricao": "Você toca uma criatura e encerra a condição Envenenado que a afeta. Durante a magia, o alvo tem vantagem nas salvaguardas para evitar ou encerrar a condição Envenenado e recebe resistência a dano venenoso."
+    },
+    "Locate Animals or Plants": {
+      "descricao": "Descreva ou nomeie um tipo específico de Fera, criatura do tipo Planta ou planta não mágica. Você descobre a direção e a distância até a criatura ou planta mais próxima desse tipo em um raio de 8 quilômetros, caso exista alguma."
+    },
+    "Spare the Dying": {
+      "descricao": "Escolha uma criatura dentro do alcance que tenha 0 Pontos de Vida e não esteja morta. A criatura fica Estável.",
+      "niveis_superiores": "Aprimoramento do truque: o alcance dobra quando você alcança os níveis 5 (9 metros), 11 (18 metros) e 17 (36 metros)."
+    },
+    "Revivify": {
+      "descricao": "Você toca uma criatura que tenha morrido no último minuto. Ela retorna à vida com 1 Ponto de Vida. A magia não pode reviver uma criatura morta por velhice nem restaurar partes do corpo que estejam ausentes."
+    },
+    "Beacon of Hope": {
+      "descricao": "Escolha qualquer quantidade de criaturas dentro do alcance. Durante a magia, cada alvo tem vantagem em salvaguardas de Sabedoria e salvaguardas contra a morte, além de recuperar a quantidade máxima possível de Pontos de Vida sempre que receber cura."
+    },
+    "Color Spray": {
+      "descricao": "Você projeta uma explosão deslumbrante de luzes coloridas e cintilantes. Cada criatura em um cone de 4,5 metros com origem em você deve ser bem-sucedida em uma salvaguarda de Constituição ou ficará Cega até o final do seu próximo turno."
+    },
+    "Divine Smite": {
+      "descricao": "O alvo sofre 2d8 de dano radiante adicional do ataque. Esse dano aumenta em 1d8 se o alvo for um Ínfero ou um Morto-vivo.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d8 por círculo acima do 1º."
+    },
+    "Mass Healing Word": {
+      "descricao": "Até seis criaturas à sua escolha que você possa ver dentro do alcance recuperam Pontos de Vida iguais a 2d4 mais seu modificador de atributo de conjuração.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 3º, a cura aumenta em 1d4 por círculo acima do 3º."
+    },
+    "Aid": {
+      "descricao": "Escolha até três criaturas dentro do alcance. Os Pontos de Vida atuais e máximos de cada alvo aumentam em 5 durante a magia.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, os Pontos de Vida de cada alvo aumentam em mais 5 por círculo acima do 2º."
+    },
+    "Inflict Wounds": {
+      "descricao": "Uma criatura que você toca realiza uma salvaguarda de Constituição. Em caso de falha, sofre 2d10 de dano necrótico; em caso de sucesso, sofre metade desse dano.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d10 por círculo acima do 1º."
+    },
+    "Poison Spray": {
+      "descricao": "Você lança uma névoa tóxica contra uma criatura dentro do alcance. Realize uma jogada de ataque mágico à distância contra o alvo. Se acertar, ele sofre 1d12 de dano venenoso.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d12 quando você alcança os níveis 5 (2d12), 11 (3d12) e 17 (4d12)."
+    },
+    "Jump": {
+      "descricao": "Você toca uma criatura voluntária. Uma vez em cada um de seus turnos até o término da magia, a criatura pode saltar até 9 metros gastando 3 metros de deslocamento.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, você pode escolher uma criatura adicional por círculo acima do 1º."
+    },
+    "Foresight": {
+      "descricao": "Você toca uma criatura voluntária e lhe concede uma capacidade limitada de antecipar o futuro imediato. Durante a magia, o alvo tem vantagem em Testes de d20, e outras criaturas têm desvantagem nas jogadas de ataque contra ele. A magia termina antecipadamente se você a conjurar novamente."
+    },
+    "Scorching Ray": {
+      "descricao": "Você lança três raios de fogo, direcionando-os contra um único alvo dentro do alcance ou contra vários. Realize uma jogada de ataque mágico à distância para cada raio. Se acertar, o raio causa 2d6 de dano de fogo.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 2º, você cria um raio adicional por círculo acima do 2º."
+    },
+    "Aura of Life": {
+      "descricao": "Uma aura emana de você em um raio de 9 metros durante a magia. Enquanto estiverem nessa aura, você e seus aliados recebem resistência a dano necrótico, e seus Pontos de Vida máximos não podem ser reduzidos. Um aliado com 0 Pontos de Vida que iniciar o próprio turno na aura recupera 1 Ponto de Vida."
+    },
+    "Continual Flame": {
+      "descricao": "Uma chama surge em um objeto que você toca. Ela emite luz plena em um raio de 6 metros e luz fraca por mais 6 metros. Embora se pareça com uma chama comum, não produz calor nem consome combustível. Pode ser coberta ou escondida, mas não pode ser abafada nem apagada."
+    },
+    "Nondetection": {
+      "descricao": "Durante a magia, você oculta de magias de Adivinhação um alvo que tocar. O alvo pode ser uma criatura voluntária, um local ou um objeto com até 3 metros em qualquer dimensão. Ele não pode ser escolhido como alvo de magias de Adivinhação nem percebido por sensores mágicos de vidência."
+    },
+    "Hellish Rebuke": {
+      "descricao": "A criatura que causou dano a você é brevemente envolvida por chamas verdes. Ela realiza uma salvaguarda de Destreza. Em caso de falha, sofre 2d10 de dano de fogo; em caso de sucesso, metade desse dano.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d10 por círculo acima do 1º."
+    },
+    "Goodberry": {
+      "descricao": "Dez bagas surgem em sua mão, imbuídas de magia durante a duração. Uma criatura pode usar uma Ação Bônus para comer uma baga. Comê-la recupera 1 Ponto de Vida e fornece alimento suficiente para sustentar uma criatura por um dia. As bagas não consumidas desaparecem quando a magia termina."
+    },
+    "Acid Splash": {
+      "descricao": "Você cria uma bolha ácida em um ponto dentro do alcance, onde ela explode em uma esfera de 1,5 metro de raio. Cada criatura nessa esfera deve ser bem-sucedida em uma salvaguarda de Destreza ou sofrerá 1d6 de dano ácido.",
+      "niveis_superiores": "Aprimoramento do truque: o dano aumenta em 1d6 quando você alcança os níveis 5 (2d6), 11 (3d6) e 17 (4d6)."
+    },
+    "Mass Heal": {
+      "descricao": "Uma onda de energia curativa flui de você para as criaturas próximas. Você restaura até 700 Pontos de Vida, distribuídos como desejar entre qualquer quantidade de criaturas que possa ver dentro do alcance. Criaturas curadas por esta magia também deixam de estar Cegas, Surdas ou Envenenadas."
+    },
+    "Heal": {
+      "descricao": "Escolha uma criatura que você possa ver dentro do alcance. Uma onda de energia vital percorre o alvo, restaurando 70 Pontos de Vida. A magia também encerra as condições Cego, Surdo e Envenenado que o afetam.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 6º, a cura aumenta em 10 Pontos de Vida por círculo acima do 6º."
+    },
+    "Greater Restoration": {
+      "descricao": "Você toca uma criatura e remove magicamente um dos seguintes efeitos que a afetam: um nível de Exaustão; a condição Enfeitiçado ou Petrificado; uma maldição, incluindo a sintonia com um item mágico amaldiçoado; qualquer redução de um dos valores de atributo do alvo; ou qualquer redução de seus Pontos de Vida máximos."
+    },
+    "Power Word Heal": {
+      "descricao": "Uma onda de energia curativa envolve uma criatura que você possa ver dentro do alcance. O alvo recupera todos os seus Pontos de Vida. Se estiver Enfeitiçado, Amedrontado, Paralisado, Envenenado ou Atordoado, a condição termina. Se estiver Caído, pode usar sua Reação para se levantar."
+    },
+    "Detect Poison and Disease": {
+      "descricao": "Durante a magia, você percebe a localização de venenos, criaturas venenosas e contágios mágicos em um raio de 9 metros ao seu redor, identificando o tipo em cada caso. O efeito é bloqueado por 30 centímetros de pedra, terra ou madeira; 2,5 centímetros de metal; ou uma lâmina fina de chumbo."
+    },
+    "Ray of Sickness": {
+      "descricao": "Você dispara um raio esverdeado contra uma criatura dentro do alcance. Realize uma jogada de ataque mágico à distância contra o alvo. Se acertar, o alvo sofre 2d8 de dano venenoso e fica Envenenado até o final do seu próximo turno.",
+      "niveis_superiores": "Ao usar um espaço de magia de círculo superior ao 1º, o dano aumenta em 1d8 por círculo acima do 1º."
+    },
+    "Tongues": {
+      "descricao": "Você concede à criatura tocada a capacidade de compreender qualquer idioma falado ou sinalizado que ouça ou veja. Além disso, quando o alvo se comunica falando ou sinalizando, qualquer criatura que conheça pelo menos um idioma consegue compreendê-lo, desde que possa ouvir sua fala ou ver seus sinais."
+    }
+  }
+}
