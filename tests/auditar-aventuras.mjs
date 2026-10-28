@@ -117,7 +117,7 @@ const state=fs.readFileSync(new URL('../scripts/adventure-state.js',import.meta.
 for(const token of['missions','timelineEvents','participantUsernames','characterIds','participantAccessConfigured','linkSceneToEncounter','adventureContextForSession'])assert.ok(state.includes(token),`Estado de Aventuras sem ${token}`);
 for(const token of['Visão geral','Participantes','Locais','Mapas','Criar e editar conteúdo','adventure-create-content','data-adventure-creation-kind','Objetivos','Cenas','NPCs','Facções','Sessões da Aventura','Linha do tempo','Entregar ao personagem','Item da Biblioteca'])assert.ok(ui.includes(token),`Workspace sem ${token}`);
 assert.ok(ui.includes('${monstersHtml(a)}'),'O card Monstros da Biblioteca deve ser renderizado na Aventura.');
-assert.ok(ui.includes('deriveAdventureTimelineEvents'),'A Linha do Tempo deve derivar Cenas automaticamente.');
+assert.ok(ui.includes('const nodes=ordered(a.scenes).map(scene=>'),'A Linha do Tempo deve derivar Cenas automaticamente, sem fonte paralela.');
 assert.ok(ui.includes("data-scene-field=\"areaId\""),'As Cenas devem selecionar um Local da exploração.');
 assert.equal(ui.includes('>Handouts<'),false,'A interface não deve exibir Handouts como rótulo.');
 assert.ok(ui.includes('itens-magicos.html?ref='),'Tesouros devem abrir referência da Biblioteca.');
