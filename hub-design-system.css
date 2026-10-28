@@ -73,6 +73,27 @@ body.hub-shell-enabled .hub-app-content :is(
   gap:var(--hub-ds-space-3);
 }
 
+
+/* Diretórios de Personagens e NPCs usam as mesmas métricas estruturais;
+   a página de painel permanece propositalmente mais compacta. */
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-grid,.hub-roster-choice-grid
+) {gap:var(--hub-ds-card-gap)!important}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-heading,.hub-area-heading
+) {margin-bottom:var(--hub-ds-space-5)}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-metrics,.hub-directory-filters
+) {margin-bottom:var(--hub-ds-space-5)}
+body.hub-shell-enabled .hub-app-content :is(
+  .hub-directory-card,.hub-directory-metric,.hub-directory-filters,
+  .hub-directory-editor,.hub-roster-choice
+) {
+  border-radius:var(--hub-ds-card-radius);
+  transition:border-color var(--hub-ds-motion-standard) var(--hub-ds-ease),
+             background-color var(--hub-ds-motion-standard) var(--hub-ds-ease);
+}
+
 /* Família de navegação horizontal por seções.
    O marcador JS já é compartilhado: apenas os tokens visuais são centralizados.
    Menus de criação (.wizard-nav) são uma variante, não uma cópia da section-nav. */
