@@ -28,6 +28,10 @@ assert.ok(page.includes('x.nome_original'),'Busca e mapeamento devem reter o nom
 for(const token of ['<b>PDF:</b>','<b>Revisão core:</b>','<b>Completude:</b>','<span class="badge">versão mais recente</span>','<span class="badge">${esc(x.ruleset)}</span>']){
  assert.ok(!page.includes(token),`Campo ou selo indevido em Magias: ${token}`);
 }
+assert.ok(page.includes("params.get('ref')"),'Links legados ?ref= devem abrir o verbete original.');
+const generator=read('scripts/gerar_referencias_hub.py');
+assert.ok(generator.includes('localizacao-ptbr-magias-completo.json'),'Índice semântico deve consumir nomes PT-BR.');
+assert.ok(generator.includes('orig = identity'),'Identidade semântica da magia não pode mudar com a tradução.');
 assert.ok(rules.includes("if(page==='magias.html')return"),'Política da Biblioteca não pode inserir aviso em Magias.');
 assert.ok(builder.includes('names[x.originalName]'),'Construtor deve preservar ID e localizar nome original.');
 assert.ok(sheet.includes('names[spell.originalName]'),'Ficha deve preservar ID e localizar nome original.');

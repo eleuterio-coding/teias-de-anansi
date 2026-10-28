@@ -108,3 +108,11 @@ test('os 537 verbetes de Magias preservam links individuais e nomes PT-BR',async
   await page.goBack();
   await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo');
 });
+
+test('links semânticos antigos continuam abrindo o verbete de magia traduzido',async({page})=>{
+  for(const path of ['/magias.html?ref=fireball#ref-fireball','/magias.html#ref-fireball']){
+    await page.goto(path,{waitUntil:'domcontentloaded'});
+    await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo',{timeout:30000});
+    await expect(page.locator('#detalhe .spell-verbetelink')).toHaveAttribute('href','magias.html?magia=fireball');
+  }
+});
