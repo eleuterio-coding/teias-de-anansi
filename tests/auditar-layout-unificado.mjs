@@ -53,7 +53,7 @@ for(const file of standardPages) {
 for(const file of libraryPages) {
   const html=read(file);
   assert.match(html,/scripts\/hub-ux\.js\?v=/,file+' deve carregar o shell.');
-  const theme=file==='bibliotecas.html'?/biblioteca-light\\.css\\?v=20261028-library-compact-cards1/:/biblioteca-light\\.css\\?v=20261028-hub-layout1/;
+  const theme=file==='bibliotecas.html'?/biblioteca-light\.css\?v=20261028-library-compact-cards1/:/biblioteca-light\.css\?v=20261028-hub-layout1/;
   assert.match(html,theme,file+' deve carregar o tema escuro.');
   assert.ok(shell.includes('"'+file+'"'),file+' precisa constar no shell.');
   assert.ok(!html.includes('id="hub-force-light-theme"'),file+' não deve forçar o tema antigo.');
