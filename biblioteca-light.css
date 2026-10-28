@@ -1,178 +1,411 @@
-:root {
-  color-scheme: only light !important;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-  --hub-library-border: #d5d5d5;
-  --hub-library-border-soft: #e7e7e7;
-  --hub-library-surface: #ffffff;
-  --hub-library-hover: #f5f5f5;
-  --hub-library-muted: #4a4a4a;
+/* Biblioteca — mesma linguagem visual das demais áreas de Teias de Anansi.
+   Estilos limitados ao conteúdo das páginas da Biblioteca: a barra lateral,
+   o topo e os diálogos continuam sob responsabilidade de hub-ux.css.
+   Os nomes e IDs legados dos catálogos são preservados. */
+html:has(body.hub-shell-enabled.hub-content-light) {
+  color-scheme: dark !important;
+  background: var(--hub-bg, #080d14) !important;
 }
-
-* { box-sizing: border-box; }
-
-html,
-body {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+body.hub-shell-enabled.hub-content-light {
+  color-scheme: dark;
+  background: var(--hub-bg, #080d14) !important;
+  color: var(--hub-text, #f4f7fb) !important;
 }
-
-body {
-  width: min(1120px, calc(100% - 48px)) !important;
-  max-width: 1120px !important;
-  margin: 0 auto !important;
-  padding: 24px 0 40px !important;
-  line-height: 1.55 !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content {
+  --b: var(--hub-border, #223245);
+  --soft: var(--hub-surface-2, #131f2b);
+  --muted: var(--hub-muted, #8290a3);
+  width: 100%;
+  max-width: 1540px;
+  min-width: 0;
+  color: var(--hub-text, #f4f7fb);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
 }
-
-body,
-button,
-body:not(.hub-shell-enabled) :is(input,select,textarea),
-body.hub-shell-enabled .hub-app-content :is(input,select,textarea) {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(h1,h2,h3,h4,strong,b,dt) {
+  color: var(--hub-text, #f4f7fb);
 }
-
-body:not(.hub-shell-enabled) *,
-body.hub-shell-enabled .hub-app-content * {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content h1 {
+  margin: 0 0 10px !important;
+  font-size: clamp(1.7rem, 2.6vw, 2.1rem) !important;
+  font-weight: 760;
+  line-height: 1.18 !important;
 }
-
-body:not(.hub-shell-enabled) *::before,
-body:not(.hub-shell-enabled) *::after,
-body.hub-shell-enabled .hub-app-content *::before,
-body.hub-shell-enabled .hub-app-content *::after {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content h2 { font-size: clamp(1.12rem, 1.6vw, 1.35rem); }
+body.hub-shell-enabled.hub-content-light .hub-app-content > header,
+body.hub-shell-enabled.hub-content-light .hub-app-content > .top {
+  margin: 0 0 20px !important;
 }
-
-body:not(.hub-shell-enabled) header,body.hub-shell-enabled .hub-app-content header { margin: 0 0 18px !important; }
-h1 { margin: 8px 0 18px !important; font-size: clamp(1.8rem, 4vw, 2.35rem) !important; line-height: 1.12 !important; }
-h2 { line-height: 1.2 !important; }
-
-body > p:first-child,
-body > nav:first-child {
-  margin-top: 0 !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content > p:first-child:has(a[href]) {
+  margin: 0 0 18px !important;
+  font-size: .85rem;
 }
-
-body:not(.hub-shell-enabled) :is(a,a:link,a:visited,a:hover,a:active,a:focus),
-body.hub-shell-enabled .hub-app-content :is(a,a:link,a:visited,a:hover,a:active,a:focus) {
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content > p:first-child > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 5px 10px;
+  border: 1px solid var(--hub-border, #223245);
+  border-radius: 8px;
+  background: var(--hub-surface, #101923);
+  text-decoration: none;
 }
-
-body:not(.hub-shell-enabled) a:hover,body.hub-shell-enabled .hub-app-content a:hover { text-decoration-thickness: 2px; }
-
-body:not(.hub-shell-enabled) :is(input,select,textarea,button,option,optgroup),
-body.hub-shell-enabled .hub-app-content :is(input,select,textarea,button,option,optgroup) {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-  color-scheme: light !important;
-  border-color: #bdbdbd !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(a,a:link,a:visited) {
+  color: var(--hub-accent-2, #67b8ff) !important;
+  -webkit-text-fill-color: currentColor;
 }
-
-input,
-select,
-textarea {
-  border: 1px solid #bdbdbd !important;
-  border-radius: 8px !important;
-  padding: 10px 12px !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content a:hover {
+  color: #b7dfff !important;
 }
-
-body:not(.hub-shell-enabled) button,body.hub-shell-enabled .hub-app-content button { border-color: #bdbdbd !important; }
-body:not(.hub-shell-enabled) input::placeholder,
-body:not(.hub-shell-enabled) textarea::placeholder,
-body.hub-shell-enabled .hub-app-content input::placeholder,
-body.hub-shell-enabled .hub-app-content textarea::placeholder { color: #555555 !important; -webkit-text-fill-color: #555555 !important; opacity: 1 !important; }
-
-.muted,
-.resumo,
-.contagem,
-.original,
-.meta,
-.count,
-.classe,
-.source-strip,
-.fonte,
-.licenca,
-small {
-  color: var(--hub-library-muted) !important;
-  -webkit-text-fill-color: var(--hub-library-muted) !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  .muted,.resumo,.meta,.contagem,.original,.count,.categoria,.classe,.sub,
+  .subtitulo,.source-strip,.fonte,.licenca,.resultado,.mini,.tipo-feat,
+  .prerequisito,.status,.catalog-results span,.results span
+) {
+  color: var(--hub-muted, #8290a3) !important;
   opacity: 1 !important;
 }
-
-/* Estrutura visual comum de cartões e painéis */
-details,
-.item,
-.subclasse,
-.card,
-.painel,
-.box,
-.stat,
-.nota,
-.modulos li {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
-  border-color: var(--hub-library-border) !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  .nota,.aviso,.warning,.warn,.erro,.vazio,.empty,.regras,.auditoria,.roteamento
+) {
+  min-width: 0;
+  padding: 14px 16px;
+  margin-block: 14px;
+  border: 1px solid var(--hub-border, #223245) !important;
+  border-radius: 11px !important;
+  background: var(--hub-surface-2, #131f2b) !important;
+  color: var(--hub-text-2, #c5cfdb) !important;
 }
-
-details,
-.item,
-.subclasse,
-.card,
-.painel {
-  border-radius: 10px !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.erro,.warning,.warn) {
+  border-color: rgba(255,107,107,.42) !important;
 }
-
-summary:hover,
-.item:hover,
-.item.on,
-.modulos a:hover {
-  background: var(--hub-library-hover) !important;
-  background-color: var(--hub-library-hover) !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.nota,.aviso,.regras,.auditoria) strong {
+  color: var(--hub-text, #f4f7fb);
 }
-
-/* Filtros e áreas de busca seguem a mesma grade */
-.controles,
-.tools {
-  background: #ffffff !important;
-  background-color: #ffffff !important;
+/* Busca e filtragem: mesmos inputs, superfícies e raios do restante do Hub. */
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.catalog-controls) {
+  display: grid;
+  gap: 12px !important;
+  align-items: end;
+  width: 100%;
+  margin: 16px 0 14px !important;
+  padding: 16px;
+  border: 1px solid var(--hub-border, #223245);
+  border-radius: var(--hub-radius, 14px);
+  background: var(--hub-surface, #101923) !important;
 }
-
-.controles {
-  gap: 10px !important;
-  margin: 18px 0 12px !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.tools,.controls) {
+  gap: 10px;
+  background: transparent !important;
 }
-
-/* Tabelas */
-table { width: 100% !important; border-collapse: collapse !important; background: #ffffff !important; }
-th, td { color: #000000 !important; border-color: var(--hub-library-border-soft) !important; }
-th { background: #f7f7f7 !important; font-weight: 700 !important; }
-
-/* Chips e badges: monocromáticos, sem depender do tema do sistema */
-.badge,
-.tag {
-  background: #ffffff !important;
-  color: #000000 !important;
-  border-color: #bdbdbd !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) > * {
+  min-width: 0;
 }
-
-/* Elementos SVG usados em alguns módulos */
-svg text { fill: #000000 !important; }
-
-/* Estados de foco acessíveis */
-body:not(.hub-shell-enabled) :focus-visible,
-body.hub-shell-enabled .hub-app-content :focus-visible {
-  outline: 2px solid #000000 !important;
-  outline-offset: 2px !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.tools,.controls,.catalog-controls) label {
+  color: var(--hub-text-2, #c5cfdb);
+  font-size: .86rem;
+  font-weight: 650;
 }
-
-@media (max-width: 750px) {
-  body {
-    width: min(100% - 28px, 1120px) !important;
-    padding: 16px 0 28px !important;
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,select,textarea) {
+  max-width: 100%;
+  min-width: 0;
+  border: 1px solid #2b3d50 !important;
+  border-radius: 9px !important;
+  background: #0b141e !important;
+  color: var(--hub-text, #f4f7fb) !important;
+  -webkit-text-fill-color: var(--hub-text, #f4f7fb) !important;
+  color-scheme: dark !important;
+  font-family: inherit !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,textarea)::placeholder {
+  color: #8191a6 !important;
+  -webkit-text-fill-color: #8191a6 !important;
+  opacity: 1 !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(input,select,textarea):focus-visible {
+  border-color: var(--hub-accent, #2f9cff) !important;
+  outline: 2px solid var(--hub-accent-2, #67b8ff) !important;
+  outline-offset: 1px !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.badge,.chip,.tag,.pill,.catalog-badge) {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #314459 !important;
+  border-radius: 999px;
+  background: #172636 !important;
+  color: #bdd9ed !important;
+  -webkit-text-fill-color: #bdd9ed !important;
+  opacity: 1 !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.badge,.chip,.tag,.pill) {
+  padding: 3px 8px;
+}
+/* Catálogo da página inicial — cartões clicáveis como os menus do Hub. */
+body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page {
+  max-width: 1400px;
+  width: 100%;
+  margin-inline: auto;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page > header {
+  margin: 0 0 20px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .hub-library-page > header p {
+  margin: 0;
+  color: var(--hub-text-2, #c5cfdb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0,1fr)) !important;
+  gap: 14px !important;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos li {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--hub-border, #223245) !important;
+  border-radius: var(--hub-radius, 14px) !important;
+  background: var(--hub-surface, #101923) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start !important;
+  justify-content: space-between;
+  gap: 12px !important;
+  width: 100%;
+  min-height: 142px !important;
+  height: 100%;
+  padding: 19px 20px !important;
+  background: transparent !important;
+  color: var(--hub-text, #f4f7fb) !important;
+  text-decoration: none;
+  transition: background .16s, transform .16s;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a:hover,
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a:focus-visible {
+  background: var(--hub-surface-2, #131f2b) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos li:hover {
+  border-color: var(--hub-accent, #2f9cff) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .nome {
+  display: block;
+  white-space: normal !important;
+  font-size: 1.06rem !important;
+  font-weight: 750;
+  line-height: 1.35;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .nome::before {
+  color: var(--hub-accent-2, #67b8ff) !important;
+  font-variant-numeric: tabular-nums;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .modulos .contagem {
+  display: block;
+  white-space: normal;
+  font-size: .78rem;
+  color: var(--hub-muted, #8290a3) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .catalog-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-left: 8px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .catalog-badge {
+  padding: 2px 7px;
+  font-size: .67rem;
+  font-weight: 700;
+}
+/* Cartões de seleção e painéis de detalhe internos. */
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  .painel,.panel,.art,.box,.stat,.bloco,.card,.ficha,.registro,.subclasse,
+  .antecedente,.especie,.classe,.grupo,.idioma,.bugiganga,.item,.talento
+) {
+  border-color: var(--hub-border, #223245) !important;
+  color: var(--hub-text-2, #c5cfdb);
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  .painel,.panel,.art,.box,.stat,.bloco,.card,.registro,.subclasse,
+  .antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+) {
+  background: var(--hub-surface, #101923) !important;
+  border-radius: var(--hub-radius-sm, 10px);
+  box-shadow: none !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  details,.registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+) {
+  overflow: hidden;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  details,.registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+) > summary {
+  cursor: pointer;
+  background: transparent !important;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content details > summary:hover {
+  background: var(--hub-surface-2, #131f2b) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content details[open] {
+  border-color: #395775 !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content details[open] > summary {
+  border-bottom: 1px solid var(--hub-border-soft, #1a2837);
+  background: #142334 !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.corpo,.detalhe,.detail) {
+  color: var(--hub-text-2, #c5cfdb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.item,.talento) {
+  background: var(--hub-surface, #101923) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item {
+  border-color: var(--hub-border, #223245) !important;
+  color: var(--hub-text-2, #c5cfdb) !important;
+  background: var(--hub-surface, #101923) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:hover,
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
+  border-color: var(--hub-accent, #2f9cff) !important;
+  background: #183049 !important;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item:is(.on,.active) {
+  box-shadow: inset 3px 0 0 var(--hub-accent, #2f9cff);
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.lista,.list) .item small {
+  color: var(--hub-muted, #8290a3) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .layout {
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) !important;
+  gap: 16px !important;
+  align-items: start;
+  min-width: 0;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .layout > * {
+  min-width: 0;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.painel,.panel) {
+  border: 1px solid var(--hub-border, #223245) !important;
+  padding: 16px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.painel,.panel) :is(.tools,.controls) {
+  padding: 0;
+  border: 0;
+  margin: 0 0 12px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.stat,.bloco,.ficha) {
+  background: var(--hub-surface-2, #131f2b) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+  .feature,.trait,.linhagem,.mecanica,.secao-regra,.house-override,.kv
+) {
+  border-left-color: var(--hub-accent, #2f9cff) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.meta,.fonte,.source-strip) {
+  border-top-color: var(--hub-border, #223245) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.resultado,.count) {
+  font-size: .84rem;
+}
+/* Tabelas e código preservam leitura e rolagem sem estourar o painel. */
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.tabela,.tabela-wrap,.tablewrap,.table-wrap) {
+  max-width: 100%;
+  overflow-x: auto;
+  border-color: var(--hub-border, #223245) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--hub-surface, #101923) !important;
+  color: var(--hub-text-2, #c5cfdb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(th,td) {
+  border-color: var(--hub-border, #223245) !important;
+  color: var(--hub-text-2, #c5cfdb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content th {
+  background: #192a3b !important;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(pre,code) {
+  color: #c1d9ee !important;
+  background: #0b141e !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content pre {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--hub-border, #223245);
+  border-radius: 9px;
+  padding: 12px;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-search-results,.results a,.catalog-results a) {
+  border: 1px solid var(--hub-border, #223245) !important;
+  border-radius: 11px;
+  background: var(--hub-surface, #101923) !important;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a) {
+  text-decoration: none;
+  transition: border-color .16s, background .16s;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a,.card[href]):hover {
+  border-color: var(--hub-accent, #2f9cff) !important;
+  background: var(--hub-surface-2, #131f2b) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content :is(.catalog-results a,.results a,.card[href]) :is(strong,span) {
+  color: inherit;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content .card[href] {
+  text-decoration: none;
+  color: var(--hub-text, #f4f7fb) !important;
+}
+body.hub-shell-enabled.hub-content-light .hub-app-content ::selection {
+  background: #265c8b;
+  color: #fff;
+}
+@media (max-width: 1120px) {
+  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+    grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  }
+}
+@media (max-width: 900px) {
+  body.hub-shell-enabled.hub-content-light .hub-app-content .layout {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+  body.hub-shell-enabled.hub-content-light .hub-app-content .layout > :is(.painel,.panel) {
+    width: 100%;
+  }
+}
+@media (max-width: 670px) {
+  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos {
+    grid-template-columns: minmax(0,1fr) !important;
+  }
+  body.hub-shell-enabled.hub-content-light .hub-app-content .modulos a {
+    min-height: 116px !important;
+    padding: 16px !important;
+  }
+  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.controles,.catalog-controls) {
+    grid-template-columns: 1fr !important;
+    padding: 12px;
+  }
+  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.filtros,.grade) {
+    grid-template-columns: 1fr !important;
+  }
+  body.hub-shell-enabled.hub-content-light .hub-app-content :is(
+    .registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+  ) > summary {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.hub-shell-enabled.hub-content-light .hub-app-content :is(.modulos a,.results a,.catalog-results a) {
+    transition: none;
   }
 }
