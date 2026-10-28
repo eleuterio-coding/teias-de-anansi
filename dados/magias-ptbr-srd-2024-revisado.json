@@ -1,0 +1,68 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v1",
+  "base": "Descrições licenciadas do SRD 5.2.1, CC BY 4.0",
+  "nota": "Traduções revisadas da edição 2024, sem importar efeitos de 2014.",
+  "total": 17,
+  "descricoes": {
+    "Resistance": {
+      "descricao": "Você toca uma criatura voluntária e escolhe um tipo de dano: ácido, contundente, frio, fogo, elétrico, necrótico, perfurante, venenoso, radiante, cortante ou trovejante. Quando a criatura sofrer dano do tipo escolhido antes do término da magia, reduza o dano total recebido em 1d4. Uma criatura só pode receber esse benefício uma vez por turno."
+    },
+    "Guidance": {
+      "descricao": "Você toca uma criatura voluntária e escolhe uma perícia. Até a magia terminar, a criatura adiciona 1d4 a qualquer teste de atributo que utilize a perícia escolhida."
+    },
+    "Fireball": {
+      "descricao": "Um rastro luminoso parte de você até um ponto à sua escolha dentro do alcance e se expande, acompanhado por um estrondo abafado, em uma explosão de chamas. Cada criatura em uma esfera de 6 metros de raio centrada nesse ponto deve realizar uma salvaguarda de Destreza. Em caso de falha, sofre 8d6 de dano de fogo; em caso de sucesso, sofre metade desse dano. Objetos inflamáveis na área que não estejam sendo vestidos ou carregados começam a queimar.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 3º, o dano aumenta em 1d6 por círculo do espaço acima do 3º."
+    },
+    "Magic Missile": {
+      "descricao": "Você cria três dardos luminosos de energia mágica. Cada dardo atinge uma criatura à sua escolha que você possa ver dentro do alcance, causando 1d4 + 1 de dano de energia ao alvo. Todos os dardos atingem simultaneamente; você pode direcioná-los contra uma única criatura ou distribuí-los entre várias.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 1º, você cria um dardo adicional por círculo do espaço acima do 1º."
+    },
+    "Bless": {
+      "descricao": "Você abençoa até três criaturas dentro do alcance. Sempre que um dos alvos realizar uma jogada de ataque ou uma salvaguarda antes do término da magia, adiciona 1d4 ao resultado dessa jogada.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 1º, você pode escolher uma criatura adicional para cada círculo do espaço acima do 1º."
+    },
+    "Mage Hand": {
+      "descricao": "Uma mão espectral flutuante surge em um ponto à sua escolha dentro do alcance e permanece pela duração da magia. Ela desaparece se ficar a mais de 9 metros de você ou se você conjurar esta magia novamente. Ao conjurar, você pode usar a mão para manipular um objeto, abrir uma porta ou recipiente destrancado, guardar ou retirar um item de um recipiente aberto ou despejar o conteúdo de um frasco. Nos turnos seguintes, você pode executar essas tarefas novamente usando uma ação Mágica; como parte dessa ação, também pode mover a mão em até 9 metros. A mão não pode atacar, ativar itens mágicos nem carregar mais de 4,5 kg."
+    },
+    "Shield": {
+      "descricao": "Uma barreira imperceptível de energia mágica envolve você. Até o início do seu próximo turno, sua Classe de Armadura recebe um bônus de +5, inclusive contra o ataque que desencadeou a magia. Durante esse período, você também não sofre dano da magia Mísseis Mágicos."
+    },
+    "Cure Wounds": {
+      "descricao": "Uma criatura que você toca recupera uma quantidade de Pontos de Vida igual a 2d8 mais seu modificador de atributo de conjuração.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 1º, a cura aumenta em 2d8 para cada círculo do espaço acima do 1º."
+    },
+    "Mage Armor": {
+      "descricao": "Você toca uma criatura voluntária que não esteja usando armadura. Até o término da magia, a Classe de Armadura base do alvo passa a ser 13 + seu modificador de Destreza. A magia termina antecipadamente se o alvo vestir uma armadura."
+    },
+    "Fly": {
+      "descricao": "Você toca uma criatura voluntária. Durante a magia, o alvo recebe deslocamento de voo de 18 metros e pode pairar. Quando a magia termina, o alvo cai caso ainda esteja no ar e não disponha de outro meio de impedir a queda.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 3º, você pode escolher uma criatura adicional para cada círculo do espaço acima do 3º."
+    },
+    "Light": {
+      "descricao": "Você toca um objeto de tamanho Grande ou menor que não esteja sendo vestido ou carregado por outra criatura. Até o término da magia, o objeto emite luz plena em um raio de 6 metros e luz fraca por mais 6 metros além dessa área. Você escolhe a cor da luz. Cobrir o objeto com algo opaco bloqueia a iluminação. A magia termina se você a conjurar novamente."
+    },
+    "Hold Person": {
+      "descricao": "Escolha um humanoide que você possa ver dentro do alcance. O alvo deve ser bem-sucedido em uma salvaguarda de Sabedoria ou ficará Paralisado durante a magia. Ao final de cada turno, o alvo repete a salvaguarda; se obtiver sucesso, a magia termina para ele.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, você pode escolher um humanoide adicional por círculo do espaço acima do 2º."
+    },
+    "Longstrider": {
+      "descricao": "Você toca uma criatura. Até o término da magia, o deslocamento do alvo aumenta em 3 metros.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 1º, você pode escolher uma criatura adicional para cada círculo do espaço acima do 1º."
+    },
+    "Feather Fall": {
+      "descricao": "Escolha até cinco criaturas em queda dentro do alcance. A velocidade de descida de cada alvo é reduzida a 18 metros por rodada até o término da magia. Se uma criatura atingir o solo antes do término da magia, não sofre dano dessa queda e o efeito termina para ela."
+    },
+    "Invisibility": {
+      "descricao": "Uma criatura que você toca recebe a condição Invisível até o término da magia. O efeito termina antecipadamente, imediatamente após o alvo realizar uma jogada de ataque, causar dano ou conjurar uma magia.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, você pode escolher uma criatura adicional por círculo do espaço acima do 2º."
+    },
+    "Sleep": {
+      "descricao": "Cada criatura à sua escolha dentro de uma esfera de 1,5 metro de raio centrada em um ponto dentro do alcance deve ser bem-sucedida em uma salvaguarda de Sabedoria ou ficará Incapacitada até o fim do próprio turno seguinte. Nesse momento, o alvo repete a salvaguarda. Se falhar novamente, ficará Inconsciente durante a duração restante da magia. O efeito termina sobre um alvo se ele sofrer dano ou se alguém a até 1,5 metro gastar uma ação para despertá-lo. Criaturas que não dormem, como elfos, ou que são imunes à condição Exaustão obtêm sucesso automático nas salvaguardas contra esta magia."
+    },
+    "Healing Word": {
+      "descricao": "Uma criatura à sua escolha que você possa ver dentro do alcance recupera Pontos de Vida iguais a 2d4 mais seu modificador de atributo de conjuração.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 1º, a cura aumenta em 2d4 por círculo do espaço acima do 1º."
+    }
+  }
+}
