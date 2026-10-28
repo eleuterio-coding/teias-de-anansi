@@ -149,5 +149,5 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
  updateAppShellContext();
 }
 
-async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261022-chronicles-final3');await import('./adventure-ui.js?v=20261027-oficina-conteudo1')}
+async function start(){if(playerMode()){readOnly();window.addEventListener('hub-rpg:remote-updated',event=>{event.detail?.claim?.();readOnly()});return}await import('./adventure-integrity-ui.js?v=20261022-chronicles-final3');await import('./adventure-ui.js?v=20261028-consulta-edicao1')}
 start();
