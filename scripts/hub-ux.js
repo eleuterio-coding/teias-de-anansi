@@ -18,6 +18,13 @@ function ensureStyles(){
   layout.href=new URL('../hub-layout.css?v=20261015-unified-layout1',import.meta.url).href;
   document.head.appendChild(layout);
  }
+ // Camada final carregada em todas as rotas que utilizam o shell do Hub.
+ // Arquivo próprio: tokens semânticos, famílias de componentes e motion.
+ if(!document.getElementById('hub-design-system-styles')){
+  const design=document.createElement('link');design.id='hub-design-system-styles';design.rel='stylesheet';
+  design.href=new URL('../hub-design-system.css?v=20261028-design-system-global1',import.meta.url).href;
+  document.head.appendChild(design);
+ }
 }
 function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href="${href}"]`))return;const link=document.createElement('link');link.rel='preconnect';link.href=href;link.crossOrigin='anonymous';document.head.appendChild(link)}
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
