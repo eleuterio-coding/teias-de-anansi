@@ -59,7 +59,7 @@ body.hub-shell-enabled.hub-content-light .hub-app-content a:hover {
   color: #b7dfff !important;
 }
 body.hub-shell-enabled.hub-content-light .hub-app-content :is(
-  .muted,.resumo,.meta,.contagem,.original,.count,.categoria,.classe,.sub,
+  .muted,.resumo,.meta,.contagem,.original,.count,.categoria,.subclasse .classe,.sub,
   .subtitulo,.source-strip,.fonte,.licenca,.resultado,.mini,.tipo-feat,
   .prerequisito,.status,.catalog-results span,.results span
 ) {
@@ -224,26 +224,26 @@ body.hub-shell-enabled.hub-content-light .hub-app-content .catalog-badge {
 /* Cartões de seleção e painéis de detalhe internos. */
 body.hub-shell-enabled.hub-content-light .hub-app-content :is(
   .painel,.panel,.art,.box,.stat,.bloco,.card,.ficha,.registro,.subclasse,
-  .antecedente,.especie,.classe,.grupo,.idioma,.bugiganga,.item,.talento
+  .antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga,.item,.talento
 ) {
   border-color: var(--hub-border, #223245) !important;
   color: var(--hub-text-2, #c5cfdb);
 }
 body.hub-shell-enabled.hub-content-light .hub-app-content :is(
   .painel,.panel,.art,.box,.stat,.bloco,.card,.registro,.subclasse,
-  .antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+  .antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) {
   background: var(--hub-surface, #101923) !important;
   border-radius: var(--hub-radius-sm, 10px);
   box-shadow: none !important;
 }
 body.hub-shell-enabled.hub-content-light .hub-app-content :is(
-  details,.registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+  details,.registro,.subclasse,.antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) {
   overflow: hidden;
 }
 body.hub-shell-enabled.hub-content-light .hub-app-content :is(
-  details,.registro,.subclasse,.antecedente,.especie,.classe,.grupo,.idioma,.bugiganga
+  details,.registro,.subclasse,.antecedente,.especie,details.classe,.grupo,.idioma,.bugiganga
 ) > summary {
   cursor: pointer;
   background: transparent !important;
