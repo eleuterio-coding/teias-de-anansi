@@ -24,7 +24,7 @@ test('Visão Geral mostra apenas informações sem campos, exclusão ou alteraç
  await visit(page);
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
  await expect(page.locator('#adventure-create-content')).toBeHidden();
- await expect(page.locator('#adventure-overview-content button,input,select,textarea')).toHaveCount(0);
+ await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
  await expect(page.locator('#adventure-overview-content [draggable="true"]')).toHaveCount(0);
  for(const id of ['overview-participantes','overview-cenas','overview-locais','overview-mapas','overview-npcs','overview-monstros'])
   await expect(page.locator('#'+id)).toBeVisible();
@@ -44,7 +44,7 @@ test('Jogadores são adicionados e editados somente na Oficina; card final é in
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
  await expect(page.locator('#overview-participantes .adventure-read-player')).toHaveCount(1);
  await expect(page.locator('#overview-participantes')).toContainText('Ana');
- await expect(page.locator('#overview-participantes button,input,select,textarea')).toHaveCount(0);
+ await expect(page.locator('#overview-participantes :is(button,input,select,textarea)')).toHaveCount(0);
  expect((await saved(page)).participantUsernames).toContain('ana');
  await create(page,'player');
  await expect(page.locator('#adventure-member-list [data-member-row="ana"]')).toBeVisible();
@@ -74,7 +74,7 @@ test('Cenas criadas reaparecem na Visão Geral e editores preservam campos avan�
  await expect.poll(async()=>(await saved(page)).scenes[0].readAloud).toBe('A rainha revela seu segredo.');
  await page.locator('#adventure-overview-tab').click();
  await expect(page.locator('#overview-cenas')).toContainText('A rainha revela seu segredo.');
- await expect(page.locator('#adventure-overview-content button,input,select,textarea')).toHaveCount(0);
+ await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
  expect(errors).toEqual([]);
 });
 
@@ -116,5 +116,5 @@ test('Biblioteca de monstros e configurações ficam exclusivas na área de cria
  await expect(page.locator('#notas-mestre')).toBeVisible();
  await expect(page.locator('#new-adventure-monster')).toBeHidden();
  await page.locator('#adventure-overview-tab').click();
- await expect(page.locator('#adventure-overview-content button,input,select,textarea')).toHaveCount(0);
+ await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
 });
