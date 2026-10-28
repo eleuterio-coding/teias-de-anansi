@@ -13,6 +13,7 @@ on:
       - 'scripts/library-catalog-status.js'
       - 'scripts/gerar_biblioteca_contagens.py'
       - 'tests/auditar-biblioteca-cards.mjs'
+      - 'tests/auditar_biblioteca_contagens.py'
       - 'magias.html'
       - 'dados/localizacao-ptbr-magias-completo.json'
       - 'scripts/character-builder/spells.js'
@@ -34,6 +35,7 @@ on:
       - 'scripts/library-catalog-status.js'
       - 'scripts/gerar_biblioteca_contagens.py'
       - 'tests/auditar-biblioteca-cards.mjs'
+      - 'tests/auditar_biblioteca_contagens.py'
       - 'magias.html'
       - 'dados/localizacao-ptbr-magias-completo.json'
       - 'scripts/character-builder/spells.js'
@@ -59,6 +61,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Validar 537 nomes e links das magias
         run: node tests/auditar-magias-ptbr.mjs
+      - name: Validar contagens nas fontes reais
+        run: python3 tests/auditar_biblioteca_contagens.py
       - name: Validar contratos dos cards e catálogo
         run: node tests/auditar-biblioteca-cards.mjs
       - name: Testar 18 módulos, detalhes e responsividade
