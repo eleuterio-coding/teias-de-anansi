@@ -437,8 +437,8 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
 #adventure-root #monstros .adventure-monsters-attached{margin-top:15px;padding-top:14px;border-top:1px solid var(--hub-border,#40546c)}
 #adventure-root #monstros .adventure-monsters-attached>summary{font-weight:700;cursor:pointer;padding:8px 0}
 #adventure-root #monstros .adventure-monsters-attached .story-list{margin:12px 0}
-#adventure-root #sessoes .adventure-linked-session{display:grid;gap:8px;min-width:0}
-#adventure-root #sessoes .adventure-linked-session>.campaign-disclosure-toggle{justify-self:start;padding:9px 11px;border:1px solid var(--hub-border,#40546c);border-radius:9px;background:rgba(80,130,180,.07)}
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-linked-session{display:grid;gap:8px;min-width:0}
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-linked-session>.campaign-disclosure-toggle{justify-self:start;padding:9px 11px;border:1px solid var(--hub-border,#40546c);border-radius:9px;background:rgba(80,130,180,.07)}
 @media(max-width:620px){#adventure-root #monstros .adventure-monster-preview dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* Mapas publicados: imagem integral sem revelar dados privados do mapa. */
@@ -464,22 +464,22 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   padding:8px 12px;
   line-height:1.2;
 }
-#adventure-root #sessoes .adventure-linked-session{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-linked-session{
   display:block;
   min-width:0;
 }
-#adventure-root #sessoes .adventure-session-card-wrap{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap{
   position:relative;
   height:100%;
   min-width:0;
 }
-#adventure-root #sessoes .adventure-session-card-wrap>.campaign-player-story-card{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap>.campaign-player-story-card{
   display:flex;
   align-items:stretch;
   min-height:214px;
   height:100%;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-content{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-content{
   display:flex;
   flex:1;
   flex-direction:column;
@@ -489,7 +489,7 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   min-height:0;
   padding:18px;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-information{
   display:grid;
   align-content:start;
   justify-items:start;
@@ -498,11 +498,11 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   padding-right:155px;
   text-align:left;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information h3{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-information h3{
   margin:0;
   overflow-wrap:anywhere;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-footer{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-footer{
   display:flex;
   flex-direction:row-reverse;
   justify-content:space-between;
@@ -511,13 +511,13 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   width:100%;
   margin-top:auto;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-status{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-status{
   margin-left:auto;
 }
-#adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-open{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-open{
   margin-right:auto;
 }
-#adventure-root #sessoes .adventure-session-visibility{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-visibility{
   position:absolute;
   z-index:3;
   top:12px;
@@ -525,7 +525,7 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   max-width:calc(100% - 24px);
   pointer-events:none;
 }
-#adventure-root #sessoes .adventure-session-visibility>.campaign-disclosure-toggle{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-visibility>.campaign-disclosure-toggle{
   display:inline-flex;
   align-items:center;
   gap:7px;
@@ -540,17 +540,17 @@ body.hub-shell-enabled.hub-content-light #sessions-list .session-adventure-scrol
   cursor:pointer;
   pointer-events:auto;
 }
-#adventure-root #sessoes .adventure-session-visibility input{
+#adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-visibility input{
   margin:0;
   accent-color:#69b7ff;
   cursor:pointer;
 }
 @media(max-width:620px){
-  #adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-information{
+  #adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-information{
     padding-right:0;
     padding-top:43px;
   }
-  #adventure-root #sessoes .adventure-session-card-wrap .campaign-player-story-content{
+  #adventure-root :is(#sessoes,#overview-sessoes) .adventure-session-card-wrap .campaign-player-story-content{
     padding:14px;
   }
 }

@@ -16,7 +16,7 @@ import{renderAdventureExploration,renderAdventureFactions,bindAdventureExplorati
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261027-release-reset3';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261027-scenes-cast-v1';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261027-release-reset3';
-import{renderAdventureOverview}from'./adventure-overview-ui.js?v=20261028-view-read-only1';
+import{renderAdventureOverview}from'./adventure-overview-ui.js?v=20261028-sessoes-vinculadas1';
 import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261027-campaign-adventure-layout3';
 import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261027-campaign-adventure-layout3';
 

@@ -2,6 +2,7 @@
    As entidades continuam nos modelos originais e nos formulários da Oficina. */
 import {adventureAssignments,adventureMembers} from './adventure-roster-ui.js?v=20261027-release-reset3';
 import {playerAvatarHtml,characterAvatarHtml} from './profile-images.js?v=20261021-user1';
+import {renderCampaignSessionCard} from './campaign-session-card.js';
 import {imageElementHtml} from './image-media.js?v=20261023-simplified3';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rows=value=>Array.isArray(value)?value:[];
@@ -63,8 +64,10 @@ export function renderAdventureOverview(a,c,characters=[]){
   p(m.description),fields([['Recompensa',m.reward],['Consequência',m.consequence],['Notas',m.notes]]),'mission')).join('');
  const sessionIds=new Set(rows(a.sessionIds)),linkedScenes=new Set(rows(a.scenes).map(s=>s.sessionId).filter(Boolean));
  const sessions=rows(c?.sessions).filter(s=>s.adventureId===a.id||sessionIds.has(s.id)||linkedScenes.has(s.id));
- const sessionCards=sessions.map(s=>card(s.title||'Sessão '+(s.order||s.number||''),
-  'Sessão '+(s.order||s.number||''),p(s.summary||s.description),fields([['Data',s.date],['Status',s.status]]),'session')).join('');
+ // Mesmo card da Visão Geral anterior: capa, numeração, resumo, data, selo e link "Abrir".
+ // Não incluir o controle de visibilidade, pois alterações pertencem à Oficina.
+ const sessionCards=sessions.slice().sort((x,y)=>(x.order||x.number||0)-(y.order||y.number||0))
+  .map(s=>'<div class="adventure-linked-session" data-adventure-session="'+esc(s.id)+'"><div class="adventure-session-card-wrap">'+renderCampaignSessionCard(s,a.campaignId)+'</div></div>').join('');
  const notes=rows(a.dmNoteEntries).map(n=>card('Nota do Mestre','Reservada',p(n.text),'','note')).join('');
  const summary=fields([['Campanha',c?.name],['Status',({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'})[a.status]||a.status],
   ['Tipo',({main:'Principal',side:'Secundária',oneshot:'One-shot',secondary:'Arco secundário'})[a.type]||a.type],['Ordem',a.order],
@@ -79,6 +82,6 @@ export function renderAdventureOverview(a,c,characters=[]){
   section('overview-monstros','Monstros',monsters.length,monsterCards)+
   (missionCards?section('overview-objetivos','Objetivos',rows(a.missions).length,missionCards):'')+
   (factionCards?section('overview-faccoes','Facções',factions.length,factionCards):'')+
-  (sessionCards?section('overview-sessoes','Sessões vinculadas',sessions.length,sessionCards):'')+
+  (sessionCards?'<section class="adventure-read-section adventure-read-sessions" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'')+
   (notes?section('overview-notas','Notas do Mestre',rows(a.dmNoteEntries).length,notes):'');
 }

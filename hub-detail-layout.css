@@ -70,14 +70,14 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 #sessions-list .hub-detail-page .campaign-product-summary .metric{min-width:0;overflow-wrap:anywhere}
 
 /* Card da Sessão em Aventura: mesma imagem ocupando todo o plano de fundo da Campanha. */
-#adventure-root #sessoes .campaign-player-story-card{position:relative;display:flex;isolation:isolate;overflow:hidden;min-height:178px;align-items:flex-end;text-decoration:none;color:#fff;border:1px solid var(--hub-border,#34485d);border-radius:12px;background:#152536}
-#adventure-root #sessoes .campaign-player-story-card::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(0deg,rgba(7,14,24,.97),rgba(7,14,24,.72) 55%,rgba(7,14,24,.18))}
-#adventure-root #sessoes .campaign-player-story-image{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
-#adventure-root #sessoes .campaign-player-story-content{display:flex;justify-content:space-between;align-items:end;gap:12px;width:100%;padding:18px;min-width:0}
-#adventure-root #sessoes .campaign-player-story-open{display:inline-flex;align-items:center;gap:5px;padding:8px 10px;border:1px solid #b9d8ff77;border-radius:8px;background:#091b2dc9;font-weight:700}
-#adventure-root #sessoes .campaign-player-story-open svg{width:16px;height:16px}
-#adventure-root #sessoes .campaign-player-story-footer{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
-#adventure-root #sessoes .campaign-player-story-status{display:inline-flex;padding:6px 9px;border-radius:7px;font-size:.83rem;font-weight:750}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-card{position:relative;display:flex;isolation:isolate;overflow:hidden;min-height:178px;align-items:flex-end;text-decoration:none;color:#fff;border:1px solid var(--hub-border,#34485d);border-radius:12px;background:#152536}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-card::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(0deg,rgba(7,14,24,.97),rgba(7,14,24,.72) 55%,rgba(7,14,24,.18))}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-image{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-content{display:flex;justify-content:space-between;align-items:end;gap:12px;width:100%;padding:18px;min-width:0}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-open{display:inline-flex;align-items:center;gap:5px;padding:8px 10px;border:1px solid #b9d8ff77;border-radius:8px;background:#091b2dc9;font-weight:700}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-open svg{width:16px;height:16px}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-footer{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status{display:inline-flex;padding:6px 9px;border-radius:7px;font-size:.83rem;font-weight:750}
 #adventure-root .hub-detail-grid #capitulos,#adventure-root .hub-detail-grid #locais{grid-column:auto}
 #adventure-root .hub-detail-grid #npcs,#adventure-root .hub-detail-grid #missoes{grid-column:auto}
 #adventure-root .hub-detail-grid #monstros,#adventure-root .hub-detail-grid #tesouros{grid-column:auto}
@@ -322,16 +322,16 @@ body .hub-collection-top[hidden],body .hub-collection-home[hidden]{display:none!
 
 
 /* Exact session-status palette */
-#adventure-root #sessoes .campaign-player-story-status.status-current{--status-bg:rgba(18,79,51,.78);--status-border:rgba(92,230,157,.64);--status-ink:#91f3b9}
-#adventure-root #sessoes .campaign-player-story-status.status-next{--status-bg:rgba(25,65,103,.78);--status-border:rgba(108,196,255,.68);--status-ink:#9cdbff}
-#adventure-root #sessoes .campaign-player-story-status.status-active{--status-bg:rgba(18,79,51,.78);--status-border:rgba(92,230,157,.64);--status-ink:#91f3b9}
-#adventure-root #sessoes .campaign-player-story-status.status-planned{--status-bg:rgba(89,60,22,.78);--status-border:rgba(255,198,98,.66);--status-ink:#ffcf85}
-#adventure-root #sessoes .campaign-player-story-status.status-paused{--status-bg:rgba(78,51,109,.78);--status-border:rgba(209,160,255,.65);--status-ink:#e0baff}
-#adventure-root #sessoes .campaign-player-story-status.status-finished{--status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0}
-#adventure-root #sessoes .campaign-player-story-status.status-completed{--status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0}
-#adventure-root #sessoes .campaign-player-story-status.status-cancelled{--status-bg:rgba(94,39,46,.83);--status-border:rgba(240,126,136,.58);--status-ink:#ffb5bf}
-#adventure-root #sessoes .campaign-player-story-status.status-archived{--status-bg:rgba(58,64,75,.80);--status-border:rgba(157,167,181,.64);--status-ink:#d3dce8}
-#adventure-root #sessoes .campaign-player-story-status{border:1px solid var(--status-border,rgba(175,190,210,.65));background:var(--status-bg,rgba(96,113,131,.23))!important;color:var(--status-ink,#e2eaf5)!important;border-radius:999px;padding:3px 10px;line-height:1.35}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-current{--status-bg:rgba(18,79,51,.78);--status-border:rgba(92,230,157,.64);--status-ink:#91f3b9}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-next{--status-bg:rgba(25,65,103,.78);--status-border:rgba(108,196,255,.68);--status-ink:#9cdbff}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-active{--status-bg:rgba(18,79,51,.78);--status-border:rgba(92,230,157,.64);--status-ink:#91f3b9}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-planned{--status-bg:rgba(89,60,22,.78);--status-border:rgba(255,198,98,.66);--status-ink:#ffcf85}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-paused{--status-bg:rgba(78,51,109,.78);--status-border:rgba(209,160,255,.65);--status-ink:#e0baff}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-finished{--status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-completed{--status-bg:rgba(52,70,86,.80);--status-border:rgba(163,190,211,.60);--status-ink:#caddf0}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-cancelled{--status-bg:rgba(94,39,46,.83);--status-border:rgba(240,126,136,.58);--status-ink:#ffb5bf}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status.status-archived{--status-bg:rgba(58,64,75,.80);--status-border:rgba(157,167,181,.64);--status-ink:#d3dce8}
+#adventure-root :is(#sessoes,#overview-sessoes) .campaign-player-story-status{border:1px solid var(--status-border,rgba(175,190,210,.65));background:var(--status-bg,rgba(96,113,131,.23))!important;color:var(--status-ink,#e2eaf5)!important;border-radius:999px;padding:3px 10px;line-height:1.35}
 
 /* Editor da cena existente: a edição ocupa toda a linha do card narrativo. */
 #adventure-root .hub-detail-grid .adventure-scene-record .hub-scene-editor{
