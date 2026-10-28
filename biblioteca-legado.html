@@ -11,6 +11,7 @@
     :root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     body{max-width:920px;margin:0 auto;padding:24px;line-height:1.55}a{color:inherit}.vazio{padding:16px;border:1px dashed #8888;border-radius:10px;margin:18px 0}.muted{opacity:.74}
   </style>
+  <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head>
 <body>
   <p><a href="bibliotecas.html?v=20260819-1236">← Bibliotecas</a></p>
@@ -22,10 +23,15 @@ if(modulo==='Regras'){
   location.replace('regras.html?v=20260819-1236');
 }else if(modulo){
   document.title=`${modulo} - Biblioteca - Teias de Anansi`;
-  document.getElementById('app').innerHTML=`<h1>${modulo}</h1><p class="muted">Catálogo mecânico do Hub.</p><div class="vazio">0 itens publicados neste módulo.</div>`;
+  const app=document.getElementById("app");
+  const heading=document.createElement("h1");heading.textContent=modulo;
+  const summary=document.createElement("p");summary.className="muted";summary.textContent="Catálogo mecânico do Hub.";
+  const empty=document.createElement("div");empty.className="vazio";empty.textContent="0 itens publicados neste módulo.";
+  app.replaceChildren(heading,summary,empty);
 }else{
   location.replace('bibliotecas.html?v=20260819-1236');
 }
 </script>
+<script type="module" src="scripts/hub-ux.js?v=20261028-hub-layout1"></script>
 </body>
 </html>
