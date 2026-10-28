@@ -401,7 +401,10 @@ function renderDetail(id){
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value;
- const rows=ALL.filter(x=>(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false))&&(!q||norm([x.nome,x.nome_original,x.escola,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q)));
+ const filtered=ALL.filter(x=>(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
+ // Priorizar correspondências por nome (PT-BR ou original) para não misturar efeitos que apenas citam outra magia.
+ const direct=q?filtered.filter(x=>norm(x.nome).includes(q)||norm(x.nome_original).includes(q)):[];
+ const rows=!q?filtered:direct.length?direct:filtered.filter(x=>norm([x.escola,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q));
  document.getElementById('count').textContent=`${rows.length} de ${ALL.length} magias`;
  document.getElementById('lista').innerHTML=rows.map(x=>`<a class="item ${CURRENT===x.id?'on':''}" href="magias.html?magia=${encodeURIComponent(x.id)}" data-id="${esc(x.id)}" ${CURRENT===x.id?'aria-current="true"':''}><span class="spell-item-title"><strong>${esc(x.nome)}</strong><span class="spell-item-level">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span></span><small>${esc(x.escola)} · ${esc(sourceTitle(x.fonte))}</small></a>`).join('')||'<div class="vazio">Nenhuma magia encontrada. Experimente remover algum filtro.</div>';
 }
