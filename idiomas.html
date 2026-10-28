@@ -54,7 +54,7 @@ const IDIOMAS_RACIAIS = ["Draconic","Dwarvish","Elvish","Giant","Gnomish","Gobli
 // Idiomas adicionais associados a povos e espécies dos cenários.
 const IDIOMAS_DE_POVOS = ["Daelkyr","Stonegrind","Tauric","Wuura'gaa","Kraul","Loxodon","Vedalken","Leonin","Hadozee","Thri-kreen","Kenderspeak","Ogre"];
 // Seleção expressamente mantida na Biblioteca, além dos grupos anteriores.
-const IDIOMAS_ADICIONAIS = ["Undercommon","Common","Thieves’ Cant","Common Sign Language"];
+const IDIOMAS_ADICIONAIS = ["Undercommon","Common","Thieves’ Cant","Common Sign Language","Abyssal","Deep Speech","Druidic","Auran","Ignan","Terran"];
 const IDIOMAS_VISIVEIS = new Set([...IDIOMAS_RACIAIS, ...IDIOMAS_DE_POVOS, ...IDIOMAS_ADICIONAIS]);
 const busca = document.getElementById('busca');
 const filtro = document.getElementById('filtro');
@@ -86,7 +86,7 @@ async function iniciar() {
   try {
     const urls = [
       'dados/idiomas-core-standard.json?v=20260923-harpy-aquan1',
-      'dados/idiomas-core-rare.json?v=20260923-harpy-aquan1',
+      'dados/idiomas-core-rare.json?v=20261028-primordial-dialects1',
       'dados/idiomas-forgotten-realms.json?v=20260923-harpy-aquan1',
       'dados/idiomas-eberron.json?v=20260923-harpy-aquan1',
       'dados/idiomas-outros.json?v=20260923-harpy-aquan1'
