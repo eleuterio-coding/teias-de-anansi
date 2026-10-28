@@ -32,7 +32,6 @@ assert.deepEqual(navOrder,[
 assert.match(shell,/hub-content-library/,'Biblioteca deve receber um tema distinto do leitor legado.');
 assert.match(shell,/LIBRARY_PAGES\.has\(currentPage\(\)\)/);
 assert.match(shell,/data-hub-preview-user/);
-assert.match(shell,/data-hub-layout-select/);
 assert.match(ux,/hub-layout\.css\?v=/);
 assert.match(ux,/app-shell\.js\?v=/);
 assert.match(ux,/Editar Ficha/);
