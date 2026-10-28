@@ -3,7 +3,7 @@
 import {adventureAssignments,adventureMembers} from './adventure-roster-ui.js?v=20261027-release-reset3';
 import {playerAvatarHtml,characterAvatarHtml} from './profile-images.js?v=20261021-user1';
 import {imageElementHtml} from './image-media.js?v=20261023-simplified3';
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rows=value=>Array.isArray(value)?value:[];
 const ordered=value=>rows(value).slice().sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
 const line=(label,value)=>String(value??'').trim()?'<div class="adventure-read-field"><dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd></div>':'';
