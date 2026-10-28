@@ -20,7 +20,6 @@ function decorateCards(){
   li.dataset.catalogRuntime=module.consumers.includes('construtor')||module.consumers.includes('ficha')?'runtime':'library';
   const count=li.querySelector('.contagem');
   if(count)count.textContent=countLabel(module);
-  li.querySelector('.catalog-badges')?.remove();
  }
 }
 function countPublished(index){
