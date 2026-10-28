@@ -1,67 +1,72 @@
+import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
-const directModules = [
-  'bibliotecas.html', 'regras.html', 'maestrias-de-arma.html', 'monstros.html',
-  'armaduras.html', 'armas.html', 'equipamentos-aventura.html', 'ferramentas.html',
-  'montarias-veiculos.html', 'comercio-e-despesas.html', 'bugigangas.html',
-  'itens-magicos.html', 'magias.html', 'idiomas.html'
+const read=path=>fs.readFileSync(path,'utf8');
+const directModules=[
+  'regras.html','maestrias-de-arma.html','monstros.html',
+  'armaduras.html','armas.html','equipamentos-aventura.html',
+  'ferramentas.html','montarias-veiculos.html','comercio-e-despesas.html',
+  'bugigangas.html','itens-magicos.html','magias.html','idiomas.html'
 ];
-const wrappedModules = ['classes.html', 'subclasses.html', 'raca.html', 'antecedentes.html', 'talentos.html'];
-const sourceModules = [
+const wrappedModules=[
+  'classes.html','subclasses.html','raca.html','antecedentes.html','talentos.html'
+];
+const nestedPages=['classes-v3.html','referencia.html','biblioteca-legado.html'];
+const sourceModules=[
   'dados/_module-source/classes.html',
   'dados/_module-source/subclasses.html',
   'dados/_module-source/especies.html',
   'dados/_module-source/antecedentes.html',
   'dados/_module-source/talentos.html'
 ];
-const layoutRx = /biblioteca-light\.css\?v=20260827-library-layout\d+/;
+const expectedModules=[
+  'regras.html','classes.html','subclasses.html','raca.html','antecedentes.html',
+  'talentos.html','maestrias-de-arma.html','monstros.html','armaduras.html',
+  'armas.html','equipamentos-aventura.html','ferramentas.html',
+  'montarias-veiculos.html','comercio-e-despesas.html','bugigangas.html',
+  'itens-magicos.html','magias.html','idiomas.html'
+];
+const index=read('bibliotecas.html');
+const hrefs=[...index.matchAll(/<li><a href="([^"?]+\.html)(?:\?[^"]*)?"/g)].map(m=>m[1]);
+assert.deepEqual(hrefs,expectedModules,'Os 18 cards devem preservar destinos e ordem.');
+assert.match(index,/class="hub-library-page"/,'O índice deve usar a estrutura compartilhada.');
+assert.match(index,/scripts\/library-catalog-status\.js/,'Busca e contagem do catálogo devem permanecer.');
 
-for (const file of directModules) {
-  if (!fs.existsSync(file)) throw new Error(`Módulo direto ausente: ${file}`);
-  const html = fs.readFileSync(file, 'utf8');
-  if (!layoutRx.test(html)) throw new Error(`Módulo direto sem stylesheet compartilhado: ${file}`);
-}
-
-for (const file of wrappedModules) {
-  if (!fs.existsSync(file)) throw new Error(`Wrapper ausente: ${file}`);
-  const html = fs.readFileSync(file, 'utf8');
-  if (!html.includes('module-clean-loader.js?v=20261016-current-status3')) {
-    throw new Error(`Wrapper usando carregador visual antigo: ${file}`);
+const stylesheet=/biblioteca-light\.css\?v=20261028-hub-layout1/;
+for(const file of ['bibliotecas.html',...directModules,...wrappedModules,...nestedPages]){
+  const html=read(file);
+  assert.match(html,stylesheet,file+' deve usar o tema compartilhado atualizado.');
+  if(!wrappedModules.includes(file)){
+    assert.match(html,/scripts\/hub-ux\.js\?v=/,file+' deve integrar o shell do Hub.');
+  }else{
+    assert.match(html,/scripts\/module-clean-loader\.js\?v=/,file+' deve carregar o módulo sem perder seu conteúdo.');
   }
 }
+for(const file of sourceModules)assert.match(read(file),/<\/head>/i,file+' deve permitir injeção do estilo.');
 
-for (const file of sourceModules) {
-  if (!fs.existsSync(file)) throw new Error(`Fonte de módulo ausente: ${file}`);
-  const html = fs.readFileSync(file, 'utf8');
-  if (!/<\/head>/i.test(html)) throw new Error(`Fonte sem ponto de injeção do layout: ${file}`);
-}
-
-const loader = fs.readFileSync('scripts/module-clean-loader.js', 'utf8');
-const loaderContract = [
-  "const LAYOUT='biblioteca-light.css?v=20260827-library-layout2'",
+const loader=read('scripts/module-clean-loader.js');
+for(const token of [
+  "const LAYOUT='biblioteca-light.css?v=20261028-hub-layout1'",
   'function applySharedLayout(html)',
   'id="hub-library-layout"',
   'html=applySharedLayout(html);',
-  'document.write(html);'
-];
-const loaderMissing = loaderContract.filter(token => !loader.includes(token));
-if (loaderMissing.length) throw new Error(`Carregador não garante layout no HTML final: ${loaderMissing.join(', ')}`);
-if (loader.indexOf('html=applySharedLayout(html);') > loader.indexOf('document.write(html);')) {
-  throw new Error('O layout compartilhado está sendo aplicado depois do document.write().');
+  'document.write(html);',
+  'scripts/hub-ux.js?v='
+])assert.ok(loader.includes(token),'Carregador sem garantia: '+token);
+assert.ok(loader.indexOf('html=applySharedLayout(html);')<loader.indexOf('document.write(html);'));
+
+const shell=read('scripts/app-shell.js');
+assert.match(shell,/hub-content-library/,'A Biblioteca precisa de um tema próprio separado do leitor claro.');
+for(const file of [...directModules,...wrappedModules,...nestedPages]){
+  assert.ok(shell.includes('"'+file+'"'),file+' deve estar registrado no shell.');
 }
-
-const css = fs.readFileSync('biblioteca-light.css', 'utf8');
-const visualContract = [
-  'color-scheme: only light !important',
-  'background: #ffffff !important',
-  'color: #000000 !important',
-  'max-width: 1120px !important',
-  '.controles',
-  'details',
-  'table',
-  ':focus-visible'
-];
-const absent = visualContract.filter(token => !css.includes(token));
-if (absent.length) throw new Error(`Contrato visual incompleto: ${absent.join(', ')}`);
-
-console.log(`Layout efetivo validado: ${directModules.length} módulos diretos + ${wrappedModules.length} módulos renderizados usando o mesmo stylesheet claro.`);
+const css=read('biblioteca-light.css');
+for(const token of [
+  'hub-content-library .hub-app-content',
+  '--hub-surface','--hub-accent','--hub-border','--hub-bg',
+  '.modulos','.controles','.catalog-controls','.layout',
+  '.catalog-results','table',':focus-visible','@media'
+])assert.ok(css.includes(token),'Contrato do layout escuro sem: '+token);
+assert.ok(!css.includes('color-scheme: only light !important'),'Biblioteca não deve impor modo branco.');
+assert.ok(!css.includes('body:not(.hub-shell-enabled) *'),'Não aplicar tema local fora do shell.');
+console.log('OK: 18/18 módulos, 3 páginas internas e 5 fontes renderizadas compartilham o visual escuro do Hub.');
