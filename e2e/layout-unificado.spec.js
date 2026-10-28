@@ -31,9 +31,10 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
   for (const [path,menu,reader] of surfaces) {
     await test.step(path,async () => {
       await page.goto(path,{waitUntil:'domcontentloaded'});
-      // O deploy injeta site-light.css em todas as páginas. Validar também essa composição.
-      await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
+      // Módulos dinâmicos podem reconstruir o DOM depois de DOMContentLoaded.
       await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
+      // Injetar CSS de deploy somente depois de o documento final existir.
+      await page.addStyleTag({url:'/site-light.css?v=deploy-preview'});
       await expect(page.locator('script[src*="scripts/hub-ux.js"]')).toHaveCount(1);
       await expect(page.locator('.hub-global-topbar')).toBeVisible();
       await expect(page.locator('[data-hub-master-tools]')).toBeVisible();
@@ -44,7 +45,7 @@ test('navegação e identidade comum nas páginas principais e catálogos', asyn
       await expect(page.locator('.hub-sidebar .hub-sidebar-section-title')).toHaveCount(0);
       await expect(page.locator('.hub-sidebar a[href="usuarios.html"]')).toHaveCount(0);
       const sidebarRoutes=await page.locator('.hub-sidebar .hub-nav > a').evaluateAll(links=>links.map(link=>link.getAttribute('href')));
-      expect(sidebarRoutes).toEqual(['painel.html','campanhas.html','aventuras.html','sessoes.html','personagens.html','bibliotecas.html']);
+      expect(sidebarRoutes).toEqual(['painel.html','campanhas.html','aventuras.html','sessoes.html','personagens.html','npcs.html','bibliotecas.html']);
       await expect(page.locator('.hub-nav-link[aria-current="page"]').filter({hasText:menu}).first()).toHaveCount(1);
       await expect(page.locator('body')).toHaveClass(/hub-shell-enabled/);
       if (reader === 'library') await expect(page.locator('body')).toHaveClass(/hub-content-library/);

@@ -21,9 +21,10 @@ test.beforeEach(async({page})=>{
 
 async function checkHubLayout(page,path) {
   await page.goto(path,{waitUntil:'domcontentloaded'});
-  // O CSS claro legado pode ser injetado pelo deploy: não deve mudar a Biblioteca.
-  await page.addStyleTag({url:'/site-light.css?v=library-layout-test'});
+  // Alguns módulos reconstruem o documento após o DOMContentLoaded.
+  // Aguardar o shell definitivo antes de injetar CSS de simulação do deploy.
   await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:20000});
+  await page.addStyleTag({url:'/site-light.css?v=library-layout-test'});
   await expect(page.locator('body')).toHaveClass(/hub-content-library/);
   await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
   await expect(page.locator('.hub-global-topbar')).toBeVisible();
