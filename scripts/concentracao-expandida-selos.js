@@ -8,6 +8,121 @@
     NC: 'Pendente de classificação'
   };
 
+  // Matrizes de coexistência da Regra da Casa, com composições completas.
+  // Cada magia conserva UMA única categoria. Os níveis são de conjurador,
+  // não o círculo da magia. Níveis anteriores continuam disponíveis.
+  const COMPATIBILITY = Object.freeze({
+    CM: [
+      ['5', 'CM + 1 CL'],
+      ['10', 'CM + 2 CL'],
+      ['20', 'CM + 2 CL; ou CM + CI; ou CM + CZ']
+    ],
+    CI: [
+      ['5', 'CI + 1 CL'],
+      ['10', 'CI + 2 CL'],
+      ['20', 'CI + 2 CL; ou CM + CI']
+    ],
+    CZ: [
+      ['5', 'CZ + 1 CL'],
+      ['10', 'CZ + 2 CL'],
+      ['20', 'CZ + 2 CL; ou CM + CZ']
+    ],
+    CL: [
+      ['5', '1 CM, CI ou CZ + 1 CL'],
+      ['10', '1 CM, CI ou CZ + 2 CL'],
+      ['20', '1 CM, CI ou CZ + 2 CL']
+    ]
+  });
+
+  const CE_STYLE_ID = 'hub-ce-coexistencia-style';
+  function ensureCompatibilityStyle() {
+    if (document.getElementById(CE_STYLE_ID)) return;
+    const style = document.createElement('style');
+    style.id = CE_STYLE_ID;
+    style.textContent = `
+      .hub-library-spells .stats .ce-stat {
+        grid-column: 1 / -1;
+        min-width: 0;
+      }
+      .hub-library-spells .ce-stat .ce-category {
+        display: block;
+        margin: 8px 0 13px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--hub-text, #f4f7fb);
+      }
+      .hub-library-spells .ce-stat .ce-guidance {
+        margin: 7px 0 11px;
+        color: var(--hub-text-2, #c5cfdb);
+        font-size: .86rem;
+        line-height: 1.55;
+      }
+      .hub-library-spells .ce-stat .ce-compat-title {
+        margin: 12px 0 8px;
+        font-size: .81rem;
+        font-weight: 700;
+        color: var(--hub-text, #f4f7fb);
+      }
+      .hub-library-spells .ce-stat .ce-compat-list {
+        display: grid;
+        grid-template-columns: minmax(82px, 120px) minmax(0, 1fr);
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--hub-border, #223245);
+        border-radius: 9px;
+        overflow: hidden;
+      }
+      .hub-library-spells .ce-stat .ce-compat-list dt,
+      .hub-library-spells .ce-stat .ce-compat-list dd {
+        min-width: 0;
+        padding: 9px 11px;
+        margin: 0;
+        font-size: .85rem;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+      .hub-library-spells .ce-stat .ce-compat-list dt {
+        font-weight: 700;
+        color: var(--hub-text, #f4f7fb);
+        background: rgba(103, 184, 255, .08);
+      }
+      .hub-library-spells .ce-stat .ce-compat-list dd {
+        color: var(--hub-text-2, #c5cfdb);
+        border-left: 1px solid var(--hub-border, #223245);
+      }
+      .hub-library-spells .ce-stat .ce-compat-list :is(dt,dd):nth-of-type(n+2) {
+        border-top: 1px solid var(--hub-border, #223245);
+      }
+      @media(max-width:420px) {
+        .hub-library-spells .ce-stat .ce-compat-list { grid-template-columns: 85px minmax(0,1fr); }
+        .hub-library-spells .ce-stat .ce-compat-list :is(dt,dd) { padding: 8px 9px; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function compatibilityHTML(record) {
+    const category = record.limite_coexistencia;
+    const label = LABELS[category] || 'Classificação não informada';
+    if (category === 'SC') {
+      return '<p class="ce-guidance">Esta magia não exige concentração e não ocupa uma posição nos Limites de Coexistência.</p>';
+    }
+    if (category === 'NC' || !COMPATIBILITY[category]) {
+      return '<p class="ce-guidance">A magia exige concentração, mas sua categoria ainda não foi validada na lista da Regra da Casa. Até a validação, não participa automaticamente das combinações de Concentração Expandida; continua sujeita à regra normal de concentração única.</p>';
+    }
+    const rows = COMPATIBILITY[category].map(([level, combination]) =>
+      `<dt>Nível ${level}+</dt><dd>${combination}</dd>`
+    ).join('');
+    const conditional = normalizeCE(record.nome_original) === normalizeCE('Bestow Curse')
+      ? '<p class="ce-guidance">Esta classificação se aplica apenas às conjurações que efetivamente exigem concentração.</p>'
+      : '';
+    return `<span class="ce-category">${label}</span>
+      <div class="ce-compat-title">Combinações permitidas por nível de conjurador</div>
+      <dl class="ce-compat-list">${rows}</dl>
+      <p class="ce-guidance">Cada combinação representa o conjunto completo de magias simultâneas; esta magia ocupa uma das posições de sua categoria. No nível 1, mantém-se apenas uma magia de concentração por vez. As combinações de níveis anteriores continuam permitidas. Outras combinações não estão autorizadas pela regra.</p>${conditional}`;
+  }
+
   const normalizeCE = value => String(value || '')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -135,7 +250,8 @@
       if (stats && !stats.querySelector('.ce-stat')) {
         const stat = document.createElement('div');
         stat.className = 'stat ce-stat';
-        stat.innerHTML = `<b>Concentração Expandida</b><span>${typeof esc === 'function' ? esc(record.limite_coexistencia_nome) : record.limite_coexistencia_nome}</span>`;
+        ensureCompatibilityStyle();
+        stat.innerHTML = `<b>Concentração Expandida</b>${compatibilityHTML(record)}`;
         stats.appendChild(stat);
       }
     };
