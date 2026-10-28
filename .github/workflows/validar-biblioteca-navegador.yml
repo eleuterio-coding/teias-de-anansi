@@ -10,6 +10,12 @@ on:
       - 'scripts/app-shell.js'
       - 'scripts/module-clean-loader.js'
       - 'e2e/library-layout.spec.js'
+      - 'magias.html'
+      - 'dados/localizacao-ptbr-magias-completo.json'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/politica-regras-biblioteca.js'
+      - 'tests/auditar-magias-ptbr.mjs'
       - '.github/workflows/validar-biblioteca-navegador.yml'
   push:
     branches: [main]
@@ -21,6 +27,12 @@ on:
       - 'scripts/app-shell.js'
       - 'scripts/module-clean-loader.js'
       - 'e2e/library-layout.spec.js'
+      - 'magias.html'
+      - 'dados/localizacao-ptbr-magias-completo.json'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/politica-regras-biblioteca.js'
+      - 'tests/auditar-magias-ptbr.mjs'
       - '.github/workflows/validar-biblioteca-navegador.yml'
   workflow_dispatch:
 
@@ -37,6 +49,8 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
+      - name: Validar 537 nomes e links das magias
+        run: node tests/auditar-magias-ptbr.mjs
       - name: Testar 18 módulos, detalhes e responsividade
         run: npx playwright test e2e/library-layout.spec.js --project=desktop-chromium --project=mobile-chromium
       - uses: actions/upload-artifact@v4
