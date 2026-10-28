@@ -177,7 +177,7 @@ const rules=JSON.parse(pieces.join('')).itens;
 const script=fs.readFileSync('scripts/regras-srd-view-v7.js','utf8');
 const page=fs.readFileSync('regras.html','utf8');
 
-const norm=v=>String(v??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').trim().toLowerCase();
+const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim().toLowerCase();
 const dict=new Map(rules.map(r=>[norm(r.original),r]));
 assert.equal(rules.length,155,'O total de regras traduzidas não deve mudar.');
 assert.equal(dict.size,155,'Não deve haver identificadores originais duplicados.');
@@ -186,7 +186,7 @@ assert.equal(EXPECTED.length,41,'A amostra deve abranger todos os 41 verbetes ti
 for(const [original,expectedTitle] of EXPECTED){
   const rule=dict.get(norm(original));
   assert.ok(rule, `Regra ausente: ${original}`);
-  const match=expectedTitle.match(/^(.+) \\[([^\\]]+)\\]$/);
+  const match=expectedTitle.match(/^(.+) \[([^\]]+)\]$/);
   assert.ok(match, `Qualificador inválido para ${original}`);
   assert.equal(rule.nome,match[1], `Nome da regra incorreto: ${original}`);
   assert.ok(Object.values(LABELS).includes(match[2]), `Categoria inválida: ${original}`);
@@ -197,12 +197,12 @@ assert.equal(EXPECTED.filter(x=>x[1].endsWith('[Condição]')).length,15);
 assert.equal(EXPECTED.filter(x=>x[1].endsWith('[Perigo]')).length,5);
 assert.equal(EXPECTED.filter(x=>x[1].endsWith('[Área de Efeito]')).length,6);
 assert.equal(EXPECTED.filter(x=>x[1].endsWith('[Atitude]')).length,3);
-assert.match(script,/function localizedHeading\\(entry,rule\\)/);
+assert.match(script,/function localizedHeading\(entry,rule\)/);
 assert.ok(script.includes("entry.tag ? \`${name} [${familyPT(entry.tag)}]\` : name"));
 assert.ok(script.includes('const title=localizedHeading(entry,rule);'));
 assert.ok(script.includes('name:localizedHeading(x,ptRule(x.original))'));
 assert.ok(script.includes('const ddb='));
 assert.ok(script.includes('data-hub-original'));
-assert.match(page,/scripts\\/regras-srd-view-v7\\.js\\?v=20261028-titulos-categorias-ptbr1/);
+assert.match(page,/scripts\/regras-srd-view-v7\.js\?v=20261028-titulos-categorias-ptbr1/);
 assert.deepEqual(Object.keys(LABELS).sort(),['Action','Area of Effect','Attitude','Condition','Hazard'].sort());
 console.log('OK: 41 títulos tipados traduzidos; 155 regras, IDs originais, busca e referências preservados.');
