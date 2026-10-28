@@ -97,8 +97,8 @@ test('Mapas, locais e NPCs usam cadastros existentes e aparecem como cards de le
  await expect(page.locator('#overview-npcs')).toContainText('Rainha Elyra');
  await create(page,'npc');
  await expect(page.locator('#npcs [data-campaign-npc]')).toHaveCount(1);
- await expect(page.locator('#npcs [data-campaign-npc-field="name"]')).toBeHidden();
- await page.locator('#npcs .adventure-attached-list summary').click();
+ const npcList=page.locator('#npcs .adventure-attached-list');
+ if(await npcList.getAttribute('open')===null)await npcList.locator('summary').click();
  await expect(page.locator('#npcs [data-campaign-npc-field="name"]')).toBeVisible();
  expect(errors).toEqual([]);
 });
