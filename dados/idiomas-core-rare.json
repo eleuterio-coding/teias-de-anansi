@@ -16,6 +16,14 @@
     "status": "Dialeto de Primordial — uso racial no Hub"
   },
   {
+    "nome": "Auran",
+    "categoria": "Core — Rare",
+    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "origem": "Elementals of Air / Primordial",
+    "descricao": "Dialeto aéreo de Primordial, associado a criaturas e elementais ligados ao ar. Nas regras de 2024 é um dialeto de Primordial; o Hub o registra individualmente para consulta, sem constituir uma escolha independente adicional de idioma.",
+    "status": "Dialeto de Primordial — registro individual no Hub"
+  },
+  {
     "nome": "Celestial",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
@@ -40,6 +48,14 @@
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
   },
   {
+    "nome": "Ignan",
+    "categoria": "Core — Rare",
+    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "origem": "Elementals of Fire / Primordial",
+    "descricao": "Dialeto ígneo de Primordial, associado a criaturas e elementais ligados ao fogo. Nas regras de 2024 é um dialeto de Primordial; o Hub o registra individualmente para consulta, sem constituir uma escolha independente adicional de idioma.",
+    "status": "Dialeto de Primordial — registro individual no Hub"
+  },
+  {
     "nome": "Infernal",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
@@ -62,6 +78,14 @@
     "origem": "The Feywild",
     "descricao": "Idioma raro associado às fadas e às tradições do Feywild. Na Fronteira Ocidental de Eberron, é ligado a fey e Greensingers e aparece com escrita élfica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs"
+  },
+  {
+    "nome": "Terran",
+    "categoria": "Core — Rare",
+    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "origem": "Elementals of Earth / Primordial",
+    "descricao": "Dialeto terrestre de Primordial, associado a criaturas e elementais ligados à terra. Nas regras de 2024 é um dialeto de Primordial; o Hub o registra individualmente para consulta, sem constituir uma escolha independente adicional de idioma.",
+    "status": "Dialeto de Primordial — registro individual no Hub"
   },
   {
     "nome": "Thieves’ Cant",
