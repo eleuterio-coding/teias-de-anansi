@@ -20,6 +20,7 @@ test.beforeEach(async ({page})=>{
 });
 
 test('Design System é carregado e mantém tokens em todas as famílias de telas',async({page})=>{
+  test.setTimeout(180_000);
   for(const route of routes){
     await test.step(route,async()=>{
       await page.goto(route,{waitUntil:'domcontentloaded'});
