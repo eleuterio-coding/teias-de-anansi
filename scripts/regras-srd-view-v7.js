@@ -97,6 +97,19 @@ function render(){
 }
 
 function focusRequested(){
+  // Links por nome canônico: funcionam com IDs semânticos ou de fallback,
+  // inclusive quando o índice opcional de referências está indisponível.
+  const original=new URLSearchParams(location.search).get('original');
+  if(original){
+    const el=[...document.querySelectorAll('#lista details[data-hub-original]')]
+      .find(item=>norm(item.dataset.hubOriginal)===norm(original));
+    if(el){
+      el.open=true;
+      el.classList.add('hub-ref-target');
+      setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),80);
+      return;
+    }
+  }
   const id=new URLSearchParams(location.search).get('ref');
   if(id){
     const el=document.querySelector(`[data-hub-entity-id="${CSS.escape(id)}"]`);
