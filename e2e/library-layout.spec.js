@@ -74,3 +74,37 @@ test('a página inicial preserva busca, filtros e cards responsivos',async({page
   await expect(page.locator('.modulos > li:visible')).toHaveCount(1);
   await expect(page.locator('.modulos > li:visible a')).toContainText('Magias');
 });
+
+test('os 537 verbetes de Magias preservam links individuais e nomes PT-BR',async({page})=>{
+  test.setTimeout(90_000);
+  await checkHubLayout(page,'/magias.html?magia=fireball');
+  await expect(page.locator('#lista a.item')).toHaveCount(537,{timeout:30000});
+  await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo');
+  await expect(page.locator('#detalhe .spell-detail-top .badge')).toHaveCount(3); // Círculo, escola e CE
+  await expect(page.locator('#detalhe .spell-detail-top')).not.toContainText('5.5e');
+  await expect(page.locator('#detalhe .spell-detail-top')).not.toContainText('versão mais recente');
+  for(const field of ['PDF:','Revisão core:','Completude:','Versões anteriores removidas']){
+    await expect(page.locator('#detalhe')).not.toContainText(field)
+  }
+  await expect(page.locator('[data-hub-rules-policy]')).toHaveCount(0);
+  const links=await page.locator('#lista a.item').evaluateAll(rows=>rows.map(row=>({
+    name:row.querySelector('strong')?.textContent,
+    id:row.dataset.id,
+    linked:new URL(row.href).searchParams.get('magia')
+  })));
+  expect(new Set(links.map(row=>row.id)).size).toBe(537);
+  expect(links.every(row=>row.name?.trim()&&row.id===row.linked)).toBe(true);
+  const href=page.locator('#detalhe a.spell-verbetelink');
+  await expect(href).toHaveAttribute('href','magias.html?magia=fireball');
+  await page.locator('#q').fill('mísseis mágicos');
+  await expect(page.locator('#lista a.item:visible')).toHaveCount(1);
+  await page.locator('#q').fill('magic missile'); // Original continua pesquisável
+  await expect(page.locator('#lista a.item:visible')).toHaveCount(1);
+  await page.locator('#spell-clear').click();
+  await expect(page.locator('#lista a.item')).toHaveCount(537);
+  await page.locator('#lista a.item[data-id="magic-missile"]').click();
+  await expect(page.locator('#detalhe h2')).toHaveText('Mísseis Mágicos');
+  await expect(page).toHaveURL(/magia=magic-missile/);
+  await page.goBack();
+  await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo');
+});

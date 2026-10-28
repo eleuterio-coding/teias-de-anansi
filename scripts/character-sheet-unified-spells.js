@@ -6,7 +6,22 @@ const ALIASES={
  light:['Light','Luz'],'minor illusion':['Minor Illusion','Ilusão Menor'],'speak with animals':['Speak with Animals','Falar com Animais'],mending:['Mending','Consertar'],prestidigitation:['Prestidigitation','Prestidigitação'],'dancing lights':['Dancing Lights','Luzes Dançantes'],'faerie fire':['Faerie Fire','Fogo das Fadas'],darkness:['Darkness','Escuridão'],'detect magic':['Detect Magic','Detectar Magia'],'misty step':['Misty Step','Passo Nebuloso'],druidcraft:['Druidcraft','Druidismo'],longstrider:['Longstrider','Passos Longos'],'pass without trace':['Pass without Trace','Passos sem Pegadas'],'poison spray':['Poison Spray','Rajada de Veneno'],'ray of sickness':['Ray of Sickness','Raio Adoecente'],'hold person':['Hold Person','Imobilizar Pessoa'],'chill touch':['Chill Touch','Toque Arrepiante'],'false life':['False Life','Vitalidade Falsa'],'ray of enfeeblement':['Ray of Enfeeblement','Raio do Enfraquecimento'],'fire bolt':['Fire Bolt','Raio de Fogo'],'hellish rebuke':['Hellish Rebuke','Repreensão Infernal']
 };
 function normalize(x,sources){const m=sources?.[x.fonte]||{},c=x.componentes||{};return{id:`magias:2024:${x.id||slug(x.nome_original||x.nome)}`,name:x.nome||x.nome_original,originalName:x.nome_original||x.nome,level:num(x.nivel),school:x.escola||'',classes:arr(x.classes_base),source:m.titulo||x.fonte||'',page:x.pagina_fonte||'',description:x.descricao||'',higher:x.niveis_superiores||'',castingTime:x.tempo_conjuracao||'',range:x.alcance||'',components:{v:!!c.verbal,s:!!c.somatic,m:!!c.material,text:c.material_texto||''},duration:x.duracao||'',concentration:!!x.concentracao,ritual:!!x.ritual,attackSave:x.ataque_salvaguarda||'',effect:x.tipo_efeito||'',damage:[x.dano_base,x.tipo_dano].filter(Boolean).join(' · '),full:x.texto_integral_publicavel!==false}}
-async function load(){if(loaded)return;if(!loading)loading=json('dados/magias-catalogo.json?v=20260826-unified-spells2').then(d=>{state.catalogs.spells=arr(d.itens).map(x=>normalize(x,d.fontes||{})).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));loaded=true});await loading}
+async function load(){
+ if(loaded)return;
+ if(!loading)loading=Promise.all([
+  json('dados/magias-catalogo.json?v=20260826-unified-spells2'),
+  json('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1').catch(()=>({nomes:{}}))
+ ]).then(([d,pt])=>{
+  const names=pt.nomes||{};
+  state.catalogs.spells=arr(d.itens).map(x=>{
+   const spell=normalize(x,d.fontes||{});
+   spell.name=names[spell.originalName]||spell.name;
+   return spell
+  }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
+  loaded=true
+ });
+ await loading
+}
 function restoreChoices(){const s=read().find(x=>x.id===state.c?.id);if(!s?.choices)return;state.c.choices.species=state.c.choices.species||{};if(s.choices.species?.traitChoices)state.c.choices.species.traitChoices=structuredClone(s.choices.species.traitChoices);if(s.choices.featMechanics)state.c.choices.featMechanics=structuredClone(s.choices.featMechanics)}
 const find=(...names)=>{const keys=names.flat().map(fold);return state.catalogs.spells.find(s=>keys.includes(fold(s.name))||keys.includes(fold(s.originalName)))||null};
 const alias=k=>find(ALIASES[k]||[k]);

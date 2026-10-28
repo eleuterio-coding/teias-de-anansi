@@ -20,10 +20,10 @@ const POLICY={
  'comercio-e-despesas.html':'Compatibilidade: preços e serviços conservam a fonte e o cenário. Uma tabela 2024 equivalente prevalece sobre a versão 5e anterior; subsistemas exclusivos continuam vinculados à própria fonte. Serviços e bens especificamente modernos seguem a política global de exclusão.',
  'bugigangas.html':'Compatibilidade: bugigangas são conteúdo narrativo; versões e tabelas permanecem vinculadas à fonte, sem converter material 5e em regra 5.5e. Objetos inequivocamente modernos/futuristas são filtrados do catálogo ativo.',
  'itens-magicos.html':'Regra da Casa: Sintonização e o limite padrão de três itens sintonizados são substituídos por Espaços de Itens Mágicos. A versão 2024 de mesmo item prevalece; legado único permanece identificado. Itens cuja natureza é explicitamente mágica/fantástica não são classificados como modernos apenas por sua função.',
- 'magias.html':'Precedência: a versão mais recente de uma magia de mesmo nome prevalece. Magias 5e sem substituta podem permanecer compatíveis quando a lista/classe atual as admite; a fonte real é preservada.',
  'idiomas.html':'Criação 5.5e: Comum é conhecido automaticamente e o personagem escolhe dois idiomas padrão. Idiomas raros, de cenário ou adicionais só são concedidos por característica, regra específica ou decisão do Mestre.'
 };
 function inject(){
+  if(page==='magias.html')return; // O grimório exibe somente informações da magia; política permanece aplicada internamente.
   if(document.querySelector('[data-hub-rules-policy]'))return;
   const detail=POLICY[page]||'';
   const box=document.createElement('div');

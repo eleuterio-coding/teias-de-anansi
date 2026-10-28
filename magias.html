@@ -168,20 +168,160 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells 
     transition:none
   }
 }
+
+/* Ajustes editoriais: nome localizado, navegação por verbete e leitura sem selos de edição. */
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-eyebrow{
+  display:block;margin:0 0 8px;font-size:.71rem;font-weight:800;letter-spacing:.15em;
+  color:var(--hub-accent-2,#67b8ff)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-heading{
+  padding-bottom:18px;border-bottom:1px solid var(--hub-border,#223245)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-heading p{
+  max-width:820px;line-height:1.65
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .layout{
+  grid-template-columns:minmax(300px,365px) minmax(0,1fr)!important;gap:20px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-browser{
+  padding:18px 16px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-tools-heading h2{
+  font-size:1.07rem!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-clear{
+  padding:5px 8px!important;min-height:30px;color:var(--hub-accent-2,#67b8ff)!important;
+  border:1px solid transparent!important;border-radius:8px;background:transparent!important;
+  font-size:.76rem;font-weight:700;cursor:pointer
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-clear:hover{
+  border-color:var(--hub-border,#223245)!important;background:var(--hub-surface-2,#131f2b)!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-search-label{
+  font-size:.77rem;font-weight:700;color:var(--hub-text-2,#c5cfdb)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .tools input[type=search]{
+  padding-left:13px!important;min-height:46px;border-color:#3a5369!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .tools :is(input,select):focus-visible{
+  outline:2px solid var(--hub-accent-2,#67b8ff)!important;outline-offset:2px
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .count{
+  display:block;padding-top:10px;margin-top:4px;border-top:1px solid var(--hub-border,#223245)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista .item{
+  display:block!important;color:var(--hub-text,#f4f7fb)!important;
+  text-decoration:none!important;cursor:pointer;min-height:69px!important;
+  padding:12px 13px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista .item .spell-item-title{
+  display:flex;justify-content:space-between;gap:8px;align-items:flex-start
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista .item .spell-item-title strong{
+  line-height:1.4;flex:1;min-width:0
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista .item .spell-item-level{
+  flex-shrink:0;font-size:.68rem;line-height:1.35;font-weight:750;
+  padding:3px 7px;border:1px solid var(--hub-border,#223245);
+  border-radius:6px;color:var(--hub-text-2,#c5cfdb);background:var(--hub-surface-2,#131f2b)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista .item.on .spell-item-level{
+  border-color:#4a7396;background:#14283c;color:#d2eaff
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .detalhe{
+  padding:25px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-detail-top{
+  margin-bottom:20px;padding-bottom:19px;border-bottom:1px solid var(--hub-border,#223245)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-detail-top h2{
+  margin:0 0 12px!important;font-size:clamp(1.45rem,2.2vw,1.9rem)!important;
+  line-height:1.25;letter-spacing:-.025em
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-detail-top .meta{
+  align-items:center;gap:8px 10px
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-detail-top .badge{
+  font-size:.76rem;font-weight:700;border-color:#365674;background:#182d40;
+  color:#d2eaff;padding:4px 10px;white-space:nowrap
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-source{
+  font-size:.81rem;color:var(--hub-text-2,#c5cfdb)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-verbetelink{
+  display:inline-flex;align-items:center;min-height:32px;padding:5px 10px;
+  border:1px solid var(--hub-border,#223245);border-radius:8px;
+  font-size:.76rem;font-weight:700;text-decoration:none!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-verbetelink:hover{
+  background:var(--hub-surface-2,#131f2b)
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .stats{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 22px
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .stat{
+  min-height:72px;padding:12px 14px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .box{
+  margin:13px 0!important;padding:18px 20px!important
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .box p{
+  line-height:1.78
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .origem{
+  font-size:.79rem;gap:5px 20px
+}
+@media(min-width:1180px){
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-browser{
+    position:sticky;top:calc(var(--hub-topbar-height,64px) + 16px)
+  }
+}
+@media(max-width:1000px){
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .layout{
+    grid-template-columns:minmax(0,1fr)!important
+  }
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-browser{
+    position:static
+  }
+}
+@media(max-width:560px){
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-browser{
+    padding:14px!important
+  }
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .detalhe{
+    padding:18px!important
+  }
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .spell-detail-top h2{
+    font-size:1.38rem!important
+  }
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .box{
+    padding:15px!important
+  }
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .stats{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important
+  }
+}
+@media(max-width:390px){
+  body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .stats{
+    grid-template-columns:minmax(0,1fr)!important
+  }
+}
 </style>
 </head>
 <body>
 <p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
 <main id="main-content" class="hub-library-spells">
   <header class="spell-heading hub-area-heading">
+    <span class="spell-eyebrow">BIBLIOTECA · GRIMÓRIO</span>
     <h1>Magias</h1>
-    <p>Consulte magias por nível, escola, classe e propriedades, com detalhes mecânicos e referências às fontes.</p>
+    <p>Encontre uma magia por nome, círculo, escola ou classe. Abra seu verbete para consultar efeitos, componentes e informações de conjuração.</p>
   </header>
   <div class="layout">
     <aside class="painel spell-browser" aria-label="Pesquisa e seleção de magias">
       <div class="tools">
-        <div class="spell-tools-heading"><h2>Catálogo de magias</h2></div>
-        <input id="q" type="search" aria-label="Buscar magias" placeholder="Buscar magia, escola, classe, efeito ou fonte…">
+        <div class="spell-tools-heading"><h2>Explorar magias</h2><button type="button" id="spell-clear" class="spell-clear" aria-label="Limpar todos os filtros">Limpar filtros</button></div>
+        <label for="q" class="spell-search-label">Buscar no grimório</label>
+        <input id="q" type="search" aria-label="Buscar magias" placeholder="Nome, escola, efeito ou fonte…" autocomplete="off">
         <div class="filtros">
           <select id="nivel" aria-label="Filtrar por nível"><option value="">Todos os níveis</option></select>
           <select id="escola" aria-label="Filtrar por escola"><option value="">Todas as escolas</option></select>
@@ -194,7 +334,7 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells 
       </div>
       <div id="lista" class="lista" aria-label="Resultados da busca de magias"></div>
     </aside>
-    <section id="detalhe" class="painel detalhe" aria-label="Detalhes da magia">
+    <section id="detalhe" class="painel detalhe" aria-label="Verbete da magia" aria-live="off">
       <div class="vazio">Carregando o catálogo de magias…</div>
     </section>
   </div>
@@ -251,9 +391,51 @@ function officialRecord(s,src,lookup){const m=META[src],du=fmtDuration(s),open=!
 function localRecord(x,fonts){const f=fonts[x.fonte]||{},c=x.componentes||{verbal:false,somatico:false,material:false,material_texto:''};return{id:slug(x.nome_original),nome:x.nome||x.nome_original,nome_original:x.nome_original,ruleset:f.ruleset||'5e',revisao_core:f.ruleset==='5.5e'?2024:2014,fonte:x.fonte,pagina_fonte:x.pagina_fonte,pdf_origem:f.pdf_origem,nivel:x.nivel||0,escola:x.escola||'—',escola_alternativa:x.escola_alternativa||'',tempo_conjuracao:x.tempo_conjuracao||'Não republicado',alcance:x.alcance||'Não republicado',componentes:c,duracao:x.duracao||'Não republicado',concentracao:x.concentracao,ritual:x.ritual,ataque_salvaguarda:x.ataque_salvaguarda||'Não republicado',tipo_efeito:'Magia',tipo_dano:x.tipo_dano||'',dano_base:x.dano_base||'',classes_base:x.classes_base||[],descricao:x.descricao||'Entrada identificada no apêndice de magias da fonte. O Hub registra nível, escola, página e proveniência, mas não reproduz o texto integral porque a própria publicação o designa como Product Identity e conteúdo não aberto.',niveis_superiores:x.niveis_superiores||'',descricao_tipo:x.descricao_tipo||'metadados_protegidos',texto_integral_publicavel:false,completude:x.completude||'metadados_protegidos',natureza:f.natureza||'terceiro',nota_versao:x.nota_versao||'',versao_mais_recente:true}}
 function comp(x){const c=x.componentes||{},a=[];if(c.verbal)a.push('V');if(c.somatico)a.push('S');if(c.material)a.push(`M${c.material_texto?' ('+c.material_texto+')':''}`);return a.join(', ')||'—'}
 function sourceTitle(id){return DATA.fontes[id]?.titulo||id}
-function renderDetail(id){CURRENT=id;renderList();const x=ALL.find(i=>i.id===id);if(!x)return;const f=DATA.fontes[x.fonte]||{},orig=x.nome!==x.nome_original?` <span class="muted">(${esc(x.nome_original)})</span>`:'',conc=x.concentracao==null?'Não informado':x.concentracao?'Sim':'Não',rit=x.ritual==null?'Não informado':x.ritual?'Sim':'Não',descTitle=x.descricao_tipo==='texto_aberto_srd_5_2_1'?'Descrição — texto aberto SRD 5.2.1':x.descricao_tipo==='metadados_protegidos'?'Descrição — metadados publicáveis':'Descrição — resumo mecânico editorial';const prev=(x.versoes_anteriores_descartadas||[]).length?`<div class="box"><h3>Versões anteriores removidas</h3><p>${x.versoes_anteriores_descartadas.map(v=>`${esc(sourceTitle(v.fonte))}${v.ano?' ('+esc(v.ano)+')':''}`).join('; ')}</p></div>`:'';document.getElementById('detalhe').innerHTML=`<h2>${esc(x.nome)}${orig}</h2><div class="meta"><span class="badge">${esc(x.ruleset)}</span><span class="badge">Nível ${esc(x.nivel)}</span><span class="badge">${esc(x.escola)}</span><span class="badge">versão mais recente</span><span><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span></div><div class="stats"><div class="stat"><b>Tempo de Conjuração</b><span>${esc(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${esc(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${conc}</span></div><div class="stat"><b>Ritual</b><span>${rit}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${esc(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box"><h3>${descTitle}</h3><p>${esc(x.descricao)}</p>${x.niveis_superiores?`<p><strong>Em níveis superiores:</strong> ${esc(x.niveis_superiores)}</p>`:''}</div><div class="box"><h3>Classes</h3><p>${esc((x.classes_base||[]).join(', ')||'Não indexadas para este registro')}</p></div>${prev}<div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página da fonte:</b> ${esc(x.pagina_fonte??'—')}</span><span><b>PDF:</b> ${esc(x.pdf_origem||'—')}</span><span><b>Revisão core:</b> ${esc(x.revisao_core)}</span><span><b>Completude:</b> ${esc(x.completude)}</span></div>`}
-function renderList(){const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value;const rows=ALL.filter(x=>(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao!==true&&x.ritual!==true))&&(!q||norm([x.nome,x.nome_original,x.escola,x.ruleset,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q)));document.getElementById('count').textContent=`${rows.length} de ${ALL.length} magias`;document.getElementById('lista').innerHTML=rows.map(x=>`<button class="item ${CURRENT===x.id?'on':''}" data-id="${esc(x.id)}"><strong>${esc(x.nome)}</strong><small>${x.nome!==x.nome_original?esc(x.nome_original)+' · ':''}${x.nivel===0?'truque':'nível '+esc(x.nivel)} · ${esc(x.escola)} · ${esc(sourceTitle(x.fonte))}</small></button>`).join('')||'<div class="vazio">Nenhuma magia encontrada.</div>';document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.id))}
+function renderDetail(id){
+ CURRENT=id;renderList();
+ const x=ALL.find(i=>i.id===id);if(!x)return;
+ const f=DATA.fontes[x.fonte]||{},conc=x.concentracao==null?'Não informado':x.concentracao?'Sim':'Não',rit=x.ritual==null?'Não informado':x.ritual?'Sim':'Não';
+ const descTitle=x.descricao_tipo==='texto_aberto_srd_5_2_1'?'Descrição da magia':x.descricao_tipo==='metadados_protegidos'?'Informações disponíveis':'Efeito e descrição';
+ const entryLink=`magias.html?magia=${encodeURIComponent(x.id)}`;
+ document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2><div class="meta"><span class="badge">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge">${esc(x.escola)}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span><a class="spell-verbetelink" href="${entryLink}" title="Link permanente para esta magia">Link do verbete</a></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${esc(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${esc(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${conc}</span></div><div class="stat"><b>Ritual</b><span>${rit}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${esc(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box"><h3>${descTitle}</h3><p>${esc(x.descricao)}</p>${x.niveis_superiores?`<p><strong>Em círculos superiores:</strong> ${esc(x.niveis_superiores)}</p>`:''}</div><div class="box"><h3>Classes</h3><p>${esc((x.classes_base||[]).join(', ')||'Não há classes associadas a este registro.')}</p></div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
+}
+function renderList(){
+ const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value;
+ const filtered=ALL.filter(x=>(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
+ // Priorizar correspondências por nome (PT-BR ou original) para não misturar efeitos que apenas citam outra magia.
+ const direct=q?filtered.filter(x=>norm(x.nome).includes(q)||norm(x.nome_original).includes(q)):[];
+ const rows=!q?filtered:direct.length?direct:filtered.filter(x=>norm([x.escola,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q));
+ document.getElementById('count').textContent=`${rows.length} de ${ALL.length} magias`;
+ document.getElementById('lista').innerHTML=rows.map(x=>`<a class="item ${CURRENT===x.id?'on':''}" href="magias.html?magia=${encodeURIComponent(x.id)}" data-id="${esc(x.id)}" ${CURRENT===x.id?'aria-current="true"':''}><span class="spell-item-title"><strong>${esc(x.nome)}</strong><span class="spell-item-level">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span></span><small>${esc(x.escola)} · ${esc(sourceTitle(x.fonte))}</small></a>`).join('')||'<div class="vazio">Nenhuma magia encontrada. Experimente remover algum filtro.</div>';
+}
 function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)=>a-b),es=[...new Set(ALL.map(x=>x.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')),cs=[...new Set(ALL.flatMap(x=>x.classes_base||[]))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('nivel').innerHTML='<option value="">Todos os níveis</option>'+ns.map(x=>`<option value="${x}">${x===0?'Truques':'Nível '+x}</option>`).join('');document.getElementById('escola').innerHTML='<option value="">Todas as escolas</option>'+es.map(x=>`<option>${esc(x)}</option>`).join('');document.getElementById('classe').innerHTML='<option value="">Todas as classes</option>'+cs.map(x=>`<option>${esc(x)}</option>`).join('')}
+async function localizeSpellNames(){
+ try{
+  const localized=await getJSON('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1');
+  const map=localized.nomes||{};
+  for(const x of ALL)x.nome=map[x.nome_original]||x.nome;
+ }catch(e){console.warn('Não foi possível carregar nomes em português; mostrando o catálogo original.',e)}
+ ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
+}
+function initialSpellId(){
+ const id=new URLSearchParams(location.search).get('magia');
+ return ALL.find(x=>x.id===id)?.id||ALL[0]?.id||'';
+}
+function openInitialSpell(){populateFilters();renderList();const id=initialSpellId();if(id)renderDetail(id)}
+document.getElementById('lista').addEventListener('click',event=>{
+ const link=event.target.closest('a.item[data-id]');
+ if(!link||event.button!==0||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey)return;
+ event.preventDefault();
+ const u=new URL(location.href);u.searchParams.set('magia',link.dataset.id);u.searchParams.delete('ref');u.hash='';
+ history.pushState({magia:link.dataset.id},'',u);
+ renderDetail(link.dataset.id);
+});
+window.addEventListener('popstate',()=>{const id=initialSpellId();if(id)renderDetail(id)});
+document.getElementById('spell-clear').addEventListener('click',()=>{
+ document.getElementById('q').value='';
+ for(const id of ['nivel','escola','classe','especial'])document.getElementById(id).value='';
+ renderList();
+});
 (async()=>{try{
  // hub-magias-catalogo-consolidado-v1
  try{
@@ -262,7 +444,7 @@ function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)
    DATA={fontes:catalog.fontes||{}};ALL=catalog.itens;
    ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
-   populateFilters();renderList();if(ALL[0])renderDetail(ALL[0].id);return;
+   await localizeSpellNames();openInitialSpell();return;
   }
  }catch(e){console.warn('Catálogo consolidado local indisponível; usando montagem remota.',e)}
  const sourceEntries=Object.entries(REMOTE);const fetched=await Promise.all(sourceEntries.map(async([src,url])=>[src,await getJSON(url)]));let lookup={};try{lookup=await getJSON(LOOKUP)}catch(e){console.warn('Class lookup indisponível',e)}const local=await getJSON('dados/magias-suplementos-locais.json?v=20260819-1300');
@@ -271,7 +453,7 @@ function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
  ALL.sort((a,b)=>(a.nivel-b.nivel)||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
- populateFilters();renderList();if(ALL[0])renderDetail(ALL[0].id);
+ await localizeSpellNames();openInitialSpell();
  }catch(e){
   console.error(e);
   document.getElementById('count').textContent='Não foi possível carregar as magias.';
