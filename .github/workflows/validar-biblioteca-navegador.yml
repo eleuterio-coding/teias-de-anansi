@@ -15,6 +15,7 @@ on:
       - 'scripts/character-builder/spells.js'
       - 'scripts/character-sheet-unified-spells.js'
       - 'scripts/politica-regras-biblioteca.js'
+      - 'scripts/gerar_referencias_hub.py'
       - 'tests/auditar-magias-ptbr.mjs'
       - '.github/workflows/validar-biblioteca-navegador.yml'
   push:
@@ -32,6 +33,7 @@ on:
       - 'scripts/character-builder/spells.js'
       - 'scripts/character-sheet-unified-spells.js'
       - 'scripts/politica-regras-biblioteca.js'
+      - 'scripts/gerar_referencias_hub.py'
       - 'tests/auditar-magias-ptbr.mjs'
       - '.github/workflows/validar-biblioteca-navegador.yml'
   workflow_dispatch:
