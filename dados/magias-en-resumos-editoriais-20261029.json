@@ -94,8 +94,8 @@
       "edicao": "5.5e"
     },
     "Control Flames": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You alter an existing nonmagical flame within a small area. The effect can reshape or reposition the fire, change its appearance or illumination, or extinguish it, subject to the options and limits in the source spell.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -118,8 +118,8 @@
       "edicao": "5e"
     },
     "Mold Earth": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You manipulate a small cube of loose earth, potentially excavating or shifting it, changing its appearance, or modifying the terrain. The exact options and persistence of each alteration are set out in the source.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -136,8 +136,8 @@
       "edicao": "5e"
     },
     "Shape Water": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You magically affect a small volume of water, altering its movement, shape, appearance, or temperature within the limits of the spell. Some changes last while others are instantaneous.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -160,8 +160,8 @@
       "edicao": "5.5e"
     },
     "Ceremony": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You perform a sacred rite with a specified benefit. The spell offers several rites for occasions such as a coming of age, marriage, atonement, or the blessing of water, each with its own requirements and duration.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -268,14 +268,14 @@
       "edicao": "5.5e"
     },
     "Elminster's Elusion": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "Protective arcane wards grant you Advantage on saving throws against spells and other magical effects while concentration lasts. A successful save that would ordinarily halve magical damage instead negates that damage.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Beast Sense": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You establish a magical sensory connection with a willing beast, enabling you to see and hear through its senses for the spell's duration. While doing so, you are unaware of your own surroundings.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
@@ -502,8 +502,8 @@
       "edicao": "5e"
     },
     "Wall of Water": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "A wall of moving water rises at a location you choose within range. The barrier interferes with attacks and the passage of certain effects, particularly those involving fire, with the details governed by the source spell.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -676,8 +676,8 @@
       "edicao": "5.5e"
     },
     "Circle of Power": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "A protective aura extends 30 feet from you while you maintain concentration. Allies within it gain Advantage on saving throws against spells and magical effects, and a successful save against an effect that normally deals half damage prevents that damage entirely.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
@@ -802,8 +802,8 @@
       "edicao": "5e"
     },
     "Skill Empowerment": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You enhance a willing creature's proficiency in one skill, granting it expertise in that skill for the spell's duration, provided the creature is already proficient and does not already benefit from a similar expertise feature.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
@@ -976,8 +976,8 @@
       "edicao": "5.5e"
     },
     "Telepathy": {
-      "descricao": "",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "You establish a lasting mental link with a willing creature you know on the same plane of existence. Both participants can exchange words, images, sounds, and other sensory messages over any distance on that plane.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
