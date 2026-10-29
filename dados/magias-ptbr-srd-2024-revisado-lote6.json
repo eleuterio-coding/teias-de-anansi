@@ -1,0 +1,120 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v6",
+  "revisado_em": "2026-10-29",
+  "fonte": "System Reference Document 5.2.1 (CC BY 4.0)",
+  "criterio": "Traduções completas de magias abertas de vários círculos. Medidas imperiais convertidas aproximadamente para o sistema métrico; efeitos em níveis superiores preservados.",
+  "total": 33,
+  "descricoes": {
+    "Arcane Eye": {
+      "descricao": "Você cria um olho Invisível e invulnerável em um ponto dentro do alcance. Ele flutua durante a magia. Você recebe mentalmente as imagens captadas pelo olho, que pode enxergar em todas as direções e possui Visão no Escuro com alcance de 9 metros. Como ação bônus, pode mover o olho até 9 metros em qualquer direção. Barreiras sólidas impedem seu movimento, mas ele consegue passar por aberturas com diâmetro de apenas 2,5 centímetros."
+    },
+    "Fire Storm": {
+      "descricao": "Uma tempestade de fogo surge dentro do alcance. Sua área é composta por até dez cubos de 3 metros de lado, dispostos como você desejar. Cada cubo deve ser contíguo a pelo menos outro. Cada criatura nessa área realiza uma salvaguarda de Destreza. Em caso de falha, sofre 7d10 de dano de fogo; em caso de sucesso, sofre metade. Objetos inflamáveis na área que não estejam sendo vestidos ou carregados começam a queimar."
+    },
+    "Flame Strike": {
+      "descricao": "Uma coluna vertical de fogo brilhante desce rugindo do alto. Cada criatura em um cilindro de 3 metros de raio e 12 metros de altura, centrado em um ponto dentro do alcance, realiza uma salvaguarda de Destreza. Em caso de falha, sofre 5d6 de dano de fogo e 5d6 de dano radiante; em caso de sucesso, sofre metade desses danos.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 5º, tanto o dano de fogo quanto o dano radiante aumentam em 1d6 por círculo acima do 5º."
+    },
+    "Dragon's Breath": {
+      "descricao": "Você toca uma criatura voluntária e escolhe um dos seguintes tipos de dano: ácido, frio, fogo, elétrico ou venenoso. Até a magia terminar, o alvo pode usar uma ação Mágica para exalar um cone de 4,5 metros. Cada criatura na área realiza uma salvaguarda de Destreza, sofrendo 3d6 de dano do tipo escolhido em caso de falha ou metade em caso de sucesso.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, o dano aumenta em 1d6 por círculo acima do 2º."
+    },
+    "Holy Aura": {
+      "descricao": "Durante a magia, você emite uma aura em uma emanação de 9 metros. Enquanto estiverem nela, criaturas à sua escolha têm vantagem em todas as salvaguardas, e as outras criaturas têm desvantagem nas jogadas de ataque contra elas. Além disso, quando um Ínfero ou Morto-vivo acerta uma criatura afetada com uma jogada de ataque corpo a corpo, o atacante deve obter sucesso em uma salvaguarda de Constituição ou fica Cego até o final do próximo turno dele."
+    },
+    "Sleet Storm": {
+      "descricao": "Até a magia terminar, uma tempestade de granizo e chuva congelante cai em um cilindro de 12 metros de altura e 6 metros de raio, centrado em um ponto escolhido dentro do alcance. A área fica totalmente obscurecida, e chamas expostas nela são apagadas. O chão no cilindro se torna Terreno Difícil. Quando uma criatura entra no cilindro pela primeira vez em um turno ou começa seu turno ali, deve obter sucesso em uma salvaguarda de Destreza ou fica Caída e perde a Concentração."
+    },
+    "Mordenkainen's Sword": {
+      "descricao": "Você cria uma espada espectral que flutua dentro do alcance e dura pelo tempo da magia. Quando a espada aparece, você realiza uma jogada de ataque mágico corpo a corpo contra um alvo a até 1,5 metro dela. Se acertar, o alvo sofre dano de energia igual a 4d12 mais seu modificador de atributo de conjuração. Em seus turnos seguintes, você pode usar uma ação bônus para mover a espada até 9 metros para um ponto que consiga ver e repetir o ataque contra o mesmo alvo ou outro."
+    },
+    "Blight": {
+      "descricao": "Uma criatura que você possa ver dentro do alcance realiza uma salvaguarda de Constituição, sofrendo 8d8 de dano necrótico em caso de falha ou metade em caso de sucesso. Uma criatura do tipo Planta falha automaticamente nessa salvaguarda. Alternativamente, você pode escolher como alvo uma planta não mágica que não seja uma criatura, como uma árvore ou arbusto. Ela não realiza salvaguarda: simplesmente murcha e morre.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano aumenta em 1d8 por círculo acima do 4º."
+    },
+    "Melf's Acid Arrow": {
+      "descricao": "Uma flecha verde cintilante dispara em direção a um alvo dentro do alcance e explode em um jato de ácido. Faça uma jogada de ataque mágico à distância contra o alvo. Se acertar, ele sofre 4d4 de dano de ácido e, no final do próximo turno dele, sofre mais 2d4 de dano de ácido. Se errar, o ácido respinga no alvo, que sofre apenas metade do dano inicial.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, tanto o dano inicial quanto o dano posterior aumentam em 1d4 por círculo acima do 2º."
+    },
+    "Befuddlement": {
+      "descricao": "Você atinge a mente de uma criatura que possa ver dentro do alcance. O alvo realiza uma salvaguarda de Inteligência. Em caso de falha, sofre 10d12 de dano psíquico e não pode conjurar magias nem realizar a ação Mágica. Ao final de cada período de 30 dias, repete a salvaguarda, encerrando o efeito se obtiver sucesso. O efeito também pode ser encerrado pelas magias Restauração Maior, Curar ou Desejo. Em caso de sucesso na salvaguarda inicial, o alvo sofre apenas metade do dano."
+    },
+    "Word of Recall": {
+      "descricao": "Você e até cinco criaturas voluntárias que estejam a até 1,5 metro de você são teleportados instantaneamente para um santuário previamente designado. Você e as criaturas teleportadas aparecem nos espaços desocupados mais próximos do ponto escolhido quando o santuário foi preparado. Se você conjurar esta magia sem ter preparado previamente um santuário, ela não produz efeito. Para designar um lugar, como um templo, como santuário, você precisa conjurar esta magia nesse local."
+    },
+    "Maze": {
+      "descricao": "Você bane uma criatura que possa ver dentro do alcance para um semiplano labiríntico. O alvo permanece lá durante a magia ou até escapar do labirinto. Ele pode realizar uma ação Estudar para tentar fugir, fazendo um teste de Inteligência (Investigação) com CD 20. Se obtiver sucesso, escapa e a magia termina. Quando a magia termina, o alvo reaparece no espaço que deixou ou, se esse espaço estiver ocupado, no espaço desocupado mais próximo."
+    },
+    "Charm Monster": {
+      "descricao": "Uma criatura que você possa ver dentro do alcance realiza uma salvaguarda de Sabedoria, com vantagem se você ou seus aliados estiverem combatendo-a. Em caso de falha, ela fica Enfeitiçada até a magia terminar ou até você ou seus aliados causarem dano a ela. A criatura Enfeitiçada fica Amistosa em relação a você. Quando a magia termina, o alvo sabe que foi Enfeitiçado por você.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, você pode escolher uma criatura adicional por círculo acima do 4º."
+    },
+    "Dispel Magic": {
+      "descricao": "Escolha uma criatura, objeto ou efeito mágico dentro do alcance. Qualquer magia ainda ativa de 3º círculo ou inferior sobre o alvo termina. Para cada magia ainda ativa de 4º círculo ou superior sobre o alvo, faça um teste de atributo usando seu atributo de conjuração contra CD igual a 10 mais o círculo da magia. Se obtiver sucesso, essa magia termina.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 3º, você encerra automaticamente uma magia no alvo se o círculo dela for igual ou inferior ao círculo do espaço utilizado."
+    },
+    "Rary's Telepathic Bond": {
+      "descricao": "Você estabelece um vínculo telepático entre até oito criaturas voluntárias à sua escolha dentro do alcance, conectando mentalmente cada uma a todas as outras durante a magia. Criaturas incapazes de se comunicar em qualquer idioma não são afetadas. Até a magia terminar, os alvos podem se comunicar telepaticamente pelo vínculo, independentemente de compartilharem um idioma. Essa comunicação funciona a qualquer distância, mas não se estende a outros planos de existência."
+    },
+    "Stone Shape": {
+      "descricao": "Você toca um objeto de pedra de tamanho Médio ou menor, ou uma seção de pedra com no máximo 1,5 metro em qualquer dimensão, e a molda na forma que desejar. Por exemplo, pode transformar uma rocha grande em arma, estátua ou cofre, ou criar uma pequena passagem através de uma parede com 1,5 metro de espessura. Você também pode moldar uma porta de pedra ou seu batente para selá-la. O objeto criado pode possuir até duas dobradiças e uma trava, mas detalhes mecânicos mais delicados não são possíveis."
+    },
+    "Hypnotic Pattern": {
+      "descricao": "Você cria um padrão espiralado de cores em um cubo de 9 metros de lado dentro do alcance. O padrão aparece por um instante e desaparece. Cada criatura na área que possa vê-lo deve obter sucesso em uma salvaguarda de Sabedoria ou fica Enfeitiçada durante a magia. Enquanto estiver Enfeitiçada dessa forma, ela também fica Incapacitada e tem Deslocamento 0. A magia termina para uma criatura afetada se ela sofrer qualquer dano ou se outra criatura usar uma ação para sacudi-la e tirá-la do estupor."
+    },
+    "Compulsion": {
+      "descricao": "Cada criatura à sua escolha que você possa ver dentro do alcance deve obter sucesso em uma salvaguarda de Sabedoria ou fica Enfeitiçada até a magia terminar. Durante esse período, você pode usar uma ação bônus para indicar uma direção horizontal em relação a você. Cada alvo Enfeitiçado deve gastar o máximo possível de seu deslocamento movendo-se nessa direção no próximo turno, pelo caminho mais seguro. Depois de se mover dessa maneira, o alvo repete a salvaguarda, encerrando a magia sobre si se obtiver sucesso."
+    },
+    "Ice Storm": {
+      "descricao": "Granizo cai em um cilindro de 6 metros de raio e 12 metros de altura centrado em um ponto dentro do alcance. Cada criatura no cilindro realiza uma salvaguarda de Destreza. Em caso de falha, sofre 2d10 de dano contundente e 4d6 de dano de frio; em caso de sucesso, sofre metade desses danos. As pedras de granizo tornam o chão do cilindro Terreno Difícil até o final do seu próximo turno.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano contundente aumenta em 1d10 por círculo acima do 4º."
+    },
+    "Fear": {
+      "descricao": "Cada criatura em um cone de 9 metros deve obter sucesso em uma salvaguarda de Sabedoria ou solta tudo o que estiver segurando e fica Amedrontada durante a magia. Uma criatura Amedrontada dessa forma realiza a ação Disparada e se afasta de você pelo caminho mais seguro em cada um de seus turnos, a menos que não haja para onde ir. Se terminar o turno em um espaço de onde não tenha linha de visão até você, ela realiza uma salvaguarda de Sabedoria. Em caso de sucesso, a magia termina para essa criatura."
+    },
+    "Vitriolic Sphere": {
+      "descricao": "Você aponta para um local dentro do alcance, e uma esfera luminosa de ácido, com 30 centímetros de diâmetro, avança até lá e explode em uma esfera de 6 metros de raio. Cada criatura na área realiza uma salvaguarda de Destreza. Em caso de falha, sofre 10d4 de dano de ácido e mais 5d4 de dano de ácido no final do próximo turno dela. Em caso de sucesso, sofre apenas metade do dano inicial.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano inicial aumenta em 2d4 por círculo acima do 4º."
+    },
+    "Conjure Minor Elementals": {
+      "descricao": "Você conjura espíritos dos Planos Elementais que esvoaçam ao seu redor em uma emanação de 4,5 metros durante a magia. Até a magia terminar, qualquer ataque seu que acerte uma criatura na emanação causa 2d8 de dano adicional, do tipo ácido, frio, fogo ou elétrico, à sua escolha ao realizar o ataque. Além disso, o chão na emanação é Terreno Difícil para seus inimigos.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano aumenta em 1d8 por círculo acima do 4º."
+    },
+    "Shatter": {
+      "descricao": "Um estrondo intenso irrompe de um ponto à sua escolha dentro do alcance. Cada criatura em uma esfera de 3 metros de raio centrada ali realiza uma salvaguarda de Constituição, sofrendo 3d8 de dano trovejante em caso de falha ou metade em caso de sucesso. Uma criatura do tipo Constructo tem desvantagem na salvaguarda. Um objeto não mágico na área que não esteja sendo vestido ou carregado também sofre esse dano.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, o dano aumenta em 1d8 por círculo acima do 2º."
+    },
+    "Stinking Cloud": {
+      "descricao": "Você cria uma esfera de 6 metros de raio de gás amarelo e nauseante, centrada em um ponto dentro do alcance. A nuvem deixa a área totalmente obscurecida e permanece suspensa no ar durante a magia ou até ser dispersada por um vento forte, como aquele criado pela magia Lufada de Vento. Cada criatura que começa seu turno na esfera deve obter sucesso em uma salvaguarda de Constituição ou fica Envenenada até o final do turno atual. Enquanto estiver Envenenada dessa forma, a criatura não pode realizar ação nem ação bônus."
+    },
+    "Ray of Enfeeblement": {
+      "descricao": "Um raio de energia debilitante parte de você em direção a uma criatura dentro do alcance. O alvo realiza uma salvaguarda de Constituição. Em caso de sucesso, ele tem desvantagem na próxima jogada de ataque que fizer até o início do seu próximo turno. Em caso de falha, ele tem desvantagem nos Testes de d20 baseados em Força durante a magia. Nesse período, também subtrai 1d8 de todas as suas rolagens de dano. O alvo repete a salvaguarda ao final de cada turno dele, encerrando a magia se obtiver sucesso."
+    },
+    "Haste": {
+      "descricao": "Escolha uma criatura voluntária que você possa ver dentro do alcance. Até a magia terminar, o Deslocamento do alvo dobra, ele recebe um bônus de +2 na Classe de Armadura, tem vantagem nas salvaguardas de Destreza e ganha uma ação adicional em cada turno dele. Essa ação só pode ser usada para Atacar (apenas um ataque), Disparada, Desengajar, Esconder-se ou Utilizar. Quando a magia termina, o alvo fica Incapacitado e tem Deslocamento 0 até o final do próximo turno dele, devido a uma onda de letargia."
+    },
+    "Warding Bond": {
+      "descricao": "Você toca outra criatura voluntária e cria uma conexão mística entre vocês até a magia terminar. Enquanto o alvo estiver a até 18 metros de você, recebe +1 na Classe de Armadura e nas salvaguardas e tem Resistência a todos os tipos de dano. Além disso, toda vez que ele sofrer dano, você sofre a mesma quantidade de dano. A magia termina se você chegar a 0 Pontos de Vida ou se você e o alvo se afastarem mais de 18 metros. Ela também termina se for conjurada novamente em qualquer uma das criaturas conectadas."
+    },
+    "Time Stop": {
+      "descricao": "Você interrompe brevemente o fluxo do tempo para todos, exceto para si. Nenhum tempo passa para as outras criaturas enquanto você realiza 1d4 + 1 turnos consecutivos, durante os quais pode usar suas ações e se mover normalmente. A magia termina se qualquer ação realizada nesse período, ou qualquer efeito que você criar nele, afetar uma criatura diferente de você ou um objeto vestido ou carregado por outra pessoa. Além disso, a magia termina se você se deslocar para um local a mais de 300 metros do ponto em que a conjurou."
+    },
+    "Passwall": {
+      "descricao": "Uma passagem aparece em um ponto que você possa ver em uma superfície de madeira, gesso ou pedra, como parede, teto ou piso, dentro do alcance, e dura pelo tempo da magia. Você escolhe suas dimensões: até 1,5 metro de largura, 2,4 metros de altura e 6 metros de profundidade. A passagem não provoca instabilidade na estrutura ao redor. Quando a abertura desaparece, quaisquer criaturas ou objetos que ainda estejam nela são expelidos em segurança para o espaço desocupado mais próximo da superfície em que a magia foi conjurada."
+    },
+    "Globe of Invulnerability": {
+      "descricao": "Uma barreira imóvel e cintilante surge em uma emanação de 3 metros ao seu redor e permanece durante a magia. Qualquer magia de 5º círculo ou inferior conjurada de fora da barreira não pode afetar nada dentro dela. Essas magias ainda podem escolher criaturas ou objetos ali como alvo, mas não produzem efeito sobre eles. Da mesma maneira, o interior da barreira fica excluído das áreas de efeito produzidas por essas magias.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço superior ao 6º círculo, a barreira bloqueia magias de um círculo adicional por círculo do espaço acima do 6º."
+    },
+    "Find Traps": {
+      "descricao": "Você percebe qualquer armadilha dentro do alcance que esteja em sua linha de visão. Para esta magia, uma armadilha inclui qualquer objeto ou mecanismo criado para causar dano ou outro perigo. Assim, a magia detectaria Alarme, Glifo de Proteção ou uma armadilha mecânica de fosso, mas não revelaria uma fraqueza natural no piso, um teto instável ou um sumidouro oculto. A magia revela que há uma armadilha presente, mas não sua localização. Você descobre a natureza geral do perigo representado por uma armadilha que perceber."
+    },
+    "Mislead": {
+      "descricao": "Você recebe a condição Invisível ao mesmo tempo que uma duplicata ilusória sua aparece onde você está. A duplicata dura pelo tempo da magia, mas a invisibilidade termina imediatamente depois que você realiza uma jogada de ataque, causa dano ou conjura uma magia. Como ação Mágica, você pode mover a duplicata ilusória até o dobro do seu Deslocamento e fazê-la gesticular, falar e se comportar como desejar. Ela é intangível e invulnerável. Você pode enxergar pelos olhos dela e ouvir pelos ouvidos dela como se estivesse em sua posição."
+    },
+    "Vampiric Touch": {
+      "descricao": "O toque de sua mão envolta em sombras drena a força vital de outras criaturas para curar suas feridas. Faça uma jogada de ataque mágico corpo a corpo contra uma criatura ao seu alcance. Se acertar, o alvo sofre 3d6 de dano necrótico, e você recupera Pontos de Vida iguais à metade do dano necrótico causado. Até a magia terminar, você pode repetir o ataque em cada um dos seus turnos como uma ação Mágica, contra a mesma criatura ou outra.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 3º, o dano aumenta em 1d6 por círculo acima do 3º."
+    }
+  }
+}
