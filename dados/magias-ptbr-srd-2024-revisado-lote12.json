@@ -1,0 +1,37 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v12",
+  "revisado_em": "2026-10-29",
+  "fonte": "System Reference Document 5.2.1 (CC BY 4.0)",
+  "total": 9,
+  "criterio": "Tradução integral de descrições abertas, com correção de marcas do conversor de texto na comparação com regras SRD 5.2.1 publicadas.",
+  "descricoes": {
+    "Detect Magic": {
+      "descricao": "Durante a magia, você percebe a presença de efeitos mágicos a até 9 metros de você. Se perceber algum, pode realizar uma ação Mágica para enxergar uma aura tênue ao redor de qualquer criatura ou objeto visível na área que possua magia. Se o efeito tiver sido criado por uma magia, você descobre a escola de magia correspondente. A magia é bloqueada por 30 centímetros de pedra, terra ou madeira, 2,5 centímetros de metal ou uma folha fina de chumbo."
+    },
+    "Divination": {
+      "descricao": "Esta magia coloca você em contato com uma divindade ou seus servos. Você faz uma pergunta sobre um objetivo, acontecimento ou atividade específica que ocorrerá nos próximos 7 dias. O Mestre oferece uma resposta verdadeira, que pode ser uma frase curta ou uma rima enigmática. A magia não considera circunstâncias capazes de alterar a resposta, como a conjuração de outras magias. Se conjurar esta magia mais de uma vez antes de terminar um Descanso Longo, haverá uma chance cumulativa de 25% de não receber resposta para cada conjuração após a primeira."
+    },
+    "Augury": {
+      "descricao": "Você recebe um presságio de uma entidade extraplanar sobre os resultados de uma ação que pretende realizar nos próximos 30 minutos. O Mestre escolhe o presságio dentre as opções:\n\nBom Agouro — resultados bons.\nMau Agouro — resultados ruins.\nBom e Mau Agouro — resultados bons e ruins.\nIndiferença — resultados nem bons nem ruins.\n\nA magia não considera circunstâncias que possam alterar os resultados, como outras magias. Se você conjurar esta magia mais de uma vez antes de concluir um Descanso Longo, haverá uma chance cumulativa de 25% de não receber resposta para cada conjuração após a primeira."
+    },
+    "Commune": {
+      "descricao": "Você entra em contato com uma divindade ou representante divino e faz até três perguntas que possam ser respondidas com sim ou não. Precisa fazer todas as perguntas antes de a magia terminar e recebe uma resposta correta para cada uma. Seres divinos não são necessariamente oniscientes, portanto pode receber 'incerto' como resposta a uma pergunta sobre algo que esteja além do conhecimento da divindade. Se uma resposta de apenas uma palavra for enganosa ou contrária aos interesses da divindade, o Mestre pode oferecer uma frase curta. Se conjurar esta magia mais de uma vez antes de terminar um Descanso Longo, haverá uma chance cumulativa de 25% de não receber resposta para cada conjuração após a primeira."
+    },
+    "Slow": {
+      "descricao": "Você altera o tempo ao redor de até seis criaturas à sua escolha em um cubo de 12 metros de lado dentro do alcance. Cada alvo deve obter sucesso em uma salvaguarda de Sabedoria ou fica afetado durante a magia. O Deslocamento do alvo afetado é reduzido à metade, ele sofre penalidade de −2 na Classe de Armadura e em salvaguardas de Destreza e não pode realizar Reações. Em seu turno, pode realizar uma ação ou uma ação bônus, mas não ambas, e só pode fazer um ataque ao executar a ação Atacar. Se conjurar uma magia com componente Somático, há 25% de chance de a magia falhar porque o alvo faz os gestos devagar demais. O alvo repete a salvaguarda no final de cada um de seus turnos, encerrando o efeito sobre si em caso de sucesso."
+    },
+    "Gust of Wind": {
+      "descricao": "Uma linha de vento forte com 18 metros de comprimento e 3 metros de largura sopra de você em uma direção à sua escolha durante a magia. Cada criatura na linha deve obter sucesso em uma salvaguarda de Força ou será empurrada 4,5 metros para longe de você, seguindo a direção da linha. Uma criatura que termina seu turno na linha repete a salvaguarda. Uma criatura na linha precisa gastar 60 centímetros de movimento para avançar cada 30 centímetros em direção a você. A rajada dispersa gases e vapores, apaga velas e chamas desprotegidas semelhantes na área e faz chamas protegidas, como as de lanternas, tremularem violentamente, com 50% de chance de apagá-las. Como ação bônus nos turnos posteriores, você pode mudar a direção em que o vento sopra."
+    },
+    "Sending": {
+      "descricao": "Você envia uma mensagem curta, com no máximo 25 palavras, a uma criatura que tenha encontrado ou que tenha sido descrita a você por alguém que já a encontrou. O alvo ouve a mensagem na mente, reconhece você como remetente caso o conheça e pode responder imediatamente da mesma forma. A magia permite que o alvo compreenda o significado de sua mensagem. Você pode enviá-la a qualquer distância e até a outros planos de existência, mas, se o alvo estiver em outro plano, haverá 5% de chance de ela não chegar. Você sabe quando a entrega falha. Ao receber a mensagem, uma criatura pode bloquear novas mensagens suas enviadas por esta magia por 8 horas. Caso tente enviar outra durante esse período, você descobre que foi bloqueado, e a magia falha."
+    },
+    "Leomund's Secret Chest": {
+      "descricao": "Você oculta um baú e todo seu conteúdo no Plano Etéreo. Precisa tocar o baú e sua réplica em miniatura, que servem como componentes Materiais da magia. O baú pode conter até aproximadamente 0,34 metro cúbico de material inanimado, com dimensões de cerca de 90 × 60 × 60 centímetros. Enquanto ele permanecer no Plano Etéreo, você pode realizar uma ação Mágica e tocar a réplica para trazê-lo de volta. Ele aparece em um espaço desocupado no chão a até 1,5 metro de você. Você também pode devolver o baú ao Plano Etéreo usando uma ação Mágica para tocar o baú e a réplica. Após 60 dias, no final de cada dia há uma chance cumulativa de 5% de a magia terminar. Ela também termina se você a conjurar novamente ou se a pequena réplica for destruída. Se terminar enquanto o baú maior estiver no Plano Etéreo, ele permanecerá lá para ser encontrado por você ou outra pessoa."
+    },
+    "Animal Messenger": {
+      "descricao": "Uma Fera Minúscula à sua escolha que você possa ver dentro do alcance deve obter sucesso em uma salvaguarda de Carisma ou tentará entregar uma mensagem para você. Se o Nível de Desafio da Fera não for 0, ela obtém sucesso automaticamente. Você indica um local que já tenha visitado e um destinatário que corresponda a uma descrição geral, como 'alguém com uniforme da guarda da cidade' ou 'um anão ruivo com chapéu pontudo'. Também transmite uma mensagem de até 25 palavras. A Fera viaja em direção ao local durante a magia, percorrendo aproximadamente 25 milhas (40 quilômetros) a cada 24 horas, ou 50 milhas (80 quilômetros) se puder voar. Ao chegar, transmite a mensagem à criatura descrita, imitando sua comunicação. Se não alcançar o destino antes de a magia terminar, a mensagem se perde e a Fera retorna ao lugar onde a magia foi conjurada.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, a duração aumenta em 48 horas por círculo acima do 2º."
+    }
+  }
+}
