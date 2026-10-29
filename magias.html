@@ -407,11 +407,10 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells 
 <script>
 const RAW='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data/';
 const REMOTE={
- XPHB:RAW+'spells/spells-xphb.json',XGE:RAW+'spells/spells-xge.json',TCE:RAW+'spells/spells-tce.json',FRHoF:RAW+'spells/spells-frhof.json',EFA:RAW+'spells/spells-efa.json'
+ XGE:RAW+'spells/spells-xge.json',TCE:RAW+'spells/spells-tce.json',FRHoF:RAW+'spells/spells-frhof.json',EFA:RAW+'spells/spells-efa.json'
 };
 const LOOKUP=RAW+'generated/gendata-spell-source-lookup.json';
 const META={
- XPHB:{id:'phb-2024',titulo:"Player's Handbook (2024)",ano:2024,prioridade:20240917,ruleset:'5.5e',revisao:2024,pdf:'pdf24_merged.pdf'},
  XGE:{id:'xanathar-2017',titulo:"Xanathar's Guide to Everything",ano:2017,prioridade:20171121,ruleset:'5e',revisao:2014,pdf:'pdf24_merged.pdf'},
  TCE:{id:'tasha-2020',titulo:"Tasha's Cauldron of Everything",ano:2020,prioridade:20201117,ruleset:'5e',revisao:2014,pdf:'pdf24_merged-1.pdf'},
  FRHoF:{id:'fr-heroes-2025',titulo:'Forgotten Realms: Heroes of Faerûn',ano:2025,prioridade:20251101,ruleset:'5.5e',revisao:2024,pdf:'pdf24_merged.pdf'},
@@ -651,9 +650,9 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
 (async()=>{try{
  // hub-magias-catalogo-consolidado-v1
  try{
-  const catalog=await getJSON('dados/magias-catalogo.json?v=20260821-unified1');
+  const catalog=await getJSON('dados/magias-catalogo.json?v=20261029-sem-phb1');
   if(Array.isArray(catalog.itens)&&catalog.itens.length){
-   DATA={fontes:catalog.fontes||{}};ALL=catalog.itens;
+   DATA={fontes:catalog.fontes||{}};ALL=catalog.itens.filter(x=>x.fonte!=='phb-2024');
    ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
    await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial()]);openInitialSpell();return;
@@ -664,6 +663,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  const groups=new Map();let candidates=0;for(const[src,data]of fetched){for(const s of(data.spell||[])){candidates++;const k=norm(s.name);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({src,s,p:META[src].prioridade})}}
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
+ ALL=ALL.filter(x=>x.fonte!=='phb-2024');
  ALL.sort((a,b)=>(a.nivel-b.nivel)||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
  await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial()]);openInitialSpell();
  }catch(e){
