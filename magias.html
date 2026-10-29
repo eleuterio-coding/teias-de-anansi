@@ -495,7 +495,7 @@ async function loadLarseneEditorial(){
 
 async function loadVerifiedSpellDescriptions(){
  try{
-  const [legacy,updated,secondBatch,thirdBatch,fourthBatch,fifthBatch,sixthBatch,seventhBatch,eighthBatch,ninthBatch,tenthBatch,eleventhBatch]=await Promise.all([
+  const [legacy,updated,secondBatch,thirdBatch,fourthBatch,fifthBatch,sixthBatch,seventhBatch,eighthBatch,ninthBatch,tenthBatch,eleventhBatch,twelfthBatch]=await Promise.all([
    getJSON('dados/magias-traducoes-srd-verificadas.json?v=20261028-verified1'),
    getJSON('dados/magias-ptbr-srd-2024-revisado.json?v=20261028-srd2024-ed1'),
    getJSON('dados/magias-ptbr-srd-2024-revisado-lote2.json?v=20261028-srd2024-lote2'),
@@ -507,9 +507,10 @@ async function loadVerifiedSpellDescriptions(){
    getJSON('dados/magias-ptbr-srd-2024-revisado-lote8.json?v=20261029-srd2024-lote8'),
    getJSON('dados/magias-ptbr-srd-2024-revisado-lote9.json?v=20261029-srd2024-lote9'),
    getJSON('dados/magias-ptbr-srd-2024-revisado-lote10.json?v=20261029-srd2024-lote10'),
-   getJSON('dados/magias-ptbr-srd-2024-revisado-lote11.json?v=20261029-srd2024-lote11')
+   getJSON('dados/magias-ptbr-srd-2024-revisado-lote11.json?v=20261029-srd2024-lote11'),
+   getJSON('dados/magias-ptbr-srd-2024-revisado-lote12.json?v=20261029-srd2024-lote12')
   ]);
-  VERIFIED_SPELL_PT={...(legacy.descricoes||{}),...(updated.descricoes||{}),...(secondBatch.descricoes||{}),...(thirdBatch.descricoes||{}),...(fourthBatch.descricoes||{}),...(fifthBatch.descricoes||{}),...(sixthBatch.descricoes||{}),...(seventhBatch.descricoes||{}),...(eighthBatch.descricoes||{}),...(ninthBatch.descricoes||{}),...(tenthBatch.descricoes||{}),...(eleventhBatch.descricoes||{})};
+  VERIFIED_SPELL_PT={...(legacy.descricoes||{}),...(updated.descricoes||{}),...(secondBatch.descricoes||{}),...(thirdBatch.descricoes||{}),...(fourthBatch.descricoes||{}),...(fifthBatch.descricoes||{}),...(sixthBatch.descricoes||{}),...(seventhBatch.descricoes||{}),...(eighthBatch.descricoes||{}),...(ninthBatch.descricoes||{}),...(tenthBatch.descricoes||{}),...(eleventhBatch.descricoes||{}),...(twelfthBatch.descricoes||{})};
  }catch(error){console.warn('Traduções verificadas indisponíveis:',error)}
 }
 function spellClassLinks(names){
