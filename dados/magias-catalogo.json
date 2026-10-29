@@ -644,11 +644,11 @@
         "Bruxo",
         "Mago"
       ],
-      "descricao": "Resumo mecânico editorial: exige salvaguarda de Inteligência; pode causar dano Psíquico; estrutura de alvo/área: Alvo único; possui efeito ou escalonamento em espaços de nível superior. O texto narrativo integral permanece na fonte comercial e não é reproduzido no Hub.",
-      "niveis_superiores": "A magia possui escalonamento ou efeito adicional com espaços de nível superior; consulte a fonte para os valores e condições completos.",
-      "descricao_tipo": "resumo_mecanico_editorial",
-      "texto_integral_publicavel": false,
-      "completude": "stats_completos_resumo",
+      "descricao": "You try to temporarily sliver the mind of one creature you can see within range. The target must succeed on an Intelligence saving throw or take 1d6 Psychic damage and subtract 1d4 from the next saving throw it makes before the end of your next turn.",
+      "niveis_superiores": "Cantrip Upgrade. The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": true,
+      "completude": "texto_integral_fornecido",
       "natureza": "oficial",
       "versoes_anteriores_descartadas": [
         {
@@ -657,7 +657,9 @@
           "pagina_fonte": 108
         }
       ],
-      "ordem_catalogo": 13
+      "ordem_catalogo": 13,
+      "descricao_pt": "Você tenta fragmentar temporariamente a mente de uma criatura que possa ver dentro do alcance. O alvo deve obter sucesso em uma salvaguarda de Inteligência ou sofre 1d6 de dano psíquico e subtrai 1d4 da próxima salvaguarda que realizar antes do final do seu próximo turno.",
+      "niveis_superiores_pt": "O dano aumenta em 1d6 quando você alcança os níveis 5 (2d6), 11 (3d6) e 17 (4d6)."
     },
     {
       "id": "vicious-mockery",
