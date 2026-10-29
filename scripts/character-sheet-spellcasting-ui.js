@@ -2,7 +2,7 @@ import{state,$,arr,num,esc,fold,read,write}from'./character-builder/state.js';
 import{derive,spellOptions}from'./character-builder/rules.js';
 import{featMechanicalOutcome}from'./character-builder/feat-mechanics.js';
 import{weaponPropertyProfile,ensureCombatState}from'./character-sheet-combat-rules.js?v=20260901-combat1';
-import{spellComponentProfile,concentrationDc,activeConcentrations,previewConcentration,effectiveConcentrationLevel,pendingConcentrationFailure,failConcentrationSave,resolveConcentrationFailure,startConcentration,endConcentration,enforceConcentrationState,spellCastReadiness,ritualEligible,recordRitualCast,preparationWindow,preparationChangeAllowed}from'./character-sheet-spellcasting-rules.js?v=20260901-rest1';
+import{spellComponentProfile,concentrationDc,activeConcentrations,previewConcentration,effectiveConcentrationLevel,pendingConcentrationFailure,failConcentrationSave,resolveConcentrationFailure,startConcentration,endConcentration,enforceConcentrationState,spellCastReadiness,ritualEligible,recordRitualCast,preparationWindow,preparationChangeAllowed}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';
 
 let initialized=false,rendering=false,observer=null,concentrationNotice='';
 function ceCategory(spell){return window.HubConcentracaoExpandida?.present?.({nome_original:spell?.originalName||spell?.name,concentracao:spell?.concentration,ruleset:spell?.ruleset||'5.5e'})?.category||'NC'}
