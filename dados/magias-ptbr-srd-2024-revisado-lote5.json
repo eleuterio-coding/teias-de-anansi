@@ -1,0 +1,83 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v5",
+  "revisado_em": "2026-10-29",
+  "fonte": "System Reference Document 5.2.1 (CC-BY-4.0)",
+  "total": 21,
+  "nota": "Traduções integrais editoriais de magias abertas do 1º círculo. Unidades em pés convertidas aproximadamente para metros, mantendo CD, salvaguardas, áreas e progressão.",
+  "descricoes": {
+    "Alarm": {
+      "descricao": "Você estabelece um alarme contra intrusos. Escolha uma porta, janela ou área dentro do alcance que não ultrapasse um cubo de 6 metros de lado. Até a magia terminar, o alarme avisa você quando uma criatura toca ou entra na área protegida. Durante a conjuração, você pode designar criaturas que não o acionam. Também escolhe entre um alarme sonoro e um mental.\n\nAlarme sonoro: um sino de mão toca por 10 segundos, podendo ser ouvido a até 18 metros da área protegida.\n\nAlarme mental: se você estiver a até 1 milha da área protegida, recebe um aviso telepático que também o desperta caso esteja dormindo."
+    },
+    "Protection from Evil and Good": {
+      "descricao": "Até a magia terminar, uma criatura voluntária que você toca recebe proteção contra Aberrações, Celestiais, Elementais, Fadas, Ínferos e Mortos-vivos. Criaturas desses tipos têm desvantagem em jogadas de ataque contra o alvo. Além disso, o alvo não pode ser possuído nem receber as condições Enfeitiçado ou Amedrontado dessas criaturas. Caso já esteja possuído, Enfeitiçado ou Amedrontado por uma delas, o alvo tem vantagem em qualquer nova salvaguarda contra o efeito correspondente."
+    },
+    "Hunter's Mark": {
+      "descricao": "Você marca magicamente como presa uma criatura que possa ver dentro do alcance. Até a magia terminar, sempre que acertar o alvo com uma jogada de ataque, você causa 1d6 de dano de energia adicional. Você também tem vantagem em testes de Sabedoria (Percepção ou Sobrevivência) feitos para encontrá-lo. Se o alvo chegar a 0 Pontos de Vida antes do término da magia, você pode usar uma ação bônus para transferir a marca a outra criatura que consiga ver dentro do alcance.",
+      "niveis_superiores": "Ao usar um espaço de magia de 3º ou 4º círculo, sua Concentração pode durar até 8 horas; com um espaço de 5º círculo ou superior, até 24 horas."
+    },
+    "Identify": {
+      "descricao": "Você toca um objeto durante toda a conjuração. Se for um item mágico ou outro objeto mágico, descobre suas propriedades e como utilizá-lo, se ele exige Sintonização e quantas cargas possui, caso existam. Você descobre quais magias ainda ativas o afetam, se houver. Se ele tiver sido criado por uma magia, também descobre o nome dessa magia. Alternativamente, se tocar uma criatura durante toda a conjuração, descobre quais magias ainda ativas a afetam, caso existam."
+    },
+    "Ensnaring Strike": {
+      "descricao": "Quando você acerta o alvo, cipós que o agarram surgem sobre ele, e o alvo realiza uma salvaguarda de Força. Uma criatura Grande ou maior tem vantagem nessa salvaguarda. Em caso de falha, o alvo fica Contido até a magia terminar. Em caso de sucesso, os cipós murcham e a magia termina. Enquanto estiver Contido, o alvo sofre 1d6 de dano perfurante no início de cada turno dele. O próprio alvo ou uma criatura ao seu alcance pode usar uma ação para realizar um teste de Força (Atletismo) contra a CD de salvaguarda de suas magias. Em caso de sucesso, a magia termina.",
+      "niveis_superiores": "Ao usar um espaço de magia de 2º círculo ou superior, o dano aumenta em 1d6 por círculo do espaço acima do 1º."
+    },
+    "Entangle": {
+      "descricao": "Plantas que agarram brotam do solo em uma área quadrada de 6 metros de lado dentro do alcance. Enquanto a magia durar, essas plantas transformam o terreno da área em Terreno Difícil. Elas desaparecem quando a magia termina. Cada criatura na área, exceto você, deve realizar uma salvaguarda de Força ao conjurar esta magia. Em caso de falha, ela fica Contida até a magia terminar. Uma criatura Contida pode usar uma ação para realizar um teste de Força (Atletismo) contra a CD de salvaguarda de suas magias. Se obtiver sucesso, ela se liberta das plantas e deixa de estar Contida por elas."
+    },
+    "Ice Knife": {
+      "descricao": "Você cria um fragmento de gelo e o arremessa contra uma criatura dentro do alcance. Faça uma jogada de ataque mágico à distância contra o alvo. Em caso de acerto, ele sofre 1d10 de dano perfurante. Independentemente de o ataque acertar ou errar, o fragmento explode em seguida. O alvo e cada criatura a até 1,5 metro dele devem realizar uma salvaguarda de Destreza; quem falhar sofre 2d6 de dano de frio.",
+      "niveis_superiores": "Ao usar um espaço de magia de 2º círculo ou superior, o dano de frio aumenta em 1d6 por círculo do espaço acima do 1º."
+    },
+    "Tenser's Floating Disk": {
+      "descricao": "Esta magia cria um disco horizontal de energia, com cerca de 90 centímetros de diâmetro e 2,5 centímetros de espessura, que flutua a 90 centímetros do solo em um espaço desocupado que você escolha e possa ver dentro do alcance. O disco permanece durante a magia e pode suportar até 225 quilogramas. Se mais peso for colocado nele, a magia termina e tudo sobre o disco cai ao chão.\n\nO disco permanece imóvel enquanto você estiver a até 6 metros dele. Se você se afastar mais que isso, ele o acompanha para permanecer a até 6 metros de você. O disco pode transitar por terrenos irregulares, subir ou descer escadas, rampas e semelhantes, mas não pode atravessar uma diferença de altura de 3 metros ou mais. Por exemplo, não consegue atravessar um fosso de 3 metros de profundidade nem sair dele caso tenha sido criado no fundo. Se você se afastar mais de 30 metros do disco, geralmente por ele não conseguir contornar um obstáculo, a magia termina."
+    },
+    "Unseen Servant": {
+      "descricao": "Esta magia cria uma força Invisível, sem mente e sem forma, de tamanho Médio, que executa tarefas simples a seu comando até a magia terminar. O servo surge em um espaço desocupado no solo dentro do alcance. Ele tem CA 10, 1 Ponto de Vida e Força 2, e não pode atacar. Se chegar a 0 Pontos de Vida, a magia termina.\n\nUma vez em cada um dos seus turnos, como ação bônus, você pode comandar mentalmente o servo a deslocar-se até 4,5 metros e interagir com um objeto. O servo pode executar tarefas simples que uma pessoa conseguiria realizar, como buscar objetos, limpar, consertar, dobrar roupas, acender fogueiras, servir comida ou despejar bebidas. Quando você dá um comando, ele executa a tarefa da melhor maneira possível até concluí-la e, então, aguarda novas ordens. Se ordenar uma tarefa que o leve a mais de 18 metros de você, a magia termina."
+    },
+    "Charm Person": {
+      "descricao": "Um Humanoide que você possa ver dentro do alcance realiza uma salvaguarda de Sabedoria, com vantagem se ele estiver combatendo você ou seus aliados. Em caso de falha, o alvo recebe a condição Enfeitiçado até a magia terminar ou até você ou seus aliados lhe causarem dano. A criatura Enfeitiçada é Amistosa com você. Quando a magia termina, o alvo sabe que foi Enfeitiçado por você.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, você pode escolher uma criatura adicional por círculo do espaço acima do 1º."
+    },
+    "Command": {
+      "descricao": "Você pronuncia uma ordem de uma palavra para uma criatura que possa ver dentro do alcance. O alvo deve realizar uma salvaguarda de Sabedoria; se falhar, obedecerá à ordem no próximo turno dele. Escolha uma das opções:\n\nAproxime-se: o alvo se desloca em sua direção pelo caminho mais curto e direto, encerrando o turno caso chegue a até 1,5 metro de você.\n\nLargue: o alvo solta o que estiver segurando e encerra o turno.\n\nFuja: o alvo passa o turno afastando-se de você pelo meio mais rápido disponível.\n\nRasteje: o alvo recebe a condição Caído e encerra o turno.\n\nPare: no próprio turno, o alvo não se move nem realiza ação ou ação bônus.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, você pode afetar uma criatura adicional por círculo do espaço acima do 1º."
+    },
+    "Dissonant Whispers": {
+      "descricao": "Uma criatura à sua escolha que você possa ver dentro do alcance ouve uma melodia dissonante em sua mente. O alvo realiza uma salvaguarda de Sabedoria. Se falhar, sofre 3d6 de dano psíquico e deve usar imediatamente sua Reação, caso esteja disponível, para se afastar de você o máximo possível pelo caminho mais seguro. Em caso de sucesso, sofre apenas metade do dano.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, o dano aumenta em 1d6 por círculo do espaço acima do 1º."
+    },
+    "Hex": {
+      "descricao": "Você lança uma maldição sobre uma criatura que possa ver dentro do alcance. Até a magia terminar, sempre que acertar o alvo com uma jogada de ataque, você causa 1d6 de dano necrótico adicional. Além disso, escolha um atributo ao conjurar a magia. O alvo tem desvantagem nos testes de atributo feitos com o atributo escolhido. Se o alvo chegar a 0 Pontos de Vida antes do término da magia, você pode usar uma ação bônus em um turno posterior para amaldiçoar uma nova criatura.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo, sua Concentração pode durar até 4 horas; com espaço de 3º ou 4º círculo, até 8 horas; com espaço de 5º círculo ou superior, até 24 horas."
+    },
+    "Tasha's Hideous Laughter": {
+      "descricao": "Uma criatura à sua escolha que você possa ver dentro do alcance realiza uma salvaguarda de Sabedoria. Em caso de falha, recebe as condições Caído e Incapacitado enquanto a magia durar. Durante esse período, ri incontrolavelmente se for capaz de rir e não pode encerrar a condição Caído por conta própria. No final de cada turno dela e sempre que sofrer dano, realiza outra salvaguarda de Sabedoria. O alvo tem vantagem na salvaguarda caso ela tenha sido provocada por dano. Em caso de sucesso, a magia termina.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, você pode escolher uma criatura adicional por círculo do espaço acima do 1º."
+    },
+    "Chromatic Orb": {
+      "descricao": "Você arremessa uma esfera de energia contra um alvo dentro do alcance. Escolha o tipo de dano da esfera: ácido, frio, fogo, elétrico, venenoso ou trovejante. Em seguida, faça uma jogada de ataque mágico à distância contra o alvo. Se acertar, ele sofre 3d8 de dano do tipo escolhido. Se dois ou mais d8 mostrarem o mesmo número, a esfera salta para outro alvo à sua escolha a até 9 metros do alvo original. Faça outra jogada de ataque contra o novo alvo e uma nova rolagem de dano. A esfera não pode saltar novamente, a menos que você tenha conjurado a magia com um espaço de 2º círculo ou superior.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, o dano aumenta em 1d8 por círculo do espaço acima do 1º. A esfera pode saltar um número máximo de vezes igual ao círculo do espaço utilizado, e uma criatura só pode ser escolhida como alvo uma vez em cada conjuração desta magia."
+    },
+    "Faerie Fire": {
+      "descricao": "Os objetos em um cubo de 6 metros de lado dentro do alcance ficam delineados por luz azul, verde ou violeta, à sua escolha. Cada criatura no cubo também fica delineada se falhar em uma salvaguarda de Destreza. Enquanto a magia durar, os objetos e criaturas afetados emitem luz fraca em um raio de 3 metros e não podem se beneficiar da condição Invisível. Jogadas de ataque contra uma criatura ou objeto afetado têm vantagem se o atacante conseguir vê-lo."
+    },
+    "Thunderwave": {
+      "descricao": "Você libera uma onda de energia trovejante. Cada criatura em um cubo de 4,5 metros de lado que se origina em você realiza uma salvaguarda de Constituição. Em caso de falha, sofre 2d8 de dano trovejante e é empurrada 3 metros para longe de você. Em caso de sucesso, sofre apenas metade do dano. Além disso, objetos soltos totalmente dentro do cubo são empurrados 3 metros para longe de você, e o estrondo pode ser ouvido a até 90 metros.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, o dano aumenta em 1d8 por círculo do espaço acima do 1º."
+    },
+    "Disguise Self": {
+      "descricao": "Você faz sua aparência, incluindo roupas, armadura, armas e demais pertences que esteja carregando, mudar até a magia terminar. Pode parecer até 30 centímetros mais alto ou mais baixo, mais pesado ou mais leve. Você precisa adotar uma forma com a mesma disposição básica de membros do seu corpo; fora isso, a extensão da ilusão fica a seu critério.\n\nAs alterações desta magia não resistem à inspeção física. Se você acrescentar um chapéu ilusório, por exemplo, objetos o atravessam e alguém que toque nele não sente nada. Para perceber o disfarce, uma criatura precisa usar a ação Estudar para examinar sua aparência e obter sucesso em um teste de Inteligência (Investigação) contra a CD de salvaguarda de suas magias."
+    },
+    "Illusory Script": {
+      "descricao": "Você escreve em pergaminho, papel ou outro material adequado e infunde a escrita com uma ilusão que dura pelo tempo da magia. Para você e quaisquer criaturas designadas durante a conjuração, o texto parece normal, escrito com sua própria caligrafia e com o sentido pretendido. Para todos os demais, parece estar escrito em símbolos desconhecidos ou mágicos, incompreensíveis.\n\nAlternativamente, a ilusão pode alterar o significado, a caligrafia e o idioma do texto, desde que o idioma seja um que você conheça. Se a magia for dissipada, tanto a escrita original quanto a ilusão desaparecem. Uma criatura com Visão Verdadeira consegue ler a mensagem oculta."
+    },
+    "Silent Image": {
+      "descricao": "Você cria a imagem de um objeto, criatura ou outro fenômeno visível que não ultrapasse um cubo de 4,5 metros de lado. A imagem aparece em um ponto dentro do alcance e permanece durante a magia. Ela é exclusivamente visual, sem sons, odores ou outros efeitos sensoriais.\n\nComo ação Mágica, você pode deslocar a imagem para qualquer ponto dentro do alcance. Ao deslocá-la, pode modificar sua aparência para que o movimento pareça natural. Por exemplo, pode fazer a imagem de uma criatura parecer caminhar. A interação física revela a ilusão, já que criaturas e objetos podem atravessá-la. Uma criatura que use a ação Estudar para examinar a imagem pode reconhecê-la como ilusão com um teste bem-sucedido de Inteligência (Investigação) contra a CD de salvaguarda de suas magias. Se perceber que a imagem é ilusória, a criatura pode enxergar através dela."
+    },
+    "Create or Destroy Water": {
+      "descricao": "Você realiza um dos efeitos a seguir.\n\nCriar água: você cria até aproximadamente 38 litros de água limpa em um recipiente aberto dentro do alcance. Alternativamente, a água cai como chuva em um cubo de 9 metros de lado dentro do alcance, apagando chamas expostas na área.\n\nDestruir água: você destrói até aproximadamente 38 litros de água em um recipiente aberto dentro do alcance. Alternativamente, elimina a névoa em um cubo de 9 metros de lado dentro do alcance.",
+      "niveis_superiores": "Ao utilizar um espaço de magia de 2º círculo ou superior, você pode criar ou destruir aproximadamente 38 litros adicionais de água, ou aumentar em 1,5 metro o lado do cubo, por círculo do espaço acima do 1º."
+    }
+  }
+}
