@@ -84,11 +84,12 @@ export function startConcentration(character,spell,sourceKey='class',options={})
  return{ok:true,previous:previous[0]||null,retained:plan.ok?previous:[],current,active:activeConcentrations(character)}
 }
 // Sem spellId, é encerramento de TODAS as concentrações (incapacitação/Descanso Longo).
-export function endConcentration(character,reason='encerrada manualmente',spellId=null){
+export function endConcentration(character,reason='encerrada manualmente',spellId=null,{casterLevel=1,strict=false}={}){
  const root=ensureSpellcastingState(character),current=activeConcentrations(character);
  if(!current.length)return{ok:false,reason:'Nenhuma Concentração ativa.'};
  const ended=spellId==null?current:current.filter(x=>x.spellId===spellId);
  if(!ended.length)return{ok:false,reason:'A Concentração selecionada não está ativa.'};
+ if(strict&&spellId!=null&& !concentrationCompositionValid(current.filter(x=>x.spellId!==spellId).map(x=>x.category),casterLevel))return{ok:false,reason:'Encerrar esta magia deixaria uma combinação proibida. Escolha outra Concentração ou encerre todas.'};
  const endedSet=new Set(ended);
  for(const row of ended)root.concentrationHistory.push({...row,endedAt:now(),endReason:String(reason||'encerrada')});
  root.concentrations=root.concentrations.filter(x=>!endedSet.has(x));
@@ -105,11 +106,11 @@ export function failConcentrationSave(character,reason='falha na salvaguarda de 
  root.pendingConcentrationFailure={at:now(),reason:String(reason),spellIds:active.map(x=>x.spellId)};
  return{ok:true,selectionRequired:true,active};
 }
-export function resolveConcentrationFailure(character,spellId){
+export function resolveConcentrationFailure(character,spellId,casterLevel=1){
  const pending=pendingConcentrationFailure(character);
  if(!pending)return{ok:false,reason:'Não há falha de Concentração aguardando escolha.'};
  if(!arr(pending.spellIds).includes(spellId))return{ok:false,reason:'Esta magia não estava ativa quando ocorreu a falha.'};
- return endConcentration(character,pending.reason||'falha na salvaguarda',spellId);
+ return endConcentration(character,pending.reason||'falha na salvaguarda',spellId,{casterLevel,strict:true});
 }
 export function spellCastReadiness(character,spell,{bothHandsOccupied=false,warCaster=false}={}){const components=spellComponentProfile(spell),conditions=concentrationBreakingConditions(character),blocked=[],warnings=[];if(conditions.length)blocked.push('Uma condição incapacitante impede conjurar esta magia.');if(components.somatic&&bothHandsOccupied&&!warCaster&&!components.material)blocked.push('O componente Somático exige uma mão disponível; War Caster pode ignorar esta restrição.');if(components.material&&bothHandsOccupied&&!warCaster)warnings.push('Confirme que uma das mãos ocupadas está usando o foco ou o componente Material permitido.');if(components.specificMaterial)warnings.push(`Componente Material específico deve ser confirmado: ${components.materialText||'consulte a magia'}.`);if(components.verbal)warnings.push('Componente Verbal exige que o personagem consiga falar.');return{available:blocked.length===0,blocked,warnings,components}}
 export function ritualEligible(spell,{prepared=false,wizardSpellbook=false}={}){return!!(spell?.ritual&&(prepared||wizardSpellbook))}
