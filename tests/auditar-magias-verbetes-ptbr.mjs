@@ -40,7 +40,7 @@ assert.ok(source.includes('class="spell-class-link"'),'Classes devem ter links d
 assert.ok(source.includes('classes-v3.html?v=20261028-library-hub-layout1'),'Classes-base devem usar o verbete PT-BR.');
 assert.ok(source.includes('classes.html#artifice'),'Artífice deve usar sua ficha publicada.');
 assert.ok(ce.includes('regras.html#regra-expanded-concentration-house-rule'),'Regra da Casa Concentração Expandida precisa ter link.');
-assert.ok(ce.includes('allowedTypesHTML(category)'),'Deve exibir os tipos de coexistência por nível.');
+assert.ok(!ce.includes('allowedTypesHTML(category)'),'Card CE deve exibir somente a categoria.');
 assert.ok(ce.includes('badge.textContent = `CE · ${record.limite_coexistencia_nome}`'),'Selo deve mostrar abreviação e nome.');
 assert.ok(ce.includes('NC: \'Pendente de classificação\''),'Pendente não pode ser classificado automaticamente.');
 assert.equal(verified.total,6,'Manter as seis traduções já verificadas.');
@@ -63,6 +63,16 @@ assert.ok(source.includes('Dados mecânicos disponíveis — descrição integra
 assert.ok(source.includes("if(x.descricao_tipo!=='texto_aberto_srd_5_2_1'||!x.texto_integral_publicavel)return ''"),'Não expor textos comerciais não licenciados.');
 assert.ok(source.includes('spellRulesHTML(x.duracao)'),'Campo Duração precisa vincular regras por termo.');
 assert.ok(source.includes('regras.html?original='),'Links devem abrir o termo original na Biblioteca de Regras.');
+
+const rulesSection = source.slice(source.indexOf('const SPELL_RULE_LABELS='), source.indexOf('function spellEffectInPortuguese('));
+const helpers = source.slice(source.indexOf('const esc='), source.indexOf('let DATA='));
+const renderRules = new Function(helpers + '\n' + rulesSection + '\nreturn spellRulesHTML;')();
+for (const word of ['Adivinhação','Conjuração','Evocação','Abjuração','Transmutação','Preparação','Classificação','Informação','Manifestação']) {
+  assert.ok(!renderRules(word).includes('spell-rule-link'), 'Não criar link parcial dentro de ' + word);
+}
+assert.match(renderRules('Usar uma Ação.'), /spell-rule-link/, 'Ação isolada continua sendo termo de regra.');
+assert.match(renderRules('Requer Concentração.'), /spell-rule-link/, 'Concentração isolada continua sendo termo de regra.');
+
 const glossary=read('scripts/regras-srd-view-v7.js');
 assert.ok(glossary.includes("get('original')"),'Regras deve reconhecer deep links com nome canônico.');
 assert.ok(glossary.includes('data-hub-original'), 'Regras deve preservar IDs originais.');
