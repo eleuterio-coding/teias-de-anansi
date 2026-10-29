@@ -490,12 +490,12 @@ const SPELL_RULE_LABELS=Object.freeze({
  'Agarrado':'Grappled','Caído':'Prone','Contido':'Restrained','Dano':'Damage','Ritual':'Ritual',
  'Pontos de Vida':'Hit Points','Luz Plena':'Bright Light','Luz Fraca':'Dim Light'
 });
-const SPELL_RULE_REGEX=/(Ação Bônus|Teste de Resistência|Classe de Armadura|Pontos de Vida|Jogada de Ataque|Concentração|Incapacitada|Incapacitado|Enfeitiçado|Amedrontado|Inconsciente|Paralisado|Atordoado|Salvaguarda|Invisível|Exaustão|Agarrado|Luz Plena|Luz Fraca|Reação|Contido|Ritual|Caído|Dano|Ação)/gi;
+const SPELL_RULE_REGEX=/(?<![\p{L}\p{M}\p{N}_])(?:Ação Bônus|Teste de Resistência|Classe de Armadura|Pontos de Vida|Jogada de Ataque|Concentração|Incapacitada|Incapacitado|Enfeitiçado|Amedrontado|Inconsciente|Paralisado|Atordoado|Salvaguarda|Invisível|Exaustão|Agarrado|Luz Plena|Luz Fraca|Reação|Contido|Ritual|Caído|Dano|Ação)(?![\p{L}\p{M}\p{N}_])/giu;
 function spellRulesHTML(value,onePerRule=false){
  const seen=new Set();
  return esc(String(value??'')).replace(SPELL_RULE_REGEX,(match,pos,text)=>{
   const before=text[pos-1]||'',after=text[pos+match.length]||'';
-  if(/[A-Za-zÀ-ÿ0-9]/.test(before)||/[A-Za-zÀ-ÿ0-9]/.test(after))return match;
+  if(/[\p{L}\p{M}\p{N}_]/u.test(before)||/[\p{L}\p{M}\p{N}_]/u.test(after))return match;
   const key=Object.keys(SPELL_RULE_LABELS).find(k=>norm(k)===norm(match)),original=SPELL_RULE_LABELS[key];
   if(!original||(onePerRule&&seen.has(original)))return match;
   seen.add(original);
@@ -606,6 +606,6 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  }})();
 ['q','nivel','escola','classe','especial'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
-<script src="scripts/concentracao-expandida-selos.js?v=94d6a2998cc2" data-concentracao-expandida-selos="1"></script>
+<script src="scripts/concentracao-expandida-selos.js?v=20261029-ce-categorias2" data-concentracao-expandida-selos="1"></script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>
