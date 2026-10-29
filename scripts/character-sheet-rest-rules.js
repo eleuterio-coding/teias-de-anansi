@@ -1,6 +1,6 @@
 import{arr,num}from'./character-builder/state.js';
 import{ensureResourceState,recoverResourcesForRest,spendResource,restoreResource}from'./character-sheet-resource-rules.js?v=20260901-rest1';
-import{endConcentration,openPreparationWindow}from'./character-sheet-spellcasting-rules.js?v=20260901-rest1';
+import{endConcentration,openPreparationWindow}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';
 
 const now=()=>new Date().toISOString();
 function runtime(character){character.sheet=character.sheet||{};const rt=character.sheet.runtime||(character.sheet.runtime={});rt.spellSlotsUsed={...(rt.spellSlotsUsed||{})};rt.spellCastLog=arr(rt.spellCastLog).filter(Boolean);rt.arcanumUsed={...(rt.arcanumUsed||{})};rt.freeSpellUses={...(rt.freeSpellUses||{})};return rt}
