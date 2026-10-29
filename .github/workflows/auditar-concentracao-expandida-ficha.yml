@@ -1,0 +1,42 @@
+name: Auditar Concentração Expandida nas Magias
+
+on:
+  push:
+    branches:
+      - main
+      - feat/concentracao-expandida-ficha-20261029
+    paths:
+      - 'scripts/concentracao-expandida-selos.js'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'ficha-personagem.html'
+      - 'magias.html'
+      - 'tests/auditar-concentracao-expandida-ficha.mjs'
+      - '.github/workflows/auditar-concentracao-expandida-ficha.yml'
+  pull_request:
+    paths:
+      - 'scripts/concentracao-expandida-selos.js'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'ficha-personagem.html'
+      - 'magias.html'
+      - 'tests/auditar-concentracao-expandida-ficha.mjs'
+      - '.github/workflows/auditar-concentracao-expandida-ficha.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auditar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe
+        run: |
+          node --check scripts/concentracao-expandida-selos.js
+          node --check scripts/character-sheet-unified-spells.js
+          node --check tests/auditar-concentracao-expandida-ficha.mjs
+      - name: Auditar Biblioteca e Ficha
+        run: node tests/auditar-concentracao-expandida-ficha.mjs
