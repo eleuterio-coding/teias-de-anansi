@@ -1,7 +1,6 @@
 (()=>{
 'use strict';
 const page=location.pathname.split('/').pop()||'';
-const ERA='Escopo de cenário: conteúdo mundano baseado em pólvora, armas de fogo, explosivos industriais, tecnologia industrial/moderna/futurista e veículos motorizados modernos é excluído do catálogo ativo e da aplicação mecânica do Hub. Tecnologia explicitamente mágica ou fantástica não é removida apenas por aparentar ser avançada.';
 const POLICY={
  'classes.html':'Regra da Casa: marcos regulares de Talento/Aumento de Atributo da classe são substituídos pela progressão universal do Hub; benefícios realmente adicionais da classe permanecem.',
  'classes-v3.html':'Regra da Casa: marcos regulares de Talento/Aumento de Atributo da classe são substituídos pela progressão universal do Hub; benefícios realmente adicionais da classe permanecem.',
@@ -25,12 +24,13 @@ const POLICY={
 function inject(){
   if(page==='magias.html')return; // O grimório exibe somente informações da magia; política permanece aplicada internamente.
   if(document.querySelector('[data-hub-rules-policy]'))return;
-  const detail=POLICY[page]||'';
+  const detail=POLICY[page];
+  if(!detail)return; // Não exibir aviso genérico ou bloco vazio.
   const box=document.createElement('div');
   box.dataset.hubRulesPolicy='1';
   box.className='nota hub-rules-policy';
   box.style.cssText='padding:11px 13px;border:1px dashed #8888;border-radius:10px;margin:12px 0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:.9rem';
-  box.innerHTML=`<strong>Política do Hub.</strong> ${ERA}${detail?` ${detail}`:''}`;
+  box.textContent=detail;
   const header=document.querySelector('header')||document.querySelector('h1');
   if(header)header.insertAdjacentElement('afterend',box);else document.body.prepend(box);
 }
