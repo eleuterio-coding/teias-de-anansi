@@ -28,7 +28,8 @@ assert.ok(source.includes('spell-original-name'),'Nome original deve ficar dispo
 assert.ok(source.includes('const origName=x.nome_original?'),'Nome inglês deve aparecer diretamente sob o nome português.');
 assert.ok(!source.includes('Nome original:'),'O dropdown original não deve conter cabeçalho de nome.');
 assert.ok(source.includes("return[x.descricao||'',x.niveis_superiores||'']"),'Texto inglês deve conter apenas o texto-fonte aberto.');
-assert.ok(source.includes('<summary>Texto original — ${esc(x.nome_original||x.nome)}</summary>'),'O dropdown precisa exibir o nome inglês original.');
+assert.ok(source.includes('Texto original — '),'O dropdown do SRD deve identificar o texto original.');
+assert.ok(source.includes('Texto em inglês — versão editorial'),'As magias de L’Arsene devem distinguir a versão editorial do texto original oficial.');
 assert.ok(!source.includes('<summary>Texto original <small>EN</small>'),'O título do menu não deve ter sufixos.');
 const spellList=source.split('\n').find(line=>line.includes("document.getElementById('lista').innerHTML=rows.map"));
 assert.ok(spellList?.includes('cleanSpellSchool(x.escola)'),'A lista deve mostrar a escola sem ponto e vírgula extra.');
