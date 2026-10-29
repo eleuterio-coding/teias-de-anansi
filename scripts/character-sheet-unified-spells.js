@@ -18,7 +18,8 @@ async function load(){
    spell.name=names[spell.originalName]||spell.name;
    return spell
   }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
-  loaded=true
+  loaded=true;
+  document.dispatchEvent(new CustomEvent('hub-rpg:sheet-spells-ready'))
  });
  await loading
 }
