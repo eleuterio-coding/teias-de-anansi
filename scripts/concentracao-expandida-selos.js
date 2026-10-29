@@ -9,139 +9,26 @@
     ND: 'Concentração não informada'
   };
 
-  // Matrizes de coexistência da Regra da Casa, com composições completas.
-  // Cada magia conserva UMA única categoria. Os níveis são de conjurador,
-  // não o círculo da magia. Níveis anteriores continuam disponíveis.
-  const COMPATIBILITY = Object.freeze({
-    CM: [
-      ['5', 'CM + 1 CL'],
-      ['10', 'CM + 2 CL'],
-      ['20', 'CM + 2 CL; ou CM + CI; ou CM + CZ']
-    ],
-    CI: [
-      ['5', 'CI + 1 CL'],
-      ['10', 'CI + 2 CL'],
-      ['20', 'CI + 2 CL; ou CM + CI']
-    ],
-    CZ: [
-      ['5', 'CZ + 1 CL'],
-      ['10', 'CZ + 2 CL'],
-      ['20', 'CZ + 2 CL; ou CM + CZ']
-    ],
-    CL: [
-      ['5', '1 CM, CI ou CZ + 1 CL'],
-      ['10', '1 CM, CI ou CZ + 2 CL'],
-      ['20', '1 CM, CI ou CZ + 2 CL']
-    ]
-  });
-
+  // Exibição compacta da categoria, sem regras de coexistência no card.
   const CE_STYLE_ID = 'hub-ce-coexistencia-style';
   function ensureCompatibilityStyle() {
     if (document.getElementById(CE_STYLE_ID)) return;
     const style = document.createElement('style');
     style.id = CE_STYLE_ID;
     style.textContent = `
-      .hub-library-spells .stats .ce-stat {
-        grid-column: 1 / -1;
-        min-width: 0;
-      }
+      .hub-library-spells .stats .ce-stat { grid-column: 1 / -1; min-width: 0; }
       .hub-library-spells .ce-stat .ce-category {
-        display: block;
-        margin: 8px 0 13px;
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--hub-text, #f4f7fb);
-      }
-      .hub-library-spells .ce-stat .ce-guidance {
-        margin: 7px 0 11px;
-        color: var(--hub-text-2, #c5cfdb);
-        font-size: .86rem;
-        line-height: 1.55;
-      }
-      .hub-library-spells .ce-stat .ce-compat-title {
-        margin: 12px 0 8px;
-        font-size: .81rem;
-        font-weight: 700;
-        color: var(--hub-text, #f4f7fb);
-      }
-      .hub-library-spells .ce-stat .ce-compat-list {
-        display: grid;
-        grid-template-columns: minmax(82px, 120px) minmax(0, 1fr);
-        gap: 0;
-        margin: 0;
-        padding: 0;
-        border: 1px solid var(--hub-border, #223245);
-        border-radius: 9px;
-        overflow: hidden;
-      }
-      .hub-library-spells .ce-stat .ce-compat-list dt,
-      .hub-library-spells .ce-stat .ce-compat-list dd {
-        min-width: 0;
-        padding: 9px 11px;
-        margin: 0;
-        font-size: .85rem;
-        line-height: 1.5;
-        overflow-wrap: anywhere;
-      }
-      .hub-library-spells .ce-stat .ce-compat-list dt {
-        font-weight: 700;
-        color: var(--hub-text, #f4f7fb);
-        background: rgba(103, 184, 255, .08);
-      }
-      .hub-library-spells .ce-stat .ce-compat-list dd {
-        color: var(--hub-text-2, #c5cfdb);
-        border-left: 1px solid var(--hub-border, #223245);
-      }
-      .hub-library-spells .ce-stat .ce-compat-list :is(dt,dd):nth-of-type(n+2) {
-        border-top: 1px solid var(--hub-border, #223245);
-      }
-      @media(max-width:420px) {
-        .hub-library-spells .ce-stat .ce-compat-list { grid-template-columns: 85px minmax(0,1fr); }
-        .hub-library-spells .ce-stat .ce-compat-list :is(dt,dd) { padding: 8px 9px; }
+        display: block; margin: 7px 0 0; font-size: 1rem;
+        font-weight: 700; color: var(--hub-text, #f4f7fb);
       }
     `;
     document.head.appendChild(style);
   }
 
-  const ALLOWED_CE_TYPES = Object.freeze({
-    CM: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2), CI ou CZ — alternativas exclusivas']],
-    CI: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2) ou CM']],
-    CZ: [['5', 'CL (1)'], ['10', 'CL (até 2)'], ['20', 'CL (até 2) ou CM']],
-    CL: [['5', 'CM, CI ou CZ'], ['10', 'CM, CI ou CZ; ou outra CL no conjunto permitido'], ['20', 'CM, CI ou CZ; ou outra CL no conjunto permitido']]
-  });
-
-  function allowedTypesHTML(category) {
-    const rows = ALLOWED_CE_TYPES[category] || [];
-    if (!rows.length) return '';
-    return `<div class="ce-compat-title">Tipos de CE com os quais pode coexistir</div>
-      <dl class="ce-compat-list">${rows.map(([level,allowed]) =>
-        `<dt>Nível ${level}+</dt><dd>${allowed}</dd>`
-      ).join('')}</dl>`;
-  }
-
   function compatibilityHTML(record) {
     const category = record.limite_coexistencia;
-    const label = LABELS[category] || 'Classificação não informada';
-    if (category === 'SC') {
-      return '<p class="ce-guidance">Esta magia não exige concentração e não ocupa uma posição nos Limites de Coexistência.</p>';
-    }
-    if (category === 'ND') {
-      return '<p class="ce-guidance">A fonte cadastrada não informa se esta magia exige concentração. Não é possível atribuir uma categoria ou autorizar coexistência sem verificar a versão da magia.</p>';
-    }
-    if (category === 'NC' || !COMPATIBILITY[category]) {
-      return '<p class="ce-guidance">A magia exige concentração, mas sua categoria ainda não foi validada na lista da Regra da Casa. Até a validação, não participa automaticamente das combinações de Concentração Expandida; continua sujeita à regra normal de concentração única.</p>';
-    }
-    const rows = COMPATIBILITY[category].map(([level, combination]) =>
-      `<dt>Nível ${level}+</dt><dd>${combination}</dd>`
-    ).join('');
-    const conditional = normalizeCE(record.nome_original) === normalizeCE('Bestow Curse')
-      ? '<p class="ce-guidance">Esta classificação se aplica apenas às conjurações que efetivamente exigem concentração.</p>'
-      : '';
-    return `<span class="ce-category">${label}</span>
-      ${allowedTypesHTML(category)}
-      <div class="ce-compat-title">Combinações completas permitidas por nível</div>
-      <dl class="ce-compat-list">${rows}</dl>
-      <p class="ce-guidance">Cada combinação representa o conjunto completo de magias simultâneas; esta magia ocupa uma das posições de sua categoria. No nível 1, mantém-se apenas uma magia de concentração por vez. As combinações de níveis anteriores continuam permitidas. Outras combinações não estão autorizadas pela regra.</p>${conditional}`;
+    if (category === 'SC') return '<span class="ce-category">Esta magia não exige concentração</span>';
+    return `<span class="ce-category">${LABELS[category] || 'Classificação não informada'}</span>`;
   }
 
   const normalizeCE = value => String(value || '')
@@ -188,6 +75,52 @@
 
   const CZ_2024 = setOf(['Conjure Celestial','Conjure Minor Elementals','Conjure Woodland Beings']);
 
+  // Classificações adicionais aprovadas para as 121 magias anteriormente NC (29/10/2026).
+  // Fonte única para Biblioteca e Ficha: não inferir classes para novas magias.
+  const APPROVED_CE = Object.freeze({
+    CM: setOf([
+      "Ensnaring Strike", "Entangle", "Sleep", "Suggestion",
+      "Phantasmal Force", "Levitate", "Maximilian's Earthen Grasp", "Enemies Abound",
+      "Otiluke's Resilient Sphere", "Grasping Vine", "Compulsion", "Banishing Smite",
+      "Modify Memory", "Bigby's Hand", "Mental Prison", "Eyebite",
+      "Forcecage", "Invulnerability", "Weird", "Mass Polymorph",
+      "Shapechange", "True Polymorph"
+    ]),
+    CI: setOf([
+      "Conjure Constructs", "Giant Insect", "Summon Dragon"
+    ]),
+    CZ: setOf([
+      "Healing Spirit", "Gust of Wind", "Warding Wind", "Stinking Cloud",
+      "Cacophonic Shield", "Wind Wall", "Doomtide", "Spellfire Storm",
+      "Antilife Shell", "Yolande's Regal Presence", "Jallarzi's Storm of Radiance", "Wrath of Nature",
+      "Control Winds", "Songal's Elemental Suffusion", "Globe of Invulnerability", "Arcane Gate",
+      "Dirge", "Sunbeam", "Move Earth", "Delayed Blast Fireball",
+      "Antimagic Field", "Tsunami", "Maddening Darkness", "Illusory Dragon",
+      "Control Weather", "Gate", "Storm of Vengeance"
+    ]),
+    CL: setOf([
+      "Blade Ward", "Resistance", "Guidance", "Magecraft",
+      "Friends", "Dancing Lights", "Beast Bond", "Detect Evil and Good",
+      "Detect Magic", "Detect Poison and Disease", "Tasha's Caustic Brew", "Witch Bolt",
+      "Silent Image", "Elminster's Elusion", "Pass without Trace", "Locate Object",
+      "Mind Spike", "Calm Emotions", "Enthrall", "Flame Blade",
+      "Spiritual Weapon", "Shadow Blade", "Heat Metal", "Shining Smite",
+      "Skywrite", "Aura of Vitality", "Beacon of Hope", "Intellect Fortress",
+      "Clairvoyance", "Crusader's Mantle", "Melf's Minute Meteors", "Major Image",
+      "Spirit Shroud", "Vampiric Touch", "Elemental Weapon", "Flame Arrows",
+      "Gaseous Form", "Aura of Life", "Aura of Purity", "Arcane Eye",
+      "Locate Creature", "Fount of Moonlight", "Phantasmal Killer", "Shadow of Moil",
+      "Elemental Bane", "Guardian of Nature", "Alustriel's Mooncloak", "Circle of Power",
+      "Dispel Evil and Good", "Scrying", "Far Step", "Tree Stride",
+      "Holy Weapon", "Immolation", "Mislead", "Enervation",
+      "Swift Quiver", "Primordial Ward", "Find the Path", "Investiture of Flame",
+      "Investiture of Ice", "Investiture of Stone", "Investiture of Wind", "Tasha's Otherworldly Guise",
+      "Mordenkainen's Sword", "Project Image", "Holy Aura", "Holy Star of Mystra",
+      "Blade of Disaster"
+    ])
+  });
+
+
   function classify(raw, record) {
     const name = normalizeCE(record?.nome_original || raw?.name || record?.nome || '');
     if (record?.concentracao == null) return 'ND';
@@ -199,6 +132,9 @@
     if (CI.has(name)) return 'CI';
     if (CZ.has(name)) return 'CZ';
     if (CL.has(name)) return 'CL';
+    for (const category of ['CM','CI','CZ','CL']) {
+      if (APPROVED_CE[category].has(name)) return category;
+    }
 
     // A lista oficial é normativa. Magias novas/revisadas não são classificadas
     // por semelhança de nome, área ou condição: aguardam validação explícita.
@@ -275,11 +211,6 @@
         const badge = document.createElement('span');
         badge.className = 'badge ce-seal';
         badge.textContent = `CE · ${record.limite_coexistencia_nome}`;
-        if (normalizeCE(record.nome_original) === normalizeCE('Bestow Curse') && record.limite_coexistencia === 'CL') {
-          badge.title = 'A categoria aplica-se apenas às conjurações que efetivamente exigem concentração.';
-        } else if (record.limite_coexistencia === 'NC') {
-          badge.title = 'A magia exige concentração, mas ainda precisa de validação explícita na lista oficial da Regra da Casa.';
-        }
         meta.insertBefore(badge, meta.children[4] || null);
       }
       const stats = detail?.querySelector('.stats');
