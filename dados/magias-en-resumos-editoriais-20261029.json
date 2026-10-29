@@ -2,7 +2,7 @@
   "schema": "hub-rpg.magias-en-editoriais.v1",
   "gerado_em": "2026-10-29",
   "total": 171,
-  "politica": "Resumos originais em inglês; NÃO são transcrições integrais dos livros comerciais. Inclui 161 traduções dos resumos mecânicos existentes, 3 traduções editoriais e 7 entradas originalmente sem conteúdo descritivo. Cinco resumos mecânicos de baixa informação foram ampliados mediante consulta pública. O texto SRD permanece no catálogo canônico.",
+  "politica": "Resumos originais em inglês; NÃO são transcrições integrais dos livros comerciais. Inclui 161 traduções dos resumos mecânicos existentes, 3 traduções editoriais e 7 entradas originalmente sem conteúdo descritivo. Cinco resumos mecânicos de baixa informação foram ampliados mediante consulta pública. O texto SRD permanece no catálogo canônico. Os formatos de área inferidos pelo catálogo foram deliberadamente omitidos dos resumos traduzidos, pois ainda exigem validação individual.",
   "fontes_de_controle": [
     "dados/magias-catalogo.json",
     "SRD 5.2.1 CC-BY-4.0 como contraste para evitar duplicação",
@@ -22,79 +22,79 @@
       "edicao": "5.5e"
     },
     "Create Bonfire": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The catalog records its targeting or area as cone.",
-      "tipo": "traducao_resumo_mecanico",
+      "descricao": "A controlled magical bonfire occupies a 5-foot cube on the ground. Creatures caught in it or entering it must succeed on a Dexterity saving throw or suffer Fire damage; the damage increases as the caster gains levels.",
+      "tipo": "resumo_editorial_conferido",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Infestation": {
-      "descricao": "A Constitution saving throw may be required. It may deal Poison damage. The catalog records its targeting or area as single target.",
+      "descricao": "A Constitution saving throw may be required. It may deal Poison damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Sword Burst": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Force damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Force damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "tasha-2020",
       "edicao": "5e"
     },
     "Friends": {
-      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Charmed. The catalog records its targeting or area as single target.",
+      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Charmed.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Mind Sliver": {
-      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Booming Blade": {
-      "descricao": "The spell uses a melee spell attack. It may deal Thunder damage. The catalog records its targeting or area as single target.",
+      "descricao": "The spell uses a melee spell attack. It may deal Thunder damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "tasha-2020",
       "edicao": "5e"
     },
     "Frostbite": {
-      "descricao": "A Constitution saving throw may be required. It may deal Cold damage. The catalog records its targeting or area as single target.",
+      "descricao": "A Constitution saving throw may be required. It may deal Cold damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Green-Flame Blade": {
-      "descricao": "The spell uses a melee spell attack. It may deal Fire damage. The catalog records its targeting or area as Múltiplos alvos, Alvo único.",
+      "descricao": "The spell uses a melee spell attack. It may deal Fire damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "tasha-2020",
       "edicao": "5e"
     },
     "Lightning Lure": {
-      "descricao": "A Strength saving throw may be required. It may deal Lightning damage. The catalog records its targeting or area as single target.",
+      "descricao": "A Strength saving throw may be required. It may deal Lightning damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "tasha-2020",
       "edicao": "5e"
     },
     "Thunderclap": {
-      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Word of Radiance": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. The catalog records its targeting or area as multiple targets. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Toll the Dead": {
-      "descricao": "A Wisdom saving throw may be required. It may deal Necrotic damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Wisdom saving throw may be required. It may deal Necrotic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Control Flames": {
-      "descricao": "The catalog records its targeting or area as cone.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -106,19 +106,19 @@
       "edicao": "5.5e"
     },
     "Gust": {
-      "descricao": "A Strength saving throw may be required. The catalog records its targeting or area as single target.",
+      "descricao": "A Strength saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Magic Stone": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Bludgeoning damage. The catalog records its targeting or area as single target.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Bludgeoning damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Mold Earth": {
-      "descricao": "The catalog records its targeting or area as cone.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -130,19 +130,19 @@
       "edicao": "5.5e"
     },
     "Primal Savagery": {
-      "descricao": "The spell uses a melee spell attack. It may deal Acid damage. The catalog records its targeting or area as single target.",
+      "descricao": "The spell uses a melee spell attack. It may deal Acid damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Shape Water": {
-      "descricao": "The catalog records its targeting or area as cone.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Thorn Whip": {
-      "descricao": "The spell uses a melee spell attack. It may deal Piercing damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a melee spell attack. It may deal Piercing damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -160,61 +160,61 @@
       "edicao": "5.5e"
     },
     "Ceremony": {
-      "descricao": "The catalog records its targeting or area as single target.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Snare": {
-      "descricao": "A Dexterity saving throw may be required. It may cause the following condition(s): Restrained. The catalog records its targeting or area as single target.",
+      "descricao": "A Dexterity saving throw may be required. It may cause the following condition(s): Restrained.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Wardaway": {
-      "descricao": "A Constitution saving throw may be required. It may deal Force damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Force damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Beast Bond": {
-      "descricao": "It may cause the following condition(s): Charmed. The catalog records its targeting or area as single target.",
+      "descricao": "It may cause the following condition(s): Charmed.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Arms of Hadar": {
-      "descricao": "A Strength saving throw may be required. It may deal Necrotic damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Strength saving throw may be required. It may deal Necrotic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Hail of Thorns": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Piercing damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Piercing damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Compelled Duel": {
-      "descricao": "A Wisdom saving throw may be required. The catalog records its targeting or area as single target.",
+      "descricao": "A Wisdom saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Chaos Bolt": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Acid, Cold, Fire, Force, Lightning, Poison, Psychic, Thunder damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Acid, Cold, Fire, Force, Lightning, Poison, Psychic, Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Earth Tremor": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as radius. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Prone. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Spellfire Flare": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Radiant damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Radiant damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
@@ -232,13 +232,13 @@
       "edicao": "5.5e"
     },
     "Witch Bolt": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Lightning damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Lightning damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Cause Fear": {
-      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Frightened. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Frightened. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -250,7 +250,7 @@
       "edicao": "5.5e"
     },
     "Catapult": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -268,19 +268,19 @@
       "edicao": "5.5e"
     },
     "Elminster's Elusion": {
-      "descricao": "The catalog records its targeting or area as single target.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Beast Sense": {
-      "descricao": "The catalog records its targeting or area as single target.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Cloud of Daggers": {
-      "descricao": "It may deal Slashing damage. The catalog records its targeting or area as cone. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "It may deal Slashing damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -298,7 +298,7 @@
       "edicao": "5e"
     },
     "Healing Spirit": {
-      "descricao": "The catalog records its targeting or area as cone. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -316,25 +316,25 @@
       "edicao": "5.5e"
     },
     "Crown of Madness": {
-      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Charmed. The catalog records its targeting or area as single target.",
+      "descricao": "A Wisdom saving throw may be required. It may cause the following condition(s): Charmed.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Tasha's Mind Whip": {
-      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "tasha-2020",
       "edicao": "5e"
     },
     "Aganazzar's Scorcher": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The catalog records its targeting or area as line. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Snilloc's Snowball Swarm": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Cold damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Cold damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -352,31 +352,31 @@
       "edicao": "5e"
     },
     "Death Armor": {
-      "descricao": "It may deal Necrotic damage. The catalog records its targeting or area as Esfera, Alvo único.",
+      "descricao": "It may deal Necrotic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Cordon of Arrows": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Piercing damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Piercing damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Earthbind": {
-      "descricao": "A Strength saving throw may be required. The catalog records its targeting or area as single target.",
+      "descricao": "A Strength saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Maximilian's Earthen Grasp": {
-      "descricao": "A Strength saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. The catalog records its targeting or area as single target.",
+      "descricao": "A Strength saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Pyrotechnics": {
-      "descricao": "A Constitution saving throw may be required. It may cause the following condition(s): Blinded. The catalog records its targeting or area as Cone, Esfera.",
+      "descricao": "A Constitution saving throw may be required. It may cause the following condition(s): Blinded.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -388,7 +388,7 @@
       "edicao": "5e"
     },
     "Aura of Vitality": {
-      "descricao": "The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -406,13 +406,13 @@
       "edicao": "5.5e"
     },
     "Conjure Constructs": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Force damage. The catalog records its targeting or area as cone. It may provide Temporary Hit Points. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Force damage. It may provide Temporary Hit Points. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Hunger of Hadar": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Acid, Cold damage. It may cause the following condition(s): Blinded. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Acid, Cold damage. It may cause the following condition(s): Blinded. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -436,31 +436,31 @@
       "edicao": "5e"
     },
     "Syluné's Viper": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Force damage. It may cause the following condition(s): Incapacitated, Poisoned. The catalog records its targeting or area as single target. It may provide Temporary Hit Points. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Force damage. It may cause the following condition(s): Incapacitated, Poisoned. It may provide Temporary Hit Points. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Thunder Step": {
-      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Tidal Wave": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as Muralha.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Prone.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Catnap": {
-      "descricao": "It may cause the following condition(s): Inconsciente. The catalog records its targeting or area as multiple targets. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "It may cause the following condition(s): Inconsciente. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Enemies Abound": {
-      "descricao": "A Intelligence saving throw may be required. The catalog records its targeting or area as single target.",
+      "descricao": "A Intelligence saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -472,49 +472,49 @@
       "edicao": "5.5e"
     },
     "Cacophonic Shield": {
-      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. It may cause the following condition(s): Deafened. It may grant resistance to Thunder damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Thunder damage. It may cause the following condition(s): Deafened. It may grant resistance to Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Crusader's Mantle": {
-      "descricao": "It may deal Radiant damage. The catalog records its targeting or area as sphere.",
+      "descricao": "It may deal Radiant damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Laeral's Silver Lance": {
-      "descricao": "A Strength saving throw may be required. It may deal Force damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as line. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Strength saving throw may be required. It may deal Force damage. It may cause the following condition(s): Prone. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Melf's Minute Meteors": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Wall of Sand": {
-      "descricao": "It may cause the following condition(s): Blinded. The catalog records its targeting or area as Muralha.",
+      "descricao": "It may cause the following condition(s): Blinded.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Wall of Water": {
-      "descricao": "The catalog records its targeting or area as Muralha.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Feign Death": {
-      "descricao": "It may cause the following condition(s): Blinded, Incapacitated. It may grant resistance to Acid, Bludgeoning, Cold, Fire, Force, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, Thunder damage. The catalog records its targeting or area as single target.",
+      "descricao": "It may cause the following condition(s): Blinded, Incapacitated. It may grant resistance to Acid, Bludgeoning, Cold, Fire, Force, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, Thunder damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Life Transference": {
-      "descricao": "It may deal Necrotic damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "It may deal Necrotic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -538,7 +538,7 @@
       "edicao": "5.5e"
     },
     "Erupting Earth": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. The catalog records its targeting or area as cone. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -550,7 +550,7 @@
       "edicao": "5e"
     },
     "Lightning Arrow": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Lightning damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Lightning damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -562,19 +562,19 @@
       "edicao": "5e"
     },
     "Aura of Purity": {
-      "descricao": "It may grant resistance to Poison damage. The catalog records its targeting or area as sphere.",
+      "descricao": "It may grant resistance to Poison damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Backlash": {
-      "descricao": "A Constitution saving throw may be required. It may deal Force damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Force damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Doomtide": {
-      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
@@ -586,7 +586,7 @@
       "edicao": "5e"
     },
     "Grasping Vine": {
-      "descricao": "The spell uses a melee spell attack. It may deal Bludgeoning damage. It may cause the following condition(s): Grappled. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a melee spell attack. It may deal Bludgeoning damage. It may cause the following condition(s): Grappled. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -616,7 +616,7 @@
       "edicao": "5e"
     },
     "Watery Sphere": {
-      "descricao": "A Strength saving throw may be required. It may cause the following condition(s): Prone, Restrained. The catalog records its targeting or area as sphere.",
+      "descricao": "A Strength saving throw may be required. It may cause the following condition(s): Prone, Restrained.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -634,31 +634,31 @@
       "edicao": "5.5e"
     },
     "Sickening Radiance": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. It may cause the following condition(s): Exhaustion. The catalog records its targeting or area as sphere.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. It may cause the following condition(s): Exhaustion.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Spellfire Storm": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. The catalog records its targeting or area as cylinder. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Storm Sphere": {
-      "descricao": "A Strength saving throw may be required. The spell uses a ranged spell attack. It may deal Bludgeoning, Lightning damage. The catalog records its targeting or area as Esfera, Alvo único. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Strength saving throw may be required. The spell uses a ranged spell attack. It may deal Bludgeoning, Lightning damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Shadow of Moil": {
-      "descricao": "It may deal Necrotic damage. It may grant resistance to Radiant damage. The catalog records its targeting or area as sphere.",
+      "descricao": "It may deal Necrotic damage. It may grant resistance to Radiant damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Elemental Bane": {
-      "descricao": "A Constitution saving throw may be required. It may deal Acid, Cold, Fire, Lightning, Thunder damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Acid, Cold, Fire, Lightning, Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -670,13 +670,13 @@
       "edicao": "5e"
     },
     "Alustriel's Mooncloak": {
-      "descricao": "It may grant resistance to Cold, Lightning, Radiant damage. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "It may grant resistance to Cold, Lightning, Radiant damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Circle of Power": {
-      "descricao": "The catalog records its targeting or area as sphere.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -688,7 +688,7 @@
       "edicao": "5.5e"
     },
     "Conjure Volley": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Force damage. The catalog records its targeting or area as cylinder.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Force damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -706,7 +706,7 @@
       "edicao": "5e"
     },
     "Steel Wind Strike": {
-      "descricao": "The spell uses a melee spell attack. It may deal Force damage. The catalog records its targeting or area as multiple targets.",
+      "descricao": "The spell uses a melee spell attack. It may deal Force damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -718,61 +718,61 @@
       "edicao": "5.5e"
     },
     "Synaptic Static": {
-      "descricao": "A Inteligência, Constituição saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Inteligência, Constituição saving throw may be required. It may deal Psychic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Yolande's Regal Presence": {
-      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as sphere.",
+      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage. It may cause the following condition(s): Prone.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Dawn": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. The catalog records its targeting or area as cylinder.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Destructive Wave": {
-      "descricao": "A Constitution saving throw may be required. It may deal Necrotic, Radiant, Thunder damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as Múltiplos alvos, Esfera.",
+      "descricao": "A Constitution saving throw may be required. It may deal Necrotic, Radiant, Thunder damage. It may cause the following condition(s): Prone.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Holy Weapon": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. It may cause the following condition(s): Blinded. The catalog records its targeting or area as multiple targets.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant damage. It may cause the following condition(s): Blinded.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Immolation": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. The catalog records its targeting or area as single target.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Jallarzi's Storm of Radiance": {
-      "descricao": "A Constitution saving throw may be required. It may deal Radiant, Thunder damage. It may cause the following condition(s): Blinded, Deafened. The catalog records its targeting or area as cylinder. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Radiant, Thunder damage. It may cause the following condition(s): Blinded, Deafened. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Maelstrom": {
-      "descricao": "A Strength saving throw may be required. It may deal Bludgeoning damage. The catalog records its targeting or area as radius.",
+      "descricao": "A Strength saving throw may be required. It may deal Bludgeoning damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Wall of Light": {
-      "descricao": "A Constitution saving throw may be required. The spell uses a ranged spell attack. It may deal Radiant damage. It may cause the following condition(s): Blinded. The catalog records its targeting or area as Alvo único, Muralha. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. The spell uses a ranged spell attack. It may deal Radiant damage. It may cause the following condition(s): Blinded. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Wrath of Nature": {
-      "descricao": "A Destreza, Força saving throw may be required. The spell uses a ranged spell attack. It may deal Bludgeoning, Slashing damage. It may cause the following condition(s): Prone, Restrained. The catalog records its targeting or area as Cone, Alvo único.",
+      "descricao": "A Destreza, Força saving throw may be required. The spell uses a ranged spell attack. It may deal Bludgeoning, Slashing damage. It may cause the following condition(s): Prone, Restrained.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -784,31 +784,31 @@
       "edicao": "5e"
     },
     "Enervation": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Necrotic damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Necrotic damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Negative Energy Flood": {
-      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage. The catalog records its targeting or area as single target. The spell involves summoning or conjuring a creature or entity. It may provide Temporary Hit Points.",
+      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage. The spell involves summoning or conjuring a creature or entity. It may provide Temporary Hit Points.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Control Winds": {
-      "descricao": "A Strength saving throw may be required. It may cause the following condition(s): Prone. The catalog records its targeting or area as cone.",
+      "descricao": "A Strength saving throw may be required. It may cause the following condition(s): Prone.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Skill Empowerment": {
-      "descricao": "The catalog records its targeting or area as single target.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Songal's Elemental Suffusion": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Acid, Cold, Fire, Lightning, Thunder damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as single target.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Acid, Cold, Fire, Lightning, Thunder damage. It may cause the following condition(s): Prone.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
@@ -820,13 +820,13 @@
       "edicao": "5.5e"
     },
     "Transmute Rock": {
-      "descricao": "A Força, Destreza saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. It may grant immunity to Poison, Psychic damage. The catalog records its targeting or area as cone.",
+      "descricao": "A Força, Destreza saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. It may grant immunity to Poison, Psychic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Druid Grove": {
-      "descricao": "The catalog records its targeting or area as Cone, Cubo. The spell involves summoning or conjuring a creature or entity.",
+      "descricao": "The spell involves summoning or conjuring a creature or entity.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -844,7 +844,7 @@
       "edicao": "5.5e"
     },
     "Scatter": {
-      "descricao": "A Wisdom saving throw may be required. The catalog records its targeting or area as multiple targets.",
+      "descricao": "A Wisdom saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -862,19 +862,19 @@
       "edicao": "5.5e"
     },
     "Dirge": {
-      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage. It may cause the following condition(s): Prone. The catalog records its targeting or area as sphere. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage. It may cause the following condition(s): Prone. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Elminster's Effulgent Spheres": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Acid, Cold, Fire, Lightning, Thunder damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Acid, Cold, Fire, Lightning, Thunder damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Mental Prison": {
-      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as single target.",
+      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -886,7 +886,7 @@
       "edicao": "5e"
     },
     "Bones of the Earth": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. The catalog records its targeting or area as multiple targets. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -898,25 +898,25 @@
       "edicao": "5e"
     },
     "Investiture of Flame": {
-      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. It may grant resistance to Cold damage. It may grant immunity to Fire damage. The catalog records its targeting or area as line.",
+      "descricao": "A Dexterity saving throw may be required. It may deal Fire damage. It may grant resistance to Cold damage. It may grant immunity to Fire damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Investiture of Ice": {
-      "descricao": "A Constitution saving throw may be required. It may deal Cold damage. It may grant resistance to Fire damage. It may grant immunity to Cold damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Constitution saving throw may be required. It may deal Cold damage. It may grant resistance to Fire damage. It may grant immunity to Cold damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Investiture of Stone": {
-      "descricao": "A Dexterity saving throw may be required. It may cause the following condition(s): Prone, Stunned. It may grant resistance to Bludgeoning, Piercing, Slashing damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Dexterity saving throw may be required. It may cause the following condition(s): Prone, Stunned. It may grant resistance to Bludgeoning, Piercing, Slashing damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Investiture of Wind": {
-      "descricao": "A Constitution saving throw may be required. It may deal Bludgeoning damage. The catalog records its targeting or area as cone.",
+      "descricao": "A Constitution saving throw may be required. It may deal Bludgeoning damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -946,37 +946,37 @@
       "edicao": "5e"
     },
     "Power Word Fortify": {
-      "descricao": "The catalog records its targeting or area as multiple targets. It may provide Temporary Hit Points.",
+      "descricao": "It may provide Temporary Hit Points.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
     },
     "Power Word Pain": {
-      "descricao": "A Constitution saving throw may be required. The catalog records its targeting or area as single target.",
+      "descricao": "A Constitution saving throw may be required.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Crown of Stars": {
-      "descricao": "The spell uses a ranged spell attack. It may deal Radiant damage. The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The spell uses a ranged spell attack. It may deal Radiant damage. The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Whirlwind": {
-      "descricao": "A Destreza, Força saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained. The catalog records its targeting or area as cylinder.",
+      "descricao": "A Destreza, Força saving throw may be required. It may deal Bludgeoning damage. It may cause the following condition(s): Restrained.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Simbul's Synostodweomer": {
-      "descricao": "The catalog records its targeting or area as single target. The source records additional effects or scaling with higher-level spell slots.",
+      "descricao": "The source records additional effects or scaling with higher-level spell slots.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Telepathy": {
-      "descricao": "The catalog records its targeting or area as single target.",
+      "descricao": "",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "phb-2024",
       "edicao": "5.5e"
@@ -988,13 +988,13 @@
       "edicao": "5e"
     },
     "Holy Star of Mystra": {
-      "descricao": "The spell uses a ranged spell attack. The catalog records its targeting or area as single target.",
+      "descricao": "The spell uses a ranged spell attack.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Maddening Darkness": {
-      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage. The catalog records its targeting or area as sphere.",
+      "descricao": "A Wisdom saving throw may be required. It may deal Psychic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -1006,7 +1006,7 @@
       "edicao": "5e"
     },
     "Abi-Dalzim's Horrid Wilting": {
-      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage. The catalog records its targeting or area as cone.",
+      "descricao": "A Constitution saving throw may be required. It may deal Necrotic damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
@@ -1018,19 +1018,19 @@
       "edicao": "5e"
     },
     "Blade of Disaster": {
-      "descricao": "The spell uses a melee spell attack. It may deal Force damage. The catalog records its targeting or area as multiple targets.",
+      "descricao": "The spell uses a melee spell attack. It may deal Force damage.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "fr-heroes-2025",
       "edicao": "5.5e"
     },
     "Psychic Scream": {
-      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. It may cause the following condition(s): Stunned. The catalog records its targeting or area as multiple targets.",
+      "descricao": "A Intelligence saving throw may be required. It may deal Psychic damage. It may cause the following condition(s): Stunned.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
     },
     "Mass Polymorph": {
-      "descricao": "A Wisdom saving throw may be required. The catalog records its targeting or area as multiple targets. It may provide Temporary Hit Points.",
+      "descricao": "A Wisdom saving throw may be required. It may provide Temporary Hit Points.",
       "tipo": "traducao_resumo_mecanico",
       "fonte": "xanathar-2017",
       "edicao": "5e"
