@@ -40,7 +40,9 @@ assert.ok(source.includes('spellOriginalText(x)'),'Texto original deve usar dado
 assert.ok(source.includes('class="spell-class-link"'),'Classes devem ter links dedicados.');
 assert.ok(source.includes('classes-v3.html?v=20261028-library-hub-layout1'),'Classes-base devem usar o verbete PT-BR.');
 assert.ok(source.includes('classes.html#artifice'),'Artífice deve usar sua ficha publicada.');
-assert.ok(ce.includes('regras.html#regra-expanded-concentration-house-rule'),'Regra da Casa Concentração Expandida precisa ter link.');
+assert.ok(!ce.includes('ce-rule-link') && ce.includes('<b>Concentração Expandida</b>'),'Card CE não pode criar link para a Regra da Casa.');
+assert.ok(source.includes("return '<p class=\"muted\">—</p>'"),'Classe ausente deve ser indicada somente por travessão.');
+assert.ok(!source.includes('Não há classes associadas a este registro.'),'Não exibir aviso textual de classes ausentes.');
 assert.ok(!ce.includes('allowedTypesHTML(category)'),'Card CE deve exibir somente a categoria.');
 assert.ok(ce.includes('badge.textContent = `CE · ${record.limite_coexistencia_nome}`'),'Selo deve mostrar abreviação e nome.');
 assert.ok(ce.includes('NC: \'Pendente de classificação\''),'Pendente não pode ser classificado automaticamente.');
