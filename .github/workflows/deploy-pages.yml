@@ -247,7 +247,7 @@ jobs:
           script=Path('scripts/politica-regras-biblioteca.js')
           if not script.exists(): raise RuntimeError('Política global 5e/5.5e ausente.')
           marker='data-hub-rules-policy-loader="1"'
-          tag='<script data-hub-rules-policy-loader="1" src="scripts/politica-regras-biblioteca.js?v=20260823-rules-audit1"></script>\n'
+          tag='<script data-hub-rules-policy-loader="1" src="scripts/politica-regras-biblioteca.js?v=20261029-hide-era-notice1"></script>\n'
           for filename in pages:
               path=Path(filename)
               if not path.exists(): raise RuntimeError(f'Página da Biblioteca ausente: {filename}')
