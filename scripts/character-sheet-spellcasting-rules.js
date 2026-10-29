@@ -95,7 +95,7 @@ export function endConcentration(character,reason='encerrada manualmente',spellI
  root.concentration=root.concentrations[0]||null;root.pendingConcentrationFailure=null;
  return{ok:true,ended:ended[0],endedAll:ended,active:activeConcentrations(character)}
 }
-export function concentrationBreakingConditions(character){const conditions=arr(character?.sheet?.runtime?.conditions).map(fold),found=conditions.filter(condition=>BREAK_CONCENTRATION.has(condition));return[...new Set(found)]}
+export function concentrationBreakingConditions(character){const runtime=character?.sheet?.runtime||{},conditions=arr(runtime.conditions).map(fold),found=conditions.filter(condition=>BREAK_CONCENTRATION.has(condition));if(runtime.currentHp!=null&&Number(runtime.currentHp)===0)found.push('inconsciente (0 PV)');return[...new Set(found)]}
 export function enforceConcentrationState(character){const active=activeConcentrations(character),breaking=concentrationBreakingConditions(character);if(active.length&&breaking.length)return endConcentration(character,`condição incapacitante: ${breaking.join(', ')}`);return{ok:true,active,breaking}}
 export function pendingConcentrationFailure(character){return ensureSpellcastingState(character)?.pendingConcentrationFailure||null}
 export function failConcentrationSave(character,reason='falha na salvaguarda de Concentração'){
