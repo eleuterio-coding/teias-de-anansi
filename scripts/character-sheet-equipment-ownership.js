@@ -57,10 +57,10 @@ if(typeof document!=='undefined'){
  for(const type of['hub-rpg:sheet-ready','hub-rpg:sheet-spells-ready','hub-rpg:inventory-transaction','hub-rpg:sheet-inventory-changed','hub-rpg:magic-items-changed','hub-rpg:magic-item-catalog-ready'])document.addEventListener(type,()=>queueMicrotask(render));
  queueMicrotask(()=>{if(state.c&&!$('sheet')?.hidden)render()});
  import('./character-sheet-combat-ui.js?v=20260901-combat1');
- import('./character-sheet-spellcasting-ui.js?v=20260901-rest1');
+ import('./character-sheet-spellcasting-ui.js?v=20261029-concentracao-combate1');
  import('./character-sheet-rest-ui.js?v=20260901-rest1');
  import('./character-sheet-magic-item-ui.js?v=20260902-magic-items2');
- import('./character-sheet-resolution-ui.js?v=20260902-resolution1');
+ import('./character-sheet-resolution-ui.js?v=20261029-concentracao-combate1');
  import('./character-sheet-magic-item-resolution-ui.js?v=20260902-resolution1');
  import('./character-sheet-death-ui.js?v=20260902-resolution1');
  import('./character-sheet-encounter-target.js?v=20260902-encounters1');
