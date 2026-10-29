@@ -7,7 +7,8 @@ import{spellComponentProfile,concentrationDc,activeConcentrations,previewConcent
 let initialized=false,rendering=false,observer=null,concentrationNotice='';
 function ceCategory(spell){return window.HubConcentracaoExpandida?.present?.({nome_original:spell?.originalName||spell?.name,concentracao:spell?.concentration,ruleset:spell?.ruleset||'5.5e'})?.category||'NC'}
 function ceOptions(spell){return{category:ceCategory(spell),casterLevel:effectiveConcentrationLevel(derive()),strict:true}}
-function cePreflight(spell){return!spell?.concentration?{ok:true}:previewConcentration(state.c,spell,ceOptions(spell))}
+function needsConcentrationForCast(spell,input){if(!spell?.concentration)return false;if(fold(spell.originalName||spell.name)==='bestow curse'&&input?.hasAttribute?.('data-new-cast')){const wrap=input.closest('.spell-use-new'),slotLevel=num(wrap?.querySelector('select[data-cast-level]')?.value||input.dataset.slotLevel);if(slotLevel>=5)return false}return true}
+function cePreflight(spell,required=spell?.concentration){return!required?{ok:true}:previewConcentration(state.c,spell,ceOptions(spell))}
 function notifyConcentration(reason){concentrationNotice=String(reason||'');render()}
 function startCE(spell,sourceKey){const result=startConcentration(state.c,spell,sourceKey,ceOptions(spell));if(result.ok){concentrationNotice='';persist(`${spell.name}: Concentração Expandida atualizada.`)}else concentrationNotice=result.reason||'Concentração não iniciada.';render();return result}
 function persist(message='Conjuração atualizada.'){const list=read(),i=list.findIndex(x=>x.id===state.c.id);state.c.updatedAt=new Date().toISOString();if(i>=0)list[i]=state.c;else list.push(state.c);write(list);const time=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});for(const id of['save-status','game-save-state'])if($(id))$(id).textContent=`${message} ${time}`}
@@ -66,13 +67,13 @@ function castCapture(event){
  const input=event.target?.closest?.('[data-new-cast],[data-free-spell-use],[data-arcanum-use]');
  if(!input||!input.checked||!state.c)return;
  const card=input.closest('.spell-runtime-card'),spell=spellForCard(card);if(!spell)return;
- const ready=readiness(spell),plan=cePreflight(spell);
+ const required=needsConcentrationForCast(spell,input),ready=readiness(spell),plan=cePreflight(spell,required);
  if(!ready.available||!plan.ok){
   event.preventDefault();event.stopImmediatePropagation();input.checked=false;
   notifyConcentration(!ready.available?ready.blocked.join(' '):plan.reason);
   return;
  }
- if(!spell.concentration)return;
+ if(!required)return;
  const rt=state.c.sheet?.runtime||{},kind=input.hasAttribute('data-new-cast')?'slot':input.hasAttribute('data-free-spell-use')?'free':'arcanum';
  const prior=kind==='slot'?arr(rt.spellCastLog).length:kind==='free'?!!rt.freeSpellUses?.[input.dataset.freeSpellUse]:!!rt.arcanumUsed?.[String(input.dataset.arcanumUse)];
  const sourceKey=input.dataset.sourceKey||kind;
