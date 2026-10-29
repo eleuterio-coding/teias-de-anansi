@@ -467,12 +467,17 @@ def main():
             continue
         retained.append(convert_local(item, local.get("fontes", {})))
 
+    # Exclusão editorial: preservar a precedência das versões e retirar o PHB antes de publicar.
+    phb_removed = sum(x.get('fonte') == 'phb-2024' for x in retained)
+    retained = [x for x in retained if x.get('fonte') != 'phb-2024']
     retained.sort(key=lambda x: (int(x.get("nivel", 0)), norm(x.get("escola")), norm(x.get("nome"))))
     for i, rec in enumerate(retained, 1):
         rec["ordem_catalogo"] = i
 
     all_sources = {}
     for src, meta in SOURCE_META.items():
+        if meta['id'] == 'phb-2024':
+            continue
         all_sources[meta["id"]] = {k: v for k, v in meta.items() if k not in {"id", "prioridade"}}
     all_sources.update(local.get("fontes", {}))
     all_sources["srd-5.2.1"] = {
@@ -496,12 +501,14 @@ def main():
         "controle": {
             "validado": True,
             "quantidade": len(retained),
+            "excluidas_phb_2024_por_solicitacao": phb_removed,
+            "fonte_excluida": "phb-2024",
             "candidatos_oficiais": sum(len(v) for v in raw_by_source.values()),
             "descartados_por_versao_ou_precedencia": len(discarded),
             "por_fonte": dict(sorted(counts.items())),
             "por_completude": dict(sorted(completeness.items())),
             "ordenacao": "nível crescente > escola > nome",
-            "fontes_documentais": ["PHB 2024", "Xanathar 2017", "Tasha 2020", "Heroes of Faerûn 2025", "Forge of the Artificer 2025", "Quickstone", "L'Arsène's Ledger"],
+            "fontes_documentais": ["Xanathar 2017", "Tasha 2020", "Heroes of Faerûn 2025", "Forge of the Artificer 2025", "Quickstone", "L'Arsène's Ledger"],
         },
         "fontes": all_sources,
         "licenciamento": {
