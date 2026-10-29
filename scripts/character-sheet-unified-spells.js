@@ -9,12 +9,12 @@ function normalize(x,sources){const m=sources?.[x.fonte]||{},c=x.componentes||{}
 async function load(){
  if(loaded)return;
  if(!loading)loading=Promise.all([
-  json('dados/magias-catalogo.json?v=20260826-unified-spells2'),
+  json('dados/magias-catalogo.json?v=20261029-sem-phb1'),
   json('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1').catch(()=>({nomes:{}})),
   json('dados/magias-larsene-descricoes-autorais.json?v=20261029-larsene-editoriais1').catch(()=>({itens:{}}))
  ]).then(([d,pt,editorials])=>{
   const names=pt.nomes||{};
-  state.catalogs.spells=arr(d.itens).map(x=>{
+  state.catalogs.spells=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(x=>{
    const spell=normalize(x,d.fontes||{});
    spell.name=names[spell.originalName]||spell.name;
    const editorial=x.fonte==='larsene-ledger-2023'&&editorials.itens?.[spell.originalName];
