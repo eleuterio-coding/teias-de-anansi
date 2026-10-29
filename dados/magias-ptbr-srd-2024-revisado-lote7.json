@@ -1,0 +1,100 @@
+{
+  "schema": "hub-rpg.magias.srd2024-traducao-editorial.v7",
+  "revisado_em": "2026-10-29",
+  "fonte": "System Reference Document 5.2.1 (CC BY 4.0)",
+  "total": 27,
+  "criterio": "Traduções integrais de descrições abertas, preservando condições, ataques, salvaguardas, dimensões e escalonamentos, com conversão métrica aproximada.",
+  "descricoes": {
+    "Chain Lightning": {
+      "descricao": "Você lança um relâmpago contra um alvo que possa ver dentro do alcance. Em seguida, três outros relâmpagos saltam desse alvo para até três alvos adicionais à sua escolha, cada um a até 9 metros do primeiro alvo. Um alvo pode ser uma criatura ou objeto e só pode ser atingido por um desses relâmpagos. Cada alvo realiza uma salvaguarda de Destreza, sofrendo 10d8 de dano elétrico em caso de falha ou metade em caso de sucesso.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 6º, um relâmpago adicional salta do primeiro alvo para outro alvo por círculo acima do 6º."
+    },
+    "Freedom of Movement": {
+      "descricao": "Você toca uma criatura voluntária. Durante a magia, o movimento do alvo não é afetado por Terreno Difícil, e magias ou outros efeitos mágicos não podem reduzir seu Deslocamento nem fazê-lo receber as condições Paralisado ou Contido. O alvo também recebe Deslocamento de Natação igual ao próprio Deslocamento. Além disso, pode gastar 1,5 metro de movimento para escapar automaticamente de restrições não mágicas, como algemas ou uma criatura que lhe imponha a condição Agarrado.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, você pode escolher uma criatura adicional por círculo acima do 4º."
+    },
+    "Flame Blade": {
+      "descricao": "Você faz surgir uma lâmina flamejante em sua mão livre. Ela tem aproximadamente o tamanho e a forma de uma cimitarra e permanece durante a magia. Se soltá-la, a lâmina desaparece, mas você pode evocá-la novamente como ação bônus. Como ação Mágica, você pode realizar um ataque mágico corpo a corpo com a lâmina. Em caso de acerto, o alvo sofre dano de fogo igual a 3d6 mais seu modificador de atributo de conjuração. A lâmina emite luz plena em um raio de 3 metros e luz fraca por mais 3 metros.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, o dano aumenta em 1d6 por círculo acima do 2º."
+    },
+    "Spiritual Weapon": {
+      "descricao": "Você cria uma força espectral flutuante com aparência de uma arma à sua escolha, que dura pelo tempo da magia. Ela aparece em um espaço escolhido dentro do alcance, e você pode realizar imediatamente uma jogada de ataque mágico corpo a corpo contra uma criatura a até 1,5 metro dela. Em caso de acerto, o alvo sofre dano de energia igual a 1d8 mais seu modificador de atributo de conjuração. Como ação bônus nos turnos seguintes, você pode mover essa força até 6 metros e repetir o ataque contra uma criatura a até 1,5 metro dela.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, o dano aumenta em 1d8 por círculo acima do 2º."
+    },
+    "Insect Plague": {
+      "descricao": "Um enxame de gafanhotos preenche uma esfera de 6 metros de raio centrada em um ponto à sua escolha dentro do alcance. A esfera permanece durante a magia, e sua área fica levemente obscurecida e se torna Terreno Difícil. Quando o enxame aparece, cada criatura na esfera realiza uma salvaguarda de Constituição, sofrendo 4d10 de dano perfurante em caso de falha ou metade em caso de sucesso. Uma criatura também realiza essa salvaguarda ao entrar na área da magia pela primeira vez em um turno ou ao terminar seu turno nela. Uma criatura faz essa salvaguarda apenas uma vez por turno.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 5º, o dano aumenta em 1d10 por círculo acima do 5º."
+    },
+    "Weird": {
+      "descricao": "Você tenta criar terrores ilusórios na mente de outras criaturas. Cada criatura à sua escolha em uma esfera de 9 metros de raio centrada em um ponto dentro do alcance realiza uma salvaguarda de Sabedoria. Em caso de falha, um alvo sofre 10d10 de dano psíquico e fica Amedrontado durante a magia; em caso de sucesso, sofre apenas metade desse dano. Um alvo Amedrontado realiza uma salvaguarda de Sabedoria no final de cada um de seus turnos. Em caso de falha, sofre 5d10 de dano psíquico; em caso de sucesso, a magia termina para ele."
+    },
+    "Conjure Woodland Beings": {
+      "descricao": "Você conjura espíritos da natureza que esvoaçam ao seu redor em uma emanação de 3 metros durante a magia. Sempre que essa emanação entra no espaço de uma criatura que você possa ver, ou quando uma criatura que você possa ver entra nela ou termina o turno nela, você pode obrigar a criatura a realizar uma salvaguarda de Sabedoria. Em caso de falha, ela sofre 5d8 de dano de energia; em caso de sucesso, metade. Uma criatura realiza essa salvaguarda apenas uma vez por turno. Além disso, você pode realizar a ação Desengajar como ação bônus durante a magia.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano aumenta em 1d8 por círculo acima do 4º."
+    },
+    "Mind Spike": {
+      "descricao": "Você crava uma estaca de energia psiônica na mente de uma criatura que possa ver dentro do alcance. O alvo realiza uma salvaguarda de Sabedoria, sofrendo 3d8 de dano psíquico em caso de falha ou metade em caso de sucesso. Em caso de falha, você também sabe constantemente a localização do alvo até a magia terminar, mas apenas enquanto estiverem no mesmo plano de existência. Enquanto possuir esse conhecimento, o alvo não pode se esconder de você e, mesmo que tenha a condição Invisível, não recebe os benefícios dela contra você.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 2º, o dano aumenta em 1d8 por círculo acima do 2º."
+    },
+    "Water Walk": {
+      "descricao": "Esta magia permite deslocar-se sobre qualquer superfície líquida — como água, ácido, lama, neve, areia movediça ou lava — como se fosse solo sólido e inofensivo. Criaturas que atravessam lava derretida ainda podem sofrer dano do calor. Até dez criaturas voluntárias à sua escolha dentro do alcance recebem essa capacidade durante a magia. Um alvo afetado precisa usar uma ação bônus para passar da superfície do líquido para o próprio líquido ou vice-versa; porém, se cair no líquido, atravessa a superfície e afunda nele."
+    },
+    "Guardian of Faith": {
+      "descricao": "Um guardião espectral Grande aparece e flutua durante a magia em um espaço desocupado que você possa ver dentro do alcance. Ele ocupa esse espaço, é invulnerável e assume uma forma apropriada à sua divindade ou panteão. Qualquer inimigo que entre pela primeira vez em um turno em um espaço a até 3 metros do guardião ou comece seu turno ali realiza uma salvaguarda de Destreza, sofrendo 20 pontos de dano radiante em caso de falha ou metade em caso de sucesso. O guardião desaparece depois de causar um total de 60 pontos de dano."
+    },
+    "Fire Shield": {
+      "descricao": "Chamas tênues envolvem seu corpo durante a magia, emitindo luz plena em um raio de 3 metros e luz fraca por mais 3 metros. Você escolhe se elas formam um escudo quente ou frio. O escudo quente concede Resistência a dano de frio; o escudo frio concede Resistência a dano de fogo. Além disso, sempre que uma criatura a até 1,5 metro de você acerta você com uma jogada de ataque corpo a corpo, o escudo irrompe em chamas. O atacante sofre 2d8 de dano de fogo, se o escudo for quente, ou 2d8 de dano de frio, se for frio."
+    },
+    "Sunburst": {
+      "descricao": "A luz brilhante do sol irrompe em uma esfera de 18 metros de raio centrada em um ponto escolhido dentro do alcance. Cada criatura na esfera realiza uma salvaguarda de Constituição. Em caso de falha, sofre 12d6 de dano radiante e fica Cega por 1 minuto; em caso de sucesso, sofre apenas metade do dano. Uma criatura que ficou Cega por esta magia realiza outra salvaguarda de Constituição no final de cada um de seus turnos, encerrando o efeito sobre si em caso de sucesso. Esta magia dissipa qualquer Escuridão criada por magia em sua área."
+    },
+    "Find the Path": {
+      "descricao": "Você percebe magicamente a rota física mais direta até um local que nomeie. Precisa estar familiarizado com o lugar, e a magia falha se você indicar um destino em outro plano de existência, um destino em movimento, como uma fortaleza móvel, ou um destino inespecífico, como 'o covil de um dragão verde'. Durante a magia, enquanto estiver no mesmo plano de existência que o destino, você sabe a distância até ele e em que direção ele se encontra. Sempre que precisar escolher entre diferentes caminhos durante o percurso, sabe qual deles é o mais direto."
+    },
+    "Heroes' Feast": {
+      "descricao": "Você conjura um banquete sobre uma superfície em um cubo desocupado de 3 metros de lado adjacente a você. O banquete leva 1 hora para ser consumido e desaparece ao final desse período; seus benefícios só começam depois que a hora se encerra. Até doze criaturas podem participar. Cada criatura que participa recebe benefícios que duram 24 horas: Resistência a dano de veneno, imunidade às condições Amedrontado e Envenenado, e aumento de 2d10 em seu máximo de Pontos de Vida, recebendo também essa mesma quantidade de Pontos de Vida."
+    },
+    "Sunbeam": {
+      "descricao": "Você dispara um raio de sol em uma linha de 1,5 metro de largura por 18 metros de comprimento. Cada criatura na linha realiza uma salvaguarda de Constituição. Em caso de falha, sofre 6d8 de dano radiante e fica Cega até o início do seu próximo turno; em caso de sucesso, sofre apenas metade do dano. Até a magia terminar, você pode realizar uma ação Mágica para criar outra linha de luz radiante. Durante a magia, um pequeno foco de radiação brilhante permanece acima de você. Ele emite luz plena em um raio de 9 metros e luz fraca por mais 9 metros. Essa luz é luz solar."
+    },
+    "Spike Growth": {
+      "descricao": "O solo em uma esfera de 6 metros de raio centrada em um ponto dentro do alcance fica coberto de espinhos rígidos e pontiagudos. A área se torna Terreno Difícil durante a magia. Sempre que uma criatura se desloca para dentro da área ou através dela, sofre 2d4 de dano perfurante a cada 1,5 metro percorrido. A transformação do terreno fica camuflada para parecer natural. Uma criatura que não pudesse ver a área quando a magia foi conjurada deve realizar uma ação Procurar e obter sucesso em um teste de Sabedoria (Percepção ou Sobrevivência) contra a CD de salvaguarda de suas magias para reconhecer o perigo antes de entrar na área."
+    },
+    "Meteor Swarm": {
+      "descricao": "Esferas flamejantes caem do céu sobre quatro pontos distintos que você possa ver dentro do alcance. Cada criatura em uma esfera de 12 metros de raio centrada em cada ponto realiza uma salvaguarda de Destreza. Em caso de falha, sofre 20d6 de dano de fogo e 20d6 de dano contundente; em caso de sucesso, sofre metade desses danos. Uma criatura em mais de uma esfera flamejante é afetada apenas uma vez. Objetos não mágicos na área que não estejam sendo vestidos ou carregados também sofrem dano e, se forem inflamáveis, começam a queimar."
+    },
+    "Daylight": {
+      "descricao": "Durante a magia, a luz do sol se espalha a partir de um ponto dentro do alcance, preenchendo uma esfera de 18 metros de raio. Essa área recebe luz plena e emite luz fraca por mais 18 metros. Alternativamente, você pode conjurar a magia sobre um objeto que não esteja sendo vestido nem carregado, fazendo com que a luz do sol preencha uma emanação de 18 metros originada nesse objeto. Cobri-lo com algo opaco, como uma tigela ou elmo, bloqueia a luz. Se qualquer parte da área desta magia se sobrepuser à área de Escuridão criada por uma magia de 3º círculo ou inferior, a outra magia é dissipada."
+    },
+    "Phantasmal Killer": {
+      "descricao": "Você explora os pesadelos de uma criatura que possa ver dentro do alcance e cria uma ilusão dos medos mais profundos dela, visível somente para a própria criatura. O alvo realiza uma salvaguarda de Sabedoria. Em caso de falha, sofre 4d10 de dano psíquico e tem desvantagem em testes de atributo e jogadas de ataque durante a magia. Em caso de sucesso, sofre metade do dano, e a magia termina. Enquanto a magia durar, o alvo realiza uma salvaguarda de Sabedoria no final de cada um de seus turnos. Em caso de falha, sofre novamente o dano psíquico; em caso de sucesso, a magia termina.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano aumenta em 1d10 por círculo acima do 4º."
+    },
+    "Banishment": {
+      "descricao": "Uma criatura que você possa ver dentro do alcance deve obter sucesso em uma salvaguarda de Carisma ou será transportada para um semiplano inofensivo durante a magia. Enquanto estiver lá, o alvo fica Incapacitado. Quando a magia termina, ele reaparece no espaço que deixou ou no espaço desocupado mais próximo, caso o original esteja ocupado. Se o alvo for uma Aberração, Celestial, Elemental, Fada ou Ínfero, ele não retorna se a magia durar 1 minuto; em vez disso, é transportado para um local aleatório de um plano associado ao seu tipo de criatura, à escolha do Mestre.",
+      "niveis_superiores": "Ao conjurar esta magia com um espaço de círculo superior ao 4º, você pode escolher uma criatura adicional por círculo acima do 4º."
+    },
+    "Darkness": {
+      "descricao": "Durante a magia, uma Escuridão mágica se espalha de um ponto dentro do alcance e preenche uma esfera de 4,5 metros de raio. A Visão no Escuro não permite enxergar através dela, e luz não mágica não consegue iluminá-la. Alternativamente, você pode conjurar a magia sobre um objeto que não esteja sendo vestido nem carregado, fazendo com que a Escuridão preencha uma emanação de 4,5 metros originada nele. Cobrir o objeto com algo opaco, como uma tigela ou elmo, bloqueia a Escuridão. Se qualquer parte da área desta magia se sobrepuser a uma área de Luz Plena ou Luz Fraca criada por magia de 2º círculo ou inferior, a outra magia é dissipada."
+    },
+    "Zone of Truth": {
+      "descricao": "Você cria uma zona mágica que impede a mentira em uma esfera de 4,5 metros de raio centrada em um ponto dentro do alcance. Até a magia terminar, toda criatura que entrar pela primeira vez em um turno na área da magia ou começar seu turno nela realiza uma salvaguarda de Carisma. Em caso de falha, a criatura não pode proferir uma mentira deliberada enquanto estiver na área. Você sabe se uma criatura obteve sucesso ou falhou nessa salvaguarda. Uma criatura afetada percebe a magia e pode evitar responder a perguntas cujas respostas verdadeiras não queira dar. Pode ser evasiva, mas deve dizer a verdade."
+    },
+    "Locate Object": {
+      "descricao": "Descreva ou nomeie um objeto que lhe seja familiar. Você percebe a direção em que o objeto se encontra se ele estiver a até 300 metros de você. Se estiver em movimento, também percebe a direção em que se move. A magia pode localizar um objeto específico que você conheça, desde que o tenha visto de perto, a até 9 metros, pelo menos uma vez. Alternativamente, pode localizar o objeto mais próximo de determinado tipo, como certa peça de vestuário, joia, móvel, ferramenta ou arma. A magia não consegue localizar um objeto se qualquer espessura de chumbo bloquear uma linha direta entre você e ele."
+    },
+    "Rope Trick": {
+      "descricao": "Você toca uma corda. Uma das extremidades sobe e paira no ar até que a corda fique perpendicular ao chão ou alcance um teto. Na extremidade superior, abre-se um portal Invisível de 90 centímetros por 1,5 metro para um espaço extradimensional, que permanece até a magia terminar. Esse espaço pode ser acessado subindo pela corda, que pode ser puxada para dentro ou baixada novamente. O espaço comporta até oito criaturas de tamanho Médio ou menor. Ataques, magias e outros efeitos não atravessam o portal em nenhuma direção, mas criaturas dentro do espaço podem ver através dele. Quando a magia termina, tudo o que estiver no espaço cai para fora."
+    },
+    "Knock": {
+      "descricao": "Escolha um objeto que possa ver dentro do alcance. Pode ser uma porta, caixa, baú, conjunto de algemas, cadeado ou outro objeto com algum mecanismo mundano ou mágico que impeça o acesso. Um alvo fechado por uma fechadura comum, emperrado ou barrado torna-se destrancado, desemperrado ou desobstruído. Se tiver várias fechaduras, apenas uma é destrancada. Se o alvo estiver fechado por Tranca Arcana, essa magia é suprimida por 10 minutos, durante os quais o objeto pode ser aberto e fechado. Quando você conjura esta magia, um forte ruído de batida emana do alvo, podendo ser ouvido a até 90 metros."
+    },
+    "Bestow Curse": {
+      "descricao": "Você toca uma criatura, que deve obter sucesso em uma salvaguarda de Sabedoria ou fica amaldiçoada durante a magia. Até a maldição terminar, o alvo sofre um dos efeitos abaixo, à sua escolha:\n\n• Escolha um atributo. O alvo tem desvantagem em testes desse atributo e em salvaguardas realizadas com ele.\n\n• O alvo tem desvantagem em jogadas de ataque contra você.\n\n• Em combate, no início de cada turno, o alvo deve obter sucesso em uma salvaguarda de Sabedoria ou será obrigado a realizar a ação Esquivar naquele turno.\n\n• Sempre que você causar dano ao alvo com uma jogada de ataque ou uma magia, ele sofre mais 1d8 de dano necrótico.",
+      "niveis_superiores": "Se você conjurar esta magia com um espaço de 4º círculo, pode manter Concentração nela por até 10 minutos. Com um espaço de 5º círculo ou superior, a magia não exige Concentração, e sua duração passa a 8 horas (espaços de 5º ou 6º círculo) ou 24 horas (espaços de 7º ou 8º círculo). Com um espaço de 9º círculo, ela dura até ser dissipada."
+    },
+    "Evard's Black Tentacles": {
+      "descricao": "Tentáculos negros e retorcidos preenchem uma área quadrada de 6 metros de lado no chão, que você possa ver dentro do alcance. Durante a magia, os tentáculos transformam a área em Terreno Difícil. Cada criatura na área realiza uma salvaguarda de Força. Em caso de falha, sofre 3d6 de dano contundente e recebe a condição Contido até a magia terminar. Uma criatura também realiza essa salvaguarda quando entra na área ou termina seu turno nela, mas apenas uma vez por turno. Uma criatura Contida pode usar uma ação para realizar um teste de Força (Atletismo) contra a CD de salvaguarda de suas magias, encerrando a condição sobre si em caso de sucesso."
+    }
+  }
+}
