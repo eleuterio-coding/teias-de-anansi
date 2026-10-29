@@ -45,12 +45,16 @@ jobs:
 
           data = json.loads(Path('dados/magias-catalogo.json').read_text(encoding='utf-8'))
           items = data.get('itens', [])
-          if len(items) <= 394:
-              raise RuntimeError(f'Catálogo consolidado anormalmente reduzido: {len(items)} magias.')
+          if not items:
+              raise RuntimeError('Catálogo consolidado vazio.')
+          if any(spell.get('fonte') == 'phb-2024' for spell in items):
+              raise RuntimeError('Magias do Player’s Handbook indevidamente incluídas.')
           if int(data.get('controle', {}).get('quantidade', len(items))) != len(items):
               raise RuntimeError('Quantidade declarada do catálogo diverge da lista de itens.')
-          required = {'phb-2024', 'xanathar-2017', 'tasha-2020', 'fr-heroes-2025', 'eberron-forge-2025'}
+          required = {'xanathar-2017', 'tasha-2020', 'fr-heroes-2025', 'eberron-forge-2025'}
           available = set(data.get('fontes', {}))
+          if 'phb-2024' in available:
+              raise RuntimeError('Player’s Handbook presente nas fontes ativas.')
           missing = sorted(required - available)
           if missing:
               raise RuntimeError('Fontes consolidadas ausentes: ' + ', '.join(missing))
