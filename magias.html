@@ -393,6 +393,8 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells 
           <select id="classe" aria-label="Filtrar por classe"><option value="">Todas as classes</option></select>
           <select id="especial" aria-label="Filtrar por ritual ou concentração"><option value="">Ritual ou concentração</option><option value="concentracao">Concentração</option><option value="ritual">Ritual</option><option value="nenhum">Sem ambos</option></select>
         </div>
+        <label for="fonte" class="spell-search-label">Fonte / livro</label>
+        <select id="fonte" aria-label="Filtrar magias por fonte ou livro"><option value="">Todas as fontes</option></select>
         <div id="count" class="count" role="status" aria-live="polite">Carregando magias…</div>
       </div>
       <div id="lista" class="lista" aria-label="Resultados da busca de magias"></div>
@@ -580,14 +582,26 @@ function renderDetail(id){
  document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2>${origName}<div class="meta"><span class="badge">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge spell-school">${esc(cleanSpellSchool(x.escola))}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${spellRulesHTML(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${spellRulesHTML(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${spellRulesHTML(conc)}</span></div><div class="stat"><b>Ritual</b><span>${spellRulesHTML(rit)}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${spellRulesHTML(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box spell-effect-box"><h3>Efeito e descrição</h3><span class="spell-description-status">${esc(pt.status)}</span><p class="spell-effect-copy">${spellRulesHTML(pt.content,true)}</p>${pt.higher?`<p class="spell-effect-higher"><strong>Em círculos superiores:</strong> ${spellRulesHTML(pt.higher,true)}</p>`:''}${originalText?`<details class="spell-original-collapse"><summary>${esc(x.fonte==='larsene-ledger-2023'&&LARSENE_EDITORIAL[x.nome_original]?'Texto em inglês — versão editorial':SPELL_EN_EDITORIAL[x.nome_original]?'Resumo em inglês — editorial, não é transcrição da fonte':'Texto original — '+(x.nome_original||x.nome))}</summary><div class="spell-original-copy" lang="en"><i>${esc(originalText)}</i></div></details>`:''}</div><div class="box spell-classes-box"><h3>Classes</h3>${spellClassLinks(x.classes_base)}</div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
 }
 function renderList(){
- const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value;
- const filtered=ALL.filter(x=>(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
+ const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value,src=document.getElementById('fonte').value;
+ const filtered=ALL.filter(x=>(!src||x.fonte===src)&&(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
  const direct=q?filtered.filter(x=>norm(x.nome).includes(q)||norm(x.nome_original).includes(q)):[];
  const rows=!q?filtered:direct.length?direct:filtered.filter(x=>norm([x.escola,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q));
  document.getElementById('count').textContent=`${rows.length} de ${ALL.length} magias`;
  document.getElementById('lista').innerHTML=rows.map(x=>`<button type="button" class="item ${CURRENT===x.id?'on':''}" data-id="${esc(x.id)}" aria-pressed="${CURRENT===x.id}"><span class="spell-item-title"><strong>${esc(x.nome)}</strong><span class="spell-item-level">${x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span></span>${x.nome_original?`<small class="spell-original-name" lang="en"><i>${esc(x.nome_original)}</i></small>`:''}<small class="spell-school" aria-label="Escola de magia">${esc(cleanSpellSchool(x.escola))}</small></button>`).join('')||'<div class="vazio">Nenhuma magia encontrada. Experimente remover algum filtro.</div>';
 }
-function populateFilters(){const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)=>a-b),es=[...new Set(ALL.map(x=>x.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')),cs=[...new Set(ALL.flatMap(x=>x.classes_base||[]))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('nivel').innerHTML='<option value="">Todos os níveis</option>'+ns.map(x=>`<option value="${x}">${x===0?'Truques':'Nível '+x}</option>`).join('');document.getElementById('escola').innerHTML='<option value="">Todas as escolas</option>'+es.map(x=>`<option>${esc(x)}</option>`).join('');document.getElementById('classe').innerHTML='<option value="">Todas as classes</option>'+cs.map(x=>`<option>${esc(x)}</option>`).join('')}
+function populateFilters(){
+ const ns=[...new Set(ALL.map(x=>x.nivel))].sort((a,b)=>a-b);
+ const es=[...new Set(ALL.map(x=>x.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ const cs=[...new Set(ALL.flatMap(x=>x.classes_base||[]))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ // Somente os livros que possuem magias no catálogo ativo; o SRD é licença/referência, não fonte primária independente.
+ const counts=new Map();
+ for(const x of ALL)if(x.fonte)counts.set(x.fonte,(counts.get(x.fonte)||0)+1);
+ const sources=[...counts.keys()].sort((a,b)=>sourceTitle(a).localeCompare(sourceTitle(b),'pt-BR'));
+ document.getElementById('nivel').innerHTML='<option value="">Todos os níveis</option>'+ns.map(x=>`<option value="${x}">${x===0?'Truques':'Nível '+x}</option>`).join('');
+ document.getElementById('escola').innerHTML='<option value="">Todas as escolas</option>'+es.map(x=>`<option>${esc(x)}</option>`).join('');
+ document.getElementById('classe').innerHTML='<option value="">Todas as classes</option>'+cs.map(x=>`<option>${esc(x)}</option>`).join('');
+ document.getElementById('fonte').innerHTML='<option value="">Todas as fontes</option>'+sources.map(id=>`<option value="${esc(id)}">${esc(sourceTitle(id))} (${counts.get(id)})</option>`).join('');
+}
 async function localizeSpellNames(){
  try{
   const localized=await getJSON('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1');
@@ -614,7 +628,7 @@ document.getElementById('lista').addEventListener('click',event=>{
 window.addEventListener('popstate',()=>{const id=initialSpellId();if(id)renderDetail(id)});
 document.getElementById('spell-clear').addEventListener('click',()=>{
  document.getElementById('q').value='';
- for(const id of ['nivel','escola','classe','especial'])document.getElementById(id).value='';
+ for(const id of ['nivel','escola','classe','especial','fonte'])document.getElementById(id).value='';
  renderList();
 });
 (async()=>{try{
@@ -641,7 +655,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
   document.getElementById('lista').innerHTML='<div class="vazio">Falha ao carregar o catálogo. Atualize a página para tentar novamente.</div>';
   document.getElementById('detalhe').innerHTML='<div class="vazio warn">Não foi possível consultar as informações das magias neste momento.</div>';
  }})();
-['q','nivel','escola','classe','especial'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
+['q','nivel','escola','classe','especial','fonte'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
 <script src="scripts/concentracao-expandida-selos.js?v=20261029-ce-card-simples2" data-concentracao-expandida-selos="1"></script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
