@@ -2,7 +2,7 @@ import{state,$,arr,num,esc,fold,read,write,signed}from'./character-builder/state
 import{derive}from'./character-builder/rules.js';
 import{ownedEquipment}from'./character-builder/equipment-ownership.js?v=20260902-magic-items2';
 import{ensureCombatState,weaponCombatProfile,masteryDescription}from'./character-sheet-combat-rules.js?v=20260901-combat1';
-import{activeConcentrations,concentrationDc,failConcentrationSave}from'./character-sheet-spellcasting-rules.js?v=20260901-rest1';
+import{activeConcentrations,concentrationDc,failConcentrationSave}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';
 import{
  ensureResolutionState,resolutionTarget,setResolutionTarget,setSelectedResolutionSpell,recordResolution,resolutionHistory,
  resolveSkillCheck,resolveAbilityCheck,resolveSavingThrow,resolveInitiative,resolveWeaponAttack,
