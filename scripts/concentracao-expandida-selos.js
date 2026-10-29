@@ -27,7 +27,7 @@
 
   function compatibilityHTML(record) {
     const category = record.limite_coexistencia;
-    if (category === 'SC') return '<span class="ce-category">Esta magia não exige concentração</span>';
+    if (category === 'SC') return '<span class="ce-category">—</span>';
     return `<span class="ce-category">${LABELS[category] || 'Classificação não informada'}</span>`;
   }
 
@@ -225,7 +225,7 @@
         const stat = document.createElement('div');
         stat.className = 'stat ce-stat';
         ensureCompatibilityStyle();
-        stat.innerHTML = `<b><a class="ce-rule-link" href="regras.html#regra-expanded-concentration-house-rule" title="Ler a Regra da Casa — Concentração Expandida">Concentração Expandida</a></b>${compatibilityHTML(record)}`;
+        stat.innerHTML = `<b>Concentração Expandida</b>${compatibilityHTML(record)}`;
         stats.appendChild(stat);
       }
     };
