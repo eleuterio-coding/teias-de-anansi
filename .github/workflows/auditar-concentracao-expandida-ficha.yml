@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
-      - feat/concentracao-expandida-ficha-20261029
+      - feat/concentracao-expandida-combate-20261029
     paths:
       - 'scripts/concentracao-expandida-selos.js'
+      - 'scripts/character-sheet-spellcasting-rules.js'
+      - 'scripts/character-sheet-spellcasting-ui.js'
+      - 'scripts/character-sheet-resolution-ui.js'
+      - 'scripts/character-sheet-rest-rules.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'tests/auditar-concentracao-expandida-combate.mjs'
       - 'scripts/character-sheet-unified-spells.js'
       - 'ficha-personagem.html'
       - 'magias.html'
@@ -15,6 +21,12 @@ on:
   pull_request:
     paths:
       - 'scripts/concentracao-expandida-selos.js'
+      - 'scripts/character-sheet-spellcasting-rules.js'
+      - 'scripts/character-sheet-spellcasting-ui.js'
+      - 'scripts/character-sheet-resolution-ui.js'
+      - 'scripts/character-sheet-rest-rules.js'
+      - 'scripts/character-sheet-equipment-ownership.js'
+      - 'tests/auditar-concentracao-expandida-combate.mjs'
       - 'scripts/character-sheet-unified-spells.js'
       - 'ficha-personagem.html'
       - 'magias.html'
@@ -36,7 +48,16 @@ jobs:
       - name: Verificar sintaxe
         run: |
           node --check scripts/concentracao-expandida-selos.js
+          node --check scripts/character-sheet-spellcasting-rules.js
+          node --check scripts/character-sheet-spellcasting-ui.js
+          node --check scripts/character-sheet-resolution-ui.js
+          node --check scripts/character-sheet-rest-rules.js
+          node --check tests/auditar-concentracao-expandida-combate.mjs
           node --check scripts/character-sheet-unified-spells.js
           node --check tests/auditar-concentracao-expandida-ficha.mjs
       - name: Auditar Biblioteca e Ficha
         run: node tests/auditar-concentracao-expandida-ficha.mjs
+      - name: Auditar Concentração Expandida no combate
+        run: |
+          node tests/auditar-concentracao-expandida-combate.mjs
+          node tests/auditar-magias-descansos.mjs
