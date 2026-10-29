@@ -50,9 +50,9 @@ function bindPanels(panel,d){
   if(button.hasAttribute('data-concentration-dc')){const damage=num($('concentration-damage')?.value),count=activeConcentrations(state.c).length;if($('concentration-dc'))$('concentration-dc').textContent=`CD ${concentrationDc(damage,count)}`;return}
   if(button.dataset.concentrationSave==='fail'){const result=failConcentrationSave(state.c,'falha na salvaguarda de Concentração');if(result.ok){persist(result.selectionRequired?'Falha: escolha qual Concentração encerrar.':'Concentração encerrada.');render()}return}
   if(button.dataset.concentrationSave==='pass'){persist('Salvaguarda de Concentração superada.');render();return}
-  if(button.hasAttribute('data-concentration-resolve')){const result=resolveConcentrationFailure(state.c,button.dataset.concentrationResolve);if(result.ok){persist('Concentração escolhida encerrada após a falha.');render()}return}
-  if(button.hasAttribute('data-concentration-end-one')){const result=endConcentration(state.c,'encerrada manualmente',button.dataset.concentrationEndOne);if(result.ok){persist('Concentração encerrada manualmente.');render()}return}
-  if(button.hasAttribute('data-concentration-end')){const result=endConcentration(state.c,'encerradas manualmente');if(result.ok){persist('Concentrações encerradas.');render()}return}
+  if(button.hasAttribute('data-concentration-resolve')){const result=resolveConcentrationFailure(state.c,button.dataset.concentrationResolve,effectiveConcentrationLevel(derive()));if(result.ok){concentrationNotice='';persist('Concentração escolhida encerrada após a falha.');render()}else notifyConcentration(result.reason);return}
+  if(button.hasAttribute('data-concentration-end-one')){const result=endConcentration(state.c,'encerrada manualmente',button.dataset.concentrationEndOne,{casterLevel:effectiveConcentrationLevel(derive()),strict:true});if(result.ok){concentrationNotice='';persist('Concentração encerrada manualmente.');render()}else notifyConcentration(result.reason);return}
+  if(button.hasAttribute('data-concentration-end')){const result=endConcentration(state.c,'encerradas manualmente');if(result.ok){concentrationNotice='';persist('Concentrações encerradas.');render()}return}
   if(button.hasAttribute('data-ritual-cast')){ritualCast(button.dataset.ritualCast,'ritual');return}
   if(button.hasAttribute('data-rest-spell-swap'))swapFixedSpell(d);
  });
