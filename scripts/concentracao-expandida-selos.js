@@ -5,7 +5,8 @@
     CZ: 'CZ — Concentração de Zona',
     CL: 'CL — Concentração Leve',
     SC: 'Sem Concentração',
-    NC: 'Pendente de classificação'
+    NC: 'Pendente de classificação',
+    ND: 'Concentração não informada'
   };
 
   // Matrizes de coexistência da Regra da Casa, com composições completas.
@@ -124,6 +125,9 @@
     if (category === 'SC') {
       return '<p class="ce-guidance">Esta magia não exige concentração e não ocupa uma posição nos Limites de Coexistência.</p>';
     }
+    if (category === 'ND') {
+      return '<p class="ce-guidance">A fonte cadastrada não informa se esta magia exige concentração. Não é possível atribuir uma categoria ou autorizar coexistência sem verificar a versão da magia.</p>';
+    }
     if (category === 'NC' || !COMPATIBILITY[category]) {
       return '<p class="ce-guidance">A magia exige concentração, mas sua categoria ainda não foi validada na lista da Regra da Casa. Até a validação, não participa automaticamente das combinações de Concentração Expandida; continua sujeita à regra normal de concentração única.</p>';
     }
@@ -186,7 +190,9 @@
 
   function classify(raw, record) {
     const name = normalizeCE(record?.nome_original || raw?.name || record?.nome || '');
-    if (record?.concentracao !== true) return 'SC';
+    if (record?.concentracao == null) return 'ND';
+    if (record.concentracao === false) return 'SC';
+    if (record.concentracao !== true) return 'ND';
 
     if (record?.ruleset === '5.5e' && CZ_2024.has(name)) return 'CZ';
     if (CM.has(name)) return 'CM';
@@ -205,6 +211,19 @@
     record.limite_coexistencia = classify(raw, record);
     record.limite_coexistencia_nome = LABELS[record.limite_coexistencia];
     return record;
+  }
+
+  // Interface compartilhada com a Ficha Digital, usando a MESMA lista normativa da Biblioteca.
+  function present(record) {
+    const category = classify(null, record);
+    return Object.freeze({
+      category,
+      label: LABELS[category] || 'Classificação não informada',
+      html: compatibilityHTML({ ...record, limite_coexistencia: category })
+    });
+  }
+  if (typeof window !== 'undefined') {
+    window.HubConcentracaoExpandida = Object.freeze({ present });
   }
 
   if (typeof officialRecord === 'function') {
@@ -274,6 +293,7 @@
     };
   }
 
+  if (document.getElementById('lista') && document.getElementById('detalhe')) {
   let tries = 0;
   const ready = setInterval(() => {
     tries += 1;
@@ -286,4 +306,5 @@
       clearInterval(ready);
     }
   }, 100);
+  }
 })();
