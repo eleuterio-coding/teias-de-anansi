@@ -29,7 +29,7 @@ assert.equal(spell('Bless').category, 'CL');
 assert.equal(spell('Unknown Concentration Spell').category, 'NC');
 assert.equal(spell('Unknown Concentration Spell').html, '<span class="ce-category">Pendente de classificação</span>');
 assert.equal(spell('Fireball', false).category, 'SC');
-assert.equal(spell('Fireball', false).html, '<span class="ce-category">Esta magia não exige concentração</span>');
+assert.equal(spell('Fireball', false).html, '<span class="ce-category">—</span>');
 assert.equal(spell('Unverified Spell', null).category, 'ND');
 assert.equal(spell('Unverified Spell', null).html, '<span class="ce-category">Concentração não informada</span>');
 
@@ -41,7 +41,7 @@ for (const record of catalog) {
   assert.ok(Object.hasOwn(counts, got.category), 'Categoria desconhecida: ' + record.nome_original);
   counts[got.category]++;
   assert.ok(!got.html.includes('ce-compat-list') && !got.html.includes('ce-guidance'), 'Card não pode repetir regras: ' + record.nome_original);
-  if (record.concentracao === false) assert.equal(got.html, '<span class="ce-category">Esta magia não exige concentração</span>');
+  if (record.concentracao === false) assert.equal(got.html, '<span class="ce-category">—</span>');
 }
 assert.deepEqual(counts, { CM: 47, CI: 20, CZ: 60, CL: 98, SC: 285, NC: 0, ND: 27 });
 assert.equal(spell('Conjure Celestial', true, '5.5e').category, 'CZ', 'Manter exceção 2024');
@@ -49,6 +49,9 @@ assert.equal(spell('Conjure Celestial', true, '5e').category, 'CI', 'Manter exce
 
 assert.match(sheetJS, /HubConcentracaoExpandida/);
 assert.match(sheetJS, /ceBlock\(ce\)/);
+assert.ok(sheetJS.includes('<h5>Concentração Expandida</h5>'), 'Card CE da Ficha deve ter título simples.');
+assert.ok(!sheetJS.includes('<h5><a href="regras.html#regra-expanded-concentration-house-rule">Concentração Expandida</a></h5>'), 'Ficha não deve linkar título CE.');
+assert.ok(libraryHTML.includes('scripts/concentracao-expandida-selos.js?v=20261029-ce-card-simples2'), 'Biblioteca precisa atualizar versão do script CE.');
 assert.match(sheetJS, /ruleset:x\.ruleset\|\|m\.ruleset/);
 assert.match(sheetJS, /concentration:x\.concentracao==null\?null/);
 const libraryTag = 'scripts/concentracao-expandida-selos.js?';
