@@ -1,8 +1,7 @@
 import{state,arr,num,slug,json}from'./state.js';
-import{SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP}from'../catalog-registry.js?v=20260901-catalog-registry1';
+import{SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP}from'../catalog-registry.js?v=20261029-sem-phb1';
 const SOURCE_META_BY_FILE={
- 'spells-xphb.json':['XPHB',20240917],
- 'spells-xge.json':['XGE',20171121],
+  'spells-xge.json':['XGE',20171121],
  'spells-tce.json':['TCE',20201117],
  'spells-frhof.json':['FRHoF',20251101],
  'spells-efa.json':['EFA',20251209]
@@ -11,7 +10,7 @@ const REMOTE=SPELL_REMOTE_SOURCES.map(url=>{const file=url.split('/').pop(),meta
 const LOOKUP=SPELL_SOURCE_LOOKUP;
 const SCHOOL={A:'Abjuração',C:'Conjuração',D:'Adivinhação',E:'Encantamento',V:'Evocação',I:'Ilusão',N:'Necromancia',T:'Transmutação'};
 const CLASS_PT={Artificer:'Artífice',Bard:'Bardo',Cleric:'Clérigo',Druid:'Druida',Paladin:'Paladino',Ranger:'Patrulheiro',Sorcerer:'Feiticeiro',Warlock:'Bruxo',Wizard:'Mago',Fighter:'Guerreiro',Rogue:'Ladino',Monk:'Monge',Barbarian:'Bárbaro'};
-const META={XPHB:{source:"Player's Handbook (2024)",ruleset:'5.5e',revision:2024},XGE:{source:"Xanathar's Guide to Everything",ruleset:'5e',revision:2014},TCE:{source:"Tasha's Cauldron of Everything",ruleset:'5e',revision:2014},FRHoF:{source:'Forgotten Realms: Heroes of Faerûn',ruleset:'5.5e',revision:2024},EFA:{source:'Eberron: Forge of the Artificer',ruleset:'5.5e',revision:2024}};
+const META={XGE:{source:"Xanathar's Guide to Everything",ruleset:'5e',revision:2014},TCE:{source:"Tasha's Cauldron of Everything",ruleset:'5e',revision:2014},FRHoF:{source:'Forgotten Realms: Heroes of Faerûn',ruleset:'5.5e',revision:2024},EFA:{source:'Eberron: Forge of the Artificer',ruleset:'5.5e',revision:2024}};
 const key=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().toLowerCase();
 const unitPt=unit=>({action:'Ação','bonus action':'Ação Bônus',bonus:'Ação Bônus',reaction:'Reação',round:'rodada',minute:'minuto',hour:'hora',day:'dia'}[String(unit||'').toLowerCase()]||unit||'');
 function remoteTime(s){const row=arr(s?.time)[0];if(!row)return'';const n=num(row.number)||1,u=unitPt(row.unit);return n===1?String(u).replace(/^./,c=>c.toUpperCase()):`${n} ${u}${n>1&&!/s$/i.test(u)?'s':''}`}
@@ -31,17 +30,16 @@ async function localizeSpellCatalog(items){
 export async function loadSpells(){
  let items=[];
  try{
-  const d=await json('dados/magias-catalogo.json?v=20260821-unified1');
-  items=arr(d.itens).map(normalizeSpell);
+  const d=await json('dados/magias-catalogo.json?v=20261029-sem-phb1');
+  items=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(normalizeSpell);
   if(!items.length)throw new Error('catálogo consolidado vazio')
  }catch(e){
   state.warnings.push(`Catálogo consolidado local indisponível: ${e.message}. Usando a mesma consolidação remota da Biblioteca.`);
   try{items=await remoteConsolidated()}
   catch(remoteError){
    state.warnings.push(`Consolidação remota de Magias: ${remoteError.message}`);
-   const d=await json('dados/magias-srd.json').catch(()=>({itens:[]}));
-   items=arr(d.itens).map(normalizeSpell)
+   items=[]; // Falha segura: nunca restaurar magias excluídas pelo SRD legado.
   }
  }
- return localizeSpellCatalog(items)
+ return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player's Handbook (2024)"))
 }
