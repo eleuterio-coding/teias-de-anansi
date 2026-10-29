@@ -3,7 +3,7 @@ import{derive}from'./character-builder/rules.js';
 import{featMechanicalOutcome}from'./character-builder/feat-mechanics.js';
 import{syncAutomaticResources,resourceRows}from'./character-sheet-resource-rules.js?v=20260901-rest1';
 import{ensureRestState,availableHitDice,spendHitDie,completeRest,closeRestWindows,arcaneRecoveryBudget,applyArcaneRecovery,useSorcerousRestoration,restHistory}from'./character-sheet-rest-rules.js?v=20260901-rest1';
-import{preparationWindow,closePreparationWindow}from'./character-sheet-spellcasting-rules.js?v=20260901-rest1';
+import{preparationWindow,closePreparationWindow}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';
 import{weaponMasteryLimit}from'./character-sheet-combat-rules.js?v=20260901-combat1';
 
 let initialized=false,rendering=false;
