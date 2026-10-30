@@ -1,0 +1,44 @@
+name: Auditar substituição das magias de Xanathar e Tasha
+on:
+  push:
+    paths:
+      - 'dados/magias-catalogo.json'
+      - 'dados/magias-xanathar-usuario.json'
+      - 'dados/magias-tasha-usuario.json'
+      - 'magias.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/gerar_magias_catalogo.py'
+      - 'tests/auditar-substituicao-magias-xanathar-tasha.mjs'
+      - '.github/workflows/auditar-substituicao-magias-xanathar-tasha.yml'
+  pull_request:
+    paths:
+      - 'dados/magias-catalogo.json'
+      - 'dados/magias-xanathar-usuario.json'
+      - 'dados/magias-tasha-usuario.json'
+      - 'magias.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/gerar_magias_catalogo.py'
+      - 'tests/auditar-substituicao-magias-xanathar-tasha.mjs'
+      - '.github/workflows/auditar-substituicao-magias-xanathar-tasha.yml'
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar scripts e regenerador
+        run: |
+          node --check scripts/character-builder/spells.js
+          node --check scripts/character-sheet-unified-spells.js
+          python3 -m py_compile scripts/gerar_magias_catalogo.py
+      - name: Auditar substituição dos resumos
+        run: |
+          node tests/auditar-substituicao-magias-xanathar-tasha.mjs
+          node tests/auditar-xanathar-95-magias.mjs
+          node tests/auditar-tasha-21-magias.mjs
