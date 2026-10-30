@@ -425,6 +425,53 @@ def convert_local(item, source_meta):
     }
 
 
+
+def apply_user_pdf_editions(retained):
+    """Mantém os PDFs fornecidos como fonte dos textos, sem reintroduzir resumos antigos."""
+    replacements = {}
+    for source, filename, name_field, expected, total in [
+        ("xanathar-2017", "magias-xanathar-usuario.json", "nome_original", 85, 95),
+        ("tasha-2020", "magias-tasha-usuario.json", "name", 11, 21),
+    ]:
+        with (ROOT / "dados" / filename).open(encoding="utf-8") as stream:
+            document = json.load(stream)
+        if len(document.get("itens", [])) != total:
+            raise ValueError(f"Transcrição do PDF incompleta: {filename}")
+        by_name = {norm(item[name_field]): item for item in document["itens"]}
+        updated = 0
+        for row in retained:
+            if row.get("fonte") != source:
+                continue
+            item = by_name.get(norm(row["nome_original"]))
+            if not item:
+                raise ValueError(f"Falta no PDF {filename}: {row['nome_original']}")
+            if row["descricao_tipo"] != "resumo_mecanico_editorial":
+                raise ValueError(f"Registro não é resumo substituível: {row['nome_original']}")
+            xge = source == "xanathar-2017"
+            row.update({
+                "descricao": item["descricao_original_en"] if xge else item["description"],
+                "niveis_superiores": "",
+                "descricao_tipo": "texto_fornecido_usuario",
+                "completude": "texto_integral_fornecido_usuario",
+                "texto_integral_publicavel": False,
+                "idioma_descricao": "en",
+                "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte" if xge else "https://www.dndbeyond.com/sources/dnd/tcoe",
+                "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf" if xge else "Tasha’s Cauldron of Everything - Modificado.pdf",
+            })
+            if xge:
+                row["pdf_pagina"] = item["pagina_pdf"]
+                row["pdf_pagina_final"] = item["pagina_pdf_final"]
+            else:
+                row["pagina_fonte"] = item["source_printed_page_start"]
+                row["pdf_pagina"] = item["source_pdf_pages"]
+                row["bloco_invocacao"] = item["statblock"]
+            updated += 1
+        if updated != expected:
+            raise ValueError(f"{filename}: {updated} registros substituídos, esperados {expected}")
+        replacements[source] = updated
+    return replacements
+
+
 def main():
     print("Baixando metadados estruturados das fontes confirmadas nos PDFs...")
     lookup = fetch_json(LOOKUP_URL)
@@ -470,6 +517,7 @@ def main():
     # Exclusão editorial: preservar a precedência das versões e retirar o PHB antes de publicar.
     phb_removed = sum(x.get('fonte') == 'phb-2024' for x in retained)
     retained = [x for x in retained if x.get('fonte') != 'phb-2024']
+    replaced = apply_user_pdf_editions(retained)
     retained.sort(key=lambda x: (int(x.get("nivel", 0)), norm(x.get("escola")), norm(x.get("nome"))))
     for i, rec in enumerate(retained, 1):
         rec["ordem_catalogo"] = i
@@ -480,6 +528,11 @@ def main():
             continue
         all_sources[meta["id"]] = {k: v for k, v in meta.items() if k not in {"id", "prioridade"}}
     all_sources.update(local.get("fontes", {}))
+    for source_id, title, url, filename in [
+        ("xanathar-2017", "Xanathar's Guide to Everything", "https://www.dndbeyond.com/sources/dnd/xgte", "Xanathar's Guide to Everything - Modificado.pdf"),
+        ("tasha-2020", "Tasha's Cauldron of Everything", "https://www.dndbeyond.com/sources/dnd/tcoe", "Tasha’s Cauldron of Everything - Modificado.pdf"),
+    ]:
+        all_sources[source_id].update(titulo=title, url=url, pdf_origem=filename)
     all_sources["srd-5.2.1"] = {
         "titulo": "System Reference Document 5.2.1",
         "editora": "Wizards of the Coast LLC",
@@ -496,10 +549,11 @@ def main():
         "schema": "hub-rpg/magias/v2",
         "gerado_em": "2026-08-19",
         "modulo": "Magias",
-        "politica": "Uma única definição por magia. Entre fontes oficiais do corpus, prevalece a definição publicada mais recentemente; conteúdo oficial prevalece sobre reimpressão homônima de terceiros. Fontes antigas sobrevivem apenas quando não existe versão posterior equivalente.",
+        "politica": "Uma única definição por magia. Entre as fontes oficiais prevalece a edição mais recente. Resumos antigos de Xanathar e Tasha foram substituídos pelas transcrições fornecidas pelo usuário; versões posteriores continuam sem duplicatas.",
         "corpus": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"],
         "controle": {
             "validado": True,
+            "substituicoes_resumos_fornecidos": {"xanathar_2017": replaced["xanathar-2017"], "tasha_2020": replaced["tasha-2020"], "versoes_complementares_externas": 19},
             "quantidade": len(retained),
             "excluidas_phb_2024_por_solicitacao": phb_removed,
             "fonte_excluida": "phb-2024",
@@ -513,7 +567,7 @@ def main():
         "fontes": all_sources,
         "licenciamento": {
             "srd_5_2_1": "CC-BY-4.0; texto aberto pode ser exibido integralmente com atribuição.",
-            "comercial": "O Hub publica parâmetros factuais e resumo mecânico/editorial original, sem reproduzir prosa protegida não aberta.",
+            "comercial": "As descrições de Xanathar e Tasha provêm de PDFs comerciais fornecidos pelo usuário; o fornecimento não comprova direitos de republicação. Outros livros continuam usando resumos.",
             "larsene": "A própria obra declara spells como Product Identity e not open content; portanto somente metadados e resumo editorial são publicados."
         },
         "itens": retained,
