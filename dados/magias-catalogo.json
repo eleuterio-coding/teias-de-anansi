@@ -4,6 +4,8 @@
   "modulo": "Magias",
   "politica": "Uma única definição por magia. Entre fontes oficiais do corpus, prevalece a definição publicada mais recentemente; conteúdo oficial prevalece sobre reimpressão homônima de terceiros. Fontes antigas sobrevivem apenas quando não existe versão posterior equivalente. As versões de Xanathar (2017) e Tasha (2020) presentes no registro canônico usam exclusivamente as transcrições integrais fornecidas pelo usuário, sem os antigos resumos mecânicos. Reimpressões de edições posteriores mantêm sua precedência e podem consultar a versão original dos PDFs.",
   "corpus": [
+    "Xanathar's Guide to Everything - Modificado.pdf",
+    "Tasha’s Cauldron of Everything - Modificado.pdf",
     "pdf24_merged.pdf",
     "pdf24_merged-1.pdf"
   ],
@@ -13,21 +15,22 @@
     "candidatos_oficiais": 527,
     "descartados_por_versao_ou_precedencia": 20,
     "por_fonte": {
-      "eberron-forge-2025": 1,
-      "fr-heroes-2025": 19,
-      "larsene-ledger-2023": 27,
       "quickstone-2024": 3,
+      "larsene-ledger-2023": 27,
+      "xanathar-2017": 85,
       "tasha-2020": 11,
-      "xanathar-2017": 85
+      "fr-heroes-2025": 19,
+      "eberron-forge-2025": 1
     },
     "por_completude": {
+      "stats_completos_resumo": 23,
       "metadados_protegidos": 27,
-      "stats_completos_resumo": 119
+      "texto_integral_fornecido_usuario": 96
     },
     "ordenacao": "nível crescente > escola > nome",
     "fontes_documentais": [
-      "Xanathar 2017",
-      "Tasha 2020",
+      "Xanathar's Guide to Everything (2017)",
+      "Tasha's Cauldron of Everything (2020)",
       "Heroes of Faerûn 2025",
       "Forge of the Artificer 2025",
       "Quickstone",
@@ -115,7 +118,7 @@
   },
   "licenciamento": {
     "srd_5_2_1": "CC-BY-4.0; texto aberto pode ser exibido integralmente com atribuição.",
-    "comercial": "O Hub publica parâmetros factuais e resumo mecânico/editorial original, sem reproduzir prosa protegida não aberta.",
+    "comercial": "As 96 descrições integrais dos livros Xanathar e Tasha foram fornecidas pelo usuário. A existência desses arquivos não comprova autorização para republicação pública; outras fontes comerciais permanecem com resumos editoriais.",
     "larsene": "A própria obra declara spells como Product Identity e not open content; portanto somente metadados e resumo editorial são publicados."
   },
   "itens": [
