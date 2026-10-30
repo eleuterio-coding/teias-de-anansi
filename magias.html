@@ -759,20 +759,14 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  try{
   const catalog=await getJSON('dados/magias-catalogo.json?v=20261030-fontes-integrais2');
   if(Array.isArray(catalog.itens)&&catalog.itens.length){
-   DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
+   DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};
+    const importedPdfNames=new Set(catalog.itens.filter(x=>x.fonte==='xanathar-2017'||x.fonte==='tasha-2020').map(x=>norm(x.nome_original)));
+    ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries.filter(x=>!importedPdfNames.has(norm(x.nome_original)))];
    ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
    await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();return;
   }
- }catch(e){console.warn('Catálogo consolidado local indisponível; usando montagem remota.',e)}
- const sourceEntries=Object.entries(REMOTE);const fetched=await Promise.all(sourceEntries.map(async([src,url])=>[src,await getJSON(url)]));let lookup={};try{lookup=await getJSON(LOOKUP)}catch(e){console.warn('Class lookup indisponível',e)}const local=await getJSON('dados/magias-suplementos-locais.json?v=20261030-biomancia1');
- DATA.fontes={};Object.values(META).forEach(m=>DATA.fontes[m.id]={titulo:m.titulo,url:m.url||'',ano:m.ano,ruleset:m.ruleset,revisao_core:m.revisao,pdf_origem:m.pdf});Object.assign(DATA.fontes,local.fontes||{});DATA.fontes['phb-2024']={titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'};DATA.fontes['srd-5.2.1']={titulo:'System Reference Document 5.2.1',ano:2025,ruleset:'5.5e',licenca:'CC-BY-4.0'};
- const groups=new Map();let candidates=0;for(const[src,data]of fetched){for(const s of(data.spell||[])){candidates++;const k=norm(s.name);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({src,s,p:META[src].prioridade})}}
- let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
- const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
- ALL=[...ALL.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
- ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
- await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();
+ }catch(e){throw new Error('Catálogo consolidado indisponível. As edições antigas não serão restauradas como substitutas dos PDFs.',{cause:e})}
  }catch(e){
   console.error(e);
   document.getElementById('count').textContent='Não foi possível carregar as magias.';

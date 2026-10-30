@@ -13,13 +13,14 @@ const byX=by(xan.itens,'nome_original');
 const byT=by(tas.itens,'name');
 const inX=cat.itens.filter(x=>x.fonte==='xanathar-2017');
 const inT=cat.itens.filter(x=>x.fonte==='tasha-2020');
-assert.equal(cat.itens.length,146,'Catálogo deve manter 146 IDs canônicos e não duplicar livros.');
-assert.equal(new Set(cat.itens.map(x=>x.id)).size,146,'IDs duplicados.');
+assert.equal(cat.itens.length,165,'Catálogo deve ter 165 definições canônicas sem duplicatas.');
+assert.equal(new Set(cat.itens.map(x=>x.id)).size,165,'IDs duplicados.');
+assert.equal(new Set(cat.itens.map(x=>norm(x.nome_original))).size,165,'Nomes duplicados.');
 assert.equal(xan.itens.length,95,'Todas as 95 magias originais de Xanathar precisam permanecer.');
 assert.equal(tas.itens.length,21,'Todas as 21 magias originais de Tasha precisam permanecer.');
 assert.equal(tas.itens.filter(x=>x.statblock).length,9,'Fichas de espíritos precisam permanecer.');
-assert.equal(inX.length,85,'85 definições canônicas de Xanathar substituídas.');
-assert.equal(inT.length,11,'11 definições canônicas de Tasha substituídas.');
+assert.equal(inX.length,95,'95 definições canônicas integrais de Xanathar.');
+assert.equal(inT.length,20,'20 definições canônicas integrais de Tasha, além de Blade of Disaster (2025).');
 assert.equal(cat.itens.length-inX.length-inT.length,50,'Registros de outras obras devem ser preservados.');
 assert.equal(cat.fontes['xanathar-2017'].titulo,"Xanathar's Guide to Everything");
 assert.equal(cat.fontes['tasha-2020'].titulo,"Tasha's Cauldron of Everything");
@@ -40,8 +41,8 @@ for(const x of [...inX,...inT]){
 const names=new Set([...cat.itens,...phb.itens].map(x=>norm(x.nome_original)));
 assert.ok(xan.itens.every(x=>names.has(norm(x.nome_original))),'Xanathar tem magia ausente.');
 assert.ok(tas.itens.every(x=>names.has(norm(x.name))),'Tasha tem magia ausente.');
-assert.equal(xan.itens.filter(x=>!cat.itens.some(c=>norm(c.nome_original)===norm(x.nome_original))).length,10);
-assert.equal(tas.itens.filter(x=>!cat.itens.some(c=>norm(c.nome_original)===norm(x.name))).length,9);
+assert.equal(xan.itens.filter(x=>!cat.itens.some(c=>norm(c.nome_original)===norm(x.nome_original))).length,0);
+assert.equal(tas.itens.filter(x=>!cat.itens.some(c=>norm(c.nome_original)===norm(x.name))).length,0);
 
 const html=read('magias.html'),script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'Script principal ausente.');
@@ -56,4 +57,6 @@ assert.ok(script.includes("https://www.dndbeyond.com/sources/dnd/xgte")&&script.
 assert.ok(read('scripts/character-builder/spells.js').includes('fontes-integrais2'));
 assert.ok(read('scripts/character-sheet-unified-spells.js').includes('fontes-integrais2'));
 assert.ok(read('scripts/gerar_magias_catalogo.py').includes('def apply_user_pdf_editions'),'Regeneração não deve restaurar resumos antigos.');
-console.log('OK: 96 resumos substituídos, 95 + 21 versões de livros acessíveis sem duplicatas e fontes oficiais nomeadas.');
+assert.ok(read('scripts/gerar_magias_catalogo.py').includes('include_pdf_magias_missing_from_2024'),'Regeneração não deve perder as 19 entradas recuperadas.');
+assert.ok(script.includes('importedPdfNames'),'Não mostrar PHB duplicado nas magias migradas.');
+console.log('OK: 96 resumos antigos retirados, 95 magias de Xanathar e 21 de Tasha acessíveis sem duplicatas; 165 verbetes no Hub.');

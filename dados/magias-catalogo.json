@@ -2,7 +2,7 @@
   "schema": "hub-rpg/magias/v2",
   "gerado_em": "2026-10-29",
   "modulo": "Magias",
-  "politica": "Uma única definição por magia. Entre fontes oficiais do corpus, prevalece a definição publicada mais recentemente; conteúdo oficial prevalece sobre reimpressão homônima de terceiros. Fontes antigas sobrevivem apenas quando não existe versão posterior equivalente. As versões de Xanathar (2017) e Tasha (2020) presentes no registro canônico usam exclusivamente as transcrições integrais fornecidas pelo usuário, sem os antigos resumos mecânicos. Reimpressões de edições posteriores mantêm sua precedência e podem consultar a versão original dos PDFs.",
+  "politica": "Uma definição ativa por magia; as 95 magias de Xanathar e as 21 de Tasha são tratadas pelas transcrições dos PDFs fornecidos, sem os antigos resumos mecânicos. Blade of Disaster mantém sua definição posterior de 2025 com referência histórica a Tasha; o índice PHB 2024 não replica as 19 entradas recuperadas dos PDFs.",
   "corpus": [
     "Xanathar's Guide to Everything - Modificado.pdf",
     "Tasha’s Cauldron of Everything - Modificado.pdf",
@@ -11,21 +11,21 @@
   ],
   "controle": {
     "validado": true,
-    "quantidade": 146,
+    "quantidade": 165,
     "candidatos_oficiais": 527,
     "descartados_por_versao_ou_precedencia": 20,
     "por_fonte": {
-      "quickstone-2024": 3,
-      "larsene-ledger-2023": 27,
-      "xanathar-2017": 85,
-      "tasha-2020": 11,
+      "eberron-forge-2025": 1,
       "fr-heroes-2025": 19,
-      "eberron-forge-2025": 1
+      "larsene-ledger-2023": 27,
+      "quickstone-2024": 3,
+      "tasha-2020": 20,
+      "xanathar-2017": 95
     },
     "por_completude": {
       "stats_completos_resumo": 23,
       "metadados_protegidos": 27,
-      "texto_integral_fornecido_usuario": 96
+      "texto_integral_fornecido_usuario": 115
     },
     "ordenacao": "nível crescente > escola > nome",
     "fontes_documentais": [
@@ -41,7 +41,8 @@
     "substituicoes_resumos_fornecidos": {
       "xanathar_2017": 85,
       "tasha_2020": 11,
-      "versoes_complementares_externas": 19
+      "entradas_pdf_antes_apenas_no_indice_phb2024": 19,
+      "duplicatas_evitadas_com_outra_fonte": 1
     }
   },
   "fontes": {
@@ -344,6 +345,52 @@
       "bloco_invocacao": null
     },
     {
+      "id": "mind-sliver",
+      "nome": "Mind Sliver",
+      "nome_original": "Mind Sliver",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 108,
+      "pdf_pagina": [
+        4
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 0,
+      "escola": "Encantamento",
+      "tempo_conjuracao": "Ação",
+      "alcance": "60 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": false,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "1 rodada",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Feiticeiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You drive a disorienting spike of psychic energy into the mind of one creature you can see within range. The target must succeed on an Intelligence saving throw or take 1d6 psychic damage and subtract 1d4 from the next saving throw it makes before the end of your next turn.\n\nThis spell's damage increases by 1d6 when you reach certain levels: 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": null,
+      "ordem_catalogo": 6
+    },
+    {
       "id": "booming-blade",
       "nome": "Booming Blade",
       "nome_original": "Booming Blade",
@@ -382,7 +429,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 6,
+      "ordem_catalogo": 7,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -426,7 +473,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 7
+      "ordem_catalogo": 8
     },
     {
       "id": "frostbite",
@@ -468,7 +515,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 8,
+      "ordem_catalogo": 9,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 10,
@@ -513,7 +560,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 9,
+      "ordem_catalogo": 10,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -560,13 +607,145 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 10,
+      "ordem_catalogo": 11,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
         3
       ],
       "bloco_invocacao": null
+    },
+    {
+      "id": "thunderclap",
+      "nome": "Thunderclap",
+      "nome_original": "Thunderclap",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 168,
+      "pdf_pagina": 22,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 0,
+      "escola": "Evocação",
+      "tempo_conjuracao": "Ação",
+      "alcance": "5 pés",
+      "componentes": {
+        "verbal": false,
+        "somatico": true,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bardo",
+        "Druida",
+        "Feiticeiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You create a burst of thunderous sound that can be heard up to 100 feet away. Each creature within range, other than you, must succeed on a Constitution saving throw or take 1d6 thunder damage.\n\nThe spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 22,
+      "ordem_catalogo": 12
+    },
+    {
+      "id": "word-of-radiance",
+      "nome": "Word of Radiance",
+      "nome_original": "Word of Radiance",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 171,
+      "pdf_pagina": 25,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 0,
+      "escola": "Evocação",
+      "tempo_conjuracao": "Ação",
+      "alcance": "5 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": false,
+        "material": true,
+        "material_texto": "a holy symbol"
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Clérigo"
+      ],
+      "descricao": "You utter a divine word, and burning radiance erupts from you. Each creature of your choice that you can see within range must succeed on a Constitution saving\n\nthrow or take 1d6 radiant damage. The spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 25,
+      "ordem_catalogo": 13
+    },
+    {
+      "id": "toll-the-dead",
+      "nome": "Toll the Dead",
+      "nome_original": "Toll the Dead",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 169,
+      "pdf_pagina": 23,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 0,
+      "escola": "Necromancia",
+      "tempo_conjuracao": "Ação",
+      "alcance": "60 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Clérigo",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You point at one creature you can see within range, and the sound of a dolorous bell fills the air around it\n\nfor a moment. The target must succeed on a Wisdom saving throw or take 1d8 necrotic damage. If the target is missing any of its hit points, it instead takes 1d12 necrotic damage.\n\nThe spell's damage increases by one die when you reach 5th level (2d8 or 2d12), 11th level (3d8 or 3d12), and 17th level (4d8 or 4d12).",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 23,
+      "ordem_catalogo": 14
     },
     {
       "id": "control-flames",
@@ -606,7 +785,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 11,
+      "ordem_catalogo": 15,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 6,
@@ -652,7 +831,7 @@
       "completude": "stats_completos_resumo",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 12
+      "ordem_catalogo": 16
     },
     {
       "id": "gust",
@@ -692,7 +871,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 13,
+      "ordem_catalogo": 17,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 11,
@@ -736,7 +915,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 14,
+      "ordem_catalogo": 18,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -780,7 +959,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 15,
+      "ordem_catalogo": 19,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 16,
@@ -824,7 +1003,7 @@
       "completude": "stats_completos_resumo",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 16
+      "ordem_catalogo": 20
     },
     {
       "id": "primal-savagery",
@@ -862,7 +1041,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 17,
+      "ordem_catalogo": 21,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -906,7 +1085,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 18,
+      "ordem_catalogo": 22,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 18,
@@ -952,7 +1131,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 19,
+      "ordem_catalogo": 23,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -995,7 +1174,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 20,
+      "ordem_catalogo": 24,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 5,
@@ -1040,7 +1219,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 21,
+      "ordem_catalogo": 25,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 19,
@@ -1085,7 +1264,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 22
+      "ordem_catalogo": 26
     },
     {
       "id": "beast-bond",
@@ -1124,7 +1303,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 23,
+      "ordem_catalogo": 27,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -1172,7 +1351,51 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 24
+      "ordem_catalogo": 28
+    },
+    {
+      "id": "ice-knife",
+      "nome": "Ice Knife",
+      "nome_original": "Ice Knife",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 157,
+      "pdf_pagina": 11,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 1,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "60 pés",
+      "componentes": {
+        "verbal": false,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a drop of water or a piece of ice"
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Druida",
+        "Feiticeiro",
+        "Mago"
+      ],
+      "descricao": "You create a shard of ice and fling it at one creature within range. Ma ke a ranged spell attack against the target. On a hit, the target takes 1d10 piercing damage. Hit or miss, the s hard then explodes. The target and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 2d6 cold damage.\n\nAt Higher Levels. When you cast this spell using a spell slot of 2nd level or higher, the cold damage increases by 1d6 for each slot level above 1st.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 11,
+      "ordem_catalogo": 29
     },
     {
       "id": "daydream",
@@ -1210,7 +1433,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 25
+      "ordem_catalogo": 30
     },
     {
       "id": "words-of-discouragement",
@@ -1248,7 +1471,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 26
+      "ordem_catalogo": 31
     },
     {
       "id": "chaos-bolt",
@@ -1286,7 +1509,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 27,
+      "ordem_catalogo": 32,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 5,
@@ -1331,7 +1554,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 28,
+      "ordem_catalogo": 33,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -1374,7 +1597,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 29
+      "ordem_catalogo": 34
     },
     {
       "id": "tasha-s-caustic-brew",
@@ -1414,7 +1637,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 30,
+      "ordem_catalogo": 35,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -1459,7 +1682,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 31,
+      "ordem_catalogo": 36,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 5,
@@ -1503,7 +1726,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 32,
+      "ordem_catalogo": 37,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -1545,7 +1768,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 33,
+      "ordem_catalogo": 38,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 25,
@@ -1587,7 +1810,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 34
+      "ordem_catalogo": 39
     },
     {
       "id": "protection",
@@ -1625,7 +1848,51 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 35
+      "ordem_catalogo": 40
+    },
+    {
+      "id": "mind-spike",
+      "nome": "Mind Spike",
+      "nome_original": "Mind Spike",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 162,
+      "pdf_pagina": 16,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 2,
+      "escola": "Adivinhação",
+      "tempo_conjuracao": "Ação",
+      "alcance": "60 pés",
+      "componentes": {
+        "verbal": false,
+        "somatico": true,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Feiticeiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You reach into the mind of one creature you can see within range. The target must m ake a Wisdom saving\n\nthrow, taking 3d8 psychic damage on a failed save, or half as much damage on a successful one. On a failed save, you also always know the target's location until the spell ends, but only while the two of you are on the same plane of existence. While you have this knowledge, the target can't become hidden from you, and if it's invisible, it gains no benefit from that condition against you.\n\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d6 for each slot level above 2nd.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 16,
+      "ordem_catalogo": 41
     },
     {
       "id": "blood-frenzy",
@@ -1669,7 +1936,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 36
+      "ordem_catalogo": 42
     },
     {
       "id": "coralskin",
@@ -1713,7 +1980,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 37
+      "ordem_catalogo": 43
     },
     {
       "id": "sugar-rush",
@@ -1757,7 +2024,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 38
+      "ordem_catalogo": 44
     },
     {
       "id": "deryan-s-helpful-homunculi",
@@ -1796,7 +2063,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 39
+      "ordem_catalogo": 45
     },
     {
       "id": "dust-devil",
@@ -1836,7 +2103,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 40,
+      "ordem_catalogo": 46,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 8,
@@ -1879,7 +2146,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 41,
+      "ordem_catalogo": 47,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 11,
@@ -1921,7 +2188,57 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 42
+      "ordem_catalogo": 48
+    },
+    {
+      "id": "summon-beast",
+      "nome": "Summon Beast",
+      "nome_original": "Summon Beast",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 109,
+      "pdf_pagina": [
+        5,
+        6
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 2,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a feather, tuft of fur, and fish tail inside a gilded acorn worth at least 200 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Druida",
+        "Patrulheiro"
+      ],
+      "descricao": "You call forth a bestial spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Bestial Spirit stat block. When you cast the spell, choose an environment: Air, Land, or Water. The creature resembles an animal of your choice that is native to the chosen environment, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Bestial Spirit",
+        "creature_type": "Small beast",
+        "text": "**Armor Class:** 11 + the level of the spell (natural armor)\n**Hit Points:** 20 (Air only) or 30 (Land and Water only) + 5 for each spell level above 2nd\n**Speed:** 30 ft.; climb 30 ft. (Land only); fly 60 ft. (Air only); swim 30 ft. (Water only)\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 18 (+4) | 11 (+0) | 16 (+3) | 4 (-3) | 14 (+2) | 5 (-3) |\n\n**Senses:** darkvision 60 ft., passive Perception 12\n**Languages:** understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Flyby (Air Only).** The beast doesn't provoke opportunity attacks when it flies out of an enemy's reach.\n\n**Pack Tactics (Land and Water Only).** The beast has advantage on an attack roll against a creature if at least one of the beast's allies is within 5 feet of the creature and the ally isn't incapacitated.\n\n**Water Breathing (Water Only).** The beast can breathe only underwater.\n\n**Actions**\n\n**Multiattack.** The beast makes a number of attacks equal to half this spell's level (rounded down).\n\n**Maul.** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level piercing damage."
+      },
+      "ordem_catalogo": 49
     },
     {
       "id": "tasha-s-mind-whip",
@@ -1960,7 +2277,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 43,
+      "ordem_catalogo": 50,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -2005,7 +2322,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 44,
+      "ordem_catalogo": 51,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -2047,7 +2364,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 45
+      "ordem_catalogo": 52
     },
     {
       "id": "snilloc-s-snowball-swarm",
@@ -2086,7 +2403,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 46,
+      "ordem_catalogo": 53,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 19,
@@ -2131,7 +2448,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 47,
+      "ordem_catalogo": 54,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 24,
@@ -2175,7 +2492,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 48,
+      "ordem_catalogo": 55,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 18,
@@ -2218,7 +2535,50 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 49
+      "ordem_catalogo": 56
+    },
+    {
+      "id": "dragon-s-breath",
+      "nome": "Dragon's Breath",
+      "nome_original": "Dragon's Breath",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 154,
+      "pdf_pagina": 8,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 2,
+      "escola": "Transmutação",
+      "tempo_conjuracao": "Ação Bônus",
+      "alcance": "Toque",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a hot pepper"
+      },
+      "duracao": "Concentração, até 1 minuto",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Feiticeiro",
+        "Mago"
+      ],
+      "descricao": "You touch one willing creature and imbue it with the power to spew magical energy from its mouth, provided it has one. Choose acid, cold, fire, lightning, or poison. Until the spell ends, the creature can use an action to exhale energy of the chosen type in a 15-foot cone. Each creature in that area must make a Dexterity saving\n\nthrow, taking 3d6 damage of the chosen type on a failed save, or half as much damage on a successful one.\n\nAt Higher Levels. When you cast this spell using a spell slot of 3rd level or higher, the damage increases by\n\n1d6 for each slot level above 2nd.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 8,
+      "ordem_catalogo": 57
     },
     {
       "id": "earthbind",
@@ -2259,7 +2619,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 50,
+      "ordem_catalogo": 58,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 8,
@@ -2302,7 +2662,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 51,
+      "ordem_catalogo": 59,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 15,
@@ -2347,7 +2707,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 52,
+      "ordem_catalogo": 60,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -2389,7 +2749,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 53
+      "ordem_catalogo": 61
     },
     {
       "id": "skywrite",
@@ -2430,7 +2790,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 54,
+      "ordem_catalogo": 62,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 19,
@@ -2476,7 +2836,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 55,
+      "ordem_catalogo": 63,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -2527,7 +2887,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 56
+      "ordem_catalogo": 64
     },
     {
       "id": "the-bends",
@@ -2572,7 +2932,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 57
+      "ordem_catalogo": 65
     },
     {
       "id": "acid-rain",
@@ -2610,7 +2970,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 58
+      "ordem_catalogo": 66
     },
     {
       "id": "conjure-constructs",
@@ -2648,7 +3008,58 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 59
+      "ordem_catalogo": 67
+    },
+    {
+      "id": "summon-fey",
+      "nome": "Summon Fey",
+      "nome_original": "Summon Fey",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 112,
+      "pdf_pagina": [
+        8
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 3,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a gilded flower worth at least 300 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Druida",
+        "Patrulheiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You call forth a fey spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Fey Spirit stat block. When you cast the spell, choose a mood: Fuming, Mirthful, or Tricksy. The creature resembles a fey creature of your choice marked by the chosen mood, which determines one of the traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Fey Spirit",
+        "creature_type": "Small fey",
+        "text": "**Armor Class:** 12 + the level of the spell (natural armor)\n**Hit Points:** 30 + 10 for each spell level above 3rd\n**Speed:** 40 ft.\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 13 (+1) | 16 (+3) | 14 (+2) | 14 (+2) | 11 (+0) | 16 (+3) |\n\n**Condition Immunities:** charmed\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** Sylvan, understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Actions**\n\n**Multiattack.** The fey makes a number of attacks equal to half this spell's level (rounded down).\n\n**Shortsword.** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level piercing damage + 1d6 force damage.\n\n**Bonus Actions**\n\n**Fey Step.** The fey magically teleports up to 30 feet to an unoccupied space it can see. Then one of the following effects occurs, based on the fey's chosen mood:\n\n**Fuming.** The fey has advantage on the next attack roll it makes before the end of this turn.\n\n**Mirthful.** The fey can force one creature it can see within 10 feet of it to make a Wisdom saving throw against your spell save DC. Unless the save succeeds, the target is charmed by you and the fey for 1 minute or until the target takes any damage.\n\n**Tricksy.** The fey can fill a 5-foot cube within 5 feet of it with magical darkness, which lasts until the end of its next turn."
+      },
+      "ordem_catalogo": 68
     },
     {
       "id": "summon-lesser-demons",
@@ -2687,7 +3098,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 60,
+      "ordem_catalogo": 69,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 21,
@@ -2730,7 +3141,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 61,
+      "ordem_catalogo": 70,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -2780,7 +3191,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 62
+      "ordem_catalogo": 71
     },
     {
       "id": "thunder-step",
@@ -2820,7 +3231,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 63,
+      "ordem_catalogo": 72,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 22,
@@ -2864,7 +3275,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 64,
+      "ordem_catalogo": 73,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 22,
@@ -2909,7 +3320,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 65,
+      "ordem_catalogo": 74,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 5,
@@ -2954,7 +3365,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 66,
+      "ordem_catalogo": 75,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -2996,7 +3407,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 67
+      "ordem_catalogo": 76
     },
     {
       "id": "cacophonic-shield",
@@ -3036,7 +3447,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 68
+      "ordem_catalogo": 77
     },
     {
       "id": "depth-charge",
@@ -3074,7 +3485,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 69
+      "ordem_catalogo": 78
     },
     {
       "id": "laeral-s-silver-lance",
@@ -3114,7 +3525,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 70
+      "ordem_catalogo": 79
     },
     {
       "id": "melf-s-minute-meteors",
@@ -3153,7 +3564,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 71,
+      "ordem_catalogo": 80,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 15,
@@ -3195,7 +3606,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 72,
+      "ordem_catalogo": 81,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 24,
@@ -3239,7 +3650,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 73,
+      "ordem_catalogo": 82,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 24,
@@ -3282,7 +3693,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 74,
+      "ordem_catalogo": 83,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -3327,13 +3738,62 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 75,
+      "ordem_catalogo": 84,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
         4
       ],
       "bloco_invocacao": null
+    },
+    {
+      "id": "summon-undead",
+      "nome": "Summon Undead",
+      "nome_original": "Summon Undead",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 114,
+      "pdf_pagina": [
+        10
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 3,
+      "escola": "Necromancia",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a gilded skull worth at least 300 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You call forth an undead spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Undead Spirit stat block. When you cast the spell, choose the creature's form: Ghostly, Putrid, or Skeletal. The spirit resembles an undead creature with the chosen form, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Undead Spirit",
+        "creature_type": "Medium undead",
+        "text": "**Armor Class:** 11 + the level of the spell (natural armor)\n**Hit Points:** 30 (Ghostly and Putrid only) or 20 (Skeletal only) + 10 for each spell level above 3rd\n**Speed:** 30 ft.; fly 40 ft. (hover) (Ghostly only)\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 12 (+1) | 16 (+3) | 15 (+2) | 4 (-3) | 10 (+0) | 9 (-1) |\n\n**Damage Immunities:** necrotic, poison\n**Condition Immunities:** exhaustion, frightened, paralyzed, poisoned\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Festering Aura (Putrid Only).** Any creature, other than you, that starts its turn within 5 feet of the spirit must succeed on a Constitution saving throw against your spell save DC or be poisoned until the start of its next turn.\n\n**Incorporeal Passage (Ghostly Only).** The spirit can move through other creatures and objects as if they were difficult terrain. If it ends its turn inside an object, it is shunted to the nearest unoccupied space and takes 1d10 force damage for every 5 feet traveled.\n\n**Actions**\n\n**Multiattack.** The spirit makes a number of attacks equal to half this spell's level (rounded down).\n\n**Deathly Touch (Ghostly Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level necrotic damage, and the creature must succeed on a Wisdom saving throw against your spell save DC or be frightened of the undead until the end of the target's next turn.\n\n**Grave Bolt (Skeletal Only).** *Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one target. *Hit:* 2d4 + 3 + the spell's level necrotic damage.\n\n**Rotting Claw (Putrid Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level slashing damage. If the target is poisoned, it must succeed on a Constitution saving throw against your spell save DC or be paralyzed until the end of its next turn."
+      },
+      "ordem_catalogo": 85
     },
     {
       "id": "erupting-earth",
@@ -3373,7 +3833,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 76,
+      "ordem_catalogo": 86,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -3419,7 +3879,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 77,
+      "ordem_catalogo": 87,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 10,
@@ -3462,7 +3922,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 78,
+      "ordem_catalogo": 88,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 22,
@@ -3504,7 +3964,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 79
+      "ordem_catalogo": 89
     },
     {
       "id": "backlash",
@@ -3545,7 +4005,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 80
+      "ordem_catalogo": 90
     },
     {
       "id": "doomtide",
@@ -3585,7 +4045,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 81
+      "ordem_catalogo": 91
     },
     {
       "id": "find-greater-steed",
@@ -3623,7 +4083,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 82,
+      "ordem_catalogo": 92,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 10,
@@ -3665,7 +4125,156 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 83
+      "ordem_catalogo": 93
+    },
+    {
+      "id": "summon-aberration",
+      "nome": "Summon Aberration",
+      "nome_original": "Summon Aberration",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 109,
+      "pdf_pagina": [
+        5
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 4,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a pickled tentacle and an eyeball in a platinum-inlaid vial worth at least 400 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You call forth an aberrant spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Aberrant Spirit stat block. When you cast the spell, choose Beholderkin, Slaad, or Star Spawn. The creature resembles an aberration of that kind, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends. The creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, use the higher level wherever the spell's level appears in the stat block",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Aberrant Spirit",
+        "creature_type": "Medium aberration",
+        "text": "**Armor Class:** 11 + the level of the spell (natural armor)\n**Hit Points:** 40 + 10 for each spell level above 4th\n**Speed:** 30 ft.; fly 30 ft. (hover) (Beholderkin only)\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 16 (+3) | 10 (+0) | 15 (+2) | 16 (+3) | 10 (+0) | 6 (-2) |\n\n**Damage Immunities:** psychic\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** Deep Speech, understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Regeneration (Slaad Only).** The aberration regains 5 hit points at the start of its turn if it has at least 1 hit point.\n\n**Whispering Aura (Star Spawn Only).** At the start of each of the aberration's turns, each creature within 5 feet of the aberration must succeed on a Wisdom saving throw against your spell save DC or take 2d6 psychic damage, provided that the aberration isn't incapacitated.\n\n**Actions**\n\n**Multiattack.** The aberration makes a number of attacks equal to half this spell's level (rounded down).\n\n**Claws (Slaad Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level slashing damage. If the target is a creature, it can't regain hit points until the start of the aberration's next turn.\n\n**Eye Ray (Beholderkin Only).** *Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage.\n\n**Psychic Slam (Star Spawn Only).** *Melee Spell Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."
+      },
+      "ordem_catalogo": 94
+    },
+    {
+      "id": "summon-construct",
+      "nome": "Summon Construct",
+      "nome_original": "Summon Construct",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 111,
+      "pdf_pagina": [
+        7
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 4,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "an ornate stone and metal lockbox worth at least 400 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Artífice",
+        "Mago"
+      ],
+      "descricao": "You call forth the spirit of a construct. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Construct Spirit stat block. When you cast the spell, choose a material: Clay, Metal, or Stone. The creature resembles a golem or a modron (your choice) made of the chosen material, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours.\n\nIt obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 4th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Construct Spirit",
+        "creature_type": "Medium construct",
+        "text": "**Armor Class:** 13 + the level of the spell (natural armor)\n**Hit Points:** 40 + 15 for each spell level above 3rd\n**Speed:** 30 ft.\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 18 (+4) | 10 (+0) | 18 (+4) | 14 (+2) | 11 (+0) | 5 (-3) |\n\n**Damage Resistances:** poison\n**Condition Immunities:** charmed, exhaustion, frightened, incapacitated, paralyzed, petrified, poisoned\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Heated Body (Metal Only).** A creature that touches the construct or hits it with a melee attack while within 5 feet of it takes 1d10 fire damage.\n\n**Stony Lethargy (Stone Only).** When a creature the construct can see starts its turn within 10 feet of the construct, the construct can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target can't use reactions and its speed is halved until the start of its next turn.\n\n**Actions**\n\n**Multiattack.** The construct makes a number of attacks equal to half this spell's level (rounded down).\n\n**Slam.** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level bludgeoning damage.\n\n**Reactions**\n\n**Berserk Lashing (Clay Only).** When the construct takes damage, it makes a slam attack against a random creature within 5 feet of it. If no creature is within reach, the construct moves up to half its speed toward an enemy it can see, without provoking opportunity attacks."
+      },
+      "ordem_catalogo": 95
+    },
+    {
+      "id": "summon-elemental",
+      "nome": "Summon Elemental",
+      "nome_original": "Summon Elemental",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 111,
+      "pdf_pagina": [
+        7,
+        8
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 4,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "air, a pebble, ash, and water inside a gold-inlaid vial worth at least 400 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Druida",
+        "Patrulheiro",
+        "Mago"
+      ],
+      "descricao": "You call forth an elemental spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Elemental Spirit stat block. When you cast the spell, choose an element: Air, Earth, Fire, or Water. The creature resembles a bipedal form wreathed in the chosen element, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Elemental Spirit",
+        "creature_type": "Medium elemental",
+        "text": "**Armor Class:** 11 + the level of the spell (natural armor)\n**Hit Points:** 50 + 10 for each spell level above 4th\n**Speed:** 40 ft.; burrow 40 ft. (Earth only); fly 40 ft. (hover) (Air only); swim 40 ft. (Water only)\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 18 (+4) | 15 (+2) | 17 (+3) | 4 (-3) | 10 (+0) | 16 (+3) |\n\n**Damage Resistances:** acid (Water only); lightning and thunder (Air only); piercing and slashing (Earth only)\n**Damage Immunities:** poison; fire (Fire only)\n**Condition Immunities:** exhaustion, paralyzed, petrified, poisoned, unconscious\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** Primordial, understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Amorphous Form (Air, Fire, and Water Only).** The elemental can move through a space as narrow as 1 inch wide without squeezing.\n\n**Actions**\n\n**Multiattack.** The elemental makes a number of attacks equal to half this spell's level (rounded down).\n\n**Slam.** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 4 + the spell's level bludgeoning damage (Air, Earth, and Water only) or fire damage (Fire only)."
+      },
+      "ordem_catalogo": 96
     },
     {
       "id": "summon-greater-demon",
@@ -3704,7 +4313,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 84,
+      "ordem_catalogo": 97,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 20,
@@ -3748,11 +4357,57 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 85,
+      "ordem_catalogo": 98,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 24,
       "pdf_pagina_final": 25
+    },
+    {
+      "id": "charm-monster",
+      "nome": "Charm Monster",
+      "nome_original": "Charm Monster",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 151,
+      "pdf_pagina": 5,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 4,
+      "escola": "Encantamento",
+      "tempo_conjuracao": "Ação",
+      "alcance": "30 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "1 hora",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bardo",
+        "Druida",
+        "Feiticeiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You attempt to charm a creature you can see within range. It must make a Wisdom saving throw, and it does so with adva ntage if you or your companions are fighting it. If it fails the saving throw, it is charmed by you until the spell ends or until you or your companions do anything harmful to it. The charmed creature is friendly to you. When the spell ends, the creature knows it was charmed by you .\n\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, you can target one additional creature for each slot level above 4th. The creatures mus t be within 30 feet of each other when you target them.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 6,
+      "ordem_catalogo": 99
     },
     {
       "id": "humperdinks-irresistible-revelry",
@@ -3790,7 +4445,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 86
+      "ordem_catalogo": 100
     },
     {
       "id": "sickening-radiance",
@@ -3830,7 +4485,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 87,
+      "ordem_catalogo": 101,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 18,
@@ -3873,7 +4528,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 88
+      "ordem_catalogo": 102
     },
     {
       "id": "storm-sphere",
@@ -3912,7 +4567,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 89,
+      "ordem_catalogo": 103,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 20,
@@ -3954,7 +4609,50 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 90
+      "ordem_catalogo": 104
+    },
+    {
+      "id": "vitriolic-sphere",
+      "nome": "Vitriolic Sphere",
+      "nome_original": "Vitriolic Sphere",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 170,
+      "pdf_pagina": 24,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 4,
+      "escola": "Evocação",
+      "tempo_conjuracao": "Ação",
+      "alcance": "150 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a drop of giant slug bile"
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Feiticeiro",
+        "Mago"
+      ],
+      "descricao": "You point at a location within range, and a glowing, 1-foot-cliameter ball of emerald acid streaks there and explodes in a 20-foot-radius sphere. Each creature in that area must make a Dexterity saving throw. On a failed save, a creature takes 10d4 acid damage and another 5d4 acid damage at the end of its next turn. On a successful save, a creature takes half the initial damage and no damage at the end of its next turn.\n\nAt Higher Levels. When you cast this spell using a spell slot of 5th level or higher, the initial damage increases by 2d4 for each slot level above 4th.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 24,
+      "ordem_catalogo": 105
     },
     {
       "id": "shadow-of-moil",
@@ -3992,7 +4690,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 91,
+      "ordem_catalogo": 106,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 18,
@@ -4037,7 +4735,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 92,
+      "ordem_catalogo": 107,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -4080,7 +4778,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 93,
+      "ordem_catalogo": 108,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 11,
@@ -4125,7 +4823,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 94
+      "ordem_catalogo": 109
     },
     {
       "id": "bone-cage",
@@ -4165,7 +4863,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 95
+      "ordem_catalogo": 110
     },
     {
       "id": "far-step",
@@ -4205,7 +4903,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 96,
+      "ordem_catalogo": 111,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -4248,7 +4946,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 97,
+      "ordem_catalogo": 112,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 12,
@@ -4290,7 +4988,144 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 98
+      "ordem_catalogo": 113
+    },
+    {
+      "id": "steel-wind-strike",
+      "nome": "Steel Wind Strike",
+      "nome_original": "Steel Wind Strike",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 166,
+      "pdf_pagina": 20,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 5,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "30 pés",
+      "componentes": {
+        "verbal": false,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a melee weapon worth at least 1 sp"
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Patrulheiro",
+        "Mago"
+      ],
+      "descricao": "You flourish the weapon used in the casting and then vanis h to strike like the wind. Choose up to five creatures you can see within range. Make a melee spell attack against each target. On a hit, a target takes 6d10 force damage.\n\nYou can then teleport to an unoccupied space you can see within 5 feet of one of the targets you hit or missed.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 20,
+      "ordem_catalogo": 114
+    },
+    {
+      "id": "summon-celestial",
+      "nome": "Summon Celestial",
+      "nome_original": "Summon Celestial",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 110,
+      "pdf_pagina": [
+        6
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 5,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "a golden reliquary worth at least 500 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Clérigo",
+        "Paladino"
+      ],
+      "descricao": "You call forth a celestial spirit. It manifests in an angelic form in an unoccupied space that you can see within range. This corporeal form uses the Celestial Spirit stat block. When you cast the spell, choose Avenger or Defender. Your choice determines the creature's attack in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 6th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Celestial Spirit",
+        "creature_type": "Large celestial",
+        "text": "**Armor Class:** 11 + the level of the spell (natural armor) + 2 (Defender only)\n**Hit Points:** 40 + 10 for each spell level above 5th\n**Speed:** 30 ft., fly 40 ft.\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 16 (+3) | 14 (+2) | 16 (+3) | 10 (+0) | 14 (+2) | 16 (+3) |\n\n**Damage Resistances:** radiant\n**Condition Immunities:** charmed, frightened\n**Senses:** darkvision 60 ft., passive Perception 12\n**Languages:** Celestial, understands the languages you speak\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Actions**\n\n**Multiattack.** The celestial makes a number of attacks equal to half this spell's level (rounded down).\n\n**Radiant Bow (Avenger Only).** *Ranged Weapon Attack:* your spell attack modifier to hit, range 150/600 ft., one target. *Hit:* 2d6 + 2 + the spell's level radiant damage.\n\n**Radiant Mace (Defender Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level radiant damage, and the celestial can choose itself or another creature it can see within 10 feet of the target. The chosen creature gains 1d10 temporary hit points.\n\n**Healing Touch (1/Day).** The celestial touches another creature. The target magically regains hit points equal to 2d8 + the spell's level."
+      },
+      "ordem_catalogo": 115
+    },
+    {
+      "id": "synaptic-static",
+      "nome": "Synaptic Static",
+      "nome_original": "Synaptic Static",
+      "fonte": "xanathar-2017",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 167,
+      "pdf_pagina": 21,
+      "pdf_origem": "Xanathar's Guide to Everything - Modificado.pdf",
+      "nivel": 5,
+      "escola": "Encantamento",
+      "tempo_conjuracao": "Ação",
+      "alcance": "120 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": false,
+        "material_texto": ""
+      },
+      "duracao": "Instantânea",
+      "concentracao": false,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bardo",
+        "Feiticeiro",
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You choose a point within range and cause psychic energy to explode there. Each creature in a 20-foot-radius sphere centered on that point must make an Intelligence saving throw. A creature wiili an Intelligence score of\n\n2 or lower can't be affected by this spell. A target takes 8d6 psychic damage on a failed save, or ha lf as much damage on a successful one. After a failed save, a target has muddled thoughts for 1 minute. During that time, it rolls a d6 and subtracts the number rolled from all its attack rolls and ability checks, as well as its Constitution saving throws to maintain concentration. The target can make an Intelligence saving throw at the end of each of its turns, end-\n\ning the effect on itself on a success.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
+      "pdf_pagina_final": 21,
+      "ordem_catalogo": 116
     },
     {
       "id": "dawn",
@@ -4329,7 +5164,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 99,
+      "ordem_catalogo": 117,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 7,
@@ -4371,7 +5206,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 100
+      "ordem_catalogo": 118
     },
     {
       "id": "holy-weapon",
@@ -4410,7 +5245,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 101,
+      "ordem_catalogo": 119,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 11,
@@ -4453,7 +5288,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 102,
+      "ordem_catalogo": 120,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 12,
@@ -4495,7 +5330,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 103,
+      "ordem_catalogo": 121,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -4539,7 +5374,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 104,
+      "ordem_catalogo": 122,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 24,
@@ -4582,7 +5417,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 105,
+      "ordem_catalogo": 123,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 25,
@@ -4625,7 +5460,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 106,
+      "ordem_catalogo": 124,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 7,
@@ -4667,7 +5502,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 107
+      "ordem_catalogo": 125
     },
     {
       "id": "enervation",
@@ -4707,7 +5542,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 108,
+      "ordem_catalogo": 126,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 9,
@@ -4750,7 +5585,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 109,
+      "ordem_catalogo": 127,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -4794,7 +5629,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 110,
+      "ordem_catalogo": 128,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 6,
@@ -4839,7 +5674,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 111,
+      "ordem_catalogo": 129,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 19,
@@ -4883,7 +5718,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 112
+      "ordem_catalogo": 130
     },
     {
       "id": "transmute-rock",
@@ -4923,7 +5758,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 113,
+      "ordem_catalogo": 131,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 23,
@@ -4965,7 +5800,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 114,
+      "ordem_catalogo": 132,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 8,
@@ -5007,7 +5842,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 115,
+      "ordem_catalogo": 133,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -5052,7 +5887,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 116
+      "ordem_catalogo": 134
     },
     {
       "id": "scatter",
@@ -5092,11 +5927,60 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 117,
+      "ordem_catalogo": 135,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 18,
       "pdf_pagina_final": 18
+    },
+    {
+      "id": "summon-fiend",
+      "nome": "Summon Fiend",
+      "nome_original": "Summon Fiend",
+      "fonte": "tasha-2020",
+      "ruleset": "5e",
+      "revisao_core": 2014,
+      "versao_mais_recente": true,
+      "pagina_fonte": 112,
+      "pdf_pagina": [
+        9
+      ],
+      "pdf_origem": "Tasha’s Cauldron of Everything - Modificado.pdf",
+      "nivel": 6,
+      "escola": "Conjuração",
+      "tempo_conjuracao": "Ação",
+      "alcance": "90 pés",
+      "componentes": {
+        "verbal": true,
+        "somatico": true,
+        "material": true,
+        "material_texto": "humanoid blood inside a ruby vial worth at least 600 gp"
+      },
+      "duracao": "Concentração, até 1 hora",
+      "concentracao": true,
+      "ritual": false,
+      "ataque_salvaguarda": "Consultar descrição original",
+      "tipo_efeito": "Magia",
+      "tipo_dano": "",
+      "dano_base": "",
+      "classes_base": [
+        "Bruxo",
+        "Mago"
+      ],
+      "descricao": "You call forth a fiendish spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Fiendish Spirit stat block. When you cast the spell, choose Demon, Devil, or Yugoloth. The creature resembles a fiend of the chosen type, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger.\n\nAt Higher Levels. When you cast this spell using a spell slot of 7th level or higher, use the higher level wherever the spell's level appears in the stat block.",
+      "niveis_superiores": "",
+      "descricao_tipo": "texto_fornecido_usuario",
+      "texto_integral_publicavel": false,
+      "completude": "texto_integral_fornecido_usuario",
+      "idioma_descricao": "en",
+      "natureza": "oficial",
+      "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
+      "bloco_invocacao": {
+        "title": "Fiendish Spirit",
+        "creature_type": "Large fiend",
+        "text": "**Armor Class:** 12 + the level of the spell (natural armor)\n**Hit Points:** 50 (Demon only) or 40 (Devil only) or 60 (Yugoloth only) + 15 for each spell level above 6th\n**Speed:** 40 ft.; climb 40 ft. (Demon only); fly 60 ft. (Devil only)\n\n| STR | DEX | CON | INT | WIS | CHA |\n|---|---|---|---|---|---|\n| 13 (+1) | 16 (+3) | 15 (+2) | 10 (+0) | 10 (+0) | 16 (+3) |\n\n**Damage Resistances:** fire\n**Damage Immunities:** poison\n**Condition Immunities:** poisoned\n**Senses:** darkvision 60 ft., passive Perception 10\n**Languages:** Abyssal, Infernal, telepathy 60 ft.\n**Challenge:** —    **Proficiency Bonus:** equals your bonus\n\n**Death Throes (Demon Only).** When the fiend drops to 0 hit points or the spell ends, the fiend explodes, and each creature within 10 feet of it must make a Dexterity saving throw against your spell save DC. A creature takes 2d10 + this spell's level fire damage on a failed save, or half as much damage on a successful one.\n\n**Devil's Sight (Devil Only).** Magical darkness doesn't impede the fiend's darkvision.\n\n**Magic Resistance.** The fiend has advantage on saving throws against spells and other magical effects.\n\n**Actions**\n\n**Multiattack.** The fiend makes a number of attacks equal to half this spell's level (rounded down).\n\n**Bite (Demon Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d12 + 3 + the spell's level necrotic damage.\n\n**Claws (Yugoloth Only).** *Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 3 + the spell's level slashing damage. Immediately after the attack hits or misses, the fiend can magically teleport up to 30 feet to an unoccupied space it can see.\n\n**Hurl Flame (Devil Only).** *Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one target. *Hit:* 2d6 + 3 + the spell's level fire damage. If the target is a flammable object that isn't being worn or carried, it also catches fire."
+      },
+      "ordem_catalogo": 136
     },
     {
       "id": "dirge",
@@ -5135,7 +6019,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 118
+      "ordem_catalogo": 137
     },
     {
       "id": "elminster-s-effulgent-spheres",
@@ -5175,7 +6059,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 119
+      "ordem_catalogo": 138
     },
     {
       "id": "mental-prison",
@@ -5215,7 +6099,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 120,
+      "ordem_catalogo": 139,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 15,
@@ -5257,7 +6141,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 121
+      "ordem_catalogo": 140
     },
     {
       "id": "soul-cage",
@@ -5296,7 +6180,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 122,
+      "ordem_catalogo": 141,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 19,
@@ -5338,7 +6222,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 123,
+      "ordem_catalogo": 142,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -5380,7 +6264,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 124,
+      "ordem_catalogo": 143,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 6,
@@ -5425,7 +6309,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 125,
+      "ordem_catalogo": 144,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 13,
@@ -5470,7 +6354,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 126,
+      "ordem_catalogo": 145,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 13,
@@ -5515,7 +6399,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 127,
+      "ordem_catalogo": 146,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 13,
@@ -5560,7 +6444,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 128,
+      "ordem_catalogo": 147,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -5604,7 +6488,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 129,
+      "ordem_catalogo": 148,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -5648,7 +6532,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 130,
+      "ordem_catalogo": 149,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 22,
@@ -5693,7 +6577,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 131,
+      "ordem_catalogo": 150,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/tcoe",
       "pdf_pagina": [
@@ -5737,7 +6621,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 132,
+      "ordem_catalogo": 151,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 21,
@@ -5781,7 +6665,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 133,
+      "ordem_catalogo": 152,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -5825,7 +6709,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 134,
+      "ordem_catalogo": 153,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 6,
@@ -5869,7 +6753,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 135,
+      "ordem_catalogo": 154,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 25,
@@ -5912,7 +6796,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 136
+      "ordem_catalogo": 155
     },
     {
       "id": "mighty-fortress",
@@ -5950,7 +6834,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 137,
+      "ordem_catalogo": 156,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 15,
@@ -5993,7 +6877,7 @@
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
       "natureza": "oficial",
-      "ordem_catalogo": 138
+      "ordem_catalogo": 157
     },
     {
       "id": "maddening-darkness",
@@ -6032,7 +6916,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 139,
+      "ordem_catalogo": 158,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -6074,7 +6958,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 140,
+      "ordem_catalogo": 159,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 11,
@@ -6117,7 +7001,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 141,
+      "ordem_catalogo": 160,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 4,
@@ -6159,7 +7043,7 @@
       "completude": "metadados_protegidos",
       "natureza": "terceiro",
       "nota_versao": "",
-      "ordem_catalogo": 142
+      "ordem_catalogo": 161
     },
     {
       "id": "invulnerability",
@@ -6197,7 +7081,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 143,
+      "ordem_catalogo": 162,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
@@ -6248,7 +7132,7 @@
           "pagina_fonte": 106
         }
       ],
-      "ordem_catalogo": 144
+      "ordem_catalogo": 163
     },
     {
       "id": "psychic-scream",
@@ -6289,7 +7173,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 145,
+      "ordem_catalogo": 164,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 17,
@@ -6333,7 +7217,7 @@
       "texto_integral_publicavel": false,
       "completude": "texto_integral_fornecido_usuario",
       "natureza": "oficial",
-      "ordem_catalogo": 146,
+      "ordem_catalogo": 165,
       "idioma_descricao": "en",
       "fonte_url": "https://www.dndbeyond.com/sources/dnd/xgte",
       "pdf_pagina": 14,
