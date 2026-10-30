@@ -591,7 +591,7 @@ function spellEffectInPortuguese(x){
   return{content:obj.descricao,higher:obj.niveis_superiores||'',status:'Descrição integral em português — SRD 5.2.1',complete:true};
  }
  if(x.fonte==='phb-2024'&&x.descricao_tipo==='texto_original_phb_2024'&&x.descricao){
-  return{content:x.descricao,higher:x.niveis_superiores||'',status:'Descrição original em inglês — Player’s Handbook (2024)',complete:true};
+  return{content:x.descricao,higher:x.niveis_superiores||'',status:'Descrição original em inglês — Player’s Handbook',complete:true};
  }
  if(x.descricao_tipo==='resumo_editorial'){
   return{content:String(x.descricao||'').trim(),higher:'',status:'Descrição editorial em português',complete:false};
