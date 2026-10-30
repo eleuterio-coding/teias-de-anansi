@@ -30,7 +30,7 @@ async function localizeSpellCatalog(items){
 export async function loadSpells(){
  let items=[];
  try{
-  const d=await json('dados/magias-catalogo.json?v=20261029-sem-phb1');
+  const d=await json('dados/magias-catalogo.json?v=20261030-fontes-integrais2');
   items=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(normalizeSpell);
   if(!items.length)throw new Error('catálogo consolidado vazio')
  }catch(e){
