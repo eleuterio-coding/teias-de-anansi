@@ -145,7 +145,7 @@
         "Bardo",
         "Mago"
       ],
-      "descricao": "A magia exige proficiência nas Ferramentas de Artesão usadas como componente material. Uma vez antes de terminar, ela permite obter vantagem em um teste de habilidade feito com essas ferramentas.",
+      "descricao": "Você deve ter proficiência com o conjunto de Ferramentas de Artesão utilizado como componente material desta magia. Uma única vez antes de a magia terminar, você pode obter vantagem em um teste de atributo realizado com essas ferramentas.",
       "niveis_superiores": "",
       "descricao_tipo": "resumo_editorial",
       "texto_integral_publicavel": false,
@@ -586,13 +586,13 @@
       "ataque_salvaguarda": "Salvaguarda de Constituição",
       "tipo_efeito": "Magia",
       "tipo_dano": "Necrótico",
-      "dano_base": "",
+      "dano_base": "Igual ao Bônus de Proficiência (em falha na salvaguarda de Constituição)",
       "classes_base": [
         "Druida",
         "Bruxo",
         "Feiticeiro"
       ],
-      "descricao": "Você fixa o olhar em uma criatura visível. Se ela puder ver seus olhos, precisa resistir com Constituição; em caso de falha, sofre dano necrótico igual ao seu Bônus de Proficiência e fica em desvantagem na próxima salvaguarda de Destreza que fizer antes do fim do próximo turno.",
+      "descricao": "Você dirige o olhar a uma criatura que possa ver a até 20 pés. Se o alvo puder ver seus olhos, o corpo dele enrijece e racha como se estivesse se transformando em pedra. O alvo deve realizar uma salvaguarda de Constituição. Se falhar, sofre dano necrótico igual ao seu Bônus de Proficiência e tem desvantagem na próxima salvaguarda de Destreza que realizar antes do fim do próximo turno dele.",
       "niveis_superiores": "",
       "descricao_tipo": "resumo_editorial",
       "texto_integral_publicavel": false,
@@ -752,7 +752,7 @@
       "classes_base": [
         "Marca da Passagem"
       ],
-      "descricao": "Você se teleporta até 5 pés para um espaço desocupado que possa ver. O deslocamento não atravessa objetos sólidos e não permite escapar de algemas ou restrições equivalentes.",
+      "descricao": "Você se teleporta por até 5 pés para um espaço desocupado que consiga ver. Não é possível se teleportar através de objetos sólidos nem se libertar de algemas ou de restrições semelhantes usando esta magia.",
       "niveis_superiores": "",
       "descricao_tipo": "resumo_editorial",
       "texto_integral_publicavel": false,
