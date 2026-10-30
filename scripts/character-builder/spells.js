@@ -44,12 +44,12 @@ export async function loadSpells(){
  try{
   const source=await json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1');
   const byName=new Map(arr(source.itens).map(x=>[key(x.nome_original),x]));
-  for(const spell of items){if(spell.source!=='xanathar-2017')continue;const full=byName.get(key(spell.originalName));if(full){spell.xanatharUserText=full.descricao_original_en;spell.xanatharSourcePage=full.pagina_pdf;}}
+  for(const spell of items){if(spell.source!=='xanathar-2017')continue;const full=byName.get(key(spell.originalName));if(full){spell.xanatharUserText=spell.source==='xanathar-2017'?'':full.descricao_original_en;spell.xanatharSourcePage=full.pagina_pdf;if(spell.source==='xanathar-2017')spell.description=full.descricao_original_en;}}
  }catch(e){state.warnings.push(`Textos integrais do PDF de Xanathar indisponíveis: ${e.message}`)}
  try{
   const source=await json('dados/magias-tasha-usuario.json?v=20261030-tasha21-1');
   const byName=new Map(arr(source.itens).map(x=>[key(x.name),x]));
-  for(const spell of items){const full=byName.get(key(spell.originalName));if(full){spell.tashaUserEdition=full;spell.tashaUserText=full.description;spell.tashaUserStatblock=full.statblock;}}
+  for(const spell of items){const full=byName.get(key(spell.originalName));if(full){spell.tashaUserEdition=full;spell.tashaUserText=spell.source==='tasha-2020'?'':full.description;spell.tashaUserStatblock=full.statblock;if(spell.source==='tasha-2020')spell.description=full.description;}}
  }catch(e){state.warnings.push(`Transcrições de Tasha indisponíveis: ${e.message}`)}
  return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player's Handbook (2024)"))
 }
