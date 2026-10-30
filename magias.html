@@ -568,6 +568,7 @@ function spellEffectInPortuguese(x){
   return{content:x.descricao,higher:'',status:'Descrição editorial em português',complete:false};
  }
  const info=[];
+ if(x.descricao_tipo==='referencia_visual_pdf')return{content:x.descricao,higher:'',status:'Índice confirmado — dados mecânicos pendentes de revisão',complete:false};
  info.push(`${x.nivel===0?'Truque':`Magia de ${x.nivel}º círculo`} de ${x.escola||'magia'}; tempo de conjuração: ${x.tempo_conjuracao||'não informado'}; alcance: ${x.alcance||'não informado'}.`);
  if(x.ataque_salvaguarda&&!/^(Nenhum|Não republicado|—)/i.test(x.ataque_salvaguarda))info.push(`Teste exigido: ${x.ataque_salvaguarda}.`);
  if(x.tipo_dano)info.push(`Dano identificado: ${x.tipo_dano}${x.dano_base?` (${x.dano_base})`:''}.`);
@@ -653,14 +654,14 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  try{
   const catalog=await getJSON('dados/magias-catalogo.json?v=20261029-sem-phb1');
   if(Array.isArray(catalog.itens)&&catalog.itens.length){
-   DATA={fontes:catalog.fontes||{}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
+   DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
    ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
    await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial()]);openInitialSpell();return;
   }
  }catch(e){console.warn('Catálogo consolidado local indisponível; usando montagem remota.',e)}
  const sourceEntries=Object.entries(REMOTE);const fetched=await Promise.all(sourceEntries.map(async([src,url])=>[src,await getJSON(url)]));let lookup={};try{lookup=await getJSON(LOOKUP)}catch(e){console.warn('Class lookup indisponível',e)}const local=await getJSON('dados/magias-suplementos-locais.json?v=20260819-1300');
- DATA.fontes={};Object.values(META).forEach(m=>DATA.fontes[m.id]={titulo:m.titulo,ano:m.ano,ruleset:m.ruleset,revisao_core:m.revisao,pdf_origem:m.pdf});Object.assign(DATA.fontes,local.fontes||{});DATA.fontes['srd-5.2.1']={titulo:'System Reference Document 5.2.1',ano:2025,ruleset:'5.5e',licenca:'CC-BY-4.0'};
+ DATA.fontes={};Object.values(META).forEach(m=>DATA.fontes[m.id]={titulo:m.titulo,ano:m.ano,ruleset:m.ruleset,revisao_core:m.revisao,pdf_origem:m.pdf});Object.assign(DATA.fontes,local.fontes||{});DATA.fontes['phb-2024']={titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'};DATA.fontes['srd-5.2.1']={titulo:'System Reference Document 5.2.1',ano:2025,ruleset:'5.5e',licenca:'CC-BY-4.0'};
  const groups=new Map();let candidates=0;for(const[src,data]of fetched){for(const s of(data.spell||[])){candidates++;const k=norm(s.name);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({src,s,p:META[src].prioridade})}}
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
