@@ -22,6 +22,8 @@ assert.equal(tas.itens.filter(x=>x.statblock).length,9,'Fichas de espíritos pre
 assert.equal(inX.length,95,'95 definições canônicas integrais de Xanathar.');
 assert.equal(inT.length,20,'20 definições canônicas integrais de Tasha, além de Blade of Disaster (2025).');
 assert.equal(cat.itens.length-inX.length-inT.length,50,'Registros de outras obras devem ser preservados.');
+assert.equal(cat.fontes['xanathar-2017'].ano,2017,'Ano correto de Xanathar.');
+assert.equal(cat.fontes['tasha-2020'].ano,2020,'Ano correto de Tasha.');
 assert.equal(cat.fontes['xanathar-2017'].titulo,"Xanathar's Guide to Everything");
 assert.equal(cat.fontes['tasha-2020'].titulo,"Tasha's Cauldron of Everything");
 assert.equal(cat.fontes['xanathar-2017'].url,'https://www.dndbeyond.com/sources/dnd/xgte');
@@ -59,4 +61,20 @@ assert.ok(read('scripts/character-sheet-unified-spells.js').includes('fontes-int
 assert.ok(read('scripts/gerar_magias_catalogo.py').includes('def apply_user_pdf_editions'),'Regeneração não deve restaurar resumos antigos.');
 assert.ok(read('scripts/gerar_magias_catalogo.py').includes('include_pdf_magias_missing_from_2024'),'Regeneração não deve perder as 19 entradas recuperadas.');
 assert.ok(script.includes('importedPdfNames'),'Não mostrar PHB duplicado nas magias migradas.');
+// Testa a lógica real da interface, incluindo a magia reimpressa em 2025.
+const contextFunction=script.match(/function spellPublicationContext\(x, selectedSourceId\)\{[\s\S]*?\n\}/)?.[0];
+assert.ok(contextFunction,'A atribuição da edição para exibição deve existir.');
+const sandbox=vm.createContext({DATA:{fontes:cat.fontes}});
+vm.runInContext(contextFunction,sandbox);
+const publication=vm.runInContext('spellPublicationContext',sandbox);
+const xanSpell=inX[0],tashaSpell=inT[0],blade=cat.itens.find(x=>x.nome_original==='Blade of Disaster');
+assert.equal(publication({...xanSpell,xanathar_2017_user:{}},'xanathar-2017').year,2017);
+assert.equal(publication({...tashaSpell,tasha_2020_user:{}},'tasha-2020').year,2020);
+assert.equal(blade.fonte,'fr-heroes-2025');
+const tashaBlade=tas.itens.find(x=>x.name==='Blade of Disaster');
+assert.equal(publication({...blade,tasha_2020_user:tashaBlade},'tasha-2020').year,2020,'Ao filtrar Tasha, o ano deve ser 2020 mesmo na reimpressão posterior.');
+assert.equal(publication({...blade,tasha_2020_user:tashaBlade},'').year,2025,'Sem filtro, conservar o ano da reimpressão 2025.');
+assert.ok(script.includes('publication.year'),'Campo Ano deve usar a edição selecionada.');
+assert.ok(script.includes('if(CURRENT)renderDetail(CURRENT)'),'Ao limpar filtros, o campo Ano deve ser atualizado.');
+
 console.log('OK: 96 resumos antigos retirados, 95 magias de Xanathar e 21 de Tasha acessíveis sem duplicatas; 165 verbetes no Hub.');
