@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+const read=path=>fs.readFileSync(path,'utf8');
+const user=JSON.parse(read('dados/magias-xanathar-usuario.json'));
+const catalog=JSON.parse(read('dados/magias-catalogo.json'));
+const phb=JSON.parse(read('dados/magias-phb-2024-indice.json'));
+const fold=s=>String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().toLowerCase();
+assert.equal(user.schema,'teias-de-anansi/xanathar-texto-fornecido-v1');
+assert.equal(user.total,95);
+assert.equal(user.itens.length,95);
+assert.equal(new Set(user.itens.map(x=>fold(x.nome_original))).size,95,'Magias duplicadas');
+for(const x of user.itens){
+ assert.ok(x.nome_original&&x.nivel_original,'Metadados não preenchidos');
+ assert.ok(Number.isInteger(x.pagina_pdf)&&x.pagina_pdf>=4&&x.pagina_pdf<=25,'Página fora do capítulo');
+ for(const field of ['tempo_conjuracao_original','alcance_original','componentes_original','duracao_original','descricao_original_en'])assert.ok(x[field]&&x[field].trim().length>0,field+': '+x.nome_original);
+}
+const canonical=new Set(catalog.itens.map(x=>fold(x.nome_original)));
+const indexed=new Set(phb.itens.map(x=>fold(x.nome_original)));
+assert.equal(user.itens.filter(x=>canonical.has(fold(x.nome_original))).length,85,'Registros de 2017 alterados inesperadamente');
+assert.equal(user.itens.filter(x=>!canonical.has(fold(x.nome_original))&&indexed.has(fold(x.nome_original))).length,10,'10 versões migradas para 2024 não conciliadas');
+assert.ok(user.itens.every(x=>canonical.has(fold(x.nome_original))||indexed.has(fold(x.nome_original))),'Magia sem correspondência no Hub');
+const html=read('magias.html');
+const script=html.match(/<script>([\\s\\S]*?)<\\/script>/)?.[1];
+assert.ok(script,'Script inline de Magias ausente');
+new vm.Script(script,{filename:'magias.html'});
+assert.ok(script.includes('loadXanatharProvidedTexts()'));
+assert.ok(script.includes('xanathar-pdf-2017'));
+assert.ok(script.includes('xanatharLegacyHTML'));
+assert.ok(read('scripts/character-builder/spells.js').includes('xanatharUserText'));
+assert.ok(read('scripts/character-sheet-unified-spells.js').includes('xanatharUserText'));
+assert.ok(read('scripts/catalog-registry.js').includes('dados/magias-xanathar-usuario.json'));
+console.log('OK: 95 transcrições; 85 magias Xanathar ativas; 10 com registro PHB 2024; catálogo, fichas e construtor vinculados.');
