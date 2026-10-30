@@ -5,7 +5,7 @@ const read=path=>fs.readFileSync(path,'utf8');
 const user=JSON.parse(read('dados/magias-xanathar-usuario.json'));
 const catalog=JSON.parse(read('dados/magias-catalogo.json'));
 const phb=JSON.parse(read('dados/magias-phb-2024-indice.json'));
-const fold=s=>String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().toLowerCase();
+const fold=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,' ').trim().toLowerCase();
 assert.equal(user.schema,'teias-de-anansi/xanathar-texto-fornecido-v1');
 assert.equal(user.total,95);
 assert.equal(user.itens.length,95);
@@ -21,7 +21,7 @@ assert.equal(user.itens.filter(x=>canonical.has(fold(x.nome_original))).length,8
 assert.equal(user.itens.filter(x=>!canonical.has(fold(x.nome_original))&&indexed.has(fold(x.nome_original))).length,10,'10 versões migradas para 2024 não conciliadas');
 assert.ok(user.itens.every(x=>canonical.has(fold(x.nome_original))||indexed.has(fold(x.nome_original))),'Magia sem correspondência no Hub');
 const html=read('magias.html');
-const script=html.match(/<script>([\\s\\S]*?)<\\/script>/)?.[1];
+const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'Script inline de Magias ausente');
 new vm.Script(script,{filename:'magias.html'});
 assert.ok(script.includes('loadXanatharProvidedTexts()'));
