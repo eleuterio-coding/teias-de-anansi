@@ -34,12 +34,8 @@ export async function loadSpells(){
   items=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(normalizeSpell);
   if(!items.length)throw new Error('catálogo consolidado vazio')
  }catch(e){
-  state.warnings.push(`Catálogo consolidado local indisponível: ${e.message}. Usando a mesma consolidação remota da Biblioteca.`);
-  try{items=await remoteConsolidated()}
-  catch(remoteError){
-   state.warnings.push(`Consolidação remota de Magias: ${remoteError.message}`);
-   items=[]; // Falha segura: nunca restaurar magias excluídas pelo SRD legado.
-  }
+  state.warnings.push(`Catálogo consolidado local indisponível: ${e.message}. Não recriar as magias antigas por fontes remotas.`);
+  items=[]; // Falha segura: arquivos PDF são a única fonte ativa para Xanathar e Tasha.
  }
  try{
   const source=await json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1');
