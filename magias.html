@@ -607,11 +607,11 @@ function spellClassLinks(names,subclasses=[]){
  const anchors=(Array.isArray(names)?names:[]).map(name=>{
   const target=CLASS_TARGETS[name];
   if(!target)return `<span class="spell-class-label">${esc(name)}</span>`;
-  const href=target==='artifice'?'classes.html#artifice':`classes-v3.html?v=20261028-library-hub-layout1&ref=classes%3Asrd521%3A${target}#ref-classes%3Asrd521%3A${target}`;
+  const href=target==='artifice'?'classes.html#artifice':`classes-v3.html?v=20261030-biomancia-classes2&ref=classes%3Asrd521%3A${target}#ref-classes%3Asrd521%3A${target}`;
   return `<a class="spell-class-link" href="${esc(href)}" title="Consultar a classe ${esc(name)} na Biblioteca">${esc(name)}</a>`;
  });
  for(const name of (Array.isArray(subclasses)?subclasses:[])){
-  if(name==='Alquimista')anchors.push('<a class="spell-class-link" href="classes.html?v=20261030-biomancia1#artifice" title="Alquimista: subclasse de Artífice (2025)">Alquimista (Artífice)</a>');
+  if(name==='Alquimista')anchors.push('<a class="spell-class-link" href="classes.html?v=20261030-biomancia-classes2#biomancia-alquimista" title="Alquimista: subclasse de Artífice (2025)">Alquimista (Artífice)</a>');
  }
  return anchors.length?`<div class="spell-class-links">${anchors.join('')}</div>`:'<p class="muted">—</p>';
 }
