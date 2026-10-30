@@ -411,6 +411,7 @@ const REMOTE={
 };
 const LOOKUP=RAW+'generated/gendata-spell-source-lookup.json';
 const META={
+ XPHB:{id:'phb-2024',titulo:'Player’s Handbook (2024)',ano:2024,prioridade:20240917,ruleset:'5.5e',revisao:2024,pdf:'Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf'},
  XGE:{id:'xanathar-2017',titulo:"Xanathar's Guide to Everything",ano:2017,prioridade:20171121,ruleset:'5e',revisao:2014,pdf:'pdf24_merged.pdf'},
  TCE:{id:'tasha-2020',titulo:"Tasha's Cauldron of Everything",ano:2020,prioridade:20201117,ruleset:'5e',revisao:2014,pdf:'pdf24_merged-1.pdf'},
  FRHoF:{id:'fr-heroes-2025',titulo:'Forgotten Realms: Heroes of Faerûn',ano:2025,prioridade:20251101,ruleset:'5.5e',revisao:2024,pdf:'pdf24_merged.pdf'},
@@ -452,6 +453,37 @@ function attackSave(s){const p=[];(s.savingThrow||[]).length&&p.push('Salvaguard
 function firstDamage(s){const b=JSON.stringify(s.entries||[]),m=b.match(/\{@damage\s+([^}|]+)/);return m?m[1].trim():''}
 function editorialSummary(s){const p=[];(s.savingThrow||[]).length&&p.push('exige salvaguarda de '+s.savingThrow.map(x=>SAVE_PT[x]||x).join(', '));(s.spellAttack||[]).forEach(x=>p.push(x==='M'?'usa ataque de magia corpo a corpo':x==='R'?'usa ataque de magia à distância':'usa ataque de magia'));(s.damageInflict||[]).length&&p.push('pode causar dano '+s.damageInflict.map(x=>DAMAGE_PT[x]||x).join(', '));(s.conditionInflict||[]).length&&p.push('pode impor '+s.conditionInflict.map(x=>CONDITION_PT[x]||x).join(', '));(s.damageResist||[]).length&&p.push('pode conceder resistência a '+s.damageResist.map(x=>DAMAGE_PT[x]||x).join(', '));(s.damageImmune||[]).length&&p.push('pode conceder imunidade a '+s.damageImmune.map(x=>DAMAGE_PT[x]||x).join(', '));const areas=(s.areaTags||[]).map(x=>AREA_PT[x]).filter(Boolean);areas.length&&p.push('estrutura de alvo/área: '+[...new Set(areas)].join(', '));const misc=new Set(s.miscTags||[]);misc.has('SMN')&&p.push('envolve invocação');misc.has('THP')&&p.push('pode conceder Pontos de Vida Temporários');(s.entriesHigherLevel||misc.has('HL'))&&p.push('possui escalonamento em espaços superiores');if(!p.length)p.push('efeito definido integralmente na fonte comercial indicada');return'Resumo mecânico editorial: '+p.join('; ')+'. O texto narrativo integral permanece na fonte comercial e não é reproduzido no Hub.'}
 function officialRecord(s,src,lookup){const m=META[src],du=fmtDuration(s),open=!!s.srd52,damage=s.damageInflict||[],desc=open?flatten(s.entries||[]).join(' '):editorialSummary(s),higher=s.entriesHigherLevel?(open?flatten(s.entriesHigherLevel).join(' '):'Possui escalonamento ou efeito adicional em espaços de nível superior; consulte a fonte para os valores completos.') :'';return{id:slug(s.name),nome:NAME_PT[s.name]||s.name,nome_original:s.name,ruleset:m.ruleset,revisao_core:m.revisao,fonte:m.id,pagina_fonte:s.page,pdf_origem:m.pdf,nivel:s.level||0,escola:SCHOOL[s.school]||s.school||'—',tempo_conjuracao:fmtTime(s),alcance:fmtRange(s),componentes:fmtComponents(s),duracao:du.texto,concentracao:du.concentracao,ritual:!!s.meta?.ritual,ataque_salvaguarda:attackSave(s),tipo_efeito:damage.length?'Dano':'Magia',tipo_dano:damage.map(x=>DAMAGE_PT[x]||x).join(', '),dano_base:firstDamage(s),classes_base:classesFor(lookup,src,s.name),descricao:desc,niveis_superiores:higher,descricao_tipo:open?'texto_aberto_srd_5_2_1':'resumo_mecanico_editorial',texto_integral_publicavel:open,completude:open?'completo_aberto':'stats_completos_resumo',natureza:'oficial',versao_mais_recente:true}}
+// Os nomes e páginas vêm do índice do PDF do usuário; os campos das regras são confrontados
+// com a base estruturada XPHB 2024 (a mesma edição). Falha remota não apaga o índice local.
+async function enrichPhbEntries(entries){
+ try{
+  const [source,lookup]=await Promise.all([
+   getJSON(RAW+'spells/spells-xphb.json'),
+   getJSON(LOOKUP)
+  ]);
+  const byName=new Map((source.spell||[]).map(x=>[norm(x.name),x]));
+  let matches=0;
+  const enriched=entries.map(x=>{
+   const alias=x.nome_original==='Good Berry'?'Goodberry':x.nome_original==="Mordenkainen's Magnificent Mans·"?"Mordenkainen's Magnificent Mansion":x.nome_original;
+   const original=byName.get(norm(alias));
+   if(!original)return x;
+   matches++;
+   const record=officialRecord(original,'XPHB',lookup);
+   return {...x,...record,id:x.id,fonte:'phb-2024',nome_original:original.name,
+    pagina_fonte:x.pagina_fonte,pdf_pagina:x.pdf_pagina,
+    pdf_origem:'Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf',
+    descricao:flatten(original.entries||[]).join('\n\n').trim(),
+    niveis_superiores:flatten(original.entriesHigherLevel||[]).join('\n\n').trim(),
+    descricao_tipo:'texto_original_phb_2024',texto_integral_publicavel:true,
+    completude:'mecanica_e_texto_original',verificacao_secundaria:'XPHB 2024'};
+  });
+  if(matches!==391)console.warn('[PHB 2024] Entradas nao reconciliadas:',391-matches);
+  return enriched;
+ }catch(error){
+  console.warn('[PHB 2024] Fonte estruturada indisponível; mantendo índices de origem:',error);
+  return entries;
+ }
+}
 function localRecord(x,fonts){const f=fonts[x.fonte]||{},c=x.componentes||{verbal:false,somatico:false,material:false,material_texto:''};return{id:slug(x.nome_original),nome:x.nome||x.nome_original,nome_original:x.nome_original,ruleset:f.ruleset||'5e',revisao_core:f.ruleset==='5.5e'?2024:2014,fonte:x.fonte,pagina_fonte:x.pagina_fonte,pdf_origem:f.pdf_origem,nivel:x.nivel||0,escola:x.escola||'—',escola_alternativa:x.escola_alternativa||'',tempo_conjuracao:x.tempo_conjuracao||'Não republicado',alcance:x.alcance||'Não republicado',componentes:c,duracao:x.duracao||'Não republicado',concentracao:x.concentracao,ritual:x.ritual,ataque_salvaguarda:x.ataque_salvaguarda||'Não republicado',tipo_efeito:'Magia',tipo_dano:x.tipo_dano||'',dano_base:x.dano_base||'',classes_base:x.classes_base||[],descricao:x.descricao||'Entrada identificada no apêndice de magias da fonte. O Hub registra nível, escola, página e proveniência, mas não reproduz o texto integral porque a própria publicação o designa como Product Identity e conteúdo não aberto.',niveis_superiores:x.niveis_superiores||'',descricao_tipo:x.descricao_tipo||'metadados_protegidos',texto_integral_publicavel:false,completude:x.completude||'metadados_protegidos',natureza:f.natureza||'terceiro',nota_versao:x.nota_versao||'',versao_mais_recente:true}}
 function comp(x){const c=x.componentes||{},a=[];if(c.verbal)a.push('V');if(c.somatico)a.push('S');if(c.material)a.push(`M${c.material_texto?' ('+c.material_texto+')':''}`);return a.join(', ')||'—'}
 function sourceTitle(id){return DATA.fontes[id]?.titulo||id}
@@ -558,6 +590,9 @@ function spellEffectInPortuguese(x){
   const obj=typeof direct==='string'?{descricao:direct}:direct;
   return{content:obj.descricao,higher:obj.niveis_superiores||'',status:'Descrição integral em português — SRD 5.2.1',complete:true};
  }
+ if(x.fonte==='phb-2024'&&x.descricao_tipo==='texto_original_phb_2024'&&x.descricao){
+  return{content:x.descricao,higher:x.niveis_superiores||'',status:'Descrição original em inglês — Player’s Handbook (2024)',complete:true};
+ }
  if(x.descricao_tipo==='resumo_editorial'){
   return{content:String(x.descricao||'').trim(),higher:'',status:'Descrição editorial em português',complete:false};
  }
@@ -581,6 +616,7 @@ function spellEffectInPortuguese(x){
  return{content:info.join('\n\n'),higher:'',status:'Dados mecânicos disponíveis — descrição integral pendente',complete:false};
 }
 function spellOriginalText(x){
+ if(x.fonte==='phb-2024')return VERIFIED_SPELL_PT[x.nome_original]?[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim():'';
  if(x.descricao_tipo==='texto_fornecido_usuario')return[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim();
  const editorial=x.fonte==='larsene-ledger-2023'&&LARSENE_EDITORIAL[x.nome_original];
  if(editorial)return[editorial.en,editorial.higher_en?'At higher levels: '+editorial.higher_en:''].filter(Boolean).join('\n\n');
@@ -649,7 +685,8 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  renderList();
 });
 (async()=>{try{
- const phbEntries=await getJSON('dados/magias-phb-2024-indice.json?v=20261030-phb-index1').then(data=>data.itens||[]).catch(error=>{console.warn('Índice PHB indisponível:',error);return[]});
+ const phbIndex=await getJSON('dados/magias-phb-2024-indice.json?v=20261030-phb-index1').then(data=>data.itens||[]).catch(error=>{console.warn('Índice PHB indisponível:',error);return[]});
+ const phbEntries=await enrichPhbEntries(phbIndex);
  // hub-magias-catalogo-consolidado-v1
  try{
   const catalog=await getJSON('dados/magias-catalogo.json?v=20261029-sem-phb1');
