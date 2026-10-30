@@ -625,7 +625,7 @@ async function localizeSpellNames(){
   const map=localized.nomes||{};
   for(const x of ALL)x.nome=map[x.nome_original]||x.nome;
  }catch(e){console.warn('Não foi possível carregar nomes em português; mostrando o catálogo original.',e)}
- ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
+ ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
 }
 function initialSpellId(){
  const params=new URLSearchParams(location.search);
@@ -655,7 +655,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
   const catalog=await getJSON('dados/magias-catalogo.json?v=20261029-sem-phb1');
   if(Array.isArray(catalog.itens)&&catalog.itens.length){
    DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
-   ALL.sort((a,b)=>(a.nivel-b.nivel)||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
+   ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
    await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial()]);openInitialSpell();return;
   }
@@ -666,7 +666,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
  ALL=[...ALL.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
- ALL.sort((a,b)=>(a.nivel-b.nivel)||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
+ ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
  await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial()]);openInitialSpell();
  }catch(e){
   console.error(e);
