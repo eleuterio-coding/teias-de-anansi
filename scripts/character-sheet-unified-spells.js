@@ -9,7 +9,7 @@ function normalize(x,sources){const m=sources?.[x.fonte]||{},c=x.componentes||{}
 async function load(){
  if(loaded)return;
  if(!loading)loading=Promise.all([
-  json('dados/magias-catalogo.json?v=20261029-sem-phb1'),
+  json('dados/magias-catalogo.json?v=20261030-fontes-integrais2'),
   json('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1').catch(()=>({nomes:{}})),
   json('dados/magias-larsene-descricoes-autorais.json?v=20261029-larsene-editoriais1').catch(()=>({itens:{}})),
   json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1').catch(()=>({itens:[]})),
