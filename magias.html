@@ -715,8 +715,8 @@ function populateFilters(){
  // Somente os livros que possuem magias no catálogo ativo; o SRD é licença/referência, não fonte primária independente.
  const counts=new Map();
  for(const x of ALL)if(x.fonte)counts.set(x.fonte,(counts.get(x.fonte)||0)+1);
- counts.set('xanathar-2017',ALL.filter(x=>x.xanathar_2017_user).length);
- counts.set('tasha-2020',ALL.filter(x=>x.tasha_2020_user).length);
+ counts.set('xanathar-2017',Math.max(counts.get('xanathar-2017')||0,ALL.filter(x=>x.xanathar_2017_user).length));
+ counts.set('tasha-2020',Math.max(counts.get('tasha-2020')||0,ALL.filter(x=>x.tasha_2020_user).length));
  const sources=[...counts.keys()].sort((a,b)=>a==='phb-2024'?-1:b==='phb-2024'?1:sourceTitle(a).localeCompare(sourceTitle(b),'pt-BR'));
  document.getElementById('nivel').innerHTML='<option value="">Todos os níveis</option>'+ns.map(x=>`<option value="${x}">${x===0?'Truques':'Nível '+x}</option>`).join('');
  document.getElementById('escola').innerHTML='<option value="">Todas as escolas</option>'+es.map(x=>`<option>${esc(x)}</option>`).join('');
