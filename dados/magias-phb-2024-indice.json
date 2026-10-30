@@ -96,8 +96,8 @@
       "pagina_fonte": 239,
       "pdf_pagina": 7,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -117,7 +117,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 3
     },
@@ -168,8 +168,8 @@
       "pagina_fonte": 239,
       "pdf_pagina": 7,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -189,7 +189,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 5
     },
@@ -636,8 +636,8 @@
       "pagina_fonte": 243,
       "pdf_pagina": 11,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -657,7 +657,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 18
     },
@@ -924,8 +924,8 @@
       "pagina_fonte": 245,
       "pdf_pagina": 13,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -945,7 +945,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 26
     },
@@ -960,8 +960,8 @@
       "pagina_fonte": 245,
       "pdf_pagina": 13,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -981,7 +981,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 27
     },
@@ -1032,8 +1032,8 @@
       "pagina_fonte": 245,
       "pdf_pagina": 13,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1053,7 +1053,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 29
     },
@@ -1068,8 +1068,8 @@
       "pagina_fonte": 245,
       "pdf_pagina": 13,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Adivinhação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1089,7 +1089,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 30
     },
@@ -1104,8 +1104,8 @@
       "pagina_fonte": 245,
       "pdf_pagina": 13,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 8,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1125,7 +1125,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 31
     },
@@ -1140,8 +1140,8 @@
       "pagina_fonte": 246,
       "pdf_pagina": 14,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1161,7 +1161,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 32
     },
@@ -1464,8 +1464,8 @@
       "pagina_fonte": 248,
       "pdf_pagina": 16,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1485,7 +1485,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 41
     },
@@ -1500,8 +1500,8 @@
       "pagina_fonte": 248,
       "pdf_pagina": 16,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1521,7 +1521,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 42
     },
@@ -1536,8 +1536,8 @@
       "pagina_fonte": 248,
       "pdf_pagina": 16,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1557,7 +1557,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 43
     },
@@ -1644,8 +1644,8 @@
       "pagina_fonte": 249,
       "pdf_pagina": 17,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -1665,7 +1665,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 46
     },
@@ -2328,8 +2328,8 @@
       "pagina_fonte": 254,
       "pdf_pagina": 22,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2349,7 +2349,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 65
     },
@@ -2364,8 +2364,8 @@
       "pagina_fonte": 254,
       "pdf_pagina": 22,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2385,7 +2385,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 66
     },
@@ -2688,8 +2688,8 @@
       "pagina_fonte": 256,
       "pdf_pagina": 24,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2709,7 +2709,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 75
     },
@@ -2760,8 +2760,8 @@
       "pagina_fonte": 256,
       "pdf_pagina": 24,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2781,7 +2781,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 77
     },
@@ -2796,8 +2796,8 @@
       "pagina_fonte": 257,
       "pdf_pagina": 25,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 8,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2817,7 +2817,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 78
     },
@@ -2904,8 +2904,8 @@
       "pagina_fonte": 258,
       "pdf_pagina": 26,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -2925,7 +2925,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 81
     },
@@ -3048,8 +3048,8 @@
       "pagina_fonte": 259,
       "pdf_pagina": 27,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3069,7 +3069,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 85
     },
@@ -3156,8 +3156,8 @@
       "pagina_fonte": 259,
       "pdf_pagina": 27,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3177,7 +3177,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 88
     },
@@ -3480,8 +3480,8 @@
       "pagina_fonte": 262,
       "pdf_pagina": 30,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Adivinhação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3501,7 +3501,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 97
     },
@@ -3516,8 +3516,8 @@
       "pagina_fonte": 262,
       "pdf_pagina": 30,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Adivinhação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3537,7 +3537,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 98
     },
@@ -3588,8 +3588,8 @@
       "pagina_fonte": 262,
       "pdf_pagina": 30,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3609,7 +3609,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 100
     },
@@ -3624,8 +3624,8 @@
       "pagina_fonte": 262,
       "pdf_pagina": 30,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3645,7 +3645,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 101
     },
@@ -3660,8 +3660,8 @@
       "pagina_fonte": 263,
       "pdf_pagina": 31,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3681,7 +3681,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 102
     },
@@ -3696,8 +3696,8 @@
       "pagina_fonte": 263,
       "pdf_pagina": 31,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -3717,7 +3717,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 103
     },
@@ -4056,8 +4056,8 @@
       "pagina_fonte": 266,
       "pdf_pagina": 34,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4077,7 +4077,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 113
     },
@@ -4092,8 +4092,8 @@
       "pagina_fonte": 266,
       "pdf_pagina": 34,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4113,7 +4113,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 114
     },
@@ -4128,8 +4128,8 @@
       "pagina_fonte": 266,
       "pdf_pagina": 34,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4149,7 +4149,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 115
     },
@@ -4200,8 +4200,8 @@
       "pagina_fonte": 267,
       "pdf_pagina": 35,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 8,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4221,7 +4221,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 117
     },
@@ -4308,8 +4308,8 @@
       "pagina_fonte": 268,
       "pdf_pagina": 36,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4329,7 +4329,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 120
     },
@@ -4452,8 +4452,8 @@
       "pagina_fonte": 268,
       "pdf_pagina": 36,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4473,7 +4473,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 124
     },
@@ -4560,8 +4560,8 @@
       "pagina_fonte": 270,
       "pdf_pagina": 38,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4581,7 +4581,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 127
     },
@@ -4632,8 +4632,8 @@
       "pagina_fonte": 270,
       "pdf_pagina": 38,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -4653,7 +4653,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 129
     },
@@ -5388,8 +5388,8 @@
       "pagina_fonte": 276,
       "pdf_pagina": 44,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -5409,7 +5409,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 150
     },
@@ -5424,8 +5424,8 @@
       "pagina_fonte": 276,
       "pdf_pagina": 44,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -5445,7 +5445,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 151
     },
@@ -6000,8 +6000,8 @@
       "pagina_fonte": 280,
       "pdf_pagina": 48,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -6021,7 +6021,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 167
     },
@@ -6648,8 +6648,8 @@
       "pagina_fonte": 285,
       "pdf_pagina": 53,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -6669,7 +6669,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 185
     },
@@ -6720,8 +6720,8 @@
       "pagina_fonte": 285,
       "pdf_pagina": 53,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -6741,7 +6741,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 187
     },
@@ -6900,8 +6900,8 @@
       "pagina_fonte": 287,
       "pdf_pagina": 55,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -6921,7 +6921,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 192
     },
@@ -7116,8 +7116,8 @@
       "pagina_fonte": 288,
       "pdf_pagina": 56,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 8,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7137,7 +7137,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 198
     },
@@ -7152,8 +7152,8 @@
       "pagina_fonte": 288,
       "pdf_pagina": 56,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7173,7 +7173,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 199
     },
@@ -7188,8 +7188,8 @@
       "pagina_fonte": 289,
       "pdf_pagina": 57,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7209,7 +7209,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 200
     },
@@ -7224,8 +7224,8 @@
       "pagina_fonte": 289,
       "pdf_pagina": 57,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7245,7 +7245,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 201
     },
@@ -7260,8 +7260,8 @@
       "pagina_fonte": 289,
       "pdf_pagina": 57,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7281,7 +7281,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 202
     },
@@ -7332,8 +7332,8 @@
       "pagina_fonte": 290,
       "pdf_pagina": 58,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7353,7 +7353,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 204
     },
@@ -7404,8 +7404,8 @@
       "pagina_fonte": 290,
       "pdf_pagina": 58,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7425,7 +7425,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 206
     },
@@ -7440,8 +7440,8 @@
       "pagina_fonte": 291,
       "pdf_pagina": 59,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7461,7 +7461,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 207
     },
@@ -7548,8 +7548,8 @@
       "pagina_fonte": 292,
       "pdf_pagina": 60,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -7569,7 +7569,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 210
     },
@@ -7980,8 +7980,8 @@
       "pagina_fonte": 295,
       "pdf_pagina": 63,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8001,7 +8001,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 222
     },
@@ -8304,8 +8304,8 @@
       "pagina_fonte": 297,
       "pdf_pagina": 65,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8325,7 +8325,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 231
     },
@@ -8448,8 +8448,8 @@
       "pagina_fonte": 298,
       "pdf_pagina": 66,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 8,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8469,7 +8469,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 235
     },
@@ -8520,8 +8520,8 @@
       "pagina_fonte": 298,
       "pdf_pagina": 66,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Adivinhação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8541,7 +8541,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 237
     },
@@ -8808,8 +8808,8 @@
       "pagina_fonte": 300,
       "pdf_pagina": 68,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8829,7 +8829,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 245
     },
@@ -8844,8 +8844,8 @@
       "pagina_fonte": 300,
       "pdf_pagina": 68,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 7,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8865,7 +8865,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 246
     },
@@ -8880,8 +8880,8 @@
       "pagina_fonte": 301,
       "pdf_pagina": 69,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -8901,7 +8901,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 247
     },
@@ -9024,8 +9024,8 @@
       "pagina_fonte": 302,
       "pdf_pagina": 70,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9045,7 +9045,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 251
     },
@@ -9348,8 +9348,8 @@
       "pagina_fonte": 304,
       "pdf_pagina": 72,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9369,7 +9369,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 260
     },
@@ -9564,8 +9564,8 @@
       "pagina_fonte": 306,
       "pdf_pagina": 74,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 7,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9585,7 +9585,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 266
     },
@@ -9600,8 +9600,8 @@
       "pagina_fonte": 306,
       "pdf_pagina": 74,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 9,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9621,7 +9621,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 267
     },
@@ -9636,8 +9636,8 @@
       "pagina_fonte": 306,
       "pdf_pagina": 74,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 9,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9657,7 +9657,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 268
     },
@@ -9744,8 +9744,8 @@
       "pagina_fonte": 307,
       "pdf_pagina": 75,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9765,7 +9765,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 271
     },
@@ -9780,8 +9780,8 @@
       "pagina_fonte": 307,
       "pdf_pagina": 75,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 7,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9801,7 +9801,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 272
     },
@@ -9852,8 +9852,8 @@
       "pagina_fonte": 308,
       "pdf_pagina": 76,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9873,7 +9873,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 274
     },
@@ -9960,8 +9960,8 @@
       "pagina_fonte": 309,
       "pdf_pagina": 77,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -9981,7 +9981,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 277
     },
@@ -9996,8 +9996,8 @@
       "pagina_fonte": 309,
       "pdf_pagina": 77,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Abjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10017,7 +10017,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 278
     },
@@ -10068,8 +10068,8 @@
       "pagina_fonte": 310,
       "pdf_pagina": 78,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10089,7 +10089,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 280
     },
@@ -10536,8 +10536,8 @@
       "pagina_fonte": 312,
       "pdf_pagina": 80,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 2,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10557,7 +10557,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 293
     },
@@ -10572,8 +10572,8 @@
       "pagina_fonte": 313,
       "pdf_pagina": 81,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10593,7 +10593,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 294
     },
@@ -10788,8 +10788,8 @@
       "pagina_fonte": 314,
       "pdf_pagina": 82,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Ilusão",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10809,7 +10809,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 300
     },
@@ -10896,8 +10896,8 @@
       "pagina_fonte": 315,
       "pdf_pagina": 83,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 9,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -10917,7 +10917,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 303
     },
@@ -11040,8 +11040,8 @@
       "pagina_fonte": 316,
       "pdf_pagina": 84,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11061,7 +11061,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 307
     },
@@ -11112,8 +11112,8 @@
       "pagina_fonte": 316,
       "pdf_pagina": 84,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11133,7 +11133,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 309
     },
@@ -11256,8 +11256,8 @@
       "pagina_fonte": 317,
       "pdf_pagina": 85,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11277,7 +11277,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 313
     },
@@ -11328,8 +11328,8 @@
       "pagina_fonte": 318,
       "pdf_pagina": 86,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11349,7 +11349,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 315
     },
@@ -11400,8 +11400,8 @@
       "pagina_fonte": 318,
       "pdf_pagina": 86,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 0,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11421,7 +11421,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 317
     },
@@ -11436,8 +11436,8 @@
       "pagina_fonte": 318,
       "pdf_pagina": 86,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Adivinhação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11457,7 +11457,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 318
     },
@@ -11472,8 +11472,8 @@
       "pagina_fonte": 318,
       "pdf_pagina": 86,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11493,7 +11493,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 319
     },
@@ -11832,8 +11832,8 @@
       "pagina_fonte": 321,
       "pdf_pagina": 89,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11853,7 +11853,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 329
     },
@@ -11868,8 +11868,8 @@
       "pagina_fonte": 321,
       "pdf_pagina": 89,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11889,7 +11889,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 330
     },
@@ -11940,8 +11940,8 @@
       "pagina_fonte": 321,
       "pdf_pagina": 89,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -11961,7 +11961,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 332
     },
@@ -12048,8 +12048,8 @@
       "pagina_fonte": 323,
       "pdf_pagina": 91,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12069,7 +12069,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 335
     },
@@ -12084,8 +12084,8 @@
       "pagina_fonte": 324,
       "pdf_pagina": 92,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12105,7 +12105,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 336
     },
@@ -12120,8 +12120,8 @@
       "pagina_fonte": 324,
       "pdf_pagina": 92,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12141,7 +12141,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 337
     },
@@ -12156,8 +12156,8 @@
       "pagina_fonte": 325,
       "pdf_pagina": 93,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 4,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12177,7 +12177,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 338
     },
@@ -12192,8 +12192,8 @@
       "pagina_fonte": 326,
       "pdf_pagina": 94,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12213,7 +12213,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 339
     },
@@ -12228,8 +12228,8 @@
       "pagina_fonte": 326,
       "pdf_pagina": 94,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 6,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12249,7 +12249,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 340
     },
@@ -12372,8 +12372,8 @@
       "pagina_fonte": 329,
       "pdf_pagina": 97,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12393,7 +12393,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 344
     },
@@ -12516,8 +12516,8 @@
       "pagina_fonte": 331,
       "pdf_pagina": 99,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Encantamento",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12537,7 +12537,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 348
     },
@@ -12624,8 +12624,8 @@
       "pagina_fonte": 331,
       "pdf_pagina": 99,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 7,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12645,7 +12645,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 351
     },
@@ -12660,8 +12660,8 @@
       "pagina_fonte": 332,
       "pdf_pagina": 100,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 5,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -12681,7 +12681,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 352
     },
@@ -13092,8 +13092,8 @@
       "pagina_fonte": 335,
       "pdf_pagina": 103,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 9,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13113,7 +13113,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 364
     },
@@ -13128,8 +13128,8 @@
       "pagina_fonte": 336,
       "pdf_pagina": 104,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 9,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13149,7 +13149,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 365
     },
@@ -13272,8 +13272,8 @@
       "pagina_fonte": 336,
       "pdf_pagina": 104,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 1,
+      "escola": "Conjuração",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13293,7 +13293,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 369
     },
@@ -13308,8 +13308,8 @@
       "pagina_fonte": 337,
       "pdf_pagina": 105,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Necromancia",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13329,7 +13329,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 370
     },
@@ -13668,8 +13668,8 @@
       "pagina_fonte": 340,
       "pdf_pagina": 108,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Transmutação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13689,7 +13689,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 380
     },
@@ -13776,8 +13776,8 @@
       "pagina_fonte": 341,
       "pdf_pagina": 109,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13797,7 +13797,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 383
     },
@@ -13812,8 +13812,8 @@
       "pagina_fonte": 341,
       "pdf_pagina": 109,
       "pdf_origem": "Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf",
-      "nivel": null,
-      "escola": "A conferir",
+      "nivel": 3,
+      "escola": "Evocação",
       "tempo_conjuracao": "A conferir no PDF",
       "alcance": "A conferir no PDF",
       "componentes": {
@@ -13833,7 +13833,7 @@
       "niveis_superiores": "",
       "descricao_tipo": "referencia_visual_pdf",
       "texto_integral_publicavel": false,
-      "completude": "indice_verificado",
+      "completude": "nivel_escola_extraidos_ocr",
       "natureza": "oficial",
       "ordem_catalogo": 384
     },
@@ -14091,9 +14091,9 @@
     }
   ],
   "revisao_parcial": {
-    "nivel_escola_extraidos": 192,
-    "nivel_escola_pendentes": 199,
-    "metodo": "Cabeçalhos OCR com correspondência de nome e escola; dados restantes não inferidos.",
+    "nivel_escola_extraidos": 291,
+    "nivel_escola_pendentes": 100,
+    "metodo": "Cabeçalhos OCR: correspondência conservadora de nomes, níveis e escolas; demais campos não inferidos.",
     "data": "2026-10-30"
   }
 }
