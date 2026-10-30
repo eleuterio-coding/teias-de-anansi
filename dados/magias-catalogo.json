@@ -1768,8 +1768,8 @@
       "classes_base": [
         "Artífice"
       ],
-      "descricao": "Resumo mecânico editorial: envolve invocação de criatura ou entidade; possui efeito ou escalonamento em espaços de nível superior. O texto narrativo integral permanece na fonte comercial e não é reproduzido no Hub.",
-      "niveis_superiores": "A magia possui escalonamento ou efeito adicional com espaços de nível superior; consulte a fonte para os valores e condições completos.",
+      "descricao": "A magia cria um servo homúnculo, um Constructo Miúdo de alinhamento Neutro. CA 13; PV 5 + 5 por nível da magia (dados de vida d4 iguais ao nível da magia); deslocamento 20 pés, voo 30 pés. Atributos: FOR 4 (−3), DES 15 (+2), CON 12 (+1), INT 10 (+0), SAB 10 (+0), CAR 7 (−2); os testes de resistência usam esses mesmos modificadores. Imunidade a dano de veneno e às condições Exaustão e Envenenado. Visão no escuro 60 pés, Percepção passiva 10 e telepatia de 1 milha apenas com o conjurador. Bônus de proficiência igual ao do conjurador; ND nenhum (0 XP). Evasão: em efeito que permita teste de resistência de Destreza para reduzir dano à metade, não sofre dano se obtiver sucesso e sofre metade se falhar; não funciona enquanto Incapacitado. Vínculo Mágico: adiciona o nível da magia a qualquer teste de atributo ou teste de resistência do homúnculo. Ação — Golpe de Força: ataque corpo a corpo (alcance 5 pés) ou à distância (30 pés), com bônus igual ao modificador de ataque mágico do conjurador; ao acertar, causa 1d6 + nível da magia de dano de energia (Force). Reação — Canalizar Magia: quando o conjurador lança uma magia de alcance Toque e o homúnculo está a até 120 pés dele, o homúnculo pode transmitir a magia por seu toque.",
+      "niveis_superiores": "O nível da magia determina os PV do servo (5 + 5 por nível), a quantidade de dados de vida d4 (igual ao nível da magia), o bônus de Vínculo Mágico (+nível da magia) e o dano de Golpe de Força (1d6 + nível da magia).",
       "descricao_tipo": "resumo_mecanico_editorial",
       "texto_integral_publicavel": false,
       "completude": "stats_completos_resumo",
