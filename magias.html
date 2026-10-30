@@ -426,8 +426,8 @@ const REMOTE={
 const LOOKUP=RAW+'generated/gendata-spell-source-lookup.json';
 const META={
  XPHB:{id:'phb-2024',titulo:'Player’s Handbook',ano:2024,prioridade:20240917,ruleset:'5.5e',revisao:2024,pdf:'Magias_Players_Handbook_Less_Integral_Visual_Indice(2).pdf'},
- XGE:{id:'xanathar-2017',titulo:"Xanathar's Guide to Everything",ano:2017,prioridade:20171121,ruleset:'5e',revisao:2014,pdf:'pdf24_merged.pdf'},
- TCE:{id:'tasha-2020',titulo:"Tasha's Cauldron of Everything",ano:2020,prioridade:20201117,ruleset:'5e',revisao:2014,pdf:'pdf24_merged-1.pdf'},
+ XGE:{id:'xanathar-2017',titulo:"Xanathar's Guide to Everything",url:'https://www.dndbeyond.com/sources/dnd/xgte',ano:2017,prioridade:20171121,ruleset:'5e',revisao:2014,pdf:"Xanathar's Guide to Everything - Modificado.pdf"},
+ TCE:{id:'tasha-2020',titulo:"Tasha's Cauldron of Everything",url:'https://www.dndbeyond.com/sources/dnd/tcoe',ano:2020,prioridade:20201117,ruleset:'5e',revisao:2014,pdf:'Tasha’s Cauldron of Everything - Modificado.pdf'},
  FRHoF:{id:'fr-heroes-2025',titulo:'Forgotten Realms: Heroes of Faerûn',ano:2025,prioridade:20251101,ruleset:'5.5e',revisao:2024,pdf:'pdf24_merged.pdf'},
  EFA:{id:'eberron-forge-2025',titulo:'Eberron: Forge of the Artificer',ano:2025,prioridade:20251209,ruleset:'5.5e',revisao:2024,pdf:'pdf24_merged-1.pdf'}
 };
@@ -449,7 +449,7 @@ async function loadXanatharProvidedTexts(){
   if(data.schema!=='teias-de-anansi/xanathar-texto-fornecido-v1'||data.total!==95||data.itens?.length!==95)throw new Error('O conjunto de 95 magias do PDF está incompleto.');
   const byName=new Map(data.itens.map(row=>[norm(row.nome_original),row]));
   let found=0;
-  for(const spell of ALL){const text=byName.get(norm(spell.nome_original));if(text){spell.xanathar_2017_user=text;found++}}
+  for(const spell of ALL){const text=byName.get(norm(spell.nome_original));if(text){spell.xanathar_2017_user=text;found++;if(spell.fonte==='xanathar-2017'&&spell.descricao_tipo!=='texto_fornecido_usuario'){spell.descricao=text.descricao_original_en;spell.niveis_superiores='';spell.descricao_tipo='texto_fornecido_usuario';spell.idioma_descricao='en';spell.completude='texto_integral_fornecido_usuario';}}}
   if(found!==95)console.warn(`[Xanathar 2017] ${found}/95 magias vinculadas ao catálogo atual.`);
  }catch(error){console.warn('Transcrições fornecidas de Xanathar indisponíveis:',error)}
 }
@@ -459,7 +459,7 @@ async function loadTashaProvidedTexts(){
   const data=await getJSON('dados/magias-tasha-usuario.json?v=20261030-tasha21-1');
   if(data.schema!=='hub-rpg/tasha-2020-transcricao-fornecida-v1'||data.itens?.length!==21||data.total_magias!==21||data.itens.filter(row=>!!row.statblock).length!==9)throw new Error('Conjunto de 21 magias e 9 espíritos incompleto.');
   const byName=new Map(data.itens.map(row=>[norm(row.name),row]));let found=0;
-  for(const spell of ALL){const record=byName.get(norm(spell.nome_original));if(record){spell.tasha_2020_user=record;found++}}
+  for(const spell of ALL){const record=byName.get(norm(spell.nome_original));if(record){spell.tasha_2020_user=record;found++;if(spell.fonte==='tasha-2020'&&spell.descricao_tipo!=='texto_fornecido_usuario'){spell.descricao=record.description;spell.niveis_superiores='';spell.descricao_tipo='texto_fornecido_usuario';spell.idioma_descricao='en';spell.completude='texto_integral_fornecido_usuario';}}}
   if(found!==21)console.warn(`[Tasha 2020] ${found}/21 magias associadas ao catálogo atual.`);
  }catch(error){console.warn('Transcrições fornecidas de Tasha indisponíveis:',error)}
 }
@@ -766,7 +766,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
   }
  }catch(e){console.warn('Catálogo consolidado local indisponível; usando montagem remota.',e)}
  const sourceEntries=Object.entries(REMOTE);const fetched=await Promise.all(sourceEntries.map(async([src,url])=>[src,await getJSON(url)]));let lookup={};try{lookup=await getJSON(LOOKUP)}catch(e){console.warn('Class lookup indisponível',e)}const local=await getJSON('dados/magias-suplementos-locais.json?v=20261030-biomancia1');
- DATA.fontes={};Object.values(META).forEach(m=>DATA.fontes[m.id]={titulo:m.titulo,ano:m.ano,ruleset:m.ruleset,revisao_core:m.revisao,pdf_origem:m.pdf});Object.assign(DATA.fontes,local.fontes||{});DATA.fontes['phb-2024']={titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'};DATA.fontes['srd-5.2.1']={titulo:'System Reference Document 5.2.1',ano:2025,ruleset:'5.5e',licenca:'CC-BY-4.0'};
+ DATA.fontes={};Object.values(META).forEach(m=>DATA.fontes[m.id]={titulo:m.titulo,url:m.url||'',ano:m.ano,ruleset:m.ruleset,revisao_core:m.revisao,pdf_origem:m.pdf});Object.assign(DATA.fontes,local.fontes||{});DATA.fontes['phb-2024']={titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'};DATA.fontes['srd-5.2.1']={titulo:'System Reference Document 5.2.1',ano:2025,ruleset:'5.5e',licenca:'CC-BY-4.0'};
  const groups=new Map();let candidates=0;for(const[src,data]of fetched){for(const s of(data.spell||[])){candidates++;const k=norm(s.name);if(!groups.has(k))groups.set(k,[]);groups.get(k).push({src,s,p:META[src].prioridade})}}
  let discarded=0;ALL=[];for(const rows of groups.values()){rows.sort((a,b)=>b.p-a.p);const win=rows[0],r=officialRecord(win.s,win.src,lookup);if(rows.length>1){r.versoes_anteriores_descartadas=rows.slice(1).map(z=>({fonte:META[z.src].id,ano:META[z.src].ano,pagina_fonte:z.s.page}));discarded+=rows.length-1}ALL.push(r)}
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
