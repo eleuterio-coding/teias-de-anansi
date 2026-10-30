@@ -426,12 +426,38 @@ def convert_local(item, source_meta):
 
 
 
+
+def include_pdf_magias_missing_from_2024(retained, raw_by_source, lookup):
+    """Recupera as 19 magias dos PDFs que estavam apenas no índice de 2024."""
+    canonical_names = {norm(row["nome_original"]) for row in retained}
+    added = []
+    for source, filename, key in [
+        ("XGE", "magias-xanathar-usuario.json", "nome_original"),
+        ("TCE", "magias-tasha-usuario.json", "name"),
+    ]:
+        with (ROOT / "dados" / filename).open(encoding="utf-8") as stream:
+            source_document = json.load(stream)
+        raw = {norm(item["name"]): item for item in raw_by_source[source]}
+        for spell in source_document["itens"]:
+            name = norm(spell[key])
+            if name in canonical_names:
+                continue  # Preserva Blade of Disaster (2025), sem duplicata.
+            if name not in raw:
+                raise ValueError(f"Magia do PDF ausente na fonte estruturada {source}: {spell[key]}")
+            retained.append(convert_official(raw[name], source, lookup))
+            canonical_names.add(name)
+            added.append((source, spell[key]))
+    if len(added) != 19:
+        raise ValueError(f"Esperadas 19 magias recuperadas: {len(added)}")
+    return added
+
+
 def apply_user_pdf_editions(retained):
     """Mantém os PDFs fornecidos como fonte dos textos, sem reintroduzir resumos antigos."""
     replacements = {}
     for source, filename, name_field, expected, total in [
-        ("xanathar-2017", "magias-xanathar-usuario.json", "nome_original", 85, 95),
-        ("tasha-2020", "magias-tasha-usuario.json", "name", 11, 21),
+        ("xanathar-2017", "magias-xanathar-usuario.json", "nome_original", 95, 95),
+        ("tasha-2020", "magias-tasha-usuario.json", "name", 20, 21),
     ]:
         with (ROOT / "dados" / filename).open(encoding="utf-8") as stream:
             document = json.load(stream)
@@ -517,6 +543,7 @@ def main():
     # Exclusão editorial: preservar a precedência das versões e retirar o PHB antes de publicar.
     phb_removed = sum(x.get('fonte') == 'phb-2024' for x in retained)
     retained = [x for x in retained if x.get('fonte') != 'phb-2024']
+    recovered = include_pdf_magias_missing_from_2024(retained, raw_by_source, lookup)
     replaced = apply_user_pdf_editions(retained)
     retained.sort(key=lambda x: (int(x.get("nivel", 0)), norm(x.get("escola")), norm(x.get("nome"))))
     for i, rec in enumerate(retained, 1):
@@ -553,7 +580,7 @@ def main():
         "corpus": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"],
         "controle": {
             "validado": True,
-            "substituicoes_resumos_fornecidos": {"xanathar_2017": replaced["xanathar-2017"], "tasha_2020": replaced["tasha-2020"], "versoes_complementares_externas": 19},
+            "substituicoes_resumos_fornecidos": {"xanathar_2017": 85, "tasha_2020": 11, "recuperadas_dos_pdfs": len(recovered), "registros_integrais_xanathar": replaced["xanathar-2017"], "registros_integrais_tasha": replaced["tasha-2020"], "reimpressao_2025_preservada": 1},
             "quantidade": len(retained),
             "excluidas_phb_2024_por_solicitacao": phb_removed,
             "fonte_excluida": "phb-2024",
