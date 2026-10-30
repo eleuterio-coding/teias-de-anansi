@@ -34,22 +34,26 @@ const canonical=new Map(catalog.itens.map(x=>[fold(x.nome_original),x]));
 const indexed=new Set(phb.itens.map(x=>fold(x.nome_original)));
 const inCanonical=data.itens.filter(x=>canonical.has(fold(x.name)));
 const inPhb=data.itens.filter(x=>!canonical.has(fold(x.name))&&indexed.has(fold(x.name)));
-assert.equal(inCanonical.length,12,'A associação dos registros canônicos mudou.');
-assert.equal(inCanonical.filter(x=>canonical.get(fold(x.name)).fonte==='tasha-2020').length,11,'Magias canônicas de Tasha divergentes.');
+assert.equal(inCanonical.length,21,'Todas as magias de Tasha devem ter verbete canônico.');
+assert.equal(inCanonical.filter(x=>canonical.get(fold(x.name)).fonte==='tasha-2020').length,20,'20 magias canônicas de Tasha são esperadas.');
 assert.equal(inCanonical.filter(x=>canonical.get(fold(x.name)).fonte==='fr-heroes-2025').length,1,'Preservar Blade of Disaster em 2025.');
-assert.equal(inPhb.length,9,'As nove magias do índice PHB 2024 precisam continuar associadas.');
+assert.equal(inPhb.length,0,'Nenhuma magia de Tasha deve depender somente do índice PHB.');
 assert.ok(data.itens.every(x=>canonical.has(fold(x.name))||indexed.has(fold(x.name))),'Há magia de Tasha sem associação no Hub.');
 
+const current=Array.from(canonical.values()).filter(x=>x.fonte==='tasha-2020');
+assert.equal(current.length,20);
+assert.ok(current.every(x=>x.descricao_tipo==='texto_fornecido_usuario'&&x.descricao.length>0));
+assert.equal(current.filter(x=>x.bloco_invocacao).length,9);
 const html=read('magias.html');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'Script da biblioteca não identificado.');
 new vm.Script(script,{filename:'magias.html'});
 assert.match(script,/loadTashaProvidedTexts\(\)/);
-assert.match(script,/tasha-pdf-2020/);
+assert.match(script,/tasha-2020/);
 assert.match(script,/renderTashaStatblock/);
 assert.match(script,/renderTashaEdition/);
 assert.match(script,/loadXanatharProvidedTexts\(\)/,'Xanathar deve permanecer disponível.');
 for(const f of ['scripts/catalog-registry.js','scripts/character-builder/spells.js','scripts/character-sheet-unified-spells.js']){
  assert.match(read(f),/dados\/magias-tasha-usuario\.json|tashaUserText/,'Integração ausente: '+f);
 }
-console.log('OK: 21 magias + 9 espíritos; 11 registros Tasha, 1 versão 2025, 9 índices PHB 2024; interface e consumidores ligados.');
+console.log('OK: 21 magias e 9 fichas de Tasha: 20 entradas canônicas e 1 reimpressão preservada de 2025, sem resumos antigos.');
