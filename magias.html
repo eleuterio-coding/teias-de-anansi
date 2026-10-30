@@ -757,7 +757,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  const phbEntries=await enrichPhbEntries(phbIndex);
  // hub-magias-catalogo-consolidado-v1
  try{
-  const catalog=await getJSON('dados/magias-catalogo.json?v=20261030-biomancia1');
+  const catalog=await getJSON('dados/magias-catalogo.json?v=20261030-fontes-integrais2');
   if(Array.isArray(catalog.itens)&&catalog.itens.length){
    DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
    ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
