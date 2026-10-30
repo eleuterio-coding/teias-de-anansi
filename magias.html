@@ -13,6 +13,20 @@
 .meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.82}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1rem;margin-top:2px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.warn{border-style:solid}.origem{font-size:.85rem;opacity:.78}
 @media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:360px}.filtros{grid-template-columns:1fr}}
 
+
+/* Edição histórica de Tasha: texto original e nove fichas de espíritos. */
+body.hub-shell-enabled .hub-library-spells .tasha-original-collapse .spell-original-copy{font-style:normal}
+body.hub-shell-enabled .hub-library-spells .tasha-edition-metadata{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:7px;margin:12px 0;font-size:.82rem}
+body.hub-shell-enabled .hub-library-spells .tasha-edition-metadata span{border:1px solid var(--hub-border,#8885);border-radius:6px;padding:7px;overflow-wrap:anywhere}
+body.hub-shell-enabled .hub-library-spells .tasha-edition-description{white-space:pre-line;font-style:normal;line-height:1.7;margin-top:14px}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-block{margin-top:16px;border:1px solid var(--hub-border,#8885);border-radius:9px;padding:12px;font-style:normal;white-space:normal;line-height:1.6}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-block h4{margin:0 0 2px;font-size:1rem}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-block p{margin:9px 0}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-table{max-width:100%;overflow-x:auto}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-table table{border-collapse:collapse;width:100%;font-size:.77rem;min-width:315px}
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-table th,
+body.hub-shell-enabled .hub-library-spells .tasha-spirit-table td{border:1px solid var(--hub-border,#8885);padding:6px 4px;text-align:center}
+
 /* Magias: títulos e categoria CE sem links; classes permanecem navegáveis. */
 body.hub-shell-enabled.hub-content-library .hub-app-content .hub-library-spells .lista button.item{
  display:block;width:100%;font:inherit;cursor:pointer;color:inherit;text-align:left;
@@ -439,6 +453,37 @@ async function loadXanatharProvidedTexts(){
   if(found!==95)console.warn(`[Xanathar 2017] ${found}/95 magias vinculadas ao catálogo atual.`);
  }catch(error){console.warn('Transcrições fornecidas de Xanathar indisponíveis:',error)}
 }
+
+async function loadTashaProvidedTexts(){
+ try{
+  const data=await getJSON('dados/magias-tasha-usuario.json?v=20261030-tasha21-1');
+  if(data.schema!=='hub-rpg/tasha-2020-transcricao-fornecida-v1'||data.itens?.length!==21||data.total_magias!==21||data.itens.filter(row=>!!row.statblock).length!==9)throw new Error('Conjunto de 21 magias e 9 espíritos incompleto.');
+  const byName=new Map(data.itens.map(row=>[norm(row.name),row]));let found=0;
+  for(const spell of ALL){const record=byName.get(norm(spell.nome_original));if(record){spell.tasha_2020_user=record;found++}}
+  if(found!==21)console.warn(`[Tasha 2020] ${found}/21 magias associadas ao catálogo atual.`);
+ }catch(error){console.warn('Transcrições fornecidas de Tasha indisponíveis:',error)}
+}
+function renderTashaInline(text){
+ return esc(text).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>');
+}
+function renderTashaStatblock(stat){
+ if(!stat?.text)return'';
+ const sections=String(stat.text).trim().split(/\n\s*\n/).map(chunk=>{
+  const lines=chunk.trim().split('\n');
+  if(lines[0].trim().startsWith('|')){
+   const rows=lines.filter(line=>line.trim().startsWith('|')).map(line=>line.trim().replace(/^\||\|$/g,'').split('|').map(cell=>cell.trim())).filter(row=>!row.every(cell=>/^:?-+:?$/.test(cell)));
+   return '<div class="tasha-spirit-table"><table>'+rows.map((row,i)=>'<tr>'+row.map(cell=>i===0?'<th scope="col">'+renderTashaInline(cell)+'</th>':'<td>'+renderTashaInline(cell)+'</td>').join('')+'</tr>').join('')+'</table></div>';
+  }
+  return '<p>'+lines.map(renderTashaInline).join('<br>')+'</p>';
+ }).join('');
+ return `<section class="tasha-spirit-block"><h4>${esc(stat.title||'Espírito invocado')}</h4><div class="spell-description-status">${esc(stat.creature_type||'')}</div>${sections}</section>`;
+}
+function renderTashaEdition(record){
+ if(!record)return'';
+ const fields=[['Nível',record.level===0?'Truque':record.level+'º círculo'],['Escola',record.school],['Tempo',record.casting_time],['Alcance',record.range],['Componentes',record.components],['Duração',record.duration],['Classes',Array.isArray(record.classes)?record.classes.join(', '):'']];
+ const origin=`Página do livro ${esc(record.source_printed_page_start??'—')} · PDF fornecido (p. ${esc((record.source_pdf_pages||[]).join(', '))})`;
+ return `<details class="spell-original-collapse tasha-original-collapse"><summary><i lang="en">${esc(record.name)}</i> — versão de Tasha (2020), PDF fornecido${record.statblock?' · inclui espírito invocado':''}</summary><div class="spell-original-copy" lang="en"><div class="spell-description-status">${origin}. Versão 5e (2020), mantida separada das regras posteriores.</div><div class="tasha-edition-metadata">${fields.map(([label,value])=>`<span><strong>${esc(label)}:</strong> ${esc(value??'—')}</span>`).join('')}</div><div class="tasha-edition-description">${esc(record.description)}</div>${renderTashaStatblock(record.statblock)}</div></details>`;
+}
 function cleanTags(text){
  let s=String(text??'');let prev='';
  while(prev!==s){prev=s;s=s.replace(/\{@[^{}]+\}/g,m=>{const body=m.slice(2,-1);const bits=body.split('|');let first=bits[0].replace(/^\w+\s+/,'');let shown=(bits.length>2&&bits[2])?bits[2]:first;return shown.replace(/\s*\[[^\]]+\]/g,'')})}
@@ -628,6 +673,7 @@ function spellEffectInPortuguese(x){
  return{content:info.join('\n\n'),higher:'',status:'Dados mecânicos disponíveis — descrição integral pendente',complete:false};
 }
 function spellOriginalText(x){
+ if(x.fonte==='tasha-2020'&&x.tasha_2020_user)return '';
  if(x.fonte==='xanathar-2017'&&x.xanathar_2017_user?.descricao_original_en)return x.xanathar_2017_user.descricao_original_en;
  if(x.fonte==='phb-2024')return VERIFIED_SPELL_PT[x.nome_original]?[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim():'';
  if(x.descricao_tipo==='texto_fornecido_usuario')return[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim();
@@ -646,13 +692,14 @@ function renderDetail(id){
  const descriptionStatus=pt.status==='Descrição editorial em português'?'':`<span class="spell-description-status">${esc(pt.status)}</span>`;
  const origName=x.nome_original?`<small class="spell-original-name" lang="en"><i>${esc(x.nome_original)}</i></small>`:'';
  const originalText=spellOriginalText(x);
+ const tashaEditionHTML=renderTashaEdition(x.tasha_2020_user);
  const xanatharRecord=x.xanathar_2017_user;
  const xanatharLegacyHTML=xanatharRecord&&x.fonte!=='xanathar-2017'?`<details class="spell-original-collapse"><summary><i lang="en">${esc(xanatharRecord.nome_original)}</i> — versão de Xanathar (2017), PDF fornecido</summary><div class="spell-original-copy" lang="en"><div class="spell-description-status">Transcrição da página ${esc(xanatharRecord.pagina_pdf)} do PDF fornecido; pode conter imperfeições de extração. Esta versão não substitui as regras atuais de 2024.</div><i>${esc(xanatharRecord.descricao_original_en)}</i></div></details>`:'';
- document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2>${origName}<div class="meta"><span class="badge">${x.nivel==null?'Nível pendente':x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge spell-school">${esc(cleanSpellSchool(x.escola))}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${spellRulesHTML(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${spellRulesHTML(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${spellRulesHTML(conc)}</span></div><div class="stat"><b>Ritual</b><span>${spellRulesHTML(rit)}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${spellRulesHTML(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box spell-effect-box"><h3>Efeito e descrição</h3>${descriptionStatus}<p class="spell-effect-copy">${spellRulesHTML(pt.content,true)}</p>${pt.higher?`<p class="spell-effect-higher"><strong>${x.nivel===0?'Aprimoramento de truque:':'Em círculos superiores:'}</strong> ${spellRulesHTML(pt.higher,true)}</p>`:''}${originalText?`<details class="spell-original-collapse"><summary><i lang="en">${esc(x.nome_original||x.nome)}</i>${x.fonte==='xanathar-2017'&&xanatharRecord?' — versão de Xanathar (2017), PDF fornecido':' — texto original'}</summary><div class="spell-original-copy" lang="en"><i>${esc(originalText)}</i></div></details>`:''}${xanatharLegacyHTML}</div><div class="box spell-classes-box"><h3>Classes</h3>${spellClassLinks(x.classes_base,x.subclasses_adicionais)}${x.escola==='Biomancia'?'<p class="muted">Distribuição editorial de Biomancia: Regra da Casa do Hub, não lista oficial da publicação. Alquimista é subclasse de Artífice.</p>':''}</div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
+ document.getElementById('detalhe').innerHTML=`<div class="spell-detail-top"><h2>${esc(x.nome)}</h2>${origName}<div class="meta"><span class="badge">${x.nivel==null?'Nível pendente':x.nivel===0?'Truque':'Círculo '+esc(x.nivel)}</span><span class="badge spell-school">${esc(cleanSpellSchool(x.escola))}</span><span class="spell-source"><b>Fonte:</b> ${esc(f.titulo||x.fonte)}</span></div></div><div class="stats"><div class="stat"><b>Tempo de conjuração</b><span>${spellRulesHTML(x.tempo_conjuracao)}</span></div><div class="stat"><b>Alcance</b><span>${esc(x.alcance)}</span></div><div class="stat"><b>Componentes</b><span>${esc(comp(x))}</span></div><div class="stat"><b>Duração</b><span>${spellRulesHTML(x.duracao)}</span></div><div class="stat"><b>Concentração</b><span>${spellRulesHTML(conc)}</span></div><div class="stat"><b>Ritual</b><span>${spellRulesHTML(rit)}</span></div><div class="stat"><b>Ataque/Salvaguarda</b><span>${spellRulesHTML(x.ataque_salvaguarda)}</span></div><div class="stat"><b>Dano</b><span>${esc(x.dano_base||'—')} ${esc(x.tipo_dano||'')}</span></div></div><div class="box spell-effect-box"><h3>Efeito e descrição</h3>${descriptionStatus}<p class="spell-effect-copy">${spellRulesHTML(pt.content,true)}</p>${pt.higher?`<p class="spell-effect-higher"><strong>${x.nivel===0?'Aprimoramento de truque:':'Em círculos superiores:'}</strong> ${spellRulesHTML(pt.higher,true)}</p>`:''}${originalText?`<details class="spell-original-collapse"><summary><i lang="en">${esc(x.nome_original||x.nome)}</i>${x.fonte==='xanathar-2017'&&xanatharRecord?' — versão de Xanathar (2017), PDF fornecido':' — texto original'}</summary><div class="spell-original-copy" lang="en"><i>${esc(originalText)}</i></div></details>`:''}${xanatharLegacyHTML}${tashaEditionHTML}</div><div class="box spell-classes-box"><h3>Classes</h3>${spellClassLinks(x.classes_base,x.subclasses_adicionais)}${x.escola==='Biomancia'?'<p class="muted">Distribuição editorial de Biomancia: Regra da Casa do Hub, não lista oficial da publicação. Alquimista é subclasse de Artífice.</p>':''}</div><div class="meta origem"><span><b>Livro:</b> ${esc(f.titulo||x.fonte)}</span><span><b>Ano:</b> ${esc(f.ano||'—')}</span><span><b>Página:</b> ${esc(x.pagina_fonte??'—')}</span></div>`;
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),n=document.getElementById('nivel').value,e=document.getElementById('escola').value,c=document.getElementById('classe').value,sp=document.getElementById('especial').value,src=document.getElementById('fonte').value;
- const filtered=ALL.filter(x=>(!src||x.fonte===src||(src==='xanathar-pdf-2017'&&!!x.xanathar_2017_user))&&(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c)||(x.subclasses_adicionais||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
+ const filtered=ALL.filter(x=>(!src||x.fonte===src||(src==='xanathar-pdf-2017'&&!!x.xanathar_2017_user)||(src==='tasha-pdf-2020'&&!!x.tasha_2020_user))&&(!n||String(x.nivel)===n)&&(!e||x.escola===e)&&(!c||(x.classes_base||[]).includes(c)||(x.subclasses_adicionais||[]).includes(c))&&(!sp||(sp==='concentracao'&&x.concentracao===true)||(sp==='ritual'&&x.ritual===true)||(sp==='nenhum'&&x.concentracao===false&&x.ritual===false)));
  const direct=q?filtered.filter(x=>norm(x.nome).includes(q)||norm(x.nome_original).includes(q)):[];
  const rows=!q?filtered:direct.length?direct:filtered.filter(x=>norm([x.escola,x.tipo_dano,x.descricao,sourceTitle(x.fonte),(x.classes_base||[]).join(' ')].join(' ')).includes(q));
  document.getElementById('count').textContent=`${rows.length} de ${ALL.length} magias`;
@@ -669,7 +716,7 @@ function populateFilters(){
  document.getElementById('nivel').innerHTML='<option value="">Todos os níveis</option>'+ns.map(x=>`<option value="${x}">${x===0?'Truques':'Nível '+x}</option>`).join('');
  document.getElementById('escola').innerHTML='<option value="">Todas as escolas</option>'+es.map(x=>`<option>${esc(x)}</option>`).join('');
  document.getElementById('classe').innerHTML='<option value="">Todas as classes</option>'+cs.map(x=>`<option value="${esc(x)}">${x==='Alquimista'?'Alquimista (subclasse de Artífice)':esc(x)}</option>`).join('');
- document.getElementById('fonte').innerHTML='<option value="">Todas as fontes</option>'+sources.map(id=>`<option value="${esc(id)}">${esc(sourceTitle(id))} (${counts.get(id)})</option>`).join('')+(ALL.some(x=>x.xanathar_2017_user)?'<option value="xanathar-pdf-2017">Xanathar (2017) — 95 magias do PDF</option>':'');
+ document.getElementById('fonte').innerHTML='<option value="">Todas as fontes</option>'+sources.map(id=>`<option value="${esc(id)}">${esc(sourceTitle(id))} (${counts.get(id)})</option>`).join('')+(ALL.some(x=>x.xanathar_2017_user)?'<option value="xanathar-pdf-2017">Xanathar (2017) — 95 magias do PDF</option>':'')+(ALL.some(x=>x.tasha_2020_user)?'<option value="tasha-pdf-2020">Tasha (2020) — 21 magias do PDF</option>':'');
 }
 async function localizeSpellNames(){
  try{
@@ -710,7 +757,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
    DATA={fontes:{...(catalog.fontes||{}),'phb-2024':{titulo:'Player’s Handbook',ano:2024,ruleset:'5.5e',natureza:'oficial'}}};ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
    ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
-   await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts()]);openInitialSpell();return;
+   await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();return;
   }
  }catch(e){console.warn('Catálogo consolidado local indisponível; usando montagem remota.',e)}
  const sourceEntries=Object.entries(REMOTE);const fetched=await Promise.all(sourceEntries.map(async([src,url])=>[src,await getJSON(url)]));let lookup={};try{lookup=await getJSON(LOOKUP)}catch(e){console.warn('Class lookup indisponível',e)}const local=await getJSON('dados/magias-suplementos-locais.json?v=20261030-biomancia1');
@@ -720,7 +767,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
  const official=new Set(ALL.map(x=>norm(x.nome_original)));for(const x of(local.itens||[])){if(official.has(norm(x.nome_original))){discarded++;continue}ALL.push(localRecord(x,local.fontes||{}))}
  ALL=[...ALL.filter(x=>x.fonte!=='phb-2024'),...phbEntries];
  ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||a.escola.localeCompare(b.escola,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'));ALL.forEach((x,i)=>x.ordem_catalogo=i+1);
- await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts()]);openInitialSpell();
+ await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();
  }catch(e){
   console.error(e);
   document.getElementById('count').textContent='Não foi possível carregar as magias.';

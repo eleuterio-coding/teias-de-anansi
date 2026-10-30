@@ -1,0 +1,37 @@
+name: Auditar as 21 magias de Tasha
+on:
+  push:
+    paths:
+      - 'dados/magias-tasha-usuario.json'
+      - 'magias.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/catalog-registry.js'
+      - 'tests/auditar-tasha-21-magias.mjs'
+      - '.github/workflows/auditar-tasha-21-magias.yml'
+  pull_request:
+    paths:
+      - 'dados/magias-tasha-usuario.json'
+      - 'magias.html'
+      - 'scripts/character-sheet-unified-spells.js'
+      - 'scripts/character-builder/spells.js'
+      - 'scripts/catalog-registry.js'
+      - 'tests/auditar-tasha-21-magias.mjs'
+      - '.github/workflows/auditar-tasha-21-magias.yml'
+permissions:
+  contents: read
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar módulos JavaScript
+        run: |
+          node --check scripts/catalog-registry.js
+          node --check scripts/character-builder/spells.js
+          node --check scripts/character-sheet-unified-spells.js
+      - name: Auditar 21 magias e fichas de espíritos
+        run: node tests/auditar-tasha-21-magias.mjs
