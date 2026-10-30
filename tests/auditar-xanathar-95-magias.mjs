@@ -17,17 +17,20 @@ for(const x of user.itens){
 }
 const canonical=new Set(catalog.itens.map(x=>fold(x.nome_original)));
 const indexed=new Set(phb.itens.map(x=>fold(x.nome_original)));
-assert.equal(user.itens.filter(x=>canonical.has(fold(x.nome_original))).length,85,'Registros de 2017 alterados inesperadamente');
-assert.equal(user.itens.filter(x=>!canonical.has(fold(x.nome_original))&&indexed.has(fold(x.nome_original))).length,10,'10 versões migradas para 2024 não conciliadas');
+assert.equal(user.itens.filter(x=>canonical.has(fold(x.nome_original))).length,95,'Todas as 95 magias devem estar no catálogo canônico.');
+assert.equal(user.itens.filter(x=>!canonical.has(fold(x.nome_original))).length,0,'Não manter magias de Xanathar somente no índice PHB.');
 assert.ok(user.itens.every(x=>canonical.has(fold(x.nome_original))||indexed.has(fold(x.nome_original))),'Magia sem correspondência no Hub');
+const actual=JSON.parse(read('dados/magias-catalogo.json')).itens.filter(x=>x.fonte==='xanathar-2017');
+assert.equal(actual.length,95);
+assert.ok(actual.every(x=>x.descricao_tipo==='texto_fornecido_usuario'&&x.completude==='texto_integral_fornecido_usuario'&&x.descricao.length>0),'Existem resumos antigos em Xanathar.');
 const html=read('magias.html');
 const script=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 assert.ok(script,'Script inline de Magias ausente');
 new vm.Script(script,{filename:'magias.html'});
 assert.ok(script.includes('loadXanatharProvidedTexts()'));
-assert.ok(script.includes('xanathar-pdf-2017'));
+assert.ok(script.includes("'xanathar-2017'"));
 assert.ok(script.includes('xanatharLegacyHTML'));
 assert.ok(read('scripts/character-builder/spells.js').includes('xanatharUserText'));
 assert.ok(read('scripts/character-sheet-unified-spells.js').includes('xanatharUserText'));
 assert.ok(read('scripts/catalog-registry.js').includes('dados/magias-xanathar-usuario.json'));
-console.log('OK: 95 transcrições; 85 magias Xanathar ativas; 10 com registro PHB 2024; catálogo, fichas e construtor vinculados.');
+console.log('OK: 95 magias de Xanathar completas como entradas canônicas; nenhum resumo antigo ou duplicata PHB.');
