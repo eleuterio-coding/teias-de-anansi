@@ -41,5 +41,10 @@ export async function loadSpells(){
    items=[]; // Falha segura: nunca restaurar magias excluídas pelo SRD legado.
   }
  }
+ try{
+  const source=await json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1');
+  const byName=new Map(arr(source.itens).map(x=>[key(x.nome_original),x]));
+  for(const spell of items){if(spell.source!=='xanathar-2017')continue;const full=byName.get(key(spell.originalName));if(full){spell.xanatharUserText=full.descricao_original_en;spell.xanatharSourcePage=full.pagina_pdf;}}
+ }catch(e){state.warnings.push(`Textos integrais do PDF de Xanathar indisponíveis: ${e.message}`)}
  return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player's Handbook (2024)"))
 }
