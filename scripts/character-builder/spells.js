@@ -46,5 +46,10 @@ export async function loadSpells(){
   const byName=new Map(arr(source.itens).map(x=>[key(x.nome_original),x]));
   for(const spell of items){if(spell.source!=='xanathar-2017')continue;const full=byName.get(key(spell.originalName));if(full){spell.xanatharUserText=full.descricao_original_en;spell.xanatharSourcePage=full.pagina_pdf;}}
  }catch(e){state.warnings.push(`Textos integrais do PDF de Xanathar indisponíveis: ${e.message}`)}
+ try{
+  const source=await json('dados/magias-tasha-usuario.json?v=20261030-tasha21-1');
+  const byName=new Map(arr(source.itens).map(x=>[key(x.name),x]));
+  for(const spell of items){const full=byName.get(key(spell.originalName));if(full){spell.tashaUserEdition=full;spell.tashaUserText=full.description;spell.tashaUserStatblock=full.statblock;}}
+ }catch(e){state.warnings.push(`Transcrições de Tasha indisponíveis: ${e.message}`)}
  return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player's Handbook (2024)"))
 }
