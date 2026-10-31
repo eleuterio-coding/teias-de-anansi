@@ -1,6 +1,9 @@
 import{state,blank,json,arr,fold,esc}from'./character-builder/state.js';
-import{loadSpecies}from'./character-builder/catalogs.js?v=20260923-race-language-field2';
-import{nativeLanguagesForSpecies}from'./species-language-rules.js?v=20260923-race-language-field2';
+import{loadSpecies}from'./character-builder/catalogs.js?v=20261031-idiomas-40-ptbr1';
+import{nativeLanguagesForSpecies}from'./species-language-rules.js?v=20261031-idiomas-40-ptbr1';
+
+const NOMES_NATIVOS_PTBR={Common:'Comum',Draconic:'Dracônico',Dwarvish:'Anão',Elvish:'Élfico',Giant:'Gigante',Gnomish:'Gnômico',Goblin:'Goblin',Halfling:'Pequenino',Orc:'Orc',Aquan:'Aquano',Celestial:'Celestial',Infernal:'Infernal',Primordial:'Primordial',Sylvan:'Silvestre',Gith:'Gith',Gnoll:'Gnoll',Harpy:'Harpia',Quori:'Quori',Serpentine:'Serpentino'};
+const nomesNativos=items=>items.filter(x=>!['Minotaur','Minotauro','Kharolian','Kharoliano'].includes(x)).map(x=>NOMES_NATIVOS_PTBR[x]||x);
 
 const $=id=>document.getElementById(id);
 let DATA=[];
@@ -9,7 +12,7 @@ function lineageTraits(lineage){return arr(lineage?.traits)}
 function sourceLabel(lineage,species){return lineage?.source||species?.source||'Fonte não informada'}
 function statusLabel(row){return row?.ruleset==='5e'?'Legado 5e compatível':'5.5e / 2024'}
 function searchable(species){return fold([
- species.name,species.source,species.lineageLabel,...(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
+ species.name,species.source,species.lineageLabel,...nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
  ...arr(species.lineages).flatMap(l=>[l.name,...arr(l.aliases),l.source,...lineageTraits(l).flatMap(t=>[t.name,t.originalName,t.text])])
 ].filter(Boolean).join(' '))}
 function renderTrait(t){return`<article class="trait"><h4>${esc(t.name||t.originalName||'Traço')}</h4><p>${esc(t.text||'')}</p></article>`}
@@ -19,7 +22,7 @@ function renderLineage(lineage,species){
 }
 function renderSpecies(species){
  const lineages=arr(species.lineages),legacy=species.ruleset==='5e';
- return`<details class="especie ${legacy?'legacy':''}" data-id="${esc(species.id)}"><summary><strong>${esc(species.name)}</strong><span class="sub">${esc(statusLabel(species))} · ${esc(arr(species.sizes).join(' / ')||'tamanho conforme fonte')} · ${esc(species.speed||30)} ft${lineages.length?` · ${lineages.length} ${esc(species.lineageLabel||'linhagens')}`:''}</span></summary><div class="corpo"><div class="stats"><div class="stat"><strong>Ruleset</strong>${esc(species.ruleset||'—')}</div><div class="stat"><strong>Tamanho</strong>${esc(arr(species.sizes).join(' / ')||'—')}</div><div class="stat"><strong>Deslocamento</strong>${esc(species.speed||30)} ft</div><div class="stat"><strong>Fonte principal</strong>${esc(species.source||'—')}</div><div class="stat"><strong>Idiomas</strong>${esc((arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)).join(', ')||'—')}</div></div><section class="bloco"><h3>Traços da raça-base</h3>${arr(species.traits).map(renderTrait).join('')||'<p class="muted">Os traços são definidos integralmente pela linhagem escolhida.</p>'}</section>${lineages.length?`<section class="bloco"><h3>${esc(species.lineageLabel||'Linhagens / escolhas')}</h3>${lineages.map(l=>renderLineage(l,species)).join('')}</section>`:''}</div></details>`
+ return`<details class="especie ${legacy?'legacy':''}" data-id="${esc(species.id)}"><summary><strong>${esc(species.name)}</strong><span class="sub">${esc(statusLabel(species))} · ${esc(arr(species.sizes).join(' / ')||'tamanho conforme fonte')} · ${esc(species.speed||30)} ft${lineages.length?` · ${lineages.length} ${esc(species.lineageLabel||'linhagens')}`:''}</span></summary><div class="corpo"><div class="stats"><div class="stat"><strong>Ruleset</strong>${esc(species.ruleset||'—')}</div><div class="stat"><strong>Tamanho</strong>${esc(arr(species.sizes).join(' / ')||'—')}</div><div class="stat"><strong>Deslocamento</strong>${esc(species.speed||30)} ft</div><div class="stat"><strong>Fonte principal</strong>${esc(species.source||'—')}</div><div class="stat"><strong>Idiomas</strong>${esc(nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)).join(', ')||'—')}</div></div><section class="bloco"><h3>Traços da raça-base</h3>${arr(species.traits).map(renderTrait).join('')||'<p class="muted">Os traços são definidos integralmente pela linhagem escolhida.</p>'}</section>${lineages.length?`<section class="bloco"><h3>${esc(species.lineageLabel||'Linhagens / escolhas')}</h3>${lineages.map(l=>renderLineage(l,species)).join('')}</section>`:''}</div></details>`
 }
 function buildSources(){
  const sel=$('fonte'),sources=[...new Set(DATA.flatMap(s=>[s.source,...arr(s.lineages).map(l=>l.source)].filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'pt-BR'));

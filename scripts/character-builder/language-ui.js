@@ -1,5 +1,5 @@
 import{state,$,esc,fold}from'./state.js';
-import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js?v=20260923-race-language-builder1';
+import{languageOutcome,sanitizeLanguageChoices}from'./language-mechanics.js?v=20261031-idiomas-40-ptbr1';
 
 let queued=false;
 function ensureHost(){
