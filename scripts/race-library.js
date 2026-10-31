@@ -32,7 +32,7 @@ function render(){
   if(src&&s.source!==src&&!arr(s.lineages).some(l=>l.source===src))return false;
   return!q||searchable(s).includes(q)
  });
- $('resultado').textContent=`${rows.length} de ${DATA.length} raças-base exibidas`;
+ $('resultado').textContent='';
  $('lista').innerHTML=rows.map(renderSpecies).join('')||'<div class="vazio">Nenhuma raça corresponde aos filtros.</div>'
 }
 
