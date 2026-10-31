@@ -98,7 +98,7 @@ async function iniciar() {
       'dados/idiomas-core-standard.json?v=20261031-idiomas-fontes42',
       'dados/idiomas-core-rare.json?v=20261031-idiomas-fontes42',
       'dados/idiomas-eberron.json?v=20261031-idiomas-fontes42',
-      'dados/idiomas-outros.json?v=20261031-idiomas-fontes42'
+      'dados/idiomas-outros.json?v=20261031-vedalkens1'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
