@@ -136,6 +136,18 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('3,6 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Leve');
     await expect(page.locator('.armor-source')).toContainText('Fonte: Livro do Jogador');
+    await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
+    await expect(page.locator('#detalhe .armor-conditions .armor-condition')).toHaveCount(1);
+    await expect(page.locator('#detalhe')).not.toContainText('Força mínima');
+    await expect(page.locator('#detalhe .armor-stat')).not.toContainText('—');
+    const alturaMinima=await page.locator('#detalhe').evaluate(el=>getComputedStyle(el).minHeight);
+    expect(alturaMinima).toBe('0px');
+    await page.locator('#lista .item').filter({hasText:'Armadura de Couro'}).click();
+    await expect(page.locator('#detalhe .armor-conditions')).toHaveCount(0);
+    await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
+    await page.locator('#lista .item').filter({hasText:'Cota de Malha'}).click();
+    await expect(page.locator('#detalhe .armor-condition')).toHaveCount(2);
+    await expect(page.locator('#detalhe')).toContainText('Força mínima: For 13');
     await expect(page.locator('#detalhe')).not.toContainText(/Ocorrência|Demonstrativo|pdf24_merged|catálogo-base/);
     await page.locator('#categoria').selectOption('Média');
     await expect(page.locator('#lista .item')).toHaveCount(5);
@@ -147,6 +159,8 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('.armor-heading h2')).toHaveText('Escudo');
     await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('2,7 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Escudo');
+    await expect(page.locator('#detalhe .armor-conditions')).toHaveCount(0);
+    await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
     await expect(page.locator('#detalhe')).toContainText('Fabricação');
     await capture(page,`armaduras-${info.project.name}.png`);
     const geom=await overflow(page);
