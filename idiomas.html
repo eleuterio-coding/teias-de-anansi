@@ -10,17 +10,15 @@
     :root { color-scheme: light dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body { max-width: 1050px; margin: 0 auto; padding: 24px; line-height: 1.55; }
     a { color: inherit; }
-    .resumo, .meta { opacity: .78; }
+    .meta { opacity: .78; }
     .controles { display: grid; grid-template-columns: minmax(220px,1fr) minmax(220px,320px); gap: 10px; margin: 18px 0 10px; }
     input, select { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 1px solid #8887; border-radius: 8px; background: transparent; color: inherit; }
     .resultado { margin: 8px 0 16px; opacity: .75; }
     .idioma { margin: 10px 0; border: 1px solid #8885; border-radius: 10px; overflow: hidden; }
     .idioma summary { cursor: pointer; padding: 14px 16px; display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
     .idioma summary:hover { background: #8881; }
-    .categoria { font-size: .86rem; opacity: .68; white-space: nowrap; }
     .corpo { padding: 0 16px 16px; }
     .meta { border-top: 1px solid #8883; margin-top: 12px; padding-top: 10px; font-size: .9rem; display: flex; flex-wrap: wrap; gap: 8px 18px; }
-    .nota { padding: 12px 14px; border: 1px dashed #8888; border-radius: 10px; margin: 14px 0; }
     .erro { padding: 14px; border: 1px solid #b44; border-radius: 10px; }
     @media (max-width: 750px) {
       body { padding: 16px; }
@@ -36,8 +34,6 @@
   <header>
     <h1>Idiomas</h1>
   </header>
-
-  <p class="nota">Descrições em português redigidas a partir de fontes identificadas: não são transcrições literais dos livros. As entradas de terceiros, legado e regras da casa estão sinalizadas individualmente.</p>
 
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar idioma, categoria ou fonte...">
@@ -74,19 +70,26 @@ const resultado = document.getElementById('resultado');
 
 function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function texto(i) { return [i.nome,i.categoria,i.fonte,i.descricao,i.status,localizarIdioma(i.nome),localizarIdioma(i.categoria),localizarIdioma(i.descricao)].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+// O rodapé mostra somente títulos de livros; proveniência permanece nos dados internos.
+function livrosDaFonte(i) {
+  if (i.nome === 'Gith') return ['Mordenkainen’s Tome of Foes (2018)'];
+  return String(i.fonte || '')
+    .replace('Player’s Handbook · Basic Rules (2024)', 'Player’s Handbook (2024)')
+    .split(' · ')
+    .map(livro => livro.trim())
+    .filter(livro => livro && !/^Regra da Casa\b/i.test(livro) && !/^legado de edições anteriores\b/i.test(livro));
+}
 function render() {
   const termo = busca.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
   const itens = IDIOMAS.filter(i => (!termo || texto(i).includes(termo)) && (!filtro.value || i.categoria === filtro.value));
   resultado.textContent = `${itens.length} de ${IDIOMAS.length} idiomas`;
   lista.innerHTML = itens.map(i => `
     <details class="idioma">
-      <summary><strong>${esc(localizarIdioma(i.nome))}</strong><span class="categoria">${esc(localizarIdioma(i.categoria))}</span></summary>
+      <summary><strong>${esc(localizarIdioma(i.nome))}</strong></summary>
       <div class="corpo">
         <p>${esc(localizarIdioma(i.descricao))}</p>
-        <p class="resumo"><strong>Proveniência:</strong> ${esc(i.proveniencia || 'Não classificada')}${i.referencia_secao ? ` · <strong>Seção:</strong> ${esc(i.referencia_secao)}` : ''}</p>
-        ${i.fonte_url?.startsWith('https://www.dndbeyond.com/') ? `<p><a href="${esc(i.fonte_url)}" target="_blank" rel="noopener noreferrer">Consultar fonte no D&amp;D Beyond ↗</a></p>` : ''}
         <div class="meta">
-          <span><strong>Livro:</strong> ${esc(localizarIdioma(i.fonte))}</span>
+          <span><strong>${livrosDaFonte(i).length === 1 ? "Livro" : "Livros"}:</strong> ${esc(livrosDaFonte(i).join(" · "))}</span>
         </div>
       </div>
     </details>`).join('');
