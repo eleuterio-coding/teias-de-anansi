@@ -76,7 +76,10 @@ function localizar(text,dic){
       (_,atr,teste)=>teste.includes('resistência')
         ?(teste.startsWith('testes')?'testes':'teste')+' de resistência de '+atr
         :(teste==='testes'?'testes':'teste')+' de '+atr)
-    .replace(/\b(dano|resistência|imunidade)\s+(fogo|frio|energia|veneno|ácido|trovejante|elétrico|psíquico|necrótico|radiante)\b/gi,'$1 de $2');
+    .replace(/\\b(dano)\\s+(fogo|frio|energia|veneno)\\b/gi,'$1 de $2')
+    .replace(/\\b(dano)\\s+de\\s+(radiante|necrótico|psíquico|ácido|trovejante|elétrico)\\b/gi,'$1 $2')
+    .replace(/\\b(\\d+d\\d+)\\s+(energia|fogo|frio|veneno|radiante|necrótico|psíquico|ácido|trovejante|elétrico)\\b/gi,
+      (_,dados,tipo)=>dados+' de dano'+(['energia','fogo','frio','veneno'].includes(tipo.toLowerCase())?' de ':' ')+tipo);
 }
 function traduzirTexto(root,dic){
   if(!root)return;
