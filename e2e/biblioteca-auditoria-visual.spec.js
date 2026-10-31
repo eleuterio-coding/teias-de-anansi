@@ -77,6 +77,9 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await page.goto('/subclasses.html');await ready(page,'#lista details.subclasse');
     await expect.poll(()=>page.locator('html').getAttribute('data-subclasses-ptbr'),{timeout:40000}).toBe('119/119');
     await expect(page.locator('#lista details.subclasse')).toHaveCount(119);
+    // A montagem da lista nunca deve alterar o filtro inicial.
+    await expect(page.locator('#filtro')).toHaveValue('');
+    await expect(page.locator('#lista details.subclasse:visible')).toHaveCount(119);
     const names=await page.locator('#lista details.subclasse').evaluateAll(items=>items.map(x=>x.dataset.nomePtbr));
     expect(names).toEqual([...names].sort((a,b)=>a.localeCompare(b,'pt-BR',{sensitivity:'base'})));
     await expect(page.locator('.selo-livro')).toHaveCount(119);
@@ -103,7 +106,9 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     expect(fichas).toHaveLength(119);
     expect(fichas.every(x=>/Livro:/.test(x)&&!/Edição:|Status:|Livro\/Fonte:|Rastreabilidade|Fonte aberta:/.test(x))).toBeTruthy();
     await capture(page,`subclasses-${info.project.name}.png`);
-    const selected=page.locator('#lista details.subclasse').first();await selected.locator('summary').click();
+    const selected=page.locator('#lista details.subclasse:visible').first();
+    await expect(selected.locator('summary')).toBeVisible();
+    await selected.locator('summary').click();
     await expect(selected).toHaveAttribute('open','');
     await capture(page,`subclasse-detalhe-${info.project.name}.png`);
     const options=await page.locator('#filtro option').allTextContents();
@@ -112,6 +117,11 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect.poll(()=>page.locator('#lista details.subclasse:visible').count()).toBeGreaterThan(0);
     expect(await page.locator('#lista details.subclasse:visible').count()).toBeLessThan(119);
     await page.locator('#busca').fill('');
+    // O filtro por classe continua funcional e pode ser desfeito.
+    await page.locator('#filtro').selectOption('Ranger');
+    await expect.poll(()=>page.locator('#lista details.subclasse:visible').count()).toBeLessThan(119);
+    await page.locator('#filtro').selectOption('');
+    await expect(page.locator('#lista details.subclasse:visible')).toHaveCount(119);
     expect.soft(errors).toEqual([]);
     const geom=await overflow(page);
     expect.soft(geom.scroll,`Estouro de largura: ${JSON.stringify(geom)}`).toBeLessThanOrEqual(geom.view+4);

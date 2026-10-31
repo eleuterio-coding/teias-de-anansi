@@ -145,7 +145,11 @@ async function configurar(){
   cards.sort((a,b)=>a.dataset.nomePtbr.localeCompare(b.dataset.nomePtbr,'pt-BR',{sensitivity:'base'})
     ||a.dataset.originalName.localeCompare(b.dataset.originalName,'pt-BR'));
   lista.append(...cards);
-  for(const option of document.querySelectorAll('#filtro option')){
+  // A substituição de <option> muda a seleção do browser quando o item
+  // selecionado é removido temporariamente. Preserve-a antes de reordenar.
+  const filtro=document.getElementById('filtro');
+  const selecionado=filtro.value;
+  for(const option of filtro.querySelectorAll('option')){
     if(!option.value&&!option.textContent.trim().includes('Todas'))continue;
     const original=option.textContent.trim();
     if(loc.classes[original]){option.value=original;option.textContent=loc.classes[original]}
@@ -153,7 +157,9 @@ async function configurar(){
   const options=[...document.querySelectorAll('#filtro option')];
   const all=options.shift();
   options.sort((a,b)=>a.textContent.localeCompare(b.textContent,'pt-BR',{sensitivity:'base'}));
-  document.getElementById('filtro').replaceChildren(all,...options);
+  filtro.replaceChildren(all,...options);
+  filtro.value=selecionado;
+  if(filtro.selectedIndex<0)filtro.value='';
   if(typeof filtrar==='function')filtrar();
   document.documentElement.dataset.subclassesPtbr='119/119';
   document.documentElement.dataset.subclassesCaracteristicasPtbr='591/591';
