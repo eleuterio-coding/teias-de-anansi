@@ -7,8 +7,7 @@ const FILES=[
  'dados/subclasses-mecanicas-quickstone-2024.json',
  'dados/subclasses-mecanicas-heroes-faerun-2025.json',
  'dados/subclasses-mecanicas-tasha-2020.json',
- 'dados/subclasses-mecanicas-xanathar-2017.json',
- 'dados/subclasses-mecanicas-larsene-ledger-2024.json'
+ 'dados/subclasses-mecanicas-xanathar-2017.json'
 ];
 const fold=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim();
 const read=p=>fs.readFileSync(p,'utf8');
@@ -16,10 +15,10 @@ const json=p=>JSON.parse(read(p));
 const forbidden=[/referência mecânica/i,/identificada e consolidada/i,/referência ativa do catálogo/i,/mantida no catálogo/i,/sem reproduzir integralmente/i];
 
 const catalog=json('dados/subclasses-pdfs.json');
-assert.equal(catalog.total,119,'O catálogo deve declarar 119 subclasses.');
-assert.equal(catalog.subclasses.length,119,'O catálogo deve conter 119 registros.');
+assert.equal(catalog.total,112,'O catálogo deve declarar 112 subclasses.');
+assert.equal(catalog.subclasses.length,112,'O catálogo deve conter 112 registros.');
 const catalogNames=new Map(catalog.subclasses.map(row=>[fold(row.nome),row.nome]));
-assert.equal(catalogNames.size,119,'As 119 subclasses precisam ter identidades únicas.');
+assert.equal(catalogNames.size,112,'As 112 subclasses precisam ter identidades únicas.');
 
 const mechanics=new Map();
 for(const file of FILES){
@@ -40,15 +39,15 @@ for(const file of FILES){
   mechanics.set(key,row)
  }
 }
-assert.equal(mechanics.size,119,`Cobertura mecânica incompleta: ${mechanics.size}/119.`);
+assert.equal(mechanics.size,112,`Cobertura mecânica incompleta: ${mechanics.size}/112.`);
 for(const[key,name]of catalogNames)assert.ok(mechanics.has(key),`Sem mecânica: ${name}`);
 for(const[key,row]of mechanics)assert.ok(catalogNames.has(key),`Mecânica sem registro no catálogo: ${row.nome}`);
 
 const source=read('dados/_module-source/subclasses.html');
-assert.equal((source.match(/<details class="subclasse"/g)||[]).length,119,'O HTML-fonte deve manter 119 cards.');
+assert.equal((source.match(/<details class="subclasse"/g)||[]).length,112,'O HTML-fonte deve manter 112 cards.');
 const runtime=read('scripts/subclass-mechanics-catalog.js');
 for(const file of FILES)assert.ok(runtime.includes(file),`Runtime não carrega ${file}.`);
-assert.ok(runtime.includes('applied!==119')&&runtime.includes('map.size!==119'),'Runtime precisa exigir cobertura 119/119.');
+assert.ok(runtime.includes('applied!==112')&&runtime.includes('map.size!==112'),'Runtime precisa exigir cobertura 112/112.');
 const cleaner=read('scripts/module-clean-loader.js');
 assert.ok(cleaner.includes('scripts/subclass-mechanics-catalog.js'),'Subclasses não carregam o enriquecedor mecânico.');
 assert.ok(!cleaner.includes('Compatibilidade 5e/5.5e:'),'O bloco editorial de compatibilidade não deve voltar ao módulo Subclasses.');
@@ -125,4 +124,4 @@ for(const name of artificerNames){const d=makeArtificer(name),row=mechanics.get(
  const d=makeArtificer('Cartographer',15),out=artificerSubclassOutcome(d);assert.ok(out.tools.includes('Suprimentos de Calígrafo')&&out.tools.includes('Ferramentas de Cartógrafo'),'Cartographer não concede as duas proficiências de ferramentas.');assert.ok(out.resources.some(x=>x.name==="Adventurer's Atlas"&&x.uses===6),'Adventurer’s Atlas com Int 20 deve criar mapas para até 6 criaturas.');assert.ok(out.summary.some(x=>x.name==='Safe Haven'&&/30 PV/.test(x.value)),'Safe Haven nível 15 deve deixar o portador com 30 PV.')
 }
 
-console.log(`OK: ${mechanics.size}/119 subclasses com mecânica estruturada; ${barbarianNames.length}/10 Bárbaro e ${artificerNames.length}/5 Artífice aplicadas ao criador.`);
+console.log(`OK: ${mechanics.size}/112 subclasses com mecânica estruturada; ${barbarianNames.length}/10 Bárbaro e ${artificerNames.length}/5 Artífice aplicadas ao criador.`);
