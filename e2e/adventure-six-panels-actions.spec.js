@@ -80,8 +80,9 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  expect(errors.filter(message=>/ReferenceError|bindAdventureNotes/.test(message))).toEqual([]);
 });
 
-test('cena existente permite editar, iniciar, concluir e preservar o conteúdo',async({page})=>{
+test('cena existente permite editar sem Iniciar ou Ignorar e preservar o conteúdo',async({page})=>{
  await page.goto('/aventuras.html?campaign=qa-six-panels&id=qa-six-adventure');
+ await page.locator('#adventure-create-tab').click();
  await page.locator('#new-scene-title').fill('Primeiro encontro');
  await page.locator('#add-scene').click();
  const item=page.locator('#cenas [data-scene-row]').first();
@@ -91,12 +92,11 @@ test('cena existente permite editar, iniciar, concluir e preservar o conteúdo',
  await item.locator('[data-scene-field="title"]').press('Tab');
  await expect.poll(async()=> (await getAdventure(page)).scenes[0].title).toBe('Encontro das Rainhas');
  await expect(page.locator('#cenas [data-scene-editor]')).toHaveAttribute('open','');
- await page.locator('#cenas [data-start-scene]').first().click();
- await expect.poll(async()=> (await getAdventure(page)).scenes[0].status).toBe('active');
- await page.locator('#cenas [data-complete-scene]').first().click();
- await expect.poll(async()=> (await getAdventure(page)).scenes[0].status).toBe('completed');
+ await expect(page.locator('#cenas [data-start-scene],#cenas [data-skip-scene]')).toHaveCount(0);
+ await expect.poll(async()=> (await getAdventure(page)).scenes[0].status).toBe('planned');
+ await page.locator('[data-adventure-creation-kind="more"]').click();
  await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toHaveCount(1);
- await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Concluída');
+ await expect(page.locator('#linha-tempo .adventure-timeline-scene')).not.toContainText('Concluída');
  await expect(page.locator('#linha-tempo .adventure-timeline-scene')).toContainText('Encontro das Rainhas');
  await page.locator('#new-timeline-title').fill('Registo manual');
  await page.locator('#new-timeline-text').fill('Os heróis encontraram a trilha.');
