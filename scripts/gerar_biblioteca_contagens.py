@@ -89,9 +89,9 @@ def count_records(index: dict, spells: dict) -> dict[str, int]:
         raise ValueError("Catálogo unificado de Magias possui IDs ausentes/duplicados.")
     # O catálogo suplementar é combinado com o índice do Livro do Jogador
     # no navegador; versões recuperadas de Xanathar/Tasha não são duplicadas.
-    from unicodedata import normalize as unicode_normalize
+    from unicodedata import normalize as unicode_normalize, combining
     def normalized(name: str) -> str:
-        return "".join(c for c in unicode_normalize("NFD", str(name or "")) if not ("\\u0300" <= c <= "\\u036f")).lower()
+        return "".join(c for c in unicode_normalize("NFD", str(name or "")) if not combining(c)).lower()
     imported = {normalized(row.get("nome_original")) for row in spells_list
                 if row.get("fonte") in ("xanathar-2017", "tasha-2020")}
     phb = json.loads((ROOT / "dados/magias-phb-2024-indice.json").read_text(encoding="utf-8"))
