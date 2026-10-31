@@ -352,3 +352,40 @@
  #adventure-root #npcs .adventure-npc-registered-row{grid-template-columns:minmax(0,1fr)}
  #adventure-root #npcs :is(#add-campaign-npc,#add-registered-npc){grid-column:1;width:100%!important}
 }
+
+/* Painéis consolidados na Visão Geral, seguindo títulos e espaçamentos dos outros blocos. */
+#adventure-root #adventure-overview-content > .adventure-overview-panel{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:11px;width:100%;min-width:0
+}
+#adventure-root #adventure-overview-content .adventure-overview-panel > :is(#visao-geral,#linha-tempo,#notas-mestre){
+ width:100%;max-width:none;min-width:0;margin:0;align-self:start;box-sizing:border-box
+}
+#adventure-root #adventure-overview-content #proxima-sessao{
+ margin:0;width:100%;max-width:none;box-sizing:border-box
+}
+#adventure-root #adventure-overview-content :is(#visao-geral,#notas-mestre)>h2,
+#adventure-root #adventure-overview-content #linha-tempo .hub-timeline-title-group>h2{display:none}
+#adventure-root #adventure-overview-content :is(#visao-geral,#linha-tempo,#notas-mestre){
+ padding:clamp(14px,2vw,18px);
+ border:1px solid var(--hub-border,#40546c);border-radius:12px;
+ background:var(--hub-surface,#111f2d);box-shadow:0 2px 8px rgba(0,0,0,.035)
+}
+#adventure-root #adventure-overview-content #visao-geral .form-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start
+}
+#adventure-root #adventure-overview-content #visao-geral .form-grid>.wide{grid-column:1/-1}
+#adventure-root #adventure-overview-content #visao-geral .row-actions{
+ margin-top:14px;display:flex;justify-content:flex-end
+}
+#adventure-root #adventure-overview-content #linha-tempo{display:grid;gap:12px}
+#adventure-root #adventure-overview-content #linha-tempo .hub-timeline-heading{
+ display:flex;justify-content:flex-end;align-items:center;min-height:0;padding:0;margin:0;border:0
+}
+#adventure-root #adventure-overview-content #linha-tempo .hub-timeline-title-group{display:none}
+#adventure-root #adventure-overview-content #notas-mestre{display:grid;gap:12px}
+#adventure-root #adventure-overview-content #notas-mestre :is(.hub-note-list,.campaign-add-line,textarea){
+ width:100%;max-width:none;min-width:0
+}
+@media(max-width:700px){
+ #adventure-root #adventure-overview-content #visao-geral .form-grid{grid-template-columns:minmax(0,1fr)}
+}
