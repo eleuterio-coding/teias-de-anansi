@@ -87,7 +87,9 @@ function render() {
     <details class="idioma">
       <summary><strong>${esc(localizarIdioma(i.nome))}</strong></summary>
       <div class="corpo">
-        <p>${esc(localizarIdioma(i.descricao))}</p>
+        <p><strong>Falantes Típicos:</strong> ${esc(i.falantes_tipicos)}</p>
+        <p><strong>Alfabeto:</strong> ${esc(i.alfabeto)}</p>
+        <p><strong>Descrição:</strong> ${esc(i.descricao)}</p>
         <div class="meta">
           <span><strong>${livrosDaFonte(i).length === 1 ? "Livro" : "Livros"}:</strong> ${esc(livrosDaFonte(i).join(" · "))}</span>
         </div>
@@ -98,10 +100,10 @@ function render() {
 async function iniciar() {
   try {
     const urls = [
-      'dados/idiomas-core-standard.json?v=20261031-idiomas-40-ptbr1',
-      'dados/idiomas-core-rare.json?v=20261031-idiomas-40-ptbr1',
-      'dados/idiomas-eberron.json?v=20261031-idiomas-40-ptbr1',
-      'dados/idiomas-outros.json?v=20261031-idiomas-40-ptbr1'
+      'dados/idiomas-core-standard.json?v=20261031-idiomas-3campos-ptbr1',
+      'dados/idiomas-core-rare.json?v=20261031-idiomas-3campos-ptbr1',
+      'dados/idiomas-eberron.json?v=20261031-idiomas-3campos-ptbr1',
+      'dados/idiomas-outros.json?v=20261031-idiomas-3campos-ptbr1'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);

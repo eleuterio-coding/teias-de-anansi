@@ -4,142 +4,168 @@
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Demons of the Abyss",
-    "descricao": "Idioma raro associado aos demônios do Abismo. Integra a lista de línguas raras de 2024; na tradição de D&D 5e, aparece associado à escrita infernal.",
+    "descricao": "O Abissal é o idioma dos demônios, uma língua áspera e dissonante falada nas Camadas Infinitas do Abismo.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas",
+    "falantes_tipicos": "Demônios do Abismo.",
+    "alfabeto": "Infernal."
   },
   {
     "nome": "Aquan",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Water / Primordial",
-    "descricao": "Dialeto de Primordial associado ao elemento água e às criaturas dos planos aquáticos. De acordo com D&D 2024, falantes de Aquan podem se comunicar com conhecedores dos demais dialetos de Primordial. O Hub o mantém como registro individual por convenção racial, não como idioma padrão adicional.",
+    "descricao": "O Aquano é um dialeto do Primordial falado por criaturas do Plano Elemental da Água, caracterizado por tons fluidos e ressonantes.",
     "status": "Dialeto de Primordial — uso racial no Hub",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — dialeto; registro separado é regra da casa",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial",
+    "falantes_tipicos": "Elementais da água e criaturas dos planos aquáticos; tortles no Hub.",
+    "alfabeto": "Rúnico anão (dialeto de Primordial, em 5e)."
   },
   {
     "nome": "Auran",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Air / Primordial",
-    "descricao": "Dialeto de Primordial associado ao ar e às criaturas elementais aéreas. Falantes de Auran e dos demais dialetos primordiais podem se compreender segundo as regras de 2024; sua separação como entrada autônoma é uma convenção de consulta do Hub.",
+    "descricao": "O Aurano é um dialeto de Primordial utilizado por criaturas do Plano Elemental do Ar, com sons suaves, soprosos e vogais sussurradas.",
     "status": "Dialeto de Primordial — registro individual no Hub",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — dialeto; registro separado é regra da casa",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial",
+    "falantes_tipicos": "Elementais do ar e criaturas dos planos aéreos.",
+    "alfabeto": "Rúnico anão (dialeto de Primordial, em 5e)."
   },
   {
     "nome": "Celestial",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Celestiais",
-    "descricao": "Idioma raro ligado aos seres celestiais. Em Eberron, também aparece relacionado a Siberys e utiliza a escrita Celestial.",
+    "descricao": "O Celestial é o idioma dos Planos Superiores, uma língua bela e harmoniosa falada por anjos e seres divinos.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas",
+    "falantes_tipicos": "Anjos, celestiais e outros seres dos Planos Superiores.",
+    "alfabeto": "Celestial."
   },
   {
     "nome": "Deep Speech",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
     "origem": "Aberrações",
-    "descricao": "Língua rara associada às aberrações e a entidades de natureza alienígena. Em Eberron, os daelkyr são relacionados a esse universo linguístico, embora os materiais do cenário também registrem Daelkyr separadamente.",
+    "descricao": "A Língua Profunda é falada por devoradores de mentes, tiranos oculares e outras aberrações alienígenas. Não possui escrita própria tradicional e pode ser transmitida telepaticamente.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas",
+    "falantes_tipicos": "Devoradores de mentes, aboleths, tiranos oculares e outras aberrações.",
+    "alfabeto": "Sem alfabeto próprio estabelecido."
   },
   {
     "nome": "Druidic",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
     "origem": "Círculos druídicos",
-    "descricao": "Idioma secreto das tradições e círculos druídicos, classificado entre os idiomas raros nas regras de 2024. O conhecimento desse idioma pode ser concedido por características de classe, em especial àqueles que seguem a tradição druídica.",
+    "descricao": "Você conhece o Druídico, o idioma secreto dos druidas. Você pode falar a língua e usá-la para deixar mensagens ocultas. Você e outros que conhecem o idioma percebem automaticamente essa mensagem.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Classes — Druida"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Classes — Druida",
+    "falantes_tipicos": "Druidas e integrantes de círculos druídicos.",
+    "alfabeto": "Não há alfabeto universal definido; utiliza marcas e mensagens secretas."
   },
   {
     "nome": "Ignan",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Fire / Primordial",
-    "descricao": "Dialeto de Primordial associado ao fogo e aos elementais ígneos. É mutuamente compreensível com os demais dialetos primordiais nas regras de 2024; o registro individual no Hub é apenas uma organização de catálogo.",
+    "descricao": "O Ignano é um dialeto do Primordial falado por criaturas elementais do fogo, pontuado por estalidos e sibilos agudos.",
     "status": "Dialeto de Primordial — registro individual no Hub",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — dialeto; registro separado é regra da casa",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial",
+    "falantes_tipicos": "Elementais do fogo e criaturas dos planos ígneos.",
+    "alfabeto": "Rúnico anão (dialeto de Primordial, em 5e)."
   },
   {
     "nome": "Infernal",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Diabos dos Nove Infernos",
-    "descricao": "Idioma raro originário dos diabos dos Nove Infernos. É separado do Abissal nas regras gerais de 2024 e conserva a associação à escrita infernal em materiais de D&D 5e.",
+    "descricao": "O Infernal é o idioma dos diabos e dos Nove Infernos. É rígido, preciso e formal, estruturado sob leis hierárquicas.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas",
+    "falantes_tipicos": "Diabos dos Nove Infernos; tieflings no Hub.",
+    "alfabeto": "Infernal."
   },
   {
     "nome": "Primordial",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Elementais",
-    "descricao": "Idioma raro dos elementais, organizado em quatro dialetos: Aquan (água), Auran (ar), Ignan (fogo) e Terran (terra). As regras de 2024 permitem a compreensão entre criaturas que conhecem dialetos primordiais diferentes.",
+    "descricao": "O Primordial é um idioma gutural, marcado por consoantes duras e vogais ressonantes. Abrange quatro dialetos: Aquano (água), Aurano (ar), Ignano (fogo) e Terrano (terra).",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial",
+    "falantes_tipicos": "Elementais e criaturas ligadas aos planos elementais.",
+    "alfabeto": "Rúnico anão (5e); escrita primordial em Eberron."
   },
   {
     "nome": "Sylvan",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Agreste das Fadas",
-    "descricao": "Idioma raro associado ao Agreste das Fadas e aos seres feéricos. Em Eberron, é ligado às criaturas feéricas e usa a escrita élfica.",
+    "descricao": "O Silvestre é a língua das criaturas feéricas do Agreste das Fadas. Utiliza escrita élfica e apresenta sonoridade musical e expressiva.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Eberron — Idiomas",
+    "falantes_tipicos": "Criaturas feéricas, fadas, sátiros e centauros.",
+    "alfabeto": "Élfico."
   },
   {
     "nome": "Terran",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Earth / Primordial",
-    "descricao": "Dialeto de Primordial associado à terra e às criaturas elementais terrestres. De acordo com as regras de 2024, é compreensível aos falantes dos demais dialetos de Primordial; o Hub o cataloga separadamente para consulta.",
+    "descricao": "O Terrano é um dialeto do Primordial falado por criaturas elementais da terra, pesado em estrondos graves e tons ríspidos.",
     "status": "Dialeto de Primordial — registro individual no Hub",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — dialeto; registro separado é regra da casa",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros, nota de Primordial",
+    "falantes_tipicos": "Elementais da terra e criaturas dos planos terrestres.",
+    "alfabeto": "Rúnico anão (dialeto de Primordial, em 5e)."
   },
   {
     "nome": "Thieves’ Cant",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024)",
     "origem": "Guildas Criminosas",
-    "descricao": "Linguagem secreta desenvolvida em diferentes guildas e comunidades criminosas. Figura como idioma raro em D&D 2024 e é concedida a ladinos por uma característica de classe; seu conhecimento não é o mesmo que falar uma língua comum a todos os habitantes de um reino.",
+    "descricao": "Durante seu treinamento de ladino, você aprendeu a gíria de ladrões, uma mistura secreta de dialeto, jargão e código que permite esconder mensagens em conversas aparentemente normais.",
     "status": "Ativo — 2024",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Classes — Ladino"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Classes — Ladino",
+    "falantes_tipicos": "Ladinos, ladrões e integrantes de guildas criminosas.",
+    "alfabeto": "Sem alfabeto próprio; emprega códigos, sinais e linguagem disfarçada."
   },
   {
     "nome": "Undercommon",
     "categoria": "Core — Rare",
     "fonte": "Player’s Handbook · Basic Rules (2024)",
     "origem": "Subterrâneo",
-    "descricao": "Idioma raro associado ao Subterrâneo, usado por povos que vivem ou mantêm relações comerciais nas regiões profundas do mundo. Em D&D 5e, sua escrita é apresentada na tradição élfica.",
+    "descricao": "O Subcomum é o idioma comercial do Subterrâneo (Underdark), falado por drow, duergar e svirfneblin. É derivado do Élfico.",
     "status": "Ativo — 2024",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Raros; Basic Rules 2014 — Idiomas",
+    "falantes_tipicos": "Drow, duergar, svirfneblin e comerciantes do Subterrâneo.",
+    "alfabeto": "Élfico."
   }
 ]

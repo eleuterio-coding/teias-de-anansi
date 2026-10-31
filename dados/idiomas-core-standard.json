@@ -4,109 +4,129 @@
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Sigil",
-    "descricao": "Língua franca das comunidades e viajantes de muitos mundos de D&D. O Livro do Jogador de 2024 situa sua origem em Sigil; em Eberron, o Comum é a principal língua de comércio de Khorvaire e a língua compartilhada pelas Cinco Nações.",
+    "descricao": "O Comum é a língua do comércio e da diplomacia por todo o multiverso.",
     "status": "Ativo — regra soberana 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Humanos, comerciantes, diplomatas e viajantes de diversos povos.",
+    "alfabeto": "Comum."
   },
   {
     "nome": "Common Sign Language",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025)",
     "origem": "Sigil",
-    "descricao": "Língua de sinais de origem atribuída a Sigil e incluída entre os idiomas padrão de D&D 2024. Utiliza sinais em vez da fala e pode ser escolhida nas mesmas condições gerais dos demais idiomas padrão.",
+    "descricao": "Língua visual e gestual de origem atribuída a Sigil. Permite a comunicação por sinais sem depender da fala e integra os idiomas padrão de D&D 2024. É distinta da Língua de Sinais Drow.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão",
+    "falantes_tipicos": "Pessoas de diferentes povos que utilizam a língua de sinais comum.",
+    "alfabeto": "Gestual; não se aplica alfabeto escrito."
   },
   {
     "nome": "Draconic",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Dragões",
-    "descricao": "Idioma originário dos dragões e associado também aos draconatos. É uma opção padrão em D&D 2024; em Eberron, os registros de sua forma escrita utilizam a escrita dracônica.",
+    "descricao": "O Dracônico é considerado um dos idiomas mais antigos e é frequentemente usado no estudo da magia. Soa áspero para a maioria das outras criaturas e inclui numerosas consoantes duras e sibilantes.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Dragões, draconatos e kobolds.",
+    "alfabeto": "Dracônico."
   },
   {
     "nome": "Dwarvish",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Anões",
-    "descricao": "Língua originária dos anões e difundida por suas comunidades. Em Eberron, é especialmente associada aos Mror Holds e utiliza a escrita anã.",
+    "descricao": "O Anão apresenta consoantes duras e sons guturais, características que também influenciam o sotaque de seus falantes ao usar outros idiomas.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Anões e comunidades de tradição anã.",
+    "alfabeto": "Rúnico anão (Dethek, em Faerûn)."
   },
   {
     "nome": "Elvish",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Elfos",
-    "descricao": "Língua originária dos elfos e preservada em diferentes tradições élficas. Em Eberron, é característica de Aerenal e Valenar e possui escrita élfica.",
+    "descricao": "O Élfico é fluido, com entonações sutis e gramática complexa. A literatura élfica é rica e variada, e suas canções e poemas são famosos entre outras raças.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Elfos e comunidades de tradição élfica.",
+    "alfabeto": "Élfico (Espruar, em Faerûn)."
   },
   {
     "nome": "Giant",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Gigantes",
-    "descricao": "Idioma originário dos gigantes. Em Eberron, é encontrado entre habitantes de Xen’drik e serve à comunicação entre povos daquela região.",
+    "descricao": "O Gigante é um idioma ancestral derivado do alfabeto Anão, falado por gigantes e ogros. É troante e ressonante.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Gigantes, ogros e golias.",
+    "alfabeto": "Rúnico anão (5e); escrita gigante em Eberron."
   },
   {
     "nome": "Gnomish",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Gnomos",
-    "descricao": "Língua originária dos gnomos. No cenário de Eberron, está associada a Zilargo e emprega a escrita anã.",
+    "descricao": "O Gnômico utiliza a escrita anã e é conhecido por tratados técnicos e registros de conhecimentos sobre o mundo natural.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Gnomos e suas comunidades.",
+    "alfabeto": "Rúnico anão."
   },
   {
     "nome": "Goblin",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Goblinóides",
-    "descricao": "Idioma originário dos povos goblinoides. Em Eberron, tem raízes na civilização dhakaani e é encontrado em Darguun, Droaam e nas Shadow Marches; ali, usa escrita própria goblin.",
+    "descricao": "O Goblin usa o alfabeto Anão, mas soa muito mais entrecortado e áspero, repleto de ordens ríspidas e sílabas agudas.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Goblins, hobgoblins e bugbears.",
+    "alfabeto": "Rúnico anão (5e); escrita goblin em Eberron."
   },
   {
     "nome": "Halfling",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Halflings",
-    "descricao": "Idioma originário dos halflings. Em Eberron, é característico das comunidades das Talenta Plains e costuma ser registrado na escrita do Comum.",
+    "descricao": "O Pequenino não é secreto, mas seus falantes relutam em ensiná-lo a outros povos. Sua tradição escrita é limitada, com poucas obras literárias.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Pequeninos e suas comunidades.",
+    "alfabeto": "Comum."
   },
   {
     "nome": "Orc",
     "categoria": "Core — Standard",
     "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Orcs",
-    "descricao": "Idioma originário dos orcs e classificado como padrão nas regras gerais de 2024. Em Eberron, é preservado sobretudo por tribos orcs mais isoladas e, nesse cenário, sua escrita deriva da escrita goblin.",
+    "descricao": "Idioma gutural e ríspido, sem sistema de escrita próprio original (adotou o alfabeto rúnico anão).",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/br-2024/creating-a-character",
     "proveniencia": "Oficial — D&D 2024",
-    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas"
+    "referencia_secao": "Criação de Personagem — Idiomas Padrão; Eberron — Idiomas",
+    "falantes_tipicos": "Orcs, meio-orcs.",
+    "alfabeto": "Rúnico (Dethek)."
   }
 ]

@@ -4,98 +4,116 @@
     "categoria": "Expanded — Ravnica",
     "fonte": "Guildmasters’ Guide to Ravnica",
     "origem": "Ravnica",
-    "descricao": "Idioma dos kraul, um dos povos de Ravnica. Guildmasters’ Guide to Ravnica o apresenta como uma língua padrão do cenário, com escrita própria denominada Kraul.",
+    "descricao": "O idioma Kraul consiste em estalidos de mandíbulas, raspagem de membros de quitina e estridulação rítmica.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/ggtr",
     "proveniencia": "Oficial — suplemento de Ravnica (2018)",
-    "referencia_secao": "Welcome to Ravnica — Languages"
+    "referencia_secao": "Welcome to Ravnica — Languages",
+    "falantes_tipicos": "Kraul de Ravnica.",
+    "alfabeto": "Kraul."
   },
   {
     "nome": "Loxodon",
     "categoria": "Expanded — Ravnica",
     "fonte": "Guildmasters’ Guide to Ravnica",
     "origem": "Ravnica",
-    "descricao": "Idioma dos loxodons de Ravnica. O guia de cenário o inclui entre as línguas faladas na cidade-mundo e indica o uso da escrita élfica para registrá-lo.",
+    "descricao": "O Loxodônico é um idioma de ritmo lento e sonoridade ressonante, com vocalizações moduladas por barritos e reverberações profundas.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/ggtr",
     "proveniencia": "Oficial — suplemento de Ravnica (2018)",
-    "referencia_secao": "Welcome to Ravnica — Languages"
+    "referencia_secao": "Welcome to Ravnica — Languages",
+    "falantes_tipicos": "Loxodontes de Ravnica.",
+    "alfabeto": "Élfico."
   },
   {
     "nome": "Vedalken",
     "categoria": "Expanded — Ravnica",
     "fonte": "Guildmasters’ Guide to Ravnica",
     "origem": "Ravnica",
-    "descricao": "Idioma dos vedalkens de Ravnica, preservado entre suas comunidades. Guildmasters’ Guide to Ravnica registra tanto a língua quanto uma escrita específica chamada Vedalken.",
+    "descricao": "O Vedalkiano é um idioma preciso e estruturado, associado ao raciocínio lógico, à terminologia técnica e a debates intelectuais.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/ggtr",
     "proveniencia": "Oficial — suplemento de Ravnica (2018)",
-    "referencia_secao": "Welcome to Ravnica — Languages"
+    "referencia_secao": "Welcome to Ravnica — Languages",
+    "falantes_tipicos": "Vedalkianos de Ravnica.",
+    "alfabeto": "Vedalkiano (escrita vedalken)."
   },
   {
     "nome": "Leonin",
     "categoria": "Expanded — Theros",
     "fonte": "Mythic Odysseys of Theros",
     "origem": "Theros",
-    "descricao": "Idioma próprio dos leonin de Theros. Mythic Odysseys of Theros o apresenta entre as línguas do cenário e registra o uso da escrita do Comum.",
+    "descricao": "O Leonino é um idioma de sonoridade forte, com rosnados graves, ronronados e vocalizações que expressam orgulho e história comunitária.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/moot",
     "proveniencia": "Oficial — suplemento de Theros (2020)",
-    "referencia_secao": "Welcome to Theros — Languages"
+    "referencia_secao": "Welcome to Theros — Languages",
+    "falantes_tipicos": "Leoninos de Theros.",
+    "alfabeto": "Comum."
   },
   {
     "nome": "Gith",
     "categoria": "Expanded — Planar",
     "fonte": "Mordenkainen-era 5e / D&D Beyond",
     "origem": "Gith",
-    "descricao": "Idioma dos gith, povo dividido entre comunidades como githyanki e githzerai. É uma tradição linguística ligada à história planar dessas comunidades, registrada nas opções de D&D 5e anteriores à revisão de 2024.",
+    "descricao": "O Gith é o idioma dos povos githyanki e githzerai, ligado às tradições de suas comunidades planares. Sua fala pode apresentar sons curtos e estalados.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/mtof",
     "proveniencia": "Oficial — D&D 5e legado (2018)",
-    "referencia_secao": "Mordenkainen’s Tome of Foes — Gith"
+    "referencia_secao": "Mordenkainen’s Tome of Foes — Gith",
+    "falantes_tipicos": "Githyanki e githzerai.",
+    "alfabeto": "Não especificado nas fontes catalogadas."
   },
   {
     "nome": "Hadozee",
     "categoria": "Expanded — Spelljammer",
     "fonte": "Spelljammer: Adventures in Space (2022) · legado de edições anteriores",
     "origem": "Espaço Selvagem",
-    "descricao": "Registro linguístico legado vinculado aos hadozee e ao cenário de Spelljammer. Embora publicações antigas de Spelljammer mencionem uma língua hadozee, a espécie em Spelljammer: Adventures in Space (2022) não confirma uma escolha de idioma independente com esse nome. O Hub mantém esta entrada por compatibilidade, sem atribuí-la às regras oficiais de 2022.",
+    "descricao": "A fala associada aos hadozee apresenta vocalizações rápidas e breves, adaptadas à comunicação em embarcações espaciais. O registro de uma língua hadozee independente é legado; o suplemento de Spelljammer de 2022 não a confirma como idioma separado.",
     "status": "Legado — idioma independente não confirmado na 5e de 2022",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/sais",
     "proveniencia": "Legado — idioma próprio não confirmado na 5e de 2022",
-    "referencia_secao": "Astral Adventurer’s Guide — Hadozee; verificação de proveniência"
+    "referencia_secao": "Astral Adventurer’s Guide — Hadozee; verificação de proveniência",
+    "falantes_tipicos": "Hadozee do cenário Spelljammer (registro legado).",
+    "alfabeto": "Não especificado no material vigente."
   },
   {
     "nome": "Thri-kreen",
     "categoria": "Expanded — Spelljammer",
     "fonte": "Spelljammer: Adventures in Space",
     "origem": "Espaço Selvagem",
-    "descricao": "Idioma próprio dos thri-kreen, cuja fala envolve sons e movimentos difíceis de reproduzir por outras espécies. Spelljammer: Adventures in Space explica que thri-kreen não conseguem falar normalmente os outros idiomas que conhecem e dispõem de telepatia para comunicar ideias com criaturas capazes de compreender ao menos um idioma.",
+    "descricao": "A fala dos thri-kreen combina estalidos de mandíbulas e movimentos corporais difíceis de reproduzir por outras espécies. Para se comunicar com outros povos, eles também recorrem à telepatia.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/sais",
     "proveniencia": "Oficial — suplemento Spelljammer (2022)",
-    "referencia_secao": "Astral Adventurer’s Guide — Thri-kreen; Telepathy"
+    "referencia_secao": "Astral Adventurer’s Guide — Thri-kreen; Telepathy",
+    "falantes_tipicos": "Thri-kreen do Espaço Selvagem.",
+    "alfabeto": "Não especificado; a comunicação inclui sons e gestos."
   },
   {
     "nome": "Kenderspeak",
     "categoria": "Expanded — Dragonlance",
     "fonte": "Dragonlance: Shadow of the Dragon Queen",
     "origem": "Krynn",
-    "descricao": "Idioma dos kender de Krynn, associado especialmente às regiões de Goodlund e Hylo. Em Dragonlance: Shadow of the Dragon Queen, integra as línguas padrão de Ansalon e utiliza a escrita do Comum.",
+    "descricao": "A Fala Kender é caracterizada por um fluxo rápido de ideias, anedotas, mudanças de assunto e curiosidade constante.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/sotdq",
     "proveniencia": "Oficial — suplemento Dragonlance (2022)",
-    "referencia_secao": "War Comes to Krynn — Life on Ansalon — Languages"
+    "referencia_secao": "War Comes to Krynn — Life on Ansalon — Languages",
+    "falantes_tipicos": "Kender de Krynn, especialmente de Goodlund e Hylo.",
+    "alfabeto": "Comum."
   },
   {
     "nome": "Ogre",
     "categoria": "Expanded — Dragonlance",
     "fonte": "Dragonlance: Shadow of the Dragon Queen",
     "origem": "Krynn",
-    "descricao": "Língua dos ogros de Krynn, especialmente associada às regiões de Blode e Kern. Dragonlance: Shadow of the Dragon Queen a inclui entre as línguas raras de Ansalon e indica uma escrita própria Ogre.",
+    "descricao": "Os ogros falam um dialeto rústico e simplificado do Gigante, limitado a um vocabulário básico focado em comida, combate e dominação física.",
     "status": "Ativo — 5e retido",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/sotdq",
     "proveniencia": "Oficial — suplemento Dragonlance (2022)",
-    "referencia_secao": "War Comes to Krynn — Life on Ansalon — Languages"
+    "referencia_secao": "War Comes to Krynn — Life on Ansalon — Languages",
+    "falantes_tipicos": "Ogros de Krynn, especialmente de Blode e Kern.",
+    "alfabeto": "Ogro."
   }
 ]

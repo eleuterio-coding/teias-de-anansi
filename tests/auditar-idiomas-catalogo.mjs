@@ -18,4 +18,14 @@ assert.ok(native.includes("[['Minotaur','Minotauro'],['Common']]"),'Espécie Min
 const mechanics=read('scripts/character-builder/language-mechanics.js');
 assert.ok(mechanics.includes("fixed:['Gíria dos Ladrões'],choose:1,pool:ALL_LANGUAGES"));
 assert.ok(mechanics.includes('RETIRED_LANGUAGE_KEYS'));
-console.log('Catálogo de 40 idiomas e localização PT-BR: OK');
+for(const row of rows){
+ for(const key of ['falantes_tipicos','alfabeto','descricao'])
+   assert.ok(typeof row[key]==='string' && row[key].trim().length>0,`${row.nome}: falta ${key}`);
+}
+for(const label of ['Falantes Típicos:','Alfabeto:','Descrição:'])
+ assert.ok(html.includes(label),'Card sem campo obrigatório: '+label);
+for(const forbidden of ['Proveniência:','Consultar fonte'])
+ assert.ok(!html.includes(forbidden),'Card voltou a mostrar '+forbidden);
+assert.equal(rows.find(x=>x.nome==='Orc').alfabeto,'Rúnico (Dethek).');
+assert.equal(rows.find(x=>x.nome==='Orc').descricao,'Idioma gutural e ríspido, sem sistema de escrita próprio original (adotou o alfabeto rúnico anão).');
+console.log('Catálogo de 40 idiomas com falantes, alfabeto e descrição em PT-BR: OK');

@@ -4,87 +4,103 @@
     "categoria": "Expanded — Eberron",
     "fonte": "Eberron: Rising from the Last War (2019)",
     "origem": "Eberron",
-    "descricao": "Língua de Eberron associada aos daelkyr, às aberrações e a habitantes de Khyber. O guia Eberron: Rising from the Last War a relaciona a uma escrita denominada Daelkyr; o catálogo do Hub a preserva como idioma próprio do cenário.",
+    "descricao": "O Daelkyr é uma língua alienígena associada a Xoriat, aos senhores da loucura e às suas criações. Sua sonoridade pode ser perturbadora e sua estrutura difere da de idiomas mais familiares.",
     "status": "Ativo — 5e retido · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/erftlw",
     "proveniencia": "Oficial — suplemento de Eberron (2019)",
-    "referencia_secao": "Introdução — Idiomas; Línguas Exóticas de Eberron"
+    "referencia_secao": "Introdução — Idiomas; Línguas Exóticas de Eberron",
+    "falantes_tipicos": "Daelkyr, aberrações e habitantes de Khyber.",
+    "alfabeto": "Daelkyr."
   },
   {
     "nome": "Gnoll",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Eberron / Fronteira Ocidental",
-    "descricao": "Idioma associado aos gnolls da Fronteira Ocidental de Eberron. Frontiers of Eberron: Quickstone o inclui entre os idiomas raros adequados a povos e personagens dessa região.",
+    "descricao": "O idioma Gnoll consiste em gargalhadas, latidos e uivos, pontuados por linguagem corporal e odor. Não possui forma escrita.",
     "status": "Ativo — Quickstone 2024 (terceiros)",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
-    "referencia_secao": "Frontier Characters — Languages"
+    "referencia_secao": "Frontier Characters — Languages",
+    "falantes_tipicos": "Gnolls da Fronteira Ocidental de Eberron.",
+    "alfabeto": "Não especificado nas fontes catalogadas."
   },
   {
     "nome": "Harpy",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024) · Regra da Casa — Hub de RPG",
     "origem": "Eberron / Droaam / Fronteira Ocidental",
-    "descricao": "Linguagem vocal criada para as harpias no Hub, tomando como inspiração a tradição de canto e voz das harpias de Droaam. Melodia, inflexão e ritmo podem carregar significado; conhecer Harpia não concede os efeitos sobrenaturais do canto de uma harpia. Este idioma é uma regra da casa, não um idioma publicado como tal por D&D.",
+    "descricao": "Idioma vocal das harpias, com sons agudos e modulados, cantos e chamados de aves. No Hub, ritmo, melodia e inflexão podem transmitir significado, mas falar Harpia não concede poderes sobrenaturais.",
     "status": "Regra da Casa — exclusivo de Harpias",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Regra da Casa — inspirada em Quickstone",
-    "referencia_secao": "Frontier Characters — Harpy; adaptação exclusiva do Hub"
+    "referencia_secao": "Frontier Characters — Harpy; adaptação exclusiva do Hub",
+    "falantes_tipicos": "Harpias de Droaam (regra da casa do Hub).",
+    "alfabeto": "Não definido; idioma vocal criado para o Hub."
   },
   {
     "nome": "Quori",
     "categoria": "Expanded — Eberron",
     "fonte": "Eberron: Rising from the Last War (2019)",
     "origem": "Eberron",
-    "descricao": "Idioma dos quori, espíritos vinculados a Dal Quor, e de comunidades de Eberron com ligação aos sonhos, como os kalashtar e os Inspired. Eberron: Rising from the Last War o inclui entre os idiomas exóticos e registra escrita Quori.",
+    "descricao": "O Quori é o idioma nativo de Dal Quor, a Região dos Sonhos. É projetado para transmitir conceitos abstratos, nuances emocionais e estados psíquicos.",
     "status": "Ativo — 5e retido · descrição ampliada pelos PDFs",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/erftlw",
     "proveniencia": "Oficial — suplemento de Eberron (2019)",
-    "referencia_secao": "Introdução — Idiomas; Línguas Exóticas de Eberron"
+    "referencia_secao": "Introdução — Idiomas; Línguas Exóticas de Eberron",
+    "falantes_tipicos": "Quori, kalashtar e Inspirados de Eberron.",
+    "alfabeto": "Quori."
   },
   {
     "nome": "Serpentine",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Eberron / Fronteira Ocidental",
-    "descricao": "Idioma associado às medusas de Droaam e da Fronteira Ocidental de Eberron. Quickstone o apresenta como uma opção cultural e linguística dessas comunidades, sem que isso conceda qualquer poder de petrificação.",
+    "descricao": "O Serpentino é um idioma de sonoridade sibilante associado às medusas de Eberron e, por convenção do Hub, aos yuan-ti. Emprega sons prolongados semelhantes a sibilos.",
     "status": "Ativo — Quickstone 2024 (terceiros)",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
-    "referencia_secao": "Frontier Characters — Languages; Medusa"
+    "referencia_secao": "Frontier Characters — Languages; Medusa",
+    "falantes_tipicos": "Medusas de Droaam e yuan-ti, conforme as convenções do Hub.",
+    "alfabeto": "Não especificado nas fontes catalogadas."
   },
   {
     "nome": "Stonegrind",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Eberron / Fronteira Ocidental",
-    "descricao": "Idioma opcional das gárgulas de Grimstone, em Eberron, formado por sons obtidos do atrito entre pedras. Quem não é gárgula pode aprender a compreendê-lo, mas necessita de pedras para produzir seus sons adequadamente.",
+    "descricao": "O Móipedra é o idioma das gárgulas de Grimstone, em Eberron. Seus sons são produzidos pelo atrito entre pedras, lembrando rochas sendo moídas; outras criaturas podem compreendê-lo, mas precisam de pedras para reproduzi-lo.",
     "status": "Opcional — Quickstone 2024 (terceiros)",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
-    "referencia_secao": "Frontier Characters — Languages; Gargoyle"
+    "referencia_secao": "Frontier Characters — Languages; Gargoyle",
+    "falantes_tipicos": "Gárgulas de Grimstone, em Eberron.",
+    "alfabeto": "Não especificado; a comunicação é feita pelo atrito entre pedras."
   },
   {
     "nome": "Tauric",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Eberron / Fronteira Ocidental",
-    "descricao": "Idioma opcional associado aos clãs de minotauros dos Barrens, na Fronteira Ocidental de Eberron. Seu uso identifica tradições linguísticas específicas desses clãs e sua identidade regional.",
+    "descricao": "O Táurico é o idioma dos clãs de minotauros dos Barrens, na Fronteira Ocidental de Eberron. Seu uso identifica tradições e vínculos culturais específicos desses clãs.",
     "status": "Opcional — Quickstone 2024 (terceiros)",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
-    "referencia_secao": "Frontier Characters — Languages"
+    "referencia_secao": "Frontier Characters — Languages",
+    "falantes_tipicos": "Clãs de minotauros dos Barrens, em Eberron.",
+    "alfabeto": "Não especificado nas fontes catalogadas."
   },
   {
     "nome": "Wuura'gaa",
     "categoria": "Expanded — Eberron",
     "fonte": "Frontiers of Eberron: Quickstone (2024)",
     "origem": "Floresta Vigilante",
-    "descricao": "Idioma opcional dos worgs que habitam Watching Wood, em Eberron. Sua associação é local e cultural: não é apresentado como língua universal de todos os worgs dos mundos de D&D.",
+    "descricao": "O Wuura'gaa é a língua dos worgs de Watching Wood, em Eberron, ligada à identidade e à comunicação dessa comunidade regional.",
     "status": "Opcional — Quickstone 2024 (terceiros)",
     "fonte_url": "https://www.dndbeyond.com/sources/dnd/foeq",
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
-    "referencia_secao": "Frontier Characters — Languages; Worg"
+    "referencia_secao": "Frontier Characters — Languages; Worg",
+    "falantes_tipicos": "Worgs de Watching Wood, em Eberron.",
+    "alfabeto": "Não especificado nas fontes catalogadas."
   }
 ]
