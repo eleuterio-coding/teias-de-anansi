@@ -54,6 +54,8 @@ jobs:
           node --check scripts/character-builder/language-ui.js
           node --check scripts/character-builder/profile-ui.js
           node --check scripts/character-builder.js
+      - name: Auditar catálogo de 40 idiomas e localização
+        run: node tests/auditar-idiomas-catalogo.mjs
       - name: Auditar contrato de idiomas
         run: |
           python - <<'PY'
@@ -73,7 +75,7 @@ jobs:
               "klass.slug==='druid'&&level>=1",
               "fixed:['Druídico']",
               "klass.slug==='rogue'&&level>=1",
-              "fixed:['Cant dos Ladrões'],choose:1,pool:ALL_LANGUAGES",
+              "fixed:['Gíria dos Ladrões'],choose:1,pool:ALL_LANGUAGES",
               "klass.slug==='ranger'&&level>=2",
               "choose:2,pool:ALL_LANGUAGES",
               'languageGrantDefinitions','sanitizeLanguageChoices','languageOutcome',
@@ -128,7 +130,7 @@ jobs:
               "[['Meio-Elfo','Half-Elf'],['Common','Elvish']]",
               "[['Meio-Orc','Half-Orc'],['Common','Orc']]",
               "[['Metamorfo','Changeling'],['Common']]",
-              "[['Minotaur','Minotauro'],['Common','Minotaur']]",
+              "[['Minotaur','Minotauro'],['Common']]",
               "[['Orc'],['Common','Orc']]",
               "[['Satyr','Sátiro'],['Common','Sylvan']]",
               "[['Tabaxi'],['Common']]",
@@ -151,5 +153,5 @@ jobs:
               raise RuntimeError('Idioma Harpy não está registrado como exclusivo de Harpias no catálogo.')
           if "fixed:['Comum'],choose:2,pool:STANDARD_LANGUAGES" in mechanics:
               raise RuntimeError('Comum não deve ser concedido pelo núcleo; idiomas nativos vêm da raça.')
-          print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Cant dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
+          print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Gíria dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
           PY

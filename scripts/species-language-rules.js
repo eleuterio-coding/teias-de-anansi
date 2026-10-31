@@ -35,7 +35,7 @@ const NATIVE_LANGUAGE_ROWS=[
   [['Meio-Elfo','Half-Elf'],['Common','Elvish']],
   [['Meio-Orc','Half-Orc'],['Common','Orc']],
   [['Metamorfo','Changeling'],['Common']],
-  [['Minotaur','Minotauro'],['Common','Minotaur']],
+  [['Minotaur','Minotauro'],['Common']],
   [['Orc'],['Common','Orc']],
   [['Satyr','Sátiro'],['Common','Sylvan']],
   [['Tabaxi'],['Common']],
