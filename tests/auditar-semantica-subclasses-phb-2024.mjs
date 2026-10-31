@@ -22,25 +22,25 @@ assert.equal(mech.subclasses.length,48);
 const expected=new Map();
 for(const[klass,def]of Object.entries(matrix.classes||{})){
   assert.ok(Array.isArray(def.niveis)&&def.niveis.length>=3,`${klass}: progressão normativa ausente.`);
-  assert.equal(def.subclasses?.length,4,`${klass}: PHB 2024 deve ter 4 subclasses.`);
+  assert.equal(def.subclasses?.length,4,`${klass}: Player’s Handbook deve ter 4 subclasses.`);
   for(const name of def.subclasses){
     assert.ok(!expected.has(name),`Identidade duplicada na matriz: ${name}`);
     expected.set(name,{klass,levels:def.niveis.map(Number)});
   }
 }
-assert.equal(expected.size,48,'A matriz precisa enumerar exatamente 48 subclasses PHB 2024.');
+assert.equal(expected.size,48,'A matriz precisa enumerar exatamente 48 subclasses Player’s Handbook.');
 
 // Catálogo é a camada que associa identidade, classe e proveniência.
 const catalogRows=(catalog.subclasses||[]).filter(x=>sourceId(x)==='phb-2024');
-assert.equal(catalogRows.length,48,'Catálogo precisa conter exatamente 48 subclasses PHB 2024.');
-assert.deepEqual(sorted(catalogRows.map(x=>x.nome)),sorted(expected.keys()),'Catálogo e matriz divergem nas identidades PHB 2024.');
+assert.equal(catalogRows.length,48,'Catálogo precisa conter exatamente 48 subclasses Player’s Handbook.');
+assert.deepEqual(sorted(catalogRows.map(x=>x.nome)),sorted(expected.keys()),'Catálogo e matriz divergem nas identidades Player’s Handbook.');
 for(const row of catalogRows){
   const exp=expected.get(row.nome);
-  assert.ok(exp,`Subclasse inesperada no catálogo PHB 2024: ${row.nome}`);
+  assert.ok(exp,`Subclasse inesperada no catálogo Player’s Handbook: ${row.nome}`);
   assert.equal(row.classe,exp.klass,`${row.nome}: classe divergente no catálogo.`);
   assert.equal(row.ano,2024,`${row.nome}: ano divergente.`);
   assert.equal(row.natureza,'oficial',`${row.nome}: natureza precisa permanecer oficial.`);
-  assert.equal(row.status,'vigente_mais_recente',`${row.nome}: versão PHB 2024 precisa permanecer vigente.`);
+  assert.equal(row.status,'vigente_mais_recente',`${row.nome}: versão Player’s Handbook precisa permanecer vigente.`);
 }
 
 // Mecânicas são uma camada enxuta por identidade; classe não é duplicada nesse arquivo.
@@ -50,8 +50,8 @@ for(const row of mech.subclasses||[]){
   assert.ok(!mechanics.has(row.nome),`Mecânica duplicada: ${row.nome}`);
   mechanics.set(row.nome,row);
 }
-assert.equal(mechanics.size,48,'Mecânicas precisam conter exatamente 48 identidades PHB 2024.');
-assert.deepEqual(sorted(mechanics.keys()),sorted(expected.keys()),'Mecânicas e matriz divergem nas identidades PHB 2024.');
+assert.equal(mechanics.size,48,'Mecânicas precisam conter exatamente 48 identidades Player’s Handbook.');
+assert.deepEqual(sorted(mechanics.keys()),sorted(expected.keys()),'Mecânicas e matriz divergem nas identidades Player’s Handbook.');
 for(const[name,exp]of expected){
   const row=mechanics.get(name);
   assert.ok(Array.isArray(row.progressao)&&row.progressao.length,`${name}: progressão mecânica vazia.`);
@@ -111,4 +111,4 @@ assert.match(sorcerer,/if\(l>=18\)resource\('Dragon Companion',1,'Descanso Longo
 const joined=[JSON.stringify(matrix),JSON.stringify(mech),JSON.stringify(catalog),wizard,sorcerer].join('\n').toLowerCase();
 assert.ok(!joined.includes('supabase'),'Escopo normativo de subclasses não pode introduzir Supabase.');
 
-console.log('Subclasses PHB 2024 validadas: 48 identidades/progressões fechadas; semântica detalhada de Evoker, War Domain e Draconic Sorcery alinhada à fonte e ao runtime conhecido.');
+console.log('Subclasses Player’s Handbook validadas: 48 identidades/progressões fechadas; semântica detalhada de Evoker, War Domain e Draconic Sorcery alinhada à fonte e ao runtime conhecido.');

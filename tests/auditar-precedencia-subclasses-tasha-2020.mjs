@@ -50,15 +50,15 @@ for(const row of tashaCatalog){
 }
 
 const replacements=matrix.substituidas_por_2024||[];
-assert.equal(replacements.length,8,'Precisamos registrar exatamente as 8 subclasses Tasha substituídas pelo PHB 2024.');
+assert.equal(replacements.length,8,'Precisamos registrar exatamente as 8 subclasses Tasha substituídas pelo Player’s Handbook.');
 const policyReplacements=(precedence.substituicoes||[]).filter(x=>x.fonte_anterior==='tasha-2020'&&x.fonte_vigente==='phb-2024');
-assert.equal(policyReplacements.length,8,'Política runtime precisa conter as 8 substituições Tasha → PHB 2024.');
+assert.equal(policyReplacements.length,8,'Política runtime precisa conter as 8 substituições Tasha → Player’s Handbook.');
 for(const old of replacements){
  const rule=policyReplacements.find(x=>x.classe===old.classe&&x.nome_anterior===old.nome_anterior&&x.nome_vigente===old.nome_vigente);
  assert.ok(rule,`Substituição ausente da política runtime: ${old.nome_anterior} → ${old.nome_vigente}`);
  assert.ok(!tasha.subclasses.some(x=>x.nome===old.nome_anterior),`Versão Tasha substituída reapareceu nas mecânicas: ${old.nome_anterior}`);
  assert.ok(!tashaCatalog.some(x=>x.nome===old.nome_anterior),`Versão Tasha substituída reapareceu no catálogo legado: ${old.nome_anterior}`);
- const target=phb.subclasses.find(x=>x.nome===old.nome_vigente);assert.ok(target,`Alvo PHB 2024 ausente: ${old.nome_vigente}`);
+ const target=phb.subclasses.find(x=>x.nome===old.nome_vigente);assert.ok(target,`Alvo Player’s Handbook ausente: ${old.nome_vigente}`);
  const targetCatalog=(catalog.subclasses||[]).find(x=>x.fonte_id==='phb-2024'&&x.nome===old.nome_vigente&&x.classe===old.classe);
  assert.ok(targetCatalog,`Alvo vigente não encontrado no catálogo PHB: ${old.nome_vigente}`);
  assert.equal(targetCatalog.status,'vigente_mais_recente',`${old.nome_vigente}: alvo precisa permanecer vigente_mais_recente.`);
@@ -77,7 +77,7 @@ for(const[oldName,newName]of expectedRenames){
 }
 
 const p=precedence.prioridade_fontes||{};
-assert.ok(Number(p['phb-2024'])>Number(p['tasha-2020']),'PHB 2024 deve ter prioridade maior que Tasha 2020.');
+assert.ok(Number(p['phb-2024'])>Number(p['tasha-2020']),'Player’s Handbook deve ter prioridade maior que Tasha 2020.');
 assert.ok(Number(p['phb-2024'])>Number(p['quickstone-2024']),'Fonte oficial atual deve superar conteúdo terceiro.');
 assert.ok(Number(p['tasha-2020'])>Number(p['quickstone-2024']),'Fonte oficial legada deve superar conteúdo terceiro quando a identidade conflita.');
 assert.ok(runtime.includes("const PRECEDENCE='dados/precedencia-subclasses.json'"),'Runtime de mecânicas precisa carregar a política de precedência.');
@@ -91,4 +91,4 @@ assert.ok(catalogsRuntime.includes('originalName:s.nome')&&catalogsRuntime.inclu
 const all=[matrix,precedence,tasha,phb,catalog].map(JSON.stringify).join('\n').toLowerCase()+runtime.toLowerCase()+catalogsRuntime.toLowerCase();
 assert.ok(!all.includes('supabase'),'Precedência de subclasses não pode introduzir Supabase.');
 
-console.log('Precedência Tasha 2020 → PHB 2024 validada: 26 no escopo, 18 legados únicos, 8 substituições e 4 equivalências renomeadas protegidas no dado, catálogo e runtime mecânico.');
+console.log('Precedência Tasha 2020 → Player’s Handbook validada: 26 no escopo, 18 legados únicos, 8 substituições e 4 equivalências renomeadas protegidas no dado, catálogo e runtime mecânico.');

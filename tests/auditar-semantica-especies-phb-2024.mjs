@@ -49,4 +49,4 @@ has(current.find(x=>x.id==='chthonic-2024')?.nivel5,'Ray of Enfeeblement');
 
 const all=JSON.stringify({aasimarPkg,tiefling}).toLowerCase();
 assert.ok(!all.includes('supabase'),'Espécies PHB não podem introduzir Supabase.');
-console.log('Espécies PHB 2024 validadas: 10 identidades core (9 SRD pinadas + Aasimar local), atributos desacoplados e invariantes Aasimar/Tiefling.');
+console.log('Espécies Player’s Handbook validadas: 10 identidades core (9 SRD pinadas + Aasimar local), atributos desacoplados e invariantes Aasimar/Tiefling.');

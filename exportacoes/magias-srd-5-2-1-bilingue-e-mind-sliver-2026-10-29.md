@@ -222,7 +222,7 @@ Você aponta para uma criatura dentro do alcance e sussurra uma mensagem. Apenas
 
 ## Mind Sliver —
 **Círculo:** Truque  
-**Fonte:** Player’s Handbook (2024), texto fornecido pelo usuário  
+**Fonte:** Player’s Handbook, texto fornecido pelo usuário  
 **ID no Hub:** `mind-sliver`  
 
 ### English

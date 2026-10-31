@@ -47,5 +47,5 @@ export async function loadSpells(){
   const byName=new Map(arr(source.itens).map(x=>[key(x.name),x]));
   for(const spell of items){const full=byName.get(key(spell.originalName));if(full){spell.tashaUserEdition=full;spell.tashaUserText=spell.source==='tasha-2020'?'':full.description;spell.tashaUserStatblock=full.statblock;if(spell.source==='tasha-2020')spell.description=full.description;}}
  }catch(e){state.warnings.push(`Transcrições de Tasha indisponíveis: ${e.message}`)}
- return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player's Handbook (2024)"))
+ return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player’s Handbook"))
 }

@@ -35,27 +35,27 @@ assert.deepEqual(sorted(xCatalog.map(x=>x.nome)),sorted(retained.keys()),'Catál
 for(const row of xCatalog){assert.equal(row.classe,retained.get(row.nome),`${row.nome}: classe divergente.`);assert.equal(row.natureza,'oficial',`${row.nome}: natureza deve ser oficial.`);assert.equal(row.status,'legado_com_conteudo_unico',`${row.nome}: status deve permanecer legado_com_conteudo_unico.`);assert.equal(row.ano,2017,`${row.nome}: ano divergente.`)}
 
 const replacements=matrix.substituidas_por_2024||[];
-assert.equal(replacements.length,4,'Xanathar precisa registrar quatro substituições pelo PHB 2024.');
+assert.equal(replacements.length,4,'Xanathar precisa registrar quatro substituições pelo Player’s Handbook.');
 const policy=(precedence.substituicoes||[]).filter(x=>x.fonte_anterior==='xanathar-2017'&&x.fonte_vigente==='phb-2024');
-assert.equal(policy.length,4,'Política runtime precisa conter quatro substituições Xanathar → PHB 2024.');
+assert.equal(policy.length,4,'Política runtime precisa conter quatro substituições Xanathar → Player’s Handbook.');
 for(const old of replacements){
  assert.ok(policy.some(x=>x.classe===old.classe&&x.nome_anterior===old.nome_anterior&&x.nome_vigente===old.nome_vigente),`Substituição ausente: ${old.nome_anterior} → ${old.nome_vigente}`);
  assert.ok(!(xanathar.subclasses||[]).some(x=>x.nome===old.nome_anterior),`Versão Xanathar substituída reapareceu nas mecânicas: ${old.nome_anterior}`);
  assert.ok(!xCatalog.some(x=>x.nome===old.nome_anterior),`Versão Xanathar substituída reapareceu no catálogo: ${old.nome_anterior}`);
- assert.ok((phb.subclasses||[]).some(x=>x.nome===old.nome_vigente),`Alvo PHB 2024 ausente: ${old.nome_vigente}`);
+ assert.ok((phb.subclasses||[]).some(x=>x.nome===old.nome_vigente),`Alvo Player’s Handbook ausente: ${old.nome_vigente}`);
  const active=(catalog.subclasses||[]).find(x=>x.fonte_id==='phb-2024'&&x.classe===old.classe&&x.nome===old.nome_vigente);
  assert.ok(active,`Alvo vigente ausente no catálogo: ${old.nome_vigente}`);
  assert.equal(active.status,'vigente_mais_recente',`${old.nome_vigente}: alvo vigente perdeu status de precedência.`);
 }
 
-assert.deepEqual(matrix.renomeadas,[{classe:'Warlock',nome_anterior:'The Celestial',nome_vigente:'Celestial Patron'}],'Renomeação Xanathar → PHB 2024 precisa ser explícita e única.');
+assert.deepEqual(matrix.renomeadas,[{classe:'Warlock',nome_anterior:'The Celestial',nome_vigente:'Celestial Patron'}],'Renomeação Xanathar → Player’s Handbook precisa ser explícita e única.');
 assert.ok(policy.some(x=>x.nome_anterior==='The Celestial'&&x.nome_vigente==='Celestial Patron'),'Runtime precisa conhecer The Celestial → Celestial Patron.');
 const p=precedence.prioridade_fontes||{};
-assert.ok(Number(p['phb-2024'])>Number(p['xanathar-2017']),'PHB 2024 deve superar Xanathar 2017.');
+assert.ok(Number(p['phb-2024'])>Number(p['xanathar-2017']),'Player’s Handbook deve superar Xanathar 2017.');
 assert.ok(Number(p['xanathar-2017'])>Number(p['quickstone-2024']),'Oficial legado deve superar terceiro em colisão de identidade.');
 assert.ok(mechanicsRuntime.includes("const PRECEDENCE='dados/precedencia-subclasses.json'"),'Runtime mecânico deve consumir a política de precedência.');
 assert.ok(catalogsRuntime.includes("json('dados/precedencia-subclasses.json')"),'Catálogo runtime deve consumir a política de precedência.');
 
 const all=[matrix,precedence,xanathar,phb,catalog].map(JSON.stringify).join('\n').toLowerCase()+mechanicsRuntime.toLowerCase()+catalogsRuntime.toLowerCase();
 assert.ok(!all.includes('supabase'),'Auditoria Xanathar não pode introduzir Supabase.');
-console.log('Precedência Xanathar 2017 → PHB 2024 validada: 31 no escopo, 27 legados únicos, 4 substituições e 1 equivalência renomeada.');
+console.log('Precedência Xanathar 2017 → Player’s Handbook validada: 31 no escopo, 27 legados únicos, 4 substituições e 1 equivalência renomeada.');

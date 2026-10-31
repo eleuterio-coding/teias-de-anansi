@@ -16,7 +16,7 @@ assert.equal((srd.items||[]).length,4,'SRD 5.2.1 deve fornecer exatamente 4 ante
 assert.equal(phb.controle?.quantidade,11,'Arquivo PHB local deve declarar 11 antecedentes.');
 assert.equal((phb.items||[]).length,11,'Arquivo PHB local deve conter 11 antecedentes.');
 const wayfarers=(open.items||[]).filter(x=>fold(x.nome_original||x.nome)==='wayfarer'&&x.compatibilidade?.ruleset==='5.5e');
-assert.equal(wayfarers.length,1,'Wayfarer PHB 2024 deve existir exatamente uma vez no arquivo aberto adicional.');
+assert.equal(wayfarers.length,1,'Wayfarer Player’s Handbook deve existir exatamente uma vez no arquivo aberto adicional.');
 
 function structured(item,bucket){
  const ds=item.mecanica?.dados_especificos||{};
@@ -54,4 +54,4 @@ assert.equal(STANDARD_BACKGROUND_PACKAGE_B_GP,50,'Regra central de antecedentes 
 const source=fs.readFileSync('scripts/character-builder/starting-equipment-rules.js','utf8');
 assert.match(source,/explicitB\?copyPackage\(explicitB\):\{id:'B',itens:\[coin\(STANDARD_BACKGROUND_PACKAGE_B_GP\)\]\}/,'Runtime deve sintetizar B=50 PO quando o registro simplificado não trouxer B explícito.');
 for(const p of ['dados/antecedentes-srd-5.2.1.json','dados/antecedentes-pdf-phb-2024.json','dados/antecedentes-abertos-adicionais.json','scripts/character-builder/starting-equipment-rules.js'])assert.ok(!fs.readFileSync(p,'utf8').toLowerCase().includes('supabase'),`${p}: não pode introduzir Supabase.`);
-console.log('Semântica dos antecedentes PHB 2024 validada: 16 identidades (4 SRD + 11 PHB + Wayfarer), 3 atributos, 2 perícias, talento, ferramenta e Pacote B=50 PO.');
+console.log('Semântica dos antecedentes Player’s Handbook validada: 16 identidades (4 SRD + 11 PHB + Wayfarer), 3 atributos, 2 perícias, talento, ferramenta e Pacote B=50 PO.');

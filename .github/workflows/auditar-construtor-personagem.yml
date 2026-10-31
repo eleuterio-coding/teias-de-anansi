@@ -128,7 +128,7 @@ jobs:
           feat_missing=sorted(core-audited)
           feat_extra=sorted(audited-catalog)
           if feat_missing: raise RuntimeError('Talentos sem regra mecânica auditada: '+', '.join(feat_missing))
-          if feat_extra: raise RuntimeError('Regras de talentos sem item correspondente no catálogo PHB 2024: '+', '.join(feat_extra))
+          if feat_extra: raise RuntimeError('Regras de talentos sem item correspondente no catálogo Player’s Handbook: '+', '.join(feat_extra))
           for feat in ['Alert','Crafter','Lucky','Magic Initiate','Musician','Skilled','Tavern Brawler','Tough','Ability Score Improvement','Keen Mind','Observant','Resilient','Ritual Caster','Skill Expert','Speedy','Weapon Master']:
               if feat not in audited: raise RuntimeError('Talento crítico não auditado: '+feat)
 
