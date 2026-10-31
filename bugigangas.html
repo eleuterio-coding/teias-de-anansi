@@ -67,7 +67,7 @@ function render() {
   const filtro = document.getElementById('filtro').value;
   const itens = DATA.itens.filter(item => (!filtro || item.fonte === filtro) && (!q || textoBusca(item).includes(q)));
 
-  document.getElementById('resultado').textContent = `${itens.length} de ${DATA.controle.registros_publicados} registros exibidos`;
+  document.getElementById('resultado').textContent = '';
   document.getElementById('lista').innerHTML = itens.map(item => {
     const fonte = DATA.fontes[item.fonte];
     const extras = (item.origens_adicionais || []).map(x => `<p class="origem-extra"><strong>Origem adicional consolidada:</strong> ${esc(x)}</p>`).join('');
