@@ -101,8 +101,8 @@ jobs:
               raise RuntimeError('Loader não inicializa o módulo de idiomas.')
           if 'id="species-native-languages"' not in creation_html:
               raise RuntimeError('Etapa Raça não possui área para exibir idiomas nativos.')
-          if 'race-language-builder1' not in loader:
-              raise RuntimeError('Criação de personagem não usa a versão atual das regras raciais de idiomas.')
+          if '20261031-idiomas-40-ptbr1' not in loader:
+              raise RuntimeError('Construtor não está carregando a versão atual das regras raciais de idiomas.')
           expected_species_languages=[
               "[['Aarakocra'],['Common','Primordial']]",
               "[['Aasimar'],['Common','Celestial']]",
