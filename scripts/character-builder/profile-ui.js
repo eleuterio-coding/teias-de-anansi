@@ -2,7 +2,7 @@ import{playerTerm,photoDataUrl,characterPicture}from'../profile-images.js?v=2026
 import{state,$,arr,num,esc}from'./state.js';
 import{normalizeCharacterGender}from'../character-gender.js?v=20261019-gender1';
 import{derive}from'./rules.js';
-import{languageOutcome}from'./language-mechanics.js?v=20260923-race-language-builder1';
+import{languageOutcome}from'./language-mechanics.js?v=20261031-idiomas-40-ptbr1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260826-equipment-ownership1';
 
 function ensureSheetState(){
