@@ -2,7 +2,10 @@
   "schema": "hub-rpg/armas-pdfs/v1",
   "gerado_em": "2026-08-19",
   "modulo": "Armas",
-  "fontes_pdf": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"],
+  "fontes_pdf": [
+    "pdf24_merged.pdf",
+    "pdf24_merged-1.pdf"
+  ],
   "politica": {
     "precedencia": "A regra oficial 5.5e/2024 permanece soberana. Versões 5e e suplementares só substituem versões anteriores equivalentes dentro da mesma linha editorial quando são claramente revisões posteriores.",
     "xyleff": "Conteúdo de Xyleff é demonstrativo e permanece isolado como não canônico; nunca substitui uma arma oficial.",
@@ -10,21 +13,19 @@
     "escopo_tematico": "O catálogo ativo do Hub exclui armas de fogo, pólvora e armamento mundano industrial, moderno ou futurista, independentemente da edição, fonte, período histórico ou status oficial. As fontes brutas podem permanecer no repositório apenas para rastreabilidade e auditoria, mas a política global de era impede que esses registros sejam oferecidos ou aplicados mecanicamente no site."
   },
   "controle": {
-    "quantidade": 107,
-    "pdf24_merged": 16,
+    "quantidade": 91,
+    "pdf24_merged": 0,
     "pdf24_merged_1": 91,
     "oficiais": 1,
-    "suplementares": 19,
+    "suplementares": 3,
     "demonstrativos": 87,
     "por_fonte": {
-      "L'Arsène's Ledger of Treasure and Trinkets": 16,
       "Heliana's Guide to Monster Hunting": 3,
       "Eberron: Rising from the Last War": 1,
       "Weapons, armors and Masteries / Xyleff": 87
     },
     "supressoes": [
       "Armas-base repetidas nas tabelas de crafting de Heliana não duplicam os registros oficiais já existentes no módulo.",
-      "Versões de armas suplementares de Heliana que foram republicadas/revisadas em L'Arsène's Ledger ficam consolidadas sob L'Arsène; os três Tommybows permanecem porque não têm sucessor equivalente na tabela revisada.",
       "Armas mágicas encontradas em pdf24_merged.pdf foram excluídas por taxonomia.",
       "Ataques nomeados dentro de stat blocks de monstros foram excluídos por não serem entradas de equipamento.",
       "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas.",
@@ -33,18 +34,62 @@
     ]
   },
   "fontes": {
-    "larsene-ledger-pdf24": {"titulo":"L'Arsène's Ledger of Treasure and Trinkets","arquivo_pdf":"pdf24_merged.pdf","ruleset":"5e","natureza":"suplementar","secao":"Chapter 2: Equipment — New Weapons","observacao":"Tabela revisada de novas armas; prevalece sobre versões anteriores equivalentes de Heliana dentro da mesma linha suplementar."},
-    "helianas-guide-pdf24-1": {"titulo":"Heliana's Guide to Monster Hunting","arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5e","natureza":"suplementar","secao":"Crafting / New Weapons — Tommybows","observacao":"Somente os Tommybows permanecem como registros ativos desta fonte após a consolidação com L'Arsène's Ledger."},
-    "erlw-pdf24-1": {"titulo":"Eberron: Rising from the Last War","ano":2019,"arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5e","natureza":"oficial","secao":"Character Creation — Double-Bladed Scimitar"},
-    "xyleff-weapons-pdf24-1": {"titulo":"Weapons, armors and Masteries","arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5.5e","natureza":"demonstrativo","autoria":"Felix Klaus; design por Angevine","secao":"Weapon List","observacao":"Material demonstrativo ligado ao Xyleff Sualky Guidebook. Os próprios autores informam que os preços foram definidos para balancear regras de materiais e durabilidade. Não canonizar."}
+    "helianas-guide-pdf24-1": {
+      "titulo": "Heliana's Guide to Monster Hunting",
+      "arquivo_pdf": "pdf24_merged-1.pdf",
+      "ruleset": "5e",
+      "natureza": "suplementar",
+      "secao": "Crafting / New Weapons — Tommybows",
+      "observacao": "Três modelos de Tommybow preservados como suplementos desta fonte."
+    },
+    "erlw-pdf24-1": {
+      "titulo": "Eberron: Rising from the Last War",
+      "ano": 2019,
+      "arquivo_pdf": "pdf24_merged-1.pdf",
+      "ruleset": "5e",
+      "natureza": "oficial",
+      "secao": "Character Creation — Double-Bladed Scimitar"
+    },
+    "xyleff-weapons-pdf24-1": {
+      "titulo": "Weapons, armors and Masteries",
+      "arquivo_pdf": "pdf24_merged-1.pdf",
+      "ruleset": "5.5e",
+      "natureza": "demonstrativo",
+      "autoria": "Felix Klaus; design por Angevine",
+      "secao": "Weapon List",
+      "observacao": "Material demonstrativo ligado ao Xyleff Sualky Guidebook. Os próprios autores informam que os preços foram definidos para balancear regras de materiais e durabilidade. Não canonizar."
+    }
   },
   "arquivos": [
-    {"fonte":"larsene-ledger-pdf24","arquivo":"dados/armas-fontes/larsene-ledger.json","quantidade":16},
-    {"fonte":"helianas-guide-pdf24-1","arquivo":"dados/armas-fontes/helianas-guide.json","quantidade":3},
-    {"fonte":"erlw-pdf24-1","arquivo":"dados/armas-fontes/erlw.json","quantidade":1},
-    {"fonte":"xyleff-weapons-pdf24-1","arquivo":"dados/armas-fontes/xyleff-weapons-1.json","quantidade":22},
-    {"fonte":"xyleff-weapons-pdf24-1","arquivo":"dados/armas-fontes/xyleff-weapons-2.json","quantidade":22},
-    {"fonte":"xyleff-weapons-pdf24-1","arquivo":"dados/armas-fontes/xyleff-weapons-3.json","quantidade":22},
-    {"fonte":"xyleff-weapons-pdf24-1","arquivo":"dados/armas-fontes/xyleff-weapons-4.json","quantidade":21}
+    {
+      "fonte": "helianas-guide-pdf24-1",
+      "arquivo": "dados/armas-fontes/helianas-guide.json",
+      "quantidade": 3
+    },
+    {
+      "fonte": "erlw-pdf24-1",
+      "arquivo": "dados/armas-fontes/erlw.json",
+      "quantidade": 1
+    },
+    {
+      "fonte": "xyleff-weapons-pdf24-1",
+      "arquivo": "dados/armas-fontes/xyleff-weapons-1.json",
+      "quantidade": 22
+    },
+    {
+      "fonte": "xyleff-weapons-pdf24-1",
+      "arquivo": "dados/armas-fontes/xyleff-weapons-2.json",
+      "quantidade": 22
+    },
+    {
+      "fonte": "xyleff-weapons-pdf24-1",
+      "arquivo": "dados/armas-fontes/xyleff-weapons-3.json",
+      "quantidade": 22
+    },
+    {
+      "fonte": "xyleff-weapons-pdf24-1",
+      "arquivo": "dados/armas-fontes/xyleff-weapons-4.json",
+      "quantidade": 21
+    }
   ]
 }

@@ -6,7 +6,7 @@
     "pdf24_merged.pdf",
     "pdf24_merged-1.pdf"
   ],
-  "total": 119,
+  "total": 112,
   "regra_precedencia": "versões posteriores equivalentes prevalecem; conteúdo único anterior e variantes distintas permanecem",
   "grupos": [
     {
@@ -74,24 +74,13 @@
         59
       ],
       "quantidade": 27
-    },
-    {
-      "nome": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "quantidade": 7
     }
   ],
   "controle": {
-    "identidades_unicas": 119,
-    "cards_html": 119,
+    "identidades_unicas": 112,
+    "cards_html": 112,
     "mecanicas_abertas_preservadas": 12,
-    "catalogo_estruturado_com_sintese": 107
+    "catalogo_estruturado_com_sintese": 100
   },
   "subclasses": [
     {
@@ -2108,132 +2097,6 @@
         59
       ],
       "descricao": "Subclasse de Wizard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Path of the Brewmaster",
-      "classe": "Barbarian",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Barbarian de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "College of Mixology",
-      "classe": "Bard",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Bard de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Festivity Domain",
-      "classe": "Cleric",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Cleric de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Tavern Brawler",
-      "classe": "Fighter",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Fighter de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Way of the Artisan",
-      "classe": "Monk",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Monk de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Charlatan",
-      "classe": "Rogue",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Rogue de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
-      "nivel_publicacao": "catalogo_estruturado_com_sintese"
-    },
-    {
-      "nome": "Swarmslinger",
-      "classe": "Tamer",
-      "grupo": "Subclasses de L’Arsène",
-      "fonte_id": "larsene-ledger-2024",
-      "fonte": "L’Arsène’s Ledger of Treasure and Trinkets",
-      "ano": 2024,
-      "natureza": "terceiros",
-      "status": "complementar",
-      "edicao": "5e / terceiros",
-      "origem_pdf": "pdf24_merged.pdf",
-      "paginas_pdf_fonte": [
-        285,
-        302
-      ],
-      "descricao": "Opção de Tamer de L’Arsène’s Ledger of Treasure and Trinkets, preservada como conteúdo de terceiros mecanicamente distinto.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     }
   ]

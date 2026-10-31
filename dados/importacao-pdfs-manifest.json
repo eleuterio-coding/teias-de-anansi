@@ -6,39 +6,105 @@
   "regra_abertura": "ignorada por solicitação explícita do usuário",
   "regra_completude": "mantida",
   "regra_precedencia": "mantida; versões posteriores equivalentes prevalecem na visualização ativa",
-  "fontes_pdf": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"],
+  "fontes_pdf": [
+    "pdf24_merged.pdf",
+    "pdf24_merged-1.pdf"
+  ],
   "fontes_estruturadas": [
-    {"id":"mpmm","titulo":"Mordenkainen Presents: Monsters of the Multiverse","ano":2022,"pdf":"pdf24_merged-1.pdf","registros":261,"arquivo":"dados/monstros-fontes/mpmm.json"},
-    {"id":"fraif","titulo":"Forgotten Realms: Adventures in Faerûn","ano":2025,"pdf":"pdf24_merged-1.pdf","registros":42,"arquivo":"dados/monstros-fontes/fraif.json"},
-    {"id":"erlw","titulo":"Eberron: Rising from the Last War","ano":2019,"pdf":"pdf24_merged-1.pdf","registros":41,"arquivo":"dados/monstros-fontes/erlw.json"},
-    {"id":"tce","titulo":"Tasha's Cauldron of Everything","ano":2020,"pdf":"pdf24_merged-1.pdf","registros":20,"arquivo":"dados/monstros-fontes/tce.json"},
-    {"id":"efa","titulo":"Eberron: Forge of the Artificer","ano":2025,"pdf":"pdf24_merged-1.pdf","registros":27,"arquivo":"dados/monstros-fontes/efa.json"},
-    {"id":"xdmg","titulo":"Dungeon Master's Guide (2024)","ano":2024,"pdf":"pdf24_merged.pdf","registros":2,"arquivo":"dados/monstros-fontes/xdmg.json"},
-    {"id":"xge","titulo":"Xanathar's Guide to Everything","ano":2017,"pdf":"pdf24_merged.pdf","registros":2,"arquivo":"dados/monstros-fontes/xge.json"}
+    {
+      "id": "mpmm",
+      "titulo": "Mordenkainen Presents: Monsters of the Multiverse",
+      "ano": 2022,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 261,
+      "arquivo": "dados/monstros-fontes/mpmm.json"
+    },
+    {
+      "id": "fraif",
+      "titulo": "Forgotten Realms: Adventures in Faerûn",
+      "ano": 2025,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 42,
+      "arquivo": "dados/monstros-fontes/fraif.json"
+    },
+    {
+      "id": "erlw",
+      "titulo": "Eberron: Rising from the Last War",
+      "ano": 2019,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 41,
+      "arquivo": "dados/monstros-fontes/erlw.json"
+    },
+    {
+      "id": "tce",
+      "titulo": "Tasha's Cauldron of Everything",
+      "ano": 2020,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 20,
+      "arquivo": "dados/monstros-fontes/tce.json"
+    },
+    {
+      "id": "efa",
+      "titulo": "Eberron: Forge of the Artificer",
+      "ano": 2025,
+      "pdf": "pdf24_merged-1.pdf",
+      "registros": 27,
+      "arquivo": "dados/monstros-fontes/efa.json"
+    },
+    {
+      "id": "xdmg",
+      "titulo": "Dungeon Master's Guide (2024)",
+      "ano": 2024,
+      "pdf": "pdf24_merged.pdf",
+      "registros": 2,
+      "arquivo": "dados/monstros-fontes/xdmg.json"
+    },
+    {
+      "id": "xge",
+      "titulo": "Xanathar's Guide to Everything",
+      "ano": 2017,
+      "pdf": "pdf24_merged.pdf",
+      "registros": 2,
+      "arquivo": "dados/monstros-fontes/xge.json"
+    }
   ],
   "registros_estruturados_brutos": 395,
   "monstros_extras_extraidos_diretamente_dos_pdfs": 92,
-  "classes_publicadas_dos_pdfs": ["Artificer 2025"],
+  "classes_publicadas_dos_pdfs": [
+    "Artificer 2025"
+  ],
   "classes_sidekick_publicadas": 0,
   "areas_separadas_de_classes": 0,
   "artificer_integrado_ao_catalogo_padrao": true,
   "ferramentas_publicadas_dos_pdfs": 25,
   "ferramentas_arquivo": "dados/ferramentas-pdfs.json",
-  "ferramentas_exclusoes_taxonomicas": ["Land Vehicles", "Water Vehicles", "Air Vehicles"],
+  "ferramentas_exclusoes_taxonomicas": [
+    "Land Vehicles",
+    "Water Vehicles",
+    "Air Vehicles"
+  ],
   "bugigangas_linhas_auditadas": 110,
   "bugigangas_publicadas": 109,
   "bugigangas_arquivo": "dados/bugigangas-pdfs.json",
   "bugigangas_pagina": "bugigangas.html",
   "bugigangas_deduplicacoes": 1,
-  "bugigangas_exclusoes_taxonomicas": ["Soul Trinkets temporários do Phantom", "Magic items de L'Arsene's Ledger of Treasure and Trinkets"],
-  "armas_publicadas_dos_pdfs": 107,
-  "armas_total_modulo": 146,
+  "bugigangas_exclusoes_taxonomicas": [
+    "Soul Trinkets temporários do Phantom"
+  ],
+  "armas_publicadas_dos_pdfs": 91,
+  "armas_total_modulo": 130,
   "armas_arquivo_manifesto": "dados/armas-pdfs-manifest.json",
   "armas_pagina": "armas.html",
-  "armas_por_pdf": {"pdf24_merged.pdf":16,"pdf24_merged-1.pdf":91},
-  "armas_por_natureza": {"oficiais":1,"suplementares":19,"demonstrativas_nao_canonizar":87},
+  "armas_por_pdf": {
+    "pdf24_merged.pdf": 0,
+    "pdf24_merged-1.pdf": 91
+  },
+  "armas_por_natureza": {
+    "oficiais": 1,
+    "suplementares": 3,
+    "demonstrativas_nao_canonizar": 87
+  },
   "armas_por_fonte": {
-    "L'Arsène's Ledger of Treasure and Trinkets": 16,
     "Heliana's Guide to Monster Hunting": 3,
     "Eberron: Rising from the Last War": 1,
     "Weapons, armors and Masteries / Xyleff": 87
@@ -54,7 +120,7 @@
     "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
     "ferramentas": "25 categorias primárias publicadas; pdf24_merged.pdf fornece as descrições detalhadas e pdf24_merged-1.pdf acrescenta relações de Eberron/Artificer; veículos direcionados ao módulo próprio",
     "bugigangas": "110 linhas de tabelas auditadas; 109 registros únicos publicados; Player’s Handbook fornece 100 entradas e Mournland Trinkets fornece 9 entradas adicionais após consolidação de uma duplicata exata",
-    "armas": "107 registros derivados dos PDFs integrados aos 39 registros SRD, totalizando 146. Oito armas modernas/futuristas do DMG 2024 foram removidas; pólvora antiga/renascentista permanece permitida. Os 87 registros Xyleff continuam isolados como demonstrativos e não canônicos.",
+    "armas": "91 registros dos PDFs integrados aos 39 registros SRD, totalizando 130. Os 87 registros Xyleff continuam isolados como demonstrativos e não canônicos.",
     "publicacao": "concluida"
   },
   "revisado_em": "2026-08-19T13:00:00-03:00",
@@ -63,6 +129,33 @@
   "registros_pdf_publicados": 594,
   "falha_corrigida": "filtro antigo rejeitava criaturas sem CR e entradas definidas por _copy/referência",
   "faltantes_corrigidos": [
-    "Hound of Ill Omen", "Tiny Servant", "Avatar of Death", "Sacred Statue", "Corrin Delmaco", "Garra", "Sergeant", "Aberrant Spirit", "Adult Red Dracolich", "Beast of the Land", "Beast of the Sea", "Beast of the Sky", "Bestial Spirit", "Celestial Spirit", "Construct Spirit", "Dancing Item", "Elemental Spirit", "Fey Spirit", "Fiendish Spirit", "Homunculus Servant", "Mighty Servant of Leuk-o", "Reflection", "Shadow Spirit", "Steel Defender", "Undead Spirit", "Wildfire Spirit", "Homunculus Servant", "Steel Defender"
+    "Hound of Ill Omen",
+    "Tiny Servant",
+    "Avatar of Death",
+    "Sacred Statue",
+    "Corrin Delmaco",
+    "Garra",
+    "Sergeant",
+    "Aberrant Spirit",
+    "Adult Red Dracolich",
+    "Beast of the Land",
+    "Beast of the Sea",
+    "Beast of the Sky",
+    "Bestial Spirit",
+    "Celestial Spirit",
+    "Construct Spirit",
+    "Dancing Item",
+    "Elemental Spirit",
+    "Fey Spirit",
+    "Fiendish Spirit",
+    "Homunculus Servant",
+    "Mighty Servant of Leuk-o",
+    "Reflection",
+    "Shadow Spirit",
+    "Steel Defender",
+    "Undead Spirit",
+    "Wildfire Spirit",
+    "Homunculus Servant",
+    "Steel Defender"
   ]
 }

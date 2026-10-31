@@ -11,7 +11,10 @@
           "fonte": "Dungeon Master's Guide (2024)",
           "ano": 2024,
           "tipo": "oficial",
-          "blocos_completos_localizados": ["Avatar of Death", "Giant Fly"],
+          "blocos_completos_localizados": [
+            "Avatar of Death",
+            "Giant Fly"
+          ],
           "publicacao_no_catalogo": "nao_adicionado",
           "motivo": "O livro não é identificado no PDF como conteúdo aberto para republicação integral; os blocos não são promovidos apenas por estarem presentes no arquivo."
         },
@@ -19,7 +22,9 @@
           "fonte": "Xanathar's Guide to Everything",
           "ano": 2017,
           "tipo": "oficial",
-          "blocos_completos_localizados": ["Tiny Servant"],
+          "blocos_completos_localizados": [
+            "Tiny Servant"
+          ],
           "publicacao_no_catalogo": "nao_adicionado",
           "motivo": "A própria publicação informa proteção autoral e proibição de reprodução não autorizada."
         },
@@ -29,13 +34,6 @@
           "tipo": "oficial",
           "publicacao_no_catalogo": "suprimido",
           "motivo": "Conteúdo posterior equivalente/revisado está presente em Mordenkainen Presents: Monsters of the Multiverse (2022), e nenhum desses livros é tratado como fonte aberta do catálogo."
-        },
-        {
-          "fonte": "L'Arsène's Ledger of Treasure and Trinkets",
-          "ano": 2023,
-          "tipo": "terceiros",
-          "publicacao_no_catalogo": "excluido",
-          "motivo": "A seção Legal declara expressamente que spells, items e monsters são Product Identity e não são open content."
         }
       ]
     },

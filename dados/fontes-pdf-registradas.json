@@ -38,10 +38,9 @@
         "armaduras.html",
         "dados/armas-pdfs-manifest.json",
         "dados/armas-fontes/dmg-2024.json",
-        "dados/armas-fontes/larsene-ledger.json",
         "armas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas foram publicados 24 registros derivados deste PDF: 8 armas oficiais opcionais do Dungeon Master's Guide 2024 e 16 armas suplementares de L'Arsène's Ledger. Armas mágicas, ataques de stat blocks e explosivos tratados como equipamentos separados foram excluídos por taxonomia."
+      "observacao": "Fonte auditada nos módulos indicados; os catálogos ativos preservam somente os equipamentos elegíveis das demais fontes."
     },
     {
       "id": "fonte:pdf24_merged-1",

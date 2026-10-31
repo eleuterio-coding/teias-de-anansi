@@ -101,12 +101,6 @@
       "proveniencia": "arquivo"
     },
     {
-      "padrao": "dados/subclasses-mecanicas-larsene-ledger-2024.json",
-      "autoridade": "terceiro_compativel",
-      "fonte": "L'Arsène's Ledger of Treasure and Trinkets",
-      "proveniencia": "arquivo"
-    },
-    {
       "padrao": "dados/subclasses-mecanicas-tasha-2020.json",
       "autoridade": "oficial_legado",
       "fonte": "Tasha's Cauldron of Everything (2020)",

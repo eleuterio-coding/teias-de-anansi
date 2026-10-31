@@ -20,8 +20,7 @@
   },
   "deduplicacoes": [],
   "exclusoes_taxonomicas": [
-    "Soul Trinkets do Phantom: objetos temporários criados e consumidos por uma característica de classe, não registros persistentes do catálogo.",
-    "Itens de L'Arsene's Ledger of Treasure and Trinkets: o próprio livro os classifica como magic items; pertencem ao módulo Itens Mágicos."
+    "Soul Trinkets do Phantom: objetos temporários criados e consumidos por uma característica de classe, não registros persistentes do catálogo."
   ],
   "itens": [
     {

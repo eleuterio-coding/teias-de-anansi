@@ -34,12 +34,6 @@
       "fonte_id": "fr-heroes-2025",
       "status": "manter",
       "resultado": "A seção regional foi auditada; não foi localizada uma tabela autônoma adicional de armaduras mundanas a publicar neste módulo."
-    },
-    {
-      "nome": "Novas propriedades e armarias",
-      "fonte_id": "larsene-ledger-2024",
-      "status": "manter",
-      "resultado": "O Ledger contém itens e propriedades mágicas relacionadas a armaduras; esses registros permanecem fora deste módulo e pertencem a Itens Mágicos. O catálogo de crafting foi usado apenas como metadado de fabricação dos modelos mundanos compatíveis."
     }
   ],
   "armaduras": [
