@@ -3,7 +3,7 @@ import{readCampaigns,writeCampaigns,updateCampaignNpc}from'../campaign-state.js?
 import{genderedCharacterTerm,genderedCharacterLineage,characterGender}from'../character-gender.js?v=20261019-gender1';
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./catalogs.js?v=20260823-character-builder26';
 import{loadSpells}from'./spells.js';
-import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,spellCreditState,sanitizeSelections,initializeHouseBackgroundChoices}from'./rules.js?v=20260831-tasha-metamagic1';
+import{compatible,selected,derive,trainedArmor,shieldTraining,subclassLevel,spellOptions,spellCreditState,sanitizeSelections,initializeHouseBackgroundChoices}from'./rules.js?v=20261031-excluir-marcas-dragon1';
 let spellQuery='';
 
 function fill(el,items,placeholder,val){if(!el)return;const kind=({classe:'class',especie:'species',antecedente:'background',subclasse:'subclass'})[el.id];el.innerHTML=`<option value="">${esc(placeholder)}</option>`+items.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(x=>`<option value="${esc(x.id)}" ${x.id===val?'selected':''}>${esc(kind?genderedCharacterTerm(x.name,characterGender(state.c),kind):x.name)}</option>`).join('')}
