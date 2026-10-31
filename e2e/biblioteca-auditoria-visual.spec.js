@@ -139,7 +139,7 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
     await expect(page.locator('#detalhe .armor-conditions .armor-condition')).toHaveCount(1);
     await expect(page.locator('#detalhe')).not.toContainText('Força mínima');
-    await expect(page.locator('#detalhe .armor-stat')).not.toContainText('—');
+    expect(await page.locator('#detalhe .armor-stat').evaluateAll(cards=>cards.every(card=>!card.textContent.includes('—')))).toBe(true);
     const alturaMinima=await page.locator('#detalhe').evaluate(el=>getComputedStyle(el).minHeight);
     expect(alturaMinima).toBe('0px');
     await page.locator('#lista .item[data-id="phb-2024-leather-armor"]').click();
