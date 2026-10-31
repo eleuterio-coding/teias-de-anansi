@@ -44,7 +44,7 @@
     <input id="busca" type="search" placeholder="Buscar bugiganga, livro ou tabela...">
     <select id="filtro">
       <option value="">Todas as fontes</option>
-      <option value="phb2024">Player’s Handbook</option>
+      <option value="phb2024">Livro do Jogador</option>
     </select>
   </div>
   <p class="resultado" id="resultado">Carregando catálogo...</p>
@@ -53,6 +53,7 @@
 <script>
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let DATA = null;
+const livroVisivel = titulo => /^Player[’']s Handbook$/i.test(String(titulo)) ? 'Livro do Jogador' : titulo;
 
 function textoBusca(item) {
   const fonte = DATA.fontes[item.fonte] || {};
@@ -78,7 +79,7 @@ function render() {
       <div class="corpo">
         ${extras}
         <div class="meta">
-          <span><strong>Livro:</strong> ${esc(fonte.livro)}</span>
+          <span><strong>Livro:</strong> ${esc(livroVisivel(fonte.livro))}</span>
           <span><strong>Edição:</strong> ${esc(fonte.edicao)}</span>
           <span><strong>PDF:</strong> ${esc(fonte.pdf)}</span>
           <span><strong>Tabela:</strong> ${esc(fonte.tabela)}</span>
