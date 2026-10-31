@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
 </head><body>
 <p><a href="bibliotecas.html">← Bibliotecas</a></p><header><h1>Itens Mágicos</h1></header>
-<div class="nota"><strong>Regra da Casa — Espaços de Itens Mágicos:</strong> requisitos de Sintonização e o limite padrão de três itens sintonizados não são usados no Hub. Itens mágicos vestidos ocupam o Espaço de Item Mágico corporal apropriado; itens sem espaço seguem suas próprias regras de uso e ativação.</div>
+
 <div class="controles"><input id="busca" type="search" placeholder="Buscar item, efeito, tipo, magia ou propriedade..."><select id="edicao"><option value="">Todas as edições</option><option value="srd521">5.5e — SRD 5.2.1</option><option value="srd51">5e — SRD 5.1 (legado ativo)</option></select><select id="tipo"><option value="">Todos os tipos</option></select><select id="raridade"><option value="">Todas as raridades</option></select></div><p class="resultado" id="resultado">Carregando catálogo...</p><div id="avisos"></div><main id="lista"></main>
 <script>
 const VERSION='20260823-rules-audit1',esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let DATA=null,ITEMS_BY_ID=new Map(),LOAD_WARNINGS=[];const RARIDADES=['Comum','Incomum','Rara','Muito rara','Lendária','Artefato','Raridade variável','Outra'];
