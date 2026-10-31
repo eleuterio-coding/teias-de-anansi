@@ -3,13 +3,13 @@ import{CATALOG_MODULES,CATALOG_BY_ROUTE}from'./catalog-registry.js?v=20260923-ra
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fold=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
 const routeOf=href=>String(href||'').split('?')[0].split('#')[0].replace(/^\.\//,'');
-let semanticIndex=null,semanticIndexPromise=null,catalogCounts=null,countsError=false;
+let semanticIndex=null,semanticIndexPromise=null,catalogCounts=null,countsError=false,monsterCountFailed=false;
 
 function countLabel(module){
  const count=catalogCounts?.[module.semanticName];
  return Number.isSafeInteger(count)&&count>=0
   ?`${count.toLocaleString('pt-BR')} ${count===1?'item':'itens'}`
-  :countsError?'':'Carregando itens…';
+  :countsError||monsterCountFailed&&module.id==='monsters'?'Contagem indisponível':'Carregando itens…';
 }
 function decorateCards(){
  for(const li of document.querySelectorAll('.modulos li')){
@@ -31,20 +31,51 @@ function countPublished(index){
  }
  return counts
 }
+// O catálogo de Monstros elimina duplicatas por nome entre SRD, suplementos e PDFs.
+// Por depender de uma API externa, o total é calculado no navegador e reutilizado na sessão.
+async function loadMonsterCount(){
+ if(!catalogCounts||Number.isSafeInteger(catalogCounts.Monstros))return;
+ const cacheKey='hub-rpg:monstros-count:v1';
+ try{
+  const cached=Number(sessionStorage.getItem(cacheKey));
+  if(Number.isSafeInteger(cached)&&cached>0){catalogCounts.Monstros=cached;decorateCards();return}
+ }catch{}
+ const sources=['efa','fraif','xdmg','mpmm','tce','erlw','xge'];
+ try{
+  const urls=['https://apisearch.thedmstoolkit.com/api/2024/monsters?fields=name,slug,source','dados/monstros-pdf-extras.json',...sources.map(id=>`dados/monstros-fontes/${id}.json`)];
+  const responses=await Promise.all(urls.map(url=>fetch(url,{cache:'default'})));
+  const bad=responses.find(r=>!r.ok);
+  if(bad)throw Error(`HTTP ${bad.status} ao buscar contagem de monstros`);
+  const [srd,extras,...groups]=await Promise.all(responses.map(r=>r.json()));
+  const srdRows=Array.isArray(srd.data)?srd.data:[];
+  if(srdRows.length!==345||!Array.isArray(extras.items))throw Error('Catálogo de monstros incompleto');
+  const names=new Set(srdRows.map(x=>fold(x.name)));
+  const complete=m=>Boolean(m&&m.name&&(m._copy||(m.size&&m.type&&m.ac&&m.hp&&m.speed&&m.str!=null&&m.dex!=null&&m.con!=null&&m.int!=null&&m.wis!=null&&m.cha!=null)));
+  for(const group of groups)for(const m of group.monster||[])if(complete(m))names.add(fold(m.name));
+  for(const m of extras.items)if(m.name)names.add(fold(m.name));
+  catalogCounts.Monstros=names.size;
+  try{sessionStorage.setItem(cacheKey,String(names.size))}catch{}
+ }catch(error){
+  console.warn('[Biblioteca] Contagem de Monstros indisponível:',error);
+  monsterCountFailed=true;
+ }
+ decorateCards()
+}
 async function loadCounts(){
  try{
-  const response=await fetch('dados/biblioteca-contagens.json?v=20261028-compact1');
+  const response=await fetch('dados/biblioteca-contagens.json?v=20261031-counts-real1');
   if(!response.ok)throw Error(`HTTP ${response.status}`);
   const data=await response.json();
   if(data?.schema!=='hub-rpg.biblioteca-contagens.v1'||!data.modulos)throw Error('Contagens incompatíveis');
-  if(CATALOG_MODULES.some(m=>!Number.isSafeInteger(data.modulos[m.semanticName])||data.modulos[m.semanticName]<0))throw Error('Módulo sem contagem válida');
+  if(CATALOG_MODULES.some(m=>m.id!=='monsters'&&(!Number.isSafeInteger(data.modulos[m.semanticName])||data.modulos[m.semanticName]<0)))throw Error('Módulo sem contagem válida');
   catalogCounts=data.modulos;
   countsError=false
  }catch(error){
   console.warn('[Biblioteca] Contagens indisponíveis:',error);
   countsError=true
  }
- decorateCards()
+ decorateCards();
+ if(!countsError)loadMonsterCount()
 }
 function visibleModules(query,scope){let visible=0;for(const li of document.querySelectorAll('.modulos li')){const matchText=!query||li.dataset.catalogSearch?.includes(query),matchScope=scope==='all'||li.dataset.catalogRuntime===scope;li.hidden=!(matchText&&matchScope);if(!li.hidden)visible++}}
 function entityMatches(query){if(!semanticIndex||query.length<2)return[];const words=query.split(/\s+/).filter(Boolean);return(semanticIndex.entidades||[]).filter(x=>{const hay=fold([x.nome,x.original,...(x.aliases||[]),x.modulo].filter(Boolean).join(' '));return words.every(w=>hay.includes(w))}).sort((a,b)=>{const an=fold(a.nome),bn=fold(b.nome),ae=an===query?0:an.startsWith(query)?1:2,be=bn===query?0:bn.startsWith(query)?1:2;return ae-be||an.localeCompare(bn,'pt-BR')}).slice(0,20)}
