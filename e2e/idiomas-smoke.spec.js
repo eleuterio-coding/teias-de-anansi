@@ -35,9 +35,10 @@ test('os 40 idiomas carregam e seus cards permanecem interativos',async({page})=
   await orc.locator('summary').click();
   await expect(orc).toHaveAttribute('open','');
   const content=await orc.locator('.corpo').innerText();
-  for(const field of ['Falantes Típicos:','Alfabeto:','Descrição:','Livro:']){
+  for(const field of ['Falantes Típicos:','Alfabeto:','Descrição:']){
     expect(content).toContain(field);
   }
+  expect(content).toMatch(/Livros?:/);
   expect(content).not.toContain('Proveniência');
   expect(content).not.toContain('Consultar fonte');
   await page.locator('#busca').fill('Táurico');
