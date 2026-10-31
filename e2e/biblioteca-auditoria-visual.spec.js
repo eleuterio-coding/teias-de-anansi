@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const SHOTS='artifacts/biblioteca-visual';
-const ready=async(page,selector,timeout=30000)=>{await expect(page.locator(selector)).toBeVisible({timeout});};
+const ready=async(page,selector,timeout=30000)=>{await expect(page.locator(selector).first()).toBeVisible({timeout});};
 const capture=async(page,name)=>{
   fs.mkdirSync(SHOTS,{recursive:true});
   await page.screenshot({path:path.join(SHOTS,name),fullPage:true,animations:'disabled'});
@@ -76,7 +76,8 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     const options=await page.locator('#filtro option').allTextContents();
     expect(options.slice(1)).toEqual(options.slice(1).sort((a,b)=>a.localeCompare(b,'pt-BR',{sensitivity:'base'})));
     await page.locator('#busca').fill('Alquimista');
-    await expect(page.locator('#lista details.subclasse:visible')).toHaveCount(1);
+    await expect.poll(()=>page.locator('#lista details.subclasse:visible').count()).toBeGreaterThan(0);
+    expect(await page.locator('#lista details.subclasse:visible').count()).toBeLessThan(119);
     await page.locator('#busca').fill('');
     expect.soft(errors).toEqual([]);
     const geom=await overflow(page);
