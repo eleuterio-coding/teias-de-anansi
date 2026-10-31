@@ -589,13 +589,12 @@ def main():
             "por_fonte": dict(sorted(counts.items())),
             "por_completude": dict(sorted(completeness.items())),
             "ordenacao": "nível crescente > escola > nome",
-            "fontes_documentais": ["Xanathar 2017", "Tasha 2020", "Heroes of Faerûn 2025", "Forge of the Artificer 2025", "Quickstone", "L'Arsène's Ledger"],
+            "fontes_documentais": ["Xanathar 2017", "Tasha 2020", "Heroes of Faerûn 2025", "Forge of the Artificer 2025", "Quickstone"],
         },
         "fontes": all_sources,
         "licenciamento": {
             "srd_5_2_1": "CC-BY-4.0; texto aberto pode ser exibido integralmente com atribuição.",
             "comercial": "As descrições de Xanathar e Tasha provêm de PDFs comerciais fornecidos pelo usuário; o fornecimento não comprova direitos de republicação. Outros livros continuam usando resumos.",
-            "larsene": "A própria obra declara spells como Product Identity e not open content; portanto somente metadados e resumo editorial são publicados."
         },
         "itens": retained,
     }

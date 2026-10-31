@@ -7,8 +7,7 @@ const LIVROS={
   'quickstone-2024':{nome:'Frontiers of Eberron: Quickstone (2024)',selo:'Fronteiras de Eberron'},
   'fr-heroes-2025':{nome:'Forgotten Realms: Heroes of Faerûn (2025)',selo:'Heróis de Faerûn'},
   'tasha-2020':{nome:'Caldeirão de Todas as Coisas de Tasha (2020)',selo:'Caldeirão de Tasha'},
-  'xanathar-2017':{nome:'Guia de Xanathar para Todas as Coisas (2017)',selo:'Guia de Xanathar'},
-  'larsene-ledger-2024':{nome:'L’Arsène’s Ledger of Treasure and Trinkets (2024)',selo:'Livro de L’Arsène'}
+  'xanathar-2017':{nome:'Guia de Xanathar para Todas as Coisas (2017)',selo:'Guia de Xanathar'}
 };
 const TERMOS={
   'Reckless Attack':'Ataque Imprudente','Rage Damage':'dano da Fúria','Bardic Inspiration':'Inspiração de Bardo',
@@ -103,9 +102,9 @@ async function configurar(){
   ]);
   const cards=[...document.querySelectorAll('#lista > details.subclasse')];
   const data=new Map((catalog.subclasses||[]).map(x=>[x.nome,x]));
-  if(cards.length!==119||data.size!==119)throw Error('Cobertura de subclasses inesperada: '+cards.length+'/'+data.size);
+  if(cards.length!==112||data.size!==112)throw Error('Cobertura de subclasses inesperada: '+cards.length+'/'+data.size);
   const dic={...loc.termos,...TERMOS,...glossario.termos,...features.nomes,...magias.nomes}; // Conserva a terminologia editorial PT-BR usada no Hub.
-  if(Object.keys(features.nomes||{}).length!==591)throw Error('Catálogo de características PT-BR incompleto.');
+  if(Object.keys(features.nomes||{}).length!==553)throw Error('Catálogo de características PT-BR incompleto.');
   const localizaTitulosMecanicos=root=>{
     for(const h of root?.querySelectorAll('h3')||[]){
       const m=h.textContent.match(/^(Nível\s+\d+\s+—\s+)(.+)$/);
@@ -161,9 +160,9 @@ async function configurar(){
   filtro.value=selecionado;
   if(filtro.selectedIndex<0)filtro.value='';
   if(typeof filtrar==='function')filtrar();
-  document.documentElement.dataset.subclassesPtbr='119/119';
-  document.documentElement.dataset.subclassesCaracteristicasPtbr='591/591';
-  document.documentElement.dataset.subclassesLivros='119/119';
+  document.documentElement.dataset.subclassesPtbr='112/112';
+  document.documentElement.dataset.subclassesCaracteristicasPtbr='553/553';
+  document.documentElement.dataset.subclassesLivros='112/112';
 }
 function pronto(){
   configurar().catch(e=>{console.error('[Biblioteca · Subclasses]',e);

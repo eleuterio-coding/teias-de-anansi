@@ -7,8 +7,7 @@
     'dados/subclasses-mecanicas-quickstone-2024.json',
     'dados/subclasses-mecanicas-heroes-faerun-2025.json',
     'dados/subclasses-mecanicas-tasha-2020.json',
-    'dados/subclasses-mecanicas-xanathar-2017.json',
-    'dados/subclasses-mecanicas-larsene-ledger-2024.json'
+    'dados/subclasses-mecanicas-xanathar-2017.json'
   ];
   const fold=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[’‘]/g,"'").replace(/\s+/g,' ').trim();
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -47,13 +46,13 @@
     }
     const extras=[...map.values()].filter(item=>!cards.some(card=>fold(originalName(card))===fold(item.nome))).map(item=>item.nome);
     document.documentElement.dataset.subclassMechanics=`${applied}/${cards.length}`;
-    if(missing.length||extras.length||applied!==119||map.size!==119){
+    if(missing.length||extras.length||applied!==112||map.size!==112){
       const problem=[missing.length?`Sem mecânica: ${missing.join(', ')}`:'',extras.length?`Sem card: ${extras.join(', ')}`:'',`cards=${cards.length}`,`mecânicas=${map.size}`,`aplicadas=${applied}`].filter(Boolean).join(' | ');
       console.error('[subclass-mechanics]',problem);
       const out=document.getElementById('resultado');if(out)out.textContent=`Falha de cobertura mecânica: ${applied}/${cards.length}.`;
       return;
     }
-    console.info('[subclass-mechanics] 119/119 subclasses enriquecidas.');
+    console.info('[subclass-mechanics] 112/112 subclasses enriquecidas.');
   }
   load().catch(error=>{console.error('[subclass-mechanics]',error);const out=document.getElementById('resultado');if(out)out.textContent='Falha ao carregar as mecânicas das subclasses.'}).finally(()=>{document.documentElement.dataset.subclassMechanicsReady='1';document.dispatchEvent(new Event('hub:subclasses-mecanicas-prontas'));});
 })();

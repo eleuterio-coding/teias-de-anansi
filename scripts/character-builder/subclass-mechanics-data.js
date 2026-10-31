@@ -8,8 +8,7 @@ const FILES=[
  'dados/subclasses-mecanicas-quickstone-2024.json',
  'dados/subclasses-mecanicas-heroes-faerun-2025.json',
  'dados/subclasses-mecanicas-tasha-2020.json',
- 'dados/subclasses-mecanicas-xanathar-2017.json',
- 'dados/subclasses-mecanicas-larsene-ledger-2024.json'
+ 'dados/subclasses-mecanicas-xanathar-2017.json'
 ];
 const PRECEDENCE='dados/precedencia-subclasses.json';
 const precedenceKey=(sourceId,name)=>`${sourceId}:${fold(name)}`;
