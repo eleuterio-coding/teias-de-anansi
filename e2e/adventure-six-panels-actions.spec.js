@@ -20,6 +20,10 @@ test('cards restantes registram ações sem depender de Capítulos, Locais ou Te
  const errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto('/aventuras.html?campaign=qa-six-panels&id=qa-six-adventure');
  await expect(page.locator('#adventure-assignment')).toHaveValue('qa-six-panels');
+ const summary=page.locator('.campaign-product-summary');
+ await expect(summary.locator('.metric')).toHaveCount(5);
+ for(const label of ['Capítulo atual','Cena atual','Área atual','Próxima cena'])await expect(summary).not.toContainText(label);
+ for(const label of ['Progresso narrativo','Exploração','Jogadores','Missões ativas','Pistas ocultas'])await expect(summary).toContainText(label);
  for(const id of ['#capitulos','#locais','#tesouros'])await expect(page.locator('.hub-detail-grid > '+id)).toHaveCount(0);
  await expect(page.locator('.section-nav a[href="#monstros"]')).toHaveText('Monstros');
  await expect(page.locator('#monstros #new-adventure-monster')).toHaveCount(1);
