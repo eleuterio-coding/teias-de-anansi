@@ -133,6 +133,7 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#origem')).toHaveCount(0);
     await expect(page.locator('#count')).toHaveText('13 de 13 equipamentos');
     await expect(page.locator('.armor-heading h2')).toHaveText('Armadura Acolchoada');
+    await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('3,6 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Leve');
     await expect(page.locator('.armor-source')).toContainText('Fonte: Livro do Jogador');
     await expect(page.locator('#detalhe')).not.toContainText(/Ocorrência|Demonstrativo|pdf24_merged|catálogo-base/);
@@ -144,6 +145,7 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#lista .item')).toHaveCount(1);
     await page.locator('#lista .item').first().click();
     await expect(page.locator('.armor-heading h2')).toHaveText('Escudo');
+    await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('2,7 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Escudo');
     await expect(page.locator('#detalhe')).toContainText('Fabricação');
     await capture(page,`armaduras-${info.project.name}.png`);
