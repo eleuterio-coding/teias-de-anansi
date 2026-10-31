@@ -24,13 +24,13 @@
           "Legacy"
         ],
         "tags": [
-          "Basic Rules 2014",
+          "Player’s Handbook 2014",
           "5e",
           "variante de Criminal",
           "conteúdo oficial aberto"
         ],
         "status": "legado-ativo-sem-equivalente-2024",
-        "natureza": "Basic Rules"
+        "natureza": "Core"
       },
       "conteudo": {
         "resumo": "Variante do Criminoso 2014 que aplica as mesmas capacidades à atividade de espionagem, seja a serviço de uma autoridade ou como agente independente.",
@@ -107,15 +107,15 @@
         "receitas": []
       },
       "fonte": {
-        "publicacao_id": "basic-rules-2014",
-        "titulo": "Basic Rules (2014)",
-        "titulo_original": "Basic Rules (2014)",
+        "publicacao_id": "phb-2014",
+        "titulo": "Player’s Handbook",
+        "titulo_original": "Player’s Handbook (2014)",
         "editora": "Wizards of the Coast LLC",
         "ano": 2014,
-        "natureza": "Basic Rules",
+        "natureza": "Core",
         "ruleset": "5e",
-        "url_original": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/personality-and-background",
-        "acesso": "Conteúdo integral disponibilizado gratuitamente na D&D Beyond"
+        "url_original": "https://www.dndbeyond.com/sources/dnd/phb-2014",
+        "acesso": "Fonte: Livro do Jogador (2014); variante também reproduzida nas Regras Básicas (2014)"
       },
       "compatibilidade": {
         "ruleset": "5e",
@@ -132,7 +132,7 @@
           "tipo": "variante_de",
           "destino": "Criminoso (2014)",
           "modulo_destino": "Antecedentes",
-          "contexto": "Mecânica herdada do antecedente Criminal das Basic Rules 2014; base não exibida como item ativo por ter versão 2024 equivalente."
+          "contexto": "Mecânica herdada do antecedente Criminoso do Livro do Jogador (2014); base não exibida como item ativo por ter versão 2024 equivalente."
         }
       ],
       "assets": [],
