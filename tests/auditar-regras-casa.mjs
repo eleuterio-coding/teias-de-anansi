@@ -24,7 +24,7 @@ for(const title of['Progressão Universal de Talentos','Aumentos de Atributo','A
 for(const level of[1,3,6,9,12,15,18])assert.match(sectionsUniversal['Progressão Universal de Talentos'],new RegExp(`\\b${level}\\b`),`Talento universal ausente no nível ${level}`);
 for(const level of[4,8,12,16,20])assert.match(sectionsUniversal['Aumentos de Atributo'],new RegExp(`\\b${level}\\b`),`Aumento de atributo ausente no nível ${level}`);
 assert.match(sectionsUniversal['Substituição dos Marcos Regulares de Classe'],/4, 8, 12, 16 e 19/);
-assert.match(sectionsUniversal['Acúmulo no Nível 12'],/1 Talento e \\+1/);
+assert.ok(sectionsUniversal['Acúmulo no Nível 12'].includes('1 Talento e +1'),'O nível 12 deve conceder Talento e +1 atributo.');
 assert.match(sectionsUniversal['Benefícios Adicionais de Classe'],/permanecem válidos/);
 assert.equal(items.filter(row=>row.original===universal.original).length,1,'O card de progressão universal não deve ser duplicado.');
 
