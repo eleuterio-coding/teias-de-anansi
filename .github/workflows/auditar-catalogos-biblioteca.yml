@@ -5,6 +5,9 @@ on:
   pull_request:
     paths:
       - 'bibliotecas.html'
+      - 'armaduras.html'
+      - 'magias.html'
+      - 'tests/auditar-armaduras-biblioteca.mjs'
       - 'referencia.html'
       - 'scripts/catalog-registry.js'
       - 'scripts/library-catalog-status.js'
@@ -24,6 +27,9 @@ on:
     branches: [main]
     paths:
       - 'bibliotecas.html'
+      - 'armaduras.html'
+      - 'magias.html'
+      - 'tests/auditar-armaduras-biblioteca.mjs'
       - 'referencia.html'
       - 'scripts/catalog-registry.js'
       - 'scripts/library-catalog-status.js'
@@ -59,8 +65,11 @@ jobs:
           node --check scripts/character-builder/state.js
           node --check scripts/character-builder/spells.js
           node --check tests/auditar-catalogos-biblioteca.mjs
+          node --check tests/auditar-armaduras-biblioteca.mjs
       - name: Auditar registro, fontes e relações
         run: node tests/auditar-catalogos-biblioteca.mjs
+      - name: Auditar armaduras e escudo oficiais
+        run: node tests/auditar-armaduras-biblioteca.mjs
       - name: Gerar índice semântico de controle
         run: |
           python - <<'PY'
