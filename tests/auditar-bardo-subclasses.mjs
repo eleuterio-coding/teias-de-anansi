@@ -3,7 +3,7 @@ import assert from'node:assert/strict';
 import{state}from'../scripts/character-builder/state.js';
 import{BARD_SUBCLASS_NAMES,bardSubclassOutcome,bardSubclassChoiceDefs,setBardSubclassChoice,applyBardSubclassMechanics}from'../scripts/character-builder/bard-subclass-mechanics.js';
 
-const FILES=['dados/subclasses-mecanicas-phb-2024.json','dados/subclasses-mecanicas-forge-2025.json','dados/subclasses-mecanicas-quickstone-2024.json','dados/subclasses-mecanicas-heroes-faerun-2025.json','dados/subclasses-mecanicas-tasha-2020.json','dados/subclasses-mecanicas-xanathar-2017.json','dados/subclasses-mecanicas-larsene-ledger-2024.json'];
+const FILES=['dados/subclasses-mecanicas-phb-2024.json','dados/subclasses-mecanicas-forge-2025.json','dados/subclasses-mecanicas-quickstone-2024.json','dados/subclasses-mecanicas-heroes-faerun-2025.json','dados/subclasses-mecanicas-tasha-2020.json','dados/subclasses-mecanicas-xanathar-2017.json'];
 const fold=v=>String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
 const mechanics=new Map();for(const file of FILES){const pkg=JSON.parse(fs.readFileSync(file,'utf8'));for(const row of pkg.subclasses||[])mechanics.set(fold(row.nome),row)}
 const catalog=JSON.parse(fs.readFileSync('dados/subclasses-pdfs.json','utf8')),bardNames=catalog.subclasses.filter(x=>x.classe==='Bard').map(x=>x.nome);
