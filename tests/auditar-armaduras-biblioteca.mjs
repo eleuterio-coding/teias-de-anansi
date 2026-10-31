@@ -12,7 +12,12 @@ assert.equal(items.length,13,'O catálogo precisa conter as 12 armaduras e o esc
 assert.deepEqual(items.map(x=>x.nome),translated,'Os nomes devem estar em português.');
 assert.equal(items.filter(x=>x.categoria==='Escudo').length,1,'Apenas o escudo oficial deve permanecer.');
 assert.ok(items.every(x=>x.canonico===true&&x.fonte_id==='phb-2024'&&x.fonte==='Livro do Jogador'),'Nenhum demonstrativo pode continuar disponível.');
-assert.ok(items.every(x=>!x.descricao),'Os textos editoriais repetitivos precisam ser retirados.');
+assert.ok(items.every(x=>!x.descricao),'Os antigos textos editoriais genéricos precisam continuar ausentes.');
+assert.ok(items.every(x=>x.descricao_pt&&x.descricao_original&&x.nome_original),'As 13 armaduras e escudo devem ter tradução integral e texto original.');
+assert.equal(new Set(items.map(x=>x.nome_original)).size,13,'Os nomes originais em inglês devem ser únicos.');
+assert.ok(items.every(x=>x.descricao_pt.length>50&&x.descricao_original.length>50),'As descrições não podem ser resumos vazios.');
+assert.ok(items.every(x=>!/[<>]/.test(x.descricao_pt+x.descricao_original)),'O conteúdo bilíngue deve ser texto simples, sem HTML embutido.');
+assert.ok(items.every(x=>/[.!]$/.test(x.descricao_pt)&&/[.!]$/.test(x.descricao_original)),'As descrições precisam estar completas.');
 assert.ok(items.every(x=>/^\d[\d.]* PO$/.test(x.custo)),'Os preços devem permanecer em peças de ouro.');
 const pesosEsperados=['3,6','4,5','5,9','5,4','9,1','20,4','9,1','18,1','18,1','24,9','27,2','29,5','2,7'];
 assert.deepEqual(items.map(x=>x.peso),pesosEsperados.map(x=>`${x} kg`),'Todos os pesos devem estar convertidos de libras para kg, com uma casa decimal.');
@@ -22,8 +27,16 @@ assert.ok(items.every(x=>!/\(máx\. (?!\+)\d+\)/.test(x.ca)),'O teto do modifica
 assert.ok(!/xyleff-demo|xyleff-unthinkable-demo|pdf24_merged-1\.pdf|demonstrativ/i.test(JSON.stringify(catalog)),'Nenhuma referência aos registros demonstrativos deve persistir no catálogo.');
 assert.equal(counts.modulos.Armaduras,13,'A contagem da Biblioteca deve corresponder ao catálogo ativo.');
 assert.ok(/armor-heading/.test(html)&&/armor-type/.test(html),'O selo de tipo deve ficar próximo ao título.');
-assert.ok(!/id="origem"|origemLabel|pdfLabel|Ocorrência|não canônico|Tabela de fabricação conferida|Fabricação — referência complementar|x\.descricao/.test(html),'A ficha não deve mostrar rótulos de origem ou texto editorial.');
+assert.ok(!/id="origem"|origemLabel|pdfLabel|Ocorrência|não canônico|Tabela de fabricação conferida|Fabricação — referência complementar/.test(html),'A ficha não deve mostrar rótulos de origem ou texto editorial.');
 assert.ok(/<h3>Fabricação<\/h3>/.test(html),'A seção deve se chamar Fabricação.');
+assert.ok(/<h3>Efeito e descrição<\/h3>/.test(html),'A ficha deve apresentar a descrição traduzida no padrão de Magias.');
+assert.ok(/class="armor-description-copy" lang="pt-BR"/.test(html),'A tradução deve ser o texto principal em português.');
+assert.ok(/<details class="armor-original-collapse">/.test(html),'O original em inglês precisa ficar recolhível.');
+assert.ok(/class="armor-original-copy" lang="en"/.test(html),'O texto original deve ser identificado como inglês.');
+assert.ok(/<summary><i lang="en">/.test(html),'A opção de expansão deve mostrar o nome original em itálico.');
+assert.ok(/x\.descricao_pt/.test(html)&&/x\.descricao_original/.test(html),'A ficha deve ler as duas versões do catálogo.');
+assert.ok(/\$\{requisitos\}\$\{descricao\}\$\{craft\}/.test(html),'A descrição deve ficar entre os atributos e a fabricação.');
+
 assert.ok(/#detalhe\.detalhe\{min-height:0/.test(html)&&!/min-height:510px/.test(html),'A ficha não pode manter altura mínima que crie espaço vazio.');
 assert.ok(/const requisitos=condicoes\.length/.test(html),'Os requisitos devem ser omitidos quando não existirem.');
 assert.ok(/x\.furtividade&&x\.furtividade!=='—'/.test(html),'A linha de Furtividade não deve renderizar valores vazios.');
