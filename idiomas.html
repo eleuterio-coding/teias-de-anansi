@@ -48,7 +48,7 @@
 let IDIOMAS = [];
 // Apenas a apresentação pública é traduzida: os identificadores canônicos
 // dos catálogos continuam intactos para as regras de personagem.
-const TRADUCOES_IDIOMAS = [["Vedalken","Vedalkiano"],["Common Sign Language","Linguagem de Sinais"],["Thieves’ Cant","Gíria de Ladrões"],["Thieves' Cant","Gíria de Ladrões"],["Venomous Demesne","Domínio Peçonhento"],["Deep Speech","Língua Profunda"],["Expanded","Expandido"],["Standard","Padrão"],["Rare","Raro"],["Core","Base"],["Common","Comum"],["Draconic","Dracônico"],["Dwarvish","Anão"],["Elvish","Élfico"],["Giant","Gigante"],["Gnomish","Gnomo"],["Harpy","Harpia"],["Kharolian","Kharoliano"],["Leonin","Leonino"],["Minotaur","Minotauro"],["Ogre","Ogro"],["Serpentine","Serpentino"],["Stonegrind","Móipedra"],["Sylvan","Silvan"],["Tauric","Taurico"],["Undercommon","Subcomum"],["Druidic","Druídico"],["dragonborn","draconato"]];
+const TRADUCOES_IDIOMAS = [["Common Sign Language","Língua de Sinais Comum"],["Venomous Demesne","Domínio Peçonhento"],["Thieves’ Cant","Gíria dos Ladrões"],["Thieves' Cant","Gíria dos Ladrões"],["Deep Speech","Língua Profunda"],["Undercommon","Subcomum"],["Kenderspeak","Fala Kender"],["Serpentine","Serpentino"],["Stonegrind","Móipedra"],["dragonborn","draconato"],["Kharolian","Kharoliano"],["Vedalken","Vedalkiano"],["Expanded","Expandido"],["Standard","Padrão"],["Draconic","Dracônico"],["Dwarvish","Anão"],["Minotaur","Minotauro"],["Halfling","Pequenino"],["Gnomish","Gnômico"],["Druidic","Druídico"],["Loxodon","Loxodônico"],["Common","Comum"],["Elvish","Élfico"],["Leonin","Leonino"],["Sylvan","Silvestre"],["Tauric","Táurico"],["Terran","Terrano"],["Giant","Gigante"],["Harpy","Harpia"],["Aquan","Aquano"],["Auran","Aurano"],["Ignan","Ignano"],["Rare","Raro"],["Core","Base"],["Ogre","Ogro"]];
 function localizarIdioma(valor) {
   return TRADUCOES_IDIOMAS.reduce(
     (texto, [original, traduzido]) => texto.split(original).join(traduzido),
@@ -57,11 +57,11 @@ function localizarIdioma(valor) {
 }
 // Curadoria da Biblioteca: preservar as fontes integrais para regras de personagem e demais módulos.
 // Idiomas nativos associados às raças em scripts/species-language-rules.js.
-const IDIOMAS_RACIAIS = ["Draconic","Dwarvish","Elvish","Giant","Gnomish","Goblin","Halfling","Orc","Aquan","Celestial","Infernal","Primordial","Sylvan","Gith","Gnoll","Harpy","Minotaur","Quori","Serpentine"];
+const IDIOMAS_RACIAIS = ["Draconic","Dwarvish","Elvish","Giant","Gnomish","Goblin","Halfling","Orc","Aquan","Celestial","Infernal","Primordial","Sylvan","Gith","Gnoll","Harpy","Quori","Serpentine"];
 // Idiomas adicionais associados a povos e espécies dos cenários.
 const IDIOMAS_DE_POVOS = ["Daelkyr","Stonegrind","Tauric","Wuura'gaa","Kraul","Loxodon","Vedalken","Leonin","Hadozee","Thri-kreen","Kenderspeak","Ogre"];
 // Seleção expressamente mantida na Biblioteca, além dos grupos anteriores.
-const IDIOMAS_ADICIONAIS = ["Undercommon","Common","Thieves’ Cant","Common Sign Language","Abyssal","Deep Speech","Druidic","Auran","Ignan","Terran","Kharolian"];
+const IDIOMAS_ADICIONAIS = ["Undercommon","Common","Thieves’ Cant","Common Sign Language","Abyssal","Deep Speech","Druidic","Auran","Ignan","Terran"];
 const IDIOMAS_VISIVEIS = new Set([...IDIOMAS_RACIAIS, ...IDIOMAS_DE_POVOS, ...IDIOMAS_ADICIONAIS]);
 const busca = document.getElementById('busca');
 const filtro = document.getElementById('filtro');
@@ -98,17 +98,17 @@ function render() {
 async function iniciar() {
   try {
     const urls = [
-      'dados/idiomas-core-standard.json?v=20261031-phb-name1',
-      'dados/idiomas-core-rare.json?v=20261031-phb-name1',
-      'dados/idiomas-eberron.json?v=20261031-idiomas-fontes42',
-      'dados/idiomas-outros.json?v=20261031-vedalkens1'
+      'dados/idiomas-core-standard.json?v=20261031-idiomas-40-ptbr1',
+      'dados/idiomas-core-rare.json?v=20261031-idiomas-40-ptbr1',
+      'dados/idiomas-eberron.json?v=20261031-idiomas-40-ptbr1',
+      'dados/idiomas-outros.json?v=20261031-idiomas-40-ptbr1'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
     if (falha) throw new Error(`HTTP ${falha.status}`);
     const grupos = await Promise.all(respostas.map(r => r.json()));
     IDIOMAS = grupos.flat().filter(i => IDIOMAS_VISIVEIS.has(i.nome)).sort((a,b) => localizarIdioma(a.nome).localeCompare(localizarIdioma(b.nome), 'pt-BR'));
-    if (IDIOMAS.length !== 42 || new Set(IDIOMAS.map(i => i.nome)).size !== 42) throw new Error('Catálogo de idiomas: esperado exatamente 42 registros únicos.');
+    if (IDIOMAS.length !== 40 || new Set(IDIOMAS.map(i => i.nome)).size !== 40) throw new Error('Catálogo de idiomas: esperado exatamente 40 registros únicos.');
     const categorias = [...new Set(IDIOMAS.map(i => i.categoria))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
     filtro.innerHTML = '<option value="">Todas as categorias</option>' +
       categorias.map(c => `<option value="${esc(c)}">${esc(localizarIdioma(c))}</option>`).join('');
