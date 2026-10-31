@@ -9,7 +9,17 @@
       "alias": "pdf24_merged",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras", "Armas"],
+      "uso_no_hub": [
+        "Classes",
+        "Monstros",
+        "Ferramentas",
+        "Antecedentes",
+        "Bugigangas",
+        "Idiomas",
+        "Montarias e Veículos",
+        "Armaduras",
+        "Armas"
+      ],
       "artefatos_relacionados": [
         "dados/classes-pdf24-merged-auditoria.json",
         "dados/monstros-pdfs-auditoria.json",
@@ -22,7 +32,6 @@
         "bugigangas.html",
         "dados/idiomas-core-standard.json",
         "dados/idiomas-core-rare.json",
-        "dados/idiomas-forgotten-realms.json",
         "idiomas.html",
         "montarias-veiculos.html",
         "dados/armaduras-pdfs.json",
@@ -40,7 +49,17 @@
       "alias": "pdf24_merged-1",
       "tipo": "PDF mesclado",
       "status": "registrado",
-      "uso_no_hub": ["Classes", "Monstros", "Ferramentas", "Antecedentes", "Bugigangas", "Idiomas", "Montarias e Veículos", "Armaduras", "Armas"],
+      "uso_no_hub": [
+        "Classes",
+        "Monstros",
+        "Ferramentas",
+        "Antecedentes",
+        "Bugigangas",
+        "Idiomas",
+        "Montarias e Veículos",
+        "Armaduras",
+        "Armas"
+      ],
       "artefatos_relacionados": [
         "classes-pdf24-merged-1.html",
         "dados/classes-pdf24-merged-1.json",
@@ -73,6 +92,9 @@
   ],
   "controle": {
     "quantidade": 2,
-    "nomes_canonicos": ["pdf24_merged.pdf", "pdf24_merged-1.pdf"]
+    "nomes_canonicos": [
+      "pdf24_merged.pdf",
+      "pdf24_merged-1.pdf"
+    ]
   }
 }

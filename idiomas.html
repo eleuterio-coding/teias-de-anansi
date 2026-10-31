@@ -37,6 +37,8 @@
     <h1>Idiomas</h1>
   </header>
 
+  <p class="nota">Descrições em português redigidas a partir de fontes identificadas: não são transcrições literais dos livros. As entradas de terceiros, legado e regras da casa estão sinalizadas individualmente.</p>
+
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar idioma, categoria ou fonte...">
     <select id="filtro">
@@ -81,6 +83,8 @@ function render() {
       <summary><strong>${esc(localizarIdioma(i.nome))}</strong><span class="categoria">${esc(localizarIdioma(i.categoria))}</span></summary>
       <div class="corpo">
         <p>${esc(localizarIdioma(i.descricao))}</p>
+        <p class="resumo"><strong>Proveniência:</strong> ${esc(i.proveniencia || 'Não classificada')}${i.referencia_secao ? ` · <strong>Seção:</strong> ${esc(i.referencia_secao)}` : ''}</p>
+        ${i.fonte_url?.startsWith('https://www.dndbeyond.com/') ? `<p><a href="${esc(i.fonte_url)}" target="_blank" rel="noopener noreferrer">Consultar fonte no D&amp;D Beyond ↗</a></p>` : ''}
         <div class="meta">
           <span><strong>Tipo:</strong> Idioma</span>
           <span><strong>Livro:</strong> ${esc(localizarIdioma(i.fonte))}</span>
@@ -93,17 +97,17 @@ function render() {
 async function iniciar() {
   try {
     const urls = [
-      'dados/idiomas-core-standard.json?v=20261028-idiomas-localizacao1',
-      'dados/idiomas-core-rare.json?v=20261028-idiomas-localizacao1',
-      'dados/idiomas-forgotten-realms.json?v=20261028-idiomas-localizacao1',
-      'dados/idiomas-eberron.json?v=20261028-idiomas-localizacao1',
-      'dados/idiomas-outros.json?v=20261028-idiomas-localizacao1'
+      'dados/idiomas-core-standard.json?v=20261031-idiomas-fontes42',
+      'dados/idiomas-core-rare.json?v=20261031-idiomas-fontes42',
+      'dados/idiomas-eberron.json?v=20261031-idiomas-fontes42',
+      'dados/idiomas-outros.json?v=20261031-idiomas-fontes42'
     ];
     const respostas = await Promise.all(urls.map(url => fetch(url, {cache:'default'})));
     const falha = respostas.find(r => !r.ok);
     if (falha) throw new Error(`HTTP ${falha.status}`);
     const grupos = await Promise.all(respostas.map(r => r.json()));
     IDIOMAS = grupos.flat().filter(i => IDIOMAS_VISIVEIS.has(i.nome)).sort((a,b) => localizarIdioma(a.nome).localeCompare(localizarIdioma(b.nome), 'pt-BR'));
+    if (IDIOMAS.length !== 42 || new Set(IDIOMAS.map(i => i.nome)).size !== 42) throw new Error('Catálogo de idiomas: esperado exatamente 42 registros únicos.');
     const categorias = [...new Set(IDIOMAS.map(i => i.categoria))].sort((a,b) => a.localeCompare(b, 'pt-BR'));
     filtro.innerHTML = '<option value="">Todas as categorias</option>' +
       categorias.map(c => `<option value="${esc(c)}">${esc(localizarIdioma(c))}</option>`).join('');
