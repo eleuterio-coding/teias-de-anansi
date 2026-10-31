@@ -2,14 +2,6 @@ name: Auditoria visual real da Biblioteca
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - auditoria-visual-linguistica-biblioteca-20261031
-    paths:
-      - e2e/biblioteca-auditoria-visual.spec.js
-      - scripts/subclasses-biblioteca-ui.js
-      - dados/localizacao-ptbr-termos-mecanicos.json
-      - .github/workflows/auditoria-visual-biblioteca.yml
   pull_request:
     paths:
       - e2e/biblioteca-auditoria-visual.spec.js
@@ -31,6 +23,8 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
+      - name: Auditar os 747 textos das subclasses
+        run: node tests/auditar-linguistica-subclasses.mjs
       - name: Testar navegador real — desktop e celular
         run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --reporter=list
       - name: Publicar capturas e relatórios mesmo em caso de falha
