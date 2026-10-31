@@ -11,10 +11,9 @@ async function load(){
  if(!loading)loading=Promise.all([
   json('dados/magias-catalogo.json?v=20261030-fontes-integrais2'),
   json('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1').catch(()=>({nomes:{}})),
-  json('dados/magias-larsene-descricoes-autorais.json?v=20261029-larsene-editoriais1').catch(()=>({itens:{}})),
   json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1').catch(()=>({itens:[]})),
   json('dados/magias-tasha-usuario.json?v=20261030-tasha21-1').catch(()=>({itens:[]}))
- ]).then(([d,pt,editorials,xanathar,tasha])=>{
+ ]).then(([d,pt,xanathar,tasha])=>{
   const names=pt.nomes||{};
   const legacyText=new Map(arr(xanathar.itens).map(row=>[fold(row.nome_original),row]));
   const tashaText=new Map(arr(tasha.itens).map(row=>[fold(row.name),row]));
@@ -25,17 +24,6 @@ async function load(){
    if(fromXanathar){spell.xanatharSourcePage=fromXanathar.pagina_pdf;if(x.fonte!=='xanathar-2017')spell.xanatharUserText=fromXanathar.descricao_original_en;}
    const fromTasha=tashaText.get(fold(spell.originalName));
    if(fromTasha){spell.tashaUserText=x.fonte==='tasha-2020'?'':fromTasha.description;spell.tashaUserEdition=fromTasha;spell.tashaUserStatblock=fromTasha.statblock;}
-   const editorial=x.fonte==='larsene-ledger-2023'&&editorials.itens?.[spell.originalName];
-   if(editorial){
-    spell.description=editorial.pt;
-    spell.higher=editorial.higher_pt||'';
-    spell.editorialEnglish=[editorial.en,editorial.higher_en?'At higher levels: '+editorial.higher_en:''].filter(Boolean).join('\n\n');
-    spell.concentration=editorial.concentracao;
-    spell.duration=editorial.duracao;
-    spell.range=editorial.alcance;
-    const components=String(editorial.componentes||'');
-    spell.components={v:/\bV\b/.test(components),s:/\bS\b/.test(components),m:/\bM\b/.test(components),text:components.match(/M\s*\((.*?)\)/)?.[1]||''};
-   }
    return spell
   }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
   loaded=true;
