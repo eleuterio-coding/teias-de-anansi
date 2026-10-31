@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20261031-phb-canonical1';
+  const VERSION='20261031-subclasses-auditoria-visual2';
   const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
