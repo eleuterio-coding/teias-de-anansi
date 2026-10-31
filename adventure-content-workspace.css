@@ -198,3 +198,71 @@
  #adventure-root .adventure-read-field{grid-template-columns:1fr;gap:3px}
  #adventure-root .adventure-creation-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+
+/* Aventura — orientação contextual de edição; mesmos acentos, bordas e
+   estados ativos utilizados nos seletores do Hub. */
+#adventure-root .adventure-creation-choices>button.is-active{
+  color:var(--hub-text,#f4f7fb);
+  border-color:var(--hub-accent,#2b659a);
+  background:color-mix(in srgb,var(--hub-accent,#2b659a) 22%,var(--hub-surface,#111f2d));
+  box-shadow:inset 0 -3px 0 var(--hub-accent,#2b659a),0 0 0 1px var(--hub-accent,#2b659a);
+  font-weight:800;
+}
+#adventure-root .adventure-editing-location{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  padding:11px 15px;
+  border:1px solid var(--hub-border,#40546c);
+  border-left:4px solid var(--hub-accent,#2b659a);
+  border-radius:10px;
+  background:var(--hub-surface-2,#172a3c);
+}
+#adventure-root .adventure-editing-location>span{
+  font-size:.73rem;
+  font-weight:800;
+  letter-spacing:.06em;
+  color:var(--hub-muted,#9db1c6);
+}
+#adventure-root .adventure-editing-location>strong{
+  font-size:1.05rem;
+  font-weight:800;
+  color:var(--hub-text,#edf6ff);
+  overflow-wrap:anywhere;
+}
+#adventure-root .adventure-workspace-editors>.card:not([hidden]){
+  border-left:3px solid var(--hub-accent,#2b659a);
+  scroll-margin-top:144px;
+}
+/* O botão de nova Aventura ocupa uma linha inteira, inclusive nas larguras
+   em que as coleções do Hub usam duas colunas para outros tipos de item. */
+#adventure-root .adventure-create-tile-row{
+  width:100%;
+  grid-template-columns:minmax(0,1fr)!important;
+  justify-items:stretch;
+}
+#adventure-root #adventure-list .adventure-create-tile-row>.campaign-create-tile{
+  box-sizing:border-box;
+  width:100%!important;
+  min-width:0;
+  margin:0;
+  min-height:96px!important;
+  height:auto!important;
+  align-self:stretch;
+  justify-content:center;
+  align-items:center;
+}
+/* Distribuição flexível: nenhuma coluna invisível é reservada quando há
+   menos cards de Locais ou Mapas do que a capacidade da grade. */
+#adventure-root .adventure-workspace-editors #exploracao .explore-area-grid,
+#adventure-root .adventure-workspace-editors #mapas .explore-level-grid{
+  width:100%;
+  min-width:0;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
+  align-items:stretch;
+}
+#adventure-root .adventure-workspace-editors :is(#exploracao,#mapas) .explore-record-card{
+  min-width:0;
+}
