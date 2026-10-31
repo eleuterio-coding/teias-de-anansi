@@ -1,5 +1,4 @@
-/* Visão Geral de Aventuras: projeção de leitura, sem controles de edição.
-   As entidades continuam nos modelos originais e nos formulários da Oficina. */
+/* Cards narrativos de leitura; planejamento, dados e notas são montados pelo editor. */
 import {adventureAssignments,adventureMembers} from './adventure-roster-ui.js?v=20261027-release-reset3';
 import {playerAvatarHtml,characterAvatarHtml} from './profile-images.js?v=20261021-user1';
 import {renderCampaignSessionCard} from './campaign-session-card.js';
@@ -68,7 +67,6 @@ export function renderAdventureOverview(a,c,characters=[]){
  // Não incluir o controle de visibilidade, pois alterações pertencem à Oficina.
  const sessionCards=sessions.slice().sort((x,y)=>(x.order||x.number||0)-(y.order||y.number||0))
   .map(s=>'<div class="adventure-linked-session" data-adventure-session="'+esc(s.id)+'"><div class="adventure-session-card-wrap">'+renderCampaignSessionCard(s,a.campaignId)+'</div></div>').join('');
- const notes=rows(a.dmNoteEntries).map(n=>card('Nota do Mestre','Reservada',p(n.text),'','note')).join('');
  const summary=fields([['Campanha',c?.name],['Status',({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'})[a.status]||a.status],
   ['Tipo',({main:'Principal',side:'Secundária',oneshot:'One-shot',secondary:'Arco secundário'})[a.type]||a.type],['Ordem',a.order],
   ['Situação atual',a.currentSituation],['Próximo passo',a.nextStep]]);
@@ -81,6 +79,5 @@ export function renderAdventureOverview(a,c,characters=[]){
   section('overview-monstros','Monstros',monsters.length,monsterCards)+
   (missionCards?section('overview-objetivos','Objetivos',rows(a.missions).length,missionCards):'')+
   (factionCards?section('overview-faccoes','Facções',factions.length,factionCards):'')+
-  (sessionCards?'<section class="adventure-read-section adventure-read-sessions" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'')+
-  (notes?section('overview-notas','Notas do Mestre',rows(a.dmNoteEntries).length,notes):'');
+  (sessionCards?'<section class="adventure-read-section adventure-read-sessions" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'');
 }

@@ -27,7 +27,7 @@ const campaign=()=>campaignById(campaigns,campaignId),adventure=()=>adventureByI
 let monsterCatalog=[],monsterCatalogReady=false;
 const expandedSceneIds=new Set(),attachedSectionsExpanded=new Set();
 let adventureContentTab='overview',adventureCreationKind='scene',adventureEditingContent=null;
-const adventureContentKinds=[['player','Jogadores'],['scene','Cenas'],['area','Locais'],['map','Mapas'],['npc','NPCs'],['monster','Monstros'],['more','Outros ajustes']];
+const adventureContentKinds=[['player','Jogadores'],['scene','Cenas'],['area','Locais'],['map','Mapas'],['npc','NPCs'],['monster','Monstros'],['more','Facções e objetivos']];
 const creationTarget={player:'participantes',scene:'criar-cena',area:'criar-area',map:'criar-mapa',npc:'npcs',monster:'monstros'};
 function finishCreatingAdventureContent(result,kind,message){
  if(!result?.ok)return commit(result,message);
@@ -307,6 +307,9 @@ function section(title,id,body,form=''){
  const list=attached?`<details class="adventure-monsters-attached adventure-attached-list" data-attached-section="${esc(id)}" ${attachedSectionsExpanded.has(id)?'open':''}><summary>${esc(listLabel)} adicionados à Aventura (${(body.match(/<article /g)||[]).length})</summary><div class="story-list">${body||'<div class="story-empty">Nenhum registro associado.</div>'}</div></details>`:`<div class="story-list">${body||''}</div>`;
  return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2>${list}${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`
 }
+function overviewPanel(id,title,content){
+ return`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel"><header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>${content}</section>`
+}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Dados gerais'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
@@ -336,7 +339,11 @@ function workspaceHtml(a){
   <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Criar conteúdo</button>
  </div>
  <div id="adventure-overview-content" class="adventure-workspace-pane" role="tabpanel" aria-labelledby="adventure-overview-tab">
+  ${overviewPanel('adventure-overview-planning','Planejamento da Campanha',renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)}))}
+  ${overviewPanel('adventure-overview-settings','Visão geral',basicsHtml(a))}
   ${renderAdventureOverview(a,c,characters)}
+  ${overviewPanel('adventure-overview-timeline','Linha do tempo',adventureTimelineHtml(a))}
+  ${overviewPanel('adventure-overview-notes','Notas do Mestre',noteSection(a.dmNoteEntries))}
  </div>
  <section id="adventure-create-content" class="adventure-workspace-pane adventure-creation-workspace" role="tabpanel" aria-labelledby="adventure-create-tab" hidden>
   <nav class="adventure-creation-choices" aria-label="Categorias de criação">
@@ -345,13 +352,10 @@ function workspaceHtml(a){
   <header class="adventure-current-section" aria-live="polite">
    <div><span class="adventure-read-eyebrow">Criar e editar</span><h2 id="adventure-active-section-title">Cenas</h2></div>
   </header>
-  <div class="adventure-creation-general" data-adventure-workspace-group="more">
-   ${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)})}
-  </div>
   <div class="campaign-sections campaign-editor-grid hub-detail-grid adventure-workspace-editors">
-   ${basicsHtml(a)}${participantsHtml(a)}${scenes}
+   ${participantsHtml(a)}${scenes}
    ${renderAdventureExploration(a,c)}${addScene}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}
-   ${adventureTimelineHtml(a)}${noteSection(a.dmNoteEntries)}
+   
   </div>
   <div class="adventure-creation-footer"><button type="button" class="secondary" data-adventure-overview-return>Voltar à Visão Geral</button><button type="button" data-save-adventure-workspace>Salvar</button></div>
  </section>`;
@@ -362,10 +366,10 @@ function arrangeAdventureContentWorkspace(){
  const overview=$('adventure-overview-content'),creation=$('adventure-create-content');
  if(!overview||!creation)return;
  const groups={
-  'visao-geral':'more',participantes:'player',cenas:'scene','criar-cena':'scene',
+  participantes:'player',cenas:'scene','criar-cena':'scene',
   exploracao:'area','criar-area':'area',mapas:'map','criar-mapa':'map',
   npcs:'npc',monstros:'monster',faccoes:'more',missoes:'more',
-  'linha-tempo':'more','notas-mestre':'more'
+  
  };
  const editor=creation.querySelector('.adventure-workspace-editors');
  Object.entries(groups).forEach(([id,group])=>{
@@ -403,6 +407,12 @@ function arrangeAdventureContentWorkspace(){
   button.addEventListener('click',()=>switchTo('create',button.dataset.adventureCreationKind)));
  creation.querySelectorAll('[data-adventure-overview-return]').forEach(button=>
   button.addEventListener('click',()=>switchTo('overview')));
+ // Abrir o editor de Cenas ao clicar em uma cena da cronologia.
+ overview.addEventListener('click',event=>{
+  const link=event.target.closest('a[href="#cenas"]');
+  if(!link||!overview.contains(link))return;
+  event.preventDefault();switchTo('create','scene');
+ });
  // Links de cronologia continuam encontrando o editor no grupo correto.
  creation.addEventListener('click',event=>{
   const link=event.target.closest('a[href^="#"]');
@@ -655,14 +665,13 @@ function bind(){
   timeline.replaceChildren(...replacement.childNodes);
   timeline.querySelector('[data-timeline-view="'+next+'"]')?.focus({preventScroll:true});
  });
- document.querySelectorAll('#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
-  const eventId=button.dataset.diagramEdit;
-  adventureTimelineView='list';
-  render();
-  const target=[...document.querySelectorAll('#linha-tempo [data-entity-row]')].find(row=>row.dataset.entityRow===eventId);
-  
- }));
- const c=campaign();
+  document.querySelectorAll('#linha-tempo [data-diagram-edit]').forEach(button=>button.addEventListener('click',()=>{
+   adventureTimelineView='list';
+   adventureContentTab='create';
+   adventureCreationKind='scene';
+   render();
+  }));
+  const c=campaign();
  const list=$('adventure-list');
  list?.querySelectorAll('[data-status-disclosure]').forEach(disclosure=>disclosure.addEventListener('toggle',()=>{
   if(!disclosure.open)return;
