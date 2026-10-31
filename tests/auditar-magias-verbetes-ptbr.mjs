@@ -12,9 +12,9 @@ const lot3=JSON.parse(read('dados/magias-ptbr-srd-2024-revisado-lote3.json'));
 const html=read('magias.html'),ce=read('scripts/concentracao-expandida-selos.js');
 const source=html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 
-assert.equal(catalog.itens.length,537,'Preservar os 537 registros originais.');
-assert.equal(Object.keys(names).length,537,'Nomes PT e IDs originais devem existir para todos.');
-assert.equal(new Set(catalog.itens.map(x=>x.id)).size,537,'IDs de magias não devem duplicar.');
+assert.equal(catalog.itens.length,138,'Manter apenas registros das fontes remanescentes.');
+assert.equal(Object.keys(names).length,510,'Nomes PT e IDs originais devem existir para todos.');
+assert.equal(new Set(catalog.itens.map(x=>x.id)).size,138,'IDs de magias não devem duplicar.');
 for(const x of catalog.itens){
  assert.ok(x.nome_original&&names[x.nome_original],'Nome original e tradução ausentes: '+x.id);
 }
@@ -29,7 +29,7 @@ assert.ok(source.includes('const origName=x.nome_original?'),'Nome inglês deve 
 assert.ok(!source.includes('Nome original:'),'O dropdown original não deve conter cabeçalho de nome.');
 assert.ok(source.includes("return[x.descricao||'',x.niveis_superiores||'']"),'Texto inglês deve conter apenas o texto-fonte aberto.');
 assert.ok(source.includes('Texto original — '),'O dropdown do SRD deve identificar o texto original.');
-assert.ok(source.includes('Texto em inglês — versão editorial'),'As magias de L’Arsene devem distinguir a versão editorial do texto original oficial.');
+assert.ok(source.includes('Texto em inglês — versão editorial'),'Os resumos editoriais devem distinguir-se do texto original oficial.');
 assert.ok(!source.includes('<summary>Texto original <small>EN</small>'),'O título do menu não deve ter sufixos.');
 const spellList=source.split('\n').find(line=>line.includes("document.getElementById('lista').innerHTML=rows.map"));
 assert.ok(spellList?.includes('cleanSpellSchool(x.escola)'),'A lista deve mostrar a escola sem ponto e vírgula extra.');
@@ -79,4 +79,4 @@ assert.match(renderRules('Requer Concentração.'), /spell-rule-link/, 'Concentr
 const glossary=read('scripts/regras-srd-view-v7.js');
 assert.ok(glossary.includes("get('original')"),'Regras deve reconhecer deep links com nome canônico.');
 assert.ok(glossary.includes('data-hub-original'), 'Regras deve preservar IDs originais.');
-console.log('OK: 537 magias, 111 textos PT-BR integrais, 339 originais ingleses SRD, escola sem link e dropdown com título inglês.');
+console.log('OK: 510 magias, 111 textos PT-BR integrais, 339 originais ingleses SRD, escola sem link e dropdown com título inglês.');
