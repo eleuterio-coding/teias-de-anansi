@@ -37,6 +37,20 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     expect.soft(geom.scroll,`Estouro de largura: ${JSON.stringify(geom)}`).toBeLessThanOrEqual(geom.view+4);
     expect.soft(errors).toEqual([]);
   });
+  test('Regras: ordem alfabética e cartões recolhidos',async({page},info)=>{
+    const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    await page.goto('/regras.html');
+    await ready(page,'#lista details.item',35000);
+    const items=page.locator('#lista details.item');
+    expect(await items.count()).toBeGreaterThan(130);
+    const titles=await page.locator('#lista details.item summary strong').allTextContents();
+    expect(titles).toEqual([...titles].sort((a,b)=>a.localeCompare(b,'pt-BR',{sensitivity:'base'})));
+    await expect(page.locator('#lista details.item[open]')).toHaveCount(0);
+    await capture(page,`regras-${info.project.name}.png`);
+    const geom=await overflow(page);
+    expect.soft(geom.scroll,`Estouro de Regras: ${JSON.stringify(geom)}`).toBeLessThanOrEqual(geom.view+4);
+    expect.soft(errors).toEqual([]);
+  });
   test('Classes: 13 cards fechados e detalhe de Artífice',async({page},info)=>{
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto('/classes.html');
@@ -67,6 +81,24 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     expect(names).toEqual([...names].sort((a,b)=>a.localeCompare(b,'pt-BR',{sensitivity:'base'})));
     await expect(page.locator('.selo-livro')).toHaveCount(119);
     await expect(page.locator('#lista details.subclasse[open]')).toHaveCount(0);
+    const problemas=await page.locator('#lista details.subclasse').evaluateAll(cards=>{
+      const errors=[];
+      for(const card of cards){
+        card.open=true;
+        const title=card.querySelector('summary strong');
+        const detalhe=card.querySelector('.corpo');
+        const artigo=card.querySelectorAll('.mecanicas .mecanica-nivel');
+        if(!title?.textContent||!detalhe||!artigo.length)
+          errors.push((card.dataset.originalName||'sem nome')+': detalhe incompleto');
+        const rect=card.getBoundingClientRect();
+        if(rect.right>innerWidth+5||rect.left < -5)
+          errors.push((card.dataset.originalName||'sem nome')+': card cortado');
+        card.open=false;
+      }
+      return errors;
+    });
+    expect(problemas).toEqual([]);
+
     const fichas=await page.locator('#lista .ficha').evaluateAll(elements=>elements.map(el=>el.textContent));
     expect(fichas).toHaveLength(119);
     expect(fichas.every(x=>/Livro:/.test(x)&&!/Edição:|Status:|Livro\/Fonte:|Rastreabilidade|Fonte aberta:/.test(x))).toBeTruthy();
