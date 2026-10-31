@@ -4,10 +4,37 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Armaduras - Biblioteca - Teias de Anansi</title>
 <style>
-:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}*{box-sizing:border-box}body{max-width:1280px;margin:auto;padding:22px;line-height:1.5}a{color:inherit}.muted{opacity:.72}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.layout{display:grid;grid-template-columns:minmax(290px,370px) minmax(0,1fr);gap:16px;align-items:start}.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}.tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}.filtros{display:grid;grid-template-columns:1fr;gap:8px}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:510px}.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.8}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1.02rem;margin-top:2px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.warning{font-weight:650}@media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:360px}.filtros{grid-template-columns:1fr}}
-.hub-library-armors .armor-heading{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.hub-library-armors .armor-heading h2{margin:0}.hub-library-armors .armor-type{font-weight:700}.hub-library-armors .armor-source{margin:8px 0 14px}.hub-library-armors .lista .item{text-align:left!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px!important}.hub-library-armors .lista .item strong,.hub-library-armors .lista .item small{text-align:left;width:100%}.hub-library-armors .armor-craft .meta{opacity:1}
+:root{color-scheme:light dark;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#8881}*{box-sizing:border-box}body{max-width:1280px;margin:auto;padding:22px;line-height:1.5}a{color:inherit}.muted{opacity:.72}.badge{display:inline-block;border:1px solid var(--b);border-radius:999px;padding:3px 8px;font-size:.78rem;margin:2px}.nota{padding:12px 14px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.layout{display:grid;grid-template-columns:minmax(290px,370px) minmax(0,1fr);gap:16px;align-items:start}.painel{border:1px solid var(--b);border-radius:11px;overflow:hidden}.tools{padding:11px;border-bottom:1px solid var(--b);display:grid;gap:8px;position:sticky;top:0;background:Canvas;z-index:3}.tools input,.tools select{font:inherit;padding:9px;border:1px solid #8887;border-radius:8px;background:transparent;color:inherit;width:100%}.filtros{display:grid;grid-template-columns:1fr;gap:8px}.lista{max-height:76vh;overflow:auto}.item{display:block;width:100%;padding:10px 11px;text-align:left;border:0;border-bottom:1px solid #8883;background:transparent;color:inherit;cursor:pointer}.item:hover,.item.on{background:var(--soft)}.item strong,.item small{display:block}.item small{opacity:.63}.detalhe{padding:18px;min-height:0}.meta{display:flex;gap:6px 16px;flex-wrap:wrap;font-size:.88rem;opacity:.8}.box{border:1px solid #8884;border-radius:9px;padding:12px 14px;margin:12px 0}.box h3{margin-top:0}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:14px 0}.stat{border:1px solid #8884;border-radius:8px;padding:9px}.stat b,.stat span{display:block}.stat span{font-size:1.02rem;margin-top:2px}.count{font-size:.85rem;opacity:.72}.vazio{padding:18px;opacity:.7}.warning{font-weight:650}@media(max-width:820px){body{padding:14px}.layout{grid-template-columns:1fr}.lista{max-height:360px}.filtros{grid-template-columns:1fr}}
+/* Armaduras e escudo: sem cartões vazios, com altura definida pelo conteúdo. */
+body.hub-library-armors #detalhe.detalhe{min-height:0;padding:18px 20px}
+body.hub-library-armors .armor-heading{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 16px}
+body.hub-library-armors .armor-heading h2{margin:0;line-height:1.25}
+body.hub-library-armors .armor-type{font-size:.75rem;font-weight:700;margin:0}
+body.hub-library-armors .armor-stats{display:grid;grid-template-columns:minmax(210px,1.55fr) repeat(2,minmax(90px,1fr));gap:10px;margin:0}
+body.hub-library-armors .armor-stat{min-width:0;padding:13px 15px;display:flex;flex-direction:column;justify-content:center;gap:5px}
+body.hub-library-armors .armor-stat b,body.hub-library-armors .armor-craft-grid b{font-size:.76rem;color:var(--hub-muted,#8290a3);line-height:1.35}
+body.hub-library-armors .armor-stat span{font-size:1rem;line-height:1.4;overflow-wrap:normal}
+body.hub-library-armors .armor-stat-primary span{font-weight:700;color:var(--hub-text,#f4f7fb)}
+body.hub-library-armors .armor-conditions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+body.hub-library-armors .armor-condition{display:inline-flex;align-items:center;flex-wrap:wrap;gap:5px;padding:7px 10px;background:var(--hub-surface-2,#131f2b);border:1px solid var(--hub-border,#223245);border-radius:8px;font-size:.85rem}
+body.hub-library-armors .armor-craft{margin:18px 0 0;padding:14px 16px;border:1px solid var(--hub-border,#223245);border-radius:10px}
+body.hub-library-armors .armor-craft h3{font-size:1rem;line-height:1.3;margin:0 0 12px}
+body.hub-library-armors .armor-craft-grid{display:flex;gap:12px 24px;flex-wrap:wrap;align-items:start}
+body.hub-library-armors .armor-craft-grid>div{display:flex;flex-direction:column;gap:3px;min-width:65px;max-width:100%}
+body.hub-library-armors .armor-craft-grid .armor-craft-tool{flex:1 1 210px}
+body.hub-library-armors .armor-craft-grid span{font-size:.9rem;line-height:1.4}
+body.hub-library-armors .armor-source{margin:14px 0 0;font-size:.78rem;line-height:1.45;color:var(--hub-muted,#8290a3)}
+body.hub-library-armors .armor-source b{font-weight:650}
+body.hub-library-armors .lista .item{text-align:left!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px!important}
+body.hub-library-armors .lista .item strong,body.hub-library-armors .lista .item small{text-align:left;width:100%}
+@media(max-width:700px){
+ body.hub-library-armors #detalhe.detalhe{padding:16px}
+ body.hub-library-armors .armor-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.hub-library-armors .armor-stat-primary{grid-column:1/-1}
+ body.hub-library-armors .armor-craft-grid{gap:12px 20px}
+}
 </style>
-  <link rel="stylesheet" href="biblioteca-light.css?v=20261031-armaduras-ptbr2">
+  <link rel="stylesheet" href="biblioteca-light.css?v=20261031-armaduras-compact1">
 </head>
 <body class="hub-library-armors">
 <p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
@@ -17,8 +44,15 @@
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();let ALL=[],CURRENT='',DATA=null;
 function renderDetail(id){
  CURRENT=id;renderList();const x=ALL.find(i=>i.id===id);if(!x)return;
- const craft=x.fabricacao?`<div class="box armor-craft"><h3>Fabricação</h3><div class="meta"><span><b>Materiais:</b> ${esc(x.fabricacao.custo_materiais)}</span><span><b>Ferramenta:</b> ${esc(x.fabricacao.ferramenta)}</span><span><b>Tempo:</b> ${esc(x.fabricacao.tempo_horas)} h</span><span><b>CD:</b> ${esc(x.fabricacao.cd)}</span></div></div>`:'';
- document.getElementById('detalhe').innerHTML=`<div class="armor-heading"><h2>${esc(x.nome)}</h2><span class="badge armor-type">${esc(x.categoria)}</span></div><div class="meta armor-source"><span><b>Fonte:</b> ${esc(x.fonte)}</span></div><div class="stats"><div class="stat"><b>CA</b><span>${esc(x.ca)}</span></div><div class="stat"><b>Custo</b><span>${esc(x.custo)}</span></div><div class="stat"><b>Peso</b><span>${esc(x.peso)}</span></div><div class="stat"><b>Força mínima</b><span>${x.forca_minima?esc('For '+x.forca_minima):'—'}</span></div><div class="stat"><b>Furtividade</b><span>${esc(x.furtividade)}</span></div></div>${craft}`;
+ const stat=(label,value,primary=false)=>`<div class="stat armor-stat${primary?' armor-stat-primary':''}"><b>${label}</b><span>${esc(value)}</span></div>`;
+ const condicoes=[
+   x.forca_minima?`<span class="armor-condition"><b>Força mínima:</b> ${esc('For '+x.forca_minima)}</span>`:'',
+   x.furtividade&&x.furtividade!=='—'?`<span class="armor-condition"><b>Furtividade:</b> ${esc(x.furtividade)}</span>`:''
+ ].filter(Boolean);
+ const requisitos=condicoes.length?`<div class="armor-conditions" aria-label="Requisitos e propriedades">${condicoes.join('')}</div>`:'';
+ const f=x.fabricacao;
+ const craft=f?`<section class="armor-craft" aria-label="Fabricação"><h3>Fabricação</h3><div class="armor-craft-grid"><div><b>Materiais</b><span>${esc(f.custo_materiais)}</span></div><div><b>Tempo</b><span>${esc(f.tempo_horas)} h</span></div><div><b>CD</b><span>${esc(f.cd)}</span></div>${f.ferramenta?`<div class="armor-craft-tool"><b>Ferramenta</b><span>${esc(f.ferramenta)}</span></div>`:''}</div></section>`:'';
+ document.getElementById('detalhe').innerHTML=`<div class="armor-heading"><h2>${esc(x.nome)}</h2><span class="badge armor-type">${esc(x.categoria)}</span></div><div class="stats armor-stats">${stat('CA',x.ca,true)}${stat('Custo',x.custo)}${stat('Peso',x.peso)}</div>${requisitos}${craft}<p class="armor-source"><b>Fonte:</b> ${esc(x.fonte)}</p>`;
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),cat=document.getElementById('categoria').value;
