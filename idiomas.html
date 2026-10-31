@@ -52,7 +52,7 @@
 let IDIOMAS = [];
 // Apenas a apresentação pública é traduzida: os identificadores canônicos
 // dos catálogos continuam intactos para as regras de personagem.
-const TRADUCOES_IDIOMAS = [["Common Sign Language","Linguagem de Sinais"],["Thieves’ Cant","Gíria de Ladrões"],["Thieves' Cant","Gíria de Ladrões"],["Venomous Demesne","Domínio Peçonhento"],["Deep Speech","Língua Profunda"],["Expanded","Expandido"],["Standard","Padrão"],["Rare","Raro"],["Core","Base"],["Common","Comum"],["Draconic","Dracônico"],["Dwarvish","Anão"],["Elvish","Élfico"],["Giant","Gigante"],["Gnomish","Gnomo"],["Harpy","Harpia"],["Kharolian","Kharoliano"],["Leonin","Leonino"],["Minotaur","Minotauro"],["Ogre","Ogro"],["Serpentine","Serpentino"],["Stonegrind","Móipedra"],["Sylvan","Silvan"],["Tauric","Taurico"],["Undercommon","Subcomum"],["Druidic","Druídico"],["dragonborn","draconato"]];
+const TRADUCOES_IDIOMAS = [["Vedalken","Vedalkiano"],["Common Sign Language","Linguagem de Sinais"],["Thieves’ Cant","Gíria de Ladrões"],["Thieves' Cant","Gíria de Ladrões"],["Venomous Demesne","Domínio Peçonhento"],["Deep Speech","Língua Profunda"],["Expanded","Expandido"],["Standard","Padrão"],["Rare","Raro"],["Core","Base"],["Common","Comum"],["Draconic","Dracônico"],["Dwarvish","Anão"],["Elvish","Élfico"],["Giant","Gigante"],["Gnomish","Gnomo"],["Harpy","Harpia"],["Kharolian","Kharoliano"],["Leonin","Leonino"],["Minotaur","Minotauro"],["Ogre","Ogro"],["Serpentine","Serpentino"],["Stonegrind","Móipedra"],["Sylvan","Silvan"],["Tauric","Taurico"],["Undercommon","Subcomum"],["Druidic","Druídico"],["dragonborn","draconato"]];
 function localizarIdioma(valor) {
   return TRADUCOES_IDIOMAS.reduce(
     (texto, [original, traduzido]) => texto.split(original).join(traduzido),
@@ -86,9 +86,7 @@ function render() {
         <p class="resumo"><strong>Proveniência:</strong> ${esc(i.proveniencia || 'Não classificada')}${i.referencia_secao ? ` · <strong>Seção:</strong> ${esc(i.referencia_secao)}` : ''}</p>
         ${i.fonte_url?.startsWith('https://www.dndbeyond.com/') ? `<p><a href="${esc(i.fonte_url)}" target="_blank" rel="noopener noreferrer">Consultar fonte no D&amp;D Beyond ↗</a></p>` : ''}
         <div class="meta">
-          <span><strong>Tipo:</strong> Idioma</span>
           <span><strong>Livro:</strong> ${esc(localizarIdioma(i.fonte))}</span>
-          <span><strong>Status:</strong> ${esc(localizarIdioma(i.status))}</span>
         </div>
       </div>
     </details>`).join('');
