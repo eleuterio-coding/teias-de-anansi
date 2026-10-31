@@ -16,6 +16,7 @@ on:
       - 'dados/idiomas-*.json'
       - 'idiomas.html'
       - 'tests/auditar-idiomas-catalogo.mjs'
+      - 'e2e/idiomas-smoke.spec.js'
       - '.github/workflows/auditar-idiomas-personagem.yml'
       - 'dados/antecedentes-*.json'
       - 'dados/subclasses-pdfs.json'
@@ -36,6 +37,7 @@ on:
       - 'dados/idiomas-*.json'
       - 'idiomas.html'
       - 'tests/auditar-idiomas-catalogo.mjs'
+      - 'e2e/idiomas-smoke.spec.js'
       - '.github/workflows/auditar-idiomas-personagem.yml'
       - 'dados/antecedentes-*.json'
       - 'dados/subclasses-pdfs.json'
@@ -163,3 +165,27 @@ jobs:
               raise RuntimeError('Comum não deve ser concedido pelo núcleo; idiomas nativos vêm da raça.')
           print('Idiomas validados: idiomas nativos raciais + 2 padrão; Druídico; Gíria dos Ladrões + 1; Patrulheiro +2; detector genérico ativo.')
           PY
+
+  navegador-idiomas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Chromium e Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar abertura do Hub e 40 idiomas
+        run: npx playwright test e2e/idiomas-smoke.spec.js --reporter=list
+      - name: Anexar diagnóstico de navegador
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: idiomas-smoke-browser
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
