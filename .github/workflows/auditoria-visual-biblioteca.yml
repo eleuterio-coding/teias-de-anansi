@@ -6,6 +6,8 @@ on:
     paths:
       - e2e/biblioteca-auditoria-visual.spec.js
       - scripts/subclasses-biblioteca-ui.js
+      - dados/localizacao-ptbr-termos-mecanicos.json
+      - tests/auditar-linguistica-subclasses.mjs
 
 permissions:
   contents: read
