@@ -142,10 +142,10 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#detalhe .armor-stat')).not.toContainText('—');
     const alturaMinima=await page.locator('#detalhe').evaluate(el=>getComputedStyle(el).minHeight);
     expect(alturaMinima).toBe('0px');
-    await page.locator('#lista .item').filter({hasText:'Armadura de Couro'}).click();
+    await page.locator('#lista .item[data-id="phb-2024-leather-armor"]').click();
     await expect(page.locator('#detalhe .armor-conditions')).toHaveCount(0);
     await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
-    await page.locator('#lista .item').filter({hasText:'Cota de Malha'}).click();
+    await page.locator('#lista .item[data-id="phb-2024-chain-mail"]').click();
     await expect(page.locator('#detalhe .armor-condition')).toHaveCount(2);
     await expect(page.locator('#detalhe')).toContainText('Força mínima: For 13');
     await expect(page.locator('#detalhe')).not.toContainText(/Ocorrência|Demonstrativo|pdf24_merged|catálogo-base/);
