@@ -19,18 +19,24 @@ test.beforeEach(async({page})=>{
 const visit=async page=>page.goto('/aventuras.html?campaign=qa-oficina-campanha&id=qa-oficina-aventura');
 const create=async(page,kind)=>{await page.locator('#adventure-create-tab').click();await page.locator('[data-adventure-creation-kind="'+kind+'"]').click()};
 
-test('Visão Geral mostra apenas informações sem campos, exclusão ou alteração',async({page})=>{
+test('Visão Geral abre com Planejamento e Dados e termina com Cronologia e Notas',async({page})=>{
  const errors=[];page.on('pageerror',err=>errors.push(err.message));
  await visit(page);
- await expect(page.locator('.adventure-read-intro')).toHaveCount(0);
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
  await expect(page.locator('#adventure-create-content')).toBeHidden();
- await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
- await expect(page.locator('#adventure-overview-content [draggable="true"]')).toHaveCount(0);
+ const sections=await page.locator('#adventure-overview-content > section').evaluateAll(items=>items.map(item=>item.id));
+ expect(sections.slice(0,2)).toEqual(['adventure-overview-planning','adventure-overview-settings']);
+ expect(sections.slice(-2)).toEqual(['adventure-overview-timeline','adventure-overview-notes']);
  for(const id of ['overview-participantes','overview-cenas','overview-locais','overview-mapas','overview-npcs','overview-monstros'])
   await expect(page.locator('#'+id)).toBeVisible();
+ await expect(page.locator('#proxima-sessao')).toBeVisible();
+ await expect(page.locator('#visao-geral')).toBeVisible();
+ await expect(page.locator('#linha-tempo')).toBeVisible();
+ await expect(page.locator('#notas-mestre')).toBeVisible();
+ await expect(page.locator('#adventure-create-content #visao-geral,#adventure-create-content #linha-tempo,#adventure-create-content #notas-mestre,#adventure-create-content #proxima-sessao')).toHaveCount(0);
+ await expect(page.locator('#adventure-overview-content .adventure-read-grid :is(button,input,select,textarea)')).toHaveCount(0);
+ await expect(page.locator('#overview-notas')).toHaveCount(0);
  await expect(page.locator('#participantes')).toBeHidden();
- await expect(page.locator('#visao-geral')).toBeHidden();
  expect(errors).toEqual([]);
 });
 
@@ -95,7 +101,7 @@ test('Cenas criadas reaparecem na Visão Geral e editores preservam campos avan�
  await expect.poll(async()=>(await saved(page)).scenes[0].readAloud).toBe('A rainha revela seu segredo.');
  await page.locator('#adventure-overview-tab').click();
  await expect(page.locator('#overview-cenas')).toContainText('A rainha revela seu segredo.');
- await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
+ await expect(page.locator('#adventure-overview-content .adventure-read-grid :is(button,input,select,textarea)')).toHaveCount(0);
  expect(errors).toEqual([]);
 });
 
@@ -135,7 +141,7 @@ test('Mapas, locais e NPCs usam cadastros existentes e aparecem como cards de le
  expect(errors).toEqual([]);
 });
 
-test('Biblioteca de monstros e configurações ficam exclusivas na área de criação',async({page})=>{
+test('Dados e notas ficam na Visão Geral, enquanto a Oficina conserva os editores temáticos',async({page})=>{
  await visit(page);
  await create(page,'monster');
  await expect(page.locator('#new-adventure-monster')).toBeVisible();
@@ -143,10 +149,34 @@ test('Biblioteca de monstros e configurações ficam exclusivas na área de cria
  await expect(page.locator('#add-adventure-monster')).toBeVisible();
  await expect(page.locator('#visao-geral')).toBeHidden();
  await page.locator('[data-adventure-creation-kind="more"]').click();
- await expect(page.locator('#visao-geral')).toBeVisible();
  await expect(page.locator('#missoes')).toBeVisible();
- await expect(page.locator('#notas-mestre')).toBeVisible();
+ await expect(page.locator('#visao-geral')).toBeHidden();
+ await expect(page.locator('#notas-mestre')).toBeHidden();
  await expect(page.locator('#new-adventure-monster')).toBeHidden();
  await page.locator('#adventure-overview-tab').click();
- await expect(page.locator('#adventure-overview-content :is(button,input,select,textarea)')).toHaveCount(0);
+ await expect(page.locator('#visao-geral')).toBeVisible();
+ await expect(page.locator('#notas-mestre')).toBeVisible();
+ await expect(page.locator('#adventure-overview-content .adventure-read-grid :is(button,input,select,textarea)')).toHaveCount(0);
+});
+
+test('Dados gerais e notas salvam na Visão Geral e a cronologia abre o editor de Cenas',async({page})=>{
+ const errors=[];page.on('pageerror',err=>errors.push(err.message));
+ await visit(page);
+ await page.locator('#visao-geral [data-adventure-field="title"]').fill('Trono de Prata');
+ await page.locator('#visao-geral [data-save-adventure-section]').click();
+ await expect.poll(async()=>(await saved(page)).title).toBe('Trono de Prata');
+ await page.locator('#notas-mestre [data-new-master-note]').fill('Anotações para a próxima sessão');
+ await page.locator('#notas-mestre [data-note-add]').click();
+ await expect.poll(async()=>(await saved(page)).dmNoteEntries[0]?.text).toBe('Anotações para a próxima sessão');
+ await expect(page.locator('#notas-mestre [data-note-id]')).toHaveCount(1);
+ await page.locator('#adventure-create-tab').click();
+ await page.locator('#new-scene-title').fill('Câmara da Rainha');
+ await page.locator('#add-scene').click();
+ await page.locator('#adventure-overview-tab').click();
+ await expect(page.locator('#linha-tempo .campaign-timeline-title-link')).toContainText('Câmara da Rainha');
+ await page.locator('#linha-tempo .campaign-timeline-title-link').click();
+ await expect(page.locator('#adventure-create-content')).toBeVisible();
+ await expect(page.locator('#cenas')).toBeVisible();
+ await expect(page.locator('[data-adventure-creation-kind="scene"]')).toHaveAttribute('aria-pressed','true');
+ expect(errors).toEqual([]);
 });
