@@ -68,7 +68,7 @@ function render(){
     const texto=norm([x.nome,descricao(x),Object.values(x.mecanica||{}).join(' '),JSON.stringify(x.armas_associadas||{}),x.fonte?.titulo,x.fonte?.arquivo,(x.variantes_encontradas||[]).map(v=>v.descricao_resumida).join(' ')].join(' '));
     return(!o||x.classificacao?.origem===o)&&(!f||x.nome===f)&&(!q||texto.includes(q));
   });
-  document.getElementById('resultado').textContent=`${rows.length} de ${ALL.length} maestrias`;
+  document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=rows.map(x=>`
     <details class="item ${x.classificacao?.origem==='terceiros_demo'?'origem-demo':''}">
       <summary><strong>${esc(x.nome)}</strong><span class="badge">${esc(badge(x))}</span></summary>
