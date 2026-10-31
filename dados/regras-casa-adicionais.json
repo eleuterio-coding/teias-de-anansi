@@ -150,31 +150,35 @@
       "nome": "Progressão Universal de Talentos e Atributos",
       "original": "Universal Feat and Ability Progression (House Rule)",
       "familia": "Regra da Casa",
-      "descricao": "Progressão universal baseada no nível total do personagem que separa a aquisição de talentos dos aumentos de atributo e substitui os marcos regulares de classe destinados à escolha padrão entre esses benefícios.",
+      "descricao": "Regra da Casa que estabelece uma progressão universal de Talentos e Aumentos de Atributo pelo nível total do personagem, substituindo os marcos regulares de classe sem eliminar benefícios verdadeiramente adicionais.",
       "secoes": [
         {
-          "titulo": "Talentos",
-          "texto": "Todo personagem recebe 1 talento nos níveis totais 1, 3, 6, 9, 12, 15 e 18. Cada talento escolhido continua sujeito a seus pré-requisitos normais de nível, atributo, proficiência, categoria ou outros requisitos próprios."
+          "titulo": "Progressão Universal de Talentos",
+          "texto": "Todo personagem recebe 1 Talento nos níveis totais 1, 3, 6, 9, 12, 15 e 18. A escolha deve respeitar os pré-requisitos do Talento, incluindo nível, atributo, proficiência, categoria e quaisquer outras exigências aplicáveis."
         },
         {
           "titulo": "Aumentos de Atributo",
-          "texto": "Todo personagem recebe +1 em um atributo à sua escolha nos níveis totais 4, 8, 12, 16 e 20, respeitando o limite máximo aplicável ao personagem e ao ruleset utilizado. O mesmo atributo pode ser escolhido em marcos diferentes."
+          "texto": "Todo personagem recebe +1 em um atributo à sua escolha nos níveis totais 4, 8, 12, 16 e 20, respeitando o limite máximo de atributo aplicável. É permitido escolher o mesmo atributo em diferentes marcos."
         },
         {
-          "titulo": "Nível 12",
-          "texto": "No nível total 12, o personagem recebe simultaneamente 1 talento e +1 em um atributo."
+          "titulo": "Acúmulo no Nível 12",
+          "texto": "Ao alcançar o nível total 12, o personagem recebe ambos os benefícios da progressão universal: 1 Talento e +1 em um atributo à sua escolha."
         },
         {
-          "titulo": "Interação com a Progressão de Classe",
-          "texto": "Esta progressão substitui os marcos regulares de classe cuja função seja conceder a escolha padrão entre talento e aumento de atributo. Esses benefícios não são recebidos novamente nos níveis originais da classe. Benefícios diferentes ou explicitamente adicionais de classe, subclasse, espécie, antecedente, organização, item ou outra Regra da Casa permanecem separados."
+          "titulo": "Substituição dos Marcos Regulares de Classe",
+          "texto": "Os marcos regulares de classe que concedem Ability Score Improvement (Aumento de Atributo) ou a escolha padrão de Talento nos níveis de classe 4, 8, 12, 16 e 19 são substituídos pela progressão universal do Hub. O personagem não recebe novamente esses benefícios pela classe. O +1 do nível total 20 integra a progressão universal e não transfere nem preserva o marco regular de classe do nível 19."
+        },
+        {
+          "titulo": "Benefícios Adicionais de Classe",
+          "texto": "Marcos verdadeiramente adicionais, que concedam Talentos ou Aumentos de Atributo além da progressão regular da classe, permanecem válidos conforme sua descrição. Características diferentes da escolha padrão de Ability Score Improvement, inclusive benefícios próprios de classe ou subclasse, não são removidas por esta substituição."
         },
         {
           "titulo": "Talento de Origem",
-          "texto": "O Talento de Origem concedido pelo antecedente é independente desta progressão e permanece como benefício separado."
+          "texto": "O Talento de Origem concedido pelo antecedente é independente da progressão universal. Ele permanece disponível mesmo quando o personagem recebe o Talento universal do nível total 1."
         },
         {
           "titulo": "Multiclasse",
-          "texto": "Use sempre o nível total do personagem, somando todos os níveis de classe. A classe em que o personagem alcança o marco não altera nem duplica o talento ou o aumento de atributo concedido."
+          "texto": "A progressão universal considera sempre o nível total do personagem, somando os níveis de todas as classes. Os marcos universais são concedidos uma única vez e não se repetem ao alcançar o mesmo nível em classes diferentes."
         }
       ],
       "inserir_depois_de": "Backgrounds and Organizations: Narrative Rules  (House Rule)",
