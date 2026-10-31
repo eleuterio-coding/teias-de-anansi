@@ -1,4 +1,4 @@
-import{state,arr,fold}from'./state.js';
+import{state,fold}from'./state.js';
 import{featPrerequisiteResult}from'./feat-prerequisite-mechanics.js';
 
 function featByName(name){return state.catalogs.feats.find(feat=>fold(feat.name)===fold(name))||null}
@@ -17,4 +17,4 @@ export function sanitizeBackgroundSpecialFeatChoice(){
  if(ch.specialFeatTool){if(ch.toolChoice===ch.specialFeatTool){ch.toolChoice='';changed=true}delete ch.specialFeatTool;changed=true}
  return changed
 }
-export function backgroundSpecialFeatInstance(){const grant=backgroundSpecialFeatGrant();if(!grant)return null;if(grant.mode==='fixed'&&grant.valid)return{key:'background:special',feat:grant.feat,source:grant.source};if(grant.mode==='choice'&&grant.valid&&grant.selected)return{key:'background:special',feat:grant.selected,source:grant.source};return null}
+export function backgroundSpecialFeatInstance(){const grant=backgroundSpecialFeatGrant();if(!grant)return null;if(grant.mode==='fixed'&&grant.valid)return{key:'background:special',feat:grant.feat,source:grant.source};return null}
