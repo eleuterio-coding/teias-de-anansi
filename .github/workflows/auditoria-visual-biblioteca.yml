@@ -2,13 +2,48 @@ name: Auditoria visual real da Biblioteca
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - e2e/biblioteca-auditoria-visual.spec.js
+      - scripts/subclasses-biblioteca-ui.js
+      - scripts/subclass-mechanics-catalog.js
+      - scripts/regras-srd-view-v7.js
+      - scripts/module-clean-loader.js
+      - dados/localizacao-ptbr-termos-mecanicos.json
+      - dados/localizacao-ptbr-subclasses.json
+      - dados/localizacao-ptbr-caracteristicas-subclasses.json
+      - dados/localizacao-ptbr-magias-completo.json
+      - dados/_module-source/classes.html
+      - dados/_module-source/subclasses.html
+      - classes-v3.html
+      - regras.html
+      - subclasses.html
+      - bibliotecas.html
+      - biblioteca-light.css
+      - tests/auditar-linguistica-subclasses.mjs
+      - .github/workflows/auditoria-visual-biblioteca.yml
   pull_request:
     paths:
       - e2e/biblioteca-auditoria-visual.spec.js
       - scripts/subclasses-biblioteca-ui.js
+      - scripts/subclass-mechanics-catalog.js
+      - scripts/regras-srd-view-v7.js
+      - scripts/module-clean-loader.js
+      - dados/_module-source/classes.html
+      - dados/_module-source/subclasses.html
+      - classes-v3.html
+      - regras.html
+      - subclasses.html
+      - bibliotecas.html
+      - biblioteca-light.css
       - dados/localizacao-ptbr-termos-mecanicos.json
       - tests/auditar-linguistica-subclasses.mjs
       - .github/workflows/auditoria-visual-biblioteca.yml
+
+concurrency:
+  group: auditoria-visual-biblioteca-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -16,7 +51,7 @@ permissions:
 jobs:
   navegador:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
