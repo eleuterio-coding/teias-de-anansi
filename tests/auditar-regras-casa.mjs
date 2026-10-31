@@ -18,6 +18,16 @@ for(const[original,name]of Object.entries(required)){
  assert.equal(row.nome,name,`Nome incorreto para ${original}`);
  assert.equal(row.familia,'Regra da Casa',`${name} não está marcada como Regra da Casa`)
 }
+const universal=byOriginal.get('Universal Feat and Ability Progression (House Rule)');
+const sectionsUniversal=Object.fromEntries((universal.secoes||[]).map(s=>[s.titulo,s.texto||'']));
+for(const title of['Progressão Universal de Talentos','Aumentos de Atributo','Acúmulo no Nível 12','Substituição dos Marcos Regulares de Classe','Benefícios Adicionais de Classe','Talento de Origem','Multiclasse'])assert.ok(title in sectionsUniversal,`Progressão universal sem seção: ${title}`);
+for(const level of[1,3,6,9,12,15,18])assert.match(sectionsUniversal['Progressão Universal de Talentos'],new RegExp(`\\b${level}\\b`),`Talento universal ausente no nível ${level}`);
+for(const level of[4,8,12,16,20])assert.match(sectionsUniversal['Aumentos de Atributo'],new RegExp(`\\b${level}\\b`),`Aumento de atributo ausente no nível ${level}`);
+assert.match(sectionsUniversal['Substituição dos Marcos Regulares de Classe'],/4, 8, 12, 16 e 19/);
+assert.match(sectionsUniversal['Acúmulo no Nível 12'],/1 Talento e \\+1/);
+assert.match(sectionsUniversal['Benefícios Adicionais de Classe'],/permanecem válidos/);
+assert.equal(items.filter(row=>row.original===universal.original).length,1,'O card de progressão universal não deve ser duplicado.');
+
 const wealth=byOriginal.get('Wealth by Level (House Rule)');
 const sections=Object.fromEntries((wealth.secoes||[]).map(s=>[s.titulo,s.texto||'']));
 for(const title of['Aplicação','Pacotes Iniciais','Fórmula','Faixas Econômicas','Classificação Padrão dos Antecedentes','Valores por Level'])assert.ok(title in sections,`Riqueza por Level sem seção normativa: ${title}`);
