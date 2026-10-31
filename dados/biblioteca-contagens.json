@@ -5,21 +5,21 @@
   "modulos": {
     "Regras": 162,
     "Classes": 13,
-    "Subclasses": 119,
+    "Subclasses": 112,
     "Espécies": 51,
     "Antecedentes": 43,
     "Talentos": 145,
     "Maestrias de Arma": 15,
     "Monstros": null,
     "Armaduras": 13,
-    "Armas": 146,
+    "Armas": 130,
     "Equipamentos de Aventura": 185,
     "Ferramentas": 25,
     "Montarias e Veículos": 60,
     "Comércio e Despesas": 6,
     "Bugigangas": 100,
     "Itens Mágicos": 259,
-    "Magias": 537,
+    "Magias": 510,
     "Idiomas": 40
   }
 }

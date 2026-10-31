@@ -69,7 +69,7 @@
     }
   ],
   "registros_estruturados_brutos": 395,
-  "monstros_extras_extraidos_diretamente_dos_pdfs": 92,
+  "monstros_extras_extraidos_diretamente_dos_pdfs": 32,
   "classes_publicadas_dos_pdfs": [
     "Artificer 2025"
   ],
@@ -125,8 +125,8 @@
   },
   "revisado_em": "2026-08-19T13:00:00-03:00",
   "registros_estruturados_carregados": 395,
-  "monstros_extras_carregados": 92,
-  "registros_pdf_publicados": 594,
+  "monstros_extras_carregados": 32,
+  "registros_pdf_publicados": 427,
   "falha_corrigida": "filtro antigo rejeitava criaturas sem CR e entradas definidas por _copy/referência",
   "faltantes_corrigidos": [
     "Hound of Ill Omen",
