@@ -66,7 +66,10 @@
         "ferramenta": "Ferramentas de Coureiro ou Ferramentas de Tecelão",
         "tempo_horas": 8,
         "cd": 13
-      }
+      },
+      "nome_original": "Padded",
+      "descricao_pt": "A armadura acolchoada é composta de camadas de tecido e enchimento costuradas entre si.",
+      "descricao_original": "Padded armor consists of quilted layers of cloth and batting."
     },
     {
       "id": "phb-2024-leather-armor",
@@ -91,7 +94,10 @@
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 16,
         "cd": 15
-      }
+      },
+      "nome_original": "Leather",
+      "descricao_pt": "O peitoral e as proteções dos ombros desta armadura são feitos de couro endurecido por fervura em óleo. O restante da armadura é feito de materiais mais macios e flexíveis.",
+      "descricao_original": "The breastplate and shoulder protectors of this armor are made of leather that has been stiffened by being boiled in oil. The rest of the armor is made of softer and more flexible materials."
     },
     {
       "id": "phb-2024-studded-leather-armor",
@@ -116,7 +122,10 @@
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 24,
         "cd": 17
-      }
+      },
+      "nome_original": "Studded Leather",
+      "descricao_pt": "Feita de couro resistente, mas flexível, esta armadura é reforçada por rebites ou tachas dispostos próximos uns dos outros.",
+      "descricao_original": "Made from tough but flexible leather, studded leather is reinforced with close-set rivets or studs."
     },
     {
       "id": "phb-2024-hide-armor",
@@ -141,7 +150,10 @@
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 8,
         "cd": 13
-      }
+      },
+      "nome_original": "Hide",
+      "descricao_pt": "Esta armadura rudimentar é feita de peles e couros grossos. É comumente usada por tribos bárbaras, humanoides malignos e outros povos que não dispõem dos recursos necessários para fabricar armaduras melhores.",
+      "descricao_original": "This crude armor consists of thick furs and pelts. It is commonly worn by barbarian tribes, evil humanoids, and other folk who lack the resources to craft better armor."
     },
     {
       "id": "phb-2024-chain-shirt",
@@ -166,7 +178,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 16,
         "cd": 15
-      }
+      },
+      "nome_original": "Chain Shirt",
+      "descricao_pt": "Feito de anéis de metal entrelaçados, um camisão de cota de malha é usado entre camadas de roupa ou couro. Esta armadura oferece uma proteção modesta à parte superior do corpo, enquanto as camadas externas abafam o som dos anéis roçando uns nos outros.",
+      "descricao_original": "Made of interlocking metal rings, a chain shirt is worn between layers of clothing or leather. This armor offers modest protection to the wearer’s upper body and allows the sound of the rings rubbing together to be muffled by outer layers."
     },
     {
       "id": "phb-2024-scale-mail",
@@ -191,7 +206,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 24,
         "cd": 17
-      }
+      },
+      "nome_original": "Scale Mail",
+      "descricao_pt": "Esta armadura consiste em um casaco e perneiras (e talvez uma saia) de couro, cobertos por peças de metal sobrepostas, semelhantes às escamas de um peixe. A armadura inclui manoplas.",
+      "descricao_original": "This armor consists of a coat and leggings (and perhaps a skirt) of leather covered with overlapping pieces of metal, much like the scales of a fish. The armor includes gauntlets."
     },
     {
       "id": "phb-2024-breastplate",
@@ -216,7 +234,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 40,
         "cd": 18
-      }
+      },
+      "nome_original": "Breastplate",
+      "descricao_pt": "Esta armadura consiste em uma peça metálica ajustada ao tórax, usada sobre uma base de couro. Embora deixe os membros relativamente desprotegidos, oferece boa proteção aos órgãos vitais de quem a veste sem restringir muito seus movimentos.",
+      "descricao_original": "This armor consists of a fitted metal chest piece worn with leather backing. Although it leaves the limbs relatively unprotected, it provides good protection for the wearer’s vital organs while leaving his or her movements relatively unencumbered."
     },
     {
       "id": "phb-2024-half-plate-armor",
@@ -241,7 +262,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 80,
         "cd": 19
-      }
+      },
+      "nome_original": "Half Plate",
+      "descricao_pt": "A meia armadura consiste em placas de metal moldadas que cobrem a maior parte do corpo de quem a veste. Não inclui proteção para as pernas além de simples caneleiras presas com tiras de couro.",
+      "descricao_original": "Half plate consists of shaped metal plates that cover most of the wearer’s body. It does not include protection for the legs beyond simple greaves attached with leather straps."
     },
     {
       "id": "phb-2024-ring-mail",
@@ -266,7 +290,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 16,
         "cd": 15
-      }
+      },
+      "nome_original": "Ring Mail",
+      "descricao_pt": "Esta armadura é feita de couro com pesados anéis costurados nele. Os anéis ajudam a reforçá-la contra golpes de espadas e machados. A cota de anéis é inferior à cota de malha e costuma ser usada apenas por quem não pode pagar por uma armadura melhor.",
+      "descricao_original": "This armor is leather armor with heavy rings sewn into it. The rings help reinforce the armor against blows from swords and axes. Ring mail is inferior to chain mail, and it's usually worn only by those who can't afford better armor."
     },
     {
       "id": "phb-2024-chain-mail",
@@ -291,7 +318,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 32,
         "cd": 16
-      }
+      },
+      "nome_original": "Chain Mail",
+      "descricao_pt": "Feita de anéis de metal entrelaçados, a cota de malha inclui uma camada de tecido acolchoado sob os anéis para evitar o atrito com a pele e amortecer o impacto dos golpes. A armadura inclui manoplas.",
+      "descricao_original": "Made of interlocking metal rings, chain mail includes a layer of quilted fabric worn underneath the rings to prevent chafing and to cushion the impact of blows. The armor includes gauntlets."
     },
     {
       "id": "phb-2024-splint-armor",
@@ -316,7 +346,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 40,
         "cd": 18
-      }
+      },
+      "nome_original": "Splint",
+      "descricao_pt": "Esta armadura é feita de tiras estreitas e verticais de metal rebitadas a uma base de couro, usada sobre um acolchoamento de tecido. Uma cota de malha flexível protege as articulações.",
+      "descricao_original": "This armor is made of narrow vertical strips of metal riveted to a leather backing that is worn over cloth padding. Flexible chain mail protects the joints."
     },
     {
       "id": "phb-2024-plate-armor",
@@ -341,7 +374,10 @@
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 200,
         "cd": 20
-      }
+      },
+      "nome_original": "Plate",
+      "descricao_pt": "A armadura de placas é composta de placas de metal moldadas e encaixadas umas nas outras, que cobrem todo o corpo. Um conjunto inclui manoplas, botas grossas de couro, capacete com viseira e um acolchoamento espesso sob a armadura. Fivelas e tiras distribuem o peso pelo corpo.",
+      "descricao_original": "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick padding underneath the armor. Buckles and straps distribute the weight over the body."
     },
     {
       "id": "phb-2024-shield",
@@ -366,7 +402,10 @@
         "ferramenta": "Ferramentas de Carpinteiro, Ferramentas de Ferreiro ou Ferramentas de Entalhador",
         "tempo_horas": 8,
         "cd": 13
-      }
+      },
+      "nome_original": "Shield",
+      "descricao_pt": "Um escudo é feito de madeira ou metal e é carregado em uma das mãos. Empunhar um escudo aumenta sua Classe de Armadura em 2. Você só pode se beneficiar de um escudo por vez.",
+      "descricao_original": "A shield is made from wood or metal and is carried in one hand. Wielding a shield increases your Armor Class by 2. You can benefit from only one shield at a time."
     }
   ],
   "auditoria": {
