@@ -40,6 +40,6 @@ assert.ok(data.itens.every(item=>item.fonte==='phb2024'));
 assert.ok(!/mournland|erlw2019/i.test(JSON.stringify(data)),'Mournland não pode aparecer nos dados publicados.');
 absent('bugigangas.html','value="erlw2019"');
 assert.match(read('bibliotecas.html'),/library-catalog-status\.js\?v=20261031-library-clean1/);
-assert.match(read('scripts/module-clean-loader.js'),/const VERSION='20261031-biblioteca-az-classes-ptbr1'/);
+assert.match(read('scripts/module-clean-loader.js'),/const VERSION='20261031-subclasses-auditoria-visual2'/);
 
 console.log('Biblioteca limpa: avisos e contadores removidos, Classes fechadas e Mournland excluído — OK');

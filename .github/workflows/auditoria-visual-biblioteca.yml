@@ -1,0 +1,59 @@
+name: Auditoria visual real da Biblioteca
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - e2e/biblioteca-auditoria-visual.spec.js
+      - scripts/subclasses-biblioteca-ui.js
+      - dados/localizacao-ptbr-termos-mecanicos.json
+      - tests/auditar-linguistica-subclasses.mjs
+      - .github/workflows/auditoria-visual-biblioteca.yml
+
+permissions:
+  contents: read
+
+jobs:
+  navegador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Auditar os 747 textos das subclasses
+        run: node tests/auditar-linguistica-subclasses.mjs
+      - name: Testar navegador real — desktop e celular
+        run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --reporter=list
+      - name: Imagens compactas para revisão visual
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const root='artifacts/biblioteca-visual/';
+          const names=['biblioteca-desktop-chromium.jpg','classes-mobile-chromium.jpg',
+            'artifice-detalhe-desktop-chromium.jpg','subclasses-mobile-chromium.jpg',
+            'subclasse-detalhe-mobile-chromium.jpg'];
+          for(const name of names){
+            if(fs.existsSync(root+name)){
+              console.log('FRAME_'+name+'='+fs.readFileSync(root+name).toString('base64'));
+            }
+          }
+          NODE
+      - name: Publicar capturas e relatórios mesmo em caso de falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auditoria-visual-biblioteca
+          path: |
+            artifacts/biblioteca-visual/
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: warn
