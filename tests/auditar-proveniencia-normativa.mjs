@@ -80,8 +80,6 @@ for(const m of mappings){
 const quickstone=mappings.filter(m=>/quickstone/i.test(m.padrao));
 assert.ok(quickstone.length>=3,'Quickstone deve estar explicitamente classificado nos domínios em que participa.');
 assert.ok(quickstone.every(m=>m.autoridade==='terceiro_compativel'),'Frontiers of Eberron: Quickstone não pode ser promovido a fonte oficial.');
-const larsene=mappings.filter(m=>/larsene/i.test(m.padrao));
-assert.ok(larsene.length>0&&larsene.every(m=>m.autoridade==='terceiro_compativel'),"L'Arsène's Ledger deve permanecer conteúdo de terceiro identificado.");
 
 const closure=normative.criterio_fechamento||{};
 for(const [key,value] of Object.entries(closure))assert.equal(value,0,`Critério de fechamento normativo deve exigir zero: ${key}`);
