@@ -34,7 +34,7 @@
       },
       "conteudo": {
         "resumo": "Variante do Criminoso 2014 que aplica as mesmas capacidades à atividade de espionagem, seja a serviço de uma autoridade ou como agente independente.",
-        "descricao": "Seu treinamento ocorreu no contexto de espionagem. Em vez de se definir principalmente por roubos ou contrabando, você aprendeu a obter e transmitir segredos, podendo ter servido oficialmente a uma autoridade ou negociado informações por conta própria. Mecanicamente, a variante utiliza o bloco do Criminoso 2014.",
+        "descricao": "Seu treinamento ocorreu no contexto de espionagem. Em vez de se definir principalmente por roubos ou contrabando, você aprendeu a obter e transmitir segredos, podendo ter servido oficialmente a uma autoridade ou negociado informações por conta própria. Mecanicamente, a variante utiliza o bloco do Criminoso das regras anteriores.",
         "texto_integral": "Espião é uma variante do antecedente Criminoso de D&D 5e (2014). Perícias: Enganação e Furtividade. Ferramentas: um tipo de Conjunto de Jogo à escolha e Ferramentas de Ladrão. Equipamento: Pé de Cabra, Roupas Comuns escuras com capuz e uma Bolsa com 15 PO. Característica — Contato Criminal: você possui um contato confiável que serve de ligação com uma rede criminosa e conhece meios e intermediários capazes de levar mensagens entre você e esse contato mesmo a grandes distâncias. A diferença temática da variante é que essas capacidades foram desenvolvidas no exercício da espionagem.",
         "notas": [
           "O Criminoso 2014 não é duplicado como antecedente ativo porque existe Criminoso 2024; Espião é preservado como variante própria, pois não possui equivalente 2024 direto."
@@ -596,10 +596,11 @@
     },
     {
       "id": "antecedentes:phb2024:wayfarer",
-      "nome": "Wayfarer",
+      "nome": "Andarilho",
       "nome_original": "Wayfarer",
       "aliases": [
-        "Andarilho"
+        "Viajante",
+        "Wayfarer"
       ],
       "slug": "wayfarer",
       "classificacao": {
@@ -620,7 +621,7 @@
       "conteudo": {
         "resumo": "Sobrevivente das margens da sociedade urbana, acostumado a perceber intenções, mover-se sem chamar atenção e recorrer às ferramentas de ladrão.",
         "descricao": "Este antecedente representa alguém que passou parte da vida entre pessoas deixadas à margem da sociedade, aprendendo a sobreviver em ruas e ambientes urbanos sem apoio estável. Essa experiência desenvolveu atenção ao comportamento alheio, discrição e familiaridade com fechaduras e outros obstáculos, sem determinar que o personagem seja necessariamente criminoso.",
-        "texto_integral": "Wayfarer é um antecedente de D&D 5.5e. Atributos associados: Destreza, Sabedoria e Carisma. Talento de Origem: Sortudo (Lucky). Perícias: Intuição e Furtividade. Ferramenta: Ferramentas de Ladrão. Equipamento: escolha o pacote A — 2 Adagas, Ferramentas de Ladrão, um Conjunto de Jogo à escolha, Saco de Dormir, 2 Bolsas, Roupas de Viajante e 16 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
+        "texto_integral": "Andarilho é um antecedente de D&D 5.5e. Atributos associados: Destreza, Sabedoria e Carisma. Talento de Origem: Sortudo (Lucky). Perícias: Intuição e Furtividade. Ferramenta: Ferramentas de Ladrão. Equipamento: escolha o pacote A — 2 Adagas, Ferramentas de Ladrão, um Conjunto de Jogo à escolha, Saco de Dormir, 2 Bolsas, Roupas de Viajante e 16 PO — ou o pacote B, 50 PO. Para os atributos, aumente um dos três em 2 e outro em 1, ou aumente os três em 1; nenhum desses aumentos pode elevar um atributo acima de 20.",
         "notas": [
           "O nome original é mantido como título principal para evitar atribuir uma tradução oficial inexistente na fonte aberta consultada."
         ]
