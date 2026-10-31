@@ -9,7 +9,7 @@ function countLabel(module){
  const count=catalogCounts?.[module.semanticName];
  return Number.isSafeInteger(count)&&count>=0
   ?`${count.toLocaleString('pt-BR')} ${count===1?'item':'itens'}`
-  :countsError?'Contagem indisponível':'Carregando itens…';
+  :countsError?'':'Carregando itens…';
 }
 function decorateCards(){
  for(const li of document.querySelectorAll('.modulos li')){
@@ -46,7 +46,7 @@ async function loadCounts(){
  }
  decorateCards()
 }
-function visibleModules(query,scope){let visible=0;for(const li of document.querySelectorAll('.modulos li')){const matchText=!query||li.dataset.catalogSearch?.includes(query),matchScope=scope==='all'||li.dataset.catalogRuntime===scope;li.hidden=!(matchText&&matchScope);if(!li.hidden)visible++}const status=document.getElementById('catalog-filter-status');if(status)status.textContent=`${visible}/${CATALOG_MODULES.length} módulos visíveis`}
+function visibleModules(query,scope){let visible=0;for(const li of document.querySelectorAll('.modulos li')){const matchText=!query||li.dataset.catalogSearch?.includes(query),matchScope=scope==='all'||li.dataset.catalogRuntime===scope;li.hidden=!(matchText&&matchScope);if(!li.hidden)visible++}const status=document.getElementById('catalog-filter-status');if(status)status.textContent=''}
 function entityMatches(query){if(!semanticIndex||query.length<2)return[];const words=query.split(/\s+/).filter(Boolean);return(semanticIndex.entidades||[]).filter(x=>{const hay=fold([x.nome,x.original,...(x.aliases||[]),x.modulo].filter(Boolean).join(' '));return words.every(w=>hay.includes(w))}).sort((a,b)=>{const an=fold(a.nome),bn=fold(b.nome),ae=an===query?0:an.startsWith(query)?1:2,be=bn===query?0:bn.startsWith(query)?1:2;return ae-be||an.localeCompare(bn,'pt-BR')}).slice(0,20)}
 function renderEntityResults(query){const box=document.getElementById('catalog-search-results');if(!box)return;if(!query||query.length<2){box.hidden=true;box.innerHTML='';return}if(!semanticIndex){box.hidden=false;box.innerHTML='<p class="resumo">Carregando índice de referências…</p>';return}const rows=entityMatches(query);box.hidden=false;box.innerHTML=rows.length?`<h2>Referências encontradas</h2><div class="catalog-results">${rows.map(x=>`<a href="referencia.html?v=20261028-library-hub-layout1&id=${encodeURIComponent(x.id)}"><strong>${esc(x.nome)}</strong><span>${esc(x.modulo==='Espécies'?'Raça':x.modulo)}</span></a>`).join('')}</div>`:'<p class="resumo">Nenhuma referência indexada encontrada.</p>'}
 function queryAndScope(){return{q:fold(document.getElementById('catalog-search')?.value.trim()),scope:document.getElementById('catalog-scope')?.value||'all'}}
