@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const V='20261031-subclasses-livros-ptbr1';
+const V='20261031-subclasses-revisao-linguistica2';
 const LIVROS={
   'phb-2024':{nome:'Livro do Jogador (2024)',selo:'Livro do Jogador'},
   'eberron-forge-2025':{nome:'Eberron: Forge of the Artificer (2025)',selo:'Forja do Artífice'},
@@ -65,11 +65,16 @@ const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 const rx=s=>s.replace(/[.*+?^\x24{}()|[\]\\]/g,'\\\x24&');
 function localizar(text,dic){
   let s=String(text||'');
+  // Delimitadores Unicode preservam termos compostos e sinais finais (!, etc.).
   for(const [original,traducao] of Object.entries(dic).sort((a,b)=>b[0].length-a[0].length)){
-    const pattern=new RegExp('\\b'+original.replace(/[.*+?^\x24{}()|[\]\\]/g,'\\\x24&')+'\\b','g');
+    const pattern=new RegExp('(?<![\\p{L}\\p{N}_])'+original.replace(/[.*+?^\x24{}()|[\]\\]/g,'\\\x24&')+'(?![\\p{L}\\p{N}_])','gu');
     s=s.replace(pattern,traducao);
   }
-  return s;
+  return s
+    .replace(/\b(Força|Destreza|Constituição|Inteligência|Sabedoria|Carisma)\s+(testes? de resistência|testes?)\b/g,
+      (_,atr,teste)=>teste.includes('resistência')?'testes de resistência de '+atr:'testes de '+atr)
+    .replace(/\b(dano|resistência|imunidade)\s+(fogo|frio|energia|veneno|ácido|trovejante|elétrico|psíquico|necrótico|radiante)\b/gi,'$1 de $2')
+    .replace(/\b(à|a)\s+testes\s+de\s+resistência\s+contra\b/gi,'$1 testes de resistência contra');
 }
 function traduzirTexto(root,dic){
   if(!root)return;
@@ -84,15 +89,17 @@ function field(parent,label,value){
   item.append(name,document.createTextNode(value));parent.append(item);
 }
 async function configurar(){
-  const [catalog,loc,features]=await Promise.all([
+  const [catalog,loc,features,glossario,magias]=await Promise.all([
     fetch('dados/subclasses-pdfs.json?v='+V).then(r=>{if(!r.ok)throw Error('Catálogo HTTP '+r.status);return r.json()}),
     fetch('dados/localizacao-ptbr-subclasses.json?v='+V).then(r=>{if(!r.ok)throw Error('Traduções HTTP '+r.status);return r.json()}),
-    fetch('dados/localizacao-ptbr-caracteristicas-subclasses.json?v='+V).then(r=>{if(!r.ok)throw Error('Características HTTP '+r.status);return r.json()})
+    fetch('dados/localizacao-ptbr-caracteristicas-subclasses.json?v='+V).then(r=>{if(!r.ok)throw Error('Características HTTP '+r.status);return r.json()}),
+    fetch('dados/localizacao-ptbr-termos-mecanicos.json?v='+V).then(r=>{if(!r.ok)throw Error('Glossário HTTP '+r.status);return r.json()}),
+    fetch('dados/localizacao-ptbr-magias-completo.json?v='+V).then(r=>{if(!r.ok)throw Error('Magias HTTP '+r.status);return r.json()})
   ]);
   const cards=[...document.querySelectorAll('#lista > details.subclasse')];
   const data=new Map((catalog.subclasses||[]).map(x=>[x.nome,x]));
   if(cards.length!==119||data.size!==119)throw Error('Cobertura de subclasses inesperada: '+cards.length+'/'+data.size);
-  const dic={...loc.termos,...TERMOS,...features.nomes}; // Conserva a terminologia editorial PT-BR usada no Hub.
+  const dic={...loc.termos,...TERMOS,...glossario.termos,...features.nomes,...magias.nomes}; // Conserva a terminologia editorial PT-BR usada no Hub.
   if(Object.keys(features.nomes||{}).length!==591)throw Error('Catálogo de características PT-BR incompleto.');
   const localizaTitulosMecanicos=root=>{
     for(const h of root?.querySelectorAll('h3')||[]){
