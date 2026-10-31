@@ -29,6 +29,22 @@ jobs:
         run: node tests/auditar-linguistica-subclasses.mjs
       - name: Testar navegador real — desktop e celular
         run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --reporter=list
+      - name: Imagens compactas para revisão visual
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const root='artifacts/biblioteca-visual/';
+          const names=['biblioteca-desktop-chromium.jpg','classes-mobile-chromium.jpg',
+            'artifice-detalhe-desktop-chromium.jpg','subclasses-mobile-chromium.jpg',
+            'subclasse-detalhe-mobile-chromium.jpg'];
+          for(const name of names){
+            if(fs.existsSync(root+name)){
+              console.log('FRAME_'+name+'='+fs.readFileSync(root+name).toString('base64'));
+            }
+          }
+          NODE
       - name: Publicar capturas e relatórios mesmo em caso de falha
         if: always()
         uses: actions/upload-artifact@v4
