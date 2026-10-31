@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+
+const read=path=>fs.readFileSync(path,'utf8');
+const catalog=JSON.parse(read('dados/armaduras-pdfs.json'));
+const html=read('armaduras.html');
+const spells=read('magias.html');
+const counts=JSON.parse(read('dados/biblioteca-contagens.json'));
+const items=catalog.armaduras||[];
+const translated=['Armadura Acolchoada','Armadura de Couro','Armadura de Couro Batido','Armadura de Peles','Camisão de Cota de Malha','Brunea','Peitoral','Meia Armadura','Cota de Anéis','Cota de Malha','Armadura de Talas','Armadura de Placas','Escudo'];
+assert.equal(items.length,13,'O catálogo precisa conter as 12 armaduras e o escudo oficiais.');
+assert.deepEqual(items.map(x=>x.nome),translated,'Os nomes devem estar em português.');
+assert.equal(items.filter(x=>x.categoria==='Escudo').length,1,'Apenas o escudo oficial deve permanecer.');
+assert.ok(items.every(x=>x.canonico===true&&x.fonte_id==='phb-2024'&&x.fonte==='Livro do Jogador'),'Nenhum demonstrativo pode continuar disponível.');
+assert.ok(items.every(x=>!x.descricao),'Os textos editoriais repetitivos precisam ser retirados.');
+assert.ok(items.every(x=>/^\d[\d.]* PO$/.test(x.custo)&&/^\d+ libras$/.test(x.peso)),'Custo e peso devem aparecer em português sem alterar quantidades.');
+assert.ok(items.every(x=>x.fabricacao&&/ PO$/.test(x.fabricacao.custo_materiais)&&!/(Leatherworker|Weaver|Smith|Carpenter|Woodcarver)/i.test(x.fabricacao.ferramenta)),'As ferramentas e materiais da fabricação devem estar traduzidos.');
+assert.ok(items.every(x=>!/\(máx\. (?!\+)\d+\)/.test(x.ca)),'O teto do modificador precisa usar o sinal de mais.');
+assert.ok(!/xyleff-demo|xyleff-unthinkable-demo|pdf24_merged-1\.pdf|demonstrativ/i.test(JSON.stringify(catalog)),'Nenhuma referência aos registros demonstrativos deve persistir no catálogo.');
+assert.equal(counts.modulos.Armaduras,13,'A contagem da Biblioteca deve corresponder ao catálogo ativo.');
+assert.ok(/armor-heading/.test(html)&&/armor-type/.test(html),'O selo de tipo deve ficar próximo ao título.');
+assert.ok(!/id="origem"|origemLabel|pdfLabel|Ocorrência|não canônico|Tabela de fabricação conferida|Fabricação — referência complementar|x\.descricao/.test(html),'A ficha não deve mostrar rótulos de origem ou texto editorial.');
+assert.ok(/<h3>Fabricação<\/h3>/.test(html),'A seção deve se chamar Fabricação.');
+assert.ok(/ALL\.length!==13/.test(html),'O carregador não deve esperar os 34 registros antigos.');
+assert.ok(/titulo:'Livro do Jogador'/.test(spells),'Magias deve mostrar Livro do Jogador como título da fonte.');
+assert.ok(!/Ocorrência/.test(spells),'O cabeçalho de Magias não deve ter Ocorrência.');
+console.log('Armaduras: 12 armaduras e um escudo oficiais, PT-BR, ficha limpa, contagem coerente — OK');
