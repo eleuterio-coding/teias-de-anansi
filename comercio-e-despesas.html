@@ -181,7 +181,7 @@ function render(){
     if(!q) return true;
     return JSON.stringify(g).toLocaleLowerCase('pt-BR').includes(q);
   });
-  document.getElementById('resultado').textContent=`${filtrados.length} de ${GRUPOS.length} grupos exibidos`;
+  document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=filtrados.map(g=>`
     <details class="grupo">
       <summary><strong>${esc(g.nome)}</strong><span class="categoria">${esc(g.categoria)}</span></summary>
