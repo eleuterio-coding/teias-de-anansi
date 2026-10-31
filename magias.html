@@ -545,7 +545,6 @@ function sourceTitle(id){return DATA.fontes[id]?.titulo||id}
 function cleanSpellSchool(x){return String(x||'—').replace(/\s*;+\s*$/,'').trim()||'—';}
 const CLASS_TARGETS={"Bárbaro":"barbarian","Bardo":"bard","Clérigo":"cleric","Druida":"druid","Guerreiro":"fighter","Monge":"monk","Paladino":"paladin","Patrulheiro":"ranger","Ladino":"rogue","Feiticeiro":"sorcerer","Bruxo":"warlock","Mago":"wizard","Artífice":"artifice"};
 let VERIFIED_SPELL_PT={};
-let LARSENE_EDITORIAL={};
 let SPELL_EN_EDITORIAL={};
 async function loadEnglishEditorial(){
  try{
@@ -553,30 +552,6 @@ async function loadEnglishEditorial(){
   if(data.schema!=='hub-rpg.magias-en-editoriais.v1'||Object.keys(data.itens||{}).length!==171)throw new Error('171 resumos ingleses incompletos');
   SPELL_EN_EDITORIAL=data.itens;
  }catch(error){console.warn('Resumos em inglês indisponíveis:',error)}
-}
-
-async function loadLarseneEditorial(){
- try{
-  const data=await getJSON('dados/magias-larsene-descricoes-autorais.json?v=20261029-larsene-editoriais1');
-  if(data.schema!=='hub-rpg.magias-larsene-editoriais.v1'||Object.keys(data.itens||{}).length!==27)throw new Error('Catálogo editorial L’Arsene incompleto');
-  LARSENE_EDITORIAL=data.itens;
-  for(const spell of ALL){
-   if(spell.fonte!=='larsene-ledger-2023')continue;
-   const editorial=LARSENE_EDITORIAL[spell.nome_original];
-   if(!editorial)continue;
-   spell.descricao=editorial.pt;
-   spell.niveis_superiores=editorial.higher_pt||'';
-   spell.descricao_tipo='resumo_editorial';
-   spell.completude='stats_completos_resumo';
-   spell.concentracao=editorial.concentracao;
-   spell.duracao=editorial.duracao;
-   spell.alcance=editorial.alcance;
-   const comp=String(editorial.componentes||'');
-   spell.componentes={verbal:/\bV\b/.test(comp),somatico:/\bS\b/.test(comp),material:/\bM\b/.test(comp),material_texto:comp.match(/M\s*\((.*?)\)/)?.[1]||''};
-   delete spell.limite_coexistencia;
-   delete spell.limite_coexistencia_nome;
-  }
- }catch(err){console.warn('Descrições autorais de L’Arsene indisponíveis:',err)}
 }
 
 async function loadVerifiedSpellDescriptions(){
@@ -643,8 +618,6 @@ function spellEffectInPortuguese(x){
  if(x.descricao_tipo==='texto_fornecido_usuario'&&x.descricao_pt){
   return{content:x.descricao_pt,higher:x.niveis_superiores_pt||'',status:'Descrição em português — tradução do texto fornecido',complete:true};
  }
- const editorial=LARSENE_EDITORIAL[x.nome_original];
- if(x.fonte==='larsene-ledger-2023'&&editorial)return{content:editorial.pt,higher:editorial.higher_pt||'',status:'Descrição editorial em português',complete:false};
  const direct=VERIFIED_SPELL_PT[x.nome_original];
  if(direct){
   const obj=typeof direct==='string'?{descricao:direct}:direct;
@@ -680,8 +653,6 @@ function spellOriginalText(x){
  if(x.fonte==='xanathar-2017'&&x.xanathar_2017_user?.descricao_original_en)return '';
  if(x.fonte==='phb-2024')return VERIFIED_SPELL_PT[x.nome_original]?[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim():'';
  if(x.descricao_tipo==='texto_fornecido_usuario')return[x.descricao||'',x.niveis_superiores||''].filter(Boolean).join('\n\n').trim();
- const editorial=x.fonte==='larsene-ledger-2023'&&LARSENE_EDITORIAL[x.nome_original];
- if(editorial)return[editorial.en,editorial.higher_en?'At higher levels: '+editorial.higher_en:''].filter(Boolean).join('\n\n');
  const summary=SPELL_EN_EDITORIAL[x.nome_original];
  if(summary?.descricao)return String(summary.descricao).trim();
  if(x.descricao_tipo!=='texto_aberto_srd_5_2_1'||!x.texto_integral_publicavel)return '';
@@ -776,7 +747,7 @@ document.getElementById('spell-clear').addEventListener('click',()=>{
     ALL=[...catalog.itens.filter(x=>x.fonte!=='phb-2024'),...phbEntries.filter(x=>!importedPdfNames.has(norm(x.nome_original)))];
    ALL.sort((a,b)=>((a.nivel??99)-(b.nivel??99))||String(a.escola||'').localeCompare(String(b.escola||''),'pt-BR')||String(a.nome||'').localeCompare(String(b.nome||''),'pt-BR'));
    ALL.forEach((x,i)=>x.ordem_catalogo=x.ordem_catalogo||i+1);
-   await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadLarseneEditorial(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();return;
+   await Promise.all([localizeSpellNames(),loadVerifiedSpellDescriptions(),loadEnglishEditorial(),loadXanatharProvidedTexts(),loadTashaProvidedTexts()]);openInitialSpell();return;
   }
  }catch(e){throw new Error('Catálogo consolidado indisponível. As edições antigas não serão restauradas como substitutas dos PDFs.',{cause:e})}
  }catch(e){
