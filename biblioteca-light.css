@@ -450,3 +450,6 @@ body.hub-shell-enabled.hub-content-library .hub-app-content ::selection {
     transition: none;
   }
 }
+
+/* Contadores removidos do cabeçalho não deixam espaços vazios nos catálogos. */
+body.hub-shell-enabled.hub-content-library .hub-app-content #resultado:empty{display:none!important}
