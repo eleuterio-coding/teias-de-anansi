@@ -14,6 +14,17 @@ const overflow=async(page)=>page.evaluate(()=>({
   elements:[...document.querySelectorAll('main *')].filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&(r.right>innerWidth+4||r.left < -4)}).slice(0,12).map(el=>el.outerHTML.slice(0,130))
 }));
 test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
+  test.beforeEach(async({page})=>{
+    // Sessão local de teste: nenhuma credencial real, nem mudanças no controle de acesso.
+    await page.addInitScript(()=>{
+      localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({
+        uid:'auditoria-visual-local',username:'auditoria',isMaster:true,memberships:[]
+      }));
+    });
+    await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
+      status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})
+    }));
+  });
   test('Biblioteca: 18 cards em ordem alfabética e sem cortes',async({page},info)=>{
     const errors=[];page.on('pageerror',e=>errors.push(e.message));
     await page.goto('/bibliotecas.html');await ready(page,'.modulos li a');
