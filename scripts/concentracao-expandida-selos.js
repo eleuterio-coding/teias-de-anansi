@@ -75,13 +75,6 @@
 
   const CZ_2024 = setOf(['Conjure Celestial','Conjure Minor Elementals','Conjure Woodland Beings']);
 
-  // Novas magias de L’Arsene: categorias explícitas após a confirmação de concentração.
-  const LARSENE_CE = Object.freeze({
-    CL: setOf(["Chameleon Skin","Daydream","Protection","Blood Frenzy","Coralskin","Sugar Rush","Flesh to Bone"]),
-    CM: setOf(["Riptide","Enrage","Living Candle","Humperdink’s Irresistible Revelry"]),
-    CZ: setOf(["Acid Rain","Aura of Impurity","Purple Rain","Gravity Smash","Crimson Death","Field of Bones"])
-  });
-
   // Classificações adicionais aprovadas para as 121 magias anteriormente NC (29/10/2026).
   // Fonte única para Biblioteca e Ficha: não inferir classes para novas magias.
   const APPROVED_CE = Object.freeze({
@@ -140,7 +133,7 @@
     if (CZ.has(name)) return 'CZ';
     if (CL.has(name)) return 'CL';
     for (const category of ['CM','CI','CZ','CL']) {
-      if (APPROVED_CE[category].has(name) || LARSENE_CE[category]?.has(name)) return category;
+      if (APPROVED_CE[category].has(name)) return category;
     }
 
     // A lista oficial é normativa. Magias novas/revisadas não são classificadas
