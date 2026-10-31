@@ -23,7 +23,7 @@ LOOKUP_URL = f"{BASE}/generated/gendata-spell-source-lookup.json"
 SOURCE_META = {
     "XPHB": {
         "id": "phb-2024",
-        "titulo": "Player's Handbook (2024)",
+        "titulo": "Player’s Handbook",
         "ano": 2024,
         "data": "2024-09-17",
         "ruleset": "5.5e",

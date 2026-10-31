@@ -56,7 +56,7 @@ jobs:
         run: node tests/auditar-proveniencia-normativa.mjs
       - name: 11B · Classes core 2024
         run: node tests/auditar-semantica-classes-core.mjs
-      - name: 11B · Subclasses PHB 2024
+      - name: 11B · Subclasses Player’s Handbook
         run: node tests/auditar-semantica-subclasses-phb-2024.mjs
       - name: 11B · Subclasses Forge 2025
         run: node tests/auditar-semantica-subclasses-forge-2025.mjs
@@ -74,7 +74,7 @@ jobs:
         run: node tests/auditar-precedencia-subclasses-tasha-2020.mjs
       - name: 11C · Precedência de subclasses Xanathar
         run: node tests/auditar-precedencia-subclasses-xanathar-2017.mjs
-      - name: 11B · Espécies PHB 2024
+      - name: 11B · Espécies Player’s Handbook
         run: node tests/auditar-semantica-especies-phb-2024.mjs
       - name: 11B · Espécies Forge 2025
         run: node tests/auditar-semantica-especies-forge-2025.mjs
@@ -84,7 +84,7 @@ jobs:
         run: node tests/auditar-semantica-especies-motm-2022.mjs
       - name: 11C · Precedência Tiefling
         run: node tests/auditar-precedencia-tiefling.mjs
-      - name: 11B · Antecedentes PHB 2024
+      - name: 11B · Antecedentes Player’s Handbook
         run: node tests/auditar-semantica-antecedentes-phb-2024.mjs
       - name: 11B · Antecedentes suplementos 2025
         run: node tests/auditar-semantica-antecedentes-suplementos-2025.mjs

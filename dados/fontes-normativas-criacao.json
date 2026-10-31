@@ -43,7 +43,7 @@
     {
       "padrao": "dados/classes-base-2024.json",
       "autoridade": "oficial_atual",
-      "fonte": "Player's Handbook 2024 / SRD 5.2.1",
+      "fonte": "Player’s Handbook · SRD 5.2.1",
       "proveniencia": "arquivo"
     },
     {
@@ -79,7 +79,7 @@
     {
       "padrao": "dados/subclasses-mecanicas-phb-2024.json",
       "autoridade": "oficial_atual",
-      "fonte": "Player's Handbook 2024",
+      "fonte": "Player’s Handbook",
       "proveniencia": "arquivo"
     },
     {
@@ -127,7 +127,7 @@
     {
       "padrao": "dados/especies-pdf-phb-2024.json",
       "autoridade": "oficial_atual",
-      "fonte": "Player's Handbook 2024",
+      "fonte": "Player’s Handbook",
       "proveniencia": "arquivo"
     },
     {
@@ -163,7 +163,7 @@
     {
       "padrao": "dados/antecedentes-pdf-phb-2024.json",
       "autoridade": "oficial_atual",
-      "fonte": "Player's Handbook 2024",
+      "fonte": "Player’s Handbook",
       "proveniencia": "arquivo"
     },
     {
@@ -193,7 +193,7 @@
     {
       "padrao": "dados/talentos-phb-2024.json",
       "autoridade": "oficial_atual",
-      "fonte": "Player's Handbook 2024",
+      "fonte": "Player’s Handbook",
       "proveniencia": "arquivo"
     },
     {

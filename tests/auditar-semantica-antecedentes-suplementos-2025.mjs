@@ -49,7 +49,7 @@ for(const row of dragonmarked){
 }
 const normalForge=forgeRows.filter(row=>!dragonmarked.includes(row));
 assert.equal(normalForge.length,3,'Forge deve ter 3 antecedentes sem Dragonmark específico.');
-for(const row of normalForge){const feat=phbFeatMap.get(fold(row.talento));assert.equal(feat?.category,'Origem',`${row.nome}: ${row.talento} deve resolver como Talento de Origem PHB.`)}
+for(const row of normalForge){const feat=phbFeatMap.get(fold(row.talento));assert.equal(feat?.category,'Origem',`${row.nome}: ${row.talento} deve resolver como Talento de Origem Player’s Handbook.`)}
 
 for(const row of heroes.items||[]){
  const local=heroesFeatMap.get(fold(row.talento)),core=phbFeatMap.get(fold(row.talento)),feat=local||core;

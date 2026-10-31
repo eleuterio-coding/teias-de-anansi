@@ -33,7 +33,7 @@ assert.match(classes,/<details class="classe" data-id=/,'Cards de Classes precis
 assert.ok(!classes.includes('<details class="classe" open'),'As Classes não devem abrir cards automaticamente.');
 assert.ok(classes.includes('if(ref){const el='),'Links diretos ainda precisam identificar a classe solicitada.');
 const data=JSON.parse(read('dados/bugigangas-pdfs.json'));
-assert.equal(data.itens.length,100,'Devem permanecer 100 bugigangas do PHB 2024.');
+assert.equal(data.itens.length,100,'Devem permanecer 100 bugigangas do Player’s Handbook.');
 assert.equal(data.controle.registros_publicados,100);
 assert.equal(data.controle.phb2024_publicados,100);
 assert.ok(data.itens.every(item=>item.fonte==='phb2024'));

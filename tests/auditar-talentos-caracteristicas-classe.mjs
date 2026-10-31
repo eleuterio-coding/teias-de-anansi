@@ -5,12 +5,12 @@ import{classFeatureFeatGrants,featEligibleForClassGrant,classFeatureFeatInstance
 import{FEAT_RULES,activeFeatInstances,featMechanicalOutcome,sanitizeFeatChoices}from'../scripts/character-builder/feat-mechanics.js';
 
 const phb=JSON.parse(fs.readFileSync('dados/talentos-phb-2024.json','utf8'));
-assert.equal(phb.itens.length,75,'PHB 2024 deve conter 75 talentos');
+assert.equal(phb.itens.length,75,'Player’s Handbook deve conter 75 talentos');
 const counts=Object.fromEntries(['Origem','Geral','Estilo de Luta','Dádiva Épica'].map(category=>[category,phb.itens.filter(row=>row[1]===category).length]));
-assert.deepEqual(counts,{Origem:10,Geral:43,'Estilo de Luta':10,'Dádiva Épica':12},'categorias PHB 2024 divergentes');
+assert.deepEqual(counts,{Origem:10,Geral:43,'Estilo de Luta':10,'Dádiva Épica':12},'categorias Player’s Handbook divergentes');
 const styleNames=phb.itens.filter(row=>row[1]==='Estilo de Luta').map(row=>row[0]);
 const boonNames=phb.itens.filter(row=>row[1]==='Dádiva Épica').map(row=>row[0]);
-for(const name of[...styleNames,...boonNames])assert.ok(FEAT_RULES[name],`talento PHB sem regra mecânica: ${name}`);
+for(const name of[...styleNames,...boonNames])assert.ok(FEAT_RULES[name],`talento Player’s Handbook sem regra mecânica: ${name}`);
 
 const fighter={id:'fighter',slug:'fighter',name:'Guerreiro',spellAbility:'',proficiencies:['Armas marciais','Armadura pesada','Escudo'],proficienciesRaw:[],features:[{level:1,name:'Estilo de Luta'},{level:19,name:'Dádiva Épica'}],_houseFeatProgression:[]};
 const feats=phb.itens.map((row,i)=>({id:`feat-${i}`,name:row[0],category:row[1],prereq:row[2],repeatable:/^sim/i.test(String(row[3])),description:row[4]}));

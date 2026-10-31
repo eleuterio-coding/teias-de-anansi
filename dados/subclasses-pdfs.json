@@ -12,7 +12,7 @@
     {
       "nome": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "origem_pdf": "pdf24_merged.pdf",
       "paginas_pdf_fonte": [
         48,
@@ -99,7 +99,7 @@
       "classe": "Barbarian",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -117,7 +117,7 @@
       "classe": "Barbarian",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -135,7 +135,7 @@
       "classe": "Barbarian",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -153,7 +153,7 @@
       "classe": "Barbarian",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -171,7 +171,7 @@
       "classe": "Bard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -189,7 +189,7 @@
       "classe": "Bard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -207,7 +207,7 @@
       "classe": "Bard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -225,7 +225,7 @@
       "classe": "Bard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -243,7 +243,7 @@
       "classe": "Cleric",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -261,7 +261,7 @@
       "classe": "Cleric",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -279,7 +279,7 @@
       "classe": "Cleric",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -297,7 +297,7 @@
       "classe": "Cleric",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -315,7 +315,7 @@
       "classe": "Druid",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -333,7 +333,7 @@
       "classe": "Druid",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -351,7 +351,7 @@
       "classe": "Druid",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -369,7 +369,7 @@
       "classe": "Druid",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -387,7 +387,7 @@
       "classe": "Fighter",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -405,7 +405,7 @@
       "classe": "Fighter",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -423,7 +423,7 @@
       "classe": "Fighter",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -441,7 +441,7 @@
       "classe": "Fighter",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -459,7 +459,7 @@
       "classe": "Monk",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -477,7 +477,7 @@
       "classe": "Monk",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -495,7 +495,7 @@
       "classe": "Monk",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -513,7 +513,7 @@
       "classe": "Monk",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -531,7 +531,7 @@
       "classe": "Paladin",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -549,7 +549,7 @@
       "classe": "Paladin",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -567,7 +567,7 @@
       "classe": "Paladin",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -585,7 +585,7 @@
       "classe": "Paladin",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -603,7 +603,7 @@
       "classe": "Ranger",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -621,7 +621,7 @@
       "classe": "Ranger",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -639,7 +639,7 @@
       "classe": "Ranger",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -657,7 +657,7 @@
       "classe": "Ranger",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -675,7 +675,7 @@
       "classe": "Rogue",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -693,7 +693,7 @@
       "classe": "Rogue",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -711,7 +711,7 @@
       "classe": "Rogue",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -729,7 +729,7 @@
       "classe": "Rogue",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -747,7 +747,7 @@
       "classe": "Sorcerer",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -765,7 +765,7 @@
       "classe": "Sorcerer",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -783,7 +783,7 @@
       "classe": "Sorcerer",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -801,7 +801,7 @@
       "classe": "Sorcerer",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -819,7 +819,7 @@
       "classe": "Warlock",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -837,7 +837,7 @@
       "classe": "Warlock",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -855,7 +855,7 @@
       "classe": "Warlock",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -873,7 +873,7 @@
       "classe": "Warlock",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -891,7 +891,7 @@
       "classe": "Wizard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -909,7 +909,7 @@
       "classe": "Wizard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -927,7 +927,7 @@
       "classe": "Wizard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -945,7 +945,7 @@
       "classe": "Wizard",
       "grupo": "Subclasses básicas 2024",
       "fonte_id": "phb-2024",
-      "fonte": "Player's Handbook (2024)",
+      "fonte": "Player’s Handbook",
       "ano": 2024,
       "natureza": "oficial",
       "status": "vigente_mais_recente",
@@ -1315,7 +1315,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1333,7 +1333,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Barbarian de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1351,7 +1351,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1369,7 +1369,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Bard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1387,7 +1387,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1405,7 +1405,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1423,7 +1423,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Cleric de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1441,7 +1441,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1459,7 +1459,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Druid de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1477,7 +1477,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Fighter de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Fighter de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1495,7 +1495,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Monk de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Monk de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1513,7 +1513,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Paladin de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Paladin de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1531,7 +1531,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Ranger de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Ranger de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1549,7 +1549,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Rogue de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Rogue de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1567,7 +1567,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1585,7 +1585,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Warlock de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1603,7 +1603,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1621,7 +1621,7 @@
         24,
         78
       ],
-      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Wizard de Tasha’s Cauldron of Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1639,7 +1639,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1657,7 +1657,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Barbarian de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1675,7 +1675,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1693,7 +1693,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Bard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1711,7 +1711,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1729,7 +1729,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Cleric de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1747,7 +1747,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1765,7 +1765,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Druid de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1783,7 +1783,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1801,7 +1801,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1819,7 +1819,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Fighter de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1837,7 +1837,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1855,7 +1855,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1873,7 +1873,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Monk de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1891,7 +1891,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1909,7 +1909,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Paladin de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1927,7 +1927,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1945,7 +1945,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Ranger de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1963,7 +1963,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1981,7 +1981,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -1999,7 +1999,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2017,7 +2017,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Rogue de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2035,7 +2035,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2053,7 +2053,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2071,7 +2071,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Sorcerer de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2089,7 +2089,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Warlock de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Warlock de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {
@@ -2107,7 +2107,7 @@
         8,
         59
       ],
-      "descricao": "Subclasse de Wizard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook de 2024.",
+      "descricao": "Subclasse de Wizard de Xanathar’s Guide to Everything mantida no catálogo porque não foi substituída por uma reimpressão equivalente no Player’s Handbook.",
       "nivel_publicacao": "catalogo_estruturado_com_sintese"
     },
     {

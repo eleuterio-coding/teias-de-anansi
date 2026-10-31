@@ -44,7 +44,7 @@
     <input id="busca" type="search" placeholder="Buscar bugiganga, livro ou tabela...">
     <select id="filtro">
       <option value="">Todas as fontes</option>
-      <option value="phb2024">Player's Handbook (2024)</option>
+      <option value="phb2024">Player’s Handbook</option>
     </select>
   </div>
   <p class="resultado" id="resultado">Carregando catálogo...</p>
@@ -89,7 +89,7 @@ function render() {
   }).join('');
 }
 
-fetch('dados/bugigangas-pdfs.json?v=20261031-no-mournland1', {cache:'default'})
+fetch('dados/bugigangas-pdfs.json?v=20261031-phb-name1', {cache:'default'})
   .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
   .then(data => { DATA = data; render(); })
   .catch(err => {

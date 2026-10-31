@@ -16,7 +16,7 @@
   ],
   "invariantes_de_proveniencia":[
     "A fonte permanece terceiro_compativel mesmo quando distribuída no D&D Beyond.",
-    "Quickstone não pode substituir uma identidade de PHB 2024, Forge 2025 ou Heroes of Faerûn 2025.",
+    "Quickstone não pode substituir uma identidade de Player’s Handbook, Forge 2025 ou Heroes of Faerûn 2025.",
     "A prioridade runtime de quickstone-2024 deve permanecer abaixo de fontes oficiais atuais.",
     "As seis subclasses devem permanecer identificadas como conteúdo da fonte quickstone-2024."
   ],

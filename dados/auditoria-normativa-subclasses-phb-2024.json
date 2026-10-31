@@ -1,7 +1,7 @@
 {
   "schema": "hub-rpg/auditoria-normativa-subclasses-phb-2024/v1",
   "fonte_id": "phb-2024",
-  "fonte": "Player's Handbook (2024)",
+  "fonte": "Player’s Handbook",
   "ruleset": "5.5e",
   "revisao": 2024,
   "politica": "fail-closed",

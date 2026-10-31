@@ -2,7 +2,7 @@
   {
     "nome": "Common",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Sigil",
     "descricao": "Língua franca das comunidades e viajantes de muitos mundos de D&D. O Livro do Jogador de 2024 situa sua origem em Sigil; em Eberron, o Comum é a principal língua de comércio de Khorvaire e a língua compartilhada pelas Cinco Nações.",
     "status": "Ativo — regra soberana 2024 · descrição ampliada pelos PDFs",
@@ -13,7 +13,7 @@
   {
     "nome": "Common Sign Language",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025)",
     "origem": "Sigil",
     "descricao": "Língua de sinais de origem atribuída a Sigil e incluída entre os idiomas padrão de D&D 2024. Utiliza sinais em vez da fala e pode ser escolhida nas mesmas condições gerais dos demais idiomas padrão.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -24,7 +24,7 @@
   {
     "nome": "Draconic",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Dragões",
     "descricao": "Idioma originário dos dragões e associado também aos draconatos. É uma opção padrão em D&D 2024; em Eberron, os registros de sua forma escrita utilizam a escrita dracônica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -35,7 +35,7 @@
   {
     "nome": "Dwarvish",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Anões",
     "descricao": "Língua originária dos anões e difundida por suas comunidades. Em Eberron, é especialmente associada aos Mror Holds e utiliza a escrita anã.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -46,7 +46,7 @@
   {
     "nome": "Elvish",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Elfos",
     "descricao": "Língua originária dos elfos e preservada em diferentes tradições élficas. Em Eberron, é característica de Aerenal e Valenar e possui escrita élfica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -57,7 +57,7 @@
   {
     "nome": "Giant",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Gigantes",
     "descricao": "Idioma originário dos gigantes. Em Eberron, é encontrado entre habitantes de Xen’drik e serve à comunicação entre povos daquela região.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -68,7 +68,7 @@
   {
     "nome": "Gnomish",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Gnomos",
     "descricao": "Língua originária dos gnomos. No cenário de Eberron, está associada a Zilargo e emprega a escrita anã.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -79,7 +79,7 @@
   {
     "nome": "Goblin",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Goblinóides",
     "descricao": "Idioma originário dos povos goblinoides. Em Eberron, tem raízes na civilização dhakaani e é encontrado em Darguun, Droaam e nas Shadow Marches; ali, usa escrita própria goblin.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -90,7 +90,7 @@
   {
     "nome": "Halfling",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Eberron: Rising from the Last War (2019)",
     "origem": "Halflings",
     "descricao": "Idioma originário dos halflings. Em Eberron, é característico das comunidades das Talenta Plains e costuma ser registrado na escrita do Comum.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -101,7 +101,7 @@
   {
     "nome": "Orc",
     "categoria": "Core — Standard",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Forgotten Realms: Heroes of Faerûn (2025) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Orcs",
     "descricao": "Idioma originário dos orcs e classificado como padrão nas regras gerais de 2024. Em Eberron, é preservado sobretudo por tribos orcs mais isoladas e, nesse cenário, sua escrita deriva da escrita goblin.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",

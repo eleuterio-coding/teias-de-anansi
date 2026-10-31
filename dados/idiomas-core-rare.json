@@ -2,7 +2,7 @@
   {
     "nome": "Abyssal",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Demons of the Abyss",
     "descricao": "Idioma raro associado aos demônios do Abismo. Integra a lista de línguas raras de 2024; na tradição de D&D 5e, aparece associado à escrita infernal.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -13,7 +13,7 @@
   {
     "nome": "Aquan",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Water / Primordial",
     "descricao": "Dialeto de Primordial associado ao elemento água e às criaturas dos planos aquáticos. De acordo com D&D 2024, falantes de Aquan podem se comunicar com conhecedores dos demais dialetos de Primordial. O Hub o mantém como registro individual por convenção racial, não como idioma padrão adicional.",
     "status": "Dialeto de Primordial — uso racial no Hub",
@@ -24,7 +24,7 @@
   {
     "nome": "Auran",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Air / Primordial",
     "descricao": "Dialeto de Primordial associado ao ar e às criaturas elementais aéreas. Falantes de Auran e dos demais dialetos primordiais podem se compreender segundo as regras de 2024; sua separação como entrada autônoma é uma convenção de consulta do Hub.",
     "status": "Dialeto de Primordial — registro individual no Hub",
@@ -35,7 +35,7 @@
   {
     "nome": "Celestial",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Celestiais",
     "descricao": "Idioma raro ligado aos seres celestiais. Em Eberron, também aparece relacionado a Siberys e utiliza a escrita Celestial.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -46,7 +46,7 @@
   {
     "nome": "Deep Speech",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
     "origem": "Aberrações",
     "descricao": "Língua rara associada às aberrações e a entidades de natureza alienígena. Em Eberron, os daelkyr são relacionados a esse universo linguístico, embora os materiais do cenário também registrem Daelkyr separadamente.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -57,7 +57,7 @@
   {
     "nome": "Druidic",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024)",
     "origem": "Círculos druídicos",
     "descricao": "Idioma secreto das tradições e círculos druídicos, classificado entre os idiomas raros nas regras de 2024. O conhecimento desse idioma pode ser concedido por características de classe, em especial àqueles que seguem a tradição druídica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -68,7 +68,7 @@
   {
     "nome": "Ignan",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Fire / Primordial",
     "descricao": "Dialeto de Primordial associado ao fogo e aos elementais ígneos. É mutuamente compreensível com os demais dialetos primordiais nas regras de 2024; o registro individual no Hub é apenas uma organização de catálogo.",
     "status": "Dialeto de Primordial — registro individual no Hub",
@@ -79,7 +79,7 @@
   {
     "nome": "Infernal",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Diabos dos Nove Infernos",
     "descricao": "Idioma raro originário dos diabos dos Nove Infernos. É separado do Abissal nas regras gerais de 2024 e conserva a associação à escrita infernal em materiais de D&D 5e.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -90,7 +90,7 @@
   {
     "nome": "Primordial",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Elementais",
     "descricao": "Idioma raro dos elementais, organizado em quatro dialetos: Aquan (água), Auran (ar), Ignan (fogo) e Terran (terra). As regras de 2024 permitem a compreensão entre criaturas que conhecem dialetos primordiais diferentes.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -101,7 +101,7 @@
   {
     "nome": "Sylvan",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Frontiers of Eberron: Quickstone (2024) · Eberron: Rising from the Last War (2019)",
     "origem": "Agreste das Fadas",
     "descricao": "Idioma raro associado ao Agreste das Fadas e aos seres feéricos. Em Eberron, é ligado às criaturas feéricas e usa a escrita élfica.",
     "status": "Ativo — 2024 · descrição ampliada pelos PDFs",
@@ -112,7 +112,7 @@
   {
     "nome": "Terran",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024) · Regra da Casa — Hub de RPG",
+    "fonte": "Player’s Handbook · Basic Rules (2024) · Regra da Casa — Hub de RPG",
     "origem": "Elementals of Earth / Primordial",
     "descricao": "Dialeto de Primordial associado à terra e às criaturas elementais terrestres. De acordo com as regras de 2024, é compreensível aos falantes dos demais dialetos de Primordial; o Hub o cataloga separadamente para consulta.",
     "status": "Dialeto de Primordial — registro individual no Hub",
@@ -123,7 +123,7 @@
   {
     "nome": "Thieves’ Cant",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024)",
+    "fonte": "Player’s Handbook · Basic Rules (2024)",
     "origem": "Guildas Criminosas",
     "descricao": "Linguagem secreta desenvolvida em diferentes guildas e comunidades criminosas. Figura como idioma raro em D&D 2024 e é concedida a ladinos por uma característica de classe; seu conhecimento não é o mesmo que falar uma língua comum a todos os habitantes de um reino.",
     "status": "Ativo — 2024",
@@ -134,7 +134,7 @@
   {
     "nome": "Undercommon",
     "categoria": "Core — Rare",
-    "fonte": "Player’s Handbook / Basic Rules (2024)",
+    "fonte": "Player’s Handbook · Basic Rules (2024)",
     "origem": "Subterrâneo",
     "descricao": "Idioma raro associado ao Subterrâneo, usado por povos que vivem ou mantêm relações comerciais nas regiões profundas do mundo. Em D&D 5e, sua escrita é apresentada na tradição élfica.",
     "status": "Ativo — 2024",

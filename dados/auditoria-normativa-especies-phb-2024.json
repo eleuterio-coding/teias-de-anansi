@@ -3,7 +3,7 @@
   "etapa":"11B",
   "dominio":"especies",
   "fonte_id":"phb-2024",
-  "fonte":"Player's Handbook (2024) / SRD 5.2.1",
+  "fonte":"Player’s Handbook · SRD 5.2.1",
   "autoridade":"oficial_atual",
   "quantidade_core":10,
   "srd_pin":"bfd3db4bcc31699cce703b46feb9af3f0ff08999",
@@ -24,7 +24,7 @@
     "Tiefling possui três legados atuais: Abyssal, Chthonic e Infernal; cada legado fornece resistência e magias nos níveis 3 e 5."
   ],
   "fontes_verificacao":[
-    "D&D Beyond — The 10 Species in the 2024 Player's Handbook",
+    "D&D Beyond — The 10 Species in the 2024 Player’s Handbook",
     "5e-bits/5e-database — SRD 5.2.1 pinado no runtime"
   ],
   "status":"estrutural_com_invariantes_publicos",

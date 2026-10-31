@@ -43,7 +43,7 @@ const qNames=q.tracos.map(x=>x.nome.replace(/\s+Legacy$/i,''));
 assert.deepEqual(qNames.sort(),[...matrix.terceiro_quickstone.nomes].sort(),'Legados Quickstone divergentes.');
 
 const trait=(name,text='')=>({name,originalName:name,text});
-const base={id:'tiefling',name:'Tiefling',ruleset:'5.5e',revision:2024,status:'atual',source:'PHB 2024',sizes:['Medium','Small'],speed:30,traits:[trait('Fiendish Legacy'),trait('Otherworldly Presence')],abilityBonuses:[],lineages:matrix.fonte_vigente.legados.map(x=>({name:x.nome,traits:[]}))};
+const base={id:'tiefling',name:'Tiefling',ruleset:'5.5e',revision:2024,status:'atual',source:'Player’s Handbook',sizes:['Medium','Small'],speed:30,traits:[trait('Fiendish Legacy'),trait('Otherworldly Presence')],abilityBonuses:[],lineages:matrix.fonte_vigente.legados.map(x=>({name:x.nome,traits:[]}))};
 const eberron={id:'quickstone-tiefling',name:'Tiefling — Eberron',ruleset:'5e',revision:2014,status:'legado_compativel',compatibleWith:['5.5e'],source:'Frontiers of Eberron: Quickstone',sizes:['Medium','Small'],speed:30,traits:q.tracos.map(x=>trait(x.nome,x.texto)),abilityBonuses:[],lineages:[]};
 state.c={refs:{species:null},choices:{species:{size:null,lineage:null}}};
 const out=organizeRaceVariants([base,eberron],legacyData);

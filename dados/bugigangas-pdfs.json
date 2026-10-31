@@ -2,10 +2,10 @@
   "schema": "hub-rpg/bugigangas/v1",
   "modulo": "Bugigangas",
   "publicado_em": "2026-08-19T10:43:00-03:00",
-  "criterio": "Bugigangas persistentes da tabela Trinkets — d100 do Player's Handbook (2024).",
+  "criterio": "Bugigangas persistentes da tabela Trinkets — d100 do Player’s Handbook.",
   "fontes": {
     "phb2024": {
-      "livro": "Player's Handbook (2024)",
+      "livro": "Player’s Handbook",
       "edicao": "D&D 2024 / 5.5e",
       "pdf": "pdf24_merged.pdf",
       "tabela": "Trinkets — d100",

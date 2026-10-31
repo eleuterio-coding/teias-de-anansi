@@ -1,0 +1,16 @@
+name: "Validar nome Player’s Handbook"
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  titulo-canonico:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/auditar-titulo-players-handbook.mjs

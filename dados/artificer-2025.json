@@ -23,7 +23,7 @@
         1508
       ]
     },
-    "descricao": "Mestre de invenções que combina engenhosidade, ferramentas e magia para criar, replicar, recarregar, transformar e armazenar efeitos mágicos em objetos. Esta é a versão revisada para a estrutura de classes alinhada ao Player's Handbook de 2024.",
+    "descricao": "Mestre de invenções que combina engenhosidade, ferramentas e magia para criar, replicar, recarregar, transformar e armazenar efeitos mágicos em objetos. Esta é a versão revisada para a estrutura de classes alinhada ao Player’s Handbook.",
     "dados_base": {
       "atributo_principal": "Intelligence",
       "dado_de_vida": "d8 por nível de Artificer",
@@ -42,7 +42,7 @@
     },
     "multiclasse": {
       "ganhos": "Hit Point Die; proficiência com Tinker's Tools; uma perícia à escolha da lista do Artificer; treinamento com Light armor, Medium armor e Shields; e as características de nível 1 da classe.",
-      "conjuracao": "Para determinar spell slots de multiclasse, some metade dos níveis de Artificer, arredondando para cima, conforme as regras de multiclasse do Player's Handbook."
+      "conjuracao": "Para determinar spell slots de multiclasse, some metade dos níveis de Artificer, arredondando para cima, conforme as regras de multiclasse do Player’s Handbook."
     },
     "progressao": [
       {

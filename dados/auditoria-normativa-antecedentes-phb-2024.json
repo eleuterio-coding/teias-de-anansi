@@ -2,7 +2,7 @@
   "schema": "hub-rpg/auditoria-normativa-antecedentes-phb-2024/v1",
   "politica": "fail-closed",
   "autoridade": "oficial_atual",
-  "fonte": "Player's Handbook (2024)",
+  "fonte": "Player’s Handbook",
   "ruleset": "5.5e",
   "quantidade": 16,
   "distribuicao_fontes_runtime": {

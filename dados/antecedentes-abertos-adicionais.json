@@ -163,7 +163,7 @@
           "Legacy"
         ],
         "tags": [
-          "Player's Handbook 2014",
+          "Player’s Handbook",
           "5e",
           "Legacy",
           "compatível com 5.5e"
@@ -263,8 +263,8 @@
       },
       "fonte": {
         "publicacao_id": "phb-2014",
-        "titulo": "Player's Handbook (2014)",
-        "titulo_original": "Player's Handbook (2014)",
+        "titulo": "Player’s Handbook",
+        "titulo_original": "Player’s Handbook",
         "editora": "Wizards of the Coast LLC",
         "ano": 2014,
         "natureza": "Core",
@@ -296,7 +296,7 @@
         "status_completude": "publicado",
         "dependencias_nao_resolvidas": [],
         "referencias_externas": [
-          "D&D Beyond — catálogo oficial de Backgrounds / Player's Handbook 2014"
+          "D&D Beyond — catálogo oficial de Backgrounds / Player’s Handbook"
         ],
         "avisos_de_extracao": [
           "Tabelas de origem e características pessoais não são reproduzidas; não são necessárias ao bloco mecânico usado pelo Hub."
@@ -469,7 +469,7 @@
           "Legacy"
         ],
         "tags": [
-          "Player's Handbook 2014",
+          "Player’s Handbook",
           "5e",
           "Legacy",
           "compatível com 5.5e"
@@ -553,8 +553,8 @@
       },
       "fonte": {
         "publicacao_id": "phb-2014",
-        "titulo": "Player's Handbook (2014)",
-        "titulo_original": "Player's Handbook (2014)",
+        "titulo": "Player’s Handbook",
+        "titulo_original": "Player’s Handbook",
         "editora": "Wizards of the Coast LLC",
         "ano": 2014,
         "natureza": "Core",
@@ -610,7 +610,7 @@
           "Origem"
         ],
         "tags": [
-          "Player's Handbook 2024",
+          "Player’s Handbook",
           "5.5e",
           "conteúdo oficial aberto"
         ],
@@ -718,8 +718,8 @@
       },
       "fonte": {
         "publicacao_id": "phb-2024",
-        "titulo": "Player's Handbook (2024)",
-        "titulo_original": "Player's Handbook (2024)",
+        "titulo": "Player’s Handbook",
+        "titulo_original": "Player’s Handbook",
         "editora": "Wizards of the Coast LLC",
         "ano": 2024,
         "natureza": "Core",
