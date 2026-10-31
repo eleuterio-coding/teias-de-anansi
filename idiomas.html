@@ -74,7 +74,7 @@ function texto(i) { return [i.nome,i.categoria,i.fonte,i.descricao,i.status,loca
 function livrosDaFonte(i) {
   if (i.nome === 'Gith') return ['Mordenkainen’s Tome of Foes (2018)'];
   return String(i.fonte || '')
-    .replace('Player’s Handbook · Basic Rules (2024)', 'Player’s Handbook (2024)')
+    .replace('Player’s Handbook · Basic Rules (2024)', 'Player’s Handbook')
     .split(' · ')
     .map(livro => livro.trim())
     .filter(livro => livro && !/^Regra da Casa\b/i.test(livro) && !/^legado de edições anteriores\b/i.test(livro));
