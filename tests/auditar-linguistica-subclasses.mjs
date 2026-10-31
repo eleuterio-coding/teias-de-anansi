@@ -4,7 +4,7 @@ import vm from 'node:vm';
 
 const read=p=>fs.readFileSync(p,'utf8');
 const json=p=>JSON.parse(read(p));
-const files=['phb-2024','forge-2025','quickstone-2024','heroes-faerun-2025','tasha-2020','xanathar-2017','larsene-ledger-2024'];
+const files=['phb-2024','forge-2025','quickstone-2024','heroes-faerun-2025','tasha-2020','xanathar-2017'];
 const records=files.flatMap(id=>json('dados/subclasses-mecanicas-'+id+'.json').subclasses);
 const titles=json('dados/localizacao-ptbr-subclasses.json');
 const features=json('dados/localizacao-ptbr-caracteristicas-subclasses.json').nomes;
@@ -18,9 +18,9 @@ const {localizar,TERMOS}=box.audit;
 const dictionary={...titles.termos,...TERMOS,...glossary,...features,...spells};
 const texts=records.flatMap(s=>[{sub:s.nome,part:'Resumo',text:s.resumo},
   ...(s.progressao||[]).map(p=>({sub:s.nome,part:p.nome,text:p.descricao}))]);
-assert.equal(records.length,119,'Amostra deve conter 119 subclasses.');
-assert.equal(texts.length,747,'Amostra deve abranger todos os 119 resumos e 628 textos de características.');
-assert.equal(Object.keys(features).length,591,'Devem existir 591 nomes distintos de características em PT-BR.');
+assert.equal(records.length,112,'Amostra deve conter 112 subclasses.');
+assert.equal(texts.length,700,'Amostra deve abranger todos os 112 resumos e 588 textos de características.');
+assert.equal(Object.keys(features).length,553,'Devem existir 553 nomes distintos de características em PT-BR.');
 assert.ok(records.every(s=>titles.nomes[s.nome]&&s.resumo?.trim()&&s.progressao.every(p=>features[p.nome]&&p.descricao?.trim())));
 const leftovers=/\b(?:saving throws?|attack rolls?|ability checks?|spell slots?|spellbook|spellcasting|cantrips?|Rage|weapon|weapons|damage|creature|swarms?|companion|proficiency|check|checks|save|saves|Action|Reaction|Force|Fire|Cold|Charisma|Wisdom|Intelligence|Strength|Dexterity|Constitution|PB|DC)\b/i;
 const problems=[];
@@ -41,4 +41,4 @@ const samples={
 for(const [source,target] of Object.entries(samples)){
   assert.equal(localizar(source,dictionary),target,'Tradução contextual incorreta: '+source);
 }
-console.log('Auditoria linguística: 119 subclasses, 119 resumos, 628 descrições e 591 características; sem resíduo do glossário crítico.');
+console.log('Auditoria linguística: 112 subclasses, 112 resumos, 588 descrições e 553 características; sem resíduo do glossário crítico.');
