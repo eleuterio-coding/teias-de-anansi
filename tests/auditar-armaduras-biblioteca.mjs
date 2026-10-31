@@ -13,7 +13,10 @@ assert.deepEqual(items.map(x=>x.nome),translated,'Os nomes devem estar em portug
 assert.equal(items.filter(x=>x.categoria==='Escudo').length,1,'Apenas o escudo oficial deve permanecer.');
 assert.ok(items.every(x=>x.canonico===true&&x.fonte_id==='phb-2024'&&x.fonte==='Livro do Jogador'),'Nenhum demonstrativo pode continuar disponível.');
 assert.ok(items.every(x=>!x.descricao),'Os textos editoriais repetitivos precisam ser retirados.');
-assert.ok(items.every(x=>/^\d[\d.]* PO$/.test(x.custo)&&/^\d+ libras$/.test(x.peso)),'Custo e peso devem aparecer em português sem alterar quantidades.');
+assert.ok(items.every(x=>/^\d[\d.]* PO$/.test(x.custo)),'Os preços devem permanecer em peças de ouro.');
+const pesosEsperados=['3,6','4,5','5,9','5,4','9,1','20,4','9,1','18,1','18,1','24,9','27,2','29,5','2,7'];
+assert.deepEqual(items.map(x=>x.peso),pesosEsperados.map(x=>`${x} kg`),'Todos os pesos devem estar convertidos de libras para kg, com uma casa decimal.');
+assert.ok(items.every(x=>/^\d+,\d kg$/.test(x.peso)),'Nenhum peso deve continuar em libras ou em formatação inglesa.');
 assert.ok(items.every(x=>x.fabricacao&&/ PO$/.test(x.fabricacao.custo_materiais)&&!/(Leatherworker|Weaver|Smith|Carpenter|Woodcarver)/i.test(x.fabricacao.ferramenta)),'As ferramentas e materiais da fabricação devem estar traduzidos.');
 assert.ok(items.every(x=>!/\(máx\. (?!\+)\d+\)/.test(x.ca)),'O teto do modificador precisa usar o sinal de mais.');
 assert.ok(!/xyleff-demo|xyleff-unthinkable-demo|pdf24_merged-1\.pdf|demonstrativ/i.test(JSON.stringify(catalog)),'Nenhuma referência aos registros demonstrativos deve persistir no catálogo.');
