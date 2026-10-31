@@ -126,4 +126,30 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     const geom=await overflow(page);
     expect.soft(geom.scroll,`Estouro de largura: ${JSON.stringify(geom)}`).toBeLessThanOrEqual(geom.view+4);
   });
+  test('Armaduras e escudo: catálogo exclusivamente oficial e cards limpos',async({page},info)=>{
+    const errors=[];page.on('pageerror',error=>errors.push(error.message));
+    await page.goto('/armaduras.html');
+    await expect(page.locator('#lista .item')).toHaveCount(13,{timeout:30000});
+    await expect(page.locator('#origem')).toHaveCount(0);
+    await expect(page.locator('#count')).toHaveText('13 de 13 equipamentos');
+    await expect(page.locator('.armor-heading h2')).toHaveText('Armadura Acolchoada');
+    await expect(page.locator('.armor-heading .armor-type')).toHaveText('Leve');
+    await expect(page.locator('.armor-source')).toContainText('Fonte: Livro do Jogador');
+    await expect(page.locator('#detalhe')).not.toContainText(/Ocorrência|Demonstrativo|pdf24_merged|catálogo-base/);
+    await page.locator('#categoria').selectOption('Média');
+    await expect(page.locator('#lista .item')).toHaveCount(5);
+    await page.locator('#lista .item').first().click();
+    await expect(page.locator('#detalhe .stat').first()).toContainText('(máx. +2)');
+    await page.locator('#categoria').selectOption('Escudo');
+    await expect(page.locator('#lista .item')).toHaveCount(1);
+    await page.locator('#lista .item').first().click();
+    await expect(page.locator('.armor-heading h2')).toHaveText('Escudo');
+    await expect(page.locator('.armor-heading .armor-type')).toHaveText('Escudo');
+    await expect(page.locator('#detalhe')).toContainText('Fabricação');
+    await capture(page,`armaduras-${info.project.name}.png`);
+    const geom=await overflow(page);
+    expect.soft(geom.scroll).toBeLessThanOrEqual(geom.view+4);
+    expect.soft(errors).toEqual([]);
+  });
+
 });
