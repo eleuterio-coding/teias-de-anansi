@@ -8,6 +8,7 @@ on:
       - scripts/subclasses-biblioteca-ui.js
       - dados/localizacao-ptbr-termos-mecanicos.json
       - tests/auditar-linguistica-subclasses.mjs
+      - .github/workflows/auditoria-visual-biblioteca.yml
 
 permissions:
   contents: read
