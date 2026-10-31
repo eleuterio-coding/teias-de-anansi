@@ -136,6 +136,17 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('3,6 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Leve');
     await expect(page.locator('.armor-source')).toContainText('Fonte: Livro do Jogador');
+    // A tradução aparece de imediato; o inglês permanece recolhido até ser solicitado.
+    await expect(page.locator('#detalhe .armor-description h3')).toHaveText('Efeito e descrição');
+    await expect(page.locator('#detalhe .armor-description-status')).toContainText('Descrição em português');
+    await expect(page.locator('#detalhe .armor-description-copy')).toContainText('camadas de tecido e enchimento');
+    await expect(page.locator('#detalhe .armor-original-collapse')).not.toHaveAttribute('open','');
+    await expect(page.locator('#detalhe .armor-original-collapse > summary')).toContainText('Padded — texto original');
+    await page.locator('#detalhe .armor-original-collapse > summary').click();
+    await expect(page.locator('#detalhe .armor-original-collapse')).toHaveAttribute('open','');
+    await expect(page.locator('#detalhe .armor-original-copy')).toContainText('quilted layers of cloth');
+    await page.locator('#detalhe .armor-original-collapse > summary').click();
+    await expect(page.locator('#detalhe .armor-original-collapse')).not.toHaveAttribute('open','');
     await expect(page.locator('#detalhe .armor-stat')).toHaveCount(3);
     await expect(page.locator('#detalhe .armor-conditions .armor-condition')).toHaveCount(1);
     await expect(page.locator('#detalhe')).not.toContainText('Força mínima');
@@ -157,6 +168,10 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('#lista .item')).toHaveCount(1);
     await page.locator('#lista .item').first().click();
     await expect(page.locator('.armor-heading h2')).toHaveText('Escudo');
+    await expect(page.locator('#detalhe .armor-description-copy')).toContainText('Você só pode se beneficiar de um escudo por vez.');
+    await expect(page.locator('#detalhe .armor-original-collapse > summary')).toContainText('Shield — texto original');
+    await page.locator('#detalhe .armor-original-collapse > summary').click();
+    await expect(page.locator('#detalhe .armor-original-copy')).toContainText('You can benefit from only one shield at a time.');
     await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('2,7 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Escudo');
     await expect(page.locator('#detalhe .armor-conditions')).toHaveCount(0);
