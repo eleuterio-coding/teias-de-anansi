@@ -1,0 +1,25 @@
+{
+  "schema": "hub-rpg.biblioteca-contagens.v1",
+  "gerado_em": "2026-10-31",
+  "observacao": "Contagens dos registros exibidos em cada módulo; Monstros é calculado dinamicamente pela mesma regra de consolidação do catálogo.",
+  "modulos": {
+    "Regras": 162,
+    "Classes": 13,
+    "Subclasses": 119,
+    "Espécies": 51,
+    "Antecedentes": 60,
+    "Talentos": 172,
+    "Maestrias de Arma": 15,
+    "Monstros": null,
+    "Armaduras": 34,
+    "Armas": 146,
+    "Equipamentos de Aventura": 185,
+    "Ferramentas": 25,
+    "Montarias e Veículos": 60,
+    "Comércio e Despesas": 6,
+    "Bugigangas": 100,
+    "Itens Mágicos": 259,
+    "Magias": 537,
+    "Idiomas": 42
+  }
+}
