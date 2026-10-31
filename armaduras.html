@@ -23,6 +23,15 @@ body.hub-library-armors .armor-craft-grid{display:flex;gap:12px 24px;flex-wrap:w
 body.hub-library-armors .armor-craft-grid>div{display:flex;flex-direction:column;gap:3px;min-width:65px;max-width:100%}
 body.hub-library-armors .armor-craft-grid .armor-craft-tool{flex:1 1 210px}
 body.hub-library-armors .armor-craft-grid span{font-size:.9rem;line-height:1.4}
+/* Descrição de armaduras no mesmo padrão visual dos efeitos de Magias. */
+body.hub-library-armors .armor-description{margin:18px 0 0;padding:17px 18px}
+body.hub-library-armors .armor-description h3{margin:0 0 11px;font-size:1rem;line-height:1.35;color:var(--hub-text,#f4f7fb)}
+body.hub-library-armors .armor-description-status{display:block;margin:0 0 12px;font-size:.74rem;line-height:1.5;color:var(--hub-muted,#8290a3);letter-spacing:.01em}
+body.hub-library-armors .armor-description-copy{margin:0;white-space:pre-line;line-height:1.7;overflow-wrap:break-word;color:var(--hub-text-2,#c5cfdb)}
+body.hub-library-armors .armor-original-collapse{border-top:1px solid var(--hub-border,#223245);margin:17px 0 0;padding-top:12px}
+body.hub-library-armors .armor-original-collapse>summary{cursor:pointer;font-size:.78rem;font-weight:650;color:var(--hub-muted,#8290a3)!important;list-style:revert}
+body.hub-library-armors .armor-original-collapse>summary:focus-visible{outline:2px solid var(--hub-accent,#2f9cff);outline-offset:4px;border-radius:3px}
+body.hub-library-armors .armor-original-copy{white-space:pre-line;margin:12px 0 2px;font-size:.8rem;line-height:1.6;color:var(--hub-muted,#8290a3);overflow-wrap:anywhere}
 body.hub-library-armors .armor-source{margin:14px 0 0;font-size:.78rem;line-height:1.45;color:var(--hub-muted,#8290a3)}
 body.hub-library-armors .armor-source b{font-weight:650}
 body.hub-library-armors .lista .item{text-align:left!important;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;padding:12px 14px!important}
@@ -34,7 +43,7 @@ body.hub-library-armors .lista .item strong,body.hub-library-armors .lista .item
  body.hub-library-armors .armor-craft-grid{gap:12px 20px}
 }
 </style>
-  <link rel="stylesheet" href="biblioteca-light.css?v=20261031-armaduras-compact1">
+  <link rel="stylesheet" href="biblioteca-light.css?v=20261031-armaduras-descricoes1">
 </head>
 <body class="hub-library-armors">
 <p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
@@ -52,7 +61,8 @@ function renderDetail(id){
  const requisitos=condicoes.length?`<div class="armor-conditions" aria-label="Requisitos e propriedades">${condicoes.join('')}</div>`:'';
  const f=x.fabricacao;
  const craft=f?`<section class="armor-craft" aria-label="Fabricação"><h3>Fabricação</h3><div class="armor-craft-grid"><div><b>Materiais</b><span>${esc(f.custo_materiais)}</span></div><div><b>Tempo</b><span>${esc(f.tempo_horas)} h</span></div><div><b>CD</b><span>${esc(f.cd)}</span></div>${f.ferramenta?`<div class="armor-craft-tool"><b>Ferramenta</b><span>${esc(f.ferramenta)}</span></div>`:''}</div></section>`:'';
- document.getElementById('detalhe').innerHTML=`<div class="armor-heading"><h2>${esc(x.nome)}</h2><span class="badge armor-type">${esc(x.categoria)}</span></div><div class="stats armor-stats">${stat('CA',x.ca,true)}${stat('Custo',x.custo)}${stat('Peso',x.peso)}</div>${requisitos}${craft}<p class="armor-source"><b>Fonte:</b> ${esc(x.fonte)}</p>`;
+ const descricao=x.descricao_pt?`<section class="box armor-description" aria-label="Efeito e descrição"><h3>Efeito e descrição</h3><p class="armor-description-status">Descrição em português — tradução do texto fornecido</p><p class="armor-description-copy" lang="pt-BR">${esc(x.descricao_pt)}</p>${x.descricao_original?`<details class="armor-original-collapse"><summary><i lang="en">${esc(x.nome_original||x.nome)}</i> — texto original</summary><div class="armor-original-copy" lang="en"><i>${esc(x.descricao_original)}</i></div></details>`:''}</section>`:'';
+ document.getElementById('detalhe').innerHTML=`<div class="armor-heading"><h2>${esc(x.nome)}</h2><span class="badge armor-type">${esc(x.categoria)}</span></div><div class="stats armor-stats">${stat('CA',x.ca,true)}${stat('Custo',x.custo)}${stat('Peso',x.peso)}</div>${requisitos}${descricao}${craft}<p class="armor-source"><b>Fonte:</b> ${esc(x.fonte)}</p>`;
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),cat=document.getElementById('categoria').value;
@@ -61,7 +71,7 @@ function renderList(){
  document.getElementById('lista').innerHTML=rows.map(x=>`<button type="button" class="item ${CURRENT===x.id?'on':''}" data-id="${esc(x.id)}" aria-pressed="${CURRENT===x.id}"><strong>${esc(x.nome)}</strong><small>${esc(x.categoria)} · CA ${esc(x.ca)}</small></button>`).join('')||'<div class="vazio">Nenhuma armadura ou escudo encontrado.</div>'; 
  document.querySelectorAll('#lista .item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.id));
 }
-(async()=>{try{const r=await fetch('dados/armaduras-pdfs.json?v=20261031-armaduras-kg1',{cache:'default'});if(!r.ok)throw new Error(`HTTP ${r.status}`);DATA=await r.json();ALL=(DATA.armaduras||[]).filter(x=>x.canonico);if(ALL.length!==13)throw new Error(`catálogo incompleto: ${ALL.length}/13`);const cats=[...new Set(ALL.map(x=>x.categoria))];document.getElementById('categoria').innerHTML='<option value="">Todas as categorias</option>'+cats.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0])renderDetail(ALL[0].id)}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();['q','categoria'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
+(async()=>{try{const r=await fetch('dados/armaduras-pdfs.json?v=20261031-armaduras-descricoes1',{cache:'default'});if(!r.ok)throw new Error(`HTTP ${r.status}`);DATA=await r.json();ALL=(DATA.armaduras||[]).filter(x=>x.canonico);if(ALL.length!==13)throw new Error(`catálogo incompleto: ${ALL.length}/13`);const cats=[...new Set(ALL.map(x=>x.categoria))];document.getElementById('categoria').innerHTML='<option value="">Todas as categorias</option>'+cats.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0])renderDetail(ALL[0].id)}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();['q','categoria'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',renderList));
 </script>
 <script type="module" src="scripts/hub-ux.js?v=20261031-armaduras-ptbr2"></script>
 </body>
