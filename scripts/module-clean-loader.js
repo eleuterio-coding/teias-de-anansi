@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20260923-race-language-field2';
+  const VERSION='20261031-library-clean1';
   const LAYOUT='biblioteca-light.css?v=20261028-hub-layout1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
@@ -50,7 +50,7 @@
   async function load(){
     const c=cfg[key];
     if(!c)throw new Error('Módulo de limpeza inválido.');
-    const r=await fetch(`${c.source}?v=${key==='classes'?'20261030-biomancia-classes2':VERSION}`,{cache:key==='raca'||key==='especies'?'no-store':'default'});
+    const r=await fetch(`${c.source}?v=${VERSION}`,{cache:key==='raca'||key==='especies'?'no-store':'default'});
     if(!r.ok)throw new Error(`HTTP ${r.status}`);
     let html=await r.text();
     for(const [rx,repl] of c.rules)html=html.replace(rx,repl);
