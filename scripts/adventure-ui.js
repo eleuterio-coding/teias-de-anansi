@@ -2,7 +2,6 @@ import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
 import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261026-drag-fix1';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
-import{renderCampaignSessionCard}from'./campaign-session-card.js';
 import{loadEncounterMonsterIndex,loadEncounterMonsterDetail}from'./monster-catalog.js?v=20261023-adventure-library7';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261027-scenes-timeline1';
@@ -230,12 +229,6 @@ function adventureTimelineHtml(a){
   ${flowchart?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):`<ol class="campaign-timeline-flow timeline-tree">${list||'<li class="campaign-blank-state">Nenhuma cena criada.</li>'}</ol>`}
  </section>`;
 }
-function linkedSessionsHtml(a){
- const ids=new Set(a.scenes.map(s=>s.sessionId).filter(Boolean));
- const rows=(campaign()?.sessions||[]).filter(s=>s.adventureId===a.id||ids.has(s.id)).sort((x,y)=>(x.order||x.number)-(y.order||y.number));
- return`<section id="sessoes" class="card campaign-editor-card"><h2>Sessões da Aventura</h2>
- <div class="list campaign-player-story-grid">${rows.length?rows.map(s=>`<div class="adventure-linked-session" data-adventure-session="${esc(s.id)}"><div class="adventure-session-card-wrap">${renderCampaignSessionCard(s,a.campaignId)}<div class="adventure-session-visibility">${visibleToggle('sessions',s.id,a.sessionVisibility?.[s.id]===true)}</div></div></div>`).join(''):'<div class="empty">Nenhuma sessão vinculada à Aventura.</div>'}</div></section>`;
-}
 function monstersHtml(a){
  const current=ordered(a.monsters||[]);
  return `<section id="monstros" class="card adventure-monster-library">
@@ -372,7 +365,7 @@ function arrangeAdventureContentWorkspace(){
   'visao-geral':'more',participantes:'player',cenas:'scene','criar-cena':'scene',
   exploracao:'area','criar-area':'area',mapas:'map','criar-mapa':'map',
   npcs:'npc',monstros:'monster',faccoes:'more',missoes:'more',
-  sessoes:'more','linha-tempo':'more','notas-mestre':'more'
+  'linha-tempo':'more','notas-mestre':'more'
  };
  const editor=creation.querySelector('.adventure-workspace-editors');
  Object.entries(groups).forEach(([id,group])=>{
@@ -643,12 +636,7 @@ function bindAdventureNotes(){
 }
 function bind(){
  bindAdventureMonsterLibrary();
- document.querySelectorAll('#sessoes [data-adventure-visible="sessions"]').forEach(input=>input.addEventListener('change',()=>{
-  const a=adventure(),id=input.dataset.visibleId;
-  const sessionVisibility={...(a.sessionVisibility||{}),[id]:input.checked};
-  commit(updateAdventure(adventures,adventureId,{sessionVisibility}),'Visibilidade da sessão atualizada.');
- }));
- // Atualizar apenas a Linha do Tempo: um render() completo destrói todos os
+// Atualizar apenas a Linha do Tempo: um render() completo destrói todos os
  // elementos da Aventura, interrompendo a navegação entre Lista e Fluxograma.
  // Delegação no contêiner preserva a alternância após trocar seus filhos.
  const timeline=$('linha-tempo');
