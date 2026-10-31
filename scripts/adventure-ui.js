@@ -337,11 +337,12 @@ function workspaceHtml(a){
   ${renderAdventureOverview(a,c,characters)}
  </div>
  <section id="adventure-create-content" class="adventure-workspace-pane adventure-creation-workspace" role="tabpanel" aria-labelledby="adventure-create-tab" hidden>
-  <div class="adventure-creation-heading"><div><span class="adventure-read-eyebrow">Gerenciamento</span><h2>Criar e editar conteúdo</h2></div></div>
-  <div class="adventure-creation-choices" role="group" aria-label="Tipo de conteúdo">
+  <nav class="adventure-creation-choices" aria-label="Categorias de criação">
    ${adventureContentKinds.map(([kind,label])=>`<button type="button" data-adventure-creation-kind="${kind}" aria-pressed="false">${label}</button>`).join('')}
-  </div>
-  <div class="adventure-editing-location" role="status" aria-live="polite"><span>EDITANDO</span><strong id="adventure-active-section-title">Cenas</strong></div>
+  </nav>
+  <header class="adventure-current-section" aria-live="polite">
+   <div><span class="adventure-read-eyebrow">Criar e editar</span><h2 id="adventure-active-section-title">Cenas</h2></div>
+  </header>
   <div class="adventure-creation-general" data-adventure-workspace-group="more">
    ${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)})}
   </div>
