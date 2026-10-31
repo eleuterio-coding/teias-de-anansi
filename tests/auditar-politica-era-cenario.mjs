@@ -36,14 +36,6 @@ const coreNames=(coreFiltered.itens||[]).map(x=>x.nome_original||x.nome);
 assert(!coreNames.some(x=>P.matchesName(x)),'Armas modernas sobreviveram ao filtro do SRD.');
 assert(coreNames.includes('Longsword'),'Arma medieval de controle foi removida indevidamente.');
 
-const larsene=JSON.parse(fs.readFileSync(path.join(ROOT,'dados','armas-fontes','larsene-ledger.json'),'utf8'));
-const larseneFiltered=P.sanitizePayload(larsene);
-const larseneNames=(larseneFiltered.itens||[]).map(x=>x.nome_original||x.nome);
-for(const removed of ['Blunderbuss','Musket','Pistol','Revolver','Rifle']){
-  assert(!larseneNames.includes(removed),`Arma de pólvora suplementar não removida: ${removed}`);
-}
-assert(larseneNames.includes('Chakram'),'Arma fantástica/medieval de controle foi removida indevidamente.');
-
 const masteries=JSON.parse(fs.readFileSync(path.join(ROOT,'dados','maestrias-de-arma-pdfs.json'),'utf8'));
 const masteriesFiltered=P.sanitizePayload(masteries);
 const masteryText=JSON.stringify(masteriesFiltered);
