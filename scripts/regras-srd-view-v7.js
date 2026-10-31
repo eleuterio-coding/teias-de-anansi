@@ -90,7 +90,7 @@ function allCards(){
 function render(){
   const q=norm(document.getElementById('busca').value);
   const source=document.getElementById('fonte').value;
-  const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family}`).includes(q))&&(!source||c.kind===source));
+  const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family}`).includes(q))&&(!source||c.kind===source)).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base'})||a.original.localeCompare(b.original,'pt-BR',{sensitivity:'base'}));
   document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=cards.map(c=>c.html).join('')||'<p class="muted">Nenhuma regra corresponde aos filtros.</p>';
   focusRequested();

@@ -20,15 +20,28 @@ const sourceModules=[
   'dados/_module-source/talentos.html'
 ];
 const expectedModules=[
-  'regras.html','classes.html','subclasses.html','raca.html','antecedentes.html',
-  'talentos.html','maestrias-de-arma.html','monstros.html','armaduras.html',
-  'armas.html','equipamentos-aventura.html','ferramentas.html',
-  'montarias-veiculos.html','comercio-e-despesas.html','bugigangas.html',
-  'itens-magicos.html','magias.html','idiomas.html'
+  'antecedentes.html',
+  'armaduras.html',
+  'armas.html',
+  'bugigangas.html',
+  'classes.html',
+  'comercio-e-despesas.html',
+  'equipamentos-aventura.html',
+  'ferramentas.html',
+  'idiomas.html',
+  'itens-magicos.html',
+  'maestrias-de-arma.html',
+  'magias.html',
+  'monstros.html',
+  'montarias-veiculos.html',
+  'raca.html',
+  'regras.html',
+  'subclasses.html',
+  'talentos.html',
 ];
 const index=read('bibliotecas.html');
 const hrefs=[...index.matchAll(/<li><a href="([^"?]+\.html)(?:\?[^"]*)?"/g)].map(m=>m[1]);
-assert.deepEqual(hrefs,expectedModules,'Os 18 cards devem preservar destinos e ordem.');
+assert.deepEqual(hrefs,expectedModules,'Os 18 cards devem seguir a ordem alfabética, preservando os destinos.');
 assert.match(index,/class="hub-library-page"/,'O índice deve usar a estrutura compartilhada.');
 assert.match(index,/scripts\/library-catalog-status\.js/,'Busca e contagem do catálogo devem permanecer.');
 
@@ -47,7 +60,7 @@ for(const file of sourceModules)assert.match(read(file),/<\/head>/i,file+' deve 
 
 const loader=read('scripts/module-clean-loader.js');
 for(const token of [
-  "const LAYOUT='biblioteca-light.css?v=20261028-hub-layout1'",
+  "const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1'",
   'function applySharedLayout(html)',
   'id="hub-library-layout"',
   'html=applySharedLayout(html);',

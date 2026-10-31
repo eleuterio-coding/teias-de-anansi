@@ -55,5 +55,5 @@
     }
     console.info('[subclass-mechanics] 119/119 subclasses enriquecidas.');
   }
-  load().catch(error=>{console.error('[subclass-mechanics]',error);const out=document.getElementById('resultado');if(out)out.textContent='Falha ao carregar as mecânicas das subclasses.'});
+  load().catch(error=>{console.error('[subclass-mechanics]',error);const out=document.getElementById('resultado');if(out)out.textContent='Falha ao carregar as mecânicas das subclasses.'}).finally(()=>{document.documentElement.dataset.subclassMechanicsReady='1';document.dispatchEvent(new Event('hub:subclasses-mecanicas-prontas'));});
 })();
