@@ -200,41 +200,95 @@
 }
 
 
-/* Aventura — orientação contextual de edição; mesmos acentos, bordas e
-   estados ativos utilizados nos seletores do Hub. */
-#adventure-root .adventure-creation-choices>button.is-active{
-  color:var(--hub-text,#f4f7fb);
-  border-color:var(--hub-accent,#2b659a);
-  background:color-mix(in srgb,var(--hub-accent,#2b659a) 22%,var(--hub-surface,#111f2d));
-  box-shadow:inset 0 -3px 0 var(--hub-accent,#2b659a),0 0 0 1px var(--hub-accent,#2b659a);
-  font-weight:800;
-}
-#adventure-root .adventure-editing-location{
+/* Navegação de criação: mesmo vocabulário visual da navegação do Hub.
+   Um único indicador discreto identifica a categoria, sem caixas de status
+   ou bordas acentuadas em todos os cards de conteúdo. */
+#adventure-root .adventure-creation-choices{
   display:flex;
-  align-items:center;
-  gap:10px;
+  flex-wrap:wrap;
+  align-items:stretch;
+  gap:5px;
+  width:100%;
   min-width:0;
-  padding:11px 15px;
+  padding:5px;
   border:1px solid var(--hub-border,#40546c);
-  border-left:4px solid var(--hub-accent,#2b659a);
-  border-radius:10px;
-  background:var(--hub-surface-2,#172a3c);
+  border-radius:12px;
+  background:var(--hub-surface-2,#172636);
 }
-#adventure-root .adventure-editing-location>span{
-  font-size:.73rem;
-  font-weight:800;
-  letter-spacing:.06em;
+#adventure-root .adventure-creation-choices>button{
+  position:relative;
+  flex:1 1 115px;
+  min-width:0;
+  min-height:43px;
+  padding:10px 13px;
+  border:1px solid transparent;
+  border-radius:8px;
+  outline:0;
+  background:transparent;
+  color:var(--hub-text-2,#bdcbd9);
+  font-size:.91rem;
+  font-weight:650;
+  line-height:1.2;
+  box-shadow:none;
+  transition:background-color .16s ease,color .16s ease,border-color .16s ease;
+}
+#adventure-root .adventure-creation-choices>button:not(.is-active):hover{
+  background:var(--hub-surface,#111f2d);
+  color:var(--hub-text,#f4f7fb);
+}
+#adventure-root .adventure-creation-choices>button.is-active{
+  border-color:var(--hub-border,#40546c);
+  background:var(--hub-surface,#111f2d);
+  color:var(--hub-accent-2,#67b8ff);
+  font-weight:750;
+  outline:none;
+  box-shadow:0 1px 5px rgba(0,0,0,.1);
+}
+#adventure-root .adventure-creation-choices>button.is-active::after{
+  content:"";
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:-1px;
+  height:2px;
+  border-radius:2px 2px 0 0;
+  background:var(--hub-accent,#2f9cff);
+}
+#adventure-root .adventure-creation-choices>button:focus-visible{
+  outline:2px solid var(--hub-accent-2,#67b8ff);
+  outline-offset:2px;
+}
+/* Título contextual editorial: a área ativa é lida sem um segundo card
+   com o rótulo "EDITANDO" nem linhas coloridas em todos os formulários. */
+#adventure-root .adventure-current-section{
+  display:flex;
+  align-items:flex-end;
+  min-width:0;
+  margin:1px 0 0;
+  padding:2px 2px 15px;
+  border-bottom:1px solid var(--hub-border,#40546c);
+}
+#adventure-root .adventure-current-section>div{min-width:0}
+#adventure-root .adventure-current-section .adventure-read-eyebrow{
+  margin-bottom:3px;
   color:var(--hub-muted,#9db1c6);
+  font-size:.71rem;
+  letter-spacing:.06em;
 }
-#adventure-root .adventure-editing-location>strong{
-  font-size:1.05rem;
-  font-weight:800;
-  color:var(--hub-text,#edf6ff);
-  overflow-wrap:anywhere;
+#adventure-root .adventure-current-section h2{
+  margin:0;
+  color:var(--hub-text,#f4f7fb);
+  font-size:clamp(1.32rem,2vw,1.58rem);
+  line-height:1.2;
+  letter-spacing:-.018em;
+  font-weight:760;
 }
-#adventure-root .adventure-workspace-editors>.card:not([hidden]){
-  border-left:3px solid var(--hub-accent,#2b659a);
-  scroll-margin-top:144px;
+@media(max-width:520px){
+  #adventure-root .adventure-creation-choices{gap:4px;padding:4px}
+  #adventure-root .adventure-creation-choices>button{flex:1 1 105px;min-height:42px;padding:9px 7px;font-size:.86rem}
+}
+@media(prefers-reduced-motion:reduce){
+  #adventure-root .adventure-creation-choices>button{transition:none}
 }
 /* O botão de nova Aventura ocupa uma linha inteira, inclusive nas larguras
    em que as coleções do Hub usam duas colunas para outros tipos de item. */
