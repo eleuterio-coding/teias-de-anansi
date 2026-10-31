@@ -398,6 +398,25 @@
     "Sight": "Visão",
     "Blindsight": "Percepção às Cegas",
     "Truesight": "Visão Verdadeira",
-    "Darkvision": "Visão no Escuro"
+    "Darkvision": "Visão no Escuro",
+    "Martial Ranged Weapons": "armas marciais à distância",
+    "Martial Ranged": "marcial à distância",
+    "Weapons": "Armas",
+    "Woodcarver's Tools": "Ferramentas de Entalhador",
+    "Artisan's Tool": "Ferramenta de Artesão",
+    "Wands": "varinhas mágicas",
+    "Monk Weapons": "armas de monge",
+    "Kensei melee weapon": "arma kensei corpo a corpo",
+    "Kensei weapon": "arma kensei",
+    "Agile Parry": "Aparar com Agilidade",
+    "Kensei's Shot": "Disparo Kensei",
+    "Way of the Brush": "Caminho do Pincel",
+    "Calligrapher's Supplies": "Suprimentos de Calígrafo",
+    "Painter's Supplies": "Suprimentos de Pintor",
+    "melee": "corpo a corpo",
+    "ranged": "à distância",
+    "Thrown Weapon": "arma de arremesso",
+    "melee weapon": "arma corpo a corpo",
+    "ranged weapon": "arma à distância"
   }
 }
