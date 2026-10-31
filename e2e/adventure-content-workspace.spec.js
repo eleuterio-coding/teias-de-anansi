@@ -67,9 +67,15 @@ test('Cenas criadas reaparecem na Visão Geral e editores preservam campos avan�
  await expect(page.locator('#adventure-create-tab')).toHaveText('Criar conteúdo');
  await expect(page.locator('[data-adventure-creation-kind="scene"]')).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('#adventure-active-section-title')).toHaveText('Cenas');
- await expect(page.locator('.adventure-editing-location')).toBeVisible();
- const indicator=await page.locator('.adventure-editing-location').evaluate(el=>getComputedStyle(el).borderLeftWidth);
- expect(Number.parseFloat(indicator)).toBeGreaterThanOrEqual(3);
+ await expect(page.locator('.adventure-editing-location')).toHaveCount(0);
+ await expect(page.locator('.adventure-creation-heading')).toHaveCount(0);
+ await expect(page.locator('.adventure-current-section')).toBeVisible();
+ const indicator=await page.locator('[data-adventure-creation-kind="scene"]').evaluate(el=>({
+  underline:getComputedStyle(el,'::after').height,
+  weight:Number.parseInt(getComputedStyle(el).fontWeight,10)
+ }));
+ expect(Number.parseFloat(indicator.underline)).toBeGreaterThanOrEqual(2);
+ expect(indicator.weight).toBeGreaterThanOrEqual(700);
  await page.locator('#new-scene-title').fill('A Traição da Rainha');
  await page.locator('#add-scene').click();
  await expect(page.locator('#adventure-create-content')).toBeVisible();
