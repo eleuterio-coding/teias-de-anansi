@@ -91,7 +91,7 @@ function render(){
   const q=norm(document.getElementById('busca').value);
   const source=document.getElementById('fonte').value;
   const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family}`).includes(q))&&(!source||c.kind===source));
-  document.getElementById('resultado').textContent=`${cards.length} de ${SRD.length+DDB_ONLY.length+HOUSE.length} itens`;
+  document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=cards.map(c=>c.html).join('')||'<p class="muted">Nenhuma regra corresponde aos filtros.</p>';
   focusRequested();
 }
