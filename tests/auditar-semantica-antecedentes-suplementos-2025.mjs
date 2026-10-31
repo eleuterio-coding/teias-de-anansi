@@ -41,15 +41,12 @@ assert.equal(forgeExpected.autoridade,'oficial_atual');
 assert.equal(heroesExpected.autoridade,'oficial_atual');
 
 const forgeRows=forge.items||[];
-const dragonmarked=forgeRows.filter(row=>forgeFeatMap.get(fold(row.talento))?.category==='Dragonmark');
-assert.equal(dragonmarked.length,forgeExpected.antecedentes_com_dragonmark,'Forge deve ter exatamente 14 antecedentes que concedem Dragonmark feat.');
-for(const row of dragonmarked){
- const feat=forgeFeatMap.get(fold(row.talento));
- assert.equal(feat.category,'Dragonmark',`${row.nome}: feat específico não pode ser reclassificado como Origem.`);
+assert.deepEqual(forgeRows.map(row=>row.nome).sort(),['Archaeologist','House Agent','Inquisitive']);
+for(const row of forgeRows){
+ const feat=phbFeatMap.get(fold(row.talento));
+ assert.equal(feat?.category,'Origem',`Forge/${row.nome}: talento de origem precisa existir no Livro do Jogador.`);
 }
-const normalForge=forgeRows.filter(row=>!dragonmarked.includes(row));
-assert.equal(normalForge.length,3,'Forge deve ter 3 antecedentes sem Dragonmark específico.');
-for(const row of normalForge){const feat=phbFeatMap.get(fold(row.talento));assert.equal(feat?.category,'Origem',`${row.nome}: ${row.talento} deve resolver como Talento de Origem Player’s Handbook.`)}
+assert.ok(!forgeRows.some(row=>forgeFeatMap.has(fold(row.talento))), 'Nenhum antecedente deve depender de talento removido.');
 
 for(const row of heroes.items||[]){
  const local=heroesFeatMap.get(fold(row.talento)),core=phbFeatMap.get(fold(row.talento)),feat=local||core;
@@ -59,8 +56,8 @@ for(const row of heroes.items||[]){
 
 const rules=fs.readFileSync('scripts/character-builder/rules.js','utf8');
 const originSync=fs.readFileSync('scripts/character-builder/origin-feat-sync.js','utf8');
-// Gap conhecido e deliberadamente fail-closed para 11D/11E: Dragonmark de antecedente não pode ser confundido com o Origin feat livre.
+// A escolha de Talento de Origem livre permanece isolada dos dados do antecedente.
 assert.ok(rules.includes('_houseOriginalFeat'),'Runtime deve preservar a referência original do talento do antecedente para a etapa de override normativo.');
 assert.ok(originSync.includes('originFeat'),'Sincronizador deve manter a escolha livre de Origin feat separadamente no estado.');
 for(const p of ['dados/antecedentes-pdf-forge-2025.json','dados/antecedentes-pdf-heroes-2025.json','dados/talentos-forge-2025.json','dados/talentos-heroes-2025.json'])assert.ok(!fs.readFileSync(p,'utf8').toLowerCase().includes('supabase'),`${p}: não pode introduzir Supabase.`);
-console.log('Antecedentes oficiais 2025 validados: Forge 17 (14 Dragonmark + 3 Origin) e Heroes 18 (todos com Origin feat), estrutura 2024 e B=50 PO.');
+console.log('Antecedentes oficiais: Forge 3 e Heroes 18, talentos de origem e pacote B de 50 PO validados.');
