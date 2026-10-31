@@ -13,9 +13,58 @@ function featureLoc(slug,f){const feats=LOC[slug]?.features||{};if(feats[f.index
 function isAsi(slug,f){const l=featureLoc(slug,f);return/ability score improvement|melhoria de atributo|aumento de atributo/i.test(`${f?.name||''} ${l?.nome||''}`)}function activeRef(slug,f,level){return!(STANDARD_ASI.has(Number(level))&&isAsi(slug,f))}
 function featureList(levels,slug,fmap){const out=[],seen=new Set;for(const l of levelsFor(levels,slug))for(const ref of arr(l.features)){if(!activeRef(slug,ref,l.level)||seen.has(ref.index))continue;seen.add(ref.index);const raw=fmap.get(ref.index)||ref,loc=featureLoc(slug,raw);out.push({...loc,index:ref.index,_nivel:l.level})}return out}
 function normalize(c,levels,fmap){const ls=levelsFor(levels,c.index);return{slug:c.index,nome:LOC[c.index]?.nome||t(c.name),descricao:DESCR[c.index]||'',dados:c,levels:ls,features:featureList(levels,c.index,fmap),caster:!!c.spellcasting}}
+
+const ARTIFICER_FEATURES={
+ 'Spellcasting':'Conjuração',"Tinker's Magic":'Magia de Funileiro',
+ 'Replicate Magic Item':'Replicar Item Mágico','Artificer Subclass':'Subclasse de Artífice',
+ 'Subclass feature':'Característica de subclasse','Ability Score Improvement':'Aumento de Atributo',
+ 'Magic Item Tinker':'Funileiro de Itens Mágicos','Flash of Genius':'Clarão de Genialidade',
+ 'Magic Item Adept':'Adepto de Itens Mágicos','Spell-Storing Item':'Item de Armazenar Magia',
+ 'Advanced Artifice':'Artificiaria Avançada','Magic Item Master':'Mestre dos Itens Mágicos',
+ 'Epic Boon':'Dádiva Épica','Soul of Artifice':'Alma da Artificiaria'
+};
+function artNames(s){return String(s||'—').split(';').map(x=>ARTIFICER_FEATURES[x.trim()]||x.trim()).join('; ')}
+function normalizeArtificer(pkg){
+  if(!pkg?.controle?.completo||!pkg.classe)throw new Error('Artífice: registro incompleto.');
+  const c=pkg.classe;
+  return {slug:'artificer',nome:'Artífice',descricao:c.descricao,
+    dados:{hit_die:8},levels:arr(c.progressao),features:arr(c.caracteristicas),
+    caster:true,artificer:c};
+}
+function renderArtificer(i){
+  const c=i.artificer,d=c.dados_base||{},levels=arr(c.progressao);
+  const show=(v)=>esc(String(v||'—'));
+  const features=[
+    {nivel:1,nome:'Conjuração',descricao:[c.conjuracao?.preparo,c.conjuracao?.foco,c.conjuracao?.slots].filter(Boolean).join(' ')},
+    {nivel:1,nome:'Magia de Funileiro',descricao:c.tinkers_magic?.descricao||''},
+    {nivel:2,nome:'Replicar Item Mágico',descricao:c.replicate_magic_item?.regras||''},
+    ...arr(c.caracteristicas).filter(f=>!([4,8,12,16].includes(Number(f.nivel))&&/ability score improvement/i.test(f.nome||'')))
+      .map(f=>({nivel:f.nivel,nome:artNames(f.nome),descricao:f.descricao}))
+  ];
+  return `<div class="corpo">
+    <p>${show(i.descricao)}</p>
+    <div class="stats"><div class="stat"><strong>Atributo principal</strong>Inteligência</div>
+      <div class="stat"><strong>Dado de Vida</strong>d8</div>
+      <div class="stat"><strong>Salvaguardas</strong>Constituição, Inteligência</div>
+      <div class="stat"><strong>Subclasses</strong>Alquimista, Armeiro, Artilheiro, Ferreiro de Batalha, Cartógrafo</div>
+    </div>
+    <section class="bloco"><h3>Proficiências</h3>
+      <p><strong>Armas:</strong> Armas simples. <strong>Armaduras:</strong> Armaduras leves, médias e escudos.
+      <strong>Perícias:</strong> ${show(d.pericias)}
+      <strong>Ferramentas:</strong> ${show(d.ferramentas)}</p></section>
+    <section class="bloco"><h3>Progressão — níveis 1–20</h3>
+      <div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características</th><th>Planos</th><th>Itens mágicos</th><th>Truques</th><th>Magias preparadas</th></tr></thead>
+      <tbody>${levels.map(l=>`<tr><td>${l.nivel}</td><td>${show(l.pb)}</td><td>${show(artNames(l.caracteristicas))}</td><td>${show(l.planos)}</td><td>${show(l.itens_magicos)}</td><td>${show(l.cantrips)}</td><td>${show(l.magias_preparadas)}</td></tr>`).join('')}</tbody></table></div></section>
+    <section class="bloco"><h3>Características ativas da classe</h3>
+      ${features.map(f=>`<article class="feature"><h4>${show(f.nome)} <span class="muted">— nível ${show(f.nivel)}</span></h4><p>${show(f.descricao)}</p></article>`).join('')}
+    </section><div class="biomancia-slot"></div>
+    <div class="meta"><span><strong>Livro:</strong> Eberron: Forge of the Artificer (2025)</span>
+    <span><strong>Progressão Talento/atributo:</strong> Regra da Casa do Hub</span></div></div>`;
+}
+
 function progress(i){const metrics=[...new Set(i.levels.flatMap(l=>Object.keys(l.class_specific||{})))];return`<div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características ativas no Hub</th>${metrics.map(k=>`<th>${esc(t(k.replaceAll('_',' ')))}</th>`).join('')}</tr></thead><tbody>${i.levels.map(l=>{const fs=arr(l.features).filter(f=>activeRef(i.slug,f,l.level)).map(f=>featureLoc(i.slug,f).nome);const house=[];if([1,3,6,9,12,15,18].includes(Number(l.level)))house.push('Talento — Regra da Casa');if([4,8,12,16,20].includes(Number(l.level)))house.push('+1 atributo — Regra da Casa');return`<tr><td>${l.level}</td><td>+${l.prof_bonus}</td><td>${esc([...fs,...house].join(', ')||'—')}</td>${metrics.map(k=>`<td>${esc(l.class_specific?.[k]??'—')}</td>`).join('')}</tr>`}).join('')}</tbody></table></div>`}
-function renderClass(i){const c=i.dados;return`<div class="corpo"><p>${esc(i.descricao)}</p><div class="stats"><div class="stat"><strong>Atributo principal</strong>${esc(primary(c))}</div><div class="stat"><strong>Dado de Vida</strong>d${esc(c.hit_die)}</div><div class="stat"><strong>Salvaguardas</strong>${esc(nomes(c.saving_throws))}</div><div class="stat"><strong>Subclasse SRD</strong>${esc(nomes(c.subclasses)||'—')}</div></div><section class="bloco"><h3>Proficiências</h3><p>${esc(nomes(c.proficiencies)||'—')}</p></section><section class="bloco"><h3>Progressão — níveis 1–20</h3>${progress(i)}</section><section class="bloco"><h3>Características ativas da classe</h3>${i.features.map(f=>`<article class="feature"><h4>${esc(f.nome)} <span class="muted">— nível ${esc(f._nivel)}</span></h4><p>${esc(f.descricao)}</p></article>`).join('')}</section>${['druid','sorcerer','wizard'].includes(i.slug)?'<div class="biomancia-slot"></div>':''}<div class="meta"><span><strong>Regras-base:</strong> 5.5e / 2024</span><span><strong>Progressão Talento/atributo:</strong> Regra da Casa do Hub</span></div></div>`}
-function render(){const q=fold(document.getElementById('busca').value.trim()),filter=document.getElementById('filtro').value,items=DATA.filter(i=>(!filter||(filter==='conjurador'?i.caster:!i.caster))&&(!q||fold([i.nome,i.descricao,...i.features.flatMap(f=>[f.nome,f.descricao])].join(' ')).includes(q)));document.getElementById('resultado').textContent=`${items.length} de ${DATA.length} classes`;const l=document.getElementById('lista');l.innerHTML=items.map(i=>`<details class="classe" data-id="${esc(i.slug)}" id="ref-classes:srd521:${esc(i.slug)}"><summary><strong>${esc(i.nome)}</strong><span class="sub">d${esc(i.dados.hit_die)} • ${esc(primary(i.dados))}</span></summary><div class="slot"></div></details>`).join('')||'<div class="vazio">Nenhuma classe corresponde aos filtros.</div>';l.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open&&!d.dataset.rendered){d.querySelector('.slot').innerHTML=renderClass(DATA.find(x=>x.slug===d.dataset.id));window.HubBiomancia?.mount(d.querySelector('.biomancia-slot'),{slug:d.dataset.id});d.dataset.rendered='1'}}));const ref=new URLSearchParams(location.search).get('ref');if(ref){const el=document.getElementById(`ref-${ref}`);if(el){el.open=true;setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}}
-(async()=>{try{const res=await Promise.all([json(`dados/localizacao-ptbr-global.json?v=${V}`),...EXPECTED.map(s=>json(`dados/classes-ptbr/${LOCFILES[s]}.json?v=${V}`)),json(`${RAW}/5e-SRD-Classes.json`),json(`${RAW}/5e-SRD-Levels.json`),json(`${RAW}/5e-SRD-Features.json`)]);G=res[0];EXPECTED.forEach((s,i)=>LOC[s]=res[1+i]);const classes=res[13],levels=res[14],features=res[15],fmap=new Map(arr(features).map(f=>[f.index,f]));DATA=arr(classes).filter(c=>EXPECTED.includes(c.index)).map(c=>normalize(c,levels,fmap)).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));render()}catch(e){document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<div class="erro">${esc(e.message)}</div>`}})();document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
+function renderClass(i){if(i.slug==='artificer')return renderArtificer(i);const c=i.dados;return`<div class="corpo"><p>${esc(i.descricao)}</p><div class="stats"><div class="stat"><strong>Atributo principal</strong>${esc(primary(c))}</div><div class="stat"><strong>Dado de Vida</strong>d${esc(c.hit_die)}</div><div class="stat"><strong>Salvaguardas</strong>${esc(nomes(c.saving_throws))}</div><div class="stat"><strong>Subclasse SRD</strong>${esc(nomes(c.subclasses)||'—')}</div></div><section class="bloco"><h3>Proficiências</h3><p>${esc(nomes(c.proficiencies)||'—')}</p></section><section class="bloco"><h3>Progressão — níveis 1–20</h3>${progress(i)}</section><section class="bloco"><h3>Características ativas da classe</h3>${i.features.map(f=>`<article class="feature"><h4>${esc(f.nome)} <span class="muted">— nível ${esc(f._nivel)}</span></h4><p>${esc(f.descricao)}</p></article>`).join('')}</section>${['druid','sorcerer','wizard'].includes(i.slug)?'<div class="biomancia-slot"></div>':''}<div class="meta"><span><strong>Regras-base:</strong> 5.5e / 2024</span><span><strong>Progressão Talento/atributo:</strong> Regra da Casa do Hub</span></div></div>`}
+function render(){const q=fold(document.getElementById('busca').value.trim()),filter=document.getElementById('filtro').value,items=DATA.filter(i=>(!filter||(filter==='conjurador'?i.caster:!i.caster))&&(!q||fold([i.nome,i.descricao,...i.features.flatMap(f=>[f.nome,f.descricao])].join(' ')).includes(q)));document.getElementById('resultado').textContent=`${items.length} de ${DATA.length} classes`;const l=document.getElementById('lista');l.innerHTML=items.map(i=>`<details class="classe" data-id="${esc(i.slug)}" id="ref-${esc(i.slug==='artificer'?'classes:pdf24merged1:artificer:2025':'classes:srd521:'+i.slug)}"><summary><strong>${esc(i.nome)}</strong><span class="sub">d${esc(i.dados.hit_die)} • ${esc(primary(i.dados))}</span></summary><div class="slot"></div></details>`).join('')||'<div class="vazio">Nenhuma classe corresponde aos filtros.</div>';l.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open&&!d.dataset.rendered){d.querySelector('.slot').innerHTML=renderClass(DATA.find(x=>x.slug===d.dataset.id));window.HubBiomancia?.mount(d.querySelector('.biomancia-slot'),{slug:d.dataset.id==='artificer'?'alchemist':d.dataset.id});d.dataset.rendered='1'}}));const ref=new URLSearchParams(location.search).get('ref');if(ref){const el=document.getElementById(`ref-${ref}`);if(el){el.open=true;setTimeout(()=>el.scrollIntoView({block:'start'}),30)}}}
+(async()=>{try{const res=await Promise.all([json(`dados/localizacao-ptbr-global.json?v=${V}`),...EXPECTED.map(s=>json(`dados/classes-ptbr/${LOCFILES[s]}.json?v=${V}`)),json(`${RAW}/5e-SRD-Classes.json`),json(`${RAW}/5e-SRD-Levels.json`),json(`${RAW}/5e-SRD-Features.json`),json(`dados/artificer-2025.json?v=${V}`)]);G=res[0];EXPECTED.forEach((s,i)=>LOC[s]=res[1+i]);const classes=res[13],levels=res[14],features=res[15],fmap=new Map(arr(features).map(f=>[f.index,f]));DATA=arr(classes).filter(c=>EXPECTED.includes(c.index)).map(c=>normalize(c,levels,fmap));DATA.push(normalizeArtificer(res[16]));DATA.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));render()}catch(e){document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<div class="erro">${esc(e.message)}</div>`}})();document.getElementById('busca').addEventListener('input',render);document.getElementById('filtro').addEventListener('change',render);
 </script><script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>

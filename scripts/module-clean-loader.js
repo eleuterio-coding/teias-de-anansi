@@ -1,7 +1,7 @@
 (()=>{
   'use strict';
-  const VERSION='20261031-library-clean1';
-  const LAYOUT='biblioteca-light.css?v=20261028-hub-layout1';
+  const VERSION='20261031-biblioteca-az-classes-ptbr1';
+  const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
     [/<p class="muted" id="resumo">Carregando catálogo consolidado\.\.\.<\/p>/gi,''],
@@ -57,7 +57,7 @@
     html=applySharedLayout(html);
     // O módulo mantém seus catálogos; navegação e estilo são compartilhados com o Hub.
     html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261028-hub-layout1"></script></body>');
-    if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script></body>`);
+    if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script><script src="scripts/subclasses-biblioteca-ui.js?v=20261031-subclasses-livros-ptbr1"><\/script></body>`);
     document.open();
     document.write(html);
     document.close();

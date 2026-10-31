@@ -453,3 +453,18 @@ body.hub-shell-enabled.hub-content-library .hub-app-content ::selection {
 
 /* Contadores removidos do cabeçalho não deixam espaços vazios nos catálogos. */
 body.hub-shell-enabled.hub-content-library .hub-app-content #resultado:empty{display:none!important}
+
+/* Subclasses: selo de livro legível, inclusive em telas estreitas. */
+body.hub-shell-enabled.hub-content-library .hub-app-content .subclasse > summary strong{
+  min-width:0;overflow-wrap:anywhere;line-height:1.55;
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .subclasse .selo-livro{
+  display:inline-block;vertical-align:middle;white-space:normal;
+  max-width:100%;font-size:.73rem;line-height:1.25;
+  margin:2px 0 2px 8px;padding:4px 9px;border-radius:999px;
+  border:1px solid var(--hub-border,#223245);color:var(--hub-text,#f4f7fb);
+  background:var(--hub-surface-2,#131f2b);
+}
+body.hub-shell-enabled.hub-content-library .hub-app-content .subclasse .ficha{
+  grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
+}
