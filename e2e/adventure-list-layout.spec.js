@@ -95,3 +95,23 @@ test('Aventura: alteração de status mantém seletor e persistência',async({pa
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1')||'[]'));
  expect(stored.find(x=>x.id==='adventure-layout-card')?.status).toBe('active');
 });
+
+test('Nova aventura ocupa toda a largura e abre a oficina de criação',async({page})=>{
+ await page.setViewportSize({width:1400,height:900});
+ await page.goto('/aventuras.html?campaign=adventure-layout-campaign');
+ const row=page.locator('.adventure-create-tile-row');
+ const link=row.locator('#open-adventure-create');
+ await expect(link).toBeVisible();
+ const sizes=await row.evaluate(el=>{
+  const a=el.getBoundingClientRect(),b=el.querySelector('a').getBoundingClientRect();
+  return {rowWidth:a.width,linkWidth:b.width,leftDelta:Math.abs(a.left-b.left)};
+ });
+ expect(sizes.linkWidth).toBeGreaterThan(0);
+ expect(Math.abs(sizes.rowWidth-sizes.linkWidth)).toBeLessThanOrEqual(3);
+ expect(sizes.leftDelta).toBeLessThanOrEqual(3);
+ await link.click();
+ await page.locator('#new-adventure-title').fill('A Jornada');
+ await page.locator('#create-adventure').click();
+ await expect(page.locator('#adventure-create-content')).toBeVisible();
+ await expect(page.locator('#criar-cena')).toBeVisible();
+});
