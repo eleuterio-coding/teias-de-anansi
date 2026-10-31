@@ -72,8 +72,7 @@ export function renderAdventureOverview(a,c,characters=[]){
  const summary=fields([['Campanha',c?.name],['Status',({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'})[a.status]||a.status],
   ['Tipo',({main:'Principal',side:'Secundária',oneshot:'One-shot',secondary:'Arco secundário'})[a.type]||a.type],['Ordem',a.order],
   ['Situação atual',a.currentSituation],['Próximo passo',a.nextStep]]);
- return '<div class="adventure-read-intro"><div><span class="adventure-read-eyebrow">Área de consulta</span><h2>Visão Geral da Aventura</h2><p>Informações reunidas para preparar e conduzir a sessão. Edições e cadastros ficam exclusivamente em Criar conteúdo.</p></div></div>'+
-  '<section class="adventure-read-section adventure-read-about"><header class="adventure-read-section-head"><div><h2>Sobre a aventura</h2></div></header><div class="adventure-read-about-content">'+p(a.description||a.summary||'Nenhum resumo cadastrado.')+summary+'</div></section>'+
+ return '<section class="adventure-read-section adventure-read-about"><header class="adventure-read-section-head"><div><h2>Sobre a aventura</h2></div></header><div class="adventure-read-about-content">'+p(a.description||a.summary||'Nenhum resumo cadastrado.')+summary+'</div></section>'+
   section('overview-participantes','Jogadores',playerCards?adventureAssignments(a,c).length:0,playerCards,'Participantes vinculados à aventura')+
   section('overview-cenas','Cenas',rows(a.scenes).length,sceneCards)+
   section('overview-locais','Locais',areas.length,areaCards)+
