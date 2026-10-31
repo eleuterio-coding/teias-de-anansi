@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20261031-subclasses-auditoria-visual2';
+  const VERSION='20261031-antecedentes-cards-ptbr1';
   const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
@@ -36,7 +36,6 @@
       [/<div class="nota"><strong>Precedência:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Escopo:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Completude:<\/strong>[\s\S]*?<\/div>/gi,''],
-      [/<strong>Aumento:<\/strong> \+2 em um e \+1 em outro, ou \+1 nos três; máximo 20\./gi,'<strong>Aumento no Hub:</strong> +2 em um atributo e +1 em outro atributo diferente, à escolha; máximo 20.'],
       [/<div class="nota"><strong>Regra da Casa:<\/strong>[\s\S]*?<\/div>/gi,'']
     ]}
   };
