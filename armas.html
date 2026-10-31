@@ -28,7 +28,7 @@ const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLo
 let CORE=null,PDFMAN=null,ALL=[],CURRENT='',MASTERY={},DEMO_MASTERY={},SOURCES={},SOURCE_RULES={};
 function natureOf(x){if(x.natureza)return x.natureza;if(String(x.fonte||'').startsWith('srd-'))return 'oficial SRD';return 'oficial'}
 function sourceOf(x){return SOURCES[x.fonte]||{}}
-function sourceTitle(x){const f=sourceOf(x);return f.titulo||x.fonte||'Fonte não identificada'}
+function sourceTitle(x){const f=sourceOf(x),title=f.titulo||x.fonte||'Fonte não identificada';return /^Player[’']s Handbook$/i.test(title)?'Livro do Jogador':title}
 function sourceFile(x){const f=sourceOf(x);return f.arquivo_pdf||'SRD'}
 function isDemo(x){return natureOf(x)==='demonstrativo'}
 function labelNature(x){const n=natureOf(x);return n==='demonstrativo'?'Demonstrativo · não canonizar':n==='suplementar'?'Suplementar':n==='oficial SRD'?'Oficial · SRD':'Oficial'}
