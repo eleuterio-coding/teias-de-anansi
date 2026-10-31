@@ -63,7 +63,7 @@ async function loadMonsterCount(){
 }
 async function loadCounts(){
  try{
-  const response=await fetch('dados/biblioteca-contagens.json?v=20261031-antecedentes-cards1');
+  const response=await fetch('dados/biblioteca-contagens.json?v=20261031-antecedentes-fonte-contagem2');
   if(!response.ok)throw Error(`HTTP ${response.status}`);
   const data=await response.json();
   if(data?.schema!=='hub-rpg.biblioteca-contagens.v1'||!data.modulos)throw Error('Contagens incompatíveis');
