@@ -1,6 +1,6 @@
 import{FIVE_E_BITS_PIN,FIVE_E_BITS_2024,FIVE_E_BITS_2014,BACKGROUND_BUILDER_FILES,SPECIES_BUILDER_FILES,FEAT_BUILDER_FILES}from'../catalog-registry.js?v=20260901-catalog-registry1';
 
-export const KEY='hub-rpg:characters:v4',LEGACY_KEYS=['hub-rpg:characters:v3','hub-rpg:characters:v2','hub-rpg:characters:v1'],V='20260901-catalog-registry1',PIN=FIVE_E_BITS_PIN;
+export const KEY='hub-rpg:characters:v4',LEGACY_KEYS=['hub-rpg:characters:v3','hub-rpg:characters:v2','hub-rpg:characters:v1'],V='20261031-excluir-marcas-dragon1',PIN=FIVE_E_BITS_PIN;
 export const RAW24=FIVE_E_BITS_2024;
 export const RAW14=FIVE_E_BITS_2014;
 export const AB=['Força','Destreza','Constituição','Inteligência','Sabedoria','Carisma'];
