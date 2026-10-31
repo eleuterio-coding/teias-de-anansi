@@ -24,6 +24,13 @@ assert.equal(counts.modulos.Armaduras,13,'A contagem da Biblioteca deve correspo
 assert.ok(/armor-heading/.test(html)&&/armor-type/.test(html),'O selo de tipo deve ficar próximo ao título.');
 assert.ok(!/id="origem"|origemLabel|pdfLabel|Ocorrência|não canônico|Tabela de fabricação conferida|Fabricação — referência complementar|x\.descricao/.test(html),'A ficha não deve mostrar rótulos de origem ou texto editorial.');
 assert.ok(/<h3>Fabricação<\/h3>/.test(html),'A seção deve se chamar Fabricação.');
+assert.ok(/#detalhe\.detalhe\{min-height:0/.test(html)&&!/min-height:510px/.test(html),'A ficha não pode manter altura mínima que crie espaço vazio.');
+assert.ok(/const requisitos=condicoes\.length/.test(html),'Os requisitos devem ser omitidos quando não existirem.');
+assert.ok(/x\.furtividade&&x\.furtividade!=='—'/.test(html),'A linha de Furtividade não deve renderizar valores vazios.');
+assert.ok(/x\.forca_minima\?/.test(html),'A linha de Força mínima deve aparecer apenas quando exigida.');
+assert.ok(/stat\('CA',x\.ca,true\).*stat\('Custo',x\.custo\).*stat\('Peso',x\.peso\)/.test(html),'Os três atributos fundamentais devem formar uma linha compacta.');
+assert.ok(/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/.test(html),'O layout compacto deve adaptar-se ao celular.');
+assert.ok(/const craft=f\?/.test(html),'O quadro Fabricação não deve ser exibido sem dados.');
 assert.ok(/ALL\.length!==13/.test(html),'O carregador não deve esperar os 34 registros antigos.');
 assert.ok(/titulo:'Livro do Jogador'/.test(spells),'Magias deve mostrar Livro do Jogador como título da fonte.');
 assert.ok(!/Ocorrência/.test(spells),'O cabeçalho de Magias não deve ter Ocorrência.');
