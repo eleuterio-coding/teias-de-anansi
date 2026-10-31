@@ -7,6 +7,7 @@ const ready=async(page,selector,timeout=30000)=>{await expect(page.locator(selec
 const capture=async(page,name)=>{
   fs.mkdirSync(SHOTS,{recursive:true});
   await page.screenshot({path:path.join(SHOTS,name),fullPage:true,animations:'disabled'});
+  await page.screenshot({path:path.join(SHOTS,name.replace(/\.png$/,'.jpg')),type:'jpeg',quality:55,fullPage:false,animations:'disabled'});
 };
 const overflow=async(page)=>page.evaluate(()=>({
   scroll:document.documentElement.scrollWidth,
