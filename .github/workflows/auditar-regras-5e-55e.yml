@@ -72,3 +72,5 @@ jobs:
           node --check scripts/politica-regras-biblioteca.js
           node --check scripts/politica-era-cenario.js
           node --check scripts/module-clean-loader.js
+      - name: Auditar propriedades de armas 2024
+        run: node tests/auditar-propriedades-armas-regras.mjs
