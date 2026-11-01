@@ -13,7 +13,7 @@ function proficiencyEntries(klass){
 const proficiencyText=klass=>proficiencyEntries(klass).join(' ');
 const weaponProps=weapon=>arr(weapon?.propriedades).map(fold);
 function martialEntryAllows(entry,weapon){
- const props=weaponProps(weapon),light=props.some(p=>p==='light'||p.startsWith('light ')),finesse=props.some(p=>p==='finesse'||p.startsWith('finesse '));
+ const props=weaponProps(weapon),light=props.some(p=>p==='light'||p.startsWith('light ')||p==='leve'||p.startsWith('leve ')),finesse=props.some(p=>p==='finesse'||p.startsWith('finesse ')||p==='acuidade'||p.startsWith('acuidade '));
  if(/^(martial weapons?|armas marciais)$/.test(entry))return true;
  if(/^martial weapons? with the light property$/.test(entry))return light;
  if(/^martial weapons? with the finesse or light property$/.test(entry))return finesse||light;
