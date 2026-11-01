@@ -169,7 +169,7 @@ async function load(){
     fetchRequired(`dados/regras-hub.json?v=${VERSION}`),
     fetchRequired(`dados/regras-casa-adicionais.json?v=${VERSION}`),
     fetchRequired(`dados/propriedades-armas-2024.json?v=${VERSION}`),
-    fetchSrd(),
+    fetchSrd().catch(error=>{console.warn('[Regras] Glossário SRD externo indisponível; as propriedades e regras locais permanecem acessíveis.',error);return null}),
     fetchOptionalJson(`dados/referencias-hub-index.json?v=${VERSION}`)
   ]);
   const data=JSON.parse(partTexts.join(''));
@@ -179,15 +179,15 @@ async function load(){
   HOUSE=[...(hub.itens||[]),...(extra.itens||[])];
   PROPERTIES=[...(properties.itens||[])];
   const known=new Set(PT_RULES.map(x=>norm(x.original)));
-  SRD=extractEntries(markdown,known);
+  SRD=markdown?extractEntries(markdown,known):[];
   const srdSet=new Set(SRD.map(x=>norm(x.original)));
-  DDB_ONLY=PT_RULES.filter(x=>!srdSet.has(norm(x.original)));
+  DDB_ONLY=markdown?PT_RULES.filter(x=>!srdSet.has(norm(x.original))):[];
   if(PT_RULES.length!==155)throw new Error(`Regras atuais inesperadas: ${PT_RULES.length}/155`);
   if(HOUSE.length!==7)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/7`);
   if(PROPERTIES.length!==9||new Set(PROPERTIES.map(x=>x.original)).size!==9)throw new Error(`Propriedades de Arma inesperadas: ${PROPERTIES.length}/9`);
-  if(SRD.length<130)throw new Error(`Extração SRD incompleta: ${SRD.length}`);
+  if(markdown&&SRD.length<130)console.warn(`[Regras] Extração do glossário parcial: ${SRD.length}; propriedades locais preservadas.`);
   render();
-  document.documentElement.dataset.regrasFonte='srd-5.2.1';
+  document.documentElement.dataset.regrasFonte=markdown?'srd-5.2.1':'local-sem-glossario';
   document.documentElement.dataset.regrasSrd=String(SRD.length);
   document.documentElement.dataset.regrasDdbComplementares=String(DDB_ONLY.length);
   document.documentElement.dataset.regrasCasa=String(HOUSE.length);
