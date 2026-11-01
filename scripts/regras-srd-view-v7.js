@@ -23,7 +23,7 @@ function localizedHeading(entry,rule){
   return entry.tag ? `${name} [${familyPT(entry.tag)}]` : name;
 }
 
-let PT_RULES=[],HOUSE=[],PATCHES=[],INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
+let PT_RULES=[],HOUSE=[],PATCHES=[],PROPERTIES=[],INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
 
 function extractEntries(markdown,knownOriginals){
   const lines=String(markdown||'').replace(/\r/g,'').split('\n'),starts=[];
@@ -70,6 +70,13 @@ function renderSupplemental(rule,maps){
   return `<details class="item ddb-only" id="${esc(cardId)}" data-hub-original="${esc(rule.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}><summary><span><strong>${esc(rule.nome)}</strong><small class="original">${esc(rule.original)}</small></span><span class="badge">${esc(rule.familia||'Regra Geral')}</span></summary><div class="corpo"><div class="source-strip"><span>D&D Beyond Basic Rules 2024</span><span>Referência oficial complementar</span></div><p class="copyright-note">Consulte a fonte oficial para a redação integral desta regra.</p><div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span></div></div></details>`;
 }
 
+function renderWeaponProperty(rule,maps){
+  const entity=maps.byOriginal.get('Regras|'+norm(rule.original))||null;
+  const cardId=entity?'ref-'+entity.id:'regra-propriedade-arma-'+slug(rule.nome);
+  const title=norm(rule.nome)==='alcance'?'Alcance — Arma':rule.nome;
+  return `<details class='item weapon-property-item' id='${esc(cardId)}' data-hub-original='${esc(rule.original)}' ${entity?`data-hub-entity-id='${esc(entity.id)}'`:''}><summary><span><strong>${esc(title)}</strong></span><span class='badge badge-weapon-property'>Propriedade de Arma</span></summary><div class='corpo'><div class='source-strip'><span>Regra oficial · 5.5e (2024)</span><span>Livro do Jogador (2024)</span></div><p>${esc(rule.descricao)}</p><div class='meta'><span><a href='armas.html'>Consultar armas que utilizam esta propriedade</a></span></div></div></details>`;
+}
+
 function renderHouse(rule,maps){
   const entity=maps.byOriginal.get(`Regras|${norm(rule.original)}`)||null;
   const cardId=entity?`ref-${entity.id}`:`regra-${slug(rule.original)}`;
@@ -83,6 +90,7 @@ function allCards(){
   return [
     ...SRD.map(x=>({kind:'srd',original:x.original,name:localizedHeading(x,ptRule(x.original)),family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps)})),
     ...DDB_ONLY.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
+    ...PROPERTIES.map(x=>({kind:'property',original:x.original,name:x.nome,family:'Propriedade de Arma',search:x.descricao,html:renderWeaponProperty(x,maps)})),
     ...HOUSE.map(x=>({kind:'house',original:x.original,name:x.nome,family:'Regra da Casa',html:renderHouse(x,maps)}))
   ];
 }
@@ -90,7 +98,7 @@ function allCards(){
 function render(){
   const q=norm(document.getElementById('busca').value);
   const source=document.getElementById('fonte').value;
-  const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family}`).includes(q))&&(!source||c.kind===source)).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base'})||a.original.localeCompare(b.original,'pt-BR',{sensitivity:'base'}));
+  const cards=allCards().filter(c=>(!q||norm(`${c.name} ${c.original} ${c.family} ${c.search||''}`).includes(q))&&(!source||c.kind===source)).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base'})||a.original.localeCompare(b.original,'pt-BR',{sensitivity:'base'}));
   document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=cards.map(c=>c.html).join('')||'<p class="muted">Nenhuma regra corresponde aos filtros.</p>';
   focusRequested();
@@ -156,10 +164,11 @@ async function fetchSrd(){
 
 async function load(){
   const partUrls=[1,2,3,4].map(n=>`dados/regras-atuais-ptbr.part${n}.txt?v=${VERSION}`);
-  const [partTexts,hub,extra,markdown,index]=await Promise.all([
+  const [partTexts,hub,extra,properties,markdown,index]=await Promise.all([
     Promise.all(partUrls.map(u=>fetchRequired(u,'text'))),
     fetchRequired(`dados/regras-hub.json?v=${VERSION}`),
     fetchRequired(`dados/regras-casa-adicionais.json?v=${VERSION}`),
+    fetchRequired(`dados/propriedades-armas-2024.json?v=${VERSION}`),
     fetchSrd(),
     fetchOptionalJson(`dados/referencias-hub-index.json?v=${VERSION}`)
   ]);
@@ -168,18 +177,21 @@ async function load(){
   PT_RULES=[...(data.itens||[])];
   PATCHES=[...(hub.sobreposicoes||[])];
   HOUSE=[...(hub.itens||[]),...(extra.itens||[])];
+  PROPERTIES=[...(properties.itens||[])];
   const known=new Set(PT_RULES.map(x=>norm(x.original)));
   SRD=extractEntries(markdown,known);
   const srdSet=new Set(SRD.map(x=>norm(x.original)));
   DDB_ONLY=PT_RULES.filter(x=>!srdSet.has(norm(x.original)));
   if(PT_RULES.length!==155)throw new Error(`Regras atuais inesperadas: ${PT_RULES.length}/155`);
   if(HOUSE.length!==7)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/7`);
+  if(PROPERTIES.length!==9||new Set(PROPERTIES.map(x=>x.original)).size!==9)throw new Error(`Propriedades de Arma inesperadas: ${PROPERTIES.length}/9`);
   if(SRD.length<130)throw new Error(`Extração SRD incompleta: ${SRD.length}`);
   render();
   document.documentElement.dataset.regrasFonte='srd-5.2.1';
   document.documentElement.dataset.regrasSrd=String(SRD.length);
   document.documentElement.dataset.regrasDdbComplementares=String(DDB_ONLY.length);
   document.documentElement.dataset.regrasCasa=String(HOUSE.length);
+  document.documentElement.dataset.regrasPropriedadesArma=String(PROPERTIES.length);
   document.documentElement.dataset.regrasIndice=INDEX?.entidades?.length?'disponivel':'fallback-local';
   document.documentElement.dataset.regrasSrdOrigem=SRD_SOURCE;
 }
