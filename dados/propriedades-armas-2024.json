@@ -1,0 +1,118 @@
+{
+  "schema": "hub-rpg/propriedades-armas/v1",
+  "modulo": "Regras",
+  "secao": "Propriedades de Armas",
+  "selo": "Propriedade de Arma",
+  "ruleset": "5.5e",
+  "revisao": 2024,
+  "fonte": {
+    "livro": "Livro do Jogador (2024)",
+    "natureza": "Regra oficial",
+    "observacao": "Redação em português fornecida pelo usuário, sem termos originais em inglês."
+  },
+  "controle": {
+    "quantidade": 9,
+    "regra_da_casa": false
+  },
+  "itens": [
+    {
+      "id": "regra-propriedade-arma-acuidade",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Acuidade",
+      "nome": "Acuidade",
+      "familia": "Propriedade de Arma",
+      "descricao": "Quando você faz um ataque com uma arma de Acuidade, você usa a sua escolha entre o seu modificador de Força ou de Destreza para as jogadas de ataque e dano. Você deve usar o mesmo modificador para ambas as jogadas.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-alcance",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Alcance",
+      "nome": "Alcance",
+      "familia": "Propriedade de Arma",
+      "descricao": "Esta arma adiciona 1,5 metros ao seu alcance quando você ataca com ela, assim como quando você determina o seu alcance para Ataques de Oportunidade com ela.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-arremesso",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Arremesso",
+      "nome": "Arremesso",
+      "familia": "Propriedade de Arma",
+      "descricao": "Se uma arma tem a propriedade Arremesso, você pode arremessar a arma para fazer um ataque à distância. Se a arma for uma arma corpo a corpo, você usa o mesmo modificador de habilidade para aquela jogada de ataque e jogada de dano que você usaria para um ataque corpo a corpo com a arma.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-duas-maos",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Duas Mãos",
+      "nome": "Duas Mãos",
+      "familia": "Propriedade de Arma",
+      "descricao": "Esta arma requer as duas mãos quando você ataca com ela.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-leve",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Leve",
+      "nome": "Leve",
+      "familia": "Propriedade de Arma",
+      "descricao": "Quando você realiza a ação de Ataque no seu turno e ataca com uma arma Leve, você pode fazer um ataque extra como uma Ação Bônus mais tarde no mesmo turno. Esse ataque extra deve ser feito com uma arma Leve diferente, e você não adiciona o seu modificador de habilidade ao dano do ataque extra, a menos que esse modificador seja negativo.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-municao",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Munição",
+      "nome": "Munição",
+      "familia": "Propriedade de Arma",
+      "descricao": "Você pode usar uma arma que tem a propriedade Munição para fazer um ataque à distância apenas se tiver munição para disparar da arma. Cada vez que você ataca com a arma, você gasta uma peça de munição. Sacar a munição de uma aljava, estojo ou outro receptáculo faz parte do ataque.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-pesada",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Pesada",
+      "nome": "Pesada",
+      "familia": "Propriedade de Arma",
+      "descricao": "Uma arma Pesada é desajeitada em comparação com outras armas. Você tem Desvantagem nas suas jogadas de ataque com uma arma Pesada se ela for uma arma corpo a corpo e o seu valor de Força for 13 ou menor, ou se for uma arma à distância e o seu valor de Destreza for 13 ou menor.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-recarga",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Recarga",
+      "nome": "Recarga",
+      "familia": "Propriedade de Arma",
+      "descricao": "Devido ao tempo necessário para carregar esta arma, você pode disparar apenas uma peça de munição dela quando usa uma Ação, Ação Bônus ou Reação para dispará-la, independentemente do número de ataques que você normalmente possa fazer.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    },
+    {
+      "id": "regra-propriedade-arma-versatil",
+      "modulo": "Regras",
+      "original": "Propriedade de Arma: Versátil",
+      "nome": "Versátil",
+      "familia": "Propriedade de Arma",
+      "descricao": "Esta arma pode ser usada com uma ou duas mãos. Um valor de dano entre parênteses aparece com a propriedade — é o dano quando a arma é usada com as duas mãos para fazer um ataque corpo a corpo.",
+      "fonte": "Livro do Jogador (2024)",
+      "ruleset": "5.5e",
+      "status": "publicado"
+    }
+  ]
+}
