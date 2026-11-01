@@ -77,6 +77,18 @@ def count_records(index: dict, spells: dict) -> dict[str, int]:
         + len(core_gear["heroes"]["itens"])
     )
 
+    # A lista de armas é publicada pelo cache canônico, não pelas referências
+    # semânticas (que incluem aliases e outros registros não navegáveis).
+    weapons = json.loads((ROOT / "cache/armas-catalogo.json").read_text(encoding="utf-8"))
+    weapon_rows = weapons.get("itens", [])
+    if len(weapon_rows) != weapons.get("controle", {}).get("quantidade"):
+        raise ValueError("Contagem de armas diverge do catálogo publicado.")
+    if any(str(row.get("status", "")).lower() == "demonstrativo"
+           or "não canonizar" in str(row.get("descricao", "")).lower()
+           for row in weapon_rows):
+        raise ValueError("Arma marcada como Não Canonizar permanece no catálogo.")
+    counts["Armas"] = len(weapon_rows)
+
     if any(n < 1 for n in counts.values()):
         empty = [module for module, n in counts.items() if n < 1]
         raise ValueError(f"Módulos sem registros publicados: {empty}")
