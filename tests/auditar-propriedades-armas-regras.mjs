@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(p,'utf8');
+const data=JSON.parse(read('dados/propriedades-armas-2024.json'));
+const rules=data.itens||[];
+const expected=['Acuidade','Alcance','Arremesso','Duas Mãos','Leve','Munição','Pesada','Recarga','Versátil'];
+assert.equal(data.modulo,'Regras');
+assert.equal(data.selo,'Propriedade de Arma');
+assert.equal(data.ruleset,'5.5e');
+assert.equal(data.revisao,2024);
+assert.equal(data.controle.regra_da_casa,false);
+assert.deepEqual(rules.map(x=>x.nome),expected,'Nove propriedades completas em português.');
+assert.equal(new Set(rules.map(x=>x.id)).size,9);
+assert.equal(new Set(rules.map(x=>x.original)).size,9);
+for(const row of rules){
+ assert.equal(row.familia,'Propriedade de Arma',row.nome);
+ assert.equal(row.modulo,'Regras',row.nome);
+ assert.ok(row.original.startsWith('Propriedade de Arma: '),row.nome);
+ assert.ok(row.descricao.length>35,'Sem texto completo: '+row.nome);
+ assert.equal(row.status,'publicado',row.nome);
+}
+assert.match(rules.find(x=>x.nome==='Pesada').descricao,/13 ou menor/);
+assert.match(rules.find(x=>x.nome==='Recarga').descricao,/Ação, Ação Bônus ou Reação/);
+assert.match(rules.find(x=>x.nome==='Leve').descricao,/não adiciona o seu modificador/);
+assert.match(rules.find(x=>x.nome==='Alcance').descricao,/1,5 metros/);
+const viewer=read('scripts/regras-srd-view-v7.js'),html=read('regras.html'),reg=read('scripts/catalog-registry.js');
+assert.ok(viewer.includes('renderWeaponProperty')&&viewer.includes("kind:'property'"),'Renderizador de propriedade não registrado.');
+assert.ok(viewer.includes('PROPERTIES.length!==9'),'Falha na validação do catálogo.');
+assert.ok(html.includes('value="property"'),'Filtro ausente.');
+assert.ok(viewer.includes('badge-weapon-property'),'Selo ausente.');
+assert.ok(viewer.includes('Regra oficial · 5.5e (2024)'),'Classificação 5.5e não identificada.');
+assert.ok(reg.includes("local('dados/propriedades-armas-2024.json')"),'Registro canônico não inclui as propriedades.');
+assert.ok(!rules.some(x=>x.familia==='Regra da Casa'),'Propriedades não são regras da casa.');
+console.log('Propriedades de Armas validadas: 9/9, selo Propriedade de Arma · oficial 5.5e (2024).');
