@@ -91,21 +91,22 @@
   "bugigangas_exclusoes_taxonomicas": [
     "Soul Trinkets temporários do Phantom"
   ],
-  "armas_publicadas_dos_pdfs": 4,
-  "armas_total_modulo": 43,
+  "armas_publicadas_dos_pdfs": 3,
+  "armas_total_modulo": 41,
   "armas_arquivo_manifesto": "dados/armas-pdfs-manifest.json",
   "armas_pagina": "armas.html",
   "armas_por_pdf": {
     "pdf24_merged.pdf": 0,
-    "pdf24_merged-1.pdf": 4
+    "pdf24_merged-1.pdf": 0
   },
   "armas_por_natureza": {
-    "oficiais": 1,
+    "oficiais": 38,
     "suplementares": 3
   },
   "armas_por_fonte": {
-    "Heliana's Guide to Monster Hunting": 3,
-    "Eberron: Rising from the Last War": 1
+    "Livro do Jogador (2024)": 38,
+    "Eberron: Ascensão da Última Guerra": 2,
+    "Forgotten Realms: Tumba da Aniquilação": 1
   },
   "armas_exclusoes_taxonomicas": [
     "armas mágicas — permanecem em Itens Mágicos",
@@ -118,10 +119,10 @@
     "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
     "ferramentas": "25 categorias primárias publicadas; pdf24_merged.pdf fornece as descrições detalhadas e pdf24_merged-1.pdf acrescenta relações de Eberron/Artificer; veículos direcionados ao módulo próprio",
     "bugigangas": "110 linhas de tabelas auditadas; 109 registros únicos publicados; Player’s Handbook fornece 100 entradas e Mournland Trinkets fornece 9 entradas adicionais após consolidação de uma duplicata exata",
-    "armas": "4 armas dos PDFs (3 suplementos de Heliana e 1 arma oficial de Eberron) integradas às 39 do SRD; total ativo de 43. As 87 armas demonstrativas foram retiradas do Hub.",
+    "armas": "Catálogo substituído por 41 armas da lista fornecida: 38 do Livro do Jogador, 2 de Eberron e 1 de Tumba da Aniquilação.",
     "publicacao": "concluida"
   },
-  "revisado_em": "2026-08-19T13:00:00-03:00",
+  "revisado_em": "2026-11-01",
   "registros_estruturados_carregados": 395,
   "monstros_extras_carregados": 32,
   "registros_pdf_publicados": 427,
