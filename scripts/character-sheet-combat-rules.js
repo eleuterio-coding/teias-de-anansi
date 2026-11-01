@@ -26,8 +26,8 @@ export function weaponPropertyProfile(weapon){
  const raw=propertyRows(weapon),normalized=raw.map(fold),base=splitDamage(weapon?.dano);
  const find=(pt,en)=>raw.find(v=>new RegExp('^(?:'+pt+'|'+en+')\\b','i').test(fold(v)));
  const versatil=find('versatil','versatile'),arremesso=find('arremesso','thrown'),municao=find('municao','ammunition'),duasMaos=find('duas maos','two-handed');
- const versatilMatch=versatil?.match(/\\(([^)]+)\\)/);
- const municaoMatch=municao?.match(/;\\s*([^)]+)\\)/);
+ const versatilMatch=versatil?.match(/\(([^)]+)\)/);
+ const municaoMatch=municao?.match(/;\s*([^)]+)\)/);
  const ammoByWeapon={shortbow:'arrow',longbow:'arrow','light-crossbow':'bolt','hand-crossbow':'bolt','heavy-crossbow':'bolt',blowgun:'needle',sling:'bullet',musket:'bullet',pistol:'bullet'};
  const ammoKey=normalizeAmmo(municaoMatch?.[1]||ammoByWeapon[weapon?.id]||'');
  return{raw,baseDamage:base.dice,damageType:base.type,
