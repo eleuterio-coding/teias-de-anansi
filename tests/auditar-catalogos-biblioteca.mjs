@@ -36,7 +36,7 @@ for(const file of[...BACKGROUND_BUILDER_FILES,...SPECIES_BUILDER_FILES,...FEAT_B
 assert(BACKGROUND_BUILDER_FILES.length===6,`Antecedentes ativos no construtor divergiram: ${BACKGROUND_BUILDER_FILES.length}`);
 assert(SPECIES_BUILDER_FILES.length===4,`Pacotes locais de espécies ativos divergiram: ${SPECIES_BUILDER_FILES.length}`);
 assert(FEAT_BUILDER_FILES.length===7,`Fontes de talentos ativas divergiram: ${FEAT_BUILDER_FILES.length}`);
-assert(SPELL_REMOTE_SOURCES.length===5,`Fontes remotas de magias divergiram: ${SPELL_REMOTE_SOURCES.length}`);
+assert(SPELL_REMOTE_SOURCES.length===4,`Fontes remotas de magias divergiram: ${SPELL_REMOTE_SOURCES.length}`);
 assert(/gendata-spell-source-lookup\.json$/.test(SPELL_SOURCE_LOOKUP),'Lookup de classes de Magias não está registrado.');
 const spells=read('scripts/character-builder/spells.js');
 assert(spells.includes('SPELL_REMOTE_SOURCES')&&spells.includes('SPELL_SOURCE_LOOKUP'),'Magias não consomem o registro canônico.');
@@ -56,17 +56,23 @@ assert(countScript.includes('status')&&countScript.includes('publicado')&&countS
 const deployWorkflow=read('.github/workflows/deploy-pages.yml');
 assert(deployWorkflow.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve produzir as contagens dos 18 módulos.');
 const weaponsPage=read('armas.html');
-assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261101-canon-only1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
+assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261101-usuario-armas1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
 assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
 assert(!/cache\s*:\s*['"]no-store['"]/.test(weaponsPage),'Biblioteca de Armas não deve ignorar o cache do navegador.');
 const weaponsCache=json('cache/armas-catalogo.json'),weaponsCore=json('dados/armas-srd.json'),weaponsManifest=json('dados/armas-pdfs-manifest.json');
 const canonicalWeapons=[...(weaponsCore.itens||[]),...(weaponsManifest.arquivos||[]).flatMap(row=>json(row.arquivo).itens||[])];
 assert((weaponsCache.itens||[]).length===canonicalWeapons.length,`Cache de Armas divergente das fontes: ${(weaponsCache.itens||[]).length}/${canonicalWeapons.length}`);
-assert((weaponsCache.itens||[]).length===43,'Biblioteca deve conter 43 armas após remover as 87 não canônicas.');
+assert((weaponsCache.itens||[]).length===41,'Biblioteca deve conter exatamente as 41 armas selecionadas pelo usuário.');
 assert(!(weaponsCache.itens||[]).some(x=>norm([x.status,x.natureza,x.descricao].join(' ')).includes('nao canonizar')||norm(x.status)==='demonstrativo'),'Arma Não Canonizar permanece publicada.');
 assert(!(weaponsManifest.arquivos||[]).some(x=>/xyleff/i.test(x.arquivo||x.fonte||'')),'Manifesto ainda inclui fragmentos não canônicos.');
 const weaponKey=row=>`${row.fonte||''}::${row.id||row.nome_original||row.nome||''}`;
 assert(JSON.stringify((weaponsCache.itens||[]).map(weaponKey).sort())===JSON.stringify(canonicalWeapons.map(weaponKey).sort()),'Cache de Armas não representa exatamente os registros das fontes canônicas.');
+const chosenMasteries=json('dados/maestrias-de-arma-pdfs.json');
+assert(chosenMasteries.itens.length===8,'A biblioteca deve conter somente as oito maestrias especificadas.');
+assert(chosenMasteries.itens.every(x=>!x.nome_original&&x.conteudo?.descricao),'Maestrias devem estar somente em português.');
+assert(weaponsCache.itens.filter(x=>x.fonte==='livro-jogador-2024').length===38,'Livro do Jogador deve conter 38 armas.');
+assert(weaponsCache.itens.filter(x=>x.fonte==='eberron-2019').length===2,'Eberron deve conter 2 armas.');
+assert(weaponsCache.itens.filter(x=>x.fonte==='tumba-aniquilacao').length===1,'Tumba da Aniquilação deve conter 1 arma.');
 for(const module of CATALOG_MODULES){const html=read(module.route);assert(!/cache\s*:\s*['"]no-store['"]/.test(html),`${module.route}: Biblioteca não deve forçar no-store.`);assert(!/<meta[^>]+http-equiv=["']Cache-Control["'][^>]+no-cache/i.test(html),`${module.route}: documento não deve proibir cache estático.`)}
 assert(!/cache\s*:\s*['"]no-store['"]/.test(read('scripts/module-clean-loader.js')),'Carregador dos módulos não deve forçar no-store.');
 
