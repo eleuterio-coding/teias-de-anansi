@@ -1,64 +1,51 @@
 {
   "schema": "hub-rpg/armas-pdfs/v1",
-  "gerado_em": "2026-08-19",
+  "gerado_em": "2026-11-01",
   "modulo": "Armas",
-  "fontes_pdf": [
-    "pdf24_merged.pdf",
-    "pdf24_merged-1.pdf"
-  ],
   "politica": {
-    "precedencia": "A regra oficial 5.5e/2024 permanece soberana. Versões 5e e suplementares só substituem versões anteriores equivalentes dentro da mesma linha editorial quando são claramente revisões posteriores.",
-    "taxonomia": "Armas mágicas localizadas nos PDFs são excluídas deste módulo e permanecem em Itens Mágicos. Ataques de blocos de monstros e explosivos também não são cadastrados como armas de equipamento.",
-    "escopo_tematico": "O catálogo ativo do Hub exclui armas de fogo, pólvora e armamento mundano industrial, moderno ou futurista, independentemente da edição, fonte, período histórico ou status oficial. As fontes brutas podem permanecer no repositório apenas para rastreabilidade e auditoria, mas a política global de era impede que esses registros sejam oferecidos ou aplicados mecanicamente no site."
+    "precedencia": "Catálogo fechado às 41 armas explicitamente fornecidas pelo usuário.",
+    "taxonomia": "Armas anteriores retiradas do catálogo público. As 38 armas do Livro do Jogador são mantidas em dados/armas-srd.json.",
+    "escopo_tematico": "Mosquete e Pistola da edição 2024 são permitidos expressamente; armas industriais, modernas e futuristas continuam excluídas."
   },
   "controle": {
-    "quantidade": 4,
+    "quantidade": 3,
     "pdf24_merged": 0,
-    "pdf24_merged_1": 4,
-    "oficiais": 1,
+    "pdf24_merged_1": 0,
+    "oficiais": 0,
     "suplementares": 3,
     "demonstrativos": 0,
     "por_fonte": {
-      "Heliana's Guide to Monster Hunting": 3,
-      "Eberron: Rising from the Last War": 1
+      "Eberron: Ascensão da Última Guerra": 2,
+      "Forgotten Realms: Tumba da Aniquilação": 1
     },
     "supressoes": [
-      "Armas-base repetidas nas tabelas de crafting de Heliana não duplicam os registros oficiais já existentes no módulo.",
-      "Armas mágicas encontradas em pdf24_merged.pdf foram excluídas por taxonomia.",
-      "Ataques nomeados dentro de stat blocks de monstros foram excluídos por não serem entradas de equipamento.",
-      "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas.",
-      "Automatic Rifle, Hunting Rifle, Revolver, Semiautomatic Pistol, Shotgun, Antimatter Rifle, Laser Pistol e Laser Rifle do Dungeon Master's Guide 2024 foram removidos por incompatibilidade com o escopo de fantasia medieval do Hub.",
-      "Musket, Pistol, Blunderbuss, Revolver, Rifle e equivalentes de pólvora permanecem apenas nas fontes brutas para auditoria e são excluídos do catálogo ativo pela política global de era do cenário.",
-      "As 87 armas demonstrativas marcadas como Não Canonizar foram retiradas integralmente das fontes publicadas e do catálogo ativo em 2026-11-01."
+      "Retiradas três bestas suplementares do catálogo anterior, além das demais armas que não constam da lista solicitada."
     ]
   },
   "fontes": {
-    "helianas-guide-pdf24-1": {
-      "titulo": "Heliana's Guide to Monster Hunting",
-      "arquivo_pdf": "pdf24_merged-1.pdf",
+    "eberron-2019": {
+      "titulo": "Eberron: Ascensão da Última Guerra",
       "ruleset": "5e",
       "natureza": "suplementar",
-      "secao": "Crafting / New Weapons — Tommybows",
-      "observacao": "Três modelos de Tommybow preservados como suplementos desta fonte."
+      "secao": "Armas de Eberron",
+      "observacao": "Registros fornecidos pelo usuário; valores de custo e peso não informados ficam sem preço."
     },
-    "erlw-pdf24-1": {
-      "titulo": "Eberron: Rising from the Last War",
-      "ano": 2019,
-      "arquivo_pdf": "pdf24_merged-1.pdf",
+    "tumba-aniquilacao": {
+      "titulo": "Forgotten Realms: Tumba da Aniquilação",
       "ruleset": "5e",
-      "natureza": "oficial",
-      "secao": "Character Creation — Double-Bladed Scimitar"
+      "natureza": "suplementar",
+      "secao": "Armas de Chult"
     }
   },
   "arquivos": [
     {
-      "fonte": "helianas-guide-pdf24-1",
-      "arquivo": "dados/armas-fontes/helianas-guide.json",
-      "quantidade": 3
+      "fonte": "eberron-2019",
+      "arquivo": "dados/armas-fontes/erlw.json",
+      "quantidade": 2
     },
     {
-      "fonte": "erlw-pdf24-1",
-      "arquivo": "dados/armas-fontes/erlw.json",
+      "fonte": "tumba-aniquilacao",
+      "arquivo": "dados/armas-fontes/tumba-aniquilacao.json",
       "quantidade": 1
     }
   ]
