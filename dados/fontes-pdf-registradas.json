@@ -1,7 +1,7 @@
 {
   "schema": "hub-rpg/fontes-pdf/v1",
   "registrado_em": "2026-08-18",
-  "atualizado_em": "2026-08-19",
+  "atualizado_em": "2026-11-01",
   "fontes": [
     {
       "id": "fonte:pdf24_merged",
@@ -78,11 +78,10 @@
         "dados/armaduras-pdfs.json",
         "armaduras.html",
         "dados/armas-pdfs-manifest.json",
-        "dados/armas-fontes/helianas-guide.json",
         "dados/armas-fontes/erlw.json",
         "armas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas Após remover as 87 armas demonstrativas, permanecem 4 armas publicadas deste PDF: 3 Tommybows de Heliana e 1 Double-Bladed Scimitar de Eberron."
+      "observacao": "As armas antes extraídas deste PDF foram substituídas no catálogo ativo pelas 41 armas explicitamente informadas pelo usuário. As fontes suplementares constam do manifesto atualizado."
     }
   ],
   "controle": {
