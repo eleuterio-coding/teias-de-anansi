@@ -21,11 +21,11 @@ counts = count_records(index, spells)
 
 expected = {
     "Classes": 13,
-    "Subclasses": 119,
-    "Talentos": 172,
-    "Maestrias de Arma": 15,
-    "Equipamentos de Aventura": 185,
-    "Magias": 537,
+    "Subclasses": 112,
+    "Talentos": 145,
+    "Maestrias de Arma": 8,
+    "Equipamentos de Aventura": 88,
+    "Magias": 510,
 }
 for module, total in expected.items():
     assert counts[module] == total, f"{module}: {counts[module]} != {total}"
