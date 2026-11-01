@@ -34,9 +34,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura com esta arma e causar dano, você ganha Vantagem na sua próxima jogada de ataque contra ela, desde que o ataque ocorra antes do final do seu próximo turno."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura com esta arma e causar dano, você ganha Vantagem na sua próxima jogada de ataque contra ela, desde que o ataque ocorra antes do final do seu próximo turno."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Machado de Mão",
@@ -74,9 +72,7 @@
       "conteudo": {
         "descricao": "Se o seu ataque errar a criatura alvo, você ainda causa dano a ela. O dano é igual ao modificador do atributo que você usou para realizar a jogada de ataque, e o tipo de dano é o mesmo da arma."
       },
-      "mecanica": {
-        "efeito": "Se o seu ataque errar a criatura alvo, você ainda causa dano a ela. O dano é igual ao modificador do atributo que você usou para realizar a jogada de ataque, e o tipo de dano é o mesmo da arma."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Espada Grande",
@@ -108,9 +104,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura, você impõe Desvantagem na próxima jogada de ataque que ela fizer antes do início do seu próximo turno."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura, você impõe Desvantagem na próxima jogada de ataque que ela fizer antes do início do seu próximo turno."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Lança",
@@ -146,9 +140,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura com esta arma, ela deve ser bem-sucedida em um Teste de Resistência de Constituição (a CD baseia-se no seu atributo de ataque) ou ficará Caída."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura com esta arma, ela deve ser bem-sucedida em um Teste de Resistência de Constituição (a CD baseia-se no seu atributo de ataque) ou ficará Caída."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Bordão",
@@ -183,9 +175,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura com esta arma, você pode empurrá-la 3 metros em linha reta para longe de você, sem exigir teste de resistência."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura com esta arma, você pode empurrá-la 3 metros em linha reta para longe de você, sem exigir teste de resistência."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Grande Clava",
@@ -219,9 +209,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura e causar dano, o deslocamento dela é reduzido em 3 metros até o início do seu próximo turno."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura e causar dano, o deslocamento dela é reduzido em 3 metros até o início do seu próximo turno."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Clava",
@@ -257,9 +245,7 @@
       "conteudo": {
         "descricao": "Quando você realiza o ataque extra da propriedade Leve, você pode fazer esse ataque extra como parte da própria Ação de Ataque original, em vez de gastar sua Ação Bônus. Só pode ser usado uma vez por turno."
       },
-      "mecanica": {
-        "efeito": "Quando você realiza o ataque extra da propriedade Leve, você pode fazer esse ataque extra como parte da própria Ação de Ataque original, em vez de gastar sua Ação Bônus. Só pode ser usado uma vez por turno."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Adaga",
@@ -293,9 +279,7 @@
       "conteudo": {
         "descricao": "Se você atingir uma criatura com um ataque corpo a corpo usando esta arma, você pode fazer um ataque adicional contra uma segunda criatura que esteja a até 1,5 m do alvo original e dentro do seu alcance. No acerto, o dano da arma não recebe o bônus do modificador de atributo. Só pode ser usado uma vez por turno."
       },
-      "mecanica": {
-        "efeito": "Se você atingir uma criatura com um ataque corpo a corpo usando esta arma, você pode fazer um ataque adicional contra uma segunda criatura que esteja a até 1,5 m do alvo original e dentro do seu alcance. No acerto, o dano da arma não recebe o bônus do modificador de atributo. Só pode ser usado uma vez por turno."
-      },
+      "mecanica": {},
       "armas_associadas": {
         "livro_jogador_2024": [
           "Alabarda",
