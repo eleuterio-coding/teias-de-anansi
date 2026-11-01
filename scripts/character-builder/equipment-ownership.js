@@ -52,7 +52,8 @@ export function purchasePermission(item,klass=currentClass()){
 
 function normalizedName(value){return fold(String(value||'').replace(/^\d+\s*[x×]\s*/i,'').replace(/\s*\([^)]*\)\s*$/,'').trim())}
 function matchesName(row,name,fields){const wanted=normalizedName(name);return fields.some(field=>normalizedName(row?.[field])===wanted)}
-function weaponByName(name){return state.catalogs.weapons.find(w=>matchesName(w,name,['nome','nome_original']))||null}
+const OLD_WEAPON_IDS=Object.freeze({"club":"club","dagger":"dagger","greatclub":"greatclub","handaxe":"handaxe","javelin":"javelin","light hammer":"light-hammer","mace":"mace","quarterstaff":"quarterstaff","sickle":"sickle","spear":"spear","dart":"dart","light crossbow":"light-crossbow","shortbow":"shortbow","sling":"sling","battleaxe":"battleaxe","flail":"flail","glaive":"glaive","greataxe":"greataxe","greatsword":"greatsword","halberd":"halberd","lance":"lance","longsword":"longsword","maul":"maul","morningstar":"morningstar","pike":"pike","rapier":"rapier","scimitar":"scimitar","shortsword":"shortsword","trident":"trident","warhammer":"warhammer","war pick":"war-pick","whip":"whip","blowgun":"blowgun","hand crossbow":"hand-crossbow","heavy crossbow":"heavy-crossbow","longbow":"longbow","musket":"musket","pistol":"pistol"});
+function weaponByName(name){const direct=state.catalogs.weapons.find(w=>matchesName(w,name,['nome','nome_original']));if(direct)return direct;const id=OLD_WEAPON_IDS[normalizedName(name)];return state.catalogs.weapons.find(w=>w.id===id)||null}
 function armorByName(name){return state.catalogs.armors.find(a=>matchesName(a,name,['nome']))||null}
 function classifyNamedItem(item,source='Equipamento inicial'){
  const name=item?.nome||item?.name||'Item',qty=Math.max(1,Math.floor(num(item?.quantidade??item?.quantity)||1)),weapon=weaponByName(name);
