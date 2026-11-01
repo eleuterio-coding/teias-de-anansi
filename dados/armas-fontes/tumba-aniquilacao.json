@@ -1,0 +1,28 @@
+{
+  "schema": "hub-rpg/armas-fonte/v1",
+  "fonte": {
+    "titulo": "Forgotten Realms: Tumba da Aniquilação",
+    "ruleset": "5e",
+    "natureza": "suplementar",
+    "secao": "Armas de Chult"
+  },
+  "itens": [
+    {
+      "id": "toa:yklwa",
+      "nome": "Yklwa",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [
+        "Arremesso (Distância 3/9m)"
+      ],
+      "maestria": null,
+      "peso": "Não informado",
+      "custo": "Não informado",
+      "ruleset": "5e",
+      "status": "suplementar",
+      "natureza": "suplementar",
+      "fonte": "tumba-aniquilacao",
+      "descricao": "Uma arma tradicional de Chult, pronunciada IÍC-ul-ua. Consiste em uma haste de madeira de 90 cm com uma lâmina de 45 cm. Embora possa ser arremessada, não é bem balanceada para isso."
+    }
+  ]
+}
