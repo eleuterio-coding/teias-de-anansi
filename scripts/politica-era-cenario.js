@@ -14,15 +14,13 @@
     .trim();
 
   // Política de cenário do Hub: fantasia medieval/fantástica sem tecnologia
-  // mundana de pólvora, industrial, moderna ou futurista. Tecnologia explicitamente
+  // mundana industrial, moderna ou futurista; Mosquete e Pistola foram autorizados explicitamente em 2026-11-01. Tecnologia explicitamente
   // mágica/fantástica não é bloqueada só por ser avançada (ex.: constructos e airships).
   const FANTASY_EXEMPT_PATTERNS=[
     /\b(eldritch|arcane|magic|magical|mistico|mistica|arcano|arcana)\s+(cannon|canhao)\b/
   ];
 
   const NAME_PATTERNS=[
-    /\b(mosquete|musket)\b/,
-    /\b(pistola|pistol)\b/,
     /\b(revolver)\b/,
     /\b(rifle)\b/,
     /\b(shotgun|espingarda)\b/,
