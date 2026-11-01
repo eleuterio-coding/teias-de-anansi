@@ -5,7 +5,7 @@
   "politica": {
     "precedencia": "Catálogo fechado às 41 armas explicitamente fornecidas pelo usuário.",
     "taxonomia": "Armas anteriores retiradas do catálogo público. As 38 armas do Livro do Jogador são mantidas em dados/armas-srd.json.",
-    "escopo_tematico": "Mosquete e Pistola da edição 2024 são permitidos expressamente; armas industriais, modernas e futuristas continuam excluídas."
+    "escopo_tematico": "O catálogo ativo permite expressamente apenas Mosquete e Pistola de 2024 entre as armas de fogo e pólvora especificadas pelo usuário; exclui armas industriais, modernas e futuristas."
   },
   "controle": {
     "quantidade": 3,
