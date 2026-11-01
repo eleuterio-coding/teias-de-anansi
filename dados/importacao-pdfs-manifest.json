@@ -91,7 +91,7 @@
   "bugigangas_exclusoes_taxonomicas": [
     "Soul Trinkets temporários do Phantom"
   ],
-  "armas_publicadas_dos_pdfs": 3,
+  "armas_publicadas_dos_pdfs": 0,
   "armas_total_modulo": 41,
   "armas_arquivo_manifesto": "dados/armas-pdfs-manifest.json",
   "armas_pagina": "armas.html",
