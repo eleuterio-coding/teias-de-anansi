@@ -30,7 +30,7 @@
 
   <div class="controles">
     <input id="busca" type="search" placeholder="Buscar maestria, efeito, arma ou fonte...">
-    <select id="origem"><option value="">Todas as origens</option><option value="oficial_aberta">Oficial aberta</option><option value="terceiros_demo">Demonstrativa</option></select>
+    <select id="origem"><option value="">Todas as origens</option><option value="oficial_aberta">Oficial aberta</option></select>
     <select id="filtro"><option value="">Todas as maestrias</option></select>
   </div>
   <div id="resultado" class="resultado"></div>
@@ -84,10 +84,10 @@ function render(){
 }
 (async()=>{
   try{
-    const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20260819-1224',{cache:'default'});
+    const r=await fetch('dados/maestrias-de-arma-pdfs.json?v=20261101-usuario-maestrias1',{cache:'default'});
     if(!r.ok) throw new Error(`HTTP ${r.status}`);
     DATA=await r.json();ALL=DATA.itens||[];
-    if(ALL.length!==15) throw new Error(`catálogo incompleto: ${ALL.length}/15`);
+    if(ALL.length!==Number(DATA.controle?.quantidade)) throw new Error(`catálogo incompleto: ${ALL.length}/${DATA.controle?.quantidade}`);
     document.getElementById('filtro').innerHTML='<option value="">Todas as maestrias</option>'+ALL.map(x=>`<option>${esc(x.nome)}</option>`).join('');
     render();
   }catch(e){
