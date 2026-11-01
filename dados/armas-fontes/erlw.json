@@ -1,1 +1,46 @@
-{"schema":"hub-rpg/armas-fonte/v1","fonte":{"titulo":"Eberron: Rising from the Last War","ano":2019,"arquivo_pdf":"pdf24_merged-1.pdf","ruleset":"5e","natureza":"oficial","secao":"Character Creation — Double-Bladed Scimitar"},"itens":[{"id":"erlw-pdf24-1:double-bladed-scimitar","nome":"Double-Bladed Scimitar","nome_original":"Double-Bladed Scimitar","categoria":"Marcial corpo a corpo","dano":"2d4 Slashing","propriedades":["Special","Two-Handed"],"maestria":null,"peso":"6 lb","custo":"100 GP","ruleset":"5e","status":"oficial legado","natureza":"oficial","canonico":true,"fonte":"erlw-pdf24-1","descricao":"Arma característica dos elfos Valenar. Se você atacar com ela como parte da ação Atacar no seu turno, pode usar uma Ação Bônus imediatamente depois para realizar outro ataque corpo a corpo com a arma; esse ataque adicional causa 1d4 de dano cortante em um acerto, em vez de 2d4."}]}
+{
+  "schema": "hub-rpg/armas-fonte/v1",
+  "fonte": {
+    "titulo": "Eberron: Ascensão da Última Guerra",
+    "ruleset": "5e",
+    "natureza": "suplementar",
+    "secao": "Armas de Eberron",
+    "observacao": "Registros fornecidos pelo usuário; valores de custo e peso não informados ficam sem preço."
+  },
+  "itens": [
+    {
+      "id": "eberron-2019:bumerangue",
+      "nome": "Bumerangue",
+      "categoria": "Simples à distância",
+      "dano": "1d4 Concussão",
+      "propriedades": [
+        "Distância 18/36m"
+      ],
+      "maestria": null,
+      "peso": "Não informado",
+      "custo": "Não informado",
+      "ruleset": "5e",
+      "status": "suplementar",
+      "natureza": "suplementar",
+      "fonte": "eberron-2019",
+      "descricao": "Se você errar um ataque com arma usando um bumerangue, ele retorna para a sua mão."
+    },
+    {
+      "id": "erlw-pdf24-1:double-bladed-scimitar",
+      "nome": "Cimitarra de Lâmina Dupla",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "2d4 Cortante",
+      "propriedades": [
+        "Duas Mãos"
+      ],
+      "maestria": null,
+      "peso": "6 libras",
+      "custo": "100 PO",
+      "ruleset": "5e",
+      "status": "suplementar",
+      "natureza": "suplementar",
+      "fonte": "eberron-2019",
+      "descricao": "Se você atacar com uma cimitarra de lâmina dupla como parte da ação de Ataque no seu turno, pode usar uma ação bônus imediatamente depois para fazer um ataque corpo a corpo com ela. Esse ataque causa 1d4 de dano cortante ao atingir, em vez de 2d4."
+    }
+  ]
+}
