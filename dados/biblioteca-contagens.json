@@ -1,6 +1,6 @@
 {
   "schema": "hub-rpg.biblioteca-contagens.v1",
-  "gerado_em": "2026-10-31",
+  "gerado_em": "2026-11-01",
   "observacao": "Contagens dos registros exibidos em cada módulo; Monstros é calculado dinamicamente pela mesma regra de consolidação do catálogo.",
   "modulos": {
     "Regras": 162,
@@ -9,10 +9,10 @@
     "Espécies": 51,
     "Antecedentes": 43,
     "Talentos": 145,
-    "Maestrias de Arma": 15,
+    "Maestrias de Arma": 8,
     "Monstros": null,
     "Armaduras": 13,
-    "Armas": 43,
+    "Armas": 41,
     "Equipamentos de Aventura": 88,
     "Ferramentas": 25,
     "Montarias e Veículos": 60,
