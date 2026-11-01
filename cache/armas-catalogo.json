@@ -1,812 +1,720 @@
 {
   "schema": "hub-rpg/armas-catalogo-cache/v1",
   "gerado_em": "2026-11-01",
-  "finalidade": "Artefato derivado para carregamento rápido da Biblioteca; as fontes normativas permanecem armas-srd.json, armas-pdfs-manifest.json e arquivos declarados no manifesto.",
+  "finalidade": "Catálogo consolidado das 41 armas selecionadas pelo usuário, exibidas em português.",
   "controle": {
-    "quantidade": 43,
-    "core": 39,
-    "pdf": 4
+    "quantidade": 41,
+    "core": 38,
+    "pdf": 3
   },
   "fontes": {
-    "srd-5.2.1": {
-      "titulo": "System Reference Document 5.2.1",
-      "editora": "Wizards of the Coast LLC",
+    "livro-jogador-2024": {
+      "titulo": "Livro do Jogador (2024)",
       "ruleset": "5.5e",
       "revisao_core": 2024,
-      "ano": 2025,
-      "licenca": "CC-BY-4.0",
-      "secao": "Equipment > Weapons",
-      "url": "https://www.dndbeyond.com/srd",
-      "atribuicao": "This work includes material from the System Reference Document 5.2.1 (SRD 5.2.1) by Wizards of the Coast LLC, available at https://www.dndbeyond.com/srd. The SRD 5.2.1 is licensed under the Creative Commons Attribution 4.0 International License."
+      "secao": "Equipamentos — Armas"
     },
-    "srd-5.1": {
-      "titulo": "System Reference Document 5.1",
-      "editora": "Wizards of the Coast LLC",
-      "ruleset": "5e",
-      "revisao_core": 2014,
-      "licenca": "CC-BY-4.0",
-      "secao": "Equipment > Weapons > Special Weapons",
-      "url": "https://dnd.wizards.com/resources/systems-reference-document",
-      "atribuicao": "This work includes material from the System Reference Document 5.1 (SRD 5.1) by Wizards of the Coast LLC. The SRD 5.1 is licensed under the Creative Commons Attribution 4.0 International License."
-    },
-    "helianas-guide-pdf24-1": {
-      "titulo": "Heliana's Guide to Monster Hunting",
-      "arquivo_pdf": "pdf24_merged-1.pdf",
+    "eberron-2019": {
+      "titulo": "Eberron: Ascensão da Última Guerra",
       "ruleset": "5e",
       "natureza": "suplementar",
-      "secao": "Crafting / New Weapons — Tommybows",
-      "observacao": "Três variantes de Tommybow preservadas como armas suplementares desta fonte."
+      "secao": "Armas de Eberron",
+      "observacao": "Registros fornecidos pelo usuário; valores de custo e peso não informados ficam sem preço."
     },
-    "erlw-pdf24-1": {
-      "titulo": "Eberron: Rising from the Last War",
-      "ano": 2019,
-      "arquivo_pdf": "pdf24_merged-1.pdf",
+    "tumba-aniquilacao": {
+      "titulo": "Forgotten Realms: Tumba da Aniquilação",
       "ruleset": "5e",
-      "natureza": "oficial",
-      "secao": "Character Creation — Double-Bladed Scimitar"
+      "natureza": "suplementar",
+      "secao": "Armas de Chult"
     }
   },
   "maestrias_demonstrativas": {},
   "itens": [
     {
-      "id": "club",
-      "nome": "Clava",
-      "nome_original": "Club",
-      "categoria": "Simples corpo a corpo",
-      "dano": "1d4 contundente",
-      "propriedades": [
-        "Light"
-      ],
-      "maestria": "Slow",
-      "peso": "2 lb",
-      "custo": "1 SP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
       "id": "dagger",
       "nome": "Adaga",
-      "nome_original": "Dagger",
       "categoria": "Simples corpo a corpo",
-      "dano": "1d4 perfurante",
+      "dano": "1d4 Perfuração",
       "propriedades": [
-        "Finesse",
-        "Light",
-        "Thrown (20/60 ft.)"
+        "Acuidade",
+        "Leve",
+        "Arremesso (Distância 6/18m)"
       ],
-      "maestria": "Nick",
-      "peso": "1 lb",
-      "custo": "2 GP",
+      "maestria": "Talho",
+      "peso": "1 libras",
+      "custo": "2 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "greatclub",
-      "nome": "Clava Grande",
-      "nome_original": "Greatclub",
-      "categoria": "Simples corpo a corpo",
-      "dano": "1d8 contundente",
-      "propriedades": [
-        "Two-Handed"
-      ],
-      "maestria": "Push",
-      "peso": "10 lb",
-      "custo": "2 SP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "handaxe",
-      "nome": "Machado de Mão",
-      "nome_original": "Handaxe",
-      "categoria": "Simples corpo a corpo",
-      "dano": "1d6 cortante",
-      "propriedades": [
-        "Light",
-        "Thrown (20/60 ft.)"
-      ],
-      "maestria": "Vex",
-      "peso": "2 lb",
-      "custo": "5 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "javelin",
       "nome": "Azagaia",
-      "nome_original": "Javelin",
       "categoria": "Simples corpo a corpo",
-      "dano": "1d6 perfurante",
+      "dano": "1d6 Perfuração",
       "propriedades": [
-        "Thrown (30/120 ft.)"
+        "Arremesso (Distância 9/36m)"
       ],
-      "maestria": "Slow",
-      "peso": "2 lb",
-      "custo": "5 SP",
+      "maestria": "Perfurar",
+      "peso": "2 libras",
+      "custo": "50 PC",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "light-hammer",
-      "nome": "Martelo Leve",
-      "nome_original": "Light Hammer",
-      "categoria": "Simples corpo a corpo",
-      "dano": "1d4 contundente",
-      "propriedades": [
-        "Light",
-        "Thrown (20/60 ft.)"
-      ],
-      "maestria": "Nick",
-      "peso": "2 lb",
-      "custo": "2 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "mace",
-      "nome": "Maça",
-      "nome_original": "Mace",
-      "categoria": "Simples corpo a corpo",
-      "dano": "1d6 contundente",
-      "propriedades": [],
-      "maestria": "Sap",
-      "peso": "4 lb",
-      "custo": "5 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": "A maestria Perfurar foi indicada sem descrição de efeito no material fornecido."
     },
     {
       "id": "quarterstaff",
       "nome": "Bordão",
-      "nome_original": "Quarterstaff",
       "categoria": "Simples corpo a corpo",
-      "dano": "1d6 contundente",
+      "dano": "1d6 Concussão",
       "propriedades": [
-        "Versatile (1d8)"
+        "Versátil (1d8)"
       ],
-      "maestria": "Topple",
-      "peso": "4 lb",
-      "custo": "2 SP",
+      "maestria": "Derrubar",
+      "peso": "4 libras",
+      "custo": "20 PC",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "club",
+      "nome": "Clava",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d4 Concussão",
+      "propriedades": [
+        "Leve"
+      ],
+      "maestria": "Lento",
+      "peso": "2 libras",
+      "custo": "10 PC",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "sickle",
-      "nome": "Foice",
-      "nome_original": "Sickle",
+      "nome": "Foice Curva",
       "categoria": "Simples corpo a corpo",
-      "dano": "1d4 cortante",
+      "dano": "1d4 Cortante",
       "propriedades": [
-        "Light"
+        "Leve"
       ],
-      "maestria": "Nick",
-      "peso": "2 lb",
-      "custo": "1 GP",
+      "maestria": "Talho",
+      "peso": "2 libras",
+      "custo": "1 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "greatclub",
+      "nome": "Grande Clava",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d8 Concussão",
+      "propriedades": [
+        "Duas Mãos"
+      ],
+      "maestria": "Empurrar",
+      "peso": "10 libras",
+      "custo": "20 PC",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "spear",
       "nome": "Lança",
-      "nome_original": "Spear",
       "categoria": "Simples corpo a corpo",
-      "dano": "1d6 perfurante",
+      "dano": "1d6 Perfuração",
       "propriedades": [
-        "Thrown (20/60 ft.)",
-        "Versatile (1d8)"
+        "Arremesso (Distância 6/18m)",
+        "Versátil (1d8)"
       ],
-      "maestria": "Sap",
-      "peso": "3 lb",
-      "custo": "1 GP",
+      "maestria": "Debilitar",
+      "peso": "3 libras",
+      "custo": "1 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "dart",
-      "nome": "Dardo",
-      "nome_original": "Dart",
-      "categoria": "Simples à distância",
-      "dano": "1d4 perfurante",
-      "propriedades": [
-        "Finesse",
-        "Thrown (20/60 ft.)"
-      ],
-      "maestria": "Vex",
-      "peso": "1/4 lb",
-      "custo": "5 CP",
+      "id": "mace",
+      "nome": "Maça",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d6 Concussão",
+      "propriedades": [],
+      "maestria": "Debilitar",
+      "peso": "4 libras",
+      "custo": "5 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "light-crossbow",
-      "nome": "Besta Leve",
-      "nome_original": "Light Crossbow",
-      "categoria": "Simples à distância",
-      "dano": "1d8 perfurante",
+      "id": "handaxe",
+      "nome": "Machado de Mão",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d6 Cortante",
       "propriedades": [
-        "Ammunition (80/320 ft.; Bolt)",
-        "Loading",
-        "Two-Handed"
+        "Leve",
+        "Arremesso (Distância 6/18m)"
       ],
-      "maestria": "Slow",
-      "peso": "5 lb",
-      "custo": "25 GP",
+      "maestria": "Afligir",
+      "peso": "2 libras",
+      "custo": "5 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "light-hammer",
+      "nome": "Martelo Leve",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d4 Concussão",
+      "propriedades": [
+        "Leve",
+        "Arremesso (Distância 6/18m)"
+      ],
+      "maestria": "Talho",
+      "peso": "2 libras",
+      "custo": "2 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "shortbow",
       "nome": "Arco Curto",
-      "nome_original": "Shortbow",
       "categoria": "Simples à distância",
-      "dano": "1d6 perfurante",
+      "dano": "1d6 Perfuração",
       "propriedades": [
-        "Ammunition (80/320 ft.; Arrow)",
-        "Two-Handed"
+        "Munição (Distância 24/96m)",
+        "Duas Mãos"
       ],
-      "maestria": "Vex",
-      "peso": "2 lb",
-      "custo": "25 GP",
+      "maestria": "Afligir",
+      "peso": "2 libras",
+      "custo": "25 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "light-crossbow",
+      "nome": "Besta Leve",
+      "categoria": "Simples à distância",
+      "dano": "1d8 Perfuração",
+      "propriedades": [
+        "Munição (Distância 24/96m)",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "maestria": "Lento",
+      "peso": "5 libras",
+      "custo": "25 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "dart",
+      "nome": "Dardo",
+      "categoria": "Simples à distância",
+      "dano": "1d4 Perfuração",
+      "propriedades": [
+        "Acuidade",
+        "Arremesso (Distância 6/18m)"
+      ],
+      "maestria": "Afligir",
+      "peso": "1/4 libras",
+      "custo": "5 PC",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "sling",
       "nome": "Funda",
-      "nome_original": "Sling",
       "categoria": "Simples à distância",
-      "dano": "1d4 contundente",
+      "dano": "1d4 Concussão",
       "propriedades": [
-        "Ammunition (30/120 ft.; Bullet)"
+        "Munição (Distância 9/36m)"
       ],
-      "maestria": "Slow",
+      "maestria": "Lento",
       "peso": "—",
-      "custo": "1 SP",
+      "custo": "10 PC",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "battleaxe",
-      "nome": "Machado de Batalha",
-      "nome_original": "Battleaxe",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 cortante",
-      "propriedades": [
-        "Versatile (1d10)"
-      ],
-      "maestria": "Topple",
-      "peso": "4 lb",
-      "custo": "10 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "flail",
-      "nome": "Mangual",
-      "nome_original": "Flail",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 contundente",
-      "propriedades": [],
-      "maestria": "Sap",
-      "peso": "2 lb",
-      "custo": "10 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "glaive",
-      "nome": "Glaive",
-      "nome_original": "Glaive",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d10 cortante",
-      "propriedades": [
-        "Heavy",
-        "Reach",
-        "Two-Handed"
-      ],
-      "maestria": "Graze",
-      "peso": "6 lb",
-      "custo": "20 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "greataxe",
-      "nome": "Machado Grande",
-      "nome_original": "Greataxe",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d12 cortante",
-      "propriedades": [
-        "Heavy",
-        "Two-Handed"
-      ],
-      "maestria": "Cleave",
-      "peso": "7 lb",
-      "custo": "30 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "greatsword",
-      "nome": "Espada Grande",
-      "nome_original": "Greatsword",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "2d6 cortante",
-      "propriedades": [
-        "Heavy",
-        "Two-Handed"
-      ],
-      "maestria": "Graze",
-      "peso": "6 lb",
-      "custo": "50 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "halberd",
       "nome": "Alabarda",
-      "nome_original": "Halberd",
       "categoria": "Marcial corpo a corpo",
-      "dano": "1d10 cortante",
+      "dano": "1d10 Cortante",
       "propriedades": [
-        "Heavy",
-        "Reach",
-        "Two-Handed"
+        "Pesada",
+        "Alcance",
+        "Duas Mãos"
       ],
-      "maestria": "Cleave",
-      "peso": "6 lb",
-      "custo": "20 GP",
+      "maestria": "Trespassar",
+      "peso": "6 libras",
+      "custo": "20 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "lance",
-      "nome": "Lança de Cavalaria",
-      "nome_original": "Lance",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d10 perfurante",
-      "propriedades": [
-        "Heavy",
-        "Reach",
-        "Two-Handed (unless mounted)"
-      ],
-      "maestria": "Topple",
-      "peso": "6 lb",
-      "custo": "10 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "longsword",
-      "nome": "Espada Longa",
-      "nome_original": "Longsword",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 cortante",
-      "propriedades": [
-        "Versatile (1d10)"
-      ],
-      "maestria": "Sap",
-      "peso": "3 lb",
-      "custo": "15 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "maul",
-      "nome": "Malho",
-      "nome_original": "Maul",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "2d6 contundente",
-      "propriedades": [
-        "Heavy",
-        "Two-Handed"
-      ],
-      "maestria": "Topple",
-      "peso": "10 lb",
-      "custo": "10 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "morningstar",
-      "nome": "Maça-estrela",
-      "nome_original": "Morningstar",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 perfurante",
-      "propriedades": [],
-      "maestria": "Sap",
-      "peso": "4 lb",
-      "custo": "15 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "pike",
-      "nome": "Pique",
-      "nome_original": "Pike",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d10 perfurante",
-      "propriedades": [
-        "Heavy",
-        "Reach",
-        "Two-Handed"
-      ],
-      "maestria": "Push",
-      "peso": "18 lb",
-      "custo": "5 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "rapier",
-      "nome": "Rapieira",
-      "nome_original": "Rapier",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 perfurante",
-      "propriedades": [
-        "Finesse"
-      ],
-      "maestria": "Vex",
-      "peso": "2 lb",
-      "custo": "25 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "scimitar",
-      "nome": "Cimitarra",
-      "nome_original": "Scimitar",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d6 cortante",
-      "propriedades": [
-        "Finesse",
-        "Light"
-      ],
-      "maestria": "Nick",
-      "peso": "3 lb",
-      "custo": "25 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "shortsword",
-      "nome": "Espada Curta",
-      "nome_original": "Shortsword",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d6 perfurante",
-      "propriedades": [
-        "Finesse",
-        "Light"
-      ],
-      "maestria": "Vex",
-      "peso": "2 lb",
-      "custo": "10 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "trident",
-      "nome": "Tridente",
-      "nome_original": "Trident",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 perfurante",
-      "propriedades": [
-        "Thrown (20/60 ft.)",
-        "Versatile (1d10)"
-      ],
-      "maestria": "Topple",
-      "peso": "4 lb",
-      "custo": "5 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "warhammer",
-      "nome": "Martelo de Guerra",
-      "nome_original": "Warhammer",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 contundente",
-      "propriedades": [
-        "Versatile (1d10)"
-      ],
-      "maestria": "Push",
-      "peso": "5 lb",
-      "custo": "15 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
-    },
-    {
-      "id": "war-pick",
-      "nome": "Picareta de Guerra",
-      "nome_original": "War Pick",
-      "categoria": "Marcial corpo a corpo",
-      "dano": "1d8 perfurante",
-      "propriedades": [
-        "Versatile (1d10)"
-      ],
-      "maestria": "Sap",
-      "peso": "2 lb",
-      "custo": "5 GP",
-      "ruleset": "5.5e",
-      "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "whip",
       "nome": "Chicote",
-      "nome_original": "Whip",
       "categoria": "Marcial corpo a corpo",
-      "dano": "1d4 cortante",
+      "dano": "1d4 Cortante",
       "propriedades": [
-        "Finesse",
-        "Reach"
+        "Acuidade",
+        "Alcance"
       ],
-      "maestria": "Slow",
-      "peso": "3 lb",
-      "custo": "2 GP",
+      "maestria": "Lento",
+      "peso": "3 libras",
+      "custo": "2 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "blowgun",
-      "nome": "Zarabatana",
-      "nome_original": "Blowgun",
-      "categoria": "Marcial à distância",
-      "dano": "1 perfurante",
+      "id": "scimitar",
+      "nome": "Cimitarra",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d6 Cortante",
       "propriedades": [
-        "Ammunition (25/100 ft.; Needle)",
-        "Loading"
+        "Acuidade",
+        "Leve"
       ],
-      "maestria": "Vex",
-      "peso": "1 lb",
-      "custo": "10 GP",
+      "maestria": "Talho",
+      "peso": "3 libras",
+      "custo": "25 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "hand-crossbow",
-      "nome": "Besta de Mão",
-      "nome_original": "Hand Crossbow",
-      "categoria": "Marcial à distância",
-      "dano": "1d6 perfurante",
+      "id": "shortsword",
+      "nome": "Espada Curta",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d6 Perfuração",
       "propriedades": [
-        "Ammunition (30/120 ft.; Bolt)",
-        "Light",
-        "Loading"
+        "Acuidade",
+        "Leve"
       ],
-      "maestria": "Vex",
-      "peso": "3 lb",
-      "custo": "75 GP",
+      "maestria": "Afligir",
+      "peso": "2 libras",
+      "custo": "10 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "heavy-crossbow",
-      "nome": "Besta Pesada",
-      "nome_original": "Heavy Crossbow",
-      "categoria": "Marcial à distância",
-      "dano": "1d10 perfurante",
+      "id": "greatsword",
+      "nome": "Espada Grande",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "2d6 Cortante",
       "propriedades": [
-        "Ammunition (100/400 ft.; Bolt)",
-        "Heavy",
-        "Loading",
-        "Two-Handed"
+        "Pesada",
+        "Duas Mãos"
       ],
-      "maestria": "Push",
-      "peso": "18 lb",
-      "custo": "50 GP",
+      "maestria": "Arranhão",
+      "peso": "6 libras",
+      "custo": "50 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "longsword",
+      "nome": "Espada Longa",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Cortante",
+      "propriedades": [
+        "Versátil (1d10)"
+      ],
+      "maestria": "Debilitar",
+      "peso": "3 libras",
+      "custo": "15 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "glaive",
+      "nome": "Glaiva",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d10 Cortante",
+      "propriedades": [
+        "Pesada",
+        "Alcance",
+        "Duas Mãos"
+      ],
+      "maestria": "Arranhão",
+      "peso": "6 libras",
+      "custo": "20 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "lance",
+      "nome": "Lança de Montaria",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d10 Perfuração",
+      "propriedades": [
+        "Pesada",
+        "Alcance",
+        "Duas Mãos (a menos que montado)"
+      ],
+      "maestria": "Derrubar",
+      "peso": "6 libras",
+      "custo": "10 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "morningstar",
+      "nome": "Maça Estrela",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [],
+      "maestria": "Debilitar",
+      "peso": "4 libras",
+      "custo": "15 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "battleaxe",
+      "nome": "Machado de Batalha",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Cortante",
+      "propriedades": [
+        "Versátil (1d10)"
+      ],
+      "maestria": "Derrubar",
+      "peso": "4 libras",
+      "custo": "10 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "greataxe",
+      "nome": "Machado Grande",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d12 Cortante",
+      "propriedades": [
+        "Pesada",
+        "Duas Mãos"
+      ],
+      "maestria": "Trespassar",
+      "peso": "7 libras",
+      "custo": "30 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "maul",
+      "nome": "Malho",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "2d6 Concussão",
+      "propriedades": [
+        "Pesada",
+        "Duas Mãos"
+      ],
+      "maestria": "Derrubar",
+      "peso": "10 libras",
+      "custo": "10 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "flail",
+      "nome": "Mangual",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Concussão",
+      "propriedades": [],
+      "maestria": "Debilitar",
+      "peso": "2 libras",
+      "custo": "10 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "warhammer",
+      "nome": "Martelo de Guerra",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Concussão",
+      "propriedades": [
+        "Versátil (1d10)"
+      ],
+      "maestria": "Empurrar",
+      "peso": "5 libras",
+      "custo": "15 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "war-pick",
+      "nome": "Picareta de Guerra",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [],
+      "maestria": "Debilitar",
+      "peso": "2 libras",
+      "custo": "5 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "pike",
+      "nome": "Pique",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d10 Perfuração",
+      "propriedades": [
+        "Pesada",
+        "Alcance",
+        "Duas Mãos"
+      ],
+      "maestria": "Empurrar",
+      "peso": "18 libras",
+      "custo": "5 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "rapier",
+      "nome": "Rapieira",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [
+        "Acuidade"
+      ],
+      "maestria": "Afligir",
+      "peso": "2 libras",
+      "custo": "25 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "trident",
+      "nome": "Tridente",
+      "categoria": "Marcial corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [
+        "Arremesso (Distância 6/18m)",
+        "Versátil (1d10)"
+      ],
+      "maestria": "Derrubar",
+      "peso": "4 libras",
+      "custo": "5 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "longbow",
       "nome": "Arco Longo",
-      "nome_original": "Longbow",
       "categoria": "Marcial à distância",
-      "dano": "1d8 perfurante",
+      "dano": "1d8 Perfuração",
       "propriedades": [
-        "Ammunition (150/600 ft.; Arrow)",
-        "Heavy",
-        "Two-Handed"
+        "Munição (Distância 45/180m)",
+        "Pesada",
+        "Duas Mãos"
       ],
-      "maestria": "Slow",
-      "peso": "2 lb",
-      "custo": "50 GP",
+      "maestria": "Lento",
+      "peso": "2 libras",
+      "custo": "50 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "hand-crossbow",
+      "nome": "Besta de Mão",
+      "categoria": "Marcial à distância",
+      "dano": "1d6 Perfuração",
+      "propriedades": [
+        "Munição (Distância 9/36m)",
+        "Leve",
+        "Recarga"
+      ],
+      "maestria": "Afligir",
+      "peso": "3 libras",
+      "custo": "75 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
+    },
+    {
+      "id": "heavy-crossbow",
+      "nome": "Besta Pesada",
+      "categoria": "Marcial à distância",
+      "dano": "1d10 Perfuração",
+      "propriedades": [
+        "Munição (Distância 30/120m)",
+        "Pesada",
+        "Recarga",
+        "Duas Mãos"
+      ],
+      "maestria": "Empurrar",
+      "peso": "18 libras",
+      "custo": "50 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "musket",
       "nome": "Mosquete",
-      "nome_original": "Musket",
       "categoria": "Marcial à distância",
-      "dano": "1d12 perfurante",
+      "dano": "1d12 Perfuração",
       "propriedades": [
-        "Ammunition (40/120 ft.; Bullet)",
-        "Loading",
-        "Two-Handed"
+        "Munição (Distância 12/36m)",
+        "Recarga",
+        "Duas Mãos"
       ],
-      "maestria": "Slow",
-      "peso": "10 lb",
-      "custo": "500 GP",
+      "maestria": "Lento",
+      "peso": "10 libras",
+      "custo": "500 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
       "id": "pistol",
       "nome": "Pistola",
-      "nome_original": "Pistol",
       "categoria": "Marcial à distância",
-      "dano": "1d10 perfurante",
+      "dano": "1d10 Perfuração",
       "propriedades": [
-        "Ammunition (30/90 ft.; Bullet)",
-        "Loading"
+        "Munição (Distância 9/27m)",
+        "Recarga"
       ],
-      "maestria": "Vex",
-      "peso": "3 lb",
-      "custo": "250 GP",
+      "maestria": "Afligir",
+      "peso": "3 libras",
+      "custo": "250 PO",
       "ruleset": "5.5e",
       "status": "atual",
-      "fonte": "srd-5.2.1"
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "net",
-      "nome": "Rede",
-      "nome_original": "Net",
+      "id": "blowgun",
+      "nome": "Zarabatana",
       "categoria": "Marcial à distância",
-      "dano": "—",
+      "dano": "1 Perfuração",
       "propriedades": [
-        "Special",
-        "Thrown (5/15 ft.)"
+        "Munição (Distância 7,5/30m)",
+        "Recarga"
       ],
-      "maestria": null,
-      "peso": "3 lb",
-      "custo": "1 GP",
-      "ruleset": "5e",
-      "status": "legado",
-      "fonte": "srd-5.1",
-      "descricao": "Uma criatura Grande ou menor atingida por uma Rede fica Restrained até ser libertada. A Rede não afeta criaturas sem forma nem criaturas Enormes ou maiores. Uma criatura pode usar sua ação para realizar um teste de Força CD 10, libertando a si mesma ou outra criatura ao seu alcance em caso de sucesso. Causar 5 pontos de dano cortante à Rede (CA 10) também liberta a criatura sem feri-la, encerra o efeito e destrói a Rede. Ao usar uma ação, Ação Bônus ou reação para atacar com uma Rede, você pode fazer apenas um ataque, independentemente do número de ataques que normalmente poderia realizar."
+      "maestria": "Afligir",
+      "peso": "1 libras",
+      "custo": "10 PO",
+      "ruleset": "5.5e",
+      "status": "atual",
+      "fonte": "livro-jogador-2024",
+      "descricao": ""
     },
     {
-      "id": "helianas-guide-pdf24-1:tommybow-hand",
-      "nome": "Tommybow, Hand",
-      "nome_original": "Tommybow, Hand",
-      "categoria": "Marcial à distância",
-      "dano": "1d6 Piercing",
-      "propriedades": [
-        "Ammunition (30/60 ft.)",
-        "Light",
-        "Reload (2–6)"
-      ],
-      "maestria": null,
-      "peso": "4 lb",
-      "custo": "150–450 GP",
-      "ruleset": "5e",
-      "status": "suplementar",
-      "natureza": "suplementar",
-      "canonico": false,
-      "fonte": "helianas-guide-pdf24-1",
-      "descricao": "Besta de repetição que substitui a propriedade Loading de sua besta-base por Reload. A capacidade pode variar de 2 a 6 disparos; o preço cresce proporcionalmente à capacidade.",
-      "variantes_custo": {
-        "Reload 2": "150 GP",
-        "Reload 3": "225 GP",
-        "Reload 4": "300 GP",
-        "Reload 5": "375 GP",
-        "Reload 6": "450 GP"
-      }
-    },
-    {
-      "id": "helianas-guide-pdf24-1:tommybow-light",
-      "nome": "Tommybow, Light",
-      "nome_original": "Tommybow, Light",
+      "id": "eberron-2019:bumerangue",
+      "nome": "Bumerangue",
       "categoria": "Simples à distância",
-      "dano": "1d8 Piercing",
+      "dano": "1d4 Concussão",
       "propriedades": [
-        "Ammunition (80/160 ft.)",
-        "Reload (2–6)",
-        "Two-Handed"
+        "Distância 18/36m"
       ],
       "maestria": null,
-      "peso": "7 lb",
-      "custo": "50–150 GP",
+      "peso": "Não informado",
+      "custo": "Não informado",
       "ruleset": "5e",
       "status": "suplementar",
       "natureza": "suplementar",
-      "canonico": false,
-      "fonte": "helianas-guide-pdf24-1",
-      "descricao": "Besta de repetição que substitui a propriedade Loading de sua besta-base por Reload. A capacidade pode variar de 2 a 6 disparos; o preço cresce proporcionalmente à capacidade.",
-      "variantes_custo": {
-        "Reload 2": "50 GP",
-        "Reload 3": "75 GP",
-        "Reload 4": "100 GP",
-        "Reload 5": "125 GP",
-        "Reload 6": "150 GP"
-      }
-    },
-    {
-      "id": "helianas-guide-pdf24-1:tommybow-heavy",
-      "nome": "Tommybow, Heavy",
-      "nome_original": "Tommybow, Heavy",
-      "categoria": "Marcial à distância",
-      "dano": "1d10 Piercing",
-      "propriedades": [
-        "Ammunition (100/200 ft.)",
-        "Heavy",
-        "Reload (2–6)",
-        "Two-Handed"
-      ],
-      "maestria": null,
-      "peso": "23 lb",
-      "custo": "100–300 GP",
-      "ruleset": "5e",
-      "status": "suplementar",
-      "natureza": "suplementar",
-      "canonico": false,
-      "fonte": "helianas-guide-pdf24-1",
-      "descricao": "Besta de repetição que substitui a propriedade Loading de sua besta-base por Reload. A capacidade pode variar de 2 a 6 disparos; o preço cresce proporcionalmente à capacidade.",
-      "variantes_custo": {
-        "Reload 2": "100 GP",
-        "Reload 3": "150 GP",
-        "Reload 4": "200 GP",
-        "Reload 5": "250 GP",
-        "Reload 6": "300 GP"
-      }
+      "fonte": "eberron-2019",
+      "descricao": "Se você errar um ataque com arma usando um bumerangue, ele retorna para a sua mão."
     },
     {
       "id": "erlw-pdf24-1:double-bladed-scimitar",
-      "nome": "Double-Bladed Scimitar",
-      "nome_original": "Double-Bladed Scimitar",
+      "nome": "Cimitarra de Lâmina Dupla",
       "categoria": "Marcial corpo a corpo",
-      "dano": "2d4 Slashing",
+      "dano": "2d4 Cortante",
       "propriedades": [
-        "Special",
-        "Two-Handed"
+        "Duas Mãos"
       ],
       "maestria": null,
-      "peso": "6 lb",
-      "custo": "100 GP",
+      "peso": "6 libras",
+      "custo": "100 PO",
       "ruleset": "5e",
-      "status": "oficial legado",
-      "natureza": "oficial",
-      "canonico": true,
-      "fonte": "erlw-pdf24-1",
-      "descricao": "Arma característica dos elfos Valenar. Se você atacar com ela como parte da ação Atacar no seu turno, pode usar uma Ação Bônus imediatamente depois para realizar outro ataque corpo a corpo com a arma; esse ataque adicional causa 1d4 de dano cortante em um acerto, em vez de 2d4."
+      "status": "suplementar",
+      "natureza": "suplementar",
+      "fonte": "eberron-2019",
+      "descricao": "Se você atacar com uma cimitarra de lâmina dupla como parte da ação de Ataque no seu turno, pode usar uma ação bônus imediatamente depois para fazer um ataque corpo a corpo com ela. Esse ataque causa 1d4 de dano cortante ao atingir, em vez de 2d4."
+    },
+    {
+      "id": "toa:yklwa",
+      "nome": "Yklwa",
+      "categoria": "Simples corpo a corpo",
+      "dano": "1d8 Perfuração",
+      "propriedades": [
+        "Arremesso (Distância 3/9m)"
+      ],
+      "maestria": null,
+      "peso": "Não informado",
+      "custo": "Não informado",
+      "ruleset": "5e",
+      "status": "suplementar",
+      "natureza": "suplementar",
+      "fonte": "tumba-aniquilacao",
+      "descricao": "Uma arma tradicional de Chult, pronunciada IÍC-ul-ua. Consiste em uma haste de madeira de 90 cm com uma lâmina de 45 cm. Embora possa ser arremessada, não é bem balanceada para isso."
     }
   ],
   "regras_por_fonte": {}
