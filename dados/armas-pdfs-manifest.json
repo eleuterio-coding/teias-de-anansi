@@ -8,21 +8,19 @@
   ],
   "politica": {
     "precedencia": "A regra oficial 5.5e/2024 permanece soberana. Versões 5e e suplementares só substituem versões anteriores equivalentes dentro da mesma linha editorial quando são claramente revisões posteriores.",
-    "xyleff": "Conteúdo de Xyleff é demonstrativo e permanece isolado como não canônico; nunca substitui uma arma oficial.",
     "taxonomia": "Armas mágicas localizadas nos PDFs são excluídas deste módulo e permanecem em Itens Mágicos. Ataques de blocos de monstros e explosivos também não são cadastrados como armas de equipamento.",
     "escopo_tematico": "O catálogo ativo do Hub exclui armas de fogo, pólvora e armamento mundano industrial, moderno ou futurista, independentemente da edição, fonte, período histórico ou status oficial. As fontes brutas podem permanecer no repositório apenas para rastreabilidade e auditoria, mas a política global de era impede que esses registros sejam oferecidos ou aplicados mecanicamente no site."
   },
   "controle": {
-    "quantidade": 91,
+    "quantidade": 4,
     "pdf24_merged": 0,
-    "pdf24_merged_1": 91,
+    "pdf24_merged_1": 4,
     "oficiais": 1,
     "suplementares": 3,
-    "demonstrativos": 87,
+    "demonstrativos": 0,
     "por_fonte": {
       "Heliana's Guide to Monster Hunting": 3,
-      "Eberron: Rising from the Last War": 1,
-      "Weapons, armors and Masteries / Xyleff": 87
+      "Eberron: Rising from the Last War": 1
     },
     "supressoes": [
       "Armas-base repetidas nas tabelas de crafting de Heliana não duplicam os registros oficiais já existentes no módulo.",
@@ -30,7 +28,8 @@
       "Ataques nomeados dentro de stat blocks de monstros foram excluídos por não serem entradas de equipamento.",
       "Explosivos do Dungeon Master's Guide 2024 foram excluídos por pertencerem a uma categoria de equipamento separada de armas.",
       "Automatic Rifle, Hunting Rifle, Revolver, Semiautomatic Pistol, Shotgun, Antimatter Rifle, Laser Pistol e Laser Rifle do Dungeon Master's Guide 2024 foram removidos por incompatibilidade com o escopo de fantasia medieval do Hub.",
-      "Musket, Pistol, Blunderbuss, Revolver, Rifle e equivalentes de pólvora permanecem apenas nas fontes brutas para auditoria e são excluídos do catálogo ativo pela política global de era do cenário."
+      "Musket, Pistol, Blunderbuss, Revolver, Rifle e equivalentes de pólvora permanecem apenas nas fontes brutas para auditoria e são excluídos do catálogo ativo pela política global de era do cenário.",
+      "As 87 armas demonstrativas marcadas como Não Canonizar foram retiradas integralmente das fontes publicadas e do catálogo ativo em 2026-11-01."
     ]
   },
   "fontes": {
@@ -49,15 +48,6 @@
       "ruleset": "5e",
       "natureza": "oficial",
       "secao": "Character Creation — Double-Bladed Scimitar"
-    },
-    "xyleff-weapons-pdf24-1": {
-      "titulo": "Weapons, armors and Masteries",
-      "arquivo_pdf": "pdf24_merged-1.pdf",
-      "ruleset": "5.5e",
-      "natureza": "demonstrativo",
-      "autoria": "Felix Klaus; design por Angevine",
-      "secao": "Weapon List",
-      "observacao": "Material demonstrativo ligado ao Xyleff Sualky Guidebook. Os próprios autores informam que os preços foram definidos para balancear regras de materiais e durabilidade. Não canonizar."
     }
   },
   "arquivos": [
@@ -70,26 +60,6 @@
       "fonte": "erlw-pdf24-1",
       "arquivo": "dados/armas-fontes/erlw.json",
       "quantidade": 1
-    },
-    {
-      "fonte": "xyleff-weapons-pdf24-1",
-      "arquivo": "dados/armas-fontes/xyleff-weapons-1.json",
-      "quantidade": 22
-    },
-    {
-      "fonte": "xyleff-weapons-pdf24-1",
-      "arquivo": "dados/armas-fontes/xyleff-weapons-2.json",
-      "quantidade": 22
-    },
-    {
-      "fonte": "xyleff-weapons-pdf24-1",
-      "arquivo": "dados/armas-fontes/xyleff-weapons-3.json",
-      "quantidade": 22
-    },
-    {
-      "fonte": "xyleff-weapons-pdf24-1",
-      "arquivo": "dados/armas-fontes/xyleff-weapons-4.json",
-      "quantidade": 21
     }
   ]
 }

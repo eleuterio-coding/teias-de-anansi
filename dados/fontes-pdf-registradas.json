@@ -80,13 +80,9 @@
         "dados/armas-pdfs-manifest.json",
         "dados/armas-fontes/helianas-guide.json",
         "dados/armas-fontes/erlw.json",
-        "dados/armas-fontes/xyleff-weapons-1.json",
-        "dados/armas-fontes/xyleff-weapons-2.json",
-        "dados/armas-fontes/xyleff-weapons-3.json",
-        "dados/armas-fontes/xyleff-weapons-4.json",
         "armas.html"
       ],
-      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas foram publicados 91 registros derivados deste PDF: 3 Tommybows de Heliana, 1 Double-Bladed Scimitar oficial de Eberron e 87 armas da tabela demonstrativa de Xyleff. O conteúdo de Xyleff permanece isolado como não canônico e não substitui nenhuma arma oficial."
+      "observacao": "Fonte auditada nos módulos Classes, Monstros, Ferramentas, Antecedentes, Bugigangas, Idiomas, Montarias e Veículos, Armaduras e Armas. Em Armas Após remover as 87 armas demonstrativas, permanecem 4 armas publicadas deste PDF: 3 Tommybows de Heliana e 1 Double-Bladed Scimitar de Eberron."
     }
   ],
   "controle": {

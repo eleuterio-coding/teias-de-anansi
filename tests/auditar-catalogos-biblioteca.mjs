@@ -56,12 +56,15 @@ assert(countScript.includes('status')&&countScript.includes('publicado')&&countS
 const deployWorkflow=read('.github/workflows/deploy-pages.yml');
 assert(deployWorkflow.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve produzir as contagens dos 18 módulos.');
 const weaponsPage=read('armas.html');
-assert(weaponsPage.includes("cache/armas-catalogo.json?v=20260922-library-perf2"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
+assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261101-canon-only1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
 assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
 assert(!/cache\s*:\s*['"]no-store['"]/.test(weaponsPage),'Biblioteca de Armas não deve ignorar o cache do navegador.');
 const weaponsCache=json('cache/armas-catalogo.json'),weaponsCore=json('dados/armas-srd.json'),weaponsManifest=json('dados/armas-pdfs-manifest.json');
 const canonicalWeapons=[...(weaponsCore.itens||[]),...(weaponsManifest.arquivos||[]).flatMap(row=>json(row.arquivo).itens||[])];
 assert((weaponsCache.itens||[]).length===canonicalWeapons.length,`Cache de Armas divergente das fontes: ${(weaponsCache.itens||[]).length}/${canonicalWeapons.length}`);
+assert((weaponsCache.itens||[]).length===43,'Biblioteca deve conter 43 armas após remover as 87 não canônicas.');
+assert(!(weaponsCache.itens||[]).some(x=>norm([x.status,x.natureza,x.descricao].join(' ')).includes('nao canonizar')||norm(x.status)==='demonstrativo'),'Arma Não Canonizar permanece publicada.');
+assert(!(weaponsManifest.arquivos||[]).some(x=>/xyleff/i.test(x.arquivo||x.fonte||'')),'Manifesto ainda inclui fragmentos não canônicos.');
 const weaponKey=row=>`${row.fonte||''}::${row.id||row.nome_original||row.nome||''}`;
 assert(JSON.stringify((weaponsCache.itens||[]).map(weaponKey).sort())===JSON.stringify(canonicalWeapons.map(weaponKey).sort()),'Cache de Armas não representa exatamente os registros das fontes canônicas.');
 for(const module of CATALOG_MODULES){const html=read(module.route);assert(!/cache\s*:\s*['"]no-store['"]/.test(html),`${module.route}: Biblioteca não deve forçar no-store.`);assert(!/<meta[^>]+http-equiv=["']Cache-Control["'][^>]+no-cache/i.test(html),`${module.route}: documento não deve proibir cache estático.`)}

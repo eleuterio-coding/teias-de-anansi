@@ -91,23 +91,21 @@
   "bugigangas_exclusoes_taxonomicas": [
     "Soul Trinkets temporários do Phantom"
   ],
-  "armas_publicadas_dos_pdfs": 91,
-  "armas_total_modulo": 130,
+  "armas_publicadas_dos_pdfs": 4,
+  "armas_total_modulo": 43,
   "armas_arquivo_manifesto": "dados/armas-pdfs-manifest.json",
   "armas_pagina": "armas.html",
   "armas_por_pdf": {
     "pdf24_merged.pdf": 0,
-    "pdf24_merged-1.pdf": 91
+    "pdf24_merged-1.pdf": 4
   },
   "armas_por_natureza": {
     "oficiais": 1,
-    "suplementares": 3,
-    "demonstrativas_nao_canonizar": 87
+    "suplementares": 3
   },
   "armas_por_fonte": {
     "Heliana's Guide to Monster Hunting": 3,
-    "Eberron: Rising from the Last War": 1,
-    "Weapons, armors and Masteries / Xyleff": 87
+    "Eberron: Rising from the Last War": 1
   },
   "armas_exclusoes_taxonomicas": [
     "armas mágicas — permanecem em Itens Mágicos",
@@ -120,7 +118,7 @@
     "monstros": "catálogo consolidado do SRD 5.2.1 com os registros completos materializados dos dois PDFs",
     "ferramentas": "25 categorias primárias publicadas; pdf24_merged.pdf fornece as descrições detalhadas e pdf24_merged-1.pdf acrescenta relações de Eberron/Artificer; veículos direcionados ao módulo próprio",
     "bugigangas": "110 linhas de tabelas auditadas; 109 registros únicos publicados; Player’s Handbook fornece 100 entradas e Mournland Trinkets fornece 9 entradas adicionais após consolidação de uma duplicata exata",
-    "armas": "91 registros dos PDFs integrados aos 39 registros SRD, totalizando 130. Os 87 registros Xyleff continuam isolados como demonstrativos e não canônicos.",
+    "armas": "4 armas dos PDFs (3 suplementos de Heliana e 1 arma oficial de Eberron) integradas às 39 do SRD; total ativo de 43. As 87 armas demonstrativas foram retiradas do Hub.",
     "publicacao": "concluida"
   },
   "revisado_em": "2026-08-19T13:00:00-03:00",
