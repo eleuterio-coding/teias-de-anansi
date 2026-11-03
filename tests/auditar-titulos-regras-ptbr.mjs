@@ -203,6 +203,25 @@ assert.ok(script.includes('const title=localizedHeading(entry,rule);'));
 assert.ok(script.includes('name:localizedHeading(x,ptRule(x.original))'));
 assert.ok(script.includes('const ddb='));
 assert.ok(script.includes('data-hub-original'));
-assert.match(page,/scripts\/regras-srd-view-v7\.js\?v=20261101-propriedades-armas1/);
+assert.match(page,/scripts\/regras-srd-view-v7\.js\?v=20261103-vestir-despir-armadura1/);
 assert.deepEqual(Object.keys(LABELS).sort(),['Action','Area of Effect','Attitude','Condition','Hazard'].sort());
-console.log('OK: 41 títulos tipados traduzidos; 155 regras, IDs originais, busca e referências preservados.');
+const official=JSON.parse(fs.readFileSync('dados/regras-hub.json','utf8')).regras_oficiais||[];
+assert.equal(official.length,1,'Deve existir uma regra oficial adicional de armaduras.');
+const armor=official[0];
+assert.equal(armor.original,'Donning and Doffing Armor');
+assert.equal(armor.nome,'Vestindo e Despindo uma Armadura');
+assert.equal(armor.familia,'Regra Geral');
+assert.deepEqual(armor.tabela.colunas,['Categoria','Vestir','Despir']);
+assert.deepEqual(armor.tabela.linhas,[
+  ['Armadura Leve','1 minuto','1 minuto'],
+  ['Armadura Média','5 minutos','1 minuto'],
+  ['Armadura Pesada','10 minutos','5 minutos'],
+  ['Escudo','1 ação','1 ação']
+]);
+assert.ok(armor.secoes.find(s=>s.titulo==='Vestir')?.texto.includes('CA'));
+assert.ok(armor.secoes.find(s=>s.titulo==='Despir')?.texto.includes('metade'));
+assert.equal(armor.fonte.edicao,'D&D 5e (2014)');
+assert.match(script,/renderOfficial5e/);
+assert.match(script,/kind:'legacy'/);
+assert.match(page,/<option value="legacy">Regras oficiais 5e \(2014\)<\/option>/);
+console.log('OK: 41 títulos tipados traduzidos; 155 regras SRD e card de armadura 5e com tabela, fonte e filtros validados.');
