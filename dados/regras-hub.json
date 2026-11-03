@@ -6,6 +6,59 @@
       "descricao": "Alguns itens mágicos exigem Sintonização antes de liberar suas propriedades, e uma criatura normalmente pode manter Sintonização com no máximo três itens ao mesmo tempo. Esta regra é substituída por Espaços de Itens Mágicos. Ignore requisitos de Sintonização e o limite de três itens; itens mágicos corporais seguem a regra Espaços de Itens Mágicos, enquanto itens que não ocupam um Espaço de Item Mágico seguem suas próprias regras de uso."
     }
   ],
+  "regras_oficiais": [
+    {
+      "nome": "Vestindo e Despindo uma Armadura",
+      "original": "Donning and Doffing Armor",
+      "familia": "Regra Geral",
+      "descricao": "O tempo necessário para vestir ou despir uma armadura ou equipar ou remover um escudo depende da categoria do equipamento.",
+      "secoes": [
+        {
+          "titulo": "Vestir",
+          "texto": "É o tempo necessário para colocar a armadura. Você só recebe o benefício da Classe de Armadura (CA) depois de concluir todo o tempo exigido para vesti-la. O escudo também deve estar devidamente equipado para conceder seu bônus de CA."
+        },
+        {
+          "titulo": "Despir",
+          "texto": "É o tempo necessário para retirar uma armadura ou um escudo. Se outra pessoa ajudar a retirar uma armadura, reduza esse tempo à metade."
+        }
+      ],
+      "tabela": {
+        "titulo": "Vestindo e Despindo uma Armadura",
+        "colunas": [
+          "Categoria",
+          "Vestir",
+          "Despir"
+        ],
+        "linhas": [
+          [
+            "Armadura Leve",
+            "1 minuto",
+            "1 minuto"
+          ],
+          [
+            "Armadura Média",
+            "5 minutos",
+            "1 minuto"
+          ],
+          [
+            "Armadura Pesada",
+            "10 minutos",
+            "5 minutos"
+          ],
+          [
+            "Escudo",
+            "1 ação",
+            "1 ação"
+          ]
+        ]
+      },
+      "fonte": {
+        "livro": "Livro do Jogador / Regras Básicas",
+        "edicao": "D&D 5e (2014)",
+        "url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/equipment#GettingIntoandOutofArmor"
+      }
+    }
+  ],
   "itens": [
     {
       "nome": "Espaços de Itens Mágicos",
