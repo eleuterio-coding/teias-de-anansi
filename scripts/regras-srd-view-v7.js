@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 
-const VERSION='20260824-house-rules-normalized1';
+const VERSION='20261103-vestir-despir-armadura1';
 const DDB_GLOSSARY='https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary';
 const SRD_SOURCES=[
   'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/1b4b99dcb786cdd1a2fb26f8acec1551191f1ca4/rules-glossary.md',
@@ -23,7 +23,7 @@ function localizedHeading(entry,rule){
   return entry.tag ? `${name} [${familyPT(entry.tag)}]` : name;
 }
 
-let PT_RULES=[],HOUSE=[],PATCHES=[],PROPERTIES=[],INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
+let PT_RULES=[],HOUSE=[],PATCHES=[],PROPERTIES=[],OFFICIAL_5E=[],INDEX=null,SRD=[],DDB_ONLY=[],SRD_SOURCE='';
 
 function extractEntries(markdown,knownOriginals){
   const lines=String(markdown||'').replace(/\r/g,'').split('\n'),starts=[];
@@ -77,6 +77,20 @@ function renderWeaponProperty(rule,maps){
   return `<details class='item weapon-property-item' id='${esc(cardId)}' data-hub-original='${esc(rule.original)}' ${entity?`data-hub-entity-id='${esc(entity.id)}'`:''}><summary><span><strong>${esc(title)}</strong></span><span class='badge badge-weapon-property'>Propriedade de Arma</span></summary><div class='corpo'><div class='source-strip'><span>Regra oficial · 5.5e (2024)</span><span>Livro do Jogador (2024)</span></div><p>${esc(rule.descricao)}</p><div class='meta'><span><a href='armas.html'>Consultar armas que utilizam esta propriedade</a></span></div></div></details>`;
 }
 
+
+function renderOfficial5e(rule,maps){
+  const entity=maps.byOriginal.get(`Regras|${norm(rule.original)}`)||null;
+  const cardId=entity?`ref-${entity.id}`:`regra-${slug(rule.original)}`;
+  const sections=(rule.secoes||[]).map(s=>`<section class="secao-regra"><h3>${esc(s.titulo)}</h3><p>${esc(s.texto)}</p></section>`).join('');
+  const table=rule.tabela||{};
+  const header=(table.colunas||[]).map(c=>`<th scope="col">${esc(c)}</th>`).join('');
+  const rows=(table.linhas||[]).map(cells=>`<tr>${cells.map((value,i)=>i===0?`<th scope="row">${esc(value)}</th>`:`<td>${esc(value)}</td>`).join('')}</tr>`).join('');
+  const tabela=header&&rows?`<div class="tabela tabela-tempos-wrap"><table class="tabela-tempos-armadura"><caption>${esc(table.titulo||rule.nome)}</caption><thead><tr>${header}</tr></thead><tbody>${rows}</tbody></table></div>`:'';
+  const fonte=rule.fonte||{};
+  const link=fonte.url?`<a href="${esc(fonte.url)}" target="_blank" rel="noopener noreferrer">Consultar regras oficiais</a>`:'';
+  return `<details class="item official-5e-item" id="${esc(cardId)}" data-hub-original="${esc(rule.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}><summary><span><strong>${esc(rule.nome)}</strong><small class="original">${esc(rule.original)}</small></span><span class="badge">${esc(rule.familia||'Regra Geral')}</span></summary><div class="corpo"><div class="source-strip"><span>Regra oficial · 5e (2014)</span><span>Terminologia do Livro do Jogador em português</span></div><p>${esc(rule.descricao)}</p>${sections}${tabela}<div class="meta"><span><b>Fonte:</b> ${esc(fonte.livro||'Livro do Jogador')}</span><span><b>Edição:</b> ${esc(fonte.edicao||'D&D 5e (2014)')}</span>${link?`<span>${link}</span>`:''}</div></div></details>`;
+}
+
 function renderHouse(rule,maps){
   const entity=maps.byOriginal.get(`Regras|${norm(rule.original)}`)||null;
   const cardId=entity?`ref-${entity.id}`:`regra-${slug(rule.original)}`;
@@ -91,6 +105,7 @@ function allCards(){
     ...SRD.map(x=>({kind:'srd',original:x.original,name:localizedHeading(x,ptRule(x.original)),family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps)})),
     ...DDB_ONLY.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
     ...PROPERTIES.map(x=>({kind:'property',original:x.original,name:x.nome,family:'Propriedade de Arma',search:x.descricao,html:renderWeaponProperty(x,maps)})),
+    ...OFFICIAL_5E.map(x=>({kind:'legacy',original:x.original,name:x.nome,family:x.familia||'Regra Geral',search:[x.descricao,...(x.secoes||[]).map(s=>s.titulo+' '+s.texto),...(x.tabela?.linhas||[]).flat()].join(' '),html:renderOfficial5e(x,maps)})),
     ...HOUSE.map(x=>({kind:'house',original:x.original,name:x.nome,family:'Regra da Casa',html:renderHouse(x,maps)}))
   ];
 }
@@ -176,6 +191,7 @@ async function load(){
   INDEX=index||{entidades:[]};
   PT_RULES=[...(data.itens||[])];
   PATCHES=[...(hub.sobreposicoes||[])];
+  OFFICIAL_5E=[...(hub.regras_oficiais||[])];
   HOUSE=[...(hub.itens||[]),...(extra.itens||[])];
   PROPERTIES=[...(properties.itens||[])];
   const known=new Set(PT_RULES.map(x=>norm(x.original)));
@@ -184,6 +200,7 @@ async function load(){
   DDB_ONLY=markdown?PT_RULES.filter(x=>!srdSet.has(norm(x.original))):[];
   if(PT_RULES.length!==155)throw new Error(`Regras atuais inesperadas: ${PT_RULES.length}/155`);
   if(HOUSE.length!==7)throw new Error(`Regras da Casa inesperadas: ${HOUSE.length}/7`);
+  if(OFFICIAL_5E.some(x=>!x.original||!x.nome||!Array.isArray(x.tabela?.linhas)))throw new Error('Regras oficiais 5e complementares inválidas.');
   if(PROPERTIES.length!==9||new Set(PROPERTIES.map(x=>x.original)).size!==9)throw new Error(`Propriedades de Arma inesperadas: ${PROPERTIES.length}/9`);
   if(markdown&&SRD.length<130)console.warn(`[Regras] Extração do glossário parcial: ${SRD.length}; propriedades locais preservadas.`);
   render();
@@ -191,6 +208,7 @@ async function load(){
   document.documentElement.dataset.regrasSrd=String(SRD.length);
   document.documentElement.dataset.regrasDdbComplementares=String(DDB_ONLY.length);
   document.documentElement.dataset.regrasCasa=String(HOUSE.length);
+  document.documentElement.dataset.regrasOficiais5e=String(OFFICIAL_5E.length);
   document.documentElement.dataset.regrasPropriedadesArma=String(PROPERTIES.length);
   document.documentElement.dataset.regrasIndice=INDEX?.entidades?.length?'disponivel':'fallback-local';
   document.documentElement.dataset.regrasSrdOrigem=SRD_SOURCE;
