@@ -348,8 +348,8 @@ def validate_curated(root, allr):
     extra = sorted(k for k in curated_keys if k not in published_rules)
     if missing or extra:
         raise RuntimeError(f"Cobertura de origens curadas inválida: ausentes={missing[:8]} extras={extra[:8]}")
-    if len(rules_map) != 160 or data.get("total_regras") != 160:
-        raise RuntimeError(f"Mapa curado deve cobrir 160 regras; encontrou {len(rules_map)}.")
+    if len(rules_map) != 170 or data.get("total_regras") != 170:
+        raise RuntimeError(f"Mapa curado deve cobrir 170 regras; encontrou {len(rules_map)}.")
 
     by_id = {r["id"]: r for r in allr if r.get("id")}
     by_original = defaultdict(list)
