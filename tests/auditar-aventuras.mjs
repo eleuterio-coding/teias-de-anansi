@@ -120,9 +120,9 @@ assert.ok(ui.includes('${monstersHtml(a)}'),'O card Monstros da Biblioteca deve 
 assert.equal(ui.includes('function linkedSessionsHtml(a)'),false,'Sessões da Aventura não devem renderizar na Criação de Conteúdo.');
 assert.ok(ui.includes('data-save-adventure-workspace'),'A criação deve oferecer Salvar no rodapé.');
 assert.ok(ui.includes('npcRoleOptions'),'Os papéis de NPC devem ser selecionáveis.');
-for(const id of ['adventure-overview-planning','adventure-overview-settings','adventure-overview-timeline','adventure-overview-notes'])
+for(const id of ['adventure-overview-settings','adventure-overview-timeline','adventure-overview-notes'])
  assert.ok(ui.includes(id),'A Visão Geral deve incluir '+id);
-assert.ok(ui.includes("overviewPanel('adventure-overview-planning'")&&ui.includes("overviewPanel('adventure-overview-notes'"),'O Planejamento e as Notas devem estar na Visão Geral.');
+assert.ok(ui.includes("renderNextCampaignSession(c,{canPlan:true")&&ui.includes("overviewPanel('adventure-overview-notes'"),'O Planejamento deve acompanhar os indicadores e as Notas permanecer na Visão Geral.');
 assert.equal(ui.includes('adventure-creation-general'),false,'Planejamento não deve permanecer na Oficina.');
 
 assert.ok(ui.includes('const nodes=ordered(a.scenes).map(scene=>'),'A Linha do Tempo deve derivar Cenas automaticamente, sem fonte paralela.');
