@@ -4,7 +4,7 @@ EDIÇÃO DO CATÁLOGO: 4 DE NOVEMBRO DE 2026
 
 PARTE I — IDENTIFICAÇÃO
 Total de magias documentadas: 581. Total de fontes distintas: 17.
-Descrições em português: 581, sendo 340 derivadas de referência aberta e 241 redações originais de mecânicas.
+Descrições em português: 581, sendo 339 provenientes de referência aberta, uma de tradução previamente disponibilizada no Hub e 241 redações originais de mecânicas.
 Distribuição por círculo: Truques: 49 | 1º círculo: 82 | 2º círculo: 97 | 3º círculo: 80 | 4º círculo: 60 | 5º círculo: 72 | 6º círculo: 52 | 7º círculo: 34 | 8º círculo: 29 | 9º círculo: 26
 Classificação CE: CM — Concentração Maior: 46 | CI — Concentração de Invocação: 21 | CZ — Concentração de Zona: 59 | CL — Concentração Leve: 96 | Nenhuma: 326 | Pendente de validação: 33 | Concentração não verificada: 0
 Critérios: prioridade às revisões publicadas para 2026 e às regras do Livro do Jogador de 2024; versões anteriores continuam quando não substituídas; uma única ficha por magia; dados exclusivamente em metros e quilogramas.
@@ -658,7 +658,7 @@ Convocar o fogo: você cria uma nuvem fina de brasas inofensivas e fumaça color
 
 Convocar a água: você cria um borrifo de névoa fresca que umedece levemente criaturas e objetos em um cubo de 1,5 metro de lado. Alternativamente, cria uma xícara de água limpa em um recipiente aberto ou sobre uma superfície; essa água evapora após 1 minuto.
 
-Moldar elemento: você faz terra, areia, fogo, fumaça, névoa ou água, em volume que caiba em um cubo de 30 centímetros de lado, assumir uma forma rudimentar (como a de uma criatura) por 1 hora.
+Moldar elemento: você faz terra, areia, fogo, fumaça, névoa ou água, em volume que caiba em um cubo de 0,3 m de lado, assumir uma forma rudimentar (como a de uma criatura) por 1 hora.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -1326,7 +1326,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você aponta para uma criatura dentro do alcance e sussurra uma mensagem. Apenas o alvo a ouve e pode responder sussurrando de modo que somente você escute. Você pode conjurar a magia através de objetos sólidos se conhecer o alvo e souber que ele está além da barreira. A magia é bloqueada por silêncio mágico, 30 centímetros de pedra, metal ou madeira, ou uma folha fina de chumbo.
+Você aponta para uma criatura dentro do alcance e sussurra uma mensagem. Apenas o alvo a ouve e pode responder sussurrando de modo que somente você escute. Você pode conjurar a magia através de objetos sólidos se conhecer o alvo e souber que ele está além da barreira. A magia é bloqueada por silêncio mágico, 0,3 m de pedra, metal ou madeira, ou uma folha fina de chumbo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -2053,7 +2053,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você repara uma única quebra ou rasgo em um objeto que toca, como um elo partido, as metades de uma chave quebrada, um manto rasgado ou um odre furado. Desde que a quebra ou rasgo tenha no máximo 30 centímetros em qualquer dimensão, você o conserta sem deixar vestígios do dano. A magia pode restaurar fisicamente um item mágico, mas não recuperar suas propriedades mágicas.
+Você repara uma única quebra ou rasgo em um objeto que toca, como um elo partido, as metades de uma chave quebrada, um manto rasgado ou um odre furado. Desde que a quebra ou rasgo tenha no máximo 0,3 m em qualquer dimensão, você o conserta sem deixar vestígios do dano. A magia pode restaurar fisicamente um item mágico, mas não recuperar suas propriedades mágicas.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -2498,7 +2498,7 @@ Você estabelece um alarme contra intrusos. Escolha uma porta, janela ou área d
 
 Alarme sonoro: um sino de mão toca por 10 segundos, podendo ser ouvido a até 18 metros da área protegida.
 
-Alarme mental: se você estiver a até 1 milha da área protegida, recebe um aviso telepático que também o desperta caso esteja dormindo.
+Alarme mental: se você estiver a até 1.609 m da área protegida, recebe um aviso telepático que também o desperta caso esteja dormindo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -3521,7 +3521,7 @@ CL — Concentração Leve
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Durante a magia, você percebe a presença de efeitos mágicos a até 9 metros de você. Se perceber algum, pode realizar uma ação Mágica para enxergar uma aura tênue ao redor de qualquer criatura ou objeto visível na área que possua magia. Se o efeito tiver sido criado por uma magia, você descobre a escola de magia correspondente. A magia é bloqueada por 30 centímetros de pedra, terra ou madeira, 2,5 centímetros de metal ou uma folha fina de chumbo.
+Durante a magia, você percebe a presença de efeitos mágicos a até 9 metros de você. Se perceber algum, pode realizar uma ação Mágica para enxergar uma aura tênue ao redor de qualquer criatura ou objeto visível na área que possua magia. Se o efeito tiver sido criado por uma magia, você descobre a escola de magia correspondente. A magia é bloqueada por 0,3 m de pedra, terra ou madeira, 0,025 m de metal ou uma folha fina de chumbo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -3568,7 +3568,7 @@ CL — Concentração Leve
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Durante a magia, você percebe a localização de qualquer Aberração, Celestial, Elemental, Fada, Ínfero ou Morto-vivo a até 9 metros de você. Também percebe se a magia Consagrar está ativa nessa área e, em caso afirmativo, onde. O efeito é bloqueado por 30 centímetros de pedra, terra ou madeira; 2,5 centímetros de metal; ou uma folha fina de chumbo.
+Durante a magia, você percebe a localização de qualquer Aberração, Celestial, Elemental, Fada, Ínfero ou Morto-vivo a até 9 metros de você. Também percebe se a magia Consagrar está ativa nessa área e, em caso afirmativo, onde. O efeito é bloqueado por 0,3 m de pedra, terra ou madeira; 0,025 m de metal; ou uma folha fina de chumbo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -3615,7 +3615,7 @@ CL — Concentração Leve
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Durante a magia, você percebe a localização de venenos, criaturas venenosas e contágios mágicos em um raio de 9 metros ao seu redor, identificando o tipo em cada caso. O efeito é bloqueado por 30 centímetros de pedra, terra ou madeira; 2,5 centímetros de metal; ou uma lâmina fina de chumbo.
+Durante a magia, você percebe a localização de venenos, criaturas venenosas e contágios mágicos em um raio de 9 metros ao seu redor, identificando o tipo em cada caso. O efeito é bloqueado por 0,3 m de pedra, terra ou madeira; 0,025 m de metal; ou uma lâmina fina de chumbo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -3662,7 +3662,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Esta magia cria um disco horizontal de energia, com cerca de 90 centímetros de diâmetro e 2,5 centímetros de espessura, que flutua a 90 centímetros do solo em um espaço desocupado que você escolha e possa ver dentro do alcance. O disco permanece durante a magia e pode suportar até 225 quilogramas. Se mais peso for colocado nele, a magia termina e tudo sobre o disco cai ao chão.
+Esta magia cria um disco horizontal de energia, com cerca de 0,9 m de diâmetro e 0,025 m de espessura, que flutua a 0,9 m do solo em um espaço desocupado que você escolha e possa ver dentro do alcance. O disco permanece durante a magia e pode suportar até 225 quilogramas. Se mais peso for colocado nele, a magia termina e tudo sobre o disco cai ao chão.
 
 O disco permanece imóvel enquanto você estiver a até 6 metros dele. Se você se afastar mais que isso, ele o acompanha para permanecer a até 6 metros de você. O disco pode transitar por terrenos irregulares, subir ou descer escadas, rampas e semelhantes, mas não pode atravessar uma diferença de altura de 3 metros ou mais. Por exemplo, não consegue atravessar um fosso de 3 metros de profundidade nem sair dele caso tenha sido criado no fundo. Se você se afastar mais de 30 metros do disco, geralmente por ele não conseguir contornar um obstáculo, a magia termina.
 
@@ -3711,7 +3711,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você faz sua aparência, incluindo roupas, armadura, armas e demais pertences que esteja carregando, mudar até a magia terminar. Pode parecer até 30 centímetros mais alto ou mais baixo, mais pesado ou mais leve. Você precisa adotar uma forma com a mesma disposição básica de membros do seu corpo; fora isso, a extensão da ilusão fica a seu critério.
+Você faz sua aparência, incluindo roupas, armadura, armas e demais pertences que esteja carregando, mudar até a magia terminar. Pode parecer até 0,3 m mais alto ou mais baixo, mais pesado ou mais leve. Você precisa adotar uma forma com a mesma disposição básica de membros do seu corpo; fora isso, a extensão da ilusão fica a seu critério.
 
 As alterações desta magia não resistem à inspeção física. Se você acrescentar um chapéu ilusório, por exemplo, objetos o atravessam e alguém que toque nele não sente nada. Para perceber o disfarce, uma criatura precisa usar a ação Estudar para examinar sua aparência e obter sucesso em um teste de Inteligência (Investigação) contra a CD de salvaguarda de suas magias.
 
@@ -7517,7 +7517,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você toca uma corda. Uma das extremidades sobe e paira no ar até que a corda fique perpendicular ao chão ou alcance um teto. Na extremidade superior, abre-se um portal Invisível de 90 centímetros por 1,5 metro para um espaço extradimensional, que permanece até a magia terminar. Esse espaço pode ser acessado subindo pela corda, que pode ser puxada para dentro ou baixada novamente. O espaço comporta até oito criaturas de tamanho Médio ou menor. Ataques, magias e outros efeitos não atravessam o portal em nenhuma direção, mas criaturas dentro do espaço podem ver através dele. Quando a magia termina, tudo o que estiver no espaço cai para fora.
+Você toca uma corda. Uma das extremidades sobe e paira no ar até que a corda fique perpendicular ao chão ou alcance um teto. Na extremidade superior, abre-se um portal Invisível de 0,9 m por 1,5 metro para um espaço extradimensional, que permanece até a magia terminar. Esse espaço pode ser acessado subindo pela corda, que pode ser puxada para dentro ou baixada novamente. O espaço comporta até oito criaturas de tamanho Médio ou menor. Ataques, magias e outros efeitos não atravessam o portal em nenhuma direção, mas criaturas dentro do espaço podem ver através dele. Quando a magia termina, tudo o que estiver no espaço cai para fora.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -7805,7 +7805,7 @@ CL — Concentração Leve
 EFEITO E DESCRIÇÃO
 Você ativa um dos efeitos abaixo. Até a magia terminar, pode ativar qualquer um deles como ação Mágica em turnos posteriores.
 
-Perceber Pensamentos: você percebe a presença de pensamentos pertencentes a criaturas que conheçam idiomas ou possuam telepatia a até 9 metros de você. Não lê os pensamentos, mas sabe que há uma criatura pensante ali. O efeito é bloqueado por 30 centímetros de pedra, terra ou madeira, 2,5 centímetros de metal ou uma folha fina de chumbo.
+Perceber Pensamentos: você percebe a presença de pensamentos pertencentes a criaturas que conheçam idiomas ou possuam telepatia a até 9 metros de você. Não lê os pensamentos, mas sabe que há uma criatura pensante ali. O efeito é bloqueado por 0,3 m de pedra, terra ou madeira, 0,025 m de metal ou uma folha fina de chumbo.
 
 Ler Pensamentos: escolha uma criatura que possa ver a até 9 metros de você ou uma criatura nessa distância que tenha detectado por Perceber Pensamentos. Você descobre o que está ocupando a mente do alvo naquele momento. Se ele não conhecer idioma algum nem possuir telepatia, você não descobre nada. Como ação Mágica no próximo turno, você pode tentar sondar mais profundamente a mente do alvo. Nesse caso, ele realiza uma salvaguarda de Sabedoria. Em caso de falha, você percebe seu raciocínio, emoções e algo importante que o preocupa ou domina seus pensamentos, como um temor, amor ou ódio. Em caso de sucesso, a magia termina. Em qualquer caso, o alvo percebe que você está sondando sua mente. Enquanto você mantiver a atenção nele, ele poderá usar uma ação no próprio turno para fazer um teste de Inteligência (Arcanismo) contra a CD de salvaguarda de suas magias, encerrando a magia em caso de sucesso.
 
@@ -8998,7 +8998,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Descreva ou nomeie um tipo específico de Fera, criatura do tipo Planta ou planta não mágica. Você descobre a direção e a distância até a criatura ou planta mais próxima desse tipo em um raio de 8 quilômetros, caso exista alguma.
+Descreva ou nomeie um tipo específico de Fera, criatura do tipo Planta ou planta não mágica. Você descobre a direção e a distância até a criatura ou planta mais próxima desse tipo em um raio de 8.000 m, caso exista alguma.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -9092,7 +9092,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma linha de vento forte com 18 metros de comprimento e 3 metros de largura sopra de você em uma direção à sua escolha durante a magia. Cada criatura na linha deve obter sucesso em uma salvaguarda de Força ou será empurrada 4,5 metros para longe de você, seguindo a direção da linha. Uma criatura que termina seu turno na linha repete a salvaguarda. Uma criatura na linha precisa gastar 60 centímetros de movimento para avançar cada 30 centímetros em direção a você. A rajada dispersa gases e vapores, apaga velas e chamas desprotegidas semelhantes na área e faz chamas protegidas, como as de lanternas, tremularem violentamente, com 50% de chance de apagá-las. Como ação bônus nos turnos posteriores, você pode mudar a direção em que o vento sopra.
+Uma linha de vento forte com 18 metros de comprimento e 3 metros de largura sopra de você em uma direção à sua escolha durante a magia. Cada criatura na linha deve obter sucesso em uma salvaguarda de Força ou será empurrada 4,5 metros para longe de você, seguindo a direção da linha. Uma criatura que termina seu turno na linha repete a salvaguarda. Uma criatura na linha precisa gastar 0,6 m de movimento para avançar cada 0,3 m em direção a você. A rajada dispersa gases e vapores, apaga velas e chamas desprotegidas semelhantes na área e faz chamas protegidas, como as de lanternas, tremularem violentamente, com 50% de chance de apagá-las. Como ação bônus nos turnos posteriores, você pode mudar a direção em que o vento sopra.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -9186,7 +9186,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma Fera Minúscula à sua escolha que você possa ver dentro do alcance deve obter sucesso em uma salvaguarda de Carisma ou tentará entregar uma mensagem para você. Se o Nível de Desafio da Fera não for 0, ela obtém sucesso automaticamente. Você indica um local que já tenha visitado e um destinatário que corresponda a uma descrição geral, como 'alguém com uniforme da guarda da cidade' ou 'um anão ruivo com chapéu pontudo'. Também transmite uma mensagem de até 25 palavras. A Fera viaja em direção ao local durante a magia, percorrendo aproximadamente 25 milhas (40 quilômetros) a cada 24 horas, ou 50 milhas (80 quilômetros) se puder voar. Ao chegar, transmite a mensagem à criatura descrita, imitando sua comunicação. Se não alcançar o destino antes de a magia terminar, a mensagem se perde e a Fera retorna ao lugar onde a magia foi conjurada.
+Uma Fera Minúscula à sua escolha que você possa ver dentro do alcance deve obter sucesso em uma salvaguarda de Carisma ou tentará entregar uma mensagem para você. Se o Nível de Desafio da Fera não for 0, ela obtém sucesso automaticamente. Você indica um local que já tenha visitado e um destinatário que corresponda a uma descrição geral, como 'alguém com uniforme da guarda da cidade' ou 'um anão ruivo com chapéu pontudo'. Também transmite uma mensagem de até 25 palavras. A Fera viaja em direção ao local durante a magia, percorrendo aproximadamente 40.000 m a cada 24 horas, ou 80.000 m se puder voar. Ao chegar, transmite a mensagem à criatura descrita, imitando sua comunicação. Se não alcançar o destino antes de a magia terminar, a mensagem se perde e a Fera retorna ao lugar onde a magia foi conjurada.
 
 **Em círculos superiores:** Ao conjurar esta magia com um espaço de círculo superior ao 2º, a duração aumenta em 48 horas por círculo acima do 2º.
 
@@ -10230,7 +10230,7 @@ Pendente de validação
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você invoca temporariamente três espíritos familiares em formas animais escolhidas por você. Todos usam as opções e restrições de Encontrar Familiar e pertencem ao mesmo tipo de criatura: Celestial, Feérico ou Ínfero. Se você já possuir um familiar criado por Encontrar Familiar ou recurso semelhante, esta magia invoca um a menos. Enquanto estiverem a até 1,6 km, os familiares podem comunicar-se telepaticamente com você e compartilhar visão e audição. Eles podem transmitir magias com alcance Toque, mas você só pode utilizar um familiar para isso por turno. Com espaços superiores: invoque mais um familiar por círculo acima do 2º.
+Você invoca temporariamente três espíritos familiares em formas animais escolhidas por você. Todos usam as opções e restrições de Encontrar Familiar e pertencem ao mesmo tipo de criatura: Celestial, Feérico ou Ínfero. Se você já possuir um familiar criado por Encontrar Familiar ou recurso semelhante, esta magia invoca um a menos. Enquanto estiverem a até 1.600 m, os familiares podem comunicar-se telepaticamente com você e compartilhar visão e audição. Eles podem transmitir magias com alcance Toque, mas você só pode utilizar um familiar para isso por turno. Com espaços superiores: invoque mais um familiar por círculo acima do 2º.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -10324,7 +10324,7 @@ Pendente de validação
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você percebe a presença de portais, inclusive inativos, num raio de 9 m durante a magia. Quando detectar um portal, pode usar uma ação para investigá-lo e realizar teste de seu atributo de conjuração CD 15. No sucesso descobre a que plano leva e qual chave exige, encerrando a magia. Na falha não aprende nada e não pode estudar o mesmo portal com esta conjuração. A percepção atravessa a maioria das barreiras, mas é bloqueada por 0,3 m de pedra, 2,5 cm de metal comum, chapa fina de chumbo ou 0,9 m de madeira ou terra.
+Você percebe a presença de portais, inclusive inativos, num raio de 9 m durante a magia. Quando detectar um portal, pode usar uma ação para investigá-lo e realizar teste de seu atributo de conjuração CD 15. No sucesso descobre a que plano leva e qual chave exige, encerrando a magia. Na falha não aprende nada e não pode estudar o mesmo portal com esta conjuração. A percepção atravessa a maioria das barreiras, mas é bloqueada por 0,3 m de pedra, 0,025 m de metal comum, chapa fina de chumbo ou 0,9 m de madeira ou terra.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -10749,7 +10749,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Um vento intenso, de aproximadamente 32 km/h, gira num raio de 3 m ao redor de você e acompanha seus movimentos. O vento ensurdece você e as demais criaturas dentro da área, extingue chamas desprotegidas de tamanho até o de uma tocha, dispersa vapores, gases e névoas suscetíveis a vento forte, transforma a área em Terreno Difícil para as outras criaturas e impõe Desvantagem em ataques à distância com armas que atravessem a corrente de ar para entrar ou sair.
+Um vento intenso, de aproximadamente 32.000 m/h, gira num raio de 3 m ao redor de você e acompanha seus movimentos. O vento ensurdece você e as demais criaturas dentro da área, extingue chamas desprotegidas de tamanho até o de uma tocha, dispersa vapores, gases e névoas suscetíveis a vento forte, transforma a área em Terreno Difícil para as outras criaturas e impõe Desvantagem em ataques à distância com armas que atravessem a corrente de ar para entrar ou sair.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -11801,9 +11801,9 @@ Nenhuma
 EFEITO E DESCRIÇÃO
 Esta magia canaliza vitalidade para as plantas. O tempo de conjuração escolhido determina se a magia produz o efeito Supercrescimento ou Enriquecimento.
 
-Supercrescimento: escolha um ponto dentro do alcance. Todas as plantas normais em uma esfera de 30 metros de raio centrada nele se tornam densas e crescem excessivamente. Uma criatura que se desloca pela área precisa gastar 1,2 metro de movimento para avançar 30 centímetros. Você pode excluir uma ou mais áreas de qualquer tamanho da região afetada.
+Supercrescimento: escolha um ponto dentro do alcance. Todas as plantas normais em uma esfera de 30 metros de raio centrada nele se tornam densas e crescem excessivamente. Uma criatura que se desloca pela área precisa gastar 1,2 metro de movimento para avançar 0,3 m. Você pode excluir uma ou mais áreas de qualquer tamanho da região afetada.
 
-Enriquecimento: todas as plantas em um raio de meia milha (aproximadamente 800 metros) centrado em um ponto dentro do alcance são enriquecidas por 365 dias. Quando colhidas, produzem o dobro da quantidade normal de alimento. Uma planta só pode se beneficiar de um efeito de Crescimento de Plantas por ano.
+Enriquecimento: todas as plantas em um raio de 800 m centrado em um ponto dentro do alcance são enriquecidas por 365 dias. Quando colhidas, produzem o dobro da quantidade normal de alimento. Uma planta só pode se beneficiar de um efeito de Crescimento de Plantas por ano.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -12473,7 +12473,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria dois glifos mágicos ligados: um detector de gatilhos e outro que executa um efeito. Grave o detector sobre superfície ou num objeto fechável. Ele ocupa área de diâmetro máximo de 3 m; mover a superfície ou objeto mais de 3 m do local original desfaz a magia. Ambos são quase invisíveis, exigindo teste de Inteligência (Investigação) contra sua CD para evitar magia para serem encontrados. Defina durante a conjuração o que desencadeará o efeito, como tocar, aproximar-se, ler, abrir ou manipular algo, podendo especificar condições por espécie, peso, alinhamento ou senha. Ao ativar, o efeito ocorre e a magia termina. Se escolher Glifo de Alarme, os dois glifos podem estar separados por até 160 km e o glifo de efeito avisa mentalmente você a até 1,6 km dele, acordando-o se estiver dormindo. Se escolher Glifo de Magia, a distância entre os dois é no máximo 30 m; você armazena no glifo de efeito uma magia preparada de até 4º círculo que escolha um alvo ou área, conjurando-a durante a criação. Ela só produz efeito ao disparar o detector.
+Você cria dois glifos mágicos ligados: um detector de gatilhos e outro que executa um efeito. Grave o detector sobre superfície ou num objeto fechável. Ele ocupa área de diâmetro máximo de 3 m; mover a superfície ou objeto mais de 3 m do local original desfaz a magia. Ambos são quase invisíveis, exigindo teste de Inteligência (Investigação) contra sua CD para evitar magia para serem encontrados. Defina durante a conjuração o que desencadeará o efeito, como tocar, aproximar-se, ler, abrir ou manipular algo, podendo especificar condições por espécie, peso, alinhamento ou senha. Ao ativar, o efeito ocorre e a magia termina. Se escolher Glifo de Alarme, os dois glifos podem estar separados por até 160.000 m e o glifo de efeito avisa mentalmente você a até 1.600 m dele, acordando-o se estiver dormindo. Se escolher Glifo de Magia, a distância entre os dois é no máximo 30 m; você armazena no glifo de efeito uma magia preparada de até 4º círculo que escolha um alvo ou área, conjurando-a durante a criação. Ela só produz efeito ao disparar o detector.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -13323,7 +13323,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma criatura semelhante a um cavalo, Grande e quase real, aparece no chão em um espaço desocupado à sua escolha dentro do alcance. Você determina a aparência da criatura, que surge equipada com sela, bridão e rédeas. Qualquer equipamento criado pela magia desaparece em uma nuvem de fumaça se for levado a mais de 3 metros da montaria. Durante a magia, você ou outra criatura que escolher pode montá-la. Ela usa o bloco de estatísticas do Cavalo de Montaria, mas tem Deslocamento de 30 metros e consegue percorrer 13 milhas (aproximadamente 21 quilômetros) em uma hora. Quando a magia termina, a montaria desaparece gradualmente, concedendo ao cavaleiro 1 minuto para desmontar. A magia termina antecipadamente se a montaria sofrer qualquer dano.
+Uma criatura semelhante a um cavalo, Grande e quase real, aparece no chão em um espaço desocupado à sua escolha dentro do alcance. Você determina a aparência da criatura, que surge equipada com sela, bridão e rédeas. Qualquer equipamento criado pela magia desaparece em uma nuvem de fumaça se for levado a mais de 3 metros da montaria. Durante a magia, você ou outra criatura que escolher pode montá-la. Ela usa o bloco de estatísticas do Cavalo de Montaria, mas tem Deslocamento de 30 metros e consegue percorrer 21.000 m em uma hora. Quando a magia termina, a montaria desaparece gradualmente, concedendo ao cavaleiro 1 minuto para desmontar. A magia termina antecipadamente se a montaria sofrer qualquer dano.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -13511,7 +13511,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma muralha de vento forte ergue-se do chão em um ponto à sua escolha dentro do alcance. Ela pode ter até 15 metros de comprimento, 4,5 metros de altura e 30 centímetros de espessura. Você pode moldar sua trajetória de qualquer maneira, desde que forme uma linha contínua sobre o chão. A muralha permanece durante a magia. Quando aparece, cada criatura em sua área realiza uma salvaguarda de Força, sofrendo 4d8 de dano contundente em caso de falha ou metade em caso de sucesso. O vento forte mantém névoa, fumaça e outros gases afastados. Criaturas ou objetos voadores de tamanho Pequeno ou menor não podem atravessá-la. Materiais leves e soltos que entram na muralha são lançados para cima. Flechas, virotes e outros projéteis comuns disparados contra alvos atrás dela são desviados para o alto e erram automaticamente. Pedregulhos arremessados por Gigantes ou máquinas de cerco e projéteis semelhantes não são afetados. Criaturas em forma gasosa não podem atravessá-la.
+Uma muralha de vento forte ergue-se do chão em um ponto à sua escolha dentro do alcance. Ela pode ter até 15 metros de comprimento, 4,5 metros de altura e 0,3 m de espessura. Você pode moldar sua trajetória de qualquer maneira, desde que forme uma linha contínua sobre o chão. A muralha permanece durante a magia. Quando aparece, cada criatura em sua área realiza uma salvaguarda de Força, sofrendo 4d8 de dano contundente em caso de falha ou metade em caso de sucesso. O vento forte mantém névoa, fumaça e outros gases afastados. Criaturas ou objetos voadores de tamanho Pequeno ou menor não podem atravessá-la. Materiais leves e soltos que entram na muralha são lançados para cima. Flechas, virotes e outros projéteis comuns disparados contra alvos atrás dela são desviados para o alto e erram automaticamente. Pedregulhos arremessados por Gigantes ou máquinas de cerco e projéteis semelhantes não são afetados. Criaturas em forma gasosa não podem atravessá-la.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -15037,7 +15037,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você oculta um baú e todo seu conteúdo no Plano Etéreo. Precisa tocar o baú e sua réplica em miniatura, que servem como componentes Materiais da magia. O baú pode conter até aproximadamente 0,34 metro cúbico de material inanimado, com dimensões de cerca de 90 × 60 × 60 centímetros. Enquanto ele permanecer no Plano Etéreo, você pode realizar uma ação Mágica e tocar a réplica para trazê-lo de volta. Ele aparece em um espaço desocupado no chão a até 1,5 metro de você. Você também pode devolver o baú ao Plano Etéreo usando uma ação Mágica para tocar o baú e a réplica. Após 60 dias, no final de cada dia há uma chance cumulativa de 5% de a magia terminar. Ela também termina se você a conjurar novamente ou se a pequena réplica for destruída. Se terminar enquanto o baú maior estiver no Plano Etéreo, ele permanecerá lá para ser encontrado por você ou outra pessoa.
+Você oculta um baú e todo seu conteúdo no Plano Etéreo. Precisa tocar o baú e sua réplica em miniatura, que servem como componentes Materiais da magia. O baú pode conter até aproximadamente 0,34 metro cúbico de material inanimado, com dimensões de cerca de 90 × 60 × 0,6 m. Enquanto ele permanecer no Plano Etéreo, você pode realizar uma ação Mágica e tocar a réplica para trazê-lo de volta. Ele aparece em um espaço desocupado no chão a até 1,5 metro de você. Você também pode devolver o baú ao Plano Etéreo usando uma ação Mágica para tocar o baú e a réplica. Após 60 dias, no final de cada dia há uma chance cumulativa de 5% de a magia terminar. Ela também termina se você a conjurar novamente ou se a pequena réplica for destruída. Se terminar enquanto o baú maior estiver no Plano Etéreo, ele permanecerá lá para ser encontrado por você ou outra pessoa.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -15479,7 +15479,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você invoca um espírito na forma de montaria leal, num espaço desocupado dentro do alcance. Escolha grifo, pégaso, peryton, lobo atroz, rinoceronte ou tigre-dentes-de-sabre, empregando as estatísticas da criatura escolhida e substituindo seu tipo por Celestial, Feérico ou Ínfero. Se a Inteligência original for 5 ou menor, passe-a para 6; a montaria compreende um idioma que você fala. Você a controla em combate e se comunica telepaticamente com ela a até 1,6 km. Enquanto montado, magias conjuradas que tenham apenas você como alvo também podem afetar a montaria. Ela desaparece ao chegar a zero Pontos de Vida ou se você a dispensar com uma ação; nova conjuração pode trazê-la de volta curada e sem condições. Não é permitido manter vínculos simultâneos desta magia e de Encontrar Montaria. Você pode desfazer o vínculo usando uma ação; os objetos usados ou carregados ficam para trás quando a montaria desaparece. Com autorização do Mestre, formas adicionais de montaria podem estar disponíveis em outros livros.
+Você invoca um espírito na forma de montaria leal, num espaço desocupado dentro do alcance. Escolha grifo, pégaso, peryton, lobo atroz, rinoceronte ou tigre-dentes-de-sabre, empregando as estatísticas da criatura escolhida e substituindo seu tipo por Celestial, Feérico ou Ínfero. Se a Inteligência original for 5 ou menor, passe-a para 6; a montaria compreende um idioma que você fala. Você a controla em combate e se comunica telepaticamente com ela a até 1.600 m. Enquanto montado, magias conjuradas que tenham apenas você como alvo também podem afetar a montaria. Ela desaparece ao chegar a zero Pontos de Vida ou se você a dispensar com uma ação; nova conjuração pode trazê-la de volta curada e sem condições. Não é permitido manter vínculos simultâneos desta magia e de Encontrar Montaria. Você pode desfazer o vínculo usando uma ação; os objetos usados ou carregados ficam para trás quando a montaria desaparece. Com autorização do Mestre, formas adicionais de montaria podem estar disponíveis em outros livros.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -15763,7 +15763,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você aponta para um local dentro do alcance, e uma esfera luminosa de ácido, com 30 centímetros de diâmetro, avança até lá e explode em uma esfera de 6 metros de raio. Cada criatura na área realiza uma salvaguarda de Destreza. Em caso de falha, sofre 10d4 de dano de ácido e mais 5d4 de dano de ácido no final do próximo turno dela. Em caso de sucesso, sofre apenas metade do dano inicial.
+Você aponta para um local dentro do alcance, e uma esfera luminosa de ácido, com 0,3 m de diâmetro, avança até lá e explode em uma esfera de 6 metros de raio. Cada criatura na área realiza uma salvaguarda de Destreza. Em caso de falha, sofre 10d4 de dano de ácido e mais 5d4 de dano de ácido no final do próximo turno dela. Em caso de sucesso, sofre apenas metade do dano inicial.
 
 **Em círculos superiores:** Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano inicial aumenta em 2d4 por círculo acima do 4º.
 
@@ -16619,7 +16619,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você forma uma esfera de neblina negra de 6 m de raio dentro do alcance, constituída por Escuridão mágica. O efeito termina se vento forte dispersar a névoa. As criaturas na área quando ela aparece, quando a esfera invade seus espaços, quando entram nela ou quando terminam seus turnos ali realizam salvaguarda de Sabedoria, no máximo uma vez por turno. Na falha, sofrem 5d6 de dano psíquico e subtraem 1d6 de suas salvaguardas até o fim do turno seguinte; no sucesso, sofrem metade do dano. No começo de cada turno seu, a esfera desloca-se 3 m para longe de você. Conjuração em Círculo: requer ao menos cinco conjuradores secundários, cada um usando espaço de 3º círculo ou superior, e uma corrente de três pérolas negras de Pandemônio consumida pela magia. O alcance passa a 1,6 km e a duração se estende até ser dissipada, sem concentração. O efeito termina antecipadamente se qualquer participante ajudar a conjurar outra Maré da Perdição em Círculo.
+Você forma uma esfera de neblina negra de 6 m de raio dentro do alcance, constituída por Escuridão mágica. O efeito termina se vento forte dispersar a névoa. As criaturas na área quando ela aparece, quando a esfera invade seus espaços, quando entram nela ou quando terminam seus turnos ali realizam salvaguarda de Sabedoria, no máximo uma vez por turno. Na falha, sofrem 5d6 de dano psíquico e subtraem 1d6 de suas salvaguardas até o fim do turno seguinte; no sucesso, sofrem metade do dano. No começo de cada turno seu, a esfera desloca-se 3 m para longe de você. Conjuração em Círculo: requer ao menos cinco conjuradores secundários, cada um usando espaço de 3º círculo ou superior, e uma corrente de três pérolas negras de Pandemônio consumida pela magia. O alcance passa a 1.600 m e a duração se estende até ser dissipada, sem concentração. O efeito termina antecipadamente se qualquer participante ajudar a conjurar outra Maré da Perdição em Círculo.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -16809,7 +16809,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria uma muralha de fogo sobre uma superfície sólida dentro do alcance. Ela pode ter até 18 metros de comprimento, 6 metros de altura e 30 centímetros de espessura, ou formar um círculo de até 6 metros de diâmetro, 6 metros de altura e 30 centímetros de espessura. A muralha é opaca e permanece durante a magia. Quando ela aparece, cada criatura na área realiza uma salvaguarda de Destreza, sofrendo 5d8 de dano de fogo em caso de falha ou metade em caso de sucesso. Um dos lados da muralha, escolhido por você ao conjurá-la, causa 5d8 de dano de fogo a qualquer criatura que termine seu turno a até 3 metros desse lado ou dentro da muralha. Uma criatura sofre o mesmo dano ao entrar na muralha pela primeira vez em um turno ou terminar seu turno nela. O outro lado não causa dano.
+Você cria uma muralha de fogo sobre uma superfície sólida dentro do alcance. Ela pode ter até 18 metros de comprimento, 6 metros de altura e 0,3 m de espessura, ou formar um círculo de até 6 metros de diâmetro, 6 metros de altura e 0,3 m de espessura. A muralha é opaca e permanece durante a magia. Quando ela aparece, cada criatura na área realiza uma salvaguarda de Destreza, sofrendo 5d8 de dano de fogo em caso de falha ou metade em caso de sucesso. Um dos lados da muralha, escolhido por você ao conjurá-la, causa 5d8 de dano de fogo a qualquer criatura que termine seu turno a até 3 metros desse lado ou dentro da muralha. Uma criatura sofre o mesmo dano ao entrar na muralha pela primeira vez em um turno ou terminar seu turno nela. O outro lado não causa dano.
 
 **Em círculos superiores:** Ao conjurar esta magia com um espaço de círculo superior ao 4º, o dano aumenta em 1d8 por círculo acima do 4º.
 
@@ -16858,7 +16858,7 @@ CL — Concentração Leve
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria um olho Invisível e invulnerável em um ponto dentro do alcance. Ele flutua durante a magia. Você recebe mentalmente as imagens captadas pelo olho, que pode enxergar em todas as direções e possui Visão no Escuro com alcance de 9 metros. Como ação bônus, pode mover o olho até 9 metros em qualquer direção. Barreiras sólidas impedem seu movimento, mas ele consegue passar por aberturas com diâmetro de apenas 2,5 centímetros.
+Você cria um olho Invisível e invulnerável em um ponto dentro do alcance. Ele flutua durante a magia. Você recebe mentalmente as imagens captadas pelo olho, que pode enxergar em todas as direções e possui Visão no Escuro com alcance de 9 metros. Como ação bônus, pode mover o olho até 9 metros em qualquer direção. Barreiras sólidas impedem seu movimento, mas ele consegue passar por aberturas com diâmetro de apenas 0,025 m.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -17433,7 +17433,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria coluna de fogo mágico luminoso num cilindro de 6 m de raio e 6 m de altura centrado em ponto ao alcance. A área possui Luz Plena. Criaturas ali presentes na criação, que entram pela primeira vez num turno ou terminam ali seu turno fazem salvaguarda de Constituição, no máximo uma vez por turno, recebendo 4d10 de dano radiante na falha ou metade no sucesso. Qualquer criatura que tente conjurar magia dentro da coluna faz outra salvaguarda de Constituição: se falhar, a magia não produz efeito e a ação, Ação Bônus ou Reação empregada é perdida, mas o espaço de magia não é gasto. Você pode designar criaturas imunes ao efeito na conjuração. Com espaços superiores: o dano aumenta 1d10 por círculo acima do 4º. Conjuração em Círculo: exige safira estrelada azul de pelo menos 25.000 peças de ouro, consumida, e espaços de 3º círculo ou superior de cada conjurador secundário; o alcance passa a 1,6 km e a concentração deixa de ser exigida. Com 1–3 secundários, o cilindro aumenta para 12 m de raio por 12 m de altura e dura uma hora; com 4–6, para 18 m por 18 m e oito horas; com sete ou mais, para 30 m por 30 m, conforme a duração indicada na publicação.
+Você cria coluna de fogo mágico luminoso num cilindro de 6 m de raio e 6 m de altura centrado em ponto ao alcance. A área possui Luz Plena. Criaturas ali presentes na criação, que entram pela primeira vez num turno ou terminam ali seu turno fazem salvaguarda de Constituição, no máximo uma vez por turno, recebendo 4d10 de dano radiante na falha ou metade no sucesso. Qualquer criatura que tente conjurar magia dentro da coluna faz outra salvaguarda de Constituição: se falhar, a magia não produz efeito e a ação, Ação Bônus ou Reação empregada é perdida, mas o espaço de magia não é gasto. Você pode designar criaturas imunes ao efeito na conjuração. Com espaços superiores: o dano aumenta 1d10 por círculo acima do 4º. Conjuração em Círculo: exige safira estrelada azul de pelo menos 25.000 peças de ouro, consumida, e espaços de 3º círculo ou superior de cada conjurador secundário; o alcance passa a 1.600 m e a concentração deixa de ser exigida. Com 1–3 secundários, o cilindro aumenta para 12 m de raio por 12 m de altura e dura uma hora; com 4–6, para 18 m por 18 m e oito horas; com sete ou mais, para 30 m por 30 m, conforme a duração indicada na publicação.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -18193,7 +18193,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você comunga com espíritos da natureza e recebe conhecimento da região ao redor. Ao ar livre, a magia fornece informações sobre uma área de até 3 milhas (aproximadamente 4,8 quilômetros) ao seu redor. Em cavernas e outros locais naturais subterrâneos, o raio é limitado a 90 metros. A magia não funciona onde a natureza foi substituída por construções, como castelos e assentamentos. Escolha três fatos da lista a seguir e descubra as informações correspondentes na área da magia:
+Você comunga com espíritos da natureza e recebe conhecimento da região ao redor. Ao ar livre, a magia fornece informações sobre uma área de até 4.800 m ao seu redor. Em cavernas e outros locais naturais subterrâneos, o raio é limitado a 90 metros. A magia não funciona onde a natureza foi substituída por construções, como castelos e assentamentos. Escolha três fatos da lista a seguir e descubra as informações correspondentes na área da magia:
 
 • Localização de assentamentos.
 • Localização de portais para outros planos de existência.
@@ -20181,7 +20181,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma muralha não mágica de pedra sólida surge em um ponto à sua escolha dentro do alcance. Ela tem 15 centímetros de espessura e é composta por dez painéis de 3 metros por 3 metros, todos contíguos entre si. Alternativamente, você pode criar painéis de 3 metros por 6 metros com apenas 7,5 centímetros de espessura. Se a muralha surgir atravessando o espaço de uma criatura, a criatura é empurrada para um dos lados, à sua escolha. Se uma criatura ficar completamente cercada pela muralha, ou pela muralha e outra superfície sólida, pode realizar uma salvaguarda de Destreza. Se obtiver sucesso, poderá usar sua Reação para se mover até seu Deslocamento e escapar do confinamento. A muralha pode assumir qualquer forma, mas não pode ocupar o mesmo espaço de uma criatura ou objeto. Ela não precisa ser vertical nem apoiar-se em base firme, porém deve se fundir a uma estrutura de pedra existente que a sustente solidamente. Assim, você pode usá-la para criar uma ponte sobre um abismo ou uma rampa. Se criar um vão com comprimento superior a 6 metros, precisa reduzir pela metade o tamanho de cada painel para formar suportes. Pode moldar grosseiramente a muralha para criar ameias e outras estruturas semelhantes. A muralha é um objeto de pedra que pode ser danificado e rompido. Cada painel tem CA 15, 30 Pontos de Vida por polegada (2,5 centímetros) de espessura e imunidade a dano de veneno e psíquico. Reduzir um painel a 0 Pontos de Vida o destrói e pode derrubar painéis conectados, a critério do Mestre. Se você mantiver Concentração durante toda a duração da magia, a muralha se torna permanente e não pode ser dissipada. Caso contrário, desaparece quando a magia termina.
+Uma muralha não mágica de pedra sólida surge em um ponto à sua escolha dentro do alcance. Ela tem 0,15 m de espessura e é composta por dez painéis de 3 metros por 3 metros, todos contíguos entre si. Alternativamente, você pode criar painéis de 3 metros por 6 metros com apenas 0,075 m de espessura. Se a muralha surgir atravessando o espaço de uma criatura, a criatura é empurrada para um dos lados, à sua escolha. Se uma criatura ficar completamente cercada pela muralha, ou pela muralha e outra superfície sólida, pode realizar uma salvaguarda de Destreza. Se obtiver sucesso, poderá usar sua Reação para se mover até seu Deslocamento e escapar do confinamento. A muralha pode assumir qualquer forma, mas não pode ocupar o mesmo espaço de uma criatura ou objeto. Ela não precisa ser vertical nem apoiar-se em base firme, porém deve se fundir a uma estrutura de pedra existente que a sustente solidamente. Assim, você pode usá-la para criar uma ponte sobre um abismo ou uma rampa. Se criar um vão com comprimento superior a 6 metros, precisa reduzir pela metade o tamanho de cada painel para formar suportes. Pode moldar grosseiramente a muralha para criar ameias e outras estruturas semelhantes. A muralha é um objeto de pedra que pode ser danificado e rompido. Cada painel tem CA 15, 30 Pontos de Vida a cada 0,025 m de espessura e imunidade a dano de veneno e psíquico. Reduzir um painel a 0 Pontos de Vida o destrói e pode derrubar painéis conectados, a critério do Mestre. Se você mantiver Concentração durante toda a duração da magia, a muralha se torna permanente e não pode ser dissipada. Caso contrário, desaparece quando a magia termina.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -20809,7 +20809,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você concede aparência ilusória a cada criatura à sua escolha que possa ver dentro do alcance. Um alvo involuntário pode realizar uma salvaguarda de Carisma e, se obtiver sucesso, não é afetado. Você pode dar a todos os alvos a mesma aparência ou aparências diferentes. A magia pode alterar a aparência dos corpos e equipamentos, fazendo cada criatura parecer até 30 centímetros mais baixa ou alta, mais leve ou pesada. A nova aparência deve manter a disposição básica dos membros do alvo, mas, fora isso, a ilusão pode assumir a forma que desejar e permanece durante a magia. As mudanças não resistem à inspeção física. Por exemplo, um chapéu ilusório acrescentado à roupa de alguém pode ser atravessado por objetos. Uma criatura que realize a ação Estudar para examinar um alvo pode fazer um teste de Inteligência (Investigação) contra a CD de salvaguarda de suas magias e, se obtiver sucesso, descobre que o alvo está disfarçado.
+Você concede aparência ilusória a cada criatura à sua escolha que possa ver dentro do alcance. Um alvo involuntário pode realizar uma salvaguarda de Carisma e, se obtiver sucesso, não é afetado. Você pode dar a todos os alvos a mesma aparência ou aparências diferentes. A magia pode alterar a aparência dos corpos e equipamentos, fazendo cada criatura parecer até 0,3 m mais baixa ou alta, mais leve ou pesada. A nova aparência deve manter a disposição básica dos membros do alvo, mas, fora isso, a ilusão pode assumir a forma que desejar e permanece durante a magia. As mudanças não resistem à inspeção física. Por exemplo, um chapéu ilusório acrescentado à roupa de alguém pode ser atravessado por objetos. Uma criatura que realize a ação Estudar para examinar um alvo pode fazer um teste de Inteligência (Investigação) contra a CD de salvaguarda de suas magias e, se obtiver sucesso, descobre que o alvo está disfarçado.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -22160,7 +22160,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Um globo gelado parte de você em direção a um ponto à sua escolha dentro do alcance, onde explode em uma esfera de 18 metros de raio. Cada criatura na área realiza uma salvaguarda de Constituição, sofrendo 10d6 de dano de frio em caso de falha ou metade em caso de sucesso. Se o globo atingir um corpo de água, congela a água até uma profundidade de 15 centímetros em uma área quadrada de 9 metros de lado. O gelo dura 1 minuto. Criaturas que estiverem nadando na superfície congelada ficam presas no gelo e recebem a condição Contido. Uma criatura presa pode usar uma ação para realizar um teste de Força (Atletismo) contra a CD de salvaguarda de suas magias para se libertar.
+Um globo gelado parte de você em direção a um ponto à sua escolha dentro do alcance, onde explode em uma esfera de 18 metros de raio. Cada criatura na área realiza uma salvaguarda de Constituição, sofrendo 10d6 de dano de frio em caso de falha ou metade em caso de sucesso. Se o globo atingir um corpo de água, congela a água até uma profundidade de 0,15 m em uma área quadrada de 9 metros de lado. O gelo dura 1 minuto. Criaturas que estiverem nadando na superfície congelada ficam presas no gelo e recebem a condição Contido. Uma criatura presa pode usar uma ação para realizar um teste de Força (Atletismo) contra a CD de salvaguarda de suas magias para se libertar.
 
 Você pode optar por não disparar o globo ao concluir a conjuração. Nesse caso, um globo do tamanho aproximado de uma bala de funda, frio ao toque, aparece em sua mão. A qualquer momento, você ou uma criatura a quem o entregar pode arremessá-lo a até 12 metros ou lançá-lo com uma funda até o alcance normal da arma. O globo se estilhaça ao atingir algo e produz o mesmo efeito de uma conjuração normal. Você também pode colocá-lo no chão sem quebrá-lo. Após 1 minuto, se ainda não tiver se estilhaçado, ele explode.
 
@@ -22975,7 +22975,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria uma muralha de vegetação entrelaçada repleta de espinhos afiados. Ela aparece sobre uma superfície sólida dentro do alcance e permanece durante a magia. Você pode fazê-la ter até 18 metros de comprimento, 3 metros de altura e 1,5 metro de espessura, ou formar um círculo de 6 metros de diâmetro com até 6 metros de altura e 1,5 metro de espessura. A muralha bloqueia a linha de visão. Quando surge, cada criatura na área realiza uma salvaguarda de Destreza, sofrendo 7d8 de dano perfurante em caso de falha ou metade em caso de sucesso. Uma criatura pode atravessar a muralha, embora lenta e dolorosamente: para cada 30 centímetros que avança dentro dela, precisa gastar 1,2 metro de movimento. Além disso, na primeira vez que entrar em um espaço da muralha em um turno ou terminar seu turno nela, realiza uma salvaguarda de Destreza, sofrendo 7d8 de dano cortante em caso de falha ou metade em caso de sucesso. A salvaguarda ocorre apenas uma vez por turno.
+Você cria uma muralha de vegetação entrelaçada repleta de espinhos afiados. Ela aparece sobre uma superfície sólida dentro do alcance e permanece durante a magia. Você pode fazê-la ter até 18 metros de comprimento, 3 metros de altura e 1,5 metro de espessura, ou formar um círculo de 6 metros de diâmetro com até 6 metros de altura e 1,5 metro de espessura. A muralha bloqueia a linha de visão. Quando surge, cada criatura na área realiza uma salvaguarda de Destreza, sofrendo 7d8 de dano perfurante em caso de falha ou metade em caso de sucesso. Uma criatura pode atravessar a muralha, embora lenta e dolorosamente: para cada 0,3 m que avança dentro dela, precisa gastar 1,2 metro de movimento. Além disso, na primeira vez que entrar em um espaço da muralha em um turno ou terminar seu turno nela, realiza uma salvaguarda de Destreza, sofrendo 7d8 de dano cortante em caso de falha ou metade em caso de sucesso. A salvaguarda ocorre apenas uma vez por turno.
 
 **Em círculos superiores:** Ao conjurar com um espaço de círculo superior ao 6º, ambos os tipos de dano aumentam em 1d8 por círculo acima do 6º.
 
@@ -23024,7 +23024,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você cria uma muralha de gelo sobre uma superfície sólida dentro do alcance. Pode moldá-la como uma cúpula hemisférica ou um globo de até 3 metros de raio, ou criar uma superfície plana com dez painéis quadrados de 3 metros de lado, cada painel contíguo a pelo menos outro. Em qualquer configuração, a muralha tem 30 centímetros de espessura e permanece durante a magia. Se surgir atravessando o espaço de uma criatura, ela é empurrada para um dos lados da muralha, à sua escolha, e realiza uma salvaguarda de Destreza, sofrendo 10d6 de dano de frio em caso de falha ou metade em caso de sucesso.
+Você cria uma muralha de gelo sobre uma superfície sólida dentro do alcance. Pode moldá-la como uma cúpula hemisférica ou um globo de até 3 metros de raio, ou criar uma superfície plana com dez painéis quadrados de 3 metros de lado, cada painel contíguo a pelo menos outro. Em qualquer configuração, a muralha tem 0,3 m de espessura e permanece durante a magia. Se surgir atravessando o espaço de uma criatura, ela é empurrada para um dos lados da muralha, à sua escolha, e realiza uma salvaguarda de Destreza, sofrendo 10d6 de dano de frio em caso de falha ou metade em caso de sucesso.
 
 A muralha é um objeto que pode ser danificado e rompido. Tem CA 12 e 30 Pontos de Vida por seção de 3 metros de comprimento, imunidade a dano de frio, veneno e psíquico e vulnerabilidade a dano de fogo. Reduzir uma seção de 3 metros a 0 Pontos de Vida a destrói, deixando uma lâmina de ar congelante no espaço anteriormente ocupado. Uma criatura que atravessar essa lâmina pela primeira vez em um turno realiza uma salvaguarda de Constituição, sofrendo 5d6 de dano de frio em caso de falha ou metade em caso de sucesso.
 
@@ -23800,7 +23800,7 @@ CM — Concentração Maior
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma prisão imóvel, Invisível e cúbica, composta de energia mágica, surge ao redor de uma área à sua escolha dentro do alcance. Você decide se a prisão terá formato de jaula ou de caixa sólida. Uma jaula pode medir até 6 metros de lado e é formada por barras com cerca de 1,25 centímetro de diâmetro, separadas por espaços de 1,25 centímetro. Uma caixa sólida pode medir até 3 metros de lado, criando uma barreira contínua que impede a passagem de qualquer matéria e bloqueia magias conjuradas para dentro ou fora da área.
+Uma prisão imóvel, Invisível e cúbica, composta de energia mágica, surge ao redor de uma área à sua escolha dentro do alcance. Você decide se a prisão terá formato de jaula ou de caixa sólida. Uma jaula pode medir até 6 metros de lado e é formada por barras com cerca de 0,0125 m de diâmetro, separadas por espaços de 0,0125 m. Uma caixa sólida pode medir até 3 metros de lado, criando uma barreira contínua que impede a passagem de qualquer matéria e bloqueia magias conjuradas para dentro ou fora da área.
 
 Ao conjurar a magia, qualquer criatura totalmente dentro da área da jaula fica aprisionada. Criaturas apenas parcialmente dentro da área ou grandes demais para caber são empurradas para longe do centro até ficarem completamente do lado de fora.
 
@@ -24188,7 +24188,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você entra nas regiões limítrofes do Plano Etéreo, onde ele se sobrepõe ao plano em que está. Permanece no Etéreo Limítrofe durante a magia. Nesse período, pode se mover em qualquer direção. Ao mover-se para cima ou para baixo, cada 30 centímetros de deslocamento custam 30 centímetros adicionais. Você consegue perceber o plano que deixou, que parece acinzentado, mas não enxerga nada nele a mais de 18 metros.
+Você entra nas regiões limítrofes do Plano Etéreo, onde ele se sobrepõe ao plano em que está. Permanece no Etéreo Limítrofe durante a magia. Nesse período, pode se mover em qualquer direção. Ao mover-se para cima ou para baixo, cada 0,3 m de deslocamento custam 0,3 m adicionais. Você consegue perceber o plano que deixou, que parece acinzentado, mas não enxerga nada nele a mais de 18 metros.
 
 Enquanto estiver no Plano Etéreo, só pode afetar ou ser afetado por criaturas, objetos e efeitos que também estejam nesse plano. Criaturas que não estejam no Plano Etéreo não podem percebê-lo nem interagir com você, a menos que possuam uma característica que lhes permita fazê-lo.
 
@@ -24341,7 +24341,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você faz o terreno de uma área quadrada de até 1 milha (aproximadamente 1,6 quilômetro) de lado parecer, soar, cheirar e até ter a sensação tátil de outro tipo de terreno. Campos ou estradas podem parecer pântanos, colinas, fendas ou outros terrenos difíceis ou intransponíveis. Uma lagoa pode parecer um prado, um precipício pode parecer uma encosta suave e um barranco rochoso pode parecer uma estrada larga e lisa. Da mesma forma, você pode alterar a aparência de estruturas ou adicionar estruturas ilusórias onde não existem. A magia não disfarça, oculta nem acrescenta criaturas. A ilusão inclui sons, imagens, sensações táteis e odores; portanto, pode transformar terreno desimpedido em Terreno Difícil ou vice-versa e dificultar o movimento na região. Qualquer parte do terreno ilusório, como pedra ou graveto, removida da área da magia desaparece imediatamente. Criaturas com Visão Verdadeira conseguem enxergar através da ilusão e ver o terreno real, mas os demais elementos ilusórios permanecem; assim, mesmo reconhecendo a ilusão, elas ainda podem interagir fisicamente com ela.
+Você faz o terreno de uma área quadrada de até 1.600 m de lado parecer, soar, cheirar e até ter a sensação tátil de outro tipo de terreno. Campos ou estradas podem parecer pântanos, colinas, fendas ou outros terrenos difíceis ou intransponíveis. Uma lagoa pode parecer um prado, um precipício pode parecer uma encosta suave e um barranco rochoso pode parecer uma estrada larga e lisa. Da mesma forma, você pode alterar a aparência de estruturas ou adicionar estruturas ilusórias onde não existem. A magia não disfarça, oculta nem acrescenta criaturas. A ilusão inclui sons, imagens, sensações táteis e odores; portanto, pode transformar terreno desimpedido em Terreno Difícil ou vice-versa e dificultar o movimento na região. Qualquer parte do terreno ilusório, como pedra ou graveto, removida da área da magia desaparece imediatamente. Criaturas com Visão Verdadeira conseguem enxergar através da ilusão e ver o terreno real, mas os demais elementos ilusórios permanecem; assim, mesmo reconhecendo a ilusão, elas ainda podem interagir fisicamente com ela.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -24686,7 +24686,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Com um toque, você oculta magicamente um objeto ou uma criatura voluntária. Durante a magia, o alvo recebe a condição Invisível e não pode ser escolhido como alvo de magias de Adivinhação, detectado por magia nem observado remotamente por meios mágicos. Se for uma criatura, entra em animação suspensa: fica Inconsciente, não envelhece e não precisa de comida, água ou ar. Você pode estabelecer uma condição para que a magia termine antecipadamente. A condição pode ser qualquer uma que escolher, mas deve ocorrer ou ser visível a até 1 milha (aproximadamente 1,6 quilômetro) do alvo. Exemplos: 'depois de mil anos' ou 'quando o tarrasque despertar'. A magia também termina se o alvo sofrer qualquer dano.
+Com um toque, você oculta magicamente um objeto ou uma criatura voluntária. Durante a magia, o alvo recebe a condição Invisível e não pode ser escolhido como alvo de magias de Adivinhação, detectado por magia nem observado remotamente por meios mágicos. Se for uma criatura, entra em animação suspensa: fica Inconsciente, não envelhece e não precisa de comida, água ou ar. Você pode estabelecer uma condição para que a magia termine antecipadamente. A condição pode ser qualquer uma que escolher, mas deve ocorrer ou ser visível a até 1.600 m do alvo. Exemplos: 'depois de mil anos' ou 'quando o tarrasque despertar'. A magia também termina se o alvo sofrer qualquer dano.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -25033,7 +25033,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você e até oito criaturas voluntárias dentro do alcance ficam Inconscientes durante a magia e compartilham visões de outro mundo do Plano Material. Se o efeito completar sua duração, as visões culminam numa cortina azul imaginária que vocês atravessam, sendo transportados física e mentalmente ao mundo vislumbrado. A conjuração exige um item mágico originário desse mundo e que você saiba da existência dele, ainda que desconheça seu nome. O destino é local seguro a até 1,6 km de onde o item foi criado. Alternativamente, se uma das criaturas afetadas nasceu nesse mundo, o destino é local seguro a até 1,6 km do nascimento dela. Se qualquer participante sofrer dano, ele deixa o efeito e não é transportado. Se você sofrer dano, a magia inteira termina e ninguém viaja.
+Você e até oito criaturas voluntárias dentro do alcance ficam Inconscientes durante a magia e compartilham visões de outro mundo do Plano Material. Se o efeito completar sua duração, as visões culminam numa cortina azul imaginária que vocês atravessam, sendo transportados física e mentalmente ao mundo vislumbrado. A conjuração exige um item mágico originário desse mundo e que você saiba da existência dele, ainda que desconheça seu nome. O destino é local seguro a até 1.600 m de onde o item foi criado. Alternativamente, se uma das criaturas afetadas nasceu nesse mundo, o destino é local seguro a até 1.600 m do nascimento dela. Se qualquer participante sofrer dano, ele deixa o efeito e não é transportado. Se você sofrer dano, a magia inteira termina e ninguém viaja.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -25096,7 +25096,7 @@ Acidente: a imprevisibilidade da magia resulta em uma viagem difícil. Cada cria
 
 Área Semelhante: você e seu grupo, ou o objeto, aparecem em outra área visual ou tematicamente semelhante ao destino desejado, no local semelhante mais próximo. Se pretendia chegar ao seu laboratório, poderia surgir no laboratório de outra pessoa na mesma cidade.
 
-Fora do Alvo: o grupo ou objeto aparece a 2d12 milhas (aproximadamente 3,2 a 38,6 quilômetros) do destino em direção aleatória. Role 1d8: 1 leste; 2 sudeste; 3 sul; 4 sudoeste; 5 oeste; 6 noroeste; 7 norte; 8 nordeste.
+Fora do Alvo: o grupo ou objeto aparece a 2d19.312 m (aproximadamente 3,2 a 38.600 m) do destino em direção aleatória. Role 1d8: 1 leste; 2 sudeste; 3 sul; 4 sudoeste; 5 oeste; 6 noroeste; 7 norte; 8 nordeste.
 
 No Alvo: você e o grupo, ou o objeto, aparecem exatamente no destino pretendido.
 
@@ -25574,7 +25574,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você toca uma criatura ou pelo menos 16,4 centímetros cúbicos de carne dela. Uma duplicata inerte da criatura se forma dentro do receptáculo usado na conjuração e termina de crescer após 120 dias. Você escolhe se o clone concluído terá a mesma idade da criatura ou será mais jovem. O clone permanece inerte indefinidamente enquanto o receptáculo não for perturbado. Se a criatura original morrer depois que o clone estiver pronto, a alma dela é transferida para ele, desde que esteja livre e queira retornar. O clone é fisicamente idêntico ao original, com a mesma personalidade, memórias e capacidades, mas não possui nenhum dos equipamentos originais. Os restos mortais da criatura original, se existirem, tornam-se inertes e não podem ser revividos, pois sua alma se encontra em outro lugar.
+Você toca uma criatura ou pelo menos 0,0000164 m³ de carne dela. Uma duplicata inerte da criatura se forma dentro do receptáculo usado na conjuração e termina de crescer após 120 dias. Você escolhe se o clone concluído terá a mesma idade da criatura ou será mais jovem. O clone permanece inerte indefinidamente enquanto o receptáculo não for perturbado. Se a criatura original morrer depois que o clone estiver pronto, a alma dela é transferida para ele, desde que esteja livre e queira retornar. O clone é fisicamente idêntico ao original, com a mesma personalidade, memórias e capacidades, mas não possui nenhum dos equipamentos originais. Os restos mortais da criatura original, se existirem, tornam-se inertes e não podem ser revividos, pois sua alma se encontra em outro lugar.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -25668,7 +25668,7 @@ CZ — Concentração de Zona
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Você controla o clima em um raio de 5 milhas (aproximadamente 8 quilômetros) durante a magia. Precisa estar ao ar livre para conjurá-la, e ela termina antecipadamente se entrar em ambiente fechado. Ao conjurar, você modifica as condições climáticas atuais, determinadas pelo Mestre. Pode alterar precipitação, temperatura e vento. As novas condições levam 1d4 × 10 minutos para entrar em vigor; depois disso, você pode alterá-las novamente. Quando a magia termina, o clima retorna gradualmente ao normal. Ao modificar o clima, localize a condição atual nas tabelas e altere sua categoria em um estágio, para cima ou para baixo. Ao mudar o vento, você também pode mudar a direção.
+Você controla o clima em um raio de 8.000 m durante a magia. Precisa estar ao ar livre para conjurá-la, e ela termina antecipadamente se entrar em ambiente fechado. Ao conjurar, você modifica as condições climáticas atuais, determinadas pelo Mestre. Pode alterar precipitação, temperatura e vento. As novas condições levam 1d4 × 10 minutos para entrar em vigor; depois disso, você pode alterá-las novamente. Quando a magia termina, o clima retorna gradualmente ao normal. Ao modificar o clima, localize a condição atual nas tabelas e altere sua categoria em um estágio, para cima ou para baixo. Ao mudar o vento, você também pode mudar a direção.
 
 Precipitação: 1 — Limpo; 2 — Nuvens leves; 3 — Encoberto ou nevoeiro rente ao solo; 4 — Chuva, granizo ou neve; 5 — Chuva torrencial, granizo intenso ou nevasca.
 
@@ -26146,7 +26146,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Uma fortaleza de pedra surge em terreno livre quadrado com 36 m de lado. Quem estiver na área é erguido em segurança durante sua formação. A estrutura possui quatro torres, uma em cada canto, bases de 6 m de lado e 9 m de altura, ligadas por muralhas de 24 m de extensão, 6 m de altura e 0,3 m de espessura; você pode definir até quatro portas externas. Dentro existe um edifício central de base quadrada de 15 m, três pavimentos com 3 m de pé-direito, cômodos à sua escolha com largura mínima de 1,5 m e escadarias de pedra. A mobília e a decoração são escolhidas por você, e a fortaleza fornece diariamente banquete de nove pratos para cem pessoas. Cem serventes invisíveis obedecem às criaturas que você designar e funcionam como Servos Invisíveis. Alimentos e objetos mágicos criados pela magia desfazem-se quando retirados. A construção pode ser danificada; seções de pedra de 3 m por 3 m têm CA 15 e 30 Pontos de Vida para cada 2,5 cm de espessura, além de Imunidade a dano psíquico e de veneno. Depois de sete dias ou se você conjurar outra fortaleza, a construção afunda sem ferir ocupantes. Conjurar no mesmo lugar uma vez a cada sete dias durante um ano torna-a permanente.
+Uma fortaleza de pedra surge em terreno livre quadrado com 36 m de lado. Quem estiver na área é erguido em segurança durante sua formação. A estrutura possui quatro torres, uma em cada canto, bases de 6 m de lado e 9 m de altura, ligadas por muralhas de 24 m de extensão, 6 m de altura e 0,3 m de espessura; você pode definir até quatro portas externas. Dentro existe um edifício central de base quadrada de 15 m, três pavimentos com 3 m de pé-direito, cômodos à sua escolha com largura mínima de 1,5 m e escadarias de pedra. A mobília e a decoração são escolhidas por você, e a fortaleza fornece diariamente banquete de nove pratos para cem pessoas. Cem serventes invisíveis obedecem às criaturas que você designar e funcionam como Servos Invisíveis. Alimentos e objetos mágicos criados pela magia desfazem-se quando retirados. A construção pode ser danificada; seções de pedra de 3 m por 3 m têm CA 15 e 30 Pontos de Vida para cada 0,025 m de espessura, além de Imunidade a dano psíquico e de veneno. Depois de sete dias ou se você conjurar outra fortaleza, a construção afunda sem ferir ocupantes. Conjurar no mesmo lugar uma vez a cada sete dias durante um ano torna-a permanente.
 
 ──────────────────────────────────────────────────────────────────────────────
 CLASSES
@@ -26769,7 +26769,7 @@ Acorrentamento: correntes firmemente presas ao solo mantêm o alvo no lugar. Ele
 
 Prisão Isolada: o alvo fica preso em um semiplano protegido contra teleportes e viagens planares. Você escolhe o formato do semiplano, como labirinto, jaula, torre ou outro semelhante.
 
-Confinamento Minúsculo: o alvo é reduzido a 2,5 centímetros de altura e aprisionado dentro de uma gema indestrutível ou objeto similar. A luz pode atravessar a gema, permitindo que o alvo veja para fora e que outras criaturas olhem para dentro, mas nada mais pode atravessá-la por nenhum meio.
+Confinamento Minúsculo: o alvo é reduzido a 0,025 m de altura e aprisionado dentro de uma gema indestrutível ou objeto similar. A luz pode atravessar a gema, permitindo que o alvo veja para fora e que outras criaturas olhem para dentro, mas nada mais pode atravessá-la por nenhum meio.
 
 Sono: o alvo fica Inconsciente e não pode ser despertado.
 
@@ -27404,7 +27404,7 @@ Nenhuma
 
 ──────────────────────────────────────────────────────────────────────────────
 EFEITO E DESCRIÇÃO
-Um plano cintilante e multicolorido forma uma muralha vertical e opaca, com até 27 metros de comprimento, 9 metros de altura e 2,5 centímetros de espessura, centrada em um ponto dentro do alcance. Alternativamente, você pode moldar a muralha como um globo de até 9 metros de diâmetro, centrado em um ponto dentro do alcance. Ela permanece durante a magia. Se surgir em um espaço ocupado por uma criatura, a magia termina imediatamente sem produzir efeito. A muralha emite Luz Plena por 30 metros e Luz Fraca por mais 30 metros. Você e quaisquer criaturas designadas na conjuração podem atravessá-la e permanecer próximos sem sofrer dano. Se outra criatura que consiga enxergá-la se aproximar a até 6 metros ou começar seu turno ali, deve obter sucesso em uma salvaguarda de Constituição ou fica Cega por 1 minuto.
+Um plano cintilante e multicolorido forma uma muralha vertical e opaca, com até 27 metros de comprimento, 9 metros de altura e 0,025 m de espessura, centrada em um ponto dentro do alcance. Alternativamente, você pode moldar a muralha como um globo de até 9 metros de diâmetro, centrado em um ponto dentro do alcance. Ela permanece durante a magia. Se surgir em um espaço ocupado por uma criatura, a magia termina imediatamente sem produzir efeito. A muralha emite Luz Plena por 30 metros e Luz Fraca por mais 30 metros. Você e quaisquer criaturas designadas na conjuração podem atravessá-la e permanecer próximos sem sofrer dano. Se outra criatura que consiga enxergá-la se aproximar a até 6 metros ou começar seu turno ali, deve obter sucesso em uma salvaguarda de Constituição ou fica Cega por 1 minuto.
 
 A muralha possui sete camadas, cada uma de cor diferente. Uma criatura que estenda parte do corpo para dentro dela ou a atravesse passa por uma camada de cada vez e precisa realizar uma salvaguarda de Destreza contra as propriedades de cada uma. A muralha tem CA 10 e pode ser destruída uma camada por vez, na ordem do vermelho ao violeta, por meios específicos. Uma camada destruída permanece ausente até o fim da magia. Campo Antimagia não a afeta, e Dissipar Magia pode afetar apenas a camada violeta.
 
@@ -27712,7 +27712,7 @@ Nenhuma
 EFEITO E DESCRIÇÃO
 Você e até oito criaturas voluntárias dentro do alcance projetam seus corpos astrais no Plano Astral. A magia termina imediatamente se você já estiver nesse plano. O corpo físico de cada alvo fica para trás em animação suspensa: recebe a condição Inconsciente, não precisa de alimento nem ar e não envelhece.
 
-A forma astral do alvo se parece com seu corpo em quase todos os aspectos, reproduzindo suas estatísticas de jogo e pertences. A principal diferença é um cordão prateado que parte da região entre as omoplatas da forma astral e desaparece da visão depois de 30 centímetros. Se o cordão for cortado — o que só acontece quando algum efeito afirma expressamente que pode fazê-lo —, tanto o corpo físico quanto a forma astral do alvo morrem.
+A forma astral do alvo se parece com seu corpo em quase todos os aspectos, reproduzindo suas estatísticas de jogo e pertences. A principal diferença é um cordão prateado que parte da região entre as omoplatas da forma astral e desaparece da visão depois de 0,3 m. Se o cordão for cortado — o que só acontece quando algum efeito afirma expressamente que pode fazê-lo —, tanto o corpo físico quanto a forma astral do alvo morrem.
 
 A forma astral pode viajar pelo Plano Astral. No momento em que sai desse plano, o corpo e os pertences do alvo viajam pelo cordão prateado, fazendo-o retornar ao próprio corpo no novo plano. Dano ou outros efeitos que atinjam a forma astral não afetam o corpo físico, e vice-versa. Se o corpo físico ou a forma astral de um alvo chegar a 0 Pontos de Vida, a magia termina para ele.
 
@@ -28602,7 +28602,7 @@ Zona de Amabilidade | 4º círculo | Encantamento | Nenhuma | Arcana Unleashed
 
 PARTE V — AUDITORIA E FONTES
 Fichas distintas: 581; sem descrição: 0; sem nome: 0.
-Textos de referência aberta em português: 340; descrições autorais em português: 241.
+Textos provenientes de referência aberta em português: 339; tradução anterior do Hub: 1; descrições autorais em português: 241.
 Por círculo: Truques: 49; 1º: 82; 2º: 97; 3º: 80; 4º: 60; 5º: 72; 6º: 52; 7º: 34; 8º: 29; 9º: 26
 Por categoria CE: CM — Concentração Maior: 46; CI — Concentração de Invocação: 21; CZ — Concentração de Zona: 59; CL — Concentração Leve: 96; Nenhuma: 326; Pendente de validação: 33; Concentração não verificada: 0
 Por publicação principal: Arcana Unleashed: 33; Livro do Jogador · 2024: 391; Forgotten Realms: Heroes of Faerûn: 19; Eberron: Forge of the Artificer: 1; Fizban's Treasury of Dragons: 7; Explorer's Guide to Wildemount: 15; Strixhaven: A Curriculum of Chaos: 4; Spelljammer: Adventures in Space: 2; The Book of Many Things: 3; Acquisitions Incorporated: 7; Guildmasters' Guide to Ravnica: 1; Icewind Dale: Rime of the Frostmaiden: 2; Lost Laboratory of Kwalish: 3; Planescape: Adventures in the Multiverse: 2; Adventures in the Forgotten Realms: A Verdant Tomb: 1; Tasha's Cauldron of Everything: 11; Xanathar's Guide to Everything: 79
