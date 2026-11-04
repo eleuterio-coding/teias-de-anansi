@@ -53,7 +53,7 @@
 <script>
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let DATA = null;
-const livroVisivel = titulo => /^Player[’']s Handbook$/i.test(String(titulo)) ? 'Livro do Jogador' : titulo;
+const livroVisivel = titulo => HubBiblioteca.livro(titulo);
 
 function textoBusca(item) {
   const fonte = DATA.fontes[item.fonte] || {};
