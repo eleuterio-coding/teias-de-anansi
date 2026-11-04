@@ -43,7 +43,7 @@ function ferramentaTexto(d){const p=[];if(d.ferramenta_escolha){const o=d.ferram
 function talentoTexto(t){if(!t)return'—';return `${talentoNome(t.nome)}${t.escolha_fixa?` (${escolhaNome(t.escolha_fixa)})`:''}`}
 
 const H=HubBiblioteca;
-const REGRAS_ATRIBUTOS={'Força':'Ability Score and Modifier','Destreza':'Ability Score and Modifier','Constituição':'Ability Score and Modifier','Inteligência':'Ability Score and Modifier','Sabedoria':'Ability Score and Modifier','Carisma':'Ability Score and Modifier'};
+const REGRAS_ATRIBUTOS={'Força':'Ability: Strength','Destreza':'Ability: Dexterity','Constituição':'Ability: Constitution','Inteligência':'Ability: Intelligence','Sabedoria':'Ability: Wisdom','Carisma':'Ability: Charisma'};
 const ITENS_LINKAVEIS={
  'azagaias':['armas.html','Azagaia'],'azagaia':['armas.html','Azagaia'],'adaga':['armas.html','Adaga'],'adagas':['armas.html','Adaga'],
  'lança':['armas.html','Lança'],'maça':['armas.html','Maça'],'bordão':['armas.html','Bordão'],'arco curto':['armas.html','Arco Curto'],
