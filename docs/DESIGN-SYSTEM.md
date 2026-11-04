@@ -6,9 +6,7 @@
 ## Objetivo e limites desta etapa
 
 Consolidar os valores visuais que ja existiam no HUB em um unico arquivo CSS:
-[`hub-design-tokens.css`](../hub-design-tokens.css). A criacao de componentes
-visuais reutilizaveis e a eliminacao de regras antigas/duplicadas em cada modulo
-pertencem a Etapa 3. Esta etapa **nao altera** HTML, dados, navegacao, permissoes,
+[`hub-design-tokens.css`](../hub-design-tokens.css). A criacao de componentes visuais reutilizaveis e a eliminacao de regras antigas/duplicadas em cada modulo pertencem a Etapa 3, iniciada de forma incremental após a base de tokens. Esta etapa **nao altera** HTML, dados, navegacao, permissoes,
 JavaScript de producao ou persistencia.
 
 O tema atual continua composto por:
@@ -98,3 +96,44 @@ homologacao visual. Nao mesclar esta branch em `main` antes dessa revisao.
   abas, tabelas, modais, selos) com nomes consistentes.
 - **Etapa 4:** migrar area por area, incluindo estilos legados e HTML inline.
 - **Etapa 5:** testes visuais cobrindo todas as rotas e estados.
+
+
+## Etapa 3 — bloco 1: componentes compartilhados de navegação
+
+Arquivo adicional: [`hub-components.css`](../hub-components.css), importado
+por `hub-ux.css` **após** os tokens visuais. O arquivo não altera
+permissões, URLs, criação de fichas nem renderização de dados.
+
+### Componentes disponíveis
+
+| Classe canônica | Uso | Situação |
+| --- | --- | --- |
+| `.hub-ui-card` | Superfície de cartão com borda e cantos globais | Ativa e aplicada como alias a menus legados |
+| `.hub-ui-card--interactive` | Hover, foco e seleção | Ativa nos menus de Personagens/NPCs |
+| `.hub-ui-page-header` | Título e ações de seção | Opt-in para migração futura |
+| `.hub-ui-button` + variantes `--secondary`, `--danger` | Botões | Opt-in; não substitui botões atuais |
+| `.hub-ui-field` | Campos de formulário | Opt-in; não substitui formulários atuais |
+| `.hub-ui-badge` | Selos informativos | Opt-in; não substituir paleta oficial de status |
+| `.hub-ui-dialog` | Superfície de modal | Opt-in; comportamento de abrir/fechar não é alterado |
+
+A estrutura de `.hub-area-menu a` e `.hub-roster-choice` agora herda
+**superfície, borda e cantos** de uma mesma regra em `hub-components.css`.
+Hover, foco e estado selecionado também compartilham cores.
+Tamanhos, espaçamento interno, ordem, links, permissões e responsividade
+permanecem nos CSS específicos.
+
+**Limite:** esta etapa não migra indiscriminadamente os cards de Campanhas,
+Sessões, Aventuras, criação de personagens e Biblioteca. Eles precisam de
+comparação visual e de comportamento por fluxo para que a unificação
+não remova ações, imagens ou distinções funcionais.
+
+### Testes da migração de cards
+
+```sh
+node --test tests/design-system-tokens.test.mjs tests/componentes-globais.test.mjs
+npx playwright test e2e/componentes-globais.spec.js
+```
+
+O arquivo E2E valida os menus em desktop e mobile e os estados hover
+no desktop. A aprovação visual integral permanece bloqueada enquanto
+as ações do GitHub não concluírem.
