@@ -403,6 +403,6 @@
   display:block;margin:0 0 14px;font-size:1.17rem;line-height:1.3;
   padding-bottom:10px;border-bottom:1px solid var(--hub-border,#40546c);
 }
-#adventure-root .adventure-product-hero + .campaign-product-summary + #proxima-sessao{
+#adventure-root .campaign-product-hero + .campaign-product-summary + #proxima-sessao{
   margin:12px 0 16px;width:100%;max-width:none;
 }
