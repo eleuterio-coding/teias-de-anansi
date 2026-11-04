@@ -36,7 +36,7 @@
     "proveniencia": "Oficial — suplemento de Ravnica (2018)",
     "referencia_secao": "Welcome to Ravnica — Languages",
     "falantes_tipicos": "Vedalkianos de Ravnica.",
-    "alfabeto": "Vedalkiano (escrita vedalken)."
+    "alfabeto": "Vedalkiano."
   },
   {
     "nome": "Leonin",
@@ -62,7 +62,7 @@
     "proveniencia": "Oficial — D&D 5e legado (2018)",
     "referencia_secao": "Mordenkainen’s Tome of Foes — Gith",
     "falantes_tipicos": "Githyanki e githzerai.",
-    "alfabeto": "Não especificado nas fontes catalogadas."
+    "alfabeto": "Tir’su (escrita circular dos gith)."
   },
   {
     "nome": "Hadozee",
@@ -75,7 +75,7 @@
     "proveniencia": "Legado — idioma próprio não confirmado na 5e de 2022",
     "referencia_secao": "Astral Adventurer’s Guide — Hadozee; verificação de proveniência",
     "falantes_tipicos": "Hadozee do cenário Spelljammer (registro legado).",
-    "alfabeto": "Não especificado no material vigente."
+    "alfabeto": "Não há alfabeto próprio documentado nas fontes consultadas."
   },
   {
     "nome": "Thri-kreen",
@@ -88,7 +88,7 @@
     "proveniencia": "Oficial — suplemento Spelljammer (2022)",
     "referencia_secao": "Astral Adventurer’s Guide — Thri-kreen; Telepathy",
     "falantes_tipicos": "Thri-kreen do Espaço Selvagem.",
-    "alfabeto": "Não especificado; a comunicação inclui sons e gestos."
+    "alfabeto": "Não se aplica alfabeto escrito; a comunicação inclui sons e gestos baseados na anatomia insetóide da raça."
   },
   {
     "nome": "Kenderspeak",
