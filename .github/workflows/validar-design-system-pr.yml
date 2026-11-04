@@ -38,6 +38,8 @@ jobs:
           node --check e2e/preview-hub-visual.spec.js
       - name: Verificar tokens, cards e contratos de layout
         run: node --test tests/design-system-tokens.test.mjs tests/componentes-globais.test.mjs
+      - name: Validar contrato atualizado da Biblioteca antes do deploy
+        run: node tests/auditar-biblioteca-alfabetica-subclasses.mjs
       - name: Instalar Playwright
         run: |
           npm install --no-audit --no-fund
