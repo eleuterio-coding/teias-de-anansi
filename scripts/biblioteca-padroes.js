@@ -2,6 +2,7 @@
 (function(){
 'use strict';
 const EQUIP={
+'Arrows':'Flechas','Bolts':'Virotes','Bullets, Firearm':'Balas de Arma de Fogo','Bullets, Sling':'Projéteis de Funda','Needles':'Agulhas','Case':'Estojo','Crystal':'Cristal','Orb':'Orbe','Rod':'Bastão','Staff':'Cajado','Wand':'Varinha','Sprig of mistletoe':'Ramo de Visco','Wooden staff':'Cajado de Madeira','Yew wand':'Varinha de Teixo','Amulet':'Amuleto','Emblem':'Emblema','Reliquary':'Relicário',
 'Acid':'Ácido','Alchemist’s Fire':'Fogo Alquímico','Ammunition':'Munição','Antitoxin':'Antitoxina','Arcane Focus':'Foco Arcano',
 'Backpack':'Mochila','Ball Bearings':'Esferas de Metal','Barrel':'Barril','Basket':'Cesto','Bedroll':'Saco de Dormir',
 'Bell':'Sino','Blanket':'Cobertor','Block and Tackle':'Roldana e Polia','Book':'Livro','Bottle, Glass':'Garrafa de Vidro',
@@ -74,7 +75,7 @@ function moedaHtml(v){
  return esc(medidas(v)).replace(/\b(PL|PO|PP|PC)\b/g,(_,m)=>item(m,'comercio-e-despesas.html#moedas'));
 }
 function termosHtml(v){
- let x=esc(medidas(v));
+ let x=esc(medidas(v)).replace(/worn or held/gi,'vestido ou empunhado').replace(/borne on fabric or Shield/gi,'ostentado em tecido ou escudo').replace(/\bheld\b/gi,'empunhado');
  x=x.replace(/\b(PL|PO|PP|PC)\b/g,(_,m)=>item(m,'comercio-e-despesas.html#moedas'));
  x=x.replace(/\b(descanso longo|descanso curto|Dados de Vida)\b/gi,(m)=>regra(m,normalize(m)==='descanso longo'?'Long Rest':normalize(m)==='descanso curto'?'Short Rest':'Hit Point Dice'));
  x=x.replace(/\b(galões|galão)\b/gi,m=>item(m,equipamentoUrl('Jug')));
