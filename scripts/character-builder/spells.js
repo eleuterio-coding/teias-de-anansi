@@ -27,25 +27,12 @@ async function localizeSpellCatalog(items){
  return items.map(x=>({...x,name:names[x.originalName]||x.name}))
   .sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'))
 }
+// Fonte única de magias em todas as etapas da criação de personagem.
 export async function loadSpells(){
- let items=[];
- try{
-  const d=await json('dados/magias-catalogo.json?v=20261030-fontes-integrais2');
-  items=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(normalizeSpell);
-  if(!items.length)throw new Error('catálogo consolidado vazio')
- }catch(e){
-  state.warnings.push(`Catálogo consolidado local indisponível: ${e.message}. Não recriar as magias antigas por fontes remotas.`);
-  items=[]; // Falha segura: arquivos PDF são a única fonte ativa para Xanathar e Tasha.
- }
- try{
-  const source=await json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1');
-  const byName=new Map(arr(source.itens).map(x=>[key(x.nome_original),x]));
-  for(const spell of items){if(spell.source!=='xanathar-2017')continue;const full=byName.get(key(spell.originalName));if(full){spell.xanatharUserText=spell.source==='xanathar-2017'?'':full.descricao_original_en;spell.xanatharSourcePage=full.pagina_pdf;if(spell.source==='xanathar-2017')spell.description=full.descricao_original_en;}}
- }catch(e){state.warnings.push(`Textos integrais do PDF de Xanathar indisponíveis: ${e.message}`)}
- try{
-  const source=await json('dados/magias-tasha-usuario.json?v=20261030-tasha21-1');
-  const byName=new Map(arr(source.itens).map(x=>[key(x.name),x]));
-  for(const spell of items){const full=byName.get(key(spell.originalName));if(full){spell.tashaUserEdition=full;spell.tashaUserText=spell.source==='tasha-2020'?'':full.description;spell.tashaUserStatblock=full.statblock;if(spell.source==='tasha-2020')spell.description=full.description;}}
- }catch(e){state.warnings.push(`Transcrições de Tasha indisponíveis: ${e.message}`)}
- return localizeSpellCatalog(items.filter(x=>x.source!=='phb-2024'&&x.source!=="Player’s Handbook"))
+ const catalog=await json('dados/catalogo-magias-20261104.json?v=20261104');
+ if(!Array.isArray(catalog.itens)||catalog.itens.length!==581)throw new Error('Catálogo de magias incompleto');
+ return catalog.itens.map(x=>{
+  const componentes=String(x.componentes||'');
+  return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\\s*\\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',revision:2024,castingTime:x.tempo_conjuracao,range:x.alcance,components:{verbal:/\\bV\\b/.test(componentes),somatic:/\\bS\\b/.test(componentes),material:/\\bM\\b/.test(componentes),materialText:componentes},duration:x.duracao,attackSave:x.ataque_salvaguarda,baseDamage:x.dano,concentrationExpanded:x.concentracao_expandida};
+ }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
 }
