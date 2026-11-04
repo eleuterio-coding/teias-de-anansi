@@ -19,7 +19,7 @@ let GLOSSARIO=new Map(),GLOSSARIO_RX=null;
 function carregarGlossario(termos){
  const entries=Object.entries(termos||{}).filter(([original,traducao])=>original&&typeof traducao==='string'&&traducao);
  GLOSSARIO=new Map(entries.map(([original,traducao])=>[original.toLocaleLowerCase('pt-BR'),traducao]));
- const escaped=entries.sort((a,b)=>b[0].length-a[0].length).map(([key])=>key.replace(/[.*+?^$()|[\]{}]/g,'\\const medida=v=>String(v??'')'));
+ const escaped=entries.sort((a,b)=>b[0].length-a[0].length).map(([key])=>key.replace(/[.*+?^$()|[\]{}]/g,'\\$&'));
  GLOSSARIO_RX=escaped.length?new RegExp('(?<![\\p{L}\\p{N}])('+escaped.join('|')+')(?![\\p{L}\\p{N}])','giu'):null;
 }
 function traduzirTermos(v){return GLOSSARIO_RX?String(v||'').replace(GLOSSARIO_RX,t=>GLOSSARIO.get(t.toLocaleLowerCase('pt-BR'))||t):String(v||'')}
