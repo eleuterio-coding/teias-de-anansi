@@ -81,6 +81,6 @@ function termosHtml(v){
  return x;
 }
 function periciasHtml(v){return String(v||'').split(/\s*;\s*|\s*,\s*|\s+e\s+/).filter(Boolean)
- .map(p=>regra(pericia(p),'Skill')).join(', ')||'—'}
+ .map(p=>regra(pericia(p),'Skill: '+p.trim())).join(', ')||'—'}
 window.HubBiblioteca={esc,normalize,livro,equipamento,ferramenta,pericia,moedas,medidas,regraUrl,regra,item,equipamentoUrl,ferramentaUrl,moedaHtml,termosHtml,periciasHtml};
 })();
