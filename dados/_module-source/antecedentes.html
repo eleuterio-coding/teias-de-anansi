@@ -91,7 +91,7 @@ function equipLista(text){
 function ferramentasComLinks(d){
  const v=ferramentaTexto(d);
  return v.split(/\s*;\s*|\s*,\s*|\s+\bou\b\s+/i).map(nome=>{
- const n=nome.trim();return n==='—'?'—':H.item(n,H.ferramentaUrl(n));
+ const n=nome.trim();return n==='—'?'—':(/escolha|qualquer|genéric|artesão/i.test(n)?esc(n):H.item(n,H.ferramentaUrl(n)));
  }).join(', ');
 }
 function itemTexto(i){if(i.nome==='PO')return`${i.quantidade} PO`;if(i.unidade)return`${i.nome} (${i.quantidade} ${i.unidade})${i.observacao?` — ${i.observacao}`:''}`;const q=i.quantidade>1?`${i.quantidade}× `:'';return`${q}${i.nome}${i.observacao?` — ${i.observacao}`:''}`}
