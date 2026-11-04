@@ -53,3 +53,29 @@ jobs:
             test-results/
             playwright-report/
           retention-days: 7
+
+  verificar-endereco-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Conferir arquivos públicos da branch de prévia (sem publicar em Pages)
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          const base = 'https://raw.githack.com/eleuterio-coding/teias-de-anansi/preview-hub-visual/';
+          const files = [
+            ['preview.html', 'Visualizar como Mestre'],
+            ['painel.html', 'Teias de Anansi'],
+            ['hub-design-tokens.css', '--hub-bg'],
+            ['hub-components.css', '.hub-ui-card'],
+            ['scripts/hub-ux.js', 'visualPreviewActive']
+          ];
+          for (const [name, expected] of files) {
+            const response = await fetch(new URL(name, base), { headers: { 'User-Agent': 'Teias de Anansi Preview Validation' } });
+            const text = await response.text();
+            if (!response.ok || !text.includes(expected)) {
+              throw new Error(`Falha na prévia ${name}: HTTP ${response.status}; esperado: ${expected}`);
+            }
+            console.log(`Prévia disponível: ${name} (${response.status})`);
+          }
+          JS
