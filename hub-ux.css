@@ -1,4 +1,5 @@
 @import url("./hub-design-tokens.css?v=20261104-design-system-v1");
+@import url("./hub-components.css?v=20261104-components-v1");
 
 /* Fonte unica dos valores --hub-*: hub-design-tokens.css. */
 html{scroll-behavior:smooth;scroll-padding-top:76px}
