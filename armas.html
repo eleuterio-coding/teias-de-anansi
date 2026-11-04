@@ -51,7 +51,7 @@ function propertyBox(x){
  +(x.propriedades||[]).map(prop=>{
    const base=propertyBase(prop),found=PROPERTIES[base],desc=found?.descricao
      ||(norm(base)==='distancia'?'Indica o alcance normal e o alcance máximo em metros, respectivamente.':'Descrição não disponível no catálogo deste livro.');
-   return '<div class="weapon-property-row" id="'+esc(propertyId(prop))+'"><h4>'+H.regra(base,'Propriedade de Arma: '+base)+'</h4><p>'+esc(desc)+'</p></div>';
+   return '<div class="weapon-property-row" id="'+esc(propertyId(prop))+'"><h4>'+H.regra(base,norm(base)==='distancia'?'Weapon Attack':'Propriedade de Arma: '+base)+'</h4><p>'+esc(desc)+'</p></div>';
  }).join('')+'</section>';
 }
 function masteryText(x){
