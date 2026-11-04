@@ -85,7 +85,7 @@ function equipamentoComLinks(v){
  return esc(str);
 }
 function equipLista(text){
- const partes=String(text||'').split(/\s*,\s*|\s+e\s+(?=\d+\s+PO\b)/i).filter(Boolean);
+ const partes=String(text||'').split(/\s*,\s*|\s+e\s+/i).filter(Boolean);
  return '<ul class="equipamento">'+partes.map(v=>'<li>'+equipamentoComLinks(v)+'</li>').join('')+'</ul>';
 }
 function ferramentasComLinks(d){
