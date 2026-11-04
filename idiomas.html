@@ -85,7 +85,7 @@ function render() {
   const itens = IDIOMAS.filter(i => (!termo || texto(i).includes(termo)) && (!filtro.value || i.categoria === filtro.value));
   resultado.textContent = `${itens.length} de ${IDIOMAS.length} idiomas`;
   lista.innerHTML = itens.map(i => `
-    <details class="idioma">
+    <details class="idioma" data-nome="${esc(i.nome)}">
       <summary><strong>${esc(localizarIdioma(i.nome))}</strong></summary>
       <div class="corpo">
         <p><strong>Falantes Típicos:</strong> ${esc(i.falantes_tipicos)}</p>
@@ -96,6 +96,7 @@ function render() {
         </div>
       </div>
     </details>`).join('');
+  const pedido=new URLSearchParams(location.search).get('item');if(pedido){const row=IDIOMAS.find(i=>texto(i)===texto(pedido)||i.nome.toLowerCase()===pedido.toLowerCase()||localizarIdioma(i.nome).toLowerCase()===pedido.toLowerCase());if(row){const el=[...lista.querySelectorAll('.idioma')].find(d=>d.dataset.nome===row.nome);if(el)el.open=true}}
 }
 
 async function iniciar() {
