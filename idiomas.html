@@ -76,7 +76,7 @@ function livrosDaFonte(i) {
  return [...new Set(fonte.split(' · ').map(t=>{
   const nome=t.trim();
   if(/Player[’']s Handbook|Livro do Jogador/i.test(nome))return 'Livro do Jogador · 2024';
-  if(/Basic Rules/i.test(nome))return 'Regras Básicas';
+  if(/Basic Rules/i.test(nome))return '';
   return HubBiblioteca.livro(nome);
  }).filter(v=>v&&!/^(?:Regra da Casa|legado de edições anteriores)/i.test(v)))];
 }
