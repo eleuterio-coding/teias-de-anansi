@@ -308,7 +308,7 @@ function section(title,id,body,form=''){
  return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2>${list}${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`
 }
 function overviewPanel(id,title,content){
- return`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel adventure-panel-card">${id==="adventure-overview-settings"?"":`<header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>`}${content}</section>`
+ return id==="adventure-overview-settings"?`<div id="${esc(id)}" class="adventure-overview-panel">${content}</div>`:`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel adventure-panel-card"><header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>${content}</section>`
 }
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
