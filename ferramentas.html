@@ -30,7 +30,7 @@ function renderDetail(nome){
    +'<p><b>Perícias relacionadas:</b> '+H.periciasHtml(x.pericias)+'</p>'
    +'<p><b>Uso especial:</b> '+H.termosHtml(x.especial||'—')+'</p></section>'
    +(acts?'<section class="box"><h3>Atividades e CDs sugeridos</h3><table class="ativ"><thead><tr><th>Atividade</th><th>CD</th></tr></thead><tbody>'+acts+'</tbody></table></section>':'')
-   +'<div class="meta"><span><b>Fonte:</b> Guia de Xanathar para Todas as Coisas</span></div>';
+   +'<div class="meta"><span><b>Livro:</b> Guia de Xanathar para Todas as Coisas</span></div>';
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),t=document.getElementById('tipo').value;
