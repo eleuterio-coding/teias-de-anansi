@@ -61,11 +61,19 @@ function moedas(v){
  .replace(/\bEP\b/gi,'5 PP').replace(/\bPP\s*\(platinum\b/gi,'PL (platina');
 }
 function medidas(v){
- return moedas(v).replace(/(\d+)(?:\s*½|½)?\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(m,n)=>{
-   const n2=/½/.test(m)?Number(n)+0.5:Number(n);return (Math.round(n2*.45359237*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})+' kg';
- }).replace(/(\d+(?:[,.]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>
-   (Math.round(Number(n.replace(',','.'))*.3*10)/10).toLocaleString('pt-BR',{maximumFractionDigits:1})+' m')
- .replace(/\bVaries\b/gi,'Varia').replace(/\bNone\b/gi,'Nenhum').replace(/\bSee text\b/gi,'Ver descrição');
+ const convert=n=>{
+  const t=String(n).trim().replace(/\s/g,'');
+  const number=/^\d{1,3}(?:\.\d{3})+$/.test(t)?Number(t.replace(/\./g,'')):Number(t.replace(',','.'));
+  return Number.isFinite(number)?number:0;
+ };
+ const fmt=n=>Number(n.toFixed(2)).toLocaleString('pt-BR',{maximumFractionDigits:2});
+ return moedas(v)
+  .replace(/(\d{1,3}(?:[. ]\d{3})+|\d+(?:[,.]\d+)?)(?:\s*½|½)?\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(full,n)=>{
+   const amount=convert(n)+(/½/.test(full)?.5:0);
+   return fmt(amount*.45359237)+' kg';
+  })
+  .replace(/(\d{1,3}(?:[. ]\d{3})+|\d+(?:[,.]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>fmt(convert(n)*.3)+' m')
+  .replace(/\bVaries\b/gi,'Varia').replace(/\bNone\b/gi,'Nenhum').replace(/\bSee text\b/gi,'Ver descrição');
 }
 function regraUrl(original){return 'regras.html?original='+encodeURIComponent(original)}
 function regra(label,original){return '<a class="hub-verbete" href="'+esc(regraUrl(original||label))+'">'+esc(label)+'</a>'}
