@@ -141,6 +141,8 @@ async function configurar(){
   cards.sort((a,b)=>a.dataset.nomePtbr.localeCompare(b.dataset.nomePtbr,'pt-BR',{sensitivity:'base'})
     ||a.dataset.originalName.localeCompare(b.dataset.originalName,'pt-BR'));
   lista.append(...cards);
+  const pedido=new URLSearchParams(location.search).get('item');if(pedido){const alvo=cards.find(c=>norm(c.dataset.nomePtbr)===norm(pedido)||norm(c.dataset.originalName)===norm(pedido));if(alvo)alvo.open=true}
+
   // A substituição de <option> muda a seleção do browser quando o item
   // selecionado é removido temporariamente. Preserve-a antes de reordenar.
   const filtro=document.getElementById('filtro');
