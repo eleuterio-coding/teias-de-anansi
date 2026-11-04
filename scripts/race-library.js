@@ -15,14 +15,43 @@ function searchable(species){return fold([
  species.name,species.source,species.lineageLabel,...nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
  ...arr(species.lineages).flatMap(l=>[l.name,...arr(l.aliases),l.source,...lineageTraits(l).flatMap(t=>[t.name,t.originalName,t.text])])
 ].filter(Boolean).join(' '))}
-function renderTrait(t){return`<article class="trait"><h4>${esc(t.name||t.originalName||'Traço')}</h4><p>${esc(t.text||'')}</p></article>`}
+const medida=v=>String(v??'')
+ .replace(/(\d+(?:[.,]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.3)+' m')
+ .replace(/(\d+(?:[.,]\d+)?)\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.45359237)+' kg');
+function formatNumber(n){return (Math.round(n*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})}
+const traduz=txt=>medida(txt).replace(/\bMedium\b/gi,'Médio').replace(/\bSmall\b/gi,'Pequeno')
+ .replace(/\bLarge\b/gi,'Grande').replace(/\bTiny\b/gi,'Minúsculo')
+ .replace(/\bDarkvision\b/gi,'Visão no Escuro').replace(/\bFlight\b/gi,'Voo')
+ .replace(/\bHumanoid\b/gi,'Humanoide').replace(/\bFey\b/gi,'Fada')
+ .replace(/\bSpeed\b/gi,'Deslocamento').replace(/\bLong Rest\b/gi,'Descanso Longo')
+ .replace(/\bBonus Action\b/gi,'Ação Bônus').replace(/\bSaving Throw\b/gi,'Salvaguarda');
+const livro=orig=>HubBiblioteca.livro(orig||'Não informado');
+function deslocamentoVoo(species){
+ const traits=[...arr(species.traits),...arr(species.lineages).flatMap(l=>arr(l.traits))];
+ const voo=traits.filter(t=>/^(?:Flight|Voo|Heavenly Wings|Asas Celestiais|Draconic Flight|Voo Dracônico)$/i.test(t.originalName||t.name||'')||/\bdeslocamento de voo\b/i.test(t.text||''));
+ if(!voo.length)return'';
+ const terrestre=formatNumber((Number(species.speed)||30)*.3)+' m';
+ const temporario=voo.some(t=>/nível\s+\d+|temporári|até.*minutos|aç[aã]o b[oô]nus/i.test(t.text||''));
+ return 'Deslocamento de Voo: '+terrestre+(temporario?' (quando o traço estiver ativo)':' (conforme traço racial)');
+}
+function renderTrait(t){return'<article class="trait"><h4>'+esc(traduz(t.name||t.originalName||'Traço'))+'</h4><p>'+esc(traduz(t.text||''))+'</p></article>'}
 function renderLineage(lineage,species){
- const legacy=lineage.ruleset==='5e',kind=species.lineageLabel||'Linhagem';
- return`<article class="linhagem ${legacy?'legacy':''}"><div class="linhagem-head"><h4>${esc(kind)}: ${esc(lineage.name)}</h4><div><span class="pill">${esc(statusLabel(lineage))}</span>${lineage.source?`<span class="pill">${esc(lineage.source)}</span>`:''}</div></div>${lineage.replaceBaseTraits?'<p class="mini">Este pacote substitui os traços da raça-base para esta linhagem.</p>':lineage.replaceTraitNames?.length?`<p class="mini">Substitui: ${esc(arr(lineage.replaceTraitNames).join(', '))}.</p>`:''}${lineageTraits(lineage).map(renderTrait).join('')}</article>`
+ const kind=species.lineageLabel||'Linhagem',source=livro(sourceLabel(lineage,species));
+ return'<article class="linhagem"><div class="linhagem-head"><h4>'+esc(traduz(kind))+': '+esc(traduz(lineage.name))+'</h4></div>'+
+ (lineage.replaceBaseTraits?'<p class="mini">Esta escolha substitui os traços da raça-base.</p>':lineage.replaceTraitNames?.length?'<p class="mini">Substitui: '+esc(arr(lineage.replaceTraitNames).map(traduz).join(', '))+'.</p>':'')+
+ lineageTraits(lineage).map(renderTrait).join('')+
+ '<footer class="livro-raca"><strong>Livro:</strong> '+esc(source)+'</footer></article>';
 }
 function renderSpecies(species){
- const lineages=arr(species.lineages),legacy=species.ruleset==='5e';
- return`<details class="especie ${legacy?'legacy':''}" data-id="${esc(species.id)}"><summary><strong>${esc(species.name)}</strong><span class="sub">${esc(statusLabel(species))} · ${esc(arr(species.sizes).join(' / ')||'tamanho conforme fonte')} · ${esc(species.speed||30)} ft${lineages.length?` · ${lineages.length} ${esc(species.lineageLabel||'linhagens')}`:''}</span></summary><div class="corpo"><div class="stats"><div class="stat"><strong>Ruleset</strong>${esc(species.ruleset||'—')}</div><div class="stat"><strong>Tamanho</strong>${esc(arr(species.sizes).join(' / ')||'—')}</div><div class="stat"><strong>Deslocamento</strong>${esc(species.speed||30)} ft</div><div class="stat"><strong>Fonte principal</strong>${esc(species.source||'—')}</div><div class="stat"><strong>Idiomas</strong>${esc(nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)).join(', ')||'—')}</div></div><section class="bloco"><h3>Traços da raça-base</h3>${arr(species.traits).map(renderTrait).join('')||'<p class="muted">Os traços são definidos integralmente pela linhagem escolhida.</p>'}</section>${lineages.length?`<section class="bloco"><h3>${esc(species.lineageLabel||'Linhagens / escolhas')}</h3>${lineages.map(l=>renderLineage(l,species)).join('')}</section>`:''}</div></details>`
+ const lineages=arr(species.lineages),fly=deslocamentoVoo(species),base=livro(species.source);
+ return'<details class="especie" data-id="'+esc(species.id)+'"><summary><strong>'+esc(traduz(species.name))+'</strong></summary><div class="corpo"><div class="stats">'+
+ '<div class="stat"><strong>Tamanho</strong>'+esc(arr(species.sizes).map(traduz).join(' / ')||'—')+'</div>'+
+ '<div class="stat"><strong>Deslocamento</strong>'+formatNumber((Number(species.speed)||30)*.3)+' m</div>'+
+ (fly?'<div class="stat"><strong>Voo</strong>'+esc(fly.replace(/^Deslocamento de Voo: /,''))+'</div>':'')+
+ '<div class="stat"><strong>Idiomas</strong>'+esc(nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)).join(', ')||'—')+'</div></div>'+
+ '<section class="bloco"><h3>Traços da raça-base</h3>'+ (arr(species.traits).map(renderTrait).join('')||'<p class="muted">Os traços são definidos pela linhagem escolhida.</p>')+'</section>'+
+ (lineages.length?'<section class="bloco"><h3>'+esc(traduz(species.lineageLabel||'Linhagens / escolhas'))+'</h3>'+lineages.map(l=>renderLineage(l,species)).join('')+'</section>':'')+
+ '<footer class="livro-raca"><strong>Livro:</strong> '+esc(base)+'</footer></div></details>';
 }
 function buildSources(){
  const sel=$('fonte'),sources=[...new Set(DATA.flatMap(s=>[s.source,...arr(s.lineages).map(l=>l.source)].filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
