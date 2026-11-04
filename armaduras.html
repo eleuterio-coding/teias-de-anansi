@@ -10,7 +10,7 @@ body.hub-library-armors #detalhe.detalhe{min-height:0;padding:18px 20px}
 body.hub-library-armors .armor-heading{display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;margin:0 0 16px}
 body.hub-library-armors .armor-heading h2{margin:0;line-height:1.25}
 body.hub-library-armors .armor-type{font-size:.75rem;font-weight:700;margin:0}
-body.hub-library-armors .armor-stats{display:grid;grid-template-columns:minmax(210px,1.55fr) repeat(2,minmax(90px,1fr));gap:10px;margin:0}
+body.hub-library-armors .armor-stats{display:grid;grid-template-columns:minmax(180px,1.55fr) repeat(3,minmax(80px,1fr));gap:10px;margin:0}
 body.hub-library-armors .armor-stat{min-width:0;padding:13px 15px;display:flex;flex-direction:column;justify-content:center;gap:5px}
 body.hub-library-armors .armor-stat b,body.hub-library-armors .armor-craft-grid b{font-size:.76rem;color:var(--hub-muted,#8290a3);line-height:1.35}
 body.hub-library-armors .armor-stat span{font-size:1rem;line-height:1.4;overflow-wrap:normal}
@@ -53,16 +53,28 @@ body.hub-library-armors .lista .item strong,body.hub-library-armors .lista .item
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const norm=v=>String(v??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();let ALL=[],CURRENT='',DATA=null;
 function renderDetail(id){
  CURRENT=id;renderList();const x=ALL.find(i=>i.id===id);if(!x)return;
- const stat=(label,value,primary=false)=>`<div class="stat armor-stat${primary?' armor-stat-primary':''}"><b>${label}</b><span>${esc(value)}</span></div>`;
- const condicoes=[
-   x.forca_minima?`<span class="armor-condition"><b>Força mínima:</b> ${esc('For '+x.forca_minima)}</span>`:'',
-   x.furtividade&&x.furtividade!=='—'?`<span class="armor-condition"><b>Furtividade:</b> ${esc(x.furtividade)}</span>`:''
- ].filter(Boolean);
- const requisitos=condicoes.length?`<div class="armor-conditions" aria-label="Requisitos e propriedades">${condicoes.join('')}</div>`:'';
+ const H=HubBiblioteca;
+ const stat=(label,value,primary=false)=>'<div class="stat armor-stat'+(primary?' armor-stat-primary':'')+'"><b>'+esc(label)+'</b><span>'+value+'</span></div>';
+ const times={Leve:['1 minuto','1 minuto'],Média:['5 minutos','1 minuto'],Pesada:['10 minutos','5 minutos'],Escudo:['1 ação','1 ação']};
+ const tempo=times[x.categoria]||['Consultar regra','Consultar regra'];
+ const extras=[
+   x.forca_minima?'<span class="armor-condition"><b>Força mínima:</b> '+esc(x.forca_minima)+'</span>':'',
+   x.furtividade&&x.furtividade!=='—'?'<span class="armor-condition"><b>Furtividade:</b> '+(x.furtividade==='Desvantagem'?H.regra('Desvantagem','Disadvantage'):esc(x.furtividade))+'</span>':''
+ ].filter(Boolean).join('');
  const f=x.fabricacao;
- const craft=f?`<section class="armor-craft" aria-label="Fabricação"><h3>Fabricação</h3><div class="armor-craft-grid"><div><b>Materiais</b><span>${esc(f.custo_materiais)}</span></div><div><b>Tempo</b><span>${esc(f.tempo_horas)} h</span></div><div><b>CD</b><span>${esc(f.cd)}</span></div>${f.ferramenta?`<div class="armor-craft-tool"><b>Ferramenta</b><span>${esc(f.ferramenta)}</span></div>`:''}</div></section>`:'';
- const descricao=x.descricao_pt?`<section class="box armor-description" aria-label="Efeito e descrição"><h3>Efeito e descrição</h3><p class="armor-description-status">Descrição em português — tradução do texto fornecido</p><p class="armor-description-copy" lang="pt-BR">${esc(x.descricao_pt)}</p>${x.descricao_original?`<details class="armor-original-collapse"><summary><i lang="en">${esc(x.nome_original||x.nome)}</i> — texto original</summary><div class="armor-original-copy" lang="en"><i>${esc(x.descricao_original)}</i></div></details>`:''}</section>`:'';
- document.getElementById('detalhe').innerHTML=`<div class="armor-heading"><h2>${esc(x.nome)}</h2><span class="badge armor-type">${esc(x.categoria)}</span></div><div class="stats armor-stats">${stat('CA',x.ca,true)}${stat('Custo',x.custo)}${stat('Peso',x.peso)}</div>${requisitos}${descricao}${craft}<p class="armor-source"><b>Fonte:</b> ${esc(x.fonte)}</p>`;
+ const toolLink=v=>{
+   let html=esc(v);
+   for(const nome of ['Ferramentas de Coureiro','Ferramentas de Tecelão','Ferramentas de Ferreiro','Ferramentas de Carpinteiro','Ferramentas de Entalhador'])
+     html=html.replaceAll(nome,H.item(nome,'ferramentas.html?item='+encodeURIComponent(nome)));
+   return html;
+ };
+ const craft=f?'<section class="armor-craft"><h3>Fabricação</h3><div class="armor-craft-grid"><div><b>Materiais</b><span>'+H.moedaHtml(f.custo_materiais)+'</span></div><div><b>Tempo</b><span>'+esc(f.tempo_horas)+' h</span></div><div><b>CD</b><span>'+esc(f.cd)+'</span></div>'+(f.ferramenta?'<div class="armor-craft-tool"><b>Ferramenta</b><span>'+toolLink(f.ferramenta)+'</span></div>':'')+'</div></section>':'';
+ const descricao=x.descricao_pt?'<section class="box armor-description"><h3>Efeito e descrição</h3><p class="armor-description-copy" lang="pt-BR">'+H.termosHtml(x.descricao_pt)+'</p></section>':'';
+ document.getElementById('detalhe').innerHTML='<div class="armor-heading"><h2>'+esc(x.nome)+'</h2></div><div class="stats armor-stats">'
+   +stat('CA',esc(x.ca),true)+stat('Custo',H.moedaHtml(x.custo))+stat('Peso',esc(H.medidas(x.peso)))+stat('Tipo',esc(x.categoria))
+   +'</div><div class="armor-conditions">'+extras+'<span class="armor-condition"><b>Vestir:</b> '+esc(tempo[0])+'</span><span class="armor-condition"><b>Despir:</b> '+esc(tempo[1])+'</span> '
+   +H.regra('Consultar a regra de vestir e despir','Donning and Doffing Armor')+'</div>'+descricao+craft
+   +'<p class="armor-source"><b>Livro:</b> '+esc(H.livro(x.fonte))+'</p>';
 }
 function renderList(){
  const q=norm(document.getElementById('q').value),cat=document.getElementById('categoria').value;
