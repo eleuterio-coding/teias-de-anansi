@@ -15,11 +15,19 @@ function searchable(species){return fold([
  species.name,species.source,species.lineageLabel,...nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
  ...arr(species.lineages).flatMap(l=>[l.name,...arr(l.aliases),l.source,...lineageTraits(l).flatMap(t=>[t.name,t.originalName,t.text])])
 ].filter(Boolean).join(' '))}
+let GLOSSARIO=new Map(),GLOSSARIO_RX=null;
+function carregarGlossario(termos){
+ const entries=Object.entries(termos||{}).filter(([original,traducao])=>original&&typeof traducao==='string'&&traducao);
+ GLOSSARIO=new Map(entries.map(([original,traducao])=>[original.toLocaleLowerCase('pt-BR'),traducao]));
+ const escaped=entries.sort((a,b)=>b[0].length-a[0].length).map(([key])=>key.replace(/[.*+?^$()|[\]{}]/g,'\\const medida=v=>String(v??'')'));
+ GLOSSARIO_RX=escaped.length?new RegExp('(?<![\\p{L}\\p{N}])('+escaped.join('|')+')(?![\\p{L}\\p{N}])','giu'):null;
+}
+function traduzirTermos(v){return GLOSSARIO_RX?String(v||'').replace(GLOSSARIO_RX,t=>GLOSSARIO.get(t.toLocaleLowerCase('pt-BR'))||t):String(v||'')}
 const medida=v=>String(v??'')
  .replace(/(\d+(?:[.,]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.3)+' m')
  .replace(/(\d+(?:[.,]\d+)?)\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.45359237)+' kg');
 function formatNumber(n){return (Math.round(n*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})}
-const traduz=txt=>medida(txt).replace(/\bMedium\b/gi,'Médio').replace(/\bSmall\b/gi,'Pequeno')
+const traduz=txt=>traduzirTermos(medida(txt)).replace(/\bMedium\b/gi,'Médio').replace(/\bSmall\b/gi,'Pequeno')
  .replace(/\bLarge\b/gi,'Grande').replace(/\bTiny\b/gi,'Minúsculo')
  .replace(/\bDarkvision\b/gi,'Visão no Escuro').replace(/\bFlight\b/gi,'Voo')
  .replace(/\bHumanoid\b/gi,'Humanoide').replace(/\bFey\b/gi,'Fada')
@@ -70,11 +78,12 @@ function render(){
 
 async function init(){
  state.c=blank();
- const[g,loc]=await Promise.all([
+ const[g,loc,glossario]=await Promise.all([
   json('dados/localizacao-ptbr-global.json').catch(()=>({})),
-  json('dados/localizacao-ptbr-especies.json').catch(()=>({species:{},lineages:{},traits:{}}))
+  json('dados/localizacao-ptbr-especies.json').catch(()=>({species:{},lineages:{},traits:{}})),
+  json('dados/localizacao-ptbr-termos-mecanicos.json').catch(()=>({termos:{}}))
  ]);
- state.G=g;state.LOCSP=loc;DATA=await loadSpecies();state.catalogs.species=DATA;
+ state.G=g;state.LOCSP=loc;carregarGlossario(glossario.termos);DATA=await loadSpecies();state.catalogs.species=DATA;
  const lineages=DATA.reduce((n,s)=>n+arr(s.lineages).length,0),playable=DATA.length+lineages;
  $('resumo').textContent=`${DATA.length} raças-base · ${lineages} linhagens, legados e ancestralidades · ${playable} opções jogáveis.`;
  buildSources();['busca','ruleset','fonte'].forEach(id=>$(id).addEventListener(id==='busca'?'input':'change',render));render()
