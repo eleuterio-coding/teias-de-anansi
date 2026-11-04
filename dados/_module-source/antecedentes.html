@@ -19,7 +19,8 @@
     .bloco{border:1px solid #8884;border-radius:8px;padding:10px 12px}.bloco h3{margin:0 0 6px;font-size:1rem}.bloco p{margin:5px 0}.equipamento{padding-left:20px;margin:6px 0 0}.equipamento li{margin:4px 0}
     .meta{border-top:1px solid #8883;margin-top:12px;padding-top:10px;font-size:.9rem;display:flex;flex-wrap:wrap;gap:8px 18px}.erro{padding:16px;border:1px solid #b44;border-radius:10px}
     @media(max-width:750px){body{padding:16px}.grade,.controles{grid-template-columns:1fr}.antecedente summary{display:block}.categoria{display:block;margin-top:5px}}
-  </style>
+   .bloco a.hub-verbete{text-decoration:none}.bloco a.hub-verbete:hover{text-decoration:underline}
+</style>
 <script src="scripts/biblioteca-padroes.js?v=20261103-1"></script></head>
 <body>
 <p><a href="bibliotecas.html?v=20261031-phb-name1">← Bibliotecas</a></p>
@@ -73,34 +74,75 @@ const ITENS_LINKAVEIS={
  'odre':['equipamentos-aventura.html','Cantil'],'garrafa de vidro':['equipamentos-aventura.html','Garrafa de Vidro'],
  'balde':['equipamentos-aventura.html','Balde'],'barbante':['equipamentos-aventura.html','Barbante']
 };
+
+Object.assign(ITENS_LINKAVEIS,{
+ 'clava grande':['armas.html','Clava Grande'],'grande clava':['armas.html','Clava Grande'],
+ 'pergaminho':['equipamentos-aventura.html','Pergaminho'],'pergaminhos':['equipamentos-aventura.html','Pergaminho'],
+ 'mapa':['equipamentos-aventura.html','Mapa'],'mapas':['equipamentos-aventura.html','Mapa'],
+ 'ferramentas de artesão':['ferramentas.html','Ferramentas de Artesão'],
+ 'instrumento musical':['ferramentas.html','Instrumento Musical'],
+ 'símbolo sagrado':['equipamentos-aventura.html','Símbolo Sagrado'],
+ 'pé de cabra':['equipamentos-aventura.html','Pé de Cabra'],
+ 'lamparina':['equipamentos-aventura.html','Lamparina'],
+ 'livro':['equipamentos-aventura.html','Livro'],'livros':['equipamentos-aventura.html','Livro'],
+ 'roupas comuns':['equipamentos-aventura.html','Roupas Comuns'],'roupa comum':['equipamentos-aventura.html','Roupas Comuns'],
+ 'cravos de ferro':['equipamentos-aventura.html','Cravos de Ferro'],
+ 'estrepes':['equipamentos-aventura.html','Estrepes'],
+ 'panela de ferro':['equipamentos-aventura.html','Panela de Ferro'],
+ 'conjunto de jogos':['ferramentas.html','Conjunto de Jogos'],
+ 'cobertor':['equipamentos-aventura.html','Cobertor'],
+ 'sino':['equipamentos-aventura.html','Sino'],
+ 'roldana':['equipamentos-aventura.html','Roldana'],
+ 'rede':['equipamentos-aventura.html','Rede'],
+ 'vara':['equipamentos-aventura.html','Vara'],
+ 'talha':['equipamentos-aventura.html','Talha'],
+ 'corrente':['equipamentos-aventura.html','Corrente'],
+ 'foco arcano':['equipamentos-aventura.html','Foco Arcano'],
+ 'flecha':['equipamentos-aventura.html','Flecha'],
+ 'flechas':['equipamentos-aventura.html','Flecha'],
+ 'pena de escrita':['equipamentos-aventura.html','Pena de Escrita'],
+ 'penas de escrita':['equipamentos-aventura.html','Pena de Escrita']
+});
+function padronizarEquipamento(v){
+ return String(v||'').replace(/Instrumento musical/gi,'Instrumento Musical')
+  .replace(/\bConjunto de Jogos?(?:\s+escolhido)?\b/gi,'Conjunto de Jogos — à escolha')
+  .replace(/\b(trajes?|vestes?)\b/gi,m=>/s$/i.test(m)?'Roupas':'Roupa');
+}
+const TERMOS_VERBETES=Object.keys(ITENS_LINKAVEIS).sort((a,b)=>b.length-a.length);
+const VERBETE_RX=new RegExp('(?<![\\p{L}\\p{N}])('+TERMOS_VERBETES.map(t=>t.replace(/[.*+?^$()|[\]{}]/g,'\\$&')).join('|')+')(?![\\p{L}\\p{N}])','giu');
 function equipamentoComLinks(v){
- const str=String(v||'');
- if(/\b(PL|PO|PP|PC)\b/.test(str))return H.moedaHtml(str);
- const terms=Object.keys(ITENS_LINKAVEIS).sort((a,b)=>b.length-a.length);
- for(const term of terms){
-  const pos=H.normalize(str).indexOf(H.normalize(term));if(pos<0)continue;
-  const [page,name]=ITENS_LINKAVEIS[term];
-  return esc(str.slice(0,pos))+H.item(str.slice(pos,pos+term.length),page+'?item='+encodeURIComponent(name))+esc(str.slice(pos+term.length));
+ const str=padronizarEquipamento(v),bloquearLivro=/Livro\s*[—–-]\s*orações/i.test(str);
+ let resultado='',offset=0;
+ VERBETE_RX.lastIndex=0;
+ for(const match of str.matchAll(VERBETE_RX)){
+  const inicio=match.index,termo=match[0],info=ITENS_LINKAVEIS[termo.toLocaleLowerCase('pt-BR')];
+  resultado+=esc(str.slice(offset,inicio));
+  resultado+=bloquearLivro&&/^livro$/i.test(termo)?esc(termo):H.item(termo,info[0]+'?item='+encodeURIComponent(info[1]));
+  offset=inicio+termo.length;
  }
- return esc(str);
+ resultado+=esc(str.slice(offset));
+ return resultado.replace(/(?<![\p{L}\p{N}])(PL|PO|PP|PC)(?![\p{L}\p{N}])/g,v=>H.item(v,'comercio-e-despesas.html#moedas'));
 }
 function equipLista(text){
  const partes=String(text||'').split(/\s*,\s*|\s+e\s+/i).filter(Boolean);
  return '<ul class="equipamento">'+partes.map(v=>'<li>'+equipamentoComLinks(v)+'</li>').join('')+'</ul>';
 }
 function ferramentasComLinks(d){
- const v=ferramentaTexto(d);
+ const v=padronizarEquipamento(ferramentaTexto(d));
+ if(v==='—')return'—';
  return v.split(/\s*;\s*|\s*,\s*|\s+\bou\b\s+/i).map(nome=>{
- const n=nome.trim();return n==='—'?'—':(/escolha|qualquer|genéric|artesão/i.test(n)?esc(n):H.item(n,H.ferramentaUrl(n)));
+  const n=nome.trim();
+  if(/ferramentas de artesão|instrumento musical|conjunto de jogos/i.test(n))return equipamentoComLinks(n);
+  return n==='—'?'—':(/escolha|qualquer|genéric/i.test(n)?esc(n):H.item(n,H.ferramentaUrl(n)));
  }).join(', ');
 }
 function itemTexto(i){if(i.nome==='PO')return`${i.quantidade} PO`;if(i.unidade)return`${i.nome} (${i.quantidade} ${i.unidade})${i.observacao?` — ${i.observacao}`:''}`;const q=i.quantidade>1?`${i.quantidade}× `:'';return`${q}${i.nome}${i.observacao?` — ${i.observacao}`:''}`}
 function blocoEquipamento(d){const op=d.equipamento_inicial?.opcoes||[];return op.map(o=>`<div class="bloco"><h3>Equipamento${op.length>1?` — Opção ${esc(o.id)}`:''}</h3>${o.texto?equipLista(o.texto):`<ul class="equipamento">${(o.itens||[]).map(i=>`<li>${equipamentoComLinks(itemTexto(i))}</li>`).join('')}</ul>`}</div>`).join('')}
-function blocos55(d){const t=d.talento_origem||{};return`<div class="grade"><div class="bloco"><h3>Atributos Associados</h3><p>${(d.atributos_elegiveis||[]).map(nome=>H.regra(nome,REGRAS_ATRIBUTOS[nome]||"Ability Score and Modifier")).join(", ")}</p><p><strong>Aumento de Atributos (Regra da Casa):</strong> +2 em um dos atributos associados e +1 em outro, ou +1 em cada um dos três; máximo 20. ${H.item("Link",H.regraUrl("Ability Score Improvement (House Rule)"))}</p></div><div class="bloco"><h3>Talento de Origem</h3><p>${t.href?`<a href="${esc(t.href)}">${esc(talentoTexto(t))}</a>`:esc(talentoTexto(t))}</p>${t.descricao?`<p>${esc(t.descricao)}</p>`:''}</div><div class="bloco"><h3>Proficiências em Perícias</h3><p>${H.periciasHtml((d.pericias||[]).join("; "))}</p></div><div class="bloco"><h3>Proficiência em ferramenta</h3><p>${ferramentasComLinks(d)}</p></div></div>`}
+function blocos55(d){const t=d.talento_origem||{};return`<div class="grade"><div class="bloco"><h3>Atributos Associados</h3><p>${(d.atributos_elegiveis||[]).map(esc).join(", ")}</p><p><strong>${H.item('Aumento de Atributos (Regra da Casa)',H.regraUrl('Ability Score Improvement (House Rule)'))}:</strong> +2 em um dos atributos associados e +1 em outro, ou +1 em cada um dos três; máximo 20.</p></div><div class="bloco"><h3>Talento de Origem</h3><p>${t.href?`<a href="${esc(t.href)}">${esc(talentoTexto(t))}</a>`:esc(talentoTexto(t))}</p>${t.descricao?`<p>${esc(t.descricao)}</p>`:''}</div><div class="bloco"><h3>Proficiências em Perícias</h3><p>${H.periciasHtml((d.pericias||[]).join("; "))}</p></div><div class="bloco"><h3>Proficiência em ferramenta</h3><p>${ferramentasComLinks(d)}</p></div></div>`}
 function blocos5e(d){const c=d.caracteristica;return`<div class="grade"><div class="bloco"><h3>Proficiências em Perícias</h3><p>${H.periciasHtml((d.pericias||[]).join("; "))}</p></div><div class="bloco"><h3>Ferramentas</h3><p>${ferramentasComLinks(d)}</p></div>${d.idiomas?.length?`<div class="bloco"><h3>Idiomas</h3><p>${esc(d.idiomas.join(', '))}</p></div>`:''}${c?`<div class="bloco"><h3>Característica — ${esc(c.nome)}</h3><p>${esc(c.descricao)}</p></div>`:''}</div>${d.evento_definidor?`<div class="bloco"><h3>Evento Definidor</h3><p>${esc(d.evento_definidor.descricao)}</p></div>`:''}`}
 function expandirPacote(pacote){const f=pacote.fonte||{};return(pacote.items||[]).map(r=>{const ferramenta=r.ferramenta?{ferramentas:[r.ferramenta]}:{ferramentas:[],ferramenta_escolha:{quantidade:1,categoria:r.ferramenta_escolha,opcoes_abertas:[]}};const d={modelo_de_antecedente:'5.5e',atributos_elegiveis:r.atributos||[],talento_origem:{nome:r.talento,href:'talentos.html',...(r.talento_escolha?{escolha_fixa:escolhaNome(r.talento_escolha)}:{})},pericias:r.pericias||[],...ferramenta,equipamento_inicial:{opcoes:[{id:'A',texto:r.equipamento},{id:'B',texto:'50 PO'}]}};const nomeExibicao=r.pt||r.nome,tn=talentoNome(r.talento),te=r.talento_escolha?` (${escolhaNome(r.talento_escolha)})`:'';const textoIntegral=`Atributos: ${(r.atributos||[]).join(', ')}. Talento: ${tn}${te}. Perícias: ${(r.pericias||[]).join(' e ')}. Ferramenta: ${r.ferramenta||r.ferramenta_escolha||'—'}. Equipamento: Opção A — ${r.equipamento}; Opção B — 50 PO.`;return{id:`antecedentes:pdf:${slug(r.nome)}`,nome:nomeExibicao,nome_original:r.nome,aliases:[],slug:slug(r.nome),classificacao:{modulo:'Antecedentes',subtipo:'antecedente',categorias:['Antecedente'],setting:f.setting||'Geral',status:'ativo',natureza:f.natureza||'Oficial'},conteudo:{descricao:r.descricao||'',texto_integral:textoIntegral},mecanica:{dados_especificos:d},fonte:{titulo:f.titulo||r.fonte_id,ano:f.ano,ruleset:'5.5e'},compatibilidade:{ruleset:'5.5e',revisao_core:'2024'},controle:{completo:true,status_completude:'publicado'}}})}
 function rotuloFonte(x){const titulo=x.fonte?.titulo||'';if(/Basic Rules/i.test(titulo))return 'Regras Básicas';if(/System Reference Document/i.test(titulo))return 'Documento de Referência do Sistema';return H.livro(titulo||'Livro do Jogador')}
-function render(){const termo=semAcento(busca.value.trim());const filtrados=ITENS.filter(x=>{const d=x.mecanica?.dados_especificos||{},texto=[x.nome,x.nome_original,...(x.aliases||[]),x.conteudo?.descricao,...(d.atributos_elegiveis||[]),...(d.pericias||[]),ferramentaTexto(d),talentoTexto(d.talento_origem),d.caracteristica?.nome,d.caracteristica?.descricao,x.fonte?.titulo,rotuloFonte(x),x.classificacao?.natureza].join(' '),ruleset=x.compatibilidade?.ruleset||x.fonte?.ruleset||d.modelo_de_antecedente;return(!termo||semAcento(texto).includes(termo))&&(!edicao.value||rotuloFonte(x)===edicao.value)});resultado.textContent='';lista.innerHTML=filtrados.map(x=>{const d=x.mecanica.dados_especificos,ruleset=x.compatibilidade?.ruleset||x.fonte?.ruleset||d.modelo_de_antecedente,subtipo=x.classificacao?.subtipo==='variante'&&x.slug!=='espiao'?' · Variante':'',fonte=rotuloFonte(x);return`<details class="antecedente" id="${esc(x.slug)}"><summary><strong>${esc(x.nome)}</strong><span class="categoria">${esc(fonte)}${esc(subtipo)}</span></summary><div class="corpo"><p>${esc(x.conteudo.descricao)}</p>${ruleset==='5.5e'?blocos55(d):blocos5e(d)}<div class="grade">${blocoEquipamento(d)}</div><div class="meta"><span><strong>Livro:</strong> ${esc(fonte)}</span></div></div></details>`}).join('')||'<div class="nota">Nenhum antecedente corresponde aos filtros.</div>'}
+function render(){const termo=semAcento(busca.value.trim());const filtrados=ITENS.filter(x=>{const d=x.mecanica?.dados_especificos||{},texto=[x.nome,x.nome_original,...(x.aliases||[]),x.conteudo?.descricao,...(d.atributos_elegiveis||[]),...(d.pericias||[]),ferramentaTexto(d),talentoTexto(d.talento_origem),d.caracteristica?.nome,d.caracteristica?.descricao,x.fonte?.titulo,rotuloFonte(x),x.classificacao?.natureza].join(' '),ruleset=x.compatibilidade?.ruleset||x.fonte?.ruleset||d.modelo_de_antecedente;return(!termo||semAcento(texto).includes(termo))&&(!edicao.value||rotuloFonte(x)===edicao.value)});resultado.textContent='';lista.innerHTML=filtrados.map(x=>{const d=x.mecanica.dados_especificos,ruleset=x.compatibilidade?.ruleset||x.fonte?.ruleset||d.modelo_de_antecedente,subtipo=x.classificacao?.subtipo==='variante'&&x.slug!=='espiao'?' · Variante':'',fonte=rotuloFonte(x);return`<details class="antecedente" id="${esc(x.slug)}"><summary><strong>${esc(x.nome)}</strong></summary><div class="corpo"><p>${esc(x.conteudo.descricao)}</p>${ruleset==='5.5e'?blocos55(d):blocos5e(d)}<div class="grade">${blocoEquipamento(d)}</div><div class="meta"><span><strong>Livro:</strong> ${esc(/herói do povo/i.test(x.nome)?"Livro do Jogador · 2024":fonte)}</span></div></div></details>`}).join('')||'<div class="nota">Nenhum antecedente corresponde aos filtros.</div>'}
 const V='20261031-antecedentes-fonte-contagem2';const ler=(url,rotulo)=>fetch(`${url}?v=${V}`,{cache:'default'}).then(r=>{if(!r.ok)throw new Error(`${rotulo}: HTTP ${r.status}`);return r.json()});
 Promise.all([ler('dados/localizacao-ptbr-talentos.json','Localização de talentos'),ler('dados/antecedentes-srd-5.2.1.json','SRD'),ler('dados/antecedentes-abertos-adicionais.json','Adicionais'),ler('dados/antecedentes-pdf-phb-2024.json','Player’s Handbook'),ler('dados/antecedentes-pdf-forge-2025.json','Forge 2025'),ler('dados/antecedentes-pdf-quickstone-2024.json','Quickstone 2024'),ler('dados/antecedentes-pdf-heroes-2025.json','Heroes of Faerûn 2025')]).then(([loc,srd,adicionais,phb,forge,quickstone,heroes])=>{LOC_TAL=loc;const pacotes=[[srd,4,'SRD'],[adicionais,5,'Adicionais'],[phb,11,'Player’s Handbook'],[forge,3,'Forge 2025'],[quickstone,2,'Quickstone 2024'],[heroes,18,'Heroes 2025']];for(const[p,q,n]of pacotes)if(!p?.controle?.validado||p?.controle?.quantidade!==q||!Array.isArray(p.items)||p.items.length!==q)throw new Error(`Pacote ${n} não passou na validação de integridade.`);const importados=[phb,forge,quickstone,heroes].flatMap(expandirPacote);ITENS=[...srd.items,...adicionais.items,...importados];const chaves=new Set();for(const x of ITENS){const chave=semAcento(x.nome_original||x.nome);if(chaves.has(chave))throw new Error(`Duplicidade detectada: ${x.nome_original||x.nome}.`);chaves.add(chave);if(!x?.controle?.completo||x?.controle?.status_completude!=='publicado')throw new Error(`Item incompleto: ${x.nome}.`)}if(ITENS.length!==43)throw new Error(`Catálogo deveria ter 43 itens, mas carregou ${ITENS.length}.`);ITENS.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));edicao.innerHTML='<option value="">Todos os livros</option>'+[...new Set(ITENS.map(rotuloFonte))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');busca.addEventListener('input',render);edicao.addEventListener('change',render);render()}).catch(err=>{resultado.textContent='Falha ao carregar os antecedentes.';lista.innerHTML=`<div class="erro"><strong>Conteúdo indisponível:</strong> ${esc(err.message)}</div>`});
 </script>
