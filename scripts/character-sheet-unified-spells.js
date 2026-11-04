@@ -12,7 +12,7 @@ async function load(){
   if(!Array.isArray(d.itens)||d.itens.length!==581)throw new Error('Catálogo de magias incompleto');
   state.catalogs.spells=d.itens.map(x=>{
    const c=String(x.componentes||'');
-   return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\\s*\\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,castingTime:x.tempo_conjuracao,range:x.alcance,components:{v:/\\bV\\b/.test(c),s:/\\bS\\b/.test(c),m:/\\bM\\b/.test(c),text:c},duration:x.duracao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',attackSave:x.ataque_salvaguarda,damage:x.dano,full:true,concentrationExpanded:x.concentracao_expandida};
+   return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\s*\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,castingTime:x.tempo_conjuracao,range:x.alcance,components:{v:/\bV\b/.test(c),s:/\bS\b/.test(c),m:/\bM\b/.test(c),text:c},duration:x.duracao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',attackSave:x.ataque_salvaguarda,damage:x.dano,full:true,concentrationExpanded:x.concentracao_expandida};
   }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
   loaded=true;
   document.dispatchEvent(new CustomEvent('hub-rpg:sheet-spells-ready'));
