@@ -71,7 +71,7 @@ function renderDetail(id){
  const props=(x.propriedades||[]).map(v=>H.item(v,'#'+propertyId(v))).join(', ')||'—';
  const maestria=x.maestria?H.item(x.maestria,'#maestria-da-arma'):'—';
  document.getElementById('detalhe').innerHTML='<h2>'+esc(x.nome)+'</h2><div class="stats">'
-   +'<div class="stat"><b>Dano</b><span>'+esc(dano)+' '+H.regra(tipo,'Damage Types')+'</span></div>'
+   +'<div class="stat"><b>Dano</b><span>'+esc(dano)+' '+H.regra(tipo,({contundente:'Damage Type: Bludgeoning',perfurante:'Damage Type: Piercing',cortante:'Damage Type: Slashing'})[tipo]||'Damage Types')+'</span></div>'
    +'<div class="stat"><b>Propriedades</b><span>'+props+'</span></div>'
    +'<div class="stat"><b>Maestria</b><span>'+maestria+'</span></div>'
    +'<div class="stat"><b>Peso</b><span>'+esc(H.medidas(x.peso))+'</span></div>'
