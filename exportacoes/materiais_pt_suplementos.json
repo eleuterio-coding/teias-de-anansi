@@ -1,0 +1,142 @@
+{
+  "xge": {
+    "Abi-Dalzim's Horrid Wilting": "um pedaço de esponja",
+    "Aganazzar's Scorcher": "uma escama de dragão vermelho",
+    "Beast Bond": "um pouco de pelo envolto em tecido",
+    "Catnap": "uma pitada de areia",
+    "Ceremony": "prata em pó no valor de 25 peças de ouro, consumida pela magia",
+    "Create Homunculus": "argila, cinzas e raiz de mandrágora, todos consumidos, e uma adaga incrustada de joias no valor mínimo de 1.000 peças de ouro",
+    "Dawn": "um pingente com símbolo de sol radiante no valor mínimo de 100 peças de ouro",
+    "Dragon's Breath": "uma pimenta ardida",
+    "Druid Grove": "visco colhido com foice dourada sob a luz de uma lua cheia, consumido pela magia",
+    "Dust Devil": "uma pitada de poeira",
+    "Erupting Earth": "um pedaço de obsidiana",
+    "Ice Knife": "uma gota de água ou pedaço de gelo",
+    "Infernal Calling": "um rubi no valor mínimo de 999 peças de ouro",
+    "Infestation": "uma pulga viva",
+    "Invulnerability": "um pequeno pedaço de adamantina no valor mínimo de 500 peças de ouro, consumido pela magia",
+    "Maddening Darkness": "uma gota de piche misturada com uma gota de mercúrio",
+    "Maelstrom": "papel ou folha vegetal em forma de funil",
+    "Mass Polymorph": "um casulo de lagarta",
+    "Maximilian's Earthen Grasp": "uma pequena mão esculpida em argila",
+    "Melf's Minute Meteors": "salitre, enxofre e resina de pinho moldados numa conta",
+    "Mighty Fortress": "um diamante no valor mínimo de 500 peças de ouro, consumido pela magia",
+    "Negative Energy Flood": "um osso quebrado e um quadrado de seda negra",
+    "Shadow of Moil": "um olho de Morto-Vivo encerrado numa gema no valor mínimo de 150 peças de ouro",
+    "Snare": "7,5 m de corda, consumidos pela magia",
+    "Snilloc's Snowball Swarm": "um pedaço de gelo ou lasca de pedra branca",
+    "Soul Cage": "uma pequena gaiola de prata no valor de 100 peças de ouro",
+    "Steel Wind Strike": "uma arma corpo a corpo no valor mínimo de uma peça de prata",
+    "Summon Greater Demon": "um frasco de sangue de Humanoide morto nas últimas 24 horas",
+    "Summon Lesser Demons": "um frasco de sangue de Humanoide morto nas últimas 24 horas",
+    "Temple of the Gods": "um símbolo sagrado no valor mínimo de 5 peças de ouro",
+    "Tenser's Transformation": "alguns pelos de touro",
+    "Tidal Wave": "uma gota de água",
+    "Transmute Rock": "argila e água",
+    "Vitriolic Sphere": "uma gota de bile de lesma gigante",
+    "Wall of Light": "um espelho de mão",
+    "Wall of Sand": "um punhado de areia",
+    "Wall of Water": "uma gota de água",
+    "Watery Sphere": "uma gota de água",
+    "Whirlwind": "um pedaço de palha",
+    "Word of Radiance": "um símbolo sagrado"
+  },
+  "tce": {
+    "Booming Blade": "uma arma corpo a corpo no valor mínimo de uma peça de prata",
+    "Dream of the Blue Veil": "um item mágico ou criatura voluntária originária do mundo de destino",
+    "Green-Flame Blade": "uma arma corpo a corpo no valor mínimo de uma peça de prata",
+    "Summon Aberration": "um tentáculo em conserva e um olho num frasco com incrustações de platina no valor mínimo de 400 peças de ouro",
+    "Summon Beast": "uma pena, um tufo de pelo e uma cauda de peixe numa bolota dourada no valor mínimo de 200 peças de ouro",
+    "Summon Celestial": "um relicário dourado no valor mínimo de 500 peças de ouro",
+    "Summon Construct": "um cofre ornamentado de pedra e metal no valor mínimo de 400 peças de ouro",
+    "Summon Elemental": "ar, pedrinha, cinza e água num frasco incrustado de ouro no valor mínimo de 400 peças de ouro",
+    "Summon Fey": "uma flor dourada no valor mínimo de 300 peças de ouro",
+    "Summon Fiend": "sangue humanoide dentro de frasco de rubi no valor mínimo de 600 peças de ouro",
+    "Summon Shadowspawn": "lágrimas dentro de uma gema no valor mínimo de 300 peças de ouro",
+    "Summon Undead": "um crânio dourado no valor mínimo de 300 peças de ouro",
+    "Tasha's Caustic Brew": "um pedaço de comida podre",
+    "Tasha's Otherworldly Guise": "um objeto com símbolo dos Planos Exteriores gravado, no valor mínimo de 500 peças de ouro"
+  },
+  "frhof": {
+    "Alustriel's Mooncloak": "uma pedra-da-lua no valor mínimo de 50 peças de ouro",
+    "Conjure Constructs": "uma engrenagem de latão",
+    "Death Armor": "uma ônix no valor mínimo de 50 peças de ouro, consumida pela magia",
+    "Deryan's Helpful Homunculi": "gemas em pó no valor mínimo de 100 peças de ouro, consumidas pela magia, e um conjunto de Ferramentas de Artesão com o qual você tenha proficiência",
+    "Doomtide": "fuligem e uma enguia seca",
+    "Elminster's Effulgent Spheres": "uma opala no valor mínimo de 1.000 peças de ouro",
+    "Laeral's Silver Lance": "um alfinete de prata no valor mínimo de 250 peças de ouro",
+    "Songal's Elemental Suffusion": "uma pérola no valor mínimo de 100 peças de ouro",
+    "Syluné's Viper": "uma presa de cobra",
+    "Wardaway": "uma pequena mão de argila"
+  },
+  "efa": {
+    "Homunculus Servant": "uma gema no valor mínimo de 100 peças de ouro"
+  },
+  "au": {
+    "Battle Familiar": "um diamante no valor mínimo de 25 peças de ouro",
+    "Catnap": "uma pitada de areia",
+    "Detonate": "um pedaço de material inflamável para acender fogo",
+    "Dueling Ground": "um estandarte de seda no valor mínimo de 100 peças de ouro",
+    "Entrancing Mirrors": "um fragmento de espelho",
+    "Grave Ground": "um punhado de terra de cemitério",
+    "Hindsight": "uma pequena ampulheta no valor mínimo de 500 peças de ouro, consumida pela magia",
+    "Invulnerability": "um pedaço de adamantina no valor mínimo de 500 peças de ouro, consumido pela magia",
+    "Iron Body": "pó de diamante no valor mínimo de 250 peças de ouro, consumido pela magia",
+    "Lightning Ring": "um pouco de pelo e um anel de vidro",
+    "Negative Energy Flood": "um osso quebrado e um quadrado de seda negra",
+    "Spirit Lantern": "uma lanterna negra",
+    "Summon Dinosaur": "uma escama polida no valor mínimo de 600 peças de ouro",
+    "Summon Plant": "ervas no valor mínimo de 500 peças de ouro",
+    "Uncertain Footing": "uma lente distorcida",
+    "Waves of Exhaustion": "um pedaço de carne seca",
+    "Wither and Bloom": "uma trepadeira murcha enrolada em um laço"
+  },
+  "egw": {
+    "Dark Star": "uma lasca de ônix e uma gota do sangue do conjurador, ambos consumidos pela magia",
+    "Fortune's Favor": "uma pérola branca no valor mínimo de 100 peças de ouro, consumida pela magia",
+    "Gravity Fissure": "um punhado de limalha de ferro",
+    "Gravity Sinkhole": "uma bolinha de gude negra",
+    "Immovable Object": "pó de ouro no valor mínimo de 25 peças de ouro, consumido pela magia",
+    "Ravenous Void": "uma pequena estrela de ferro com nove pontas",
+    "Reality Break": "um prisma de cristal",
+    "Tether Essence": "um carretel de cordão de platina no valor mínimo de 250 peças de ouro, consumido pela magia",
+    "Time Ravage": "uma ampulheta cheia de pó de diamante no valor mínimo de 5.000 peças de ouro, consumida pela magia"
+  },
+  "ftd": {
+    "Draconic Transformation": "uma estatueta de dragão no valor mínimo de 500 peças de ouro",
+    "Fizban's Platinum Shield": "uma escama de dragão revestida de platina no valor mínimo de 500 peças de ouro",
+    "Nathair's Mischief": "um pedaço da crosta de uma torta de maçã",
+    "Rime's Binding Ice": "um frasco de água de degelo",
+    "Summon Draconic Spirit": "um objeto com uma imagem de dragão gravada no valor mínimo de 500 peças de ouro"
+  },
+  "scc": {
+    "Borrowed Knowledge": "um livro no valor mínimo de 25 peças de ouro",
+    "Wither and Bloom": "uma trepadeira murcha enrolada em um laço"
+  },
+  "aag": {
+    "Create Spelljamming Helm": "uma haste de cristal no valor mínimo de 5.000 peças de ouro, consumida pela magia"
+  },
+  "ai": {
+    "Incite Greed": "uma gema no valor mínimo de 50 peças de ouro",
+    "Jim's Glowing Coin": "uma moeda"
+  },
+  "bmt": {
+    "Antagonize": "uma carta de baralho que representa um ladino",
+    "Spirit of Death": "uma carta de baralho dourada no valor mínimo de 400 peças de ouro, representando um avatar da morte",
+    "Spray of Cards": "um baralho"
+  },
+  "idrotf": {
+    "Create Magen": "um frasco de mercúrio no valor de 500 peças de ouro e um boneco humano de tamanho natural, ambos consumidos, além de uma haste de cristal elaborada no valor mínimo de 1.500 peças de ouro, que não é consumida"
+  },
+  "llk": {
+    "Galder's Speedy Courier": "25 peças de ouro ou bens minerais de valor equivalente, consumidos pela magia",
+    "Galder's Tower": "um fragmento de pedra, madeira ou outro material de construção"
+  },
+  "sato": {
+    "Gate Seal": "uma chave de portal quebrada, consumida pela magia",
+    "Warp Sense": "uma folha de trepadeira-cortante"
+  },
+  "aitfr-avt": {
+    "Linked Glyphs": "incenso e diamante em pó no valor mínimo de 300 peças de ouro, consumidos pela magia"
+  }
+}
