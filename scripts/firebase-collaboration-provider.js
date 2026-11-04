@@ -5,6 +5,14 @@ const text=v=>String(v??'').trim(),now=()=>new Date().toISOString(),arr=v=>Array
 export async function loadFirebaseConfig(fetcher=fetch){const r=await fetcher(CONFIG_URL,{cache:'no-store'});if(!r.ok)throw new Error(`Configuração de acesso indisponível (HTTP ${r.status}).`);const c=await r.json(),required=['projectId','apiKey','authDomain','appId','usernameDomain'];return{...c,configured:c.enabled===true&&c.authMode==='username-password'&&required.every(k=>text(c[k]))}}
 async function sdk(version='12.18.0'){const base=`https://www.gstatic.com/firebasejs/${version}`;const[app,auth,firestore]=await Promise.all([import(`${base}/firebase-app.js`),import(`${base}/firebase-auth.js`),import(`${base}/firebase-firestore.js`)]);return{app,auth,firestore}}
 export async function createFirebaseCollaborationProvider({config=null}={}){
+ // A prévia de layout não pode conectar, autenticar ou sincronizar o Firebase real.
+ // Este bloqueio só se aplica ao host temporário e à sessão de demonstração.
+ try{
+  const host=typeof location==='undefined'?'':location.hostname;
+  if((host==='raw.githack.com'||host==='127.0.0.1'||host==='localhost')&&sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1'){
+   return{configured:false,reason:'Prévia visual desconectada.',config:{configured:false,enabled:false}};
+  }
+ }catch{}
  const c=config||await loadFirebaseConfig();
  if(!c.configured)return{configured:false,reason:'Acesso online ainda não configurado.',config:c};
  const lib=await sdk(c.sdkVersion||'12.18.0'),firebaseOptions={apiKey:c.apiKey,authDomain:c.authDomain,projectId:c.projectId,appId:c.appId,storageBucket:c.storageBucket||undefined,messagingSenderId:c.messagingSenderId||undefined},app=lib.app.getApps().length?lib.app.getApp():lib.app.initializeApp(firebaseOptions),auth=lib.auth.getAuth(app),db=lib.firestore.getFirestore(app),f=lib.firestore;
