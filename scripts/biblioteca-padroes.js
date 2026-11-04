@@ -13,7 +13,7 @@ const EQUIP={
 'Dungeoneer’s Pack':'Pacote de Explorador de Masmorras','Entertainer’s Pack':'Pacote de Artista','Explorer’s Pack':'Pacote de Explorador',
 'Flask':'Frasco','Grappling Hook':'Gancho de Escalada','Healer’s Kit':'Kit de Curandeiro','Holy Symbol':'Símbolo Sagrado',
 'Holy Water':'Água Benta','Hunting Trap':'Armadilha de Caça','Ink':'Tinta','Ink Pen':'Pena de Escrita','Jug':'Jarro',
-'Ladder':'Escada','Lamp':'Lâmpada','Lantern, Bullseye':'Lanterna Direcional','Lantern, Hooded':'Lanterna Coberta',
+'Ladder':'Escada','Lamp':'Lamparina','Lantern, Bullseye':'Lanterna Direcional','Lantern, Hooded':'Lanterna Coberta',
 'Lock':'Cadeado','Magnifying Glass':'Lupa','Manacles':'Algemas','Map':'Mapa','Mirror':'Espelho','Net':'Rede',
 'Oil':'Óleo','Paper':'Papel','Parchment':'Pergaminho','Perfume':'Perfume','Poison, Basic':'Veneno Básico',
 'Pole':'Vara','Pot, Iron':'Panela de Ferro','Pouch':'Bolsa','Priest’s Pack':'Pacote de Sacerdote',
