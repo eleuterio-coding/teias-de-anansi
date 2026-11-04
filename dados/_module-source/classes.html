@@ -29,8 +29,7 @@ const V='20261031-phb-name1';
 document.getElementById('grid').innerHTML=CLASSES.sort((a,b)=>a[0].localeCompare(b[0],'pt-BR',{sensitivity:'base'}))
  .map(([nome,slug])=>{
   const ref=slug==='artificer'?'classes:pdf24merged1:artificer:2025':'classes:srd521:'+slug;
-  const subtitle=slug==='artificer'?'Eberron: Forge of the Artificer · 2025':'Livro do Jogador · 2024';
-  return `<a class="card" href="classes-v3.html?v=${V}&ref=${encodeURIComponent(ref)}"><strong>${nome}</strong><small>${subtitle}</small></a>`;
+  return `<a class="card" href="classes-v3.html?v=${V}&ref=${encodeURIComponent(ref)}"><strong>${nome}</strong></a>`;
  }).join('');
 </script>
 </body>
