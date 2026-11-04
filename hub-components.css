@@ -111,3 +111,25 @@
 @media (prefers-reduced-motion: reduce) {
   .hub-ui-card--interactive { transition: none; }
 }
+
+/* Visível exclusivamente quando a prévia externa ativa sua marca de sessão. */
+.hub-visual-preview-banner {
+  position:fixed;
+  right:12px;
+  bottom:12px;
+  z-index:10050;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  max-width:min(95vw,500px);
+  padding:10px 14px;
+  border:1px solid var(--hub-border);
+  border-radius:var(--hub-control-radius);
+  background:var(--hub-sidebar);
+  color:var(--hub-text);
+  box-shadow:var(--hub-shadow);
+  font:600 .8rem/1.4 var(--hub-font-sans);
+}
+.hub-visual-preview-banner a {color:var(--hub-accent-2);text-decoration:underline}
+.hub-visual-preview-banner a:focus-visible {outline:2px solid var(--hub-focus);outline-offset:2px}
