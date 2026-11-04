@@ -287,6 +287,31 @@
         "edicao": "D&D 5.5e / 2024 — Regra da Casa",
         "url": ""
       }
+    },
+    {
+      "nome": "Aumento de Atributos (Regra da Casa)",
+      "original": "Ability Score Improvement (House Rule)",
+      "familia": "Regra da Casa",
+      "descricao": "Ao selecionar os atributos associados a um Antecedente, aumente um deles em 2 e outro em 1, ou aumente cada um dos três atributos associados em 1. Nenhum atributo pode ultrapassar 20 por esta escolha.",
+      "secoes": [
+        {
+          "titulo": "Opção +2 e +1",
+          "texto": "Escolha dois atributos associados diferentes. Um recebe +2 e o outro recebe +1."
+        },
+        {
+          "titulo": "Opção +1, +1 e +1",
+          "texto": "Cada um dos três atributos associados recebe +1."
+        },
+        {
+          "titulo": "Limite",
+          "texto": "Esta regra não permite aumentar um atributo para mais de 20."
+        }
+      ],
+      "fonte": {
+        "livro": "Regra da Casa — Hub de RPG",
+        "edicao": "D&D 5.5e / 2024 — Regra da Casa",
+        "url": ""
+      }
     }
   ]
 }
