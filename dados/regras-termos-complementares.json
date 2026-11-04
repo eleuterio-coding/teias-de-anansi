@@ -1,0 +1,186 @@
+{
+  "schema": "hub-rpg/termos-regras/v1",
+  "fonte": "Livro do Jogador · 2024",
+  "itens": [
+    {
+      "original": "Ability: Strength",
+      "nome": "Força",
+      "familia": "Atributos",
+      "descricao": "Capacidade física utilizada em testes de esforço, empurrar, erguer, agarrar e outras situações de potência corporal."
+    },
+    {
+      "original": "Ability: Dexterity",
+      "nome": "Destreza",
+      "familia": "Atributos",
+      "descricao": "Agilidade, reflexos, equilíbrio, coordenação motora e movimentos precisos."
+    },
+    {
+      "original": "Ability: Constitution",
+      "nome": "Constituição",
+      "familia": "Atributos",
+      "descricao": "Resistência, vigor, capacidade de suportar fadiga, doenças e outros efeitos físicos."
+    },
+    {
+      "original": "Ability: Intelligence",
+      "nome": "Inteligência",
+      "familia": "Atributos",
+      "descricao": "Raciocínio, memória, análise e conhecimento adquirido."
+    },
+    {
+      "original": "Ability: Wisdom",
+      "nome": "Sabedoria",
+      "familia": "Atributos",
+      "descricao": "Percepção do ambiente, intuição, atenção e discernimento."
+    },
+    {
+      "original": "Ability: Charisma",
+      "nome": "Carisma",
+      "familia": "Atributos",
+      "descricao": "Capacidade de influenciar, comunicar-se e manifestar força de personalidade."
+    },
+    {
+      "original": "Skill: Athletics",
+      "nome": "Atletismo",
+      "familia": "Perícias",
+      "descricao": "Aplicada a ações que exigem esforço atlético, como escalar, nadar ou saltar em situações difíceis.",
+      "atributo": "Força"
+    },
+    {
+      "original": "Skill: Acrobatics",
+      "nome": "Acrobacia",
+      "familia": "Perícias",
+      "descricao": "Usada para manter o equilíbrio e realizar manobras acrobáticas.",
+      "atributo": "Destreza"
+    },
+    {
+      "original": "Skill: Sleight of Hand",
+      "nome": "Prestidigitação",
+      "familia": "Perícias",
+      "descricao": "Usada para movimentos manuais discretos ou precisos, como ocultar ou manipular pequenos objetos.",
+      "atributo": "Destreza"
+    },
+    {
+      "original": "Skill: Stealth",
+      "nome": "Furtividade",
+      "familia": "Perícias",
+      "descricao": "Usada para evitar ser percebido, movimentar-se em silêncio ou permanecer oculto.",
+      "atributo": "Destreza"
+    },
+    {
+      "original": "Skill: Arcana",
+      "nome": "Arcanismo",
+      "familia": "Perícias",
+      "descricao": "Conhecimento de magia, tradições arcanas, símbolos e fenômenos sobrenaturais.",
+      "atributo": "Inteligência"
+    },
+    {
+      "original": "Skill: History",
+      "nome": "História",
+      "familia": "Perícias",
+      "descricao": "Conhecimento de acontecimentos, povos, reinos e acontecimentos históricos.",
+      "atributo": "Inteligência"
+    },
+    {
+      "original": "Skill: Investigation",
+      "nome": "Investigação",
+      "familia": "Perícias",
+      "descricao": "Busca e interpretação de indícios para tirar conclusões a partir da observação e da dedução.",
+      "atributo": "Inteligência"
+    },
+    {
+      "original": "Skill: Nature",
+      "nome": "Natureza",
+      "familia": "Perícias",
+      "descricao": "Conhecimento de fauna, flora, terrenos, clima e fenômenos naturais.",
+      "atributo": "Inteligência"
+    },
+    {
+      "original": "Skill: Religion",
+      "nome": "Religião",
+      "familia": "Perícias",
+      "descricao": "Conhecimento de divindades, ritos, organizações religiosas e tradições sagradas.",
+      "atributo": "Inteligência"
+    },
+    {
+      "original": "Skill: Animal Handling",
+      "nome": "Adestrar Animais",
+      "familia": "Perícias",
+      "descricao": "Compreensão, manejo e orientação do comportamento de animais.",
+      "atributo": "Sabedoria"
+    },
+    {
+      "original": "Skill: Insight",
+      "nome": "Intuição",
+      "familia": "Perícias",
+      "descricao": "Interpretação de intenções, emoções e comportamentos de outras criaturas.",
+      "atributo": "Sabedoria"
+    },
+    {
+      "original": "Skill: Medicine",
+      "nome": "Medicina",
+      "familia": "Perícias",
+      "descricao": "Avaliação de ferimentos, diagnóstico e cuidados médicos básicos.",
+      "atributo": "Sabedoria"
+    },
+    {
+      "original": "Skill: Perception",
+      "nome": "Percepção",
+      "familia": "Perícias",
+      "descricao": "Detecção de sons, movimentos, odores ou outros sinais no ambiente.",
+      "atributo": "Sabedoria"
+    },
+    {
+      "original": "Skill: Survival",
+      "nome": "Sobrevivência",
+      "familia": "Perícias",
+      "descricao": "Orientação, rastreamento, procura de alimento e adaptação a ambientes naturais.",
+      "atributo": "Sabedoria"
+    },
+    {
+      "original": "Skill: Deception",
+      "nome": "Enganação",
+      "familia": "Perícias",
+      "descricao": "Tentativas de iludir ou apresentar informações falsas de forma convincente.",
+      "atributo": "Carisma"
+    },
+    {
+      "original": "Skill: Intimidation",
+      "nome": "Intimidação",
+      "familia": "Perícias",
+      "descricao": "Uso de presença, ameaças ou pressão para influenciar outra criatura.",
+      "atributo": "Carisma"
+    },
+    {
+      "original": "Skill: Performance",
+      "nome": "Atuação",
+      "familia": "Perícias",
+      "descricao": "Apresentações artísticas, musicais, teatrais ou outras performances.",
+      "atributo": "Carisma"
+    },
+    {
+      "original": "Skill: Persuasion",
+      "nome": "Persuasão",
+      "familia": "Perícias",
+      "descricao": "Influência por negociação, argumentos, cortesia ou diplomacia.",
+      "atributo": "Carisma"
+    },
+    {
+      "original": "Damage Type: Bludgeoning",
+      "nome": "Contundente",
+      "familia": "Tipos de Dano",
+      "descricao": "Dano provocado por impactos ou esmagamento, como golpes com clavas, martelos ou quedas."
+    },
+    {
+      "original": "Damage Type: Piercing",
+      "nome": "Perfurante",
+      "familia": "Tipos de Dano",
+      "descricao": "Dano causado por perfuração, como uma ponta de lança, flecha ou azagaia."
+    },
+    {
+      "original": "Damage Type: Slashing",
+      "nome": "Cortante",
+      "familia": "Tipos de Dano",
+      "descricao": "Dano causado por lâminas ou garras que produzem cortes."
+    }
+  ]
+}
