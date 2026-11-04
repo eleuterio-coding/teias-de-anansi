@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20261031-antecedentes-fonte-contagem2';
+  const VERSION='20261104-hub-catalogos-padroes1';
   const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
@@ -20,7 +20,7 @@
       [/<div class="nota"><strong>Localização PT-BR:<\/strong>[\s\S]*?<\/div>/gi,'']
     ]},
     subclasses:{source:'dados/_module-source/subclasses.html',rules:[
-      [/<p class="resumo">119 subclasses identificadas em pdf24_merged\.pdf e pdf24_merged-1\.pdf, deduplicadas por identidade e revisão\. Versões mais recentes equivalentes têm precedência\.<\/p>/gi,''],
+      [/<p class="resumo">\d+ subclasses identificadas em pdf24_merged\.pdf e pdf24_merged-1\.pdf, deduplicadas por identidade e revisão\. Versões mais recentes equivalentes têm precedência\.<\/p>/gi,''],
       [/<div class="nota"><strong>Critério editorial:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<div class="nota"><strong>Completude e direitos:<\/strong>[\s\S]*?<\/div>/gi,''],
       [/<footer class="licenca">[\s\S]*?<\/footer>/gi,'']
@@ -56,7 +56,7 @@
     html=applySharedLayout(html);
     // O módulo mantém seus catálogos; navegação e estilo são compartilhados com o Hub.
     html=html.replace(/<\/body>/i,'<script type="module" src="scripts/hub-ux.js?v=20261028-hub-layout1"></script></body>');
-    if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script><script src="scripts/subclasses-biblioteca-ui.js?v=20261031-subclasses-auditoria-visual2"><\/script></body>`);
+    if(key==='subclasses')html=html.replace(/<\/body>/i,`<script src="scripts/subclass-mechanics-catalog.js?v=${VERSION}"><\/script><script src="scripts/subclasses-biblioteca-ui.js?v=20261104-hub-catalogos-padroes1"><\/script></body>`);
     document.open();
     document.write(html);
     document.close();
