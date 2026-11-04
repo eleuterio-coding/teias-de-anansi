@@ -97,7 +97,7 @@ function operationalHtml(a){
  <div class="campaign-product-title-row"><h1>${esc(numberedAdventureTitle(a))}</h1><span class="badge ${esc(a.status)}">${esc(advStatus(a.status))}</span></div>
  ${a.description||a.summary?'<p class="campaign-product-description">'+esc(a.description||a.summary)+'</p>':''}
  <div class="campaign-product-meta"><span class="badge">${esc(advType(a.type))}</span><span class="badge">${a.participantUsernames.length} ${a.participantUsernames.length===1?'jogador':'jogadores'}</span><span class="badge">${a.scenes.length} ${a.scenes.length===1?'cena':'cenas'}</span></div>
- </div></section><div class="campaign-product-summary">${metrics.map(([label,value])=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join('')}</div>${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)})}`;
+ </div></section><div class="campaign-product-summary">${metrics.map(([label,value])=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join('')}</div>${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c?.id)})}`;
 }
 function basicsHtml(a){return`<section id="visao-geral" class="card adventure-editor campaign-editor-card"><h2>Visão geral</h2><div class="form-grid">
 <label>Campanha da aventura<select id="adventure-assignment">${campaignOptions(a.campaignId)}</select></label>
