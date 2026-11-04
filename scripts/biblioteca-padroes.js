@@ -62,7 +62,7 @@ function medidas(v){
  return moedas(v).replace(/(\d+)(?:\s*½|½)?\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(m,n)=>{
    const n2=/½/.test(m)?Number(n)+0.5:Number(n);return (Math.round(n2*.45359237*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})+' kg';
  }).replace(/(\d+(?:[,.]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>
-   (Math.round(Number(n.replace(',','.'))*.3048*10)/10).toLocaleString('pt-BR',{maximumFractionDigits:1})+' m')
+   (Math.round(Number(n.replace(',','.'))*.3*10)/10).toLocaleString('pt-BR',{maximumFractionDigits:1})+' m')
  .replace(/\bVaries\b/gi,'Varia').replace(/\bNone\b/gi,'Nenhum').replace(/\bSee text\b/gi,'Ver descrição');
 }
 function regraUrl(original){return 'regras.html?original='+encodeURIComponent(original)}
