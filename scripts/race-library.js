@@ -65,7 +65,7 @@ function render(){
   return!q||searchable(s).includes(q)
  });
  $('resultado').textContent='';
- $('lista').innerHTML=rows.map(renderSpecies).join('')||'<div class="vazio">Nenhuma raça corresponde aos filtros.</div>';const pedido=new URLSearchParams(location.search).get('item');if(pedido){const x=rows.find(x=>fold(x.name)===fold(pedido)||fold(x.id)===fold(pedido));const el=x?[...document.querySelectorAll('.especie')].find(d=>d.dataset.id===x.id):null;if(el)el.open=true}
+ $('lista').innerHTML=rows.map(renderSpecies).join('')||'<div class="vazio">Nenhuma raça corresponde aos filtros.</div>';const pedido=new URLSearchParams(location.search).get('item');if(pedido){const x=rows.find(x=>fold(x.name)===fold(pedido)||fold(x.id)===fold(pedido)||fold(state.LOCSP.species?.[pedido])===fold(x.name));const el=x?[...document.querySelectorAll('.especie')].find(d=>d.dataset.id===x.id):null;if(el)el.open=true}
 }
 
 async function init(){
