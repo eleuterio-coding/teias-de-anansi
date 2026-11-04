@@ -1,13 +1,8 @@
 /* Hub de RPG — camada única de composição visual.
    A navegação usa o tema do produto; áreas de leitura e edição preservam
    o contraste claro dos catálogos e fichas, sem contaminar o shell. */
-:root {
-  --hub-space-1:4px;--hub-space-2:8px;--hub-space-3:12px;--hub-space-4:16px;
-  --hub-space-5:24px;--hub-space-6:32px;
-  --hub-control-radius:10px;--hub-panel-radius:14px;
-  --hub-reader-bg:#f4f7fb;--hub-reader-paper:#fff;--hub-reader-ink:#172638;
-  --hub-reader-border:#d5dee9;--hub-reader-muted:#516379;
-}
+@import url("./hub-design-tokens.css?v=20261104-design-system-v1");
+/* Escala, cantos e paleta de leitura definidos em hub-design-tokens.css. */
 body.hub-shell-enabled .hub-app-content{min-width:0}
 body.hub-shell-enabled .hub-app-content :where(.card,.panel,.focus-card,.metric,.campaign-card,.session-card){
   transition:border-color .14s ease;
