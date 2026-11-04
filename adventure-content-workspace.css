@@ -406,3 +406,8 @@
 #adventure-root .campaign-product-hero + .campaign-product-summary + #proxima-sessao{
   margin:12px 0 16px;width:100%;max-width:none;
 }
+
+/* Cards aninhados do editor não duplicam molduras. */
+#adventure-root #adventure-overview-content .adventure-overview-panel > :is(#linha-tempo,#notas-mestre){
+ border:0;box-shadow:none;background:transparent;padding:0;
+}
