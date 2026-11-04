@@ -114,7 +114,7 @@
     },
     {
       "id": "greatclub",
-      "nome": "Grande Clava",
+      "nome": "Clava Grande",
       "categoria": "Simples corpo a corpo",
       "dano": "1d8 Concussão",
       "propriedades": [
