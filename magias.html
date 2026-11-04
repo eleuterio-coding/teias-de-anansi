@@ -609,17 +609,18 @@ function spellRulesHTML(value,onePerRule=false){
  });
 }
 function spellEffectInPortuguese(x){
+ const direct=VERIFIED_SPELL_PT[x.nome_original];
+ if(direct){
+  const obj=typeof direct==='string'?{descricao:direct}:direct;
+  return{content:obj.descricao,higher:obj.niveis_superiores||'',status:'Descrição integral em português — SRD 5.2.1',complete:true};
+ }
  if(x.descricao_tipo==='texto_fornecido_usuario'&&x.idioma_descricao==='en'&&x.descricao){
   return{content:`Magia de ${x.nivel===0?'truque':`${x.nivel}º círculo`} da escola ${x.escola||'magia'}, com tempo de conjuração ${x.tempo_conjuracao||'não informado'}, alcance ${x.alcance||'não informado'} e duração ${x.duracao||'não informada'}. O texto completo desta entrada ainda não possui tradução validada no catálogo.`,higher:'',status:'Resumo mecânico em português',complete:false};
  }
  if(x.descricao_tipo==='texto_fornecido_usuario'&&x.descricao_pt){
   return{content:x.descricao_pt,higher:x.niveis_superiores_pt||'',status:'Descrição em português — tradução do texto fornecido',complete:true};
  }
- const direct=VERIFIED_SPELL_PT[x.nome_original];
- if(direct){
-  const obj=typeof direct==='string'?{descricao:direct}:direct;
-  return{content:obj.descricao,higher:obj.niveis_superiores||'',status:'Descrição integral em português — SRD 5.2.1',complete:true};
- }
+
  if(x.fonte==='phb-2024'&&x.descricao_tipo==='texto_original_phb_2024'&&x.descricao){
   return{content:`Magia de ${x.nivel===0?'truque':`${x.nivel}º círculo`} da escola ${x.escola||'magia'}; alcance ${x.alcance||'não informado'} e duração ${x.duracao||'não informada'}. A descrição integral desta entrada aguarda tradução editorial validada.`,higher:'',status:'Resumo mecânico em português',complete:false};
  }
