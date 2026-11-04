@@ -407,7 +407,7 @@ COMPONENTES
 S
 
 DURAÇÃO
-Instantânea or 1 hora (see below)
+Instantânea ou 1 hora (conforme o efeito escolhido)
 
 CONCENTRAÇÃO
 Não
@@ -613,7 +613,7 @@ TEMPO DE CONJURAÇÃO
 Ação
 
 ALCANCE
-Pessoal (5-foot radius)
+Pessoal (raio de 1,5 m)
 
 COMPONENTES
 V
@@ -871,7 +871,7 @@ TEMPO DE CONJURAÇÃO
 Ação
 
 ALCANCE
-Pessoal (15-foot radius)
+Pessoal (raio de 4,5 m)
 
 COMPONENTES
 V
@@ -921,7 +921,7 @@ TEMPO DE CONJURAÇÃO
 Ação
 
 ALCANCE
-Pessoal (5-foot radius)
+Pessoal (raio de 1,5 m)
 
 COMPONENTES
 S, M (material específico: tradução e validação pendentes)
@@ -971,7 +971,7 @@ TEMPO DE CONJURAÇÃO
 Ação
 
 ALCANCE
-Pessoal (5-foot radius)
+Pessoal (raio de 1,5 m)
 
 COMPONENTES
 S, M (material específico: tradução e validação pendentes)
@@ -1329,7 +1329,7 @@ COMPONENTES
 S
 
 DURAÇÃO
-Instantânea or 1 hora (see below)
+Instantânea ou 1 hora (conforme o efeito escolhido)
 
 CONCENTRAÇÃO
 Não
@@ -1379,7 +1379,7 @@ COMPONENTES
 S
 
 DURAÇÃO
-Instantânea or 1 hora (see below)
+Instantânea ou 1 hora (conforme o efeito escolhido)
 
 CONCENTRAÇÃO
 Não
@@ -2463,7 +2463,7 @@ ABSORVER ELEMENTOS
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reação, which you take when you take acid, cold, fire, lightning, or thunder damage
+Reação, utilizada quando você sofre dano ácido, frio, de fogo, elétrico ou trovejante
 
 ALCANCE
 Pessoal
@@ -3299,12 +3299,12 @@ DESTRUIÇÃO ARDENTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi-
+Ação Bônus (gatilho de conjuração pendente de conferência)
 ately after hitting a target with a Melee weapon or an 
 Unarmed Strike
 
 ALCANCE
-Self
+Pessoal
 Component: V
 
 COMPONENTES
@@ -3354,7 +3354,7 @@ DESTRUIÇÃO COLÉRICA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi­
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -3404,12 +3404,12 @@ DESTRUIÇÃO DIVINA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi-
+Ação Bônus (gatilho de conjuração pendente de conferência)
 ately after hitting a target with a Melee weapon or an 
 Unarmed Strike
 
 ALCANCE
-Self
+Pessoal
 Component: V
 
 COMPONENTES
@@ -3459,7 +3459,7 @@ DESTRUIÇÃO TROVEJANTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi­
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -3813,7 +3813,7 @@ Parcial — mecânicas dependem de verificação editorial
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reaction, which you take when you are 
+Reação (gatilho de conjuração pendente de conferência)
 hit by an attack roll or targeted by the Magic Missile 
 spell
 
@@ -4321,7 +4321,7 @@ GOLPE APRISIONADOR
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi-
+Ação Bônus (gatilho de conjuração pendente de conferência)
 ately after hitting a creature with a weapon
 
 ALCANCE
@@ -4474,7 +4474,7 @@ HAIL OF THORNS
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi-
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -4733,7 +4733,7 @@ TEMPO DE CONJURAÇÃO
 Ação
 
 ALCANCE
-Pessoal (30-foot line)
+Pessoal (linha de 9 m)
 
 COMPONENTES
 V, S, M (material específico: tradução e validação pendentes)
@@ -5459,7 +5459,7 @@ COMPONENTES
 V, S, M (material específico: tradução e validação pendentes)
 
 DURAÇÃO
-Concentration up to 10 minuto
+Concentração, até 10 minutos
 
 CONCENTRAÇÃO
 Sim
@@ -5550,7 +5550,7 @@ QUEDA SUAVE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reaction, which you take when you or a 
+Reação (gatilho de conjuração pendente de conferência)
 creature you can see within 18 m of you falls
 
 ALCANCE
@@ -5805,7 +5805,7 @@ REPREENSÃO DIABÓLICA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reaction, which you take in response to 
+Reação (gatilho de conjuração pendente de conferência)
 taking damage from a creature that you can see within 
 18 m of yourself
 
@@ -7723,12 +7723,12 @@ DESTRUIÇÃO BRILHANTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi-
+Ação Bônus (gatilho de conjuração pendente de conferência)
 ately after hitting a creature with a Melee weapon or 
 an Unarmed Strike
 
 ALCANCE
-Self
+Pessoal
 Component: V
 
 COMPONENTES
@@ -9709,7 +9709,7 @@ SENTIDOS DA FERA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Action or Ritual
+Ação ou Ritual
 
 ALCANCE
 Toque
@@ -11025,7 +11025,7 @@ CONTRAMAGIA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reaction, which you take when you see a 
+Reação (gatilho de conjuração pendente de conferência)
 creature within 18 m of yourself casting a spell with 
 Verbal, Somatic, or Material components
 
@@ -11129,7 +11129,7 @@ CRESCIMENTO DE PLANTAS
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Action (Overgrowth) or 
+Ação (Crescimento Exuberante) ou outro tempo, conforme o efeito escolhido; conferir a fonte
 8 hours (Enrichment)
 
 ALCANCE
@@ -11234,7 +11234,7 @@ DESTRUIÇÃO CEGANTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action (after hitting)
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -11486,7 +11486,7 @@ FLECHA RELAMPEJANTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi­
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -11697,7 +11697,7 @@ COMPONENTES
 V, S, M (material específico: tradução e validação pendentes)
 
 DURAÇÃO
-Until dispelled or triggered
+Até ser dissipada ou ativada
 
 CONCENTRAÇÃO
 Não
@@ -13664,7 +13664,7 @@ SIMULAR MORTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Action or Ritual
+Ação ou Ritual
 
 ALCANCE
 Toque
@@ -14539,7 +14539,7 @@ DESTRUIÇÃO ATORDOANTE
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action,.which you take i·mmedi­
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -16307,7 +16307,7 @@ RETALIAÇÃO
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reação, which you take in response to taking damage
+Reação, utilizada quando você sofre dano
 
 ALCANCE
 18 m
@@ -18116,7 +18116,7 @@ DESTRUIÇÃO BANIDORA
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Bonus Action, which you take immedi­
+Ação Bônus (gatilho de conjuração pendente de conferência)
 
 ALCANCE
 Pessoal
@@ -21391,7 +21391,7 @@ JAULA DE ALMAS
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-Reação, which you take when a hu- manoid you can see within 18 m of you dies
+Reação, utilizada quando um humanoide que você possa ver a até 18 m morre
 
 ALCANCE
 18 m
@@ -22941,7 +22941,7 @@ MORDENKAINEN'S MAGNIFICENT MANS·
 
 ──────────────────────────────────────────────────────────────────────
 TEMPO DE CONJURAÇÃO
-l minute
+1 minuto
 
 ALCANCE
 90 m
@@ -23466,7 +23466,7 @@ COMPONENTES
 V, S, M (material específico: tradução e validação pendentes)
 
 DURAÇÃO
-Until dispelled or triggered
+Até ser dissipada ou ativada
 
 CONCENTRAÇÃO
 Não
