@@ -39,5 +39,5 @@ const comercio=ler('comercio-e-despesas.html');
 assert.ok(comercio.includes('GRUPOS.splice(2)'));
 assert.ok(comercio.includes('id="moedas"'));
 for(const x of ['armas.html','equipamentos-aventura.html','ferramentas.html','maestrias-de-arma.html'])
- assert.ok(ler(x).includes("new URLSearchParams(location.search).get('item')"),x+' sem navegação direta por item');
+ assert.ok(/new URLSearchParams\(location\.search\)\.get\(["\']item["\']\)/.test(ler(x)),x+' sem navegação direta por item');
 console.log('Biblioteca: verificação de sintaxe, termos, cards e navegação direta OK.');
