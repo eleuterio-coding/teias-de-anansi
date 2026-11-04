@@ -8,28 +8,16 @@ const ALIASES={
 function normalize(x,sources){const m=sources?.[x.fonte]||{},c=x.componentes||{};return{id:`magias:2024:${x.id||slug(x.nome_original||x.nome)}`,name:x.nome||x.nome_original,originalName:x.nome_original||x.nome,level:num(x.nivel),school:x.escola||'',classes:arr(x.classes_base),source:m.titulo||x.fonte||'',page:x.pagina_fonte||'',description:x.descricao||'',higher:x.niveis_superiores||'',castingTime:x.tempo_conjuracao||'',range:x.alcance||'',components:{v:!!c.verbal,s:!!c.somatic,m:!!c.material,text:c.material_texto||''},duration:x.duracao||'',concentration:x.concentracao==null?null:!!x.concentracao,ritual:!!x.ritual,ruleset:x.ruleset||m.ruleset||'5.5e',attackSave:x.ataque_salvaguarda||'',effect:x.tipo_efeito||'',damage:[x.dano_base,x.tipo_dano].filter(Boolean).join(' · '),full:x.descricao_tipo==='texto_fornecido_usuario'||x.texto_integral_publicavel!==false}}
 async function load(){
  if(loaded)return;
- if(!loading)loading=Promise.all([
-  json('dados/magias-catalogo.json?v=20261030-fontes-integrais2'),
-  json('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1').catch(()=>({nomes:{}})),
-  json('dados/magias-xanathar-usuario.json?v=20261030-xge95-1').catch(()=>({itens:[]})),
-  json('dados/magias-tasha-usuario.json?v=20261030-tasha21-1').catch(()=>({itens:[]}))
- ]).then(([d,pt,xanathar,tasha])=>{
-  const names=pt.nomes||{};
-  const legacyText=new Map(arr(xanathar.itens).map(row=>[fold(row.nome_original),row]));
-  const tashaText=new Map(arr(tasha.itens).map(row=>[fold(row.name),row]));
-  state.catalogs.spells=arr(d.itens).filter(x=>x.fonte!=='phb-2024').map(x=>{
-   const spell=normalize(x,d.fontes||{});
-   spell.name=names[spell.originalName]||spell.name;
-   const fromXanathar=x.fonte==='xanathar-2017'&&legacyText.get(fold(spell.originalName));
-   if(fromXanathar){spell.xanatharSourcePage=fromXanathar.pagina_pdf;if(x.fonte!=='xanathar-2017')spell.xanatharUserText=fromXanathar.descricao_original_en;}
-   const fromTasha=tashaText.get(fold(spell.originalName));
-   if(fromTasha){spell.tashaUserText=x.fonte==='tasha-2020'?'':fromTasha.description;spell.tashaUserEdition=fromTasha;spell.tashaUserStatblock=fromTasha.statblock;}
-   return spell
+ if(!loading)loading=json('dados/catalogo-magias-20261104.json?v=20261104').then(d=>{
+  if(!Array.isArray(d.itens)||d.itens.length!==581)throw new Error('Catálogo de magias incompleto');
+  state.catalogs.spells=d.itens.map(x=>{
+   const c=String(x.componentes||'');
+   return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\\s*\\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,castingTime:x.tempo_conjuracao,range:x.alcance,components:{v:/\\bV\\b/.test(c),s:/\\bS\\b/.test(c),m:/\\bM\\b/.test(c),text:c},duration:x.duracao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',attackSave:x.ataque_salvaguarda,damage:x.dano,full:true,concentrationExpanded:x.concentracao_expandida};
   }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
   loaded=true;
-  document.dispatchEvent(new CustomEvent('hub-rpg:sheet-spells-ready'))
+  document.dispatchEvent(new CustomEvent('hub-rpg:sheet-spells-ready'));
  });
- await loading
+ await loading;
 }
 function restoreChoices(){const s=read().find(x=>x.id===state.c?.id);if(!s?.choices)return;state.c.choices.species=state.c.choices.species||{};if(s.choices.species?.traitChoices)state.c.choices.species.traitChoices=structuredClone(s.choices.species.traitChoices);if(s.choices.featMechanics)state.c.choices.featMechanics=structuredClone(s.choices.featMechanics)}
 const find=(...names)=>{const keys=names.flat().map(fold);return state.catalogs.spells.find(s=>keys.includes(fold(s.name))||keys.includes(fold(s.originalName)))||null};
