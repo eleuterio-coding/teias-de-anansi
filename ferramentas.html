@@ -39,7 +39,18 @@ function renderList(){
  document.getElementById('lista').innerHTML=rows.map(x=>'<button class="item '+(CURRENT===x.nome?'on':'')+'" data-name="'+esc(x.nome)+'"><strong>'+esc(x.nome)+'</strong></button>').join('')||'<div class="vazio">Nenhuma ferramenta encontrada.</div>';
  document.querySelectorAll('.item').forEach(b=>b.onclick=()=>renderDetail(b.dataset.name));
 }
-(async()=>{try{const r=await fetch('dados/ferramentas-pdfs.json?v=20260819-1029',{cache:'default'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();ALL=(d.ferramentas||[]).map(x=>({...x,nome_original:x.nome,nome:HubBiblioteca.ferramenta(x.nome)})).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));if(ALL.length!==25)throw new Error(`catálogo incompleto: ${ALL.length}/25`);const tipos=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('tipo').innerHTML='<option value="">Todos os tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0]){const id=new URLSearchParams(location.search).get('item'),chosen=ALL.find(x=>norm(x.nome)===norm(id)||norm(x.nome_original)===norm(id))||ALL[0];renderDetail(chosen.nome)}}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();document.getElementById('q').addEventListener('input',renderList);document.getElementById('tipo').addEventListener('change',renderList);
+(async()=>{try{const r=await fetch('dados/ferramentas-pdfs.json?v=20260819-1029',{cache:'default'});if(!r.ok)throw new Error(`HTTP ${r.status}`);const d=await r.json();ALL=(d.ferramentas||[]).map(x=>({...x,nome_original:x.nome,nome:HubBiblioteca.ferramenta(x.nome)})).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));if(ALL.length!==25)throw new Error(`catálogo incompleto: ${ALL.length}/25`);const tipos=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>a.localeCompare(b,'pt-BR'));document.getElementById('tipo').innerHTML='<option value="">Todos os tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');renderList();if(ALL[0]){
+ const id=new URLSearchParams(location.search).get('item');
+ const artisan=norm(id)===norm('Ferramentas de Artesão');
+ if(artisan){
+  const items=ALL.filter(x=>/artesão/i.test(x.subtipo));
+  document.getElementById('detalhe').innerHTML='<h2>Ferramentas de Artesão</h2><p>Escolha um dos tipos de ferramentas abaixo.</p><ul>'+
+   items.map(x=>'<li><a href="ferramentas.html?item='+encodeURIComponent(x.nome)+'">'+esc(x.nome)+'</a></li>').join('')+'</ul>';
+ }else{
+  const chosen=ALL.find(x=>norm(x.nome)===norm(id)||norm(x.nome_original)===norm(id))||ALL[0];
+  renderDetail(chosen.nome);
+ }
+}}catch(e){document.getElementById('detalhe').innerHTML=`<div class="vazio"><strong>Falha ao carregar catálogo:</strong> ${esc(e.message)}</div>`}})();document.getElementById('q').addEventListener('input',renderList);document.getElementById('tipo').addEventListener('change',renderList);
 </script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body>
