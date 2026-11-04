@@ -160,6 +160,8 @@ async function configurar(){
   document.documentElement.dataset.subclassesPtbr='112/112';
   document.documentElement.dataset.subclassesCaracteristicasPtbr='553/553';
   document.documentElement.dataset.subclassesLivros='112/112';
+  document.dispatchEvent(new CustomEvent('hub:subclasses-ptbr-ready'));
+
 }
 function pronto(){
   configurar().catch(e=>{console.error('[Biblioteca · Subclasses]',e);
