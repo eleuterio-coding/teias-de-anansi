@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 
-const VERSION='20261103-vestir-despir-armadura1';
+const VERSION='20261104-biblioteca-termos1';
 const DDB_GLOSSARY='https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary';
 const SRD_SOURCES=[
   'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/1b4b99dcb786cdd1a2fb26f8acec1551191f1ca4/rules-glossary.md',
