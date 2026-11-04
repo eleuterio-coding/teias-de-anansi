@@ -88,8 +88,8 @@ function memberName(m){return m.name||m.username||'Jogador'}
 function progress(a){const total=a.scenes.length,done=a.scenes.filter(s=>['completed','skipped'].includes(s.status)).length;return total?`${done}/${total} cenas`:'Sem cenas'}
 function operationalHtml(a){
  const c=campaign();
- const activeMissions=a.missions.filter(m=>m.status==='active').length,hiddenClues=a.clues.filter(x=>x.status==='hidden').length;
- const metrics=[['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)],['Pistas ocultas',String(hiddenClues)]];
+ const activeMissions=a.missions.filter(m=>m.status==='active').length;
+ const metrics=[['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)]];
  return `<section class="campaign-product-hero adventure-product-hero">
  ${imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-product-hero-media',alt:''})}
  <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a></div>
@@ -97,7 +97,7 @@ function operationalHtml(a){
  <div class="campaign-product-title-row"><h1>${esc(numberedAdventureTitle(a))}</h1><span class="badge ${esc(a.status)}">${esc(advStatus(a.status))}</span></div>
  ${a.description||a.summary?'<p class="campaign-product-description">'+esc(a.description||a.summary)+'</p>':''}
  <div class="campaign-product-meta"><span class="badge">${esc(advType(a.type))}</span><span class="badge">${a.participantUsernames.length} ${a.participantUsernames.length===1?'jogador':'jogadores'}</span><span class="badge">${a.scenes.length} ${a.scenes.length===1?'cena':'cenas'}</span></div>
- </div></section><div class="campaign-product-summary">${metrics.map(([label,value])=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join('')}</div>`;
+ </div></section><div class="campaign-product-summary">${metrics.map(([label,value])=>`<div class="metric"><span>${esc(label)}</span><strong>${esc(value)}</strong></div>`).join('')}</div>${renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c?.id)})}`;
 }
 function basicsHtml(a){return`<section id="visao-geral" class="card adventure-editor campaign-editor-card"><h2>Visão geral</h2><div class="form-grid">
 <label>Campanha da aventura<select id="adventure-assignment">${campaignOptions(a.campaignId)}</select></label>
@@ -308,7 +308,7 @@ function section(title,id,body,form=''){
  return`<section id="${id}" class="card adventure-entity-section"><h2>${esc(title)}</h2>${list}${form}<div class="row-actions adventure-section-actions"><button type="button" data-save-adventure-section>Salvar</button></div></section>`
 }
 function overviewPanel(id,title,content){
- return`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel"><header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>${content}</section>`
+ return id==="adventure-overview-settings"?`<div id="${esc(id)}" class="adventure-overview-panel">${content}</div>`:`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel adventure-panel-card"><header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>${content}</section>`
 }
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
@@ -339,7 +339,6 @@ function workspaceHtml(a){
   <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Criar conteúdo</button>
  </div>
  <div id="adventure-overview-content" class="adventure-workspace-pane" role="tabpanel" aria-labelledby="adventure-overview-tab">
-  ${overviewPanel('adventure-overview-planning','Planejamento da Campanha',renderNextCampaignSession(c,{canPlan:true,adventures:adventuresForCampaign(adventures,c.id)}))}
   ${overviewPanel('adventure-overview-settings','Visão geral',basicsHtml(a))}
   ${renderAdventureOverview(a,c,characters)}
   ${overviewPanel('adventure-overview-timeline','Linha do tempo',adventureTimelineHtml(a))}

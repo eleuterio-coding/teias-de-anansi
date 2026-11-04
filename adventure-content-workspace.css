@@ -389,3 +389,25 @@
 @media(max-width:700px){
  #adventure-root #adventure-overview-content #visao-geral .form-grid{grid-template-columns:minmax(0,1fr)}
 }
+
+/* 2026-11-03 — Títulos e conteúdo permanecem dentro de seus cards. */
+#adventure-root #adventure-overview-content .adventure-panel-card{
+  padding:clamp(14px,2vw,18px);border:1px solid var(--hub-border,#40546c);
+  border-radius:12px;background:var(--hub-surface,#111f2d);
+  box-shadow:0 2px 8px rgba(0,0,0,.035);
+}
+#adventure-root #adventure-overview-content .adventure-read-about-content{
+  border:0;background:transparent;box-shadow:none;padding:3px 0;
+}
+#adventure-root #adventure-overview-content #visao-geral>h2{
+  display:block;margin:0 0 14px;font-size:1.17rem;line-height:1.3;
+  padding-bottom:10px;border-bottom:1px solid var(--hub-border,#40546c);
+}
+#adventure-root .campaign-product-hero + .campaign-product-summary + #proxima-sessao{
+  margin:12px 0 16px;width:100%;max-width:none;
+}
+
+/* Cards aninhados do editor não duplicam molduras. */
+#adventure-root #adventure-overview-content .adventure-overview-panel > :is(#linha-tempo,#notas-mestre){
+ border:0;box-shadow:none;background:transparent;padding:0;
+}

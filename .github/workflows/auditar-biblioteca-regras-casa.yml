@@ -42,6 +42,7 @@ jobs:
               'Universal Feat and Ability Progression (House Rule)': 'Progressão Universal de Talentos e Atributos',
               'Base Ability Score Distribution (House Rule)': 'Distribuição de Atributos Base',
               'Wealth by Level (House Rule)': 'Riqueza por Level',
+              'Ability Score Improvement (House Rule)': 'Aumento de Atributos (Regra da Casa)',
           }
           for original, name in required.items():
               row = by_original.get(original)
@@ -78,8 +79,8 @@ jobs:
               if token in html:
                   raise AssertionError(f'Bloco especial removido voltou ao HTML: {token}')
 
-          if 'HOUSE.length!==7' not in viewer or '${HOUSE.length}/7' not in viewer:
-              raise AssertionError('Visualizador não espera as sete Regras da Casa pesquisáveis.')
+          if 'HOUSE.length!==8' not in viewer or '${HOUSE.length}/8' not in viewer:
+              raise AssertionError('Visualizador não espera as oito Regras da Casa pesquisáveis.')
           if 'renderHouse' not in viewer or "kind:'house'" not in viewer:
               raise AssertionError('Regras da Casa não estão usando o mesmo renderizador do catálogo.')
 

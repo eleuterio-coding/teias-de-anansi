@@ -28,7 +28,7 @@
     }
   </style>
   <link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1">
-</head>
+<script src="scripts/biblioteca-padroes.js?v=20261103-1"></script></head>
 <body>
   <p><a href="bibliotecas.html?v=20261028-library-hub-layout1">← Bibliotecas</a></p>
   <header>
@@ -72,12 +72,13 @@ function esc(v='') { return String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<'
 function texto(i) { return [i.nome,i.categoria,i.fonte,i.descricao,i.status,localizarIdioma(i.nome),localizarIdioma(i.categoria),localizarIdioma(i.descricao)].join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
 // O rodapé mostra somente títulos de livros; proveniência permanece nos dados internos.
 function livrosDaFonte(i) {
-  if (i.nome === 'Gith') return ['Mordenkainen’s Tome of Foes (2018)'];
-  return String(i.fonte || '')
-    .replace('Player’s Handbook · Basic Rules (2024)', 'Livro do Jogador').replace('Player’s Handbook', 'Livro do Jogador')
-    .split(' · ')
-    .map(livro => livro.trim())
-    .filter(livro => livro && !/^Regra da Casa\b/i.test(livro) && !/^legado de edições anteriores\b/i.test(livro));
+ const fonte=i.nome==='Gith'?'Mordenkainen’s Tome of Foes':String(i.fonte||'');
+ return [...new Set(fonte.split(' · ').map(t=>{
+  const nome=t.trim();
+  if(/Player[’']s Handbook|Livro do Jogador/i.test(nome))return 'Livro do Jogador · 2024';
+  if(/Basic Rules/i.test(nome))return 'Regras Básicas';
+  return HubBiblioteca.livro(nome);
+ }).filter(v=>v&&!/^(?:Regra da Casa|legado de edições anteriores)/i.test(v)))];
 }
 function render() {
   const termo = busca.value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -89,7 +90,7 @@ function render() {
       <div class="corpo">
         <p><strong>Falantes Típicos:</strong> ${esc(i.falantes_tipicos)}</p>
         <p><strong>Alfabeto:</strong> ${esc(i.alfabeto)}</p>
-        <p><strong>Descrição:</strong> ${esc(i.descricao)}</p>
+        <p><strong>Descrição:</strong> ${esc(i.descricao.replace(/\s*\(dialeto de Primordial, em 5e\)|\s*\(Espruar, em Faerûn\)/gi,''))}</p>
         <div class="meta">
           <span><strong>${livrosDaFonte(i).length === 1 ? "Livro" : "Livros"}:</strong> ${esc(livrosDaFonte(i).join(" · "))}</span>
         </div>
