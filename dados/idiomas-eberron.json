@@ -23,7 +23,7 @@
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
     "referencia_secao": "Frontier Characters — Languages",
     "falantes_tipicos": "Gnolls da Fronteira Ocidental de Eberron.",
-    "alfabeto": "Não especificado nas fontes catalogadas."
+    "alfabeto": "Não se aplica alfabeto escrito; o idioma gnoll é predominantemente vocal."
   },
   {
     "nome": "Harpy",
@@ -36,7 +36,7 @@
     "proveniencia": "Regra da Casa — inspirada em Quickstone",
     "referencia_secao": "Frontier Characters — Harpy; adaptação exclusiva do Hub",
     "falantes_tipicos": "Harpias de Droaam (regra da casa do Hub).",
-    "alfabeto": "Não definido; idioma vocal criado para o Hub."
+    "alfabeto": "Vocal; não se aplica alfabeto escrito."
   },
   {
     "nome": "Quori",
@@ -62,7 +62,7 @@
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
     "referencia_secao": "Frontier Characters — Languages; Medusa",
     "falantes_tipicos": "Medusas de Droaam e yuan-ti, conforme as convenções do Hub.",
-    "alfabeto": "Não especificado nas fontes catalogadas."
+    "alfabeto": "Alfabeto próprio não especificado na fonte de Quickstone."
   },
   {
     "nome": "Stonegrind",
@@ -75,7 +75,7 @@
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
     "referencia_secao": "Frontier Characters — Languages; Gargoyle",
     "falantes_tipicos": "Gárgulas de Grimstone, em Eberron.",
-    "alfabeto": "Não especificado; a comunicação é feita pelo atrito entre pedras."
+    "alfabeto": "Não se aplica alfabeto escrito; a comunicação é feita pelo atrito entre pedras."
   },
   {
     "nome": "Tauric",
@@ -101,6 +101,6 @@
     "proveniencia": "Terceiros — Frontiers of Eberron: Quickstone",
     "referencia_secao": "Frontier Characters — Languages; Worg",
     "falantes_tipicos": "Worgs de Watching Wood, em Eberron.",
-    "alfabeto": "Não especificado nas fontes catalogadas."
+    "alfabeto": "Alfabeto não especificado na fonte de Quickstone."
   }
 ]
