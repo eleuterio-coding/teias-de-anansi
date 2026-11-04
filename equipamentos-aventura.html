@@ -22,7 +22,16 @@
 const LABELS={recipiente:"Recipiente",municao:"Munição",kit:"Kit",iluminacao:"Iluminação",alimento:"Alimento",foco:"Foco",roupa:"Roupa",consumivel:"Consumível",explosivo:"Explosivo",armadilha_portatil:"Armadilha portátil",veneno:"Veneno",material:"Material",equipamento_especial:"Equipamento especial"};
 let ALL=[],selected=null;
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function expandCore(d){const conv=(grupo)=>grupo.itens.map(r=>({nome:r[0],subtipo:r[1],peso:r[2],custo:r[3],descricao:r[4],...(r[5]||{}),livro:grupo.livro,pdf:d.fonte_pdf,secao:grupo.secao}));return [...conv(d.phb),...conv(d.heroes)]}
+function expandCore(d){
+ const conv=grupo=>grupo.itens.map(r=>({nome:r[0],subtipo:r[1],peso:r[2],custo:r[3],descricao:r[4],...(r[5]||{}),livro:grupo.livro,pdf:d.fonte_pdf,secao:grupo.secao}));
+ const rows=[...conv(d.phb),...conv(d.heroes)];
+ const ammunition=rows.find(x=>x.nome==='Ammunition');
+ const arrows=ammunition?.variantes?.find(x=>x.nome==='Arrows');
+ if(arrows)rows.push({nome:'Flecha',subtipo:'municao',peso:arrows.peso,custo:arrows.custo,quantidade:arrows.quantidade,descricao:'Variante de Munição para arcos, conforme a ficha de Munição.',livro:d.phb.livro,secao:d.phb.secao});
+ // Preservar o item legado referenciado por antecedentes sem atribuir custo ou peso não documentados.
+ rows.push({nome:'Roupas Comuns',subtipo:'roupa',peso:'Não informado',custo:'Não informado',descricao:'Roupa mencionada nos equipamentos de antecedentes legados do Hub; valores não disponíveis no catálogo de equipamentos de 2024.',livro:'Antecedentes legados'});
+ return rows;
+}
 const H=HubBiblioteca;
 function searchable(x){return [x.nome,x.original,LABELS[x.subtipo],x.descricao,x.livro,x.custo,x.peso,...(x.aliases||[])].join(" ").toLocaleLowerCase("pt-BR")}
 function buildFilter(){const f=document.getElementById("filtro"),types=[...new Set(ALL.map(x=>x.subtipo))].sort((a,b)=>(LABELS[a]||a).localeCompare(LABELS[b]||b,"pt-BR"));f.innerHTML='<option value="">Todos os subtipos</option>'+types.map(t=>'<option value="'+esc(t)+'">'+esc(LABELS[t]||t)+'</option>').join("")}
