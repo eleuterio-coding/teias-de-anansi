@@ -33,6 +33,6 @@ export async function loadSpells(){
  if(!Array.isArray(catalog.itens)||catalog.itens.length!==581)throw new Error('Catálogo de magias incompleto');
  return catalog.itens.map(x=>{
   const componentes=String(x.componentes||'');
-  return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\\s*\\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',revision:2024,castingTime:x.tempo_conjuracao,range:x.alcance,components:{verbal:/\\bV\\b/.test(componentes),somatic:/\\bS\\b/.test(componentes),material:/\\bM\\b/.test(componentes),materialText:componentes},duration:x.duracao,attackSave:x.ataque_salvaguarda,baseDamage:x.dano,concentrationExpanded:x.concentracao_expandida};
+  return{id:x.id,name:x.nome,originalName:x.nome,level:num(x.nivel),school:x.escola,classes:String(x.classes||'').split(',').map(v=>v.trim().replace(/\s*\(.*$/,'')).filter(Boolean),source:x.livro,description:x.descricao,concentration:x.concentracao==='Sim',ritual:x.ritual==='Sim',ruleset:'5.5e',revision:2024,castingTime:x.tempo_conjuracao,range:x.alcance,components:{verbal:/\bV\b/.test(componentes),somatic:/\bS\b/.test(componentes),material:/\bM\b/.test(componentes),materialText:componentes},duration:x.duracao,attackSave:x.ataque_salvaguarda,baseDamage:x.dano,concentrationExpanded:x.concentracao_expandida};
  }).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'pt-BR'));
 }
