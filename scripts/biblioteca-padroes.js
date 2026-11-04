@@ -76,11 +76,11 @@ function moedaHtml(v){
 function termosHtml(v){
  let x=esc(medidas(v));
  x=x.replace(/\b(PL|PO|PP|PC)\b/g,(_,m)=>item(m,'comercio-e-despesas.html#moedas'));
- x=x.replace(/\b(descanso longo|descanso curto|Dados de Vida)\b/gi,(m)=>regra(m,normalize(m)==='descanso longo'?'Long Rest':normalize(m)==='descanso curto'?'Short Rest':'Hit Dice'));
+ x=x.replace(/\b(descanso longo|descanso curto|Dados de Vida)\b/gi,(m)=>regra(m,normalize(m)==='descanso longo'?'Long Rest':normalize(m)==='descanso curto'?'Short Rest':'Hit Point Dice'));
  x=x.replace(/\b(galões|galão)\b/gi,m=>item(m,equipamentoUrl('Jug')));
  return x;
 }
 function periciasHtml(v){return String(v||'').split(/\s*;\s*|\s*,\s*|\s+e\s+/).filter(Boolean)
- .map(p=>regra(pericia(p),'Skill: '+p.trim())).join(', ')||'—'}
+ .map(p=>regra(pericia(p),'Skill')).join(', ')||'—'}
 window.HubBiblioteca={esc,normalize,livro,equipamento,ferramenta,pericia,moedas,medidas,regraUrl,regra,item,equipamentoUrl,ferramentaUrl,moedaHtml,termosHtml,periciasHtml};
 })();
