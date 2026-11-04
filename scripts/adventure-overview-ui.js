@@ -10,7 +10,7 @@ const line=(label,value)=>String(value??'').trim()?'<div class="adventure-read-f
 const fields=(pairs=[])=>{const html=pairs.map(([label,value])=>line(label,value)).join('');return html?'<dl class="adventure-read-fields">'+html+'</dl>':''};
 const names=(ids,collection)=>rows(ids).map(id=>collection.find(item=>item.id===id)?.name||collection.find(item=>item.id===id)?.title).filter(Boolean).join(', ');
 const card=(title,meta='',content='',extra='',kind='')=>'<article class="adventure-read-card"'+(kind?' data-adventure-summary-kind="'+esc(kind)+'"':'')+'><div class="adventure-read-card-head"><h3>'+esc(title)+'</h3>'+(meta?'<span class="adventure-read-meta">'+esc(meta)+'</span>':'')+'</div>'+(content?'<div class="adventure-read-primary">'+content+'</div>':'')+(extra?'<details class="adventure-read-more"><summary>Ver informações completas</summary><div>'+extra+'</div></details>':'')+'</article>';
-const section=(id,title,count,items,description='')=>'<section class="adventure-read-section" id="'+esc(id)+'"><header class="adventure-read-section-head"><div><h2>'+esc(title)+'</h2>'+(description?'<p>'+esc(description)+'</p>':'')+'</div><span class="adventure-read-count">'+count+'</span></header><div class="adventure-read-grid">'+(items||'<p class="adventure-read-empty">Nenhum registro nesta aventura.</p>')+'</div></section>';
+const section=(id,title,count,items,description='')=>'<section class="adventure-read-section adventure-panel-card" id="'+esc(id)+'"><header class="adventure-read-section-head"><div><h2>'+esc(title)+'</h2>'+(description?'<p>'+esc(description)+'</p>':'')+'</div><span class="adventure-read-count">'+count+'</span></header><div class="adventure-read-grid">'+(items||'<p class="adventure-read-empty">Nenhum registro nesta aventura.</p>')+'</div></section>';
 const p=value=>String(value??'').trim()?'<p>'+esc(value)+'</p>':'';
 export function renderAdventureOverview(a,c,characters=[]){
  const characterById=new Map(characters.map(x=>[x.id,x]));
@@ -70,14 +70,14 @@ export function renderAdventureOverview(a,c,characters=[]){
  const summary=fields([['Campanha',c?.name],['Status',({planned:'Planejada',active:'Em andamento',paused:'Pausada',completed:'Concluída',archived:'Arquivada'})[a.status]||a.status],
   ['Tipo',({main:'Principal',side:'Secundária',oneshot:'One-shot',secondary:'Arco secundário'})[a.type]||a.type],['Ordem',a.order],
   ['Situação atual',a.currentSituation],['Próximo passo',a.nextStep]]);
- return '<section class="adventure-read-section adventure-read-about"><header class="adventure-read-section-head"><div><h2>Sobre a aventura</h2></div></header><div class="adventure-read-about-content">'+p(a.description||a.summary||'Nenhum resumo cadastrado.')+summary+'</div></section>'+
+ return '<section class="adventure-read-section adventure-read-about adventure-panel-card"><header class="adventure-read-section-head"><div><h2>Sobre a aventura</h2></div></header><div class="adventure-read-about-content">'+p(a.description||a.summary||'Nenhum resumo cadastrado.')+summary+'</div></section>'+
   section('overview-participantes','Jogadores',playerCards?adventureAssignments(a,c).length:0,playerCards,'Participantes vinculados à aventura')+
   section('overview-cenas','Cenas',rows(a.scenes).length,sceneCards)+
   section('overview-locais','Locais',areas.length,areaCards)+
   section('overview-mapas','Mapas',maps.length,mapCards)+
   section('overview-npcs','NPCs',linkedNpcs.length,npcCards)+
   section('overview-monstros','Monstros',monsters.length,monsterCards)+
-  (missionCards?section('overview-objetivos','Objetivos',rows(a.missions).length,missionCards):'')+
-  (factionCards?section('overview-faccoes','Facções',factions.length,factionCards):'')+
-  (sessionCards?'<section class="adventure-read-section adventure-read-sessions" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'');
+  section('overview-objetivos','Objetivos',rows(a.missions).length,missionCards)+
+  section('overview-faccoes','Facções',factions.length,factionCards)+
+  (sessionCards?'<section class="adventure-read-section adventure-read-sessions adventure-panel-card" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'');
 }
