@@ -2,12 +2,12 @@
 'use strict';
 const V='20261031-subclasses-revisao-linguistica3';
 const LIVROS={
-  'phb-2024':{nome:'Livro do Jogador (2024)',selo:'Livro do Jogador'},
-  'eberron-forge-2025':{nome:'Eberron: Forge of the Artificer (2025)',selo:'Forja do Artífice'},
-  'quickstone-2024':{nome:'Frontiers of Eberron: Quickstone (2024)',selo:'Fronteiras de Eberron'},
-  'fr-heroes-2025':{nome:'Forgotten Realms: Heroes of Faerûn (2025)',selo:'Heróis de Faerûn'},
-  'tasha-2020':{nome:'Caldeirão de Todas as Coisas de Tasha (2020)',selo:'Caldeirão de Tasha'},
-  'xanathar-2017':{nome:'Guia de Xanathar para Todas as Coisas (2017)',selo:'Guia de Xanathar'}
+  'phb-2024':{nome:'Livro do Jogador · 2024',selo:'Livro do Jogador'},
+  'eberron-forge-2025':{nome:'Eberron: Forge of the Artificer',selo:'Forja do Artífice'},
+  'quickstone-2024':{nome:'Frontiers of Eberron: Quickstone',selo:'Fronteiras de Eberron'},
+  'fr-heroes-2025':{nome:'Forgotten Realms: Heroes of Faerûn',selo:'Heróis de Faerûn'},
+  'tasha-2020':{nome:'Caldeirão de Todas as Coisas de Tasha',selo:'Caldeirão de Tasha'},
+  'xanathar-2017':{nome:'Guia de Xanathar para Todas as Coisas',selo:'Guia de Xanathar'}
 };
 const TERMOS={
   'Reckless Attack':'Ataque Imprudente','Rage Damage':'dano da Fúria','Bardic Inspiration':'Inspiração de Bardo',
@@ -122,17 +122,14 @@ async function configurar(){
     const sum=card.querySelector(':scope > summary');
     const strong=sum.querySelector('strong');
     strong.textContent=loc.nomes[original];
-    const selo=document.createElement('span');selo.className='tag selo-livro';
-    selo.textContent=LIVROS[item.fonte_id].nome.replace(/\s+\(20\d\d\)$/,'');
-    selo.title=LIVROS[item.fonte_id].nome;
-    strong.append(' ',selo);
     const className=sum.querySelector('.classe');
     if(className)className.textContent=loc.classes[item.classe];
     const ficha=card.querySelector('.ficha');
-    ficha.replaceChildren();
-    field(ficha,'Nome',loc.nomes[original]);
-    field(ficha,'Classe',loc.classes[item.classe]);
-    field(ficha,'Livro',LIVROS[item.fonte_id].nome);
+    ficha.remove();
+    const footer=document.createElement('footer');
+    footer.className='meta subclass-book';
+    footer.innerHTML='<strong>Livro:</strong> '+String(LIVROS[item.fonte_id].nome).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+    card.querySelector('.corpo').append(footer);
     // Dados bibliográficos e IDs permanecem no catálogo JSON; não são apagados.
     card.querySelectorAll('.corpo .fonte,.corpo .pdf-rastreio').forEach(el=>el.remove());
     traduzirTexto(card.querySelector('.descricao'),dic);
