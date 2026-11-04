@@ -1,0 +1,39 @@
+name: "Validar ajustes de Aventuras e Biblioteca"
+on:
+  pull_request:
+    paths:
+      - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-overview-ui.js'
+      - 'scripts/regras-srd-view-v7.js'
+      - 'scripts/biblioteca-padroes.js'
+      - 'adventure-content-workspace.css'
+      - 'dados/**'
+      - 'armaduras.html'
+      - 'armas.html'
+      - 'equipamentos-aventura.html'
+      - 'ferramentas.html'
+      - 'idiomas.html'
+      - 'maestrias-de-arma.html'
+      - 'magias.html'
+      - 'comercio-e-despesas.html'
+      - 'bugigangas.html'
+      - 'tests/validar-ajustes-biblioteca-20261103.mjs'
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validar sintaxe dos módulos
+        run: |
+          node --check scripts/adventure-ui.js
+          node --check scripts/adventure-overview-ui.js
+          node --check scripts/regras-srd-view-v7.js
+          node --check scripts/biblioteca-padroes.js
+      - name: Validar HTML, catálogos e links de verbetes
+        run: node tests/validar-ajustes-biblioteca-20261103.mjs
