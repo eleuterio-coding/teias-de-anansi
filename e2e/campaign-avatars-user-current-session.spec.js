@@ -100,11 +100,10 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
   const bounds=id=>document.getElementById(id).getBoundingClientRect();
   return{camp:bounds('campanha'),players:bounds('jogadores'),adventures:bounds('aventuras'),sessions:bounds('sessoes')}
  });
- if((page.viewportSize()?.width||0)>820){
-  expect(Math.abs(pair.camp.y-pair.players.y)).toBeLessThan(5);
+ expect(pair.players.y).toBeGreaterThan(pair.camp.y);
+ if((page.viewportSize()?.width||0)>900){
   expect(Math.abs(pair.adventures.y-pair.sessions.y)).toBeLessThan(5);
  }else{
-  expect(pair.players.y).toBeGreaterThan(pair.camp.y);
   expect(pair.sessions.y).toBeGreaterThan(pair.adventures.y);
  }
  const timeline=page.locator('#linha-tempo');
@@ -115,7 +114,7 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await toggle.click();
  await expect(branch).toHaveJSProperty('hidden',before==='true');
  await timeline.locator('[data-timeline-view="flowchart"]').click();
- await expect(timeline.locator('.hub-diagram-root')).toBeVisible();
+ await expect(timeline.locator('.hub-diagram-root').first()).toBeVisible();
  await timeline.locator('[data-timeline-view="list"]').click();
  await expect(timeline.locator('.timeline-tree')).toBeVisible();
  await expect(page.locator('#jogadores input,#jogadores select')).toHaveCount(0);
@@ -147,7 +146,7 @@ test('Cards continuam empilhados no celular',async({page})=>{
 
 test('Jogador: sessão Atual no topo e até cinco sessões de Aventura ativa segundo prioridades',async({page})=>{
  const more={...shared,sessions:[
-  ...campaign.sessions,
+  ...shared.sessions,
   {id:'next-high',number:4,order:4,title:'Outra travessia',status:'next',adventureId:'adv'},
   {id:'planned-high',number:5,order:5,title:'Preparação futura',status:'planned'},
   {id:'completed-high',number:6,order:6,title:'Memórias passadas',status:'completed',adventureId:'adv'}
