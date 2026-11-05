@@ -36,7 +36,7 @@ assert.match(sheet,/id="save-status"[^>]*role="status"[^>]*aria-live="polite"/,'
 assert.match(sheet,/id="load-warnings"[^>]*role="alert"[^>]*aria-live="assertive"/,'Falhas de carregamento precisam ser anunciadas.');
 
 assert.ok(list.includes('scripts/character-list-ui.js'),'Lista deve delegar ações ao módulo atual.');
-assert.ok(listUi.includes('data-structure-edit'),'Lista deve distinguir a ação de edição estrutural.');
+assert.ok(listUi.includes('href="criacao-personagem.html?id=')&&listUi.includes('Editar estrutura'),'Lista deve oferecer ação estrutural explícita que abre o construtor.');
 assert.ok(listUi.includes('Editar estrutura'),'Lista deve explicitar que o construtor altera estrutura.');
 assert.ok(!/>Editar<\/a>/.test(list+listUi),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.equal(list.includes('Abra a Ficha Digital para jogar.'),false,'Lista pós-criação não deve exibir ajuda contextual.');
