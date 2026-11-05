@@ -6,6 +6,7 @@ on:
       - '.github/workflows/validar-jogador-layout-pr.yml'
       - 'e2e/player-visibility.spec.js'
       - 'scripts/campaign-player-view.js'
+      - 'scripts/adventure-router.js'
       - 'scripts/campaign-table-router.js'
       - 'scripts/campaign-sessions-ui.js'
       - 'scripts/character-list-ui.js'
