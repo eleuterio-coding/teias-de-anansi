@@ -17,7 +17,7 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(page.getByRole('button',{name:'Excluir'})).toHaveCount(0);
 
  await page.goto('/sessoes.html');
- await expect(page.getByText('Sessão do Gus',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Sessão 1 · Sessão do Gus',exact:true})).toBeVisible();
  await expect(page.getByText('SESSÃO SECRETA')).toHaveCount(0);
 
  await page.goto('/mesa.html?id=c-gus');
