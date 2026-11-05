@@ -1002,12 +1002,12 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
  margin-top:4px!important;
 }
 
-/* Mesma largura matemática das células da grade de Aventuras,
-   descontando borda e padding de 16px do grupo da Campanha. */
+/* O card Nova Aventura ocupa toda a linha disponível da própria grade.
+   O antigo padding de 17px de cada lado reduzia a largura clicável em 34px. */
 #adventure-root .adventure-create-tile-row{
- padding-inline:17px!important;
+ padding-inline:0!important;
  gap:clamp(14px,1.5vw,22px)!important;
 }
 @media(max-width:680px){
- #adventure-root .adventure-create-tile-row{padding-inline:12px!important}
+ #adventure-root .adventure-create-tile-row{padding-inline:0!important}
 }
