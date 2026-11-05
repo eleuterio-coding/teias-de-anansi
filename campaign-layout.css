@@ -478,7 +478,8 @@
 /* Desktop: jogador + personagem + ações, sem trilha flexível após o seletor. */
 @container campaign-roster (min-width:760px){
  #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
-  grid-template-columns:24px 40px minmax(0,1fr) minmax(0,1.35fr) max-content;
+  /* Paridade desktop com Jogadores da Sessão: reservar a mesma coluna de ações. */
+  grid-template-columns:24px 40px minmax(0,1fr) minmax(0,1.35fr) 170px;
  }
 }
 /* Intermediário: ações imediatamente ao lado do seletor, na segunda linha. */
