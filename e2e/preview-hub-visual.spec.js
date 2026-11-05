@@ -43,3 +43,32 @@ test('prévia de Jogador preserva perfil fictício e impede Firebase', async ({ 
   await page.locator('.hub-visual-preview-banner a').click();
   await expect(page).toHaveURL(/preview\.html/);
 });
+
+test('Jogador consegue abrir criação própria, mas não a edição de ficha sem acesso', async ({ page }) => {
+  await page.goto('/preview.html');
+  await page.getByRole('button',{name:'Visualizar como Jogador'}).click();
+  await expect(page).toHaveURL(/painel\.html/);
+
+  await page.goto('/criacao-personagem.html');
+  await expect(page).toHaveURL(/criacao-personagem\.html/);
+  await expect(page.locator('.hub-app-shell')).toBeVisible();
+  await expect(page.locator('#wizard-nav')).toBeVisible();
+  await expect(page.locator('.hub-visual-preview-banner')).toBeVisible();
+
+  await page.goto('/criacao-personagem.html?id=ficha-sem-permissao');
+  await expect(page).toHaveURL(/lista-personagens\.html/);
+  const role=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1')));
+  expect(role.isMaster).toBe(false);
+});
+
+test('Mestre consegue abrir a criação e a edição de fichas demonstrativas', async ({ page }) => {
+  await page.goto('/preview.html');
+  await page.getByRole('button',{name:'Visualizar como Mestre'}).click();
+  await expect(page).toHaveURL(/painel\.html/);
+  await page.goto('/criacao-personagem.html');
+  await expect(page).toHaveURL(/criacao-personagem\.html/);
+  await expect(page.locator('.hub-app-shell')).toBeVisible();
+  await expect(page.locator('#wizard-nav')).toBeVisible();
+  const role=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1')));
+  expect(role.isMaster).toBe(true);
+});
