@@ -40,7 +40,8 @@ test('jogadores organizados e confirmação acessível após salvar',async({page
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const rows=page.locator('#jogadores .roster-player');
  await expect(rows).toHaveCount(2);
- await expect(page.locator('.roster-count')).toContainText('2 jogadores');
+ // A contagem visível fica no resumo geral; o roster valida os dois cards reais.
+ await expect(page.locator('.campaign-product-meta')).toContainText('2 jogadores');
  for(const row of await rows.all()){
   await expect(row.locator('.roster-player-name')).toBeVisible();
   await expect(row.locator('[data-member-user]')).toHaveCount(0);
