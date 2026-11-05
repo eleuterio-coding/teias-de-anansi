@@ -103,6 +103,9 @@ test('Jogadores da Aventura podem ser reordenados e removidos sem modificar Camp
  page.on('dialog',dialog=>dialog.accept());
  await page.goto('/aventuras.html?campaign=e2e-campaign-roster-images&new=1');
  await page.locator('#create-adventure').click();
+ // A criação abre no editor de Cenas; o elenco fica na categoria Jogadores.
+ await page.locator('[data-adventure-creation-kind="player"]').click();
+ await expect(page.locator('#participantes')).toBeVisible();
  const fernanda=page.locator('#adventure-member-list [data-member-row="fernanda"]');
  await fernanda.locator('[data-roster-move="down"]').click();
  const order=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0].participantAssignments.map(m=>m.username));
