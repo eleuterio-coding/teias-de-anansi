@@ -26,7 +26,9 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(page.locator('#campanha')).toBeVisible();
  await expect(page.locator('#campanha input[readonly]').first()).toBeVisible();
  await expect(page.locator('#notas-compartilhadas textarea[readonly]')).toHaveValue('NOTA COMPARTILHADA GUS');
- await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
+ // A Campanha destaca somente sessões elegíveis ao resumo; a sessão planejada
+ // permanece acessível pela lista, já validada acima.
+ await expect(page.locator('#table-root a.campaign-reference-title-link[href^="sessoes.html"]')).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
  await expect(page.getByRole('button')).toHaveCount(0);
 
