@@ -37,9 +37,13 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  // O formulário da Campanha é somente leitura e não deve ter ações de edição.
  await expect(page.locator('#campanha button')).toHaveCount(0);
 
+ // A lista mostra somente as Aventuras atribuídas; pistas pertencem à tela de detalhe.
  await page.goto('/aventuras.html?campaign=c-gus');
  await expect(page.getByRole('heading',{name:'Aventura do Gus'})).toBeVisible();
- await expect(page.getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
+ await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
+ await page.goto('/aventuras.html?campaign=c-gus&id=a-gus');
+ await expect(page.locator('#pistas')).toBeVisible();
+ await expect(page.locator('#pistas').getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
  await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
 
  await page.goto('/lista-personagens.html');
