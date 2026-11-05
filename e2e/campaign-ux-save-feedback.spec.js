@@ -78,7 +78,9 @@ test('personagem ocupado não pode ser selecionado por outro jogador',async({pag
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const fernanda=page.locator('[data-member-row="m1"]'),bruno=page.locator('[data-member-row="m2"]');
  await expect(fernanda.locator('[data-member-character]')).toHaveValue('pc-fernanda');
- await expect(fernanda.locator('.roster-open-button')).toHaveAttribute('href',/ficha-personagem\.html\?id=pc-fernanda/);
+ const sheetHref=await fernanda.locator('.roster-open-button').getAttribute('href');
+ expect(new URL(sheetHref,page.url()).pathname).toMatch(/\/ficha-personagem\.html$/);
+ expect(new URL(sheetHref,page.url()).searchParams.get('id')).toBe('pc-fernanda');
  await expect(bruno.locator('[data-member-character] option[value="pc-fernanda"]')).toHaveCount(0);
  await expect(bruno.locator('[data-member-character] option[value="pc-bruno"]')).toHaveCount(1);
  await bruno.locator('[data-member-character]').selectOption('pc-bruno');
@@ -256,12 +258,13 @@ test('arrastar jogador sobre outro reordena sem perder personagens',async({page}
  await expect(list.locator('[data-member-row]').last()).toHaveAttribute('data-member-row','m1');
 });
 
-test('borda da capa é suave e ações do editor continuam operacionais',async({page})=>{
+test('borda branca da capa mantém espessura e opacidade especificadas e ações operacionais',async({page})=>{
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const preview=page.locator('#campanha .image-picker-preview');
  await expect(preview).toBeVisible();
- const border=await preview.evaluate(el=>getComputedStyle(el).borderColor);
- expect(border).toMatch(/rgba\(255, 255, 255, 0\.17\)/);
+ const border=await preview.evaluate(el=>({color:getComputedStyle(el).borderColor,
+  style:getComputedStyle(el).borderStyle,width:getComputedStyle(el).borderWidth}));
+ expect(border).toEqual({color:'rgba(255, 255, 255, 0.7)',style:'dashed',width:'2px'});
  const section=page.locator('#campanha');
  await expect(section.locator('[data-campaign-field="name"]')).toBeVisible();
  await expect(section.locator('[data-image-input]')).toHaveCount(1);
