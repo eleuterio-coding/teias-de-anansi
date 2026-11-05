@@ -363,6 +363,12 @@
  width:100%;
  min-width:0;
 }
+/* A ação de abrir ficha da visão de leitura usa alvo de 44px também no celular. */
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-character .roster-player-profile-link{
+ display:grid;place-items:center;
+ flex:0 0 44px;width:44px;min-width:44px;max-width:44px;
+ height:44px;min-height:44px;max-height:44px;
+}
 #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly :is(.roster-player-label,.roster-player-name){
  display:flex;
  align-items:center;
