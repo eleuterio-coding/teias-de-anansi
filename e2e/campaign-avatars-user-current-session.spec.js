@@ -27,7 +27,8 @@ test('Mestre: Campanha, status Atual, próxima sessão e retratos em participant
  },{campaign,chars,people});
  await page.goto('/mesa.html?id='+campaign.id);
  await expect(page.locator('#proxima-sessao')).toContainText('PLANEJAMENTO DA CAMPANHA');
- await expect(page.locator('#proxima-sessao')).toContainText('Sessão Atual');
+ await expect(page.locator('#proxima-sessao').getByRole('heading',{name:'Planejamento de Campanha'})).toBeVisible();
+ await expect(page.locator('#proxima-sessao .campaign-next-status')).toHaveText('Atual');
  await expect(page.locator('#proxima-sessao')).toContainText('Confronto');
  await expect(page.locator('.campaign-product-summary')).toContainText('Sessão Anterior');
  await expect(page.locator('.campaign-product-summary')).toContainText('Próxima Sessão');
