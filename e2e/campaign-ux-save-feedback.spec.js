@@ -47,12 +47,14 @@ test('jogadores organizados e confirmação acessível após salvar',async({page
   await expect(row.locator('[data-member-user]')).toHaveCount(0);
   await expect(row.locator('[data-member-character]')).toBeVisible();
   await expect(row.getByText('Notas',{exact:true})).toHaveCount(0);
-  await expect(row.locator('.roster-player-label')).toHaveText('Jogador');
+  // Os rótulos são verificados por participante logo após validar os dois cards.
   await expect(row.locator('.roster-player-character label')).toContainText('Personagem');
   await expect(row.locator('.roster-open-button')).toBeVisible();
   await expect(row.locator('.roster-open-button')).toHaveText('Abrir');
   await expect(row.getByRole('button',{name:'Remover'})).toBeVisible();
  }
+ await expect(page.locator('#jogadores [data-member-row="m1"] .roster-player-label')).toHaveText('Jogadora');
+ await expect(page.locator('#jogadores [data-member-row="m2"] .roster-player-label')).toHaveText('Jogador');
  await page.locator('#jogadores [data-save-campaign-section]').click();
  await expect(page.locator('#hub-save-notice')).toBeVisible();
  await expect(page.locator('#hub-save-notice .hub-save-title')).toHaveText('Alterações salvas');
