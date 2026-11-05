@@ -30,7 +30,7 @@ test('Mestre: Aventuras e Sessões da Campanha têm dimensões iguais',async({pa
  },masterData());
  await page.goto('/mesa.html?id='+cid);
  await expect(page.locator('#campanha [data-campaign-field="name"]')).toBeVisible();
- await expect(page.locator('#campanha #historia')).toContainText('Resumo da história');
+ await expect(page.locator('#campanha #historia')).toContainText('Resumo da Campanha');
  await expect(page.locator('#campanha #historia textarea[data-campaign-field="historySummary"]')).toHaveValue('Resumo público');
  await expect(page.locator('#table-root > .campaign-sections > #historia')).toHaveCount(0);
  await expect(page.locator('#table-root .campaign-product-description')).toContainText('Resumo público');
@@ -78,7 +78,7 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  }
  await expect(root.locator('#campanha input[readonly]')).not.toHaveCount(0);
  await expect(root.locator('#campanha #historia textarea[readonly]')).toHaveValue('Resumo público');
- await expect(root.locator('#campanha #historia')).toContainText('Resumo da história');
+ await expect(root.locator('#campanha #historia')).toContainText('Resumo da Campanha');
  await expect(root.locator('.campaign-editor-grid > #historia')).toHaveCount(0);
  await expect(root.locator('.campaign-product-description')).toContainText('Resumo público');
  await expect(root.locator('#jogadores .roster-player')).toHaveCount(2);
@@ -88,7 +88,7 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  await expect(root.locator('#jogadores .roster-player-character')).toHaveCount(2);
  const rowAlignment=await root.locator('#jogadores .roster-player').first().evaluate(row=>{
   const r=s=>row.querySelector(s)?.getBoundingClientRect();
-  const identity=r('.roster-player-identity'),character=r('.roster-player-character'),open=r('.roster-open-button'),parent=row.getBoundingClientRect();
+  const identity=r('.roster-player-identity'),character=r('.roster-player-character'),open=r('.roster-player-character .roster-player-profile-link'),parent=row.getBoundingClientRect();
   const clip=e=>e&&e.left>=parent.left-2&&e.right<=parent.right+2&&e.width>0;
   const grid=getComputedStyle(row).gridTemplateColumns;
   return{identityVisible:clip(identity),characterVisible:clip(character),actionVisible:clip(open),
@@ -106,12 +106,13 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaç�
  await expect(root.locator('#linha-tempo')).toContainText('Um evento revelado');
  for(const hidden of ['NPC Secreto','Local Secreto','Plano secreto','Segredo do mestre'])await expect(root).not.toContainText(hidden);
  await expect(root.locator('[data-campaign-field],[data-remove-member],[data-visible-npc],[data-visible-location],[data-visible-event],[data-timeline-delete],[data-add-npc]')).toHaveCount(0);
- await expect(root.locator('#jogadores a[href*="id=ana-char"]')).toHaveCount(2);
+ await expect(root.locator('#jogadores .roster-player-character a[href*="id=ana-char"]')).toHaveCount(1);
+ await expect(root.locator('#jogadores .roster-player-character a[aria-label="Abrir ficha de Aluria"]')).toHaveCount(1);
  const aligned=await root.evaluate(node=>{
   const r=s=>node.querySelector(s)?.getBoundingClientRect();
   const a=r('#aventuras'),s=r('#sessoes'),hA=r('#aventuras .campaign-reference-head h2'),hS=r('#sessoes .campaign-reference-head h2');
   const cover=node.querySelector('#campanha .campaign-readonly-picker .image-picker-preview img');
-  const button=r('#jogadores .roster-open-button');
+  const button=r('#jogadores .roster-player-character .roster-player-profile-link');
   return{
    sameWidth:Math.abs(a.width-s.width)<2,
    sameRow:Math.abs(a.top-s.top)<3,
