@@ -51,11 +51,9 @@ test('estados de hover mantêm cores compartilhadas', async ({ page }, testInfo)
     await expect(page.locator('.hub-app-shell')).toBeVisible();
     const link = page.locator('.hub-area-menu a').first();
     await link.hover();
-    const style = await link.evaluate(el => {
-      const css = getComputedStyle(el);
-      return { background: css.backgroundColor, border: css.borderTopColor };
-    });
-    expect(style.background).toBe('rgb(19, 31, 43)');
-    expect(style.border).toBe('rgb(47, 156, 255)');
+    // A transição de 150ms interpola a cor: verificar o estado estabilizado,
+    // e não um frame intermediário imediatamente após o hover.
+    await expect(link).toHaveCSS('background-color', 'rgb(19, 31, 43)');
+    await expect(link).toHaveCSS('border-top-color', 'rgb(47, 156, 255)');
   }
 });
