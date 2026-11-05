@@ -128,7 +128,10 @@ test('subeventos aninhados podem ser revelados por seus próprios cards, sem cri
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
  await expect(area.locator('[data-timeline-add-child],[data-timeline-add-root]')).toHaveCount(0);
- await area.locator('.timeline-tree [data-timeline-card-toggle="root-1"]').click();
+ const rootToggle=area.locator('.timeline-tree [data-timeline-toggle="root-1"]');
+ const rootChildren=area.locator('#timeline-list-children-root-1');
+ if(await rootToggle.getAttribute('aria-expanded')==='false')await rootToggle.click();
+ await expect(rootChildren).toBeVisible();
  await area.locator('[data-timeline-move="indent"][data-timeline-target="child-2"]').click();
  await expect(area.locator('#timeline-list-children-child-1 > .timeline-item')).toHaveCount(1);
  const childToggle=area.locator('[data-timeline-toggle="child-1"]');
