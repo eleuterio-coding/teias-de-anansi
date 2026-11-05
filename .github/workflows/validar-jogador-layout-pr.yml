@@ -9,6 +9,8 @@ on:
       - 'scripts/campaign-table-router.js'
       - 'scripts/campaign-sessions-ui.js'
       - 'scripts/character-list-ui.js'
+      - 'scripts/campaign-shared-layout.js'
+      - 'scripts/collaboration-view.js'
       - 'hub-components.css'
   workflow_dispatch:
 
@@ -17,10 +19,25 @@ permissions:
 
 jobs:
   jogador:
+    name: Jogador ${{ matrix.version }} — desktop/mobile
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout da versão correspondente
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && (github.event.pull_request.base.sha || 'main') || (github.event.pull_request.head.sha || github.sha) }}
+      - name: Aplicar a mesma especificação isolada à main, sem alterar a branch
+        if: matrix.version == 'baseline-main'
+        run: |
+          git fetch --no-tags origin "${{ github.event.pull_request.head.sha || github.sha }}"
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/player-visibility.spec.js" > e2e/player-visibility.spec.js
+      - name: Registrar revisão da aplicação
+        run: git log -1 --format="%H %s"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -28,14 +45,15 @@ jobs:
         run: |
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
-      - name: Confirmar visibilidade de jogador e bloqueio de edição em desktop e mobile
+      - name: Verificar visibilidade, Aventura atribuída e bloqueio de edição
         run: npx playwright test e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line
-      - name: Preservar evidências em caso de erro
-        if: failure()
+      - name: Preservar evidências
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: jogador-layout-evidencias
+          name: jogador-layout-${{ matrix.version }}-${{ github.run_id }}
           path: |
             test-results/
             playwright-report/
           retention-days: 7
+          if-no-files-found: ignore
