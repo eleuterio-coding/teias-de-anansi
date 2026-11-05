@@ -55,7 +55,10 @@ test('Linha do tempo preserva eventos legados, edita e organiza sem botão de cr
  await page.reload();
  await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(1);
  await expect(area.locator('#timeline-list-children-legacy-timeline-1')).toBeHidden();
- await area.locator('[data-timeline-card-toggle="legacy-timeline-1"]').click();
+ const disclosure=area.locator('[data-timeline-toggle="legacy-timeline-1"]');
+ await expect(disclosure).toHaveAttribute('aria-expanded','false');
+ await disclosure.click();
+ await expect(disclosure).toHaveAttribute('aria-expanded','true');
  await expect(area.locator('#timeline-list-children-legacy-timeline-1')).toBeVisible();
 });
 
