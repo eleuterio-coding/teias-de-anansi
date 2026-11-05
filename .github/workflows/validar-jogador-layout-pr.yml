@@ -1,0 +1,41 @@
+name: Validar Jornada do Jogador — layout e permissões
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/validar-jogador-layout-pr.yml'
+      - 'e2e/player-visibility.spec.js'
+      - 'scripts/campaign-player-view.js'
+      - 'scripts/campaign-table-router.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/character-list-ui.js'
+      - 'hub-components.css'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  jogador:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar testes de navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Confirmar visibilidade de jogador e bloqueio de edição em desktop e mobile
+        run: npx playwright test e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line
+      - name: Preservar evidências em caso de erro
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jogador-layout-evidencias
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
