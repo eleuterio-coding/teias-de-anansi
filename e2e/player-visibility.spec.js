@@ -29,7 +29,10 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  // A Campanha destaca somente sessões elegíveis ao resumo; a sessão planejada
  // permanece acessível pela lista, já validada acima.
  await expect(page.locator('#table-root a.campaign-reference-title-link[href^="sessoes.html"]')).toBeVisible();
- await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
+ const assignedAdventure=page.locator('#aventuras .campaign-adventure-featured-card[href="aventuras.html?campaign=c-gus&id=a-gus"]');
+ await expect(assignedAdventure).toHaveCount(1);
+ await expect(assignedAdventure).toBeVisible();
+ await expect(assignedAdventure.locator('h3')).toHaveText('Aventura do Gus');
  // Botões globais de busca/menu continuam acessíveis ao Jogador.
  // O formulário da Campanha é somente leitura e não deve ter ações de edição.
  await expect(page.locator('#campanha button')).toHaveCount(0);
