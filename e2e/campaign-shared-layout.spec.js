@@ -84,7 +84,7 @@ test('Jogador: espelho estrutural do Mestre sem exibir ferramentas ou informaÃ§Ã
  await expect(root.locator('#jogadores .roster-player')).toHaveCount(2);
  await expect(root.locator('#jogadores .roster-grip')).toHaveCount(0);
  await expect(root.locator('#jogadores .roster-player-identity')).toHaveCount(2);
- await expect(root.locator('#jogadores .roster-player-name')).toHaveText(['Ana','Bento']);
+ await expect(root.locator('#jogadores .roster-player-identity .roster-player-name')).toHaveText(['Ana','Bento']);
  await expect(root.locator('#jogadores .roster-player-character')).toHaveCount(2);
  const rowAlignment=await root.locator('#jogadores .roster-player').first().evaluate(row=>{
   const r=s=>row.querySelector(s)?.getBoundingClientRect();
