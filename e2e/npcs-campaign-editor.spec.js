@@ -48,7 +48,7 @@ test('Jogador consulta apenas NPCs públicos e não acessa controles do Mestre',
  await page.goto('/npcs.html');
  await page.evaluate(player=>localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(player)),player);
  await page.reload();
- await expect(page).toHaveURL(/npcs\\.html/);
+ await expect(page).toHaveURL(/npcs\.html/);
  await expect(page.locator('[data-master-only]')).toBeHidden();
  await expect(page.locator('a[href="lista-npcs.html"]')).toBeVisible();
  await page.locator('a[href="lista-npcs.html"]').click();
