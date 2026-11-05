@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/campaign-player-view.js'
+      - 'scripts/campaign-table-ui.js'
       - 'scripts/campaign-shared-layout.js'
       - 'scripts/collaboration-realtime.js'
       - 'scripts/hub-ux.js'
@@ -25,10 +26,23 @@ permissions:
   contents: read
 jobs:
   mestre-jogador:
+    name: Visibilidade ${{ matrix.version }} — desktop/mobile
     runs-on: ubuntu-latest
     timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && (github.event.pull_request.base.sha || 'main') || (github.event.pull_request.head.sha || github.sha) }}
+      - name: Utilizar as mesmas especificações atualizadas no baseline
+        if: matrix.version == 'baseline-main'
+        run: |
+          git fetch --no-tags origin "${{ github.event.pull_request.head.sha || github.sha }}"
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/campaign-player-disclosure.spec.js" > e2e/campaign-player-disclosure.spec.js
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/campaign-shared-layout.spec.js" > e2e/campaign-shared-layout.spec.js
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
