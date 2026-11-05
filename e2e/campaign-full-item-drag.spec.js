@@ -22,6 +22,7 @@ test.beforeEach(async({page})=>{
 const read=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1'))[0]);
 
 test('arrastar Locais e conservar registros legados de Atos',async({page})=>{
+ test.skip(test.info().project.name==='mobile-chromium','Arraste por mouse; no celular o toque longo é coberto abaixo');
  await page.goto('/mesa.html?id=full-drag-campaign');
  await expect(page.locator('#missoes')).toHaveCount(0);
  const locais=page.locator('#locais .campaign-bullet-entry');
@@ -74,11 +75,16 @@ test('no celular o arraste por toque longo reordena o bullet inteiro',async({pag
  await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:to}]});
  await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
- expect((await read(page)).importantLocations).toBe('Portão de Baldur\nCidade Sem Sol\nFenda do Carvalho');
+ const saved=await read(page);
+ expect(saved.importantLocations).toBe('Portão de Baldur\nCidade Sem Sol\nFenda do Carvalho');
+ expect(saved.activeMissions).toBe('Ato 1\nAto 2\nAto 3');
+ await page.reload();
+ await expect.poll(()=>page.locator('#locais [data-edit-line]').evaluateAll(nodes=>nodes.map(node=>node.value))).toEqual(['Portão de Baldur','Cidade Sem Sol','Fenda do Carvalho']);
 });
 
 
 test('o destino e o item arrastado ficam destacados e a troca recebe confirmação',async({page})=>{
+ test.skip(test.info().project.name==='mobile-chromium','Indicadores do cursor; o gesto real mobile usa touch events');
  await page.goto('/mesa.html?id=full-drag-campaign');
  const rows=page.locator('#locais .campaign-bullet-entry');
  await rows.first().scrollIntoViewIfNeeded();
@@ -109,6 +115,7 @@ test('o destino e o item arrastado ficam destacados e a troca recebe confirmaç�
 });
 
 test('a Linha do Tempo sinaliza o encaixe antes de confirmar a posição final',async({page})=>{
+ test.skip(test.info().project.name==='mobile-chromium','Indicador de mouse; a persistência de eventos no mobile é testada separadamente');
  await page.goto('/mesa.html?id=full-drag-campaign');
  const items=page.locator('#linha-tempo .timeline-tree > .timeline-item');
  await items.nth(2).scrollIntoViewIfNeeded();
