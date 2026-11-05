@@ -9,8 +9,9 @@ for(const page of pages){
  assert.ok(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i.test(html),`${page}: zoom do usuário não pode ser bloqueado.`)
 }
 
-const css=read('hub-ux.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),listUi=read('scripts/character-list-ui.js'),home=read('index.html');
-assert.match(css,/--hub-touch:44px/,'Alvo mínimo de toque precisa ser 44 px.');
+const css=read('hub-ux.css'),tokens=read('hub-design-tokens.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),listUi=read('scripts/character-list-ui.js'),home=read('index.html');
+assert.match(css,/hub-design-tokens\.css/,'O Hub deve carregar a fonte única de tokens.');
+assert.match(tokens,/--hub-touch\s*:\s*44px\s*;/,'Alvo mínimo de toque precisa ser 44 px.');
 assert.match(css,/:focus-visible/,'Foco visível compartilhado ausente.');
 assert.match(css,/\.section-nav\{[^}]*position:sticky!important[^}]*overflow-x:auto!important/s,'Navegação de seções precisa permanecer sticky e rolável no mobile.');
 assert.match(css,/@media\(max-width:760px\)[\s\S]*font-size:16px/,'Controles de formulário mobile precisam evitar zoom involuntário.');
