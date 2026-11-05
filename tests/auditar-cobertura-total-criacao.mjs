@@ -107,7 +107,10 @@ function globRegex(pattern){
   const escaped=pattern.replace(/[.+^${}()|[\]\\]/g,'\\$&').replace(/\*\*/g,'§§DOUBLESTAR§§').replace(/\*/g,'[^/]*').replace(/§§DOUBLESTAR§§/g,'.*');
   return new RegExp(`^${escaped}$`);
 }
-const dataFiles=walk(path.join(ROOT,'dados')).filter(p=>p.endsWith('.json')).map(rel).sort();
+// Catálogos consolidados em cache também são fontes efetivamente consumidas pelo construtor.
+// Permanecem sujeitos à classificação explícita por domínio no manifesto fail-closed.
+const dataDirs=['dados','cache'].map(dir=>path.join(ROOT,dir)).filter(exists);
+const dataFiles=dataDirs.flatMap(dir=>walk(dir)).filter(p=>p.endsWith('.json')).map(rel).sort();
 const domains=Array.isArray(scope.dominios)?scope.dominios:[];
 if(!domains.length)fail('Manifesto sem domínios de criação.');
 const ids=new Set(),classifiedSources=new Set();
