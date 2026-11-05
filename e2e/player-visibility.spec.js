@@ -30,7 +30,9 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  // permanece acessível pela lista, já validada acima.
  await expect(page.locator('#table-root a.campaign-reference-title-link[href^="sessoes.html"]')).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(0);
+ // Botões globais de busca/menu continuam acessíveis ao Jogador.
+ // O formulário da Campanha é somente leitura e não deve ter ações de edição.
+ await expect(page.locator('#campanha button')).toHaveCount(0);
 
  await page.goto('/aventuras.html?campaign=c-gus');
  await expect(page.getByRole('heading',{name:'Aventura do Gus'})).toBeVisible();
