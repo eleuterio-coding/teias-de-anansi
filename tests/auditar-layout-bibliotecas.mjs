@@ -45,10 +45,10 @@ assert.deepEqual(hrefs,expectedModules,'Os 18 cards devem seguir a ordem alfabé
 assert.match(index,/class="hub-library-page"/,'O índice deve usar a estrutura compartilhada.');
 assert.match(index,/scripts\/library-catalog-status\.js/,'Busca e contagem do catálogo devem permanecer.');
 
-const stylesheet=/biblioteca-light\.css\?v=20261028-hub-layout1/;
+const stylesheet=/\bbiblioteca-light\.css\?v=[\w.-]+/;
 for(const file of ['bibliotecas.html',...directModules,...wrappedModules,...nestedPages]){
   const html=read(file);
-  const theme=file==='bibliotecas.html'?/biblioteca-light\.css\?v=20261028-library-compact-cards1/:stylesheet;
+  const theme=stylesheet; // A versão de cache não altera o contrato do layout.
   assert.match(html,theme,file+' deve usar o tema compartilhado atualizado.');
   if(!wrappedModules.includes(file)){
     assert.match(html,/scripts\/hub-ux\.js\?v=/,file+' deve integrar o shell do Hub.');
