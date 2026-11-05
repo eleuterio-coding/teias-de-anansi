@@ -94,7 +94,7 @@ test('Planejar Sessão navega ao formulário da Campanha sem perder o vínculo',
  await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-retrospectiva');
  await expect(page.locator('#new-session-title')).toBeVisible();
 });
-test('Salvar fica na borda inferior da capa e pontilhado é branco discreto',async({page},info)=>{
+test('Salvar alinha à capa e tracejado branco mantém opacidade de 70%',async({page},info)=>{
  test.skip(info.project.name!=='desktop-chromium','alinhamento de duas colunas');
  await page.setViewportSize({width:1450,height:950});
  await page.goto('/mesa.html?id=e2e-retrospectiva');
@@ -104,9 +104,13 @@ test('Salvar fica na borda inferior da capa e pontilhado é branco discreto',asy
   const image=img.getBoundingClientRect(),button=save.getBoundingClientRect();
   return {imageBottom:image.bottom,saveBottom:button.bottom,
    border:getComputedStyle(img).borderColor,
+   borderStyle:getComputedStyle(img).borderStyle,
+   borderWidth:getComputedStyle(img).borderWidth,
    left:image.left,right:button.right};
  });
  expect(Math.abs(positions.imageBottom-positions.saveBottom)).toBeLessThanOrEqual(14);
- expect(positions.border).toBe('rgba(255, 255, 255, 0.17)');
+ expect(positions.border).toBe('rgba(255, 255, 255, 0.7)');
+ expect(positions.borderStyle).toBe('dashed');
+ expect(positions.borderWidth).toBe('2px');
  expect(positions.right).toBeGreaterThan(positions.left);
 });
