@@ -22,8 +22,10 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
 
  await page.goto('/mesa.html?id=c-gus');
  await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
- await expect(page.locator('#campanha .campaign-player-campaign-overview')).toBeVisible();
- await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
+ // A visão do Jogador compartilha a árvore do Mestre, mas usa campos somente leitura.
+ await expect(page.locator('#campanha')).toBeVisible();
+ await expect(page.locator('#campanha input[readonly]').first()).toBeVisible();
+ await expect(page.locator('#notas-compartilhadas textarea[readonly]')).toHaveValue('NOTA COMPARTILHADA GUS');
  await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
  await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
  await expect(page.getByRole('button')).toHaveCount(0);
