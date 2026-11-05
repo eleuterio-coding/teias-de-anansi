@@ -135,3 +135,28 @@ test('a Linha do Tempo sinaliza o encaixe antes de confirmar a posição final',
  await expect(page.locator('#linha-tempo [data-reorder-confirmation]')).toContainText('Ordem atualizada');
  await expect(page.locator('#linha-tempo .timeline-tree > .timeline-item').first().locator('[data-timeline-text]').first()).toHaveValue('A decisão');
 });
+
+test('no celular o toque longo reordena eventos da Linha do Tempo e persiste',async({page})=>{
+ test.skip(test.info().project.name!=='mobile-chromium','Gesto de toque validado somente em dispositivo mobile');
+ await page.goto('/mesa.html?id=full-drag-campaign');
+ const rows=page.locator('#linha-tempo .timeline-tree > .timeline-item');
+ await expect(rows).toHaveCount(3);
+ await rows.nth(0).scrollIntoViewIfNeeded();
+ await rows.nth(2).scrollIntoViewIfNeeded();
+ const source=rows.nth(2).locator(':scope > .campaign-flow-step');
+ const destination=rows.nth(0).locator(':scope > .campaign-flow-step > .campaign-flow-card');
+ const a=await source.boundingBox(),b=await destination.boundingBox();
+ expect(a&&b).toBeTruthy();
+ const client=await page.context().newCDPSession(page);
+ const from={x:a.x+17,y:a.y+Math.min(25,a.height/2)};
+ const to={x:b.x+Math.min(22,b.width/2),y:b.y+3};
+ await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[from]});
+ await page.waitForTimeout(360);
+ await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:to.x,y:(from.y+to.y)/2}]});
+ await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[to]});
+ await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+ await expect.poll(()=>page.locator('#linha-tempo .timeline-tree > .timeline-item').evaluateAll(nodes=>nodes.map(n=>n.dataset.timelineId))).toEqual(['t-3','t-1','t-2']);
+ expect((await read(page)).timelineNodes.map(n=>n.id)).toEqual(['t-3','t-1','t-2']);
+ await page.reload();
+ await expect.poll(()=>page.locator('#linha-tempo .timeline-tree > .timeline-item').evaluateAll(nodes=>nodes.map(n=>n.dataset.timelineId))).toEqual(['t-3','t-1','t-2']);
+});
