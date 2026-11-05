@@ -144,7 +144,7 @@ function flow(c,view='list',collapsedIds=null,{readOnly=false,adventures=[]}={})
  const nodes=projectCampaignTimeline(c,adventures),mode=view==='flowchart'?'flowchart':'list';
  // Todo grupo começa recolhido, tanto automático quanto manual.
  collapsedIds=collapsedIds??defaultCollapsedTimelineIds(nodes);
- return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(mode)}</div>
+ return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section"><div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2><span class="campaign-editor-count">${countTimelineNodes(nodes)} ${countTimelineNodes(nodes)===1?'evento':'eventos'}</span></div>${timelineViewToggle(mode)}</div>
  ${mode==='flowchart'?renderCampaignTimelineDiagram(nodes,collapsedIds,{readOnly}):`<ol class="campaign-timeline-flow timeline-tree">${nodes.length?nodes.map((n,i)=>readOnly?readonlyTimelineNode(n,i,0,collapsedIds):nodeHtml(n,i,0,collapsedIds)).join(''):'<li class="campaign-blank-state">Nenhum evento registrado.</li>'}</ol>`}
  
  </section>`
