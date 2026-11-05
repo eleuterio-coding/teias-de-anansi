@@ -12,7 +12,7 @@ const chars=[
 const people=[{username:'fernanda',displayName:'Fernanda',avatarDataUrl:photo},{username:'gustavo',displayName:'Gustavo',avatarDataUrl:photo}];
 const membership={campaignId:campaign.id,uid:'f-user',username:'fernanda',role:'player',characterId:'char-f',active:true,adventureIds:['adv'],sessionIds:['old','next','current']};
 const shared={
- ...campaign,importantNpcEntries:[],importantLocationEntries:[],historySummary:'',
+ ...campaign,sessions:campaign.sessions.map(row=>({...row,adventureId:'adv'})),importantNpcEntries:[],importantLocationEntries:[],historySummary:'',
  timeline:'A chegada\nDescoberta',timelineNodes:[{id:'a',text:'A chegada',children:[{id:'b',text:'Descoberta',children:[]}]}]
 };
 test.beforeEach(async({page})=>{
@@ -65,22 +65,25 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
   localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({campaigns:{[data.campaign.id]:{membership:data.membership,payload:{campaign:data.shared,participants:data.people,revealedAdventures:[{id:'adv',campaignId:data.campaign.id,title:'As Rainhas',summary:'Aventura importante',status:'current'}]},characters:data.chars,characterIds:data.chars.map(c=>c.id)}}}));
  },{campaign,shared,membership,people,chars});
  await page.goto('/mesa.html?id='+campaign.id);
- await expect(page.locator('#jogadores .campaign-player-roster-row')).toHaveCount(2);
- await expect(page.locator('#jogadores .campaign-player-roster-row').first()).toContainText('Jogadora');
+ await expect(page.locator('#jogadores .campaign-roster-readonly')).toHaveCount(2);
+ await expect(page.locator('#jogadores .campaign-roster-readonly').first()).toContainText('Jogadora');
  await expect(page.locator('#jogadores .hub-user-photo img')).toHaveCount(2);
  await expect(page.locator('#jogadores .hub-character-photo img')).toHaveCount(2);
- await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveCount(1);
- await expect(page.locator('#jogadores .roster-player-profile-link')).toHaveAttribute('href',/usuario\.html\?campaign=/);
+ await expect(page.locator('#jogadores .roster-player-profile-link[title="Abrir meu perfil"]')).toHaveCount(1);
+ await expect(page.locator('#jogadores .roster-player-profile-link[title="Abrir meu perfil"]')).toHaveAttribute('href',/usuario\.html\?campaign=/);
+ await expect(page.locator('#jogadores .roster-player-profile-link[title^="Abrir ficha de"]')).toHaveCount(2);
  await expect(page.locator('#aventuras h2')).toHaveText('Aventuras da Campanha');
  await expect(page.locator('#sessoes h2')).toHaveText('Sessões da Campanha');
  await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(3);
  await expect(page.locator('#sessoes .campaign-player-story-card').first()).toHaveClass(/campaign-player-story-card-featured/);
  await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
- await expect(page.locator('#campanha .campaign-player-fact')).toHaveCount(4);
+ await expect(page.locator('#campanha input[readonly]')).toHaveCount(5);
+ await expect(page.locator('#campanha textarea[readonly]')).toHaveCount(1);
+ await expect(page.locator('#campanha [data-campaign-field]')).toHaveCount(0);
  await expect(page.locator('#aventuras .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-current')).toHaveText('Atual');
  await expect(page.locator('#sessoes .campaign-player-story-status.status-next')).toHaveText('Próxima');
- const avatar=page.locator('#jogadores .campaign-player-roster-row').first().locator('[data-campaign-avatar-preview]');
+ const avatar=page.locator('#jogadores .campaign-roster-readonly').first().locator('[data-campaign-avatar-preview]');
  await expect(avatar).toHaveCount(2);
  await avatar.first().click();
  await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
@@ -88,8 +91,8 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
  await avatar.last().click();
  await expect(page.locator('dialog.campaign-avatar-lightbox img')).toBeVisible();
  await page.locator('dialog.campaign-avatar-lightbox button').click();
- await expect(page.locator('#campanha')).toContainText('Toril');
- await expect(page.locator('#campanha')).toContainText('Costa da Espada');
+ await expect(page.locator('#campanha').getByLabel('Mundo / Plano')).toHaveValue('Toril');
+ await expect(page.locator('#campanha').getByLabel('Principal Continente / Região')).toHaveValue('Costa da Espada');
  const first=page.locator('#sessoes .campaign-player-story-card').first();
  await expect(first).toContainText('Confronto');
  await expect(page.locator('#sessoes .campaign-player-story-card').nth(1)).toContainText('Travessia');
@@ -104,13 +107,17 @@ test('Jogador: cards pareados e imagens; sessões Atual antes de Próxima; linha
   expect(pair.players.y).toBeGreaterThan(pair.camp.y);
   expect(pair.sessions.y).toBeGreaterThan(pair.adventures.y);
  }
- await expect(page.locator('#linha-tempo [data-player-timeline-collapse]')).toHaveCount(1);
- await page.locator('#linha-tempo [data-player-timeline-collapse]').click();
- await expect(page.locator('#linha-tempo .campaign-player-event-children').first()).toBeHidden();
- await page.locator('#linha-tempo [data-player-timeline-view="flowchart"]').click();
- await expect(page.locator('#linha-tempo .campaign-player-diagram')).toBeVisible();
- await page.locator('#linha-tempo [data-player-timeline-collapse]').click();
- await expect(page.locator('#linha-tempo .campaign-player-event-children').first()).toBeHidden();
+ const timeline=page.locator('#linha-tempo');
+ const toggle=timeline.locator('[data-timeline-toggle]').first();
+ await expect(toggle).toBeVisible();
+ const branch=toggle.locator('xpath=ancestor::li[contains(@class,"timeline-item")][1]').locator(':scope > .timeline-children');
+ const before=await toggle.getAttribute('aria-expanded');
+ await toggle.click();
+ await expect(branch).toHaveJSProperty('hidden',before==='true');
+ await timeline.locator('[data-timeline-view="flowchart"]').click();
+ await expect(timeline.locator('.hub-diagram-root')).toBeVisible();
+ await timeline.locator('[data-timeline-view="list"]').click();
+ await expect(timeline.locator('.timeline-tree')).toBeVisible();
  await expect(page.locator('#jogadores input,#jogadores select')).toHaveCount(0);
  await expect(page.locator('#jogadores button:not([data-campaign-avatar-preview])')).toHaveCount(0);
 });
@@ -138,26 +145,27 @@ test('Cards continuam empilhados no celular',async({page})=>{
  expect(positions.sessions.top).toBeGreaterThan(positions.adventures.top);
 });
 
-test('Jogador: sessão Atual no topo e no máximo três sessões segundo prioridades existentes',async({page})=>{
+test('Jogador: sessão Atual no topo e até cinco sessões de Aventura ativa segundo prioridades',async({page})=>{
  const more={...shared,sessions:[
   ...campaign.sessions,
-  {id:'next-high',number:4,order:4,title:'Outra travessia',status:'next'},
+  {id:'next-high',number:4,order:4,title:'Outra travessia',status:'next',adventureId:'adv'},
   {id:'planned-high',number:5,order:5,title:'Preparação futura',status:'planned'},
-  {id:'completed-high',number:6,order:6,title:'Memórias passadas',status:'completed'}
+  {id:'completed-high',number:6,order:6,title:'Memórias passadas',status:'completed',adventureId:'adv'}
  ]};
  await page.addInitScript(data=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'f-user',username:'fernanda',isMaster:false,memberships:[data.membership]}));
-  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({campaigns:{[data.campaign.id]:{membership:data.membership,payload:{campaign:data.more,participants:data.people,revealedAdventures:[]},characters:data.chars,characterIds:data.chars.map(c=>c.id)}}}));
+  localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify({campaigns:{[data.campaign.id]:{membership:data.membership,payload:{campaign:data.more,participants:data.people,revealedAdventures:[{id:'adv',campaignId:data.campaign.id,title:'As Rainhas',status:'active'}]},characters:data.chars,characterIds:data.chars.map(c=>c.id)}}}));
  },{campaign,membership,more,people,chars});
  await page.goto('/mesa.html?id='+campaign.id);
  const cards=page.locator('#sessoes .campaign-player-story-card');
- await expect(cards).toHaveCount(3);
+ await expect(cards).toHaveCount(5);
  await expect(cards.nth(0)).toContainText('Confronto');
  await expect(cards.nth(0)).toHaveClass(/campaign-player-story-card-featured/);
  await expect(cards.nth(1)).toContainText('Outra travessia');
  await expect(cards.nth(2)).toContainText('Travessia');
  await expect(page.locator('#sessoes')).not.toContainText('Preparação futura');
- await expect(page.locator('#sessoes')).not.toContainText('Memórias passadas');
+ await expect(cards.nth(3)).toContainText('Memórias passadas');
+ await expect(cards.nth(4)).toContainText('Introdução');
 });
 
 test('Sessão replica o layout de Jogadores da Campanha e preserva as ações',async({page})=>{
