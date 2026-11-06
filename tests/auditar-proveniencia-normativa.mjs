@@ -149,7 +149,7 @@ assert.equal(srdTranslationFiles.length,16,'Lotes SRD de tradução incompletos 
 for(const file of srdTranslationFiles){
   const layer=readJson(file);
   assert.match(layer.schema||'',/^hub-rpg\.magias\.srd2024-traducao-editorial\.v(?:[1-9]|1[0-6])$/);
-  assert.match(String(layer.base||layer.fonte||''),/SRD 5\.2\.1/,'A localização deve declarar a fonte SRD 5.2.1.');
+  assert.match(String(layer.base||layer.fonte||''),/(?:SRD|System Reference Document) 5\.2\.1/,'A localização deve declarar o SRD/System Reference Document 5.2.1.');
   assert.equal(layer.total,Object.keys(layer.descricoes||{}).length,`${file}: total de traduções divergente.`);
   assert.ok(layer.total>0,`${file}: lote de traduções vazio.`);
   for(const [name,entry] of Object.entries(layer.descricoes)){
