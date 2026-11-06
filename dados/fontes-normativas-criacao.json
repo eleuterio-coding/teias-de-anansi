@@ -287,6 +287,12 @@
       "proveniencia": "item"
     },
     {
+      "padrao": "dados/catalogo-magias-20261104.json",
+      "autoridade": "consolidado_misto",
+      "fonte": "Catálogo de magias com livro de origem identificado individualmente",
+      "proveniencia": "item"
+    },
+    {
       "padrao": "dados/magias-srd.json",
       "autoridade": "oficial_atual",
       "fonte": "SRD 5.2.1",
