@@ -96,6 +96,21 @@ for(const [i,item] of weaponCache.itens.entries()){
   assert.ok(['5e','5.5e'].includes(source.ruleset),`Arma ${item.id}: ruleset da fonte desconhecido.`);
 }
 
+// Catálogo de magias: não atribuir autoridade ao conjunto sem proveniência individual.
+const spellCatalog=readJson('dados/catalogo-magias-20261104.json');
+assert.equal(spellCatalog.schema,'hub-rpg/catalogo-magias-20261104/v1');
+assert.ok(scoped.has('dados/catalogo-magias-20261104.json'),'O catálogo de magias deve permanecer no escopo normativo.');
+assert.ok(Array.isArray(spellCatalog.itens)&&spellCatalog.itens.length>0,'Catálogo de magias vazio.');
+assert.equal(spellCatalog.total,spellCatalog.itens.length,'Total declarado de magias inconsistente.');
+const spellIds=new Set();
+for(const [i,item] of spellCatalog.itens.entries()){
+  assert.ok(typeof item.id==='string'&&item.id.trim(),`Magia ${i}: ID ausente.`);
+  assert.ok(typeof item.nome==='string'&&item.nome.trim(),`Magia ${item.id}: nome ausente.`);
+  assert.ok(typeof item.livro==='string'&&item.livro.trim(),`Magia ${item.id}: fonte editorial ausente.`);
+  assert.ok(!spellIds.has(item.id),`Magia ${item.id}: ID duplicado.`);
+  spellIds.add(item.id);
+}
+
 const quickstone=mappings.filter(m=>/quickstone/i.test(m.padrao));
 assert.ok(quickstone.length>=3,'Quickstone deve estar explicitamente classificado nos domínios em que participa.');
 assert.ok(quickstone.every(m=>m.autoridade==='terceiro_compativel'),'Frontiers of Eberron: Quickstone não pode ser promovido a fonte oficial.');
