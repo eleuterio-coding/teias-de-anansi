@@ -46,7 +46,10 @@ assert.match(precedence,/Regras da Casa do Hub prevalecem/);
 assert.match(precedence,/versão 5\.5e\/2024/);
 assert.match(precedence,/Conteúdo 5e sem substituto 5\.5e permanece disponível/);
 
-const dataFiles=walk('dados').filter(file=>file.endsWith('.json'));
+const dataFiles=['dados','cache']
+  .filter(dir=>fs.existsSync(path.join(ROOT,dir)))
+  .flatMap(dir=>walk(dir))
+  .filter(file=>file.endsWith('.json'));
 const scoped=new Set();
 for(const domain of scope.dominios){
   for(const pattern of domain.fontes){
@@ -75,6 +78,22 @@ for(const file of [...scoped].sort()){
 
 for(const m of mappings){
   assert.ok(usedMappings.has(m.padrao),`Mapeamento normativo órfão ou fora do escopo de criação: ${m.padrao}`);
+}
+
+// Catálogo de armas: toda entrada consolidada conserva a fonte do item.
+const weaponCache=readJson('cache/armas-catalogo.json');
+assert.equal(weaponCache.schema,'hub-rpg/armas-catalogo-cache/v1');
+assert.ok(scoped.has('cache/armas-catalogo.json'),'O catálogo de armas deve permanecer no escopo normativo.');
+assert.ok(Array.isArray(weaponCache.itens)&&weaponCache.itens.length>0,'Catálogo de armas sem itens.');
+assert.equal(weaponCache.controle?.quantidade,weaponCache.itens.length,'Controle de quantidade do catálogo inconsistente.');
+const weaponSources=weaponCache.fontes;
+assert.ok(weaponSources&&typeof weaponSources==='object'&&!Array.isArray(weaponSources)&&Object.keys(weaponSources).length>0,'Registro de fontes de armas ausente.');
+for(const [i,item] of weaponCache.itens.entries()){
+  assert.ok(typeof item.id==='string'&&item.id.trim(),`Arma ${i}: ID ausente.`);
+  assert.ok(typeof item.fonte==='string'&&Object.prototype.hasOwnProperty.call(weaponSources,item.fonte),`Arma ${item.id}: fonte ausente ou desconhecida.`);
+  const source=weaponSources[item.fonte];
+  assert.ok(String(source.titulo||'').trim(),`Arma ${item.id}: fonte sem título.`);
+  assert.ok(['5e','5.5e'].includes(source.ruleset),`Arma ${item.id}: ruleset da fonte desconhecido.`);
 }
 
 const quickstone=mappings.filter(m=>/quickstone/i.test(m.padrao));
