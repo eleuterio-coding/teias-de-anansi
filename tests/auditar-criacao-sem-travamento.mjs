@@ -14,9 +14,9 @@ const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 
 // Contratos reais de carregamento. A página e o motor já usam uma revisão
 // posterior à indicada nas constantes congeladas de 2026-09-17.
-const LEGACY_UI_REV='20260828-character-builder-freeze1';
-const RULES_REV='20260831-tasha-metamagic1';
-const WEALTH_REV='20260923-wealth-collapse1';
+const EQUIPMENT_UI_REV='20261106-rules-singleton1';
+const RULES_REV='20261106-rules-singleton1';
+
 const pageRevision=html.match(/scripts\/character-builder\.js\?v=([\w-]+)/)?.[1];
 const coreRevision=loader.match(/character-builder\/ui\.js\?v=([\w-]+)/)?.[1];
 const wizardRevision=loader.match(/character-builder\/wizard-ui\.js\?v=([\w-]+)/)?.[1];
@@ -24,18 +24,20 @@ assert.ok(pageRevision,'A página deve importar o carregador com revisão explí
 assert.ok(coreRevision,'O carregador deve importar o núcleo com revisão explícita.');
 assert.ok(wizardRevision,'O carregador deve importar o controle de acesso com revisão explícita.');
 assert.notEqual(pageRevision,'20260917-master-full-control1','A página não pode voltar ao carregador anterior à revisão atual.');
-assert.equal(pageRevision,'20261106-wizard-ready1','A página deve invalidar o carregador do wizard pronto para navegação.');
-assert.equal(coreRevision,'20261031-excluir-marcas-dragon1','O motor normativo do núcleo permanece na revisão de outubro; migração do rules.js será separada.');
-assert.ok(loader.includes('wizard-ui.js?v=20261106-wizard-ready1'),'O loader deve invalidar o wizard que sinaliza prontidão.');
+assert.equal(pageRevision,'20261106-wizard-rules1','A página deve invalidar o carregador do wizard pronto para navegação.');
+assert.equal(coreRevision,RULES_REV,'O núcleo precisa importar a revisão única do motor central.');
+assert.ok(loader.includes(`wizard-ui.js?v=${RULES_REV}`),'O loader deve invalidar o wizard que sinaliza prontidão.');
+assert.notEqual(pageRevision,coreRevision,'Cache da página e cache do motor devem ter revisões distintas e explícitas.');
+assert.equal(wizardRevision,RULES_REV,'Wizard precisa invalidar seus importadores transitivos.');
 assert.ok(html.includes('#builder[hidden],#builder:not([data-wizard-ready="true"])'),'O construtor não deve ficar clicável antes da inicialização do wizard.');
 assert.ok(html.includes('id="builder" class="builder controles" hidden'),'HTML inicial deve ocultar o construtor até o wizard ficar pronto.');
 assert.ok(loader.includes("builder?.dataset.wizardReady!=='true'"),'O loader não deve apresentar o construtor antes do controle de acesso e da vinculação da navegação.');
 assert.ok(text('scripts/character-builder/wizard-ui.js').includes("builder.dataset.wizardReady='true'"),'O wizard deve sinalizar prontidão apenas após registrar os eventos e verificar autorização.');
 assert.match(core,new RegExp('rules\\.js\\?v='+coreRevision+'[\\\'"]'),'O núcleo deve usar a revisão normativa correspondente.');
 assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias deve manter sua revisão normativa validada.');
-assert.ok(loader.includes(`equipment-ownership-ui.js?v=${LEGACY_UI_REV}`),'Equipamento ativo deve manter sua revisão anti-travamento.');
-assert.ok(loader.includes(`package-b-purchase-ui.js?v=${WEALTH_REV}`),'O carregador deve usar a revisão atual de compras/riqueza.');
-assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${WEALTH_REV}`),'Compras deve importar a mesma revisão de riqueza.');
+assert.ok(loader.includes(`equipment-ownership-ui.js?v=${EQUIPMENT_UI_REV}`),'Equipamento ativo deve manter sua revisão anti-travamento.');
+assert.ok(loader.includes(`package-b-purchase-ui.js?v=${RULES_REV}`),'O carregador deve usar a revisão atual de compras/riqueza.');
+assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${RULES_REV}`),'Compras deve importar a mesma revisão de riqueza.');
 for(const [label,source] of [['Mago',wizardUi],['equipamento',equipmentUi]]){
  assert.ok(source.includes(`rules.js?v=${RULES_REV}`),`${label}: regras normativas previamente verificadas devem continuar vinculadas.`);
 }

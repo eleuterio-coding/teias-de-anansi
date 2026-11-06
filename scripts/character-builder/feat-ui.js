@@ -1,5 +1,5 @@
 import{state,$,AB,SKILL_AB,arr,num,esc,fold,mod,signed,pb}from'./state.js';
-import{derive,speciesTraitChoiceDefs}from'./rules.js';
+import{derive,speciesTraitChoiceDefs}from'./rules.js?v=20261106-rules-singleton1';
 import{ALL_SKILLS,activeFeatInstances,featRule,featChoiceDefs,sanitizeFeatChoices,featEligibleSpells,featMissingChoices}from'./feat-mechanics.js';
 
 let applying=false,scheduled=false;

@@ -348,8 +348,21 @@ def validate_curated(root, allr):
     extra = sorted(k for k in curated_keys if k not in published_rules)
     if missing or extra:
         raise RuntimeError(f"Cobertura de origens curadas inválida: {len(missing)} ausentes={missing} {len(extra)} extras={extra}")
-    if len(rules_map) != 170 or data.get("total_regras") != 170:
-        raise RuntimeError(f"Mapa curado deve cobrir 170 regras; encontrou {len(rules_map)}.")
+    if len(rules_map) != 198 or data.get("total_regras") != 198:
+        raise RuntimeError(f"Mapa curado deve cobrir 198 regras; encontrou {len(rules_map)}.")
+
+    # Origem publicada só é marcada como curada quando possui ao menos um vínculo
+    # mecânico real; atributos, perícias e tipos de dano recém-adicionados não
+    # podem passar na auditoria apenas com uma lista vazia.
+    new_origins = {norm("Ability Score Improvement (House Rule)")} | {
+        norm(item.get("original"))
+        for item in json.loads((root / "dados" / "regras-termos-complementares.json").read_text(encoding="utf-8")).get("itens", [])
+        if item.get("original")
+    }
+    missing_origins = sorted(new_origins - set(curated_keys))
+    empty_origins = sorted(k for k in new_origins if k in curated_keys and not rules_map[curated_keys[k]])
+    if missing_origins or empty_origins:
+        raise RuntimeError(f"Origens complementares sem relação curada: ausentes={missing_origins} vazias={empty_origins}")
 
     by_id = {r["id"]: r for r in allr if r.get("id")}
     by_original = defaultdict(list)

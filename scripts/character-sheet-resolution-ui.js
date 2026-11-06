@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,read,write,signed}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{ownedEquipment}from'./character-builder/equipment-ownership.js?v=20260902-magic-items2';
 import{ensureCombatState,weaponCombatProfile,masteryDescription}from'./character-sheet-combat-rules.js?v=20260901-combat1';
 import{activeConcentrations,concentrationDc,failConcentrationSave,enforceConcentrationState}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';

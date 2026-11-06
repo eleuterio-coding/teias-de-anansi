@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,json}from'./state.js';
-import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
+import{selected}from'./rules.js?v=20261106-rules-singleton1';
 import{WEALTH_BY_LEVEL,creationBudgetCp,creationBudgetBreakdown}from'./starting-equipment-rules.js?v=20260922-wealth-class4';
 import{purchasePermission}from'./equipment-ownership.js?v=20260828-wealth-background1';
 

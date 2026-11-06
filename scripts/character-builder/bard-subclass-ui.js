@@ -1,5 +1,5 @@
 import{state,$,esc,arr}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20261106-rules-singleton1';
 import{bardSubclassChoiceDefs,setBardSubclassChoice}from'./bard-subclass-mechanics.js?v=20260827-bard-subclasses1';
 
 let queued=false;

@@ -66,3 +66,4 @@ export function derive(){applyHouseRules();syncSorcererSpellAccess();let d=apply
 subclassLevel trainedArmor spellProgress spellOptions k.hitDie+con
 speciesTraitChoiceDefs sanitizeSpeciesTraitChoices spellCreditState
 */
+export const RULES_REVISION='20261106-rules-singleton1';

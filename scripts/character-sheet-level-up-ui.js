@@ -1,7 +1,7 @@
 import{state,$,AB,arr,num,esc,fold,pb,read,write,snapshot}from'./character-builder/state.js';
-import{derive,applyHouseRules,subclassLevel,spellOptions,spellCreditState,sanitizeSelections}from'./character-builder/rules.js?v=20260831-tasha-metamagic1';
+import{derive,applyHouseRules,subclassLevel,spellOptions,spellCreditState,sanitizeSelections}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{featChoiceDefs,sanitizeFeatChoices}from'./character-builder/feat-mechanics.js?v=20260901-level-up1';
-import{ensureProgressionState,levelUpPlan,preserveDamageOnLevelUp,recordLevelUp,progressionLabel}from'./character-sheet-level-up-rules.js?v=20260901-level-up1';
+import{ensureProgressionState,levelUpPlan,preserveDamageOnLevelUp,recordLevelUp,progressionLabel}from'./character-sheet-level-up-rules.js?v=20261106-rules-singleton1';
 
 const REPLACE_ONE=new Set(['bard','sorcerer','warlock']);
 const SUBCLASS_MODULES={
