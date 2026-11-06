@@ -293,6 +293,12 @@
       "proveniencia": "item"
     },
     {
+      "padrao": "dados/magias-en-resumos-editoriais-20261029.json",
+      "autoridade": "demonstrativo_nao_canonico",
+      "fonte": "Resumos editoriais auxiliares em inglês; não substituem o catálogo SRD canônico",
+      "proveniencia": "item"
+    },
+    {
       "padrao": "dados/magias-srd.json",
       "autoridade": "oficial_atual",
       "fonte": "SRD 5.2.1",
