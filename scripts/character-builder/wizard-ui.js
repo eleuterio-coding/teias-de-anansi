@@ -119,5 +119,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(schedulePendingLinks).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});schedulePendingLinks()
 }
-export function initWizardUi(){if(initialized)return;initialized=true;if(!enforceCharacterEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;if(!enforceCharacterEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi();const builder=byId('builder');if(builder)builder.dataset.wizardReady='true'}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();

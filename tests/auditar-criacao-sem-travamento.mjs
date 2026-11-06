@@ -24,7 +24,13 @@ assert.ok(pageRevision,'A página deve importar o carregador com revisão explí
 assert.ok(coreRevision,'O carregador deve importar o núcleo com revisão explícita.');
 assert.ok(wizardRevision,'O carregador deve importar o controle de acesso com revisão explícita.');
 assert.notEqual(pageRevision,'20260917-master-full-control1','A página não pode voltar ao carregador anterior à revisão atual.');
-assert.equal(pageRevision,coreRevision,'A página e o núcleo devem compartilhar a revisão de correção atual.');
+assert.equal(pageRevision,'20261106-wizard-ready1','A página deve invalidar o carregador do wizard pronto para navegação.');
+assert.equal(coreRevision,'20261031-excluir-marcas-dragon1','O motor normativo do núcleo permanece na revisão de outubro; migração do rules.js será separada.');
+assert.ok(loader.includes('wizard-ui.js?v=20261106-wizard-ready1'),'O loader deve invalidar o wizard que sinaliza prontidão.');
+assert.ok(html.includes('#builder[hidden],#builder:not([data-wizard-ready="true"])'),'O construtor não deve ficar clicável antes da inicialização do wizard.');
+assert.ok(html.includes('id="builder" class="builder controles" hidden'),'HTML inicial deve ocultar o construtor até o wizard ficar pronto.');
+assert.ok(loader.includes("builder?.dataset.wizardReady!=='true'"),'O loader não deve apresentar o construtor antes do controle de acesso e da vinculação da navegação.');
+assert.ok(text('scripts/character-builder/wizard-ui.js').includes("builder.dataset.wizardReady='true'"),'O wizard deve sinalizar prontidão apenas após registrar os eventos e verificar autorização.');
 assert.match(core,new RegExp('rules\\.js\\?v='+coreRevision+'[\\\'"]'),'O núcleo deve usar a revisão normativa correspondente.');
 assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias deve manter sua revisão normativa validada.');
 assert.ok(loader.includes(`equipment-ownership-ui.js?v=${LEGACY_UI_REV}`),'Equipamento ativo deve manter sua revisão anti-travamento.');
