@@ -73,7 +73,7 @@ jobs:
           if missing: raise RuntimeError('Controle de substituição incompleto: '+', '.join(missing))
           if 'new MutationObserver' in ui:
               raise RuntimeError('A UI de substituição não pode observar e mover o próprio DOM: isso pode gerar loop e travar a página.')
-          if 'spell-swap-ui.js?v=20260825-spell-swap-visible1' not in loader or 'initSpellSwapUi' not in loader:
+          if 'spell-swap-ui.js?v=20261106-rules-singleton1' not in loader or 'initSpellSwapUi' not in loader:
               raise RuntimeError('O construtor não carrega a opção explícita de substituição.')
           if 'automaticamente' not in ui or 'marcada no círculo correspondente' not in ui:
               raise RuntimeError('A interface não explica a sincronização automática dos checkboxes.')

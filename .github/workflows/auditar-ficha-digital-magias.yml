@@ -75,7 +75,7 @@ jobs:
           html=Path('ficha-personagem.html').read_text(encoding='utf-8')
           runtime=Path('scripts/character-sheet-spell-runtime.js').read_text(encoding='utf-8')
           prep=Path('scripts/character-sheet-spell-preparation.js').read_text(encoding='utf-8')
-          required_html=['spell-resource-title','spell-rest-actions','character-sheet-spell-runtime.js?v=20260825-spell-runtime1']
+          required_html=['spell-resource-title','spell-rest-actions','character-sheet-spell-runtime.js?v=20261106-rules-singleton1']
           required_runtime=['data-new-cast','data-remove-cast','spellCastLog','arcanumUsed','freeSpellUses','Pact Magic','Arcanos Místicos','Conjuração gratuita','data-spell-rest="short"','data-spell-rest="long"']
           missing=[x for x in required_html if x not in html]+[x for x in required_runtime if x not in runtime]
           if missing: raise RuntimeError('Integração incompleta: '+', '.join(missing))
