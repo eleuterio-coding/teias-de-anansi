@@ -245,6 +245,12 @@
       "proveniencia": "item"
     },
     {
+      "padrao": "cache/armas-catalogo.json",
+      "autoridade": "consolidado_misto",
+      "fonte": "Catálogo de armas 5.5e/5e com proveniência identificada por item",
+      "proveniencia": "item"
+    },
+    {
       "padrao": "dados/armaduras-pdfs.json",
       "autoridade": "consolidado_misto",
       "fonte": "Armaduras consolidadas das fontes registradas",
