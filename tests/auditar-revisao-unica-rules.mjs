@@ -15,7 +15,7 @@ function walk(dir){
 walk('scripts');
 
 const refs=[];
-const importPattern=/(?:\\bfrom\\s*|\\bimport\\s*(?:\\(\\s*)?)['"]([^'"]*\\/rules\\.js(?:\\?v=([A-Za-z0-9._-]+))?)['"]/g;
+const importPattern=/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)['"]([^'"]*\/rules\.js(?:\?v=([A-Za-z0-9._-]+))?)['"]/g;
 for(const file of files){
   const source=fs.readFileSync(path.join(ROOT,file),'utf8');
   for(const match of source.matchAll(importPattern)){
@@ -23,13 +23,13 @@ for(const file of files){
   }
 }
 assert.equal(refs.length,EXPECTED_DIRECT_IMPORTS,
-  `O inventário de imports diretos do motor mudou: esperado ${EXPECTED_DIRECT_IMPORTS}, encontrado ${refs.length}.\\n${refs.map(x=>`${x.file}: ${x.literal}`).join('\\n')}`);
+  `O inventário de imports diretos do motor mudou: esperado ${EXPECTED_DIRECT_IMPORTS}, encontrado ${refs.length}.\n${refs.map(x=>`${x.file}: ${x.literal}`).join('\n')}`);
 const withoutVersion=refs.filter(x=>!x.revision);
 assert.equal(withoutVersion.length,0,
-  `O motor central rules.js não pode ser importado sem versão; encontrados ${withoutVersion.length}:\\n${withoutVersion.map(x=>`${x.file}: ${x.literal}`).join('\\n')}`);
+  `O motor central rules.js não pode ser importado sem versão; encontrados ${withoutVersion.length}:\n${withoutVersion.map(x=>`${x.file}: ${x.literal}`).join('\n')}`);
 const revisions=[...new Set(refs.map(x=>x.revision))];
 assert.deepEqual(revisions,[RULES_REV],
-  `O motor central rules.js deve possuir uma única revisão ${RULES_REV}; encontradas: ${revisions.join(', ')}.\\n${refs.map(x=>`${x.file}: ${x.revision}`).join('\\n')}`);
+  `O motor central rules.js deve possuir uma única revisão ${RULES_REV}; encontradas: ${revisions.join(', ')}.\n${refs.map(x=>`${x.file}: ${x.revision}`).join('\n')}`);
 
 const html=fs.readFileSync(path.join(ROOT,'criacao-personagem.html'),'utf8');
 const loader=fs.readFileSync(path.join(ROOT,'scripts/character-builder.js'),'utf8');
