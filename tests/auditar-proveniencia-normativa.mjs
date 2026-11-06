@@ -71,7 +71,10 @@ for(const file of [...scoped].sort()){
   assert.ok(['arquivo','item'].includes(m.proveniencia),`${file}: modo de proveniência inválido.`);
   if(m.autoridade==='consolidado_misto')assert.equal(m.proveniencia,'item',`${file}: consolidado misto exige proveniência por item.`);
   if(m.autoridade==='derivado_localizacao'){
-    const validLocalization=file.startsWith('dados/localizacao-')||file.startsWith('dados/classes-ptbr/');
+    const validLocalization=file.startsWith('dados/localizacao-')||file.startsWith('dados/classes-ptbr/')
+      ||/^dados\/magias-ptbr-srd-2024-revisado(?:-lote(?:[2-9]|1[0-6]))?\.json$/.test(file)
+      ||file==='dados/magias-traducoes-srd-verificadas.json'
+      ||file==='dados/regras-termos-complementares.json';
     assert.ok(validLocalization,`${file}: derivado de localização usado fora de camada autorizada.`);
   }
 }
@@ -130,6 +133,69 @@ for(const [name,item] of Object.entries(editorialSummaries.itens)){
 const editorialAuthority=mappings.find(m=>m.padrao==='dados/magias-en-resumos-editoriais-20261029.json');
 assert.equal(editorialAuthority.autoridade,'demonstrativo_nao_canonico','Resumos editoriais não podem adquirir precedência normativa.');
 assert.equal(editorialAuthority.proveniencia,'item','Cada resumo editorial precisa de proveniência individual.');
+
+// Fontes heterogêneas só são classificadas conforme esquema e evidência documental.
+const phbIndex=readJson('dados/magias-phb-2024-indice.json');
+assert.equal(phbIndex.schema,'hub-rpg.magias.phb-2024.indice.v1');
+assert.equal(phbIndex.total,phbIndex.itens?.length,'Índice PHB: contagem declarada divergente.');
+assert.ok(phbIndex.itens.length>0,'Índice PHB vazio.');
+assert.match(phbIndex.fonte?.nota||'',/OCR com erros/,'O índice deve declarar as limitações de extração.');
+assert.ok(phbIndex.itens.every(i=>i.id&&i.fonte==='phb-2024'&&i.pagina_fonte&&i.pdf_origem&&i.texto_integral_publicavel===false&&['indice_verificado','nivel_escola_extraidos_ocr'].includes(i.completude)),'Índice PHB: metadados de origem/verificação ausentes ou texto integral marcado como publicável.');
+assert.equal(mappings.find(m=>m.padrao==='dados/magias-phb-2024-indice.json')?.autoridade,'demonstrativo_nao_canonico','Índice OCR parcial não pode virar fonte canônica.');
+
+// Lotes SRD: verificam metadados e integridade textual, não alegam conferir a tradução com o SRD.
+const srdTranslationFiles=[...scoped].filter(file=>/^dados\/magias-ptbr-srd-2024-revisado(?:-lote(?:[2-9]|1[0-6]))?\.json$/.test(file)).sort();
+assert.equal(srdTranslationFiles.length,16,'Lotes SRD de tradução incompletos ou não previstos.');
+for(const file of srdTranslationFiles){
+  const layer=readJson(file);
+  assert.match(layer.schema||'',/^hub-rpg\.magias\.srd2024-traducao-editorial\.v(?:[1-9]|1[0-6])$/);
+  assert.match(String(layer.base||layer.fonte||''),/SRD 5\.2\.1/,'A localização deve declarar a fonte SRD 5.2.1.');
+  assert.equal(layer.total,Object.keys(layer.descricoes||{}).length,`${file}: total de traduções divergente.`);
+  assert.ok(layer.total>0,`${file}: lote de traduções vazio.`);
+  for(const [name,entry] of Object.entries(layer.descricoes)){
+    assert.ok(name.trim(),`${file}: magia sem nome de origem.`);
+    const description=typeof entry==='string'?entry:entry?.descricao;
+    assert.ok(typeof description==='string'&&description.trim(),`${file}: tradução vazia para ${name}.`);
+  }
+}
+assert.equal(mappings.find(m=>m.padrao==='dados/magias-ptbr-srd-2024-revisado*.json')?.autoridade,'derivado_localizacao','Traduções editoriais não criam regras mecânicas próprias.');
+
+const verifiedTranslations=readJson('dados/magias-traducoes-srd-verificadas.json');
+assert.equal(verifiedTranslations.schema,'hub-rpg.magias-traducao-verificada.v1');
+assert.match(verifiedTranslations.base||'',/SRD 5\.2\.1/);
+assert.match(verifiedTranslations.licenca_traducao||'',/MIT/);
+assert.match(verifiedTranslations.commit_origem||'',/^[0-9a-f]{40}$/);
+assert.equal(verifiedTranslations.total,Object.keys(verifiedTranslations.descricoes||{}).length);
+assert.ok(verifiedTranslations.total>0);
+assert.ok(Object.entries(verifiedTranslations.descricoes).every(([name,text])=>name.trim()&&typeof text==='string'&&text.trim()),'Traduções verificadas: entrada sem texto ou nome.');
+assert.equal(mappings.find(m=>m.padrao==='dados/magias-traducoes-srd-verificadas.json')?.autoridade,'derivado_localizacao');
+
+// PDFs de usuário: arquivos auxiliares, sem promover extração textual a regra oficial.
+const tashaProvided=readJson('dados/magias-tasha-usuario.json');
+assert.equal(tashaProvided.schema,'hub-rpg/tasha-2020-transcricao-fornecida-v1');
+assert.match(tashaProvided.politica||'',/fornecido pelo usuário/);
+assert.equal(tashaProvided.total_magias,tashaProvided.itens?.length);
+assert.ok(tashaProvided.itens.length>0);
+assert.ok(tashaProvided.itens.every(i=>i.id&&i.name&&typeof i.description==='string'&&i.description.trim()),'Tasha: magia transcrita sem ID, nome ou descrição.');
+const xanatharProvided=readJson('dados/magias-xanathar-usuario.json');
+assert.equal(xanatharProvided.schema,'teias-de-anansi/xanathar-texto-fornecido-v1');
+assert.match(xanatharProvided.origem||'',/PDF fornecido pelo usuário/);
+assert.equal(xanatharProvided.total,xanatharProvided.itens?.length);
+assert.ok(xanatharProvided.itens.length>0);
+assert.ok(xanatharProvided.itens.every(i=>i.nome_original&&typeof i.descricao_original_en==='string'&&i.descricao_original_en.trim()),'Xanathar: nome ou descrição transcritos ausentes.');
+for(const file of ['dados/magias-tasha-usuario.json','dados/magias-xanathar-usuario.json']){
+  assert.equal(mappings.find(m=>m.padrao===file)?.autoridade,'demonstrativo_nao_canonico',`${file}: transcrição não verificada não deve ter autoridade canônica.`);
+}
+
+const glossary=readJson('dados/regras-termos-complementares.json');
+assert.equal(glossary.schema,'hub-rpg/termos-regras/v1');
+assert.match(glossary.fonte||'',/Livro do Jogador/);
+assert.ok(Array.isArray(glossary.itens)&&glossary.itens.length>0);
+assert.ok(glossary.itens.every(i=>i.original?.trim()&&i.nome?.trim()&&i.familia?.trim()&&i.descricao?.trim()),'Glossário: termo editorial incompleto.');
+assert.equal(mappings.find(m=>m.padrao==='dados/regras-termos-complementares.json')?.autoridade,'derivado_localizacao','Glossário não pode ter autoridade mecânica.');
+
+// Um mapeamento inexistente continua sendo erro; a fonte órfã já foi retirada do registro.
+assert.ok(!mappings.some(m=>m.padrao==='dados/equipamentos-aventura-pdfs.json'),'Registro não deve apontar a arquivo de equipamentos inexistente.');
 
 const quickstone=mappings.filter(m=>/quickstone/i.test(m.padrao));
 assert.ok(quickstone.length>=3,'Quickstone deve estar explicitamente classificado nos domínios em que participa.');

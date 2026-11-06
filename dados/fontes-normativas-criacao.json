@@ -263,12 +263,6 @@
       "proveniencia": "item"
     },
     {
-      "padrao": "dados/equipamentos-aventura-pdfs.json",
-      "autoridade": "consolidado_misto",
-      "fonte": "Equipamento de aventura suplementar consolidado",
-      "proveniencia": "item"
-    },
-    {
       "padrao": "dados/ferramentas-pdfs.json",
       "autoridade": "consolidado_misto",
       "fonte": "Ferramentas consolidadas das fontes registradas",
@@ -297,6 +291,42 @@
       "autoridade": "demonstrativo_nao_canonico",
       "fonte": "Resumos editoriais auxiliares em inglês; não substituem o catálogo SRD canônico",
       "proveniencia": "item"
+    },
+    {
+      "padrao": "dados/magias-phb-2024-indice.json",
+      "autoridade": "demonstrativo_nao_canonico",
+      "fonte": "Índice OCR parcial de magias do Player’s Handbook 2024; referência de páginas, sem descrição canônica validada",
+      "proveniencia": "item"
+    },
+    {
+      "padrao": "dados/magias-ptbr-srd-2024-revisado*.json",
+      "autoridade": "derivado_localizacao",
+      "fonte": "Traduções editoriais das descrições do SRD 5.2.1 CC BY 4.0, sem autoridade normativa própria",
+      "proveniencia": "item"
+    },
+    {
+      "padrao": "dados/magias-traducoes-srd-verificadas.json",
+      "autoridade": "derivado_localizacao",
+      "fonte": "Traduções SRD 5.2.1 verificadas com referência de origem e licença MIT declarada",
+      "proveniencia": "item"
+    },
+    {
+      "padrao": "dados/magias-tasha-usuario.json",
+      "autoridade": "demonstrativo_nao_canonico",
+      "fonte": "Transcrição auxiliar de PDF fornecido pelo usuário, com validação visual ainda necessária; não substitui regra oficial",
+      "proveniencia": "arquivo"
+    },
+    {
+      "padrao": "dados/magias-xanathar-usuario.json",
+      "autoridade": "demonstrativo_nao_canonico",
+      "fonte": "Transcrição auxiliar de PDF fornecido pelo usuário, sujeita à conferência da camada textual",
+      "proveniencia": "arquivo"
+    },
+    {
+      "padrao": "dados/regras-termos-complementares.json",
+      "autoridade": "derivado_localizacao",
+      "fonte": "Glossário editorial de termos do Livro do Jogador 2024; sem precedência mecânica própria",
+      "proveniencia": "arquivo"
     },
     {
       "padrao": "dados/magias-srd.json",
