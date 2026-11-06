@@ -1,14 +1,20 @@
 import{test,expect}from'@playwright/test';
 
 const pixel=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL/nwAAAABJRU5ErkJggg==','base64');
-test.beforeEach(async({page})=>{
+test.beforeEach(async({page},testInfo)=>{
   await page.route('**/dados/firebase-config.json*',route=>route.fulfill({
     status:200,contentType:'application/json',
     body:JSON.stringify({enabled:false,authMode:'username-password',playerAccounts:[]})
   }));
-  await page.addInitScript(()=>{
-    localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'master',username:'rafael',isMaster:true,memberships:[]}));
-  });
+  // O retrato salvo é testado por um Jogador autenticado, proprietário da nova ficha.
+  // No modo Mestre, salvar sem atribuir um Jogador continua proibido e possui teste próprio.
+  const selfOwned=testInfo.title==='retrato escolhido na Origem permanece na ficha após salvar';
+  await page.addInitScript(asPlayer=>{
+    const session=asPlayer
+      ?{uid:'u-e2e-retrato',username:'e2e-retrato',isMaster:false,memberships:[]}
+      :{uid:'master',username:'rafael',isMaster:true,memberships:[]};
+    localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(session));
+  },selfOwned);
 });
 test('criação: Raça precede Origem, cards e tema seguem o Hub',async({page})=>{
   await page.goto('/criacao-personagem.html');
@@ -44,12 +50,26 @@ test('retrato escolhido na Origem permanece na ficha após salvar',async({page})
   await expect(page.locator('#creation-portrait-preview img')).toBeVisible();
   await page.locator('#save').click();
   const char=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]').find(c=>c.name==='Personagem com retrato'));
+  expect(char?.ownerUid).toBe('u-e2e-retrato');
+  expect(char?.ownerUsername).toBe('e2e-retrato');
   expect(char?.portraitDataUrl).toMatch(/^data:image\/(webp|png);base64,/);
   await page.goto('/ficha-personagem.html?id='+encodeURIComponent(char.id));
   await expect(page.locator('#sheet')).toBeVisible({timeout:35000});
   await expect(page.locator('#character-portrait-preview img')).toBeVisible();
   await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
 });
+test('Mestre não salva personagem sem jogador responsável atribuído',async({page})=>{
+  await page.goto('/criacao-personagem.html');
+  await expect(page.locator('#builder')).toBeVisible({timeout:35000});
+  await page.locator('[data-wizard-step="origem"]').click();
+  await page.locator('#nome').fill('Personagem sem jogador');
+  await page.locator('#save').click();
+  await expect(page.locator('#save-status')).toContainText('Selecione o jogador responsável');
+  const persisted=await page.evaluate(()=>
+    JSON.parse(localStorage.getItem('hub-rpg:characters:v4')||'[]').some(c=>c.name==='Personagem sem jogador'));
+  expect(persisted).toBe(false);
+});
+
 test('imagem clicável abre a seleção pelo retrato',async({page})=>{
  await page.goto('/criacao-personagem.html');
  await expect(page.locator('#builder')).toBeVisible({timeout:35000});
