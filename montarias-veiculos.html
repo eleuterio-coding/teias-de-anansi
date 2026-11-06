@@ -35,6 +35,6 @@ function render(){
  if(selected){const found=items.find(x=>x.nome===selected||x.id===selected);if(found){const el=document.getElementById(found.id);if(el)el.open=true}}
 }
 busca.addEventListener('input',render);grupo.addEventListener('change',render);
-fetch('dados/catalogo-montarias-veiculos-20261104.json?v=20261104',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d.itens?.length!==36)throw Error('Quantidade de entradas inválida');data=d;grupo.innerHTML='<option value="">Todos os grupos</option>'+d.grupos.map(x=>'<option>'+esc(x.nome)+'</option>').join('');render()}).catch(e=>{resultado.textContent='Não foi possível carregar o catálogo.';lista.textContent=e.message});
+fetch('dados/catalogo-montarias-veiculos-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d.itens?.length!==36)throw Error('Quantidade de entradas inválida');data=d;grupo.innerHTML='<option value="">Todos os grupos</option>'+d.grupos.map(x=>'<option>'+esc(x.nome)+'</option>').join('');render()}).catch(e=>{resultado.textContent='Não foi possível carregar o catálogo.';lista.textContent=e.message});
 </script><script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>
