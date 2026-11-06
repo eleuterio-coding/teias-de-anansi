@@ -347,7 +347,7 @@ def validate_curated(root, allr):
     missing = sorted(k for k in published_rules if k not in curated_keys and k not in uncurated_published)
     extra = sorted(k for k in curated_keys if k not in published_rules)
     if missing or extra:
-        raise RuntimeError(f"Cobertura de origens curadas inválida: ausentes={missing[:8]} extras={extra[:8]}")
+        raise RuntimeError(f"Cobertura de origens curadas inválida: {len(missing)} ausentes={missing} {len(extra)} extras={extra}")
     if len(rules_map) != 170 or data.get("total_regras") != 170:
         raise RuntimeError(f"Mapa curado deve cobrir 170 regras; encontrou {len(rules_map)}.")
 
