@@ -111,6 +111,26 @@ for(const [i,item] of spellCatalog.itens.entries()){
   spellIds.add(item.id);
 }
 
+// Resumos editoriais não substituem texto canônico: proveniência por resumo obrigatória.
+const editorialSummaries=readJson('dados/magias-en-resumos-editoriais-20261029.json');
+assert.equal(editorialSummaries.schema,'hub-rpg.magias-en-editoriais.v1');
+assert.ok(scoped.has('dados/magias-en-resumos-editoriais-20261029.json'),'Os resumos editoriais devem permanecer no escopo de proveniência.');
+assert.match(editorialSummaries.politica,/NÃO são transcrições integrais/);
+assert.match(editorialSummaries.politica,/texto SRD permanece no catálogo canônico/);
+assert.equal(editorialSummaries.total,Object.keys(editorialSummaries.itens||{}).length,'Total de resumos editoriais divergente.');
+assert.ok(editorialSummaries.total>0,'Os resumos editoriais não podem ficar vazios.');
+const editorialTypes=new Set(['resumo_editorial_conferido','traducao_resumo_editorial','traducao_resumo_mecanico']);
+for(const [name,item] of Object.entries(editorialSummaries.itens)){
+  assert.ok(name.trim(),`Resumo editorial sem nome.`);
+  assert.ok(typeof item.descricao==='string'&&item.descricao.trim(),`Resumo editorial ${name}: descrição ausente.`);
+  assert.ok(editorialTypes.has(item.tipo),`Resumo editorial ${name}: tipo desconhecido.`);
+  assert.ok(typeof item.fonte==='string'&&item.fonte.trim(),`Resumo editorial ${name}: fonte ausente.`);
+  assert.ok(['5e','5.5e'].includes(item.edicao),`Resumo editorial ${name}: edição inválida.`);
+}
+const editorialAuthority=mappings.find(m=>m.padrao==='dados/magias-en-resumos-editoriais-20261029.json');
+assert.equal(editorialAuthority.autoridade,'demonstrativo_nao_canonico','Resumos editoriais não podem adquirir precedência normativa.');
+assert.equal(editorialAuthority.proveniencia,'item','Cada resumo editorial precisa de proveniência individual.');
+
 const quickstone=mappings.filter(m=>/quickstone/i.test(m.padrao));
 assert.ok(quickstone.length>=3,'Quickstone deve estar explicitamente classificado nos domínios em que participa.');
 assert.ok(quickstone.every(m=>m.autoridade==='terceiro_compativel'),'Frontiers of Eberron: Quickstone não pode ser promovido a fonte oficial.');
