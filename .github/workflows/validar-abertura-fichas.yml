@@ -19,10 +19,22 @@ permissions:
   contents: read
 jobs:
   conferir-fichas:
+    name: Fichas ${{ matrix.version }} — desktop/mobile
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 16
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && (github.event.pull_request.base.sha || 'main') || (github.event.pull_request.head.sha || github.sha) }}
+      - name: Usar a mesma especificação corrigida na main, sem modificar a branch
+        if: matrix.version == 'baseline-main'
+        run: |
+          git fetch --no-tags origin "${{ github.event.pull_request.head.sha || github.sha }}"
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/character-sheet-shared-opening.spec.js" > e2e/character-sheet-shared-opening.spec.js
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -41,4 +53,4 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Abrir as fichas no navegador
-        run: npx playwright test e2e/character-sheet-shared-opening.spec.js --project=desktop-chromium
+        run: npx playwright test e2e/character-sheet-shared-opening.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line

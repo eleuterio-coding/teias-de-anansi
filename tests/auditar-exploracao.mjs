@@ -57,7 +57,7 @@ assert.equal(publicProjection.factions[0].name,'Aliança Local');
 assert.equal(publicProjection.factions[0].description,'Grupo reconhecido');
 assert.equal(JSON.stringify(publicProjection).includes('PLANO SIGILOSO'),false);
 assert.equal(JSON.stringify(publicProjection).includes('npc-1'),false,'IDs de NPCs vinculados a facções são privados');
-assert.equal(JSON.stringify(publicProjection).includes('https://example.org'),false);
+assert.equal(publicProjection.levels[0].mapUrl,'https://example.org/mapa.png','O mapa de um nível explicitamente revelado deve aparecer ao Jogador');
 
 let sceneRet=addAdventureScene([adventure],adventure.id,{title:'Interrogatório',areaId:gateId});
 assert.equal(sceneRet.adventure.scenes[0].areaId,gateId);

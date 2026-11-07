@@ -5,7 +5,7 @@ import{npcMode,npcMasterAuthorized,state,$,AB,SKILL_AB,arr,num,esc,mod,signed,re
 import{loadClasses,loadSpecies,loadBackgrounds,loadSubclasses,loadFeats,loadEquipment}from'./character-builder/catalogs.js';
 import{characterGender,genderedCharacterTerm,genderedCharacterLineage,normalizeCharacterGender}from'./character-gender.js?v=20261019-gender1';
 import{loadSpells}from'./character-builder/spells.js';
-import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js';
+import{derive,sanitizeSelections,spellOptions}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 
 const CONDITIONS=['Agarrado','Amedrontado','Atordoado','Caído','Cego','Enfeitiçado','Envenenado','Impedido','Incapacitado','Inconsciente','Invisível','Paralisado','Petrificado','Surdo'];
 

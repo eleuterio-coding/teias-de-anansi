@@ -1,0 +1,135 @@
+/*
+ * Teias de Anansi — componentes visuais compartilhados (Etapa 3, bloco 1).
+ * Depende de hub-design-tokens.css, importado antes deste arquivo em hub-ux.css.
+ * Contrato: classe semântica para novos componentes e aliases para menus legados.
+ * Regras e comportamentos específicos de cada área continuam nos respectivos CSS.
+ */
+
+/* Cartões de navegação e seleção; geometria comum, conteúdo livre. */
+.hub-ui-card,
+.hub-area-menu a,
+.hub-roster-choice {
+  background: var(--hub-surface, #101923);
+  border: 1px solid var(--hub-border, #223245);
+  border-radius: var(--hub-radius, 14px);
+}
+
+.hub-ui-card--interactive:is(:hover, :focus-visible, .is-selected),
+.hub-area-menu a:is(:hover, :focus-visible),
+.hub-roster-choice:is(:hover, :focus-visible, .is-selected) {
+  background: var(--hub-surface-2, #131f2b);
+  border-color: var(--hub-accent, #2f9cff);
+}
+
+.hub-ui-card {
+  min-width: 0;
+  color: var(--hub-text, #f4f7fb);
+  text-decoration: none;
+}
+
+/* Primitivos opt-in: ainda não substituem regras legadas de outras áreas. */
+.hub-ui-page-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--hub-space-4, 16px);
+  margin-bottom: var(--hub-space-5, 24px);
+}
+.hub-ui-page-header :is(h1, h2) { margin: 0; color: var(--hub-text); }
+
+.hub-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hub-space-2, 8px);
+  min-height: var(--hub-touch, 44px);
+  padding: 9px 13px;
+  border: 1px solid var(--hub-accent);
+  border-radius: var(--hub-control-radius, 10px);
+  background: var(--hub-accent);
+  color: var(--hub-bg);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+.hub-ui-button--secondary {
+  background: var(--hub-surface-2);
+  border-color: var(--hub-border);
+  color: var(--hub-text);
+}
+.hub-ui-button--danger {
+  background: var(--hub-surface);
+  border-color: var(--hub-red);
+  color: var(--hub-red);
+}
+.hub-ui-button:disabled,
+.hub-ui-button[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
+
+.hub-ui-field {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--hub-touch, 44px);
+  padding: 9px 12px;
+  border: 1px solid var(--hub-border);
+  border-radius: var(--hub-control-radius, 10px);
+  background: var(--hub-bg-raised);
+  color: var(--hub-text);
+  font: inherit;
+}
+
+.hub-ui-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border: 1px solid var(--hub-border);
+  border-radius: var(--hub-radius-sm, 10px);
+  background: var(--hub-surface-2);
+  color: var(--hub-text-2);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.hub-ui-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(90dvh, 920px);
+  overflow: auto;
+  border: 1px solid var(--hub-border);
+  border-radius: var(--hub-panel-radius, 14px);
+  background: var(--hub-surface);
+  color: var(--hub-text);
+  box-shadow: var(--hub-shadow);
+}
+
+/* Foco visível independente da área e preferências de movimento. */
+:where(.hub-ui-card--interactive, .hub-ui-button, .hub-ui-field):focus-visible {
+  outline: 2px solid var(--hub-focus);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hub-ui-card--interactive { transition: none; }
+}
+
+/* Visível exclusivamente quando a prévia externa ativa sua marca de sessão. */
+.hub-visual-preview-banner {
+  position:fixed;
+  right:12px;
+  bottom:12px;
+  z-index:10050;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  max-width:min(95vw,500px);
+  padding:10px 14px;
+  border:1px solid var(--hub-border);
+  border-radius:var(--hub-control-radius);
+  background:var(--hub-sidebar);
+  color:var(--hub-text);
+  box-shadow:var(--hub-shadow);
+  font:600 .8rem/1.4 var(--hub-font-sans);
+}
+.hub-visual-preview-banner a {color:var(--hub-accent-2);text-decoration:underline}
+.hub-visual-preview-banner a:focus-visible {outline:2px solid var(--hub-focus);outline-offset:2px}

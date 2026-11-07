@@ -19,7 +19,7 @@ test('Sessão compartilha hierarquia visual, alinhamento e ações do elenco da 
   const styles=getComputedStyle(el);
   const rect=sel=>el.querySelector(sel)?.getBoundingClientRect();
   const name=rect('.roster-player-name'),avatar=rect('.roster-player-identity .campaign-avatar-trigger, .roster-player-identity .roster-avatar');
-  const character=rect('.roster-player-character'),open=rect('.roster-open-button'),remove=rect('.roster-remove-button');
+  const character=rect('.roster-player-character .roster-character-picker select'),open=rect('.roster-open-button'),remove=rect('.roster-remove-button');
   return {
    columns:styles.gridTemplateColumns.split(' ').map(v=>Math.round(parseFloat(v))),
    rows:styles.gridTemplateRows.split(' ').map(v=>Math.round(parseFloat(v))),
@@ -57,7 +57,7 @@ test('Sessão compartilha hierarquia visual, alinhamento e ações do elenco da 
   expect(actual.columns[0]).toBe(expected.columns[0]);
   expect(actual.columns[1]).toBe(expected.columns[1]);
   expect(actual.columns[4]).toBe(expected.columns[4]);
-  expect(Math.abs(actual.nameTop-actual.characterTop)).toBeLessThan(24);
+  expect(Math.abs(actual.nameTop-actual.characterTop)).toBeLessThan(5);
  }else{
   expect(actual.columns.length).toBeLessThanOrEqual(4);
  }

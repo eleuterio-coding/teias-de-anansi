@@ -1,8 +1,8 @@
 import{state,$,num,esc,read,write,signed}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{ensureGameplayState,setGameplayField}from'./character-sheet-gameplay-state.js?v=20260901-gameplay1';
 import'./character-sheet-level-up-input-guard.js?v=20260901-level-up1';
-import'./character-sheet-level-up-ui.js?v=20260901-level-up1';
+import'./character-sheet-level-up-ui.js?v=20261106-rules-singleton1';
 import'./character-sheet-inventory-ui.js?v=20260901-campaign-inventory1';
 import'./character-sheet-campaign-ui.js?v=20260901-campaign1';
 

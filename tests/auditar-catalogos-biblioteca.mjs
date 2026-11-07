@@ -56,7 +56,7 @@ assert(countScript.includes('status')&&countScript.includes('publicado')&&countS
 const deployWorkflow=read('.github/workflows/deploy-pages.yml');
 assert(deployWorkflow.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve produzir as contagens dos 18 módulos.');
 const weaponsPage=read('armas.html');
-assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261101-usuario-armas1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
+assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261104-clava-grande1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
 assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
 assert(!/cache\s*:\s*['"]no-store['"]/.test(weaponsPage),'Biblioteca de Armas não deve ignorar o cache do navegador.');
 const weaponsCache=json('cache/armas-catalogo.json'),weaponsCore=json('dados/armas-srd.json'),weaponsManifest=json('dados/armas-pdfs-manifest.json');

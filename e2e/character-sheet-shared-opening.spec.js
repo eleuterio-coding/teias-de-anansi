@@ -117,17 +117,22 @@ test('Quando a autenticação expira, retorno ao login preserva o endereço da f
  expect(next).toBe('ficha-personagem.html?id=char-own');
 });
 
-test('Link Minha ficha na Campanha abre a versão atual da ficha',async({page})=>{
+test('A ação de abrir ficha no elenco preserva edição própria e leitura compartilhada',async({page})=>{
  await page.addInitScript(({membership,cache,own})=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'uid-bruno',username:'bruno',isMaster:false,memberships:[membership]}));
   localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify(cache));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([own]));
  },{membership,cache,own});
  await page.goto('/mesa.html?id=campaign-sheet');
- const link=page.getByRole('link',{name:'Minha ficha'});
- await expect(link).toHaveAttribute('href',/ficha-personagem\.html\?v=20261021-fichas-auth3&id=char-own/);
- await link.click();
- await expect(page).toHaveURL(/ficha-personagem\.html/);
+ // A interface atual usa "Abrir ficha de [personagem]" no elenco; "Minha ficha" é obsoleto.
+ const roster=page.locator('#jogadores .roster-player-character');
+ const ownLink=roster.getByRole('link',{name:'Abrir ficha de Personagem próprio'});
+ await expect(ownLink).toHaveAttribute('href',/ficha-personagem\.html\?v=20261021-fichas-auth3&id=char-own/);
+ const sharedLink=roster.getByRole('link',{name:'Abrir ficha de Personagem compartilhado'});
+ await expect(sharedLink).toHaveAttribute('href',/ficha-personagem\.html\?v=20261021-fichas-auth3&id=char-other/);
+ await ownLink.click();
+ await expect(page).toHaveURL(/ficha-personagem\.html.*id=char-own/);
  await expect(page.locator('#sheet')).toBeVisible({timeout:30000});
  await expect(page.locator('#pc-name')).toHaveText('Personagem próprio');
+ await expect(page.locator('#save-sheet')).toBeVisible();
 });

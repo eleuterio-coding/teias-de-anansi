@@ -1,5 +1,5 @@
 import{state,$,arr,esc,fold}from'./state.js';
-import{derive}from'./rules.js';
+import{derive}from'./rules.js?v=20261106-rules-singleton1';
 import{activeFeatInstances}from'./feat-mechanics.js';
 import{classFeatureFeatGrants,eligibleClassFeatureFeats,sanitizeClassFeatureFeatSelections}from'./class-feature-feat-mechanics.js';
 

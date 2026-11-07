@@ -61,7 +61,7 @@ function renderLista(){
 }
 lista.addEventListener('click',event=>{const b=event.target.closest('button.item');if(b){const m=magias.find(x=>x.id===b.dataset.id);if(m)renderDetalhe(m)}});
 q.addEventListener('input',renderLista);circulo.addEventListener('change',renderLista);classe.addEventListener('change',renderLista);
-fetch('dados/catalogo-magias-20261104.json?v=20261104',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{
+fetch('dados/catalogo-magias-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{
  if(data.itens?.length!==581)throw Error('O catálogo não contém 581 magias.');
  magias=data.itens;
  circulo.innerHTML='<option value="">Todos os círculos</option>'+Array.from({length:10},(_,n)=>'<option value="'+n+'">'+(n?n+'º círculo':'Truques')+'</option>').join('');

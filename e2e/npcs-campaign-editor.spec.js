@@ -10,13 +10,16 @@ test.beforeEach(async({page})=>{
   if(!localStorage.getItem('hub-rpg:npcs:v1'))localStorage.setItem('hub-rpg:npcs:v1',JSON.stringify([data.npc]));
  },{master,campaign,npc});
 });
-test('NPCs existem sob Personagens no menu do Mestre',async({page})=>{
+test('Menu do Mestre abre a listagem e mantém a criação de NPC',async({page})=>{
  await page.goto('/npcs.html');
- await expect(page.locator('.hub-nav-link', {hasText:'NPCs'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'NPCs',exact:true})).toBeVisible();
+ await expect(page.locator('a[href="lista-npcs.html"]')).toBeVisible();
+ await expect(page.locator('a[href="criacao-personagem.html?npc=1"]')).toBeVisible();
+ await page.locator('a[href="lista-npcs.html"]').click();
  await expect(page.locator('#npc-list')).toContainText('Arante');
- await expect(page.locator('[href="criacao-personagem.html?npc=1"]').first()).toBeVisible();
+ await expect(page.locator('#npc-master-actions')).toBeVisible();
 });
-test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Encontros e Materiais',async({page})=>{
+test('Campanha seleciona NPC e mantém Locais e Linha do Tempo',async({page})=>{
  await page.goto('/mesa.html?id=e2e-npc-campaign');
  await expect(page.locator('#npcs')).toBeVisible();
  await expect(page.locator('#locais .campaign-bullet-list li')).toHaveCount(2);
@@ -36,19 +39,23 @@ test('Campanha apresenta NPC selecionável, marcadores e linha do tempo sem Enco
  await page.locator('#locais [data-new-line]').fill('Nova região');
  await page.locator('#locais [data-add-line]').click();
  await expect(page.locator('#locais .campaign-bullet-list li')).toHaveCount(3);
- await page.locator('#linha-tempo [data-new-timeline]').fill('Revelação');
- await page.locator('#linha-tempo [data-timeline-add-root]').click();
- await expect(page.locator('#linha-tempo .campaign-flow-step')).toHaveCount(3);
- await page.locator('#linha-tempo .timeline-tree > .timeline-item').nth(2).locator('[data-timeline-move="up"]').first().click();
- const updated=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:campaigns:v1')||'[]')[0]);
- expect(updated.timeline.split('\n')).toEqual(['Chegada','Revelação','Descoberta']);
+ // O editor da Campanha conserva a Linha do Tempo existente; novos
+ // eventos são criados no fluxo narrativo, não neste card.
+ await expect(page.locator('#linha-tempo .timeline-tree > .timeline-item')).toHaveCount(2);
+ await expect(page.locator('#linha-tempo')).toContainText('Linha do tempo');
 });
-test('jogador não vê NPCs e não pode acessar a biblioteca',async({page})=>{
+test('Jogador consulta apenas NPCs públicos e não acessa controles do Mestre',async({page})=>{
  await page.goto('/npcs.html');
  await page.evaluate(player=>localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify(player)),player);
  await page.reload();
- await expect(page).toHaveURL(/personagens\.html/);
- await expect(page.locator('.hub-nav-link', {hasText:'NPCs'})).toHaveCount(0);
+ await expect(page).toHaveURL(/npcs\.html/);
+ await expect(page.locator('[data-master-only]')).toBeHidden();
+ await expect(page.locator('a[href="lista-npcs.html"]')).toBeVisible();
+ await page.locator('a[href="lista-npcs.html"]').click();
+ await expect(page.locator('#npc-list [data-npc-id="npc-e2e-1"]')).toHaveCount(0);
+ await expect(page.locator('#npc-list')).not.toContainText('Arante');
+ await expect(page.locator('#npc-master-actions')).toBeHidden();
+ await expect(page.locator('#npc-editor')).toBeHidden();
 });
 
 

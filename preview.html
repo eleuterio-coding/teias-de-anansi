@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Prévia visual · Teias de Anansi</title>
+  <style>
+    :root{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark}
+    *{box-sizing:border-box}
+    body{min-height:100dvh;margin:0;display:grid;place-items:center;padding:24px;background:#080d14;color:#f4f7fb;line-height:1.5}
+    main{width:min(100%,740px);padding:clamp(22px,5vw,44px);background:#101923;border:1px solid #223245;border-radius:18px;box-shadow:0 18px 50px #0005}
+    .eyebrow{font-size:.77rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#67b8ff}
+    h1{margin:8px 0 12px;font-size:clamp(1.75rem,4vw,2.4rem);line-height:1.2}
+    p{color:#c5cfdb;max-width:62ch}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin:28px 0 16px}
+    button{font:inherit;font-weight:750;border-radius:10px;min-height:48px;padding:11px 20px;cursor:pointer;border:1px solid #2f9cff;background:#2f9cff;color:#080d14}
+    button.secondary{background:#131f2b;color:#f4f7fb;border-color:#223245}
+    button:focus-visible{outline:3px solid #67b8ff;outline-offset:3px}
+    .notice{padding:12px 15px;background:#131f2b;border-radius:10px;border:1px solid #223245;font-size:.9rem;color:#c5cfdb}
+    a{color:#67b8ff}
+    #error{color:#ff9b9b}
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Prévia isolada · Design System</p>
+  <h1>Teias de Anansi</h1>
+  <p>Explore a interface em desenvolvimento da PR #275, sem alterar o site público.</p>
+  <p>Selecione uma visão. O HUB abrirá com <strong>dados fictícios de demonstração</strong> e sem necessidade de login real. É possível navegar pelo menu normalmente.</p>
+  <div class="actions">
+    <button type="button" id="preview-master">Visualizar como Mestre</button>
+    <button type="button" id="preview-player" class="secondary">Visualizar como Jogador</button>
+  </div>
+  <p class="notice"><strong>Apenas demonstração visual.</strong> Não insira nomes de usuário, senhas nem informações reais. Os dados e alterações desta prévia permanecem locais ao navegador, e a sincronização em tempo real é desligada na prévia.</p>
+  <p><a href="https://github.com/eleuterio-coding/teias-de-anansi/pull/275">Ver código e revisão da PR #275</a></p>
+  <p id="error" role="status" aria-live="polite"></p>
+</main>
+<script>
+(()=>{
+  'use strict';
+  const host=location.hostname;
+  const allowed=host==='raw.githack.com'||host==='127.0.0.1'||host==='localhost';
+  const status=document.getElementById('error');
+  if(!allowed){
+    status.textContent='Esta prévia somente pode ser aberta no domínio de demonstração; o HUB público não foi alterado.';
+    document.querySelectorAll('button').forEach(button=>button.disabled=true);
+    return;
+  }
+  const campaign={
+    id:'preview-campanha',name:'As Crônicas da Aurora',status:'active',system:'D&D 5.5e',
+    setting:'Fantasia medieval',dmName:'Mestre de demonstração',description:'Campanha fictícia para revisar o layout do HUB.',
+    members:[{id:'preview-member',username:'aventureiro',name:'Aventureiro',role:'player',characterId:'preview-pc',active:true}],
+    sessions:[{id:'preview-sessao',number:1,title:'O Primeiro Encontro',status:'planned',adventureId:'preview-aventura',
+      date:'2026-11-07',participantCharacterIds:['preview-pc'],summary:'Sessão fictícia para revisão visual.',scenes:[]}],
+    updatedAt:'2026-11-04T00:00:00Z'
+  };
+  const adventure={
+    id:'preview-aventura',campaignId:campaign.id,title:'O Caminho das Estrelas',
+    status:'active',type:'main',order:1,summary:'Aventura de demonstração visual.',
+    characterIds:['preview-pc'],scenes:[],npcs:[],locationIds:[],
+    updatedAt:'2026-11-04T00:00:00Z'
+  };
+  const character={
+    id:'preview-pc',name:'Lira',ownerUid:'preview-player',ownerUsername:'aventureiro',
+    refSnapshots:{class:{name:'Mago'},species:{name:'Elfo'},background:{name:'Sábio'}},
+    choices:{class:{level:4}},updatedAt:'2026-11-04T00:00:00Z'
+  };
+  const membership={
+    campaignId:campaign.id,uid:'preview-player',username:'aventureiro',displayName:'Aventureiro',
+    role:'player',characterId:character.id,sessionIds:['preview-sessao'],
+    adventureIds:['preview-aventura'],active:true
+  };
+  const cache={
+    schema:'hub-rpg/collaboration-cache/v1',
+    campaigns:{[campaign.id]:{
+      membership,
+      payload:{campaign,revealedAdventures:[adventure]},
+      characters:[character],characterIds:[character.id]
+    }}
+  };
+  function enter(mode){
+    try{
+      const player=mode==='jogador';
+      sessionStorage.setItem('hub-rpg:visual-preview:v1','1');
+      sessionStorage.setItem('hub-rpg:visual-preview-role:v1',mode);
+      localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({
+        uid:player?'preview-player':'preview-master',username:player?'aventureiro':'rafael',
+        isMaster:!player,memberships:player?[membership]:[]
+      }));
+      localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify(player?[]:[campaign]));
+      localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(player?[]:[adventure]));
+      localStorage.setItem('hub-rpg:characters:v4',JSON.stringify([character]));
+      localStorage.setItem('hub-rpg:collaboration-cache:v1',JSON.stringify(player?cache:{schema:'hub-rpg/collaboration-cache/v1',campaigns:{}}));
+      localStorage.removeItem('hub-rpg:master-preview:v1');
+      localStorage.removeItem('hub-rpg:master-preview-cache:v1');
+      location.replace('painel.html');
+    }catch(error){
+      status.textContent='Não foi possível iniciar a demonstração neste navegador: '+error.message;
+    }
+  }
+  document.getElementById('preview-master').addEventListener('click',()=>enter('mestre'));
+  document.getElementById('preview-player').addEventListener('click',()=>enter('jogador'));
+  const auto=new URLSearchParams(location.search).get('auto');
+  if(auto==='mestre'||auto==='jogador')enter(auto);
+})();
+</script>
+</body>
+</html>

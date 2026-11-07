@@ -23,9 +23,22 @@ function preconnect(href){if(document.querySelector(`link[rel="preconnect"][href
 function warmExternalOrigins(){const page=location.pathname.split('/').pop()||'';if(page==='ficha-personagem.html'||page==='criacao-personagem.html')preconnect('https://raw.githubusercontent.com')}
 function applyStoredPreferences(){applyUiPreferences(readSettings())}
 function currentPage(){return location.pathname.split('/').pop()||'index.html'}
+/* Prévia visual isolada: somente no host temporário e com opção explícita. */
+function visualPreviewActive(){
+ try{return (location.hostname==='raw.githack.com'||location.hostname==='127.0.0.1'||location.hostname==='localhost')&&sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1'}catch{return false}
+}
+function showVisualPreviewBanner(){
+ if(!visualPreviewActive()||document.querySelector('.hub-visual-preview-banner'))return;
+ const banner=document.createElement('aside');banner.className='hub-visual-preview-banner';
+ banner.setAttribute('role','note');
+ banner.append(document.createTextNode('PRÉVIA VISUAL · dados fictícios · '));
+ const link=document.createElement('a');link.href='preview.html';link.textContent='Trocar perfil';
+ banner.appendChild(link);document.body.appendChild(banner);
+}
 function hasLoginSession(){try{const raw=JSON.parse(localStorage.getItem(COLLAB_SESSION_KEY)||'null');return Boolean(raw?.uid&&raw?.username)}catch{return false}}
 function enforceLogin(){const page=currentPage();if(page==='usuarios.html'||hasLoginSession())return true;const next=`${page}${location.search||''}${location.hash||''}`,login=new URL('usuarios.html',location.href);login.searchParams.set('next',next);location.replace(login.href);return false}
 async function setRealtime(active){
+ if(visualPreviewActive())return;
  if(!active){realtimeModule?.stopRealtime?.();return}
  if(!realtimeLoad)realtimeLoad=import('./collaboration-realtime.js?v=20261027-scenes-cast-v1').then(module=>realtimeModule=module).catch(error=>{console.warn('[Hub realtime] bootstrap:',error);realtimeLoad=null;return null});
  const module=await realtimeLoad;module?.startRealtime?.()
@@ -197,7 +210,7 @@ function removeCampaignGlossaryLinks(){
 }
 function enhanceDynamicUi(){removeCampaignGlossaryLinks();enhanceLiveRegions();enhanceTouchGroups();enhanceStructureEditingCopy();enhanceSectionNav()}
 function scheduleEnhancements(){if(enhanceFrame)return;enhanceFrame=requestAnimationFrame(()=>{enhanceFrame=0;enhanceDynamicUi();updateAppShellContext()})}
-function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initSaveFeedback();initAppShell();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
+function run(){ensureStyles();applyStoredPreferences();if(!enforceLogin())return;initSaveFeedback();initAppShell();showVisualPreviewBanner();ensureSkipLink();enhanceDynamicUi();updateAppShellContext();bootstrapPageAccess();bootstrapRealtime()}
 
 if(typeof document!=='undefined'){
  warmExternalOrigins();

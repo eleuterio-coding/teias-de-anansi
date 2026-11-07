@@ -1,0 +1,124 @@
+name: Diagnosticar paridade mobile — geometria main x PR
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/diagnosticar-paridade-mobile.yml'
+      - 'adventure-layout-refinement.css'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout da main fixada
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: baseline
+          persist-credentials: false
+      - name: Checkout da PR fixada
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Playwright sem alterar qualquer build
+        working-directory: candidate
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Medir com fixture, viewport e navegador idênticos
+        working-directory: candidate
+        run: |
+          node --input-type=module <<'JS'
+          import { chromium } from '@playwright/test';
+          import { spawn } from 'node:child_process';
+          import { mkdirSync, writeFileSync } from 'node:fs';
+          const fixture = {
+            campaign: {
+              id:'layout-parity-c',name:'Reinos de Prata',status:'active',members:[],npcs:[],locations:[],
+              sessions:[{id:'layout-parity-s',number:3,order:3,title:'Batalhas dos Campos Carmesim',status:'current',adventureId:'layout-parity-a1',scenes:[],encounters:[]}]
+            },
+            adventures: [
+              {id:'layout-parity-a1',campaignId:'layout-parity-c',title:'As Labaredas',order:2,status:'active',scenes:[{id:'layout-parity-sc1',title:'Sala do conselho',order:1,areaId:'area-1'}],exploration:{levels:[{id:'map-1',name:'Palácio'}],areas:[{id:'area-1',code:'A01',name:'Sala 1',levelId:'map-1'}],factions:[{id:'fac-1',name:'Guardiões'}]},npcIds:[],missions:[{id:'objective-1',title:'Proteger o reino'}],monsters:[{id:'monster-1',name:'Ogro'}]},
+              {id:'layout-parity-a2',campaignId:'layout-parity-c',title:'A emboscada',order:3,status:'planned',scenes:[]}
+            ]
+          };
+          const servers=[
+            spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory','../baseline'],{stdio:'ignore'}),
+            spawn('python3',['-m','http.server','4174','--bind','127.0.0.1','--directory','.'],{stdio:'ignore'})
+          ];
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const ready=async port=>{
+            for(let i=0;i<50;i++){
+              try { const r=await fetch('http://127.0.0.1:'+port+'/index.html'); if(r.ok)return; } catch {}
+              await sleep(300);
+            }
+            throw Error('Servidor não iniciou: '+port);
+          };
+          const browser=await chromium.launch({headless:true});
+          mkdirSync('../evidencias-geometria',{recursive:true});
+          async function capture(label,port,override=false){
+            const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+            await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
+            await page.addInitScript(data=>{
+              localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'layout-master',username:'rafael',isMaster:true,memberships:[]}));
+              localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+              localStorage.setItem('hub-rpg:adventures:v1',JSON.stringify(data.adventures));
+              localStorage.setItem('hub-rpg:characters:v4','[]');
+            },fixture);
+            await page.goto('http://127.0.0.1:'+port+'/aventuras.html',{waitUntil:'domcontentloaded'});
+            await page.locator('[data-adventure-card="layout-parity-a1"]').waitFor({state:'visible',timeout:25000});
+            await page.locator('#open-adventure-create').waitFor({state:'visible',timeout:25000});
+            if(override)await page.addStyleTag({content:'#adventure-root .adventure-create-tile-row{padding-inline:12px!important}'});
+            const data=await page.evaluate(()=>{
+              const find=(selector)=>{
+                const el=document.querySelector(selector);
+                if(!el)return null;
+                const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+                return {x:r.x,right:r.right,width:r.width,marginLeft:s.marginLeft,marginRight:s.marginRight,paddingLeft:s.paddingLeft,paddingRight:s.paddingRight,boxSizing:s.boxSizing,display:s.display,gridTemplateColumns:s.gridTemplateColumns};
+              };
+              const group=find('[data-adventure-campaign-group="layout-parity-c"]');
+              const track=find('[data-adventure-campaign-group="layout-parity-c"] .adventure-campaign-track');
+              const card=find('[data-adventure-card="layout-parity-a1"]');
+              const tile=find('#open-adventure-create');
+              const row=find('.adventure-create-tile-row');
+              return {viewport:innerWidth,devicePixelRatio,group,track,card,tile,row,root:find('#adventure-root'),delta:tile&&card?tile.width-card.width:null};
+            });
+            await page.screenshot({path:'../evidencias-geometria/'+label+'.png',fullPage:true});
+            await page.close();
+            console.log('DIAGNOSTICO_GEO '+label+' '+JSON.stringify(data));
+            if(!data.card||!data.tile||!data.row)throw Error('Geometria incompleta '+label);
+            return data;
+          }
+          try {
+            await Promise.all([ready(4173),ready(4174)]);
+            const result={
+              main:await capture('main-mobile',4173),
+              pr:await capture('pr-mobile',4174),
+              pr_padding12_somente_em_memoria:await capture('pr-padding12-mobile',4174,true)
+            };
+            writeFileSync('../evidencias-geometria/resultados.json',JSON.stringify(result,null,2));
+            console.log('COMPARACAO_CONTROLADA '+JSON.stringify({
+              deltaMain:result.main.delta,deltaPr:result.pr.delta,deltaPrSimulacao:result.pr_padding12_somente_em_memoria.delta,
+              deltaCardPrMain:result.pr.card.width-result.main.card.width,
+              deltaTilePrMain:result.pr.tile.width-result.main.tile.width
+            }));
+          } finally { await browser.close(); servers.forEach(s=>s.kill()); }
+          JS
+      - name: Evidência de geometria e screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paridade-mobile-main-pr-${{ github.run_id }}
+          path: evidencias-geometria/
+          retention-days: 7
+          if-no-files-found: ignore

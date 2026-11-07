@@ -115,3 +115,22 @@ test('Nova aventura ocupa toda a largura e abre a oficina de criação',async({p
  await expect(page.locator('#adventure-create-content')).toBeVisible();
  await expect(page.locator('#criar-cena')).toBeVisible();
 });
+
+test('Nova aventura usa a largura disponível também no celular',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await page.goto('/aventuras.html?campaign=adventure-layout-campaign');
+ const row=page.locator('.adventure-create-tile-row');
+ const link=row.locator('#open-adventure-create');
+ await expect(link).toBeVisible();
+ const layout=await row.evaluate(node=>{
+  const a=node.getBoundingClientRect(),b=node.querySelector('a').getBoundingClientRect();
+  return{rowWidth:a.width,linkWidth:b.width,leftDelta:Math.abs(a.left-b.left),
+   viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth};
+ });
+ expect(layout.linkWidth).toBeGreaterThan(0);
+ expect(Math.abs(layout.rowWidth-layout.linkWidth)).toBeLessThanOrEqual(3);
+ expect(layout.leftDelta).toBeLessThanOrEqual(3);
+ expect(layout.scroll).toBeLessThanOrEqual(layout.viewport+2);
+ await link.click();
+ await expect(page.locator('#new-adventure-title')).toBeVisible();
+});

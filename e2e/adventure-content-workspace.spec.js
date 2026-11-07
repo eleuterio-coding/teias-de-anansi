@@ -19,13 +19,13 @@ test.beforeEach(async({page})=>{
 const visit=async page=>page.goto('/aventuras.html?campaign=qa-oficina-campanha&id=qa-oficina-aventura');
 const create=async(page,kind)=>{await page.locator('#adventure-create-tab').click();await page.locator('[data-adventure-creation-kind="'+kind+'"]').click()};
 
-test('Visão Geral abre com Planejamento e Dados e termina com Cronologia e Notas',async({page})=>{
+test('Visão Geral abre com Dados, mostra as coleções e termina com Cronologia e Notas',async({page})=>{
  const errors=[];page.on('pageerror',err=>errors.push(err.message));
  await visit(page);
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
  await expect(page.locator('#adventure-create-content')).toBeHidden();
- const sections=await page.locator('#adventure-overview-content > section').evaluateAll(items=>items.map(item=>item.id));
- expect(sections.slice(0,2)).toEqual(['adventure-overview-planning','adventure-overview-settings']);
+ const sections=await page.locator('#adventure-overview-content > *').evaluateAll(items=>items.map(item=>item.id));
+ expect(sections[0]).toBe('adventure-overview-settings');
  expect(sections.slice(-2)).toEqual(['adventure-overview-timeline','adventure-overview-notes']);
  for(const id of ['overview-participantes','overview-cenas','overview-locais','overview-mapas','overview-npcs','overview-monstros'])
   await expect(page.locator('#'+id)).toBeVisible();

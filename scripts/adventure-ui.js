@@ -656,11 +656,12 @@ function bind(){
   if(adventureTimelineView===next)return;
   const current=adventure();
   if(!current)return;
+  // O HTML precisa ser gerado para o modo solicitado, não para o modo anterior.
+  adventureTimelineView=next;
   const template=document.createElement('template');
   template.innerHTML=adventureTimelineHtml(current);
   const replacement=template.content.firstElementChild;
   if(!replacement)return;
-  adventureTimelineView=next;
   timeline.replaceChildren(...replacement.childNodes);
   timeline.querySelector('[data-timeline-view="'+next+'"]')?.focus({preventScroll:true});
  });

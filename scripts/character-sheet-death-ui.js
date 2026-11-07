@@ -1,5 +1,5 @@
 import{state,$,num,esc,read,write}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{recordResolution,resolutionHistory}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
 import{deathState,rollDeathSave,stabilizeCharacter,resetDeathState,syncDeathStateWithHp,applyDamageAtZeroConsequences,applyHealingDeathConsequences}from'./character-sheet-death-rules.js?v=20260902-resolution1';
 

@@ -1,0 +1,83 @@
+name: Validar prévia isolada e Design System
+
+on:
+  pull_request:
+    paths:
+      - 'preview.html'
+      - 'hub-design-tokens.css'
+      - 'hub-components.css'
+      - 'hub-ux.css'
+      - 'hub-area-menus.css'
+      - 'hub-roster.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'tests/design-system-tokens.test.mjs'
+      - 'tests/componentes-globais.test.mjs'
+      - 'e2e/componentes-globais.spec.js'
+      - 'e2e/preview-hub-visual.spec.js'
+      - '.github/workflows/validar-design-system-pr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-design-system:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verificar sintaxe de scripts de produção e testes
+        run: |
+          node --check scripts/hub-ux.js
+          node --check scripts/firebase-collaboration-provider.js
+          node --check tests/componentes-globais.test.mjs
+          node --check e2e/preview-hub-visual.spec.js
+      - name: Verificar tokens, cards e contratos de layout
+        run: node --test tests/design-system-tokens.test.mjs tests/componentes-globais.test.mjs
+      - name: Validar contrato atualizado da Biblioteca antes do deploy
+        run: node tests/auditar-biblioteca-alfabetica-subclasses.mjs
+      - name: Instalar Playwright
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar a prévia e os componentes no desktop e no celular
+        run: npx playwright test e2e/preview-hub-visual.spec.js e2e/componentes-globais.spec.js --project=desktop-chromium --project=mobile-chromium
+      - name: Publicar evidências em caso de falha
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: design-system-preview-evidencias
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  verificar-endereco-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Conferir arquivos públicos da branch de prévia (sem publicar em Pages)
+        shell: bash
+        run: |
+          node --input-type=module <<'JS'
+          const base = 'https://raw.githack.com/eleuterio-coding/teias-de-anansi/preview-hub-visual/';
+          const files = [
+            ['preview.html', 'Visualizar como Mestre'],
+            ['painel.html', 'Teias de Anansi'],
+            ['hub-design-tokens.css', '--hub-bg'],
+            ['hub-components.css', '.hub-ui-card'],
+            ['scripts/hub-ux.js', 'visualPreviewActive']
+          ];
+          for (const [name, expected] of files) {
+            const response = await fetch(new URL(name, base), { headers: { 'User-Agent': 'Teias de Anansi Preview Validation' } });
+            const text = await response.text();
+            if (!response.ok || !text.includes(expected)) {
+              throw new Error(`Falha na prévia ${name}: HTTP ${response.status}; esperado: ${expected}`);
+            }
+            console.log(`Prévia disponível: ${name} (${response.status})`);
+          }
+          JS

@@ -12,23 +12,47 @@ const equipmentUi=text('scripts/character-builder/equipment-ownership-ui.js');
 const legacyEquipment=text('scripts/character-builder/active-equipment-ui.js');
 const packageB=text('scripts/character-builder/package-b-purchase-ui.js');
 
-const LEGACY_UI_REV='20260828-character-builder-freeze1';
-const RULES_REV='20260831-tasha-metamagic1';
-const WEALTH_REV='20260831-magic-rarity2';
-const PLAYER_PAGE_REV='20260917-master-full-control1';
-const PLAYER_ACCESS_REV='20260917-master-full-control1';
-assert.ok(html.includes(`character-builder.js?v=${PLAYER_PAGE_REV}`),'A página precisa invalidar imediatamente o carregador após correções do fluxo de criação por jogador.');
-assert.ok(loader.includes(`ui.js?v=${RULES_REV}`),'O núcleo da criação precisa usar a revisão normativa canônica do motor.');
-assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias precisa acompanhar a revisão normativa canônica.');
-assert.ok(loader.includes(`wizard-ui.js?v=${PLAYER_ACCESS_REV}`),'O controle de acesso da criação precisa usar a revisão atual do fluxo de jogador.');
-assert.ok(loader.includes(`equipment-ownership-ui.js?v=${LEGACY_UI_REV}`),'Equipamento ativo precisa manter sua revisão anti-travamento própria.');
-assert.ok(loader.includes(`package-b-purchase-ui.js?v=${WEALTH_REV}`),'Carregador precisa invalidar a revisão antiga da etapa de compras/riqueza.');
-assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${WEALTH_REV}`),'Etapa de compras precisa invalidar a versão da loja anterior à correção de raridades.');
-for(const [label,source] of [['núcleo',core],['Mago',wizardUi],['equipamento',equipmentUi]]){
- assert.ok(source.includes(`rules.js?v=${RULES_REV}`),`${label}: rules.js deve usar a revisão normativa canônica do motor.`);
+// Contratos reais de carregamento. A página e o motor já usam uma revisão
+// posterior à indicada nas constantes congeladas de 2026-09-17.
+const EQUIPMENT_UI_REV='20261106-rules-singleton1';
+const RULES_REV='20261106-rules-singleton1';
+
+const pageRevision=html.match(/scripts\/character-builder\.js\?v=([\w-]+)/)?.[1];
+const coreRevision=loader.match(/character-builder\/ui\.js\?v=([\w-]+)/)?.[1];
+const wizardRevision=loader.match(/character-builder\/wizard-ui\.js\?v=([\w-]+)/)?.[1];
+assert.ok(pageRevision,'A página deve importar o carregador com revisão explícita.');
+assert.ok(coreRevision,'O carregador deve importar o núcleo com revisão explícita.');
+assert.ok(wizardRevision,'O carregador deve importar o controle de acesso com revisão explícita.');
+assert.notEqual(pageRevision,'20260917-master-full-control1','A página não pode voltar ao carregador anterior à revisão atual.');
+assert.equal(pageRevision,'20261106-wizard-rules1','A página deve invalidar o carregador do wizard pronto para navegação.');
+assert.equal(coreRevision,RULES_REV,'O núcleo precisa importar a revisão única do motor central.');
+assert.ok(loader.includes(`wizard-ui.js?v=${RULES_REV}`),'O loader deve invalidar o wizard que sinaliza prontidão.');
+assert.notEqual(pageRevision,coreRevision,'Cache da página e cache do motor devem ter revisões distintas e explícitas.');
+assert.equal(wizardRevision,RULES_REV,'Wizard precisa invalidar seus importadores transitivos.');
+assert.ok(html.includes('#builder[hidden],#builder:not([data-wizard-ready="true"])'),'O construtor não deve ficar clicável antes da inicialização do wizard.');
+assert.ok(html.includes('id="builder" class="builder controles" hidden'),'HTML inicial deve ocultar o construtor até o wizard ficar pronto.');
+assert.ok(loader.includes("builder?.dataset.wizardReady!=='true'"),'O loader não deve apresentar o construtor antes do controle de acesso e da vinculação da navegação.');
+assert.ok(text('scripts/character-builder/wizard-ui.js').includes("builder.dataset.wizardReady='true'"),'O wizard deve sinalizar prontidão apenas após registrar os eventos e verificar autorização.');
+assert.match(core,new RegExp('rules\\.js\\?v='+coreRevision+'[\\\'"]'),'O núcleo deve usar a revisão normativa correspondente.');
+assert.ok(loader.includes(`class-skill-ui.js?v=${RULES_REV}`),'A etapa de perícias deve manter sua revisão normativa validada.');
+assert.ok(loader.includes(`equipment-ownership-ui.js?v=${EQUIPMENT_UI_REV}`),'Equipamento ativo deve manter sua revisão anti-travamento.');
+assert.ok(loader.includes(`package-b-purchase-ui.js?v=${RULES_REV}`),'O carregador deve usar a revisão atual de compras/riqueza.');
+assert.ok(packageB.includes(`wealth-purchase-ui.js?v=${RULES_REV}`),'Compras deve importar a mesma revisão de riqueza.');
+for(const [label,source] of [['Mago',wizardUi],['equipamento',equipmentUi]]){
+ assert.ok(source.includes(`rules.js?v=${RULES_REV}`),`${label}: regras normativas previamente verificadas devem continuar vinculadas.`);
 }
-assert.ok(classUi.includes(`rules.js?v=${RULES_REV}`),'Perícias devem carregar a revisão normativa atual de rules.js, que inclui a integração de testes de perícia.');
-assert.ok(classUi.includes('renderSkillChecks'),'A revisão dedicada de perícias precisa aplicar os valores mecânicos no preview.');
+assert.ok(classUi.includes(`rules.js?v=${RULES_REV}`),'Perícias devem conservar regras e testes de perícia.');
+assert.ok(classUi.includes('renderSkillChecks'),'A prévia de perícias deve renderizar os valores mecânicos.');
+
+const access=fs.readFileSync('scripts/character-builder/wizard-ui.js','utf8');
+assert.ok(access.includes('function enforceCharacterEditAccess()'),'Criação deve verificar acesso ao editar.');
+assert.ok(access.includes("if(mode==='guest')"),'Visitante não pode acessar a criação autenticada.');
+assert.ok(access.includes('if(!id)return true'),'Jogador autenticado pode criar ficha nova.');
+assert.ok(access.includes('if(canEditCharacter(id))return true'),'Edição só pode prosseguir com permissão explícita.');
+assert.ok(access.includes('if(canOpenCharacter(id))'),'Ficha de outra pessoa deve abrir somente como leitura.');
+assert.ok(access.includes('function stampPlayerOwnership()'),'A criação pelo jogador precisa registrar o proprietário.');
+assert.ok(access.includes('state.c.ownerUid=session.uid')&&access.includes('state.c.ownerUsername=session.username'),'Propriedade deve ficar vinculada ao usuário autenticado.');
+assert.ok(access.includes("byId('save')?.addEventListener('click',stampPlayerOwnership,true)"),'A identidade deve ser gravada no ato de salvar.');
 
 for(const token of['ensureSpellIndex','spellCatalogRef','schoolLevelCache','spellByIdCache','sameChoiceState'])assert.ok(wizardMechanics.includes(token),`Cache do Mago ausente: ${token}`);
 assert.ok(!wizardMechanics.includes("arr(state.catalogs?.spells).filter(s=>wizardSpell(s)&&sLevel(s)===level"),'Savant não pode voltar a varrer o catálogo inteiro por escolha.');

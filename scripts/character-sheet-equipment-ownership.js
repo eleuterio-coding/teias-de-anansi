@@ -1,5 +1,5 @@
 import{state,$,esc,signed,num}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{ownedEquipment,ownedItemCount,formatOwnedRows,weaponAttackProfile}from'./character-builder/equipment-ownership.js?v=20260902-magic-items2';
 import{selectedBackgroundPackage,selectedClassPackage,creationBudgetBreakdown,itemsCurrencyCp,physicalItems,formatPhysicalItems}from'./character-builder/starting-equipment-rules.js?v=20260828-wealth-background1';
 import{isStandardWealthBackground}from'./character-builder/background-wealth-tier-ui.js?v=20260901-background-wealth-tier1';

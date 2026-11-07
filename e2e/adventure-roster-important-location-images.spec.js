@@ -43,11 +43,14 @@ test('Imagem quadrada fica entre os seis pontos e o ponto azul em Locais importa
    const image=element.querySelector('.campaign-location-thumb').getBoundingClientRect();
    const dot=element.querySelector('.campaign-list-marker').getBoundingClientRect();
    const name=element.querySelector('input[data-edit-line]').getBoundingClientRect();
-   return{gripRight:grip.right,imageLeft:image.left,imageRight:image.right,dotLeft:dot.left,dotRight:dot.right,nameLeft:name.left,width:image.width,height:image.height};
+   return{gripRight:grip.right,imageLeft:image.left,imageRight:image.right,dotLeft:dot.left,dotRight:dot.right,dotBottom:dot.bottom,nameLeft:name.left,nameTop:name.top,nameWidth:name.width,width:image.width,height:image.height};
   });
   expect(layout.imageLeft).toBeGreaterThan(layout.gripRight);
   expect(layout.dotLeft).toBeGreaterThan(layout.imageRight);
-  expect(layout.nameLeft).toBeGreaterThan(layout.dotRight);
+  // Até 650px a linha quebra intencionalmente: o campo fica abaixo do marcador,
+  // não à sua direita. Nos dois modos, a imagem permanece antes do marcador.
+  expect(layout.nameLeft>layout.dotRight||layout.nameTop>=layout.dotBottom-2).toBe(true);
+  expect(layout.nameWidth).toBeGreaterThan(90);
   expect(Math.abs(layout.width-layout.height)).toBeLessThanOrEqual(2);
  }
 });
@@ -103,6 +106,9 @@ test('Jogadores da Aventura podem ser reordenados e removidos sem modificar Camp
  page.on('dialog',dialog=>dialog.accept());
  await page.goto('/aventuras.html?campaign=e2e-campaign-roster-images&new=1');
  await page.locator('#create-adventure').click();
+ // A criação abre no editor de Cenas; o elenco fica na categoria Jogadores.
+ await page.locator('[data-adventure-creation-kind="player"]').click();
+ await expect(page.locator('#participantes')).toBeVisible();
  const fernanda=page.locator('#adventure-member-list [data-member-row="fernanda"]');
  await fernanda.locator('[data-roster-move="down"]').click();
  const order=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0].participantAssignments.map(m=>m.username));

@@ -1,0 +1,96 @@
+name: Comparar regressões Playwright — main x PR
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/comparar-playwright-main-pr.yml'
+      - 'hub-ux.css'
+      - 'hub-layout.css'
+      - 'hub-design-tokens.css'
+      - 'hub-components.css'
+      - 'hub-area-menus.css'
+      - 'hub-roster.css'
+      - 'biblioteca-light.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'e2e/layout-unificado.spec.js'
+      - 'e2e/dashboard-viewport.spec.js'
+      - 'e2e/campaign-nav-roster-timeline.spec.js'
+      - 'e2e/player-visibility.spec.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comparar:
+    name: Playwright ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout da versão correspondente, sem alterar main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+      - name: Registrar código exato em comparação
+        run: git log -1 --format="%H %s"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Executar os mesmos cenários em ambas as versões
+        run: |
+          npx playwright test e2e/layout-unificado.spec.js e2e/dashboard-viewport.spec.js e2e/campaign-nav-roster-timeline.spec.js e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line
+      - name: Guardar evidências para comparação manual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  comparar-criacao:
+    name: Criação e retratos ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout do mesmo commit-base ou HEAD da PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+      - name: Registrar proveniência da comparação
+        run: git log -1 --format="%H %s"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Reproduzir três cenários de criação em desktop e mobile
+        run: |
+          npx playwright test e2e/character-creation-layout-portrait.spec.js --project=desktop-chromium --project=mobile-chromium --grep 'criação: Raça precede Origem|retrato escolhido na Origem|imagem clicável abre a seleção' --reporter=line
+      - name: Guardar evidências dos mesmos cenários em cada versão
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: criacao-retratos-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore

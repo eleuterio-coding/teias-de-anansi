@@ -1708,7 +1708,16 @@ body:not(.hub-shell-enabled) :is(#campaign-list,#adventure-list,#sessions-list) 
 #table-root #npcs .campaign-bullet-list>li,
 #table-root #locais .campaign-bullet-list>li{min-width:0}
 #table-root #npcs .campaign-bullet-list>li>:is(a,span):not(.campaign-list-marker){min-width:0}
-#table-root #locais .campaign-line-actions{flex-wrap:wrap;justify-content:flex-end}
+/* Mantém o nome do local editável no card de duas colunas: os controles vão
+   para a linha seguinte antes que o campo de texto seja espremido. */
+#table-root #locais .campaign-editable-bullets .campaign-bullet-entry{flex-wrap:wrap}
+#table-root #locais .campaign-editable-bullets input[data-edit-line]{
+ flex:1 1 120px;min-width:min(100%,120px)
+}
+#table-root #locais .campaign-line-actions{
+ flex:1 0 100%;width:100%;margin-left:0;
+ flex-wrap:wrap;justify-content:flex-end
+}
 #table-root #npcs .campaign-disclosure-toggle{margin-left:auto}
 #table-root #npcs .campaign-list-remove{margin-left:0}
 #table-root #linha-tempo .campaign-flow-actions{flex-wrap:wrap;align-items:center}

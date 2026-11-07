@@ -9,8 +9,9 @@ for(const page of pages){
  assert.ok(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1/i.test(html),`${page}: zoom do usuário não pode ser bloqueado.`)
 }
 
-const css=read('hub-ux.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),listUi=read('scripts/character-list-ui.js'),home=read('index.html');
-assert.match(css,/--hub-touch:44px/,'Alvo mínimo de toque precisa ser 44 px.');
+const css=read('hub-ux.css'),tokens=read('hub-design-tokens.css'),ux=read('scripts/hub-ux.js'),wizard=read('scripts/character-builder/wizard-ui.js'),sheet=read('ficha-personagem.html'),list=read('lista-personagens.html'),listUi=read('scripts/character-list-ui.js'),home=read('index.html');
+assert.match(css,/hub-design-tokens\.css/,'O Hub deve carregar a fonte única de tokens.');
+assert.match(tokens,/--hub-touch\s*:\s*44px\s*;/,'Alvo mínimo de toque precisa ser 44 px.');
 assert.match(css,/:focus-visible/,'Foco visível compartilhado ausente.');
 assert.match(css,/\.section-nav\{[^}]*position:sticky!important[^}]*overflow-x:auto!important/s,'Navegação de seções precisa permanecer sticky e rolável no mobile.');
 assert.match(css,/@media\(max-width:760px\)[\s\S]*font-size:16px/,'Controles de formulário mobile precisam evitar zoom involuntário.');
@@ -35,12 +36,21 @@ assert.match(sheet,/id="save-status"[^>]*role="status"[^>]*aria-live="polite"/,'
 assert.match(sheet,/id="load-warnings"[^>]*role="alert"[^>]*aria-live="assertive"/,'Falhas de carregamento precisam ser anunciadas.');
 
 assert.ok(list.includes('scripts/character-list-ui.js'),'Lista deve delegar ações ao módulo atual.');
-assert.ok(listUi.includes('data-structure-edit'),'Lista deve distinguir a ação de edição estrutural.');
+assert.ok(listUi.includes('href="criacao-personagem.html?id=')&&listUi.includes('Editar estrutura'),'Lista deve oferecer ação estrutural explícita que abre o construtor.');
 assert.ok(listUi.includes('Editar estrutura'),'Lista deve explicitar que o construtor altera estrutura.');
 assert.ok(!/>Editar<\/a>/.test(list+listUi),'Ação ambígua “Editar” não pode permanecer na lista pós-criação.');
 assert.equal(list.includes('Abra a Ficha Digital para jogar.'),false,'Lista pós-criação não deve exibir ajuda contextual.');
 assert.equal(list.includes('somente a ficha atribuída pelo Mestre é exibida'),false,'Lista pós-criação não deve explicar o recorte de permissão.');
-assert.ok(listUi.includes('.hidden=guest')&&listUi.includes('canEditCharacter(c.id)')&&listUi.includes('const remove=!ctx.restricted?')&&listUi.includes('ainda não vinculado'),'Jogadores continuam limitados às fichas autorizadas, enquanto o Mestre pode editar e excluir qualquer ficha, vinculada ou não.');
+assert.ok(
+ listUi.includes("restricted=mode==='player'")&&
+ listUi.includes('visible:new Set(visibleCharacterIds())')&&
+ listUi.includes('owned:new Set(editableCharacterIds())')&&
+ listUi.includes('canEditCharacter(c.id)')&&
+ listUi.includes("ctx.mode==='master'")&&
+ listUi.includes('deleteCharacterAsMaster(')&&
+ listUi.includes('Nenhuma campanha vinculada'),
+ 'Lista deve restringir fichas por permissões do Jogador e reservar duplicação/exclusão ao Mestre.'
+);
 
 for(const href of['personagens.html','campanhas.html','sessoes.html','aventuras.html','bibliotecas.html','usuarios.html','painel.html','configuracoes.html'])assert.ok(home.includes(`href="${href}`),`Início sem acesso implementado: ${href}`);
 assert.equal(home.includes('dados.html'),false,'A área de Backup não faz parte do produto atual.');

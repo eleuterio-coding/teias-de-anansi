@@ -1,9 +1,9 @@
 import'../hub-ux.js?v=20260917-master-full-control1';
 import{collaborationAccessMode,canOpenCharacter,canEditCharacter,readCollaborationSession,masterPreviewMode}from'../collaboration-view.js?v=20261016-master-preview1';
 import{state,npcMode,npcMasterAuthorized}from'./state.js';
-import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20260923-wealth-collapse1';
-import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20260824-background-ability-fix1';
-import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20260824-house-feat-prereq1';
+import{initWealthPurchaseCreationUi}from'./wealth-purchase-creation-ui.js?v=20261106-rules-singleton1';
+import{initBackgroundAbilityUi}from'./background-ability-ui.js?v=20261106-rules-singleton1';
+import{initHouseFeatPrereqUi}from'./house-feat-prereq-ui.js?v=20261106-rules-singleton1';
 const STEPS=[
  {id:'classe',title:'Classe e Nível',description:'Defina a classe, o nível atual, a subclasse quando disponível, as perícias da classe e as magias.'},
  {id:'raca',title:'Raça',description:'Escolha a raça e, quando existir, a variante, linhagem ou legado apropriado.'},
@@ -119,5 +119,5 @@ function bind(){
  addEventListener('hashchange',()=>{current=stepFromHash();render({writeHash:false})});
  const pending=byId('pending');if(pending)new MutationObserver(schedulePendingLinks).observe(pending,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});schedulePendingLinks()
 }
-export function initWizardUi(){if(initialized)return;initialized=true;if(!enforceCharacterEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi()}
+export function initWizardUi(){if(initialized)return;initialized=true;if(!enforceCharacterEditAccess())return;ensureVisibleStepMenu();current=stepFromHash();bind();render({writeHash:!location.hash,scroll:false});initBackgroundAbilityUi();initHouseFeatPrereqUi();initWealthPurchaseCreationUi();const builder=byId('builder');if(builder)builder.dataset.wizardReady='true'}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initWizardUi,{once:true});else initWizardUi();

@@ -22,7 +22,8 @@ test.beforeEach(async({page})=>{
   localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({
    uid:'dm-roster',username:'rafael',isMaster:true,memberships:[]
   }));
-  localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
+  if(!localStorage.getItem('hub-rpg:campaigns:v1'))
+   localStorage.setItem('hub-rpg:campaigns:v1',JSON.stringify([data.campaign]));
   localStorage.setItem('hub-rpg:characters:v4',JSON.stringify(data.characters));
  },{campaign,characters});
 });
@@ -54,6 +55,7 @@ test('o card levantado mantém o grid e não sai lateralmente da lista',async({p
   identity:getComputedStyle(el.querySelector('.roster-player-identity')).display,
   actionLabel:getComputedStyle(el.querySelector('.roster-action-label')).position,
   actionWidths:[...el.querySelectorAll('.roster-open-button,.roster-remove-button')].map(b=>Math.round(b.getBoundingClientRect().width)),
+  originalActionWidths:[...document.querySelectorAll('#member-list [data-member-row]:first-child .roster-open-button,#member-list [data-member-row]:first-child .roster-remove-button')].map(b=>Math.round(b.getBoundingClientRect().width)),
   text:el.querySelector('.roster-player-name')?.textContent,
   character:el.querySelector('[data-member-character]')?.value
  }));
@@ -64,7 +66,8 @@ test('o card levantado mantém o grid e não sai lateralmente da lista',async({p
  cloneTracks.forEach((value,index)=>expect(Math.abs(value-sourceTracks[index])).toBeLessThanOrEqual(.5));
  expect(styling.identity).toBe('contents');
  expect(styling.actionLabel).toBe('absolute');
- expect(styling.actionWidths).toEqual([44,44]);
+ expect(styling.actionWidths).toEqual(styling.originalActionWidths);
+ expect(styling.actionWidths.every(width=>width>=40)).toBe(true);
  expect(styling.text).toBe('Fernanda');
  expect(styling.character).toBe('p1');
  await page.mouse.move(Math.min(targetBox.x+targetBox.width-20,startX+220),targetBox.y+targetBox.height-7,{steps:12});
