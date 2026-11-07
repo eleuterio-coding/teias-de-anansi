@@ -1009,5 +1009,10 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
  gap:clamp(14px,1.5vw,22px)!important;
 }
 @media(max-width:680px){
- #adventure-root .adventure-create-tile-row{padding-inline:12px!important}
+ /* Largura do próprio grid = largura do tile = largura do card (338px em 390px). */
+ #adventure-root .adventure-create-tile-row{
+  width:calc(100% - 24px)!important;
+  margin-inline:12px!important;
+  padding-inline:0!important;
+ }
 }
