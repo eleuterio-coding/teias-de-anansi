@@ -33,7 +33,7 @@ function globRegex(glob){
 }
 const patterns=(scope.dominios||[]).flatMap(d=>d.fontes.map(glob=>({domain:d.id,glob,re:globRegex(glob)})));
 // O manifesto também classifica catálogos JSON locais da pasta cache.
-const dataFiles=['dados','cache'].map(dir=>path.join(ROOT,dir)).filter(exists).flatMap(dir=>walk(dir)).filter(p=>p.endsWith('.json')).map(rel);
+const dataFiles=['dados','cache'].map(dir=>path.join(ROOT,dir)).filter(fs.existsSync).flatMap(dir=>walk(dir)).filter(p=>p.endsWith('.json')).map(rel);
 const declaredFiles=new Set();
 for(const item of patterns)for(const file of dataFiles)if(item.re.test(file))declaredFiles.add(file);
 
