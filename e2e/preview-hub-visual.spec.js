@@ -76,12 +76,12 @@ test('Mestre consegue abrir a criação e a edição de fichas demonstrativas', 
 test('prévia continua isolada em nova aba sem marcador e após sua remoção', async ({ page, context }) => {
   const requests=[];
   const monitor=request=>{
-    if(/firestore\\.googleapis\\.com|identitytoolkit\\.googleapis\\.com|securetoken\\.googleapis\\.com/.test(request.url()))requests.push(request.url());
+    if(/firestore\.googleapis\.com|identitytoolkit\.googleapis\.com|securetoken\.googleapis\.com/.test(request.url()))requests.push(request.url());
   };
   page.on('request',monitor);
   await page.goto('/preview.html');
   await page.getByRole('button',{name:'Visualizar como Mestre'}).click();
-  await expect(page).toHaveURL(/painel\\.html/);
+  await expect(page).toHaveURL(/painel\.html/);
 
   const anotherTab=await context.newPage();
   anotherTab.on('request',monitor);
