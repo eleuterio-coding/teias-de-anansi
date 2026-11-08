@@ -15,3 +15,7 @@
 .hub-settings-page .settings-actions .status-inline{font-size:.9rem;color:var(--hub-text-2,#aebfd0)}
 .hub-settings-page .settings-actions .status-inline[data-kind=error]{color:var(--hub-red,#ff9898)}
 @media(max-width:680px){.hub-settings-page .settings-fields{grid-template-columns:1fr}.hub-settings-page .settings-actions{align-items:stretch;flex-direction:column}.hub-settings-page .settings-actions .actions>*{flex:1}}
+.hub-settings-page .settings-checkboxes{display:grid;align-content:center;gap:14px}
+.hub-settings-page .settings-fields .settings-checkboxes label{display:flex;align-items:center;gap:10px;font-weight:500}
+.hub-settings-page .settings-checkboxes input{width:18px;height:18px;accent-color:var(--hub-accent,#6bb5ff)}
+@media(max-width:760px){.hub-settings-page .settings-fields{grid-template-columns:1fr}.hub-settings-page .settings-checkboxes{gap:16px}}

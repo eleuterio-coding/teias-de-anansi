@@ -9,11 +9,28 @@
 </head>
 <body class="hub-settings-page">
 <main id="main-content" class="settings-page">
-<header class="settings-hero"><div><p class="eyebrow">Preferências de interface</p><h1>Configurações</h1><p class="settings-intro">Ajuste a leitura e o movimento da interface do Hub.</p></div></header>
+<header class="settings-hero"><div><p class="eyebrow">Preferências de interface</p><h1>Configurações</h1><p class="settings-intro">Personalize seu perfil de uso, a apresentação da Ficha Digital e a acessibilidade da interface.</p></div></header>
+<section class="card settings-preferences" aria-labelledby="settings-workspace-title">
+  <header class="settings-section-header"><h2 id="settings-workspace-title">Perfil de uso</h2><p>Escolha como prefere organizar a interface. As permissões continuam definidas pela sua conta.</p></header>
+  <div class="settings-fields">
+    <label for="workspace">Interface preferida<select id="workspace"><option value="auto">Automática</option><option value="mestre">Mestre</option><option value="jogador">Jogador</option></select></label>
+  </div>
+</section>
+<section class="card settings-preferences" aria-labelledby="settings-sheet-title">
+  <header class="settings-section-header"><h2 id="settings-sheet-title">Ficha Digital</h2><p>Opções de leitura e navegação das fichas.</p></header>
+  <div class="settings-fields">
+    <label for="sheet-density">Densidade<select id="sheet-density"><option value="comfortable">Confortável</option><option value="compact">Compacta</option></select></label>
+    <div class="settings-checkboxes">
+      <label for="show-sources"><input id="show-sources" type="checkbox"> Mostrar fontes nas fichas</label>
+      <label for="sticky-sections"><input id="sticky-sections" type="checkbox"> Manter seções visíveis ao navegar</label>
+    </div>
+  </div>
+</section>
 <section class="card settings-preferences" aria-labelledby="settings-accessibility-title">
   <header class="settings-section-header"><h2 id="settings-accessibility-title">Acessibilidade</h2><p>Preferências visuais aplicadas em todas as áreas.</p></header>
   <div class="settings-fields">
   <label for="font-scale">Tamanho do texto<select id="font-scale"><option value="normal">Normal</option><option value="large">Grande</option><option value="xlarge">Extra grande</option></select></label>
+  <label for="contrast">Contraste<select id="contrast"><option value="standard">Padrão</option><option value="high">Alto contraste</option></select></label>
   <label for="motion">Movimento<select id="motion"><option value="system">Sistema</option><option value="reduce">Reduzir animações</option></select></label>
   </div>
 </section>

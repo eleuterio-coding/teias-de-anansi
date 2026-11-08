@@ -43,18 +43,18 @@ export function normalizeSettings(input={}){
  const accessibility=source.accessibility&&typeof source.accessibility==='object'?source.accessibility:{};
  return{
   schema:SETTINGS_SCHEMA,
-  workspace:'auto',
+  workspace:WORKSPACES.has(source.workspace)?source.workspace:base.workspace,
   layout:LAYOUTS.has(source.layout)?source.layout:base.layout,
   sources:{enabled:[...ALL_SOURCES]},
   houseRules:{preset:'teias-v1',enabled:[]},
   sheet:{
-   density:'comfortable',
-   showSources:true,
-   stickySections:true
+   density:DENSITIES.has(sheet.density)?sheet.density:base.sheet.density,
+   showSources:bool(sheet.showSources,base.sheet.showSources),
+   stickySections:bool(sheet.stickySections,base.sheet.stickySections)
   },
   accessibility:{
    fontScale:FONT_SCALES.has(accessibility.fontScale)?accessibility.fontScale:base.accessibility.fontScale,
-   contrast:'standard',
+   contrast:CONTRASTS.has(accessibility.contrast)?accessibility.contrast:base.accessibility.contrast,
    motion:MOTIONS.has(accessibility.motion)?accessibility.motion:base.accessibility.motion
   },
   campaignDefaults:{dmName:'Rafael',setting:'',system:'D&D 5.5e'},
