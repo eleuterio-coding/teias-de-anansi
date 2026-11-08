@@ -25,7 +25,13 @@ function applyStoredPreferences(){applyUiPreferences(readSettings())}
 function currentPage(){return location.pathname.split('/').pop()||'index.html'}
 /* Prévia visual isolada: somente no host temporário e com opção explícita. */
 function visualPreviewActive(){
- try{return (location.hostname==='raw.githack.com'||location.hostname==='127.0.0.1'||location.hostname==='localhost')&&sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1'}catch{return false}
+ try{
+  if(location.hostname!=='raw.githack.com'&&location.hostname!=='127.0.0.1'&&location.hostname!=='localhost')return false;
+  if(sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1')return true;
+  // localStorage e compartilhado entre abas; a sessao ficticia deve continuar isolada.
+  const session=JSON.parse(localStorage.getItem(COLLAB_SESSION_KEY)||'null');
+  return session?.uid==='preview-master'||session?.uid==='preview-player';
+ }catch{return false}
 }
 function showVisualPreviewBanner(){
  if(!visualPreviewActive()||document.querySelector('.hub-visual-preview-banner'))return;

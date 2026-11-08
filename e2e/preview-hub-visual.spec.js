@@ -72,3 +72,32 @@ test('Mestre consegue abrir a criação e a edição de fichas demonstrativas', 
   const role=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1')));
   expect(role.isMaster).toBe(true);
 });
+
+test('prévia continua isolada em nova aba sem marcador e após sua remoção', async ({ page, context }) => {
+  const requests=[];
+  const monitor=request=>{
+    if(/firestore\\.googleapis\\.com|identitytoolkit\\.googleapis\\.com|securetoken\\.googleapis\\.com/.test(request.url()))requests.push(request.url());
+  };
+  page.on('request',monitor);
+  await page.goto('/preview.html');
+  await page.getByRole('button',{name:'Visualizar como Mestre'}).click();
+  await expect(page).toHaveURL(/painel\\.html/);
+
+  const anotherTab=await context.newPage();
+  anotherTab.on('request',monitor);
+  await anotherTab.goto('/painel.html');
+  await expect(anotherTab.locator('.hub-visual-preview-banner')).toContainText('PRÉVIA VISUAL');
+  const isolation=await anotherTab.evaluate(async ()=>{
+    const marker=sessionStorage.getItem('hub-rpg:visual-preview:v1');
+    const uid=JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1'))?.uid;
+    const mod=await import('./scripts/firebase-collaboration-provider.js');
+    const provider=await mod.createFirebaseCollaborationProvider();
+    return {marker,uid,configured:provider.configured};
+  });
+  expect(isolation).toEqual({marker:null,uid:'preview-master',configured:false});
+
+  await page.evaluate(()=>sessionStorage.removeItem('hub-rpg:visual-preview:v1'));
+  await page.reload();
+  await expect(page.locator('.hub-visual-preview-banner')).toContainText('PRÉVIA VISUAL');
+  expect(requests).toEqual([]);
+});

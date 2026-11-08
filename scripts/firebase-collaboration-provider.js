@@ -9,8 +9,13 @@ export async function createFirebaseCollaborationProvider({config=null}={}){
  // Este bloqueio só se aplica ao host temporário e à sessão de demonstração.
  try{
   const host=typeof location==='undefined'?'':location.hostname;
-  if((host==='raw.githack.com'||host==='127.0.0.1'||host==='localhost')&&sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1'){
-   return{configured:false,reason:'Prévia visual desconectada.',config:{configured:false,enabled:false}};
+  if(host==='raw.githack.com'||host==='127.0.0.1'||host==='localhost'){
+   let demo=sessionStorage.getItem('hub-rpg:visual-preview:v1')==='1';
+   if(!demo){
+    const session=JSON.parse(localStorage.getItem('hub-rpg:collaboration-session:v1')||'null');
+    demo=session?.uid==='preview-master'||session?.uid==='preview-player';
+   }
+   if(demo)return{configured:false,reason:'Prévia visual desconectada.',config:{configured:false,enabled:false}};
   }
  }catch{}
  const c=config||await loadFirebaseConfig();
