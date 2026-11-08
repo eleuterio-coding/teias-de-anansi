@@ -40,7 +40,7 @@ assert.ok(durable>=4&&transient>=2&&cache>=1,'Persistencia, estados transitorios
 assert.equal(CLASSIFIED_STORAGE_KEYS.size,keys.size,'Registro de chaves classificadas nao pode omitir nem inventar aliases.');
 for(const name of ['characters','campaigns','sessions','adventures','settings'])assert.equal(storageRecord(name)?.scope,'durable');
 for(const name of ['collaboration-session','master-preview'])assert.equal(storageRecord(name)?.scope,'transient');
-assert.equal(storageRecord('inexistente'),undefined);
+assert.equal(storageRecord('inexistente'),null,'IDs desconhecidos devem retornar null.');
 
 const html=fs.readFileSync(new URL('../configuracoes.html',import.meta.url),'utf8');
 for(const id of ['storage-key','export-data','import-data','restore-backup'])assert.ok(!html.includes('id="'+id+'"'),'Configurações nao podem reintroduzir controle de backup: '+id);
