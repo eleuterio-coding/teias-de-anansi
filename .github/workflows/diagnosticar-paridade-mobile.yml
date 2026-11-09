@@ -66,8 +66,8 @@ jobs:
           };
           const browser=await chromium.launch({headless:true});
           mkdirSync('../evidencias-geometria',{recursive:true});
-          async function capture(label,port,override=false){
-            const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+          async function capture(label,port,override=false,device='mobile'){
+            const page=await browser.newPage(device==='mobile'?{viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1}:{viewport:{width:1440,height:1000},isMobile:false,hasTouch:false,deviceScaleFactor:1});
             await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
             await page.addInitScript(data=>{
               localStorage.setItem('hub-rpg:collaboration-session:v1',JSON.stringify({uid:'layout-master',username:'rafael',isMaster:true,memberships:[]}));
@@ -78,7 +78,7 @@ jobs:
             await page.goto('http://127.0.0.1:'+port+'/aventuras.html',{waitUntil:'domcontentloaded'});
             await page.locator('[data-adventure-card="layout-parity-a1"]').waitFor({state:'visible',timeout:25000});
             await page.locator('#open-adventure-create').waitFor({state:'visible',timeout:25000});
-            if(override)await page.addStyleTag({content:'#adventure-root .adventure-create-tile-row{padding-inline:12px!important}'});
+            if(override)await page.addStyleTag({content:device==='mobile'?'#adventure-root .adventure-create-tile-row{padding-inline:12px!important}':'#adventure-root .adventure-create-tile-row{padding-inline:17px!important}'});
             const data=await page.evaluate(()=>{
               const find=(selector)=>{
                 const el=document.querySelector(selector);
@@ -91,7 +91,10 @@ jobs:
               const card=find('[data-adventure-card="layout-parity-a1"]');
               const tile=find('#open-adventure-create');
               const row=find('.adventure-create-tile-row');
-              return {viewport:innerWidth,devicePixelRatio,group,track,card,tile,row,root:find('#adventure-root'),delta:tile&&card?tile.width-card.width:null};
+              const ancestry=document.querySelector('[data-adventure-card="layout-parity-a1"] .adventure-card-campaign .hub-parent-link');
+              const cardGroup=document.querySelector('[data-adventure-campaign-group="layout-parity-c"]');
+              const heading=cardGroup?.querySelector('.adventure-campaign-group-heading');
+              return {viewport:innerWidth,devicePixelRatio,group,track,card,tile,row,root:find('#adventure-root'),heading:heading?find('[data-adventure-campaign-group="layout-parity-c"] .adventure-campaign-group-heading'):null,delta:tile&&card?tile.width-card.width:null,ancestryHtml:ancestry?.outerHTML||null,ancestryLinks:ancestry?.querySelectorAll('a').length??null,groupHeadingLinks:heading?.querySelectorAll('a').length??null};
             });
             await page.screenshot({path:'../evidencias-geometria/'+label+'.png',fullPage:true});
             await page.close();
@@ -104,13 +107,24 @@ jobs:
             const result={
               main:await capture('main-mobile',4173),
               pr:await capture('pr-mobile',4174),
-              pr_padding12_somente_em_memoria:await capture('pr-padding12-mobile',4174,true)
+              pr_padding12_somente_em_memoria:await capture('pr-padding12-mobile',4174,true),
+              main_desktop:await capture('main-desktop',4173,false,'desktop'),
+              pr_desktop:await capture('pr-desktop',4174,false,'desktop'),
+              pr_padding17_somente_em_memoria_desktop:await capture('pr-padding17-desktop',4174,true,'desktop')
             };
             writeFileSync('../evidencias-geometria/resultados.json',JSON.stringify(result,null,2));
             console.log('COMPARACAO_CONTROLADA '+JSON.stringify({
               deltaMain:result.main.delta,deltaPr:result.pr.delta,deltaPrSimulacao:result.pr_padding12_somente_em_memoria.delta,
               deltaCardPrMain:result.pr.card.width-result.main.card.width,
               deltaTilePrMain:result.pr.tile.width-result.main.tile.width
+            }));
+            console.log('COMPARACAO_DESKTOP_CONTROLADA '+JSON.stringify({
+              deltaMain:result.main_desktop.delta,deltaPr:result.pr_desktop.delta,
+              deltaPrPadding17:result.pr_padding17_somente_em_memoria_desktop.delta,
+              deltaCardPrMain:result.pr_desktop.card.width-result.main_desktop.card.width,
+              deltaTilePrMain:result.pr_desktop.tile.width-result.main_desktop.tile.width,
+              mainAncestryLinks:result.main_desktop.ancestryLinks,
+              prAncestryLinks:result.pr_desktop.ancestryLinks
             }));
           } finally { await browser.close(); servers.forEach(s=>s.kill()); }
           JS
