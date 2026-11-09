@@ -51,10 +51,12 @@ assert.ok(css.includes('.dashboard-row-cover')&&css.includes('.focus-card-cover'
 assert.ok(css.includes('@media(max-width:820px)')&&css.includes('@media(max-width:520px)'),'Painel deve ser responsivo.');
 assert.ok(home.includes('href="painel.html'),'Início deve expor o Painel Geral.');
 assert.ok(page.includes('class="dashboard-page"'),'Painel deve habilitar a configuração específica da janela.');
-assert.ok(page.includes('id="dashboard-pagination"'),'Painel deve oferecer navegação paginada.');
-assert.ok(css.includes('Dashboard viewport-fit')&&css.includes('overflow:hidden'),'Painel deve restringir a grade à janela.');
-assert.ok(css.includes('grid-template-rows:minmax(0,1fr) auto'),'Modo paginado deve reservar área para controles.');
-for(const token of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor','requestAnimationFrame','window.addEventListener'])assert.ok(ui.includes(token),'Painel sem ajuste responsivo: '+token);
+// O contrato de 16/10/2026 substituiu a paginacao por rolagem para nao cortar cards.
+assert.ok(!page.includes('id="dashboard-pagination"'),'Painel rolavel nao deve esconder cards em paginas artificiais.');
+assert.ok(css.includes('Início rolável')&&css.includes('overflow-y:auto')&&css.includes('overflow:visible'),'Painel deve permitir rolagem sem corte.');
+assert.ok(css.indexOf('Dashboard viewport-fit')<css.indexOf('Início rolável'),'Regra posterior de rolagem deve prevalecer sobre CSS legado.');
+for(const token of ['renderCampaigns(summary.campaigns)','renderAdventures(summary.adventures)','renderSessions(summary.sessions)','renderContext(summary)'])assert.ok(ui.includes(token),'Todos os cards precisam ser renderizados: '+token);
+for(const legacy of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor'])assert.ok(!ui.includes(legacy),'Nao ocultar registros por paginacao desativada: '+legacy);
 const semanticJs=fs.readFileSync(new URL('../scripts/referencias-hub.js',import.meta.url),'utf8');
 const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-pages.yml',import.meta.url),'utf8');
 assert.match(semanticJs,/if\(\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\)===\'painel\.html\'\)return;/,'Painel Geral deve impedir links semânticos mesmo se o script for carregado.');

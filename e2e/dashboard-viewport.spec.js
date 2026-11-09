@@ -16,75 +16,56 @@ test.beforeEach(async({page})=>{
  },{session,campaigns});
 });
 
-async function checkBounds(page,expectedMode,count){
- await expect(page.locator('body')).toHaveAttribute('data-dashboard-mode',expectedMode);
- const sizes=await page.evaluate(()=>{
-  const cards=[...document.querySelectorAll('.dashboard-card,.focus-card')].filter(el=>el.getClientRects().length);
-  const views=cards.map(el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right}});
-  const visibleLists=[...document.querySelectorAll('.dashboard-list')].filter(el=>el.getClientRects().length);
-  return {
-   screenWidth:document.documentElement.clientWidth,
-   scrollWidth:document.documentElement.scrollWidth,
-   screenHeight:window.innerHeight,
-   scrollHeight:document.documentElement.scrollHeight,
-   views,
-   listOverflow:visibleLists.map(el=>getComputedStyle(el).overflowY)
-  }
+async function verifyScrollableCards(page){
+ await expect(page.locator('body')).toHaveClass(/dashboard-page/);
+ await expect(page.locator('#campaign-dashboard-list .dash-row')).toHaveCount(17);
+ const geometry=await page.evaluate(()=>{
+  const cards=[...document.querySelectorAll('.dashboard-collections > .dashboard-card,.dashboard-context .focus-card')];
+  const rects=cards.map(el=>el.getBoundingClientRect()),w=document.documentElement.clientWidth;
+  return{count:cards.length,width:w,scrollWidth:document.documentElement.scrollWidth,
+   height:document.scrollingElement.scrollHeight,viewport:innerHeight,
+   cropped:rects.filter(r=>!r.width||!r.height||r.left < -1||r.right > w+2).length,
+   hidden:[...document.querySelectorAll('#campaign-dashboard-list .dash-row')]
+      .filter(el=>el.hidden||getComputedStyle(el).display==='none').length,
+   overflow:[...document.querySelectorAll('.dashboard-list')].map(el=>getComputedStyle(el).overflowY),
+   pagers:document.querySelectorAll('#dashboard-pagination,.dashboard-list-pager').length};
  });
- expect(sizes.views).toHaveLength(count);
- expect(sizes.scrollWidth).toBeLessThanOrEqual(sizes.screenWidth+2);
- expect(sizes.scrollHeight).toBeLessThanOrEqual(sizes.screenHeight+2);
- for(const rect of sizes.views){
-  expect(rect.left).toBeGreaterThanOrEqual(-1);
-  expect(rect.right).toBeLessThanOrEqual(sizes.screenWidth+2);
-  expect(rect.top).toBeGreaterThanOrEqual(-1);
-  expect(rect.bottom).toBeLessThanOrEqual(sizes.screenHeight+2);
- }
- expect(sizes.listOverflow.every(value=>value==='hidden')).toBe(true);
+ expect(geometry.count).toBe(7);
+ expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.width+2);
+ expect(geometry.height).toBeGreaterThan(geometry.viewport);
+ expect(geometry.cropped).toBe(0);
+ expect(geometry.hidden).toBe(0);
+ expect(geometry.overflow.every(v=>v==='visible')).toBe(true);
+ expect(geometry.pagers).toBe(0);
+ const last=page.locator('#campaign-dashboard-list .dash-row').last();
+ await last.scrollIntoViewIfNeeded();
+ await expect(last).toBeInViewport();
+ await page.locator('#current-session').scrollIntoViewIfNeeded();
+ await expect(page.locator('#current-session')).toBeInViewport();
 }
 
-test('card fitting and viewport-aware pages on desktop, notebook and phone',async({page})=>{
+test('cards completos e alcancaveis com rolagem responsiva, sem corte',async({page})=>{
  await page.goto('/painel.html');
- await page.setViewportSize({width:1440,height:900});
- await checkBounds(page,'full',7);
- await page.setViewportSize({width:1050,height:720});
- await checkBounds(page,'group',3);
- await expect(page.locator('#dashboard-page-status')).toContainText('Página 1 de 2');
- await page.locator('[data-dashboard-next]').click();
- await expect(page.locator('#current-session')).toBeVisible();
- await expect(page.locator('#next-session')).toBeVisible();
- await checkBounds(page,'group',4);
- await expect(page.locator('#dashboard-page-status')).toContainText('Página 2 de 2');
- await page.setViewportSize({width:390,height:844});
- await checkBounds(page,'single',1);
- await expect(page.locator('#dashboard-page-status')).toContainText('Página 1 de 7');
- for(let index=1;index<7;index++){
-  await page.locator('[data-dashboard-next]').click();
-  await checkBounds(page,'single',1);
-  await expect(page.locator('#dashboard-page-status')).toContainText('Página '+(index+1)+' de 7');
+ for(const viewport of [{width:1440,height:900},{width:1050,height:720},{width:390,height:844}]){
+  await page.setViewportSize(viewport);
+  await verifyScrollableCards(page);
  }
- await expect(page.locator('[data-dashboard-next]')).toBeDisabled();
 });
 
-test('a collection with more rows than the screen uses item pagination',async({page})=>{
+test('colecoes extensas exibem todas as linhas sem paginacao artificial',async({page})=>{
  await page.setViewportSize({width:1050,height:720});
  await page.goto('/painel.html');
- await expect(page.locator('body')).toHaveAttribute('data-dashboard-mode','group');
  const list=page.locator('#campaign-dashboard-list');
  await expect(list.locator('.dash-row')).toHaveCount(17);
- const pager=page.locator('#campaign-dashboard-list + .dashboard-list-pager');
- await expect(pager).toBeVisible();
- const first=await list.locator('.dash-row:visible').first().textContent();
- await pager.locator('[data-list-next]').click();
- await expect(pager.locator('[data-list-prev]')).toBeEnabled();
- const after=await list.locator('.dash-row:visible').first().textContent();
- expect(after).not.toBe(first);
- const dimensions=await list.evaluate(el=>({
-  height:el.clientHeight,visibleRows:[...el.querySelectorAll('.dash-row')].filter(row=>!row.hidden).length,
-  innerScroll:getComputedStyle(el).overflowY
- }));
- expect(dimensions.visibleRows).toBeGreaterThan(0);
- expect(dimensions.innerScroll).toBe('hidden');
+ await expect(page.locator('#dashboard-pagination,.dashboard-list-pager')).toHaveCount(0);
+ const names=await list.locator('.dash-row strong').allTextContents();
+ expect(names).toHaveLength(17);
+ expect(new Set(names).size).toBe(17);
+ const last=list.locator('.dash-row').last();
+ await last.scrollIntoViewIfNeeded();
+ await expect(last).toBeInViewport();
+ const all=await list.locator('.dash-row').evaluateAll(rows=>rows.every(el=>!el.hidden&&getComputedStyle(el).display!=='none'));
+ expect(all).toBe(true);
 });
 
 test('Painel Geral não transforma textos em links de verbetes',async({page})=>{
@@ -114,9 +95,9 @@ test('current status and explicit Campaign/Adventure relationships are visible i
   ]));
  });
  await page.reload();
- await expect(page.locator('#current-campaign h2')).toContainText('Reinos de Prata');
- await expect(page.locator('#current-adventure h2')).toContainText('As Rainhas');
- await expect(page.locator('#current-session h2')).toContainText('Encontro das Rainhas');
+ await expect(page.locator('#current-campaign .focus-card-name')).toContainText('Reinos de Prata');
+ await expect(page.locator('#current-adventure .focus-card-name')).toContainText('As Rainhas');
+ await expect(page.locator('#current-session .focus-card-name')).toContainText('Encontro das Rainhas');
  await expect(page.locator('#adventure-dashboard-list .relationship-chip')).toContainText('Campanha: Reinos de Prata');
  await expect(page.locator('#session-dashboard-list .relation-campaign').first()).toContainText('Campanha: Reinos de Prata');
  await expect(page.locator('#session-dashboard-list .relation-adventure').first()).toContainText('Aventura: As Rainhas');
