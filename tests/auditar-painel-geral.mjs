@@ -59,7 +59,9 @@ for(const token of ['renderCampaigns(summary.campaigns)','renderAdventures(summa
 for(const legacy of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor'])assert.ok(!ui.includes(legacy),'Nao ocultar registros por paginacao desativada: '+legacy);
 const semanticJs=fs.readFileSync(new URL('../scripts/referencias-hub.js',import.meta.url),'utf8');
 const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-pages.yml',import.meta.url),'utf8');
-assert.match(semanticJs,/if\(\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\)===\'painel\.html\'\)return;/,'Painel Geral deve impedir links semânticos mesmo se o script for carregado.');
+assert.match(semanticJs,/const page=\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\);/,'Resolver a pagina antes de aplicar links semanticos.');
+assert.match(semanticJs,/if\(new Set\(\[[^\]]*'painel\.html'[^\]]*\]\)\.has\(page\)\)return;/,'Painel precisa continuar excluido dos verbetes.');
+assert.ok(semanticJs.indexOf('if(new Set(')<semanticJs.indexOf('fetch(INDEX_URL'),'A exclusao de verbetes deve ocorrer antes de carregar o indice.');
 assert.ok(deploy.includes("if path.name == 'painel.html':"),'Deploy não deve injetar resolutor de verbetes no Painel Geral.');
 assert.ok(page.includes('href="campanhas.html"')&&page.includes('href="aventuras.html"')&&page.includes('href="sessoes.html"'),'Links operacionais dos cards devem permanecer.');
 

@@ -100,10 +100,11 @@ test('current status and explicit Campaign/Adventure relationships are visible i
  await expect(page.locator('#current-session .focus-card-name')).toContainText('Encontro das Rainhas');
  await expect(page.locator('#adventure-dashboard-list .relationship-chip')).toContainText('Campanha: Reinos de Prata');
  await expect(page.locator('#session-dashboard-list .relation-campaign').first()).toContainText('Campanha: Reinos de Prata');
- await expect(page.locator('#session-dashboard-list .relation-adventure').first()).toContainText('Aventura: As Rainhas');
- for(const id of ['campaign-dashboard-list','adventure-dashboard-list','session-dashboard-list']){
-  await expect(page.locator('#'+id+' .badge.current').first()).toHaveText('Atual');
- }
+ await expect(page.locator('#session-dashboard-list .relation-adventure').first()).toContainText('Aventura: Aventura 1 · As Rainhas');
+ // O status Atual foi retirado de Campanhas e normalizado em Aventuras; somente Sessoes conservam Atual.
+ await expect(page.locator('#campaign-dashboard-list .badge.active').first()).toHaveText('Em andamento');
+ await expect(page.locator('#adventure-dashboard-list .badge.active').first()).toHaveText('Em andamento');
+ await expect(page.locator('#session-dashboard-list .badge.current').first()).toHaveText('Atual');
  await expect(page.locator('#current-adventure .focus-card-copy')).toContainText('Campanha: Reinos de Prata');
- await expect(page.locator('#current-session .focus-card-copy')).toContainText('Aventura: As Rainhas');
+ await expect(page.locator('#current-session .focus-card-copy')).toContainText('Aventura: Aventura 1 · As Rainhas');
 });
