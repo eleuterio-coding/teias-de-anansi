@@ -163,9 +163,14 @@ jobs:
             try{
               await page.goto('http://127.0.0.1:'+port+'/bibliotecas.html',{waitUntil:'domcontentloaded',timeout:30000});
               const field=page.locator('#catalog-search');
-              await field.waitFor({state:'visible',timeout:20000});
               await sleep(1200);
               const startup=snapshot();
+              const controlsPresent=await field.count()===1&&await field.isVisible();
+              if(!controlsPresent){
+                const result={label,controlsPresent,startup,oneChar:startup,twoChars:startup,threeChars:startup,errors:errors.slice(-8)};
+                console.log('BIBLIOTECA_LAZY_'+label+' '+JSON.stringify(result));
+                return result;
+              }
               await field.fill('x');
               await sleep(200);
               const oneChar=snapshot();
@@ -175,7 +180,7 @@ jobs:
               await field.fill('fir');
               await sleep(250);
               const threeChars=snapshot();
-              const result={label,startup,oneChar,twoChars,threeChars,errors:errors.slice(-8)};
+              const result={label,controlsPresent,startup,oneChar,twoChars,threeChars,errors:errors.slice(-8)};
               console.log('BIBLIOTECA_LAZY_'+label+' '+JSON.stringify(result));
               return result;
             }finally{await page.close()}
@@ -187,12 +192,13 @@ jobs:
             writeFileSync('../evidencias-geometria/biblioteca-lazy-main-pr.json',JSON.stringify({baseline,pr},null,2));
             // Diagnostico diferencial: erros comuns nao sao regressao da PR.
             // Nunca converter a observacao em homologacao funcional.
+            assert.equal(pr.controlsPresent,baseline.controlsPresent,'Regressao diferencial no campo de busca da Biblioteca');
             assert.deepEqual(
               [pr.startup.semantic,pr.oneChar.semantic,pr.twoChars.semantic,pr.threeChars.semantic],
               [baseline.startup.semantic,baseline.oneChar.semantic,baseline.twoChars.semantic,baseline.threeChars.semantic],
               'Regressao diferencial no carregamento lazy'
             );
-            if(baseline.startup.semantic===0&&baseline.oneChar.semantic===0&&baseline.twoChars.semantic===1&&baseline.threeChars.semantic===1){
+            if(baseline.controlsPresent&&pr.controlsPresent&&baseline.startup.semantic===0&&baseline.oneChar.semantic===0&&baseline.twoChars.semantic===1&&baseline.threeChars.semantic===1){
               console.log('BIBLIOTECA_LAZY_COMPARACAO comportamento desejado confirmado nos dois SHAs');
             }else{
               console.log('BIBLIOTECA_LAZY_INCONCLUSIVO causas compartilhadas exigem auditoria propria; PR nao introduziu requisicoes semanticas adicionais');
