@@ -65,9 +65,20 @@ jobs:
           assert 'hub:class-skills-changed' in skilled
           assert 'data-skilled-direct' in skilled and 'data-skilled-tool' in skilled
           assert 'initSkilledFeatUi' in package
-          assert 'skilled-feat-ui.js?v=20260825-skilled-existing1' in package
-          assert 'package-b-purchase-ui.js?v=20260831-magic-rarity2' in builder
-          assert 'wealth-purchase-ui.js?v=20260831-magic-rarity2' in package
+          # A revisão do cache é dinâmica; o contrato é importar os três módulos
+          # existentes com a MESMA versão do rules.js usado pelo Skilled.
+          import re
+          def import_revision(source, module_path):
+              pattern=r"""['"]"""+re.escape(module_path)+r"""\?v=([A-Za-z0-9-]+)['"]"""
+              versions=re.findall(pattern, source)
+              assert len(versions)==1, f'Import versionado ausente ou ambíguo: {module_path}: {versions}'
+              return versions[0]
+          canonical=import_revision(skilled, './rules.js')
+          assert canonical==import_revision(package, './skilled-feat-ui.js'), 'Skilled deve usar a revisão central do motor.'
+          assert canonical==import_revision(builder, './character-builder/package-b-purchase-ui.js'), 'Construtor deve carregar o pacote na revisão central.'
+          assert canonical==import_revision(package, './wealth-purchase-ui.js'), 'Riqueza deve usar a mesma revisão central.'
+          for module in ('rules.js','skilled-feat-ui.js','package-b-purchase-ui.js','wealth-purchase-ui.js'):
+              assert (Path('scripts/character-builder')/module).is_file(), f'Import inexistente: {module}'
           assert 'supabase' not in (skilled+package).lower()
           print('Integração do Skilled com filtro de perícias existentes e revisão de riqueza vigente validada.')
           PY
