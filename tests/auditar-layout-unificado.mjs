@@ -31,6 +31,9 @@ assert.deepEqual(navOrder,[
 ],'A ordem do menu lateral não deve mudar.');
 assert.match(shell,/hub-content-library/,'Biblioteca deve receber um tema distinto do leitor legado.');
 assert.match(shell,/LIBRARY_PAGES\.has\(currentPage\(\)\)/);
+assert.match(shell,/if\(CHARACTER_PAGES\.has\(currentPage\(\)\)\)document\.body\.classList\.add\("hub-content-light"\)/,'Criação e Ficha devem ativar leitura clara sem mudar a Biblioteca escura.');
+assert.ok(![...libraryPages,...wrappedPages].some(file=>['criacao-personagem.html','ficha-personagem.html'].includes(file)),'Fichas não podem ser classificadas como Biblioteca.');
+
 assert.match(shell,/data-hub-preview-user/);
 assert.match(ux,/hub-layout\.css\?v=/);
 assert.match(ux,/app-shell\.js\?v=/);
