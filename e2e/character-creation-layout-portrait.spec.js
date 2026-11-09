@@ -38,7 +38,8 @@ test('criação: Raça precede Origem, cards e tema seguem o Hub',async({page})=
    expect(layout.details.width).toBeGreaterThan(layout.portrait.width);
   }
   await expect(page.locator('#creation-portrait-preview')).toBeVisible();
-  await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
+  await expect(page.locator('body')).toHaveClass(/hub-content-light/);
+  await expect(page.locator('.hub-app-content')).toHaveCSS('background-color','rgb(244, 247, 251)');
   await expect(page.locator('body')).toHaveClass(/hub-character-page/);
 });
 test('retrato escolhido na Origem permanece na ficha após salvar',async({page})=>{
@@ -56,7 +57,8 @@ test('retrato escolhido na Origem permanece na ficha após salvar',async({page})
   await page.goto('/ficha-personagem.html?id='+encodeURIComponent(char.id));
   await expect(page.locator('#sheet')).toBeVisible({timeout:35000});
   await expect(page.locator('#character-portrait-preview img')).toBeVisible();
-  await expect(page.locator('body')).not.toHaveClass(/hub-content-light/);
+  await expect(page.locator('body')).toHaveClass(/hub-content-light/);
+  await expect(page.locator('.hub-app-content')).toHaveCSS('background-color','rgb(244, 247, 251)');
 });
 test('Mestre não salva personagem sem jogador responsável atribuído',async({page})=>{
   await page.goto('/criacao-personagem.html');
