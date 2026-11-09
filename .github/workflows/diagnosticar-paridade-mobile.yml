@@ -128,6 +128,81 @@ jobs:
             }));
           } finally { await browser.close(); servers.forEach(s=>s.kill()); }
           JS
+      - name: Diagnosticar lazy-load da Biblioteca em navegador controlado
+        working-directory: candidate
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import {chromium} from '@playwright/test';
+          import {spawn} from 'node:child_process';
+          import {writeFileSync} from 'node:fs';
+          const servers=[
+            spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory','../baseline'],{stdio:'ignore'}),
+            spawn('python3',['-m','http.server','4174','--bind','127.0.0.1','--directory','.'],{stdio:'ignore'})
+          ];
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          async function ready(port){
+            for(let i=0;i<60;i++){
+              try{if((await fetch('http://127.0.0.1:'+port+'/bibliotecas.html')).ok)return}catch{}
+              await sleep(250);
+            }
+            throw Error('Servidor indisponível na porta '+port);
+          }
+          const browser=await chromium.launch({headless:true});
+          async function measure(label,port){
+            const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+            const requests=[];
+            page.on('request',request=>{
+              const url=request.url();
+              if(url.includes('/dados/referencias-hub-index.json'))requests.push('semantic');
+              if(url.includes('/dados/biblioteca-contagens.json'))requests.push('counts');
+            });
+            await page.route('**/dados/firebase-config.json*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({enabled:false,authMode:'username-password'})}));
+            const snapshot=()=>({semantic:requests.filter(x=>x==='semantic').length,counts:requests.filter(x=>x==='counts').length});
+            try{
+              const counts=page.waitForResponse(r=>r.url().includes('/dados/biblioteca-contagens.json'),{timeout:20000});
+              await page.goto('http://127.0.0.1:'+port+'/bibliotecas.html',{waitUntil:'domcontentloaded',timeout:30000});
+              const field=page.locator('#catalog-search');
+              await field.waitFor({state:'visible',timeout:20000});
+              await counts;
+              await sleep(250);
+              const startup=snapshot();
+              await field.fill('x');
+              await sleep(200);
+              const oneChar=snapshot();
+              const semanticResponse=page.waitForResponse(r=>r.url().includes('/dados/referencias-hub-index.json'),{timeout:30000});
+              await field.fill('fi');
+              const response=await semanticResponse;
+              await sleep(350);
+              const twoChars=snapshot();
+              await field.fill('fir');
+              await sleep(250);
+              const threeChars=snapshot();
+              const result={label,startup,oneChar,twoChars,threeChars,semanticStatus:response.status()};
+              console.log('BIBLIOTECA_LAZY_'+label+' '+JSON.stringify(result));
+              return result;
+            }finally{await page.close()}
+          }
+          try{
+            await Promise.all([ready(4173),ready(4174)]);
+            const baseline=await measure('MAIN',4173);
+            const pr=await measure('PR',4174);
+            writeFileSync('../evidencias-geometria/biblioteca-lazy-main-pr.json',JSON.stringify({baseline,pr},null,2));
+            for(const item of [baseline,pr]){
+              assert.equal(item.startup.semantic,0,'Indice semantico no carregamento: '+item.label);
+              assert.equal(item.oneChar.semantic,0,'Indice semantico com um caractere: '+item.label);
+              assert.equal(item.twoChars.semantic,1,'Indice nao carregado uma unica vez: '+item.label);
+              assert.equal(item.threeChars.semantic,1,'Indice carregado repetidamente: '+item.label);
+              assert.ok(item.startup.counts>=1,'Contagens indisponiveis na inicializacao: '+item.label);
+            }
+            assert.deepEqual(
+              [pr.startup.semantic,pr.oneChar.semantic,pr.twoChars.semantic,pr.threeChars.semantic],
+              [baseline.startup.semantic,baseline.oneChar.semantic,baseline.twoChars.semantic,baseline.threeChars.semantic],
+              'Regressao diferencial no carregamento lazy'
+            );
+            console.log('BIBLIOTECA_LAZY_COMPARACAO main=pr; indice apenas apos 2 caracteres; nenhum prefetch sem pesquisa');
+          }finally{await browser.close();servers.forEach(s=>s.kill())}
+          JS
       - name: Evidência de geometria e screenshots
         if: always()
         uses: actions/upload-artifact@v4
