@@ -87,7 +87,7 @@ assert.equal(statusDash.currentCampaign.id,'c-new','A Campanha marcada como Atua
 assert.equal(statusDash.currentSession.session.id,'s-new','A Sessão marcada como Atual precisa vencer a Sessão em andamento.');
 assert.equal(statusDash.currentAdventure.id,'a-new','A Aventura marcada como Atual precisa vencer a Aventura em andamento.');
 assert.equal(statusDash.sessions.find(s=>s.id==='s-new').campaignName,'Reinos de Prata');
-assert.equal(statusDash.sessions.find(s=>s.id==='s-new').adventureName,'As Rainhas');
+assert.equal(statusDash.sessions.find(s=>s.id==='s-new').adventureName,'Aventura 1 · As Rainhas','O Painel deve manter a numeração registrada na Ordem da Aventura.');
 assert.equal(statusDash.sessions[0].id,'s-new','Listas do Painel devem priorizar o status Atual.');
 assert.equal(statusDash.adventures[0].id,'a-new');
 assert.equal(statusDash.campaigns[0].id,'c-new');
