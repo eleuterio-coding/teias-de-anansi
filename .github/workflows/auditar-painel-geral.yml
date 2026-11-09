@@ -32,4 +32,4 @@ jobs:
       - name: Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
       - name: Regressão persistência
-        run: node tests/auditar-persistencia-portabilidade.mjs
+        run: node tests/auditar-armazenamento-classificado.mjs
