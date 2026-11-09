@@ -62,7 +62,9 @@ test('Lista usa Campanha: Nome com link, contador à direita e tile da largura d
  expect(headRect&&countRect&&cardRect&&tileRect).toBeTruthy();
  expect(countRect.x+countRect.width).toBeGreaterThan(headRect.x+headRect.width-28);
  near(tileRect.width,cardRect.width,9);
- await expect(section.locator('[data-adventure-card="layout-parity-a1"] .hub-parent-link')).toContainText('Campanha: As Labaredas');
+ const ancestry=section.locator('[data-adventure-card="layout-parity-a1"] .hub-parent-link');
+ await expect(ancestry).toHaveText('Campanha: '+campaign.name);
+ await expect(ancestry).not.toContainText(adventures[0].title);
 });
 test('Cenas compartilha o layout de Mapas e a criação exibe somente o básico',async({page})=>{
  await page.goto('/aventuras.html?campaign='+campaign.id+'&id='+adventures[0].id);
