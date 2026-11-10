@@ -124,8 +124,12 @@ require("weapons:arr(w.itens).filter(x=>x.status!=='nao_canonizar'&&(x.ruleset==
         'Criador está descartando armas 5e únicas do catálogo já consolidado')
 require("import('./spells.js')" in catalogs,
         'Carregador secundário de magias diverge do carregador consolidado do criador')
-require("fixed:['Comum'],choose:2" in languages,
-        'Idiomas iniciais 5.5e devem ser Comum + 2 padrão')
+require("const CORE_LANGUAGE_CHOICES=['Comum',...STANDARD_LANGUAGES]" in languages
+        and "key:'core:languages',label:'Criação de Personagem',fixed:[],choose:2,pool:CORE_LANGUAGE_CHOICES" in languages
+        and 'speciesLanguageDefinitions(species)' in languages
+        and 'nativeLanguagesForSpecies' in languages
+        and "fixed:['Comum'],choose:2" not in languages,
+        'Política do Hub: idiomas nativos raciais + 2 escolhas; Comum não pode ser concedido obrigatoriamente pelo núcleo')
 require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
