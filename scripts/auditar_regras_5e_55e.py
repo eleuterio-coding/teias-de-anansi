@@ -169,23 +169,38 @@ require('function regraHubDoItem(i)' in magic_page
         and 'Sintonização no Hub:</strong> Não usada' in magic_page,
         'Itens mágicos devem aplicar espaços corporais da Regra da Casa, dois Anéis e substituir a Sintonização padrão')
 
-# Magias: o catálogo consolidado precisa manter 2024 + conteúdo 2014 sem equivalente.
+# Magias: 581 entradas canônicas em criação, ficha e Biblioteca; corpus histórico preservado.
+# O catálogo histórico de 138 entradas é de proveniência, não a fonte ativa 2024/legados.
 spell_loader = text('scripts/character-builder/spells.js')
-require("json('dados/magias-catalogo.json" in spell_loader,
-        'Criador não usa o catálogo consolidado de magias')
+registry = text('scripts/catalog-registry.js')
+spell_page = text('magias.html')
+require("SPELL_CANONICAL_FILE=firstLocal('spells','builder',p=>p==='dados/catalogo-magias-20261104.json')" in registry
+        and "json(SPELL_CANONICAL_FILE+'?v=20261104')" in spell_loader
+        and "catalog.itens.length!==581" in spell_loader,
+        'O construtor deve consumir o catálogo canônico de 581 magias sem cair silenciosamente em fonte anterior')
 require('SPELL_REMOTE_SOURCES' in spell_loader and 'SPELL_SOURCE_LOOKUP' in spell_loader,
         'Fallback remoto de Magias não deriva do registro canônico')
-spells = load('dados/magias-catalogo.json')
+require("fetch('dados/catalogo-magias-20261104.json?v=20261104'" in spell_page
+        and "data.itens?.length!==581" in spell_page
+        and "args.get('magia')||args.get('ref')" in spell_page,
+        'Biblioteca de Magias deve compartilhar as 581 entradas e preservar os links por ID/ref')
+spells = load('dados/catalogo-magias-20261104.json')
 spell_items = spells.get('itens', [])
-require(spells.get('controle', {}).get('validado') is True and len(spell_items) >= 500,
-        'Catálogo consolidado de magias está incompleto ou não validado')
-require(any(x.get('ruleset') == '5.5e' for x in spell_items),
-        'Catálogo de magias perdeu conteúdo 5.5e/2024')
-require(any(x.get('ruleset') == '5e' for x in spell_items),
-        'Catálogo de magias perdeu conteúdo legado 5e sem equivalente')
-spell_page = text('magias.html')
-require('const groups=new Map()' in spell_page and 'versoes_anteriores_descartadas' in spell_page,
-        'Biblioteca de Magias não está consolidando versões por identidade')
+require(spells.get('total') == 581 and len(spell_items) == 581,
+        'Catálogo ativo de magias deve possuir exatamente 581 entradas')
+require(len({x.get('id') for x in spell_items}) == 581 and len({norm(x.get('nome')) for x in spell_items}) == 581
+        and all(x.get('id') and x.get('nome') and x.get('livro') and x.get('descricao') for x in spell_items),
+        'Catálogo canônico possui IDs, nomes ou proveniência incompletos/duplicados')
+def count_spells(book):
+    return sum(x.get('livro') == book for x in spell_items)
+require(count_spells('Livro do Jogador · 2024') == 391
+        and count_spells("Xanathar's Guide to Everything") == 79
+        and count_spells("Tasha's Cauldron of Everything") == 11,
+        'Catálogo ativo perdeu conteúdo 2024 ou legado de Xanathar/Tasha')
+historical_spells = load('dados/magias-catalogo.json')
+require(historical_spells.get('controle', {}).get('validado') is True
+        and len(historical_spells.get('itens', [])) == 138,
+        'Corpus histórico de proveniência de magias perdeu a validação ou entradas')
 
 # Concentração Expandida: 2024 determina concentração; classificação é explícita, nunca heurística.
 ce = text('scripts/concentracao-expandida-selos.js')
@@ -197,18 +212,23 @@ for forbidden in ('miscTags', 'areaTags', 'strongConditions', 'majorName'):
 for conjure in ('Conjure Celestial', 'Conjure Minor Elementals', 'Conjure Woodland Beings'):
     require(conjure in ce, f'Reclassificação 2024 ausente na Concentração Expandida: {conjure}')
 no_concentration_2024 = {
-    'Barkskin', 'Divine Favor', 'Magic Weapon', 'True Strike',
-    'Searing Smite', 'Thunderous Smite', 'Wrathful Smite'
+    'Pele-Casca': 'Barkskin',
+    'Favor Divino': 'Divine Favor',
+    'Arma Mágica': 'Magic Weapon',
+    'Golpe Certeiro': 'True Strike',
+    'Destruição Ardente': 'Searing Smite',
+    'Destruição Trovejante': 'Thunderous Smite',
+    'Destruição Colérica': 'Wrathful Smite',
 }
 current_by_name = {
-    norm(x.get('nome_original') or x.get('nome')): x
-    for x in spell_items if x.get('ruleset') == '5.5e'
+    norm(x.get('nome')): x
+    for x in spell_items if x.get('livro') == 'Livro do Jogador · 2024'
 }
-for name in no_concentration_2024:
-    row = current_by_name.get(norm(name))
-    require(row is not None, f'Magia 2024 ausente do catálogo: {name}')
-    require(row.get('concentracao') is False,
-            f'{name} 2024 não pode ocupar vaga da Concentração Expandida')
+for localized, original in no_concentration_2024.items():
+    row = current_by_name.get(norm(localized))
+    require(row is not None, f'Magia 2024 ausente do catálogo: {original} ({localized})')
+    require(row.get('concentracao') == 'Não',
+            f'{original} ({localized}) 2024 não pode ocupar vaga da Concentração Expandida')
 
 # Talentos e raças: visualização ativa prefere 2024 e preserva legado único.
 feat_page = text('dados/_module-source/talentos.html')
