@@ -1,0 +1,37 @@
+name: Auditar geometria interna de Aventuras — PR visual
+on:
+  pull_request:
+    paths:
+      - 'adventure-content-workspace.css'
+      - 'adventure-layout-refinement.css'
+      - 'adventure-exploration.css'
+      - 'e2e/adventure-interior-geometry.spec.js'
+      - '.github/workflows/validar-layout-interior-aventuras-pr.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  geometria:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar Visão Geral, Oficina e Locais quadrados em desktop e mobile
+        run: npx playwright test e2e/adventure-interior-geometry.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=list
+      - name: Guardar screenshots e traces caso haja falha
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometria-interna-aventuras-${{ github.run_id }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
