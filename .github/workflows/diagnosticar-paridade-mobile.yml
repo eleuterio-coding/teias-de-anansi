@@ -40,6 +40,7 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           import { chromium } from '@playwright/test';
+          import assert from 'node:assert/strict';
           import { spawn } from 'node:child_process';
           import { mkdirSync, writeFileSync } from 'node:fs';
           const fixture = {
@@ -126,6 +127,16 @@ jobs:
               mainAncestryLinks:result.main_desktop.ancestryLinks,
               prAncestryLinks:result.pr_desktop.ancestryLinks
             }));
+            // Regressão geométrica: paridade main x PR; jamais validar só logs.
+            const perto=(a,b)=>Math.abs(a-b)<=2;
+            assert.ok(perto(result.pr.tile.width,result.main.tile.width),'Mobile: tile diverge da main (histórico 24px)');
+            assert.ok(perto(result.pr.tile.width,result.pr.card.width),'Mobile: tile e card precisam ter a mesma largura');
+            assert.ok(perto(result.pr.tile.x,result.pr.heading.x),'Mobile: tile desalinhado do título da Campanha');
+            assert.ok(perto(result.pr_desktop.tile.width,result.main_desktop.tile.width),'Desktop: tile diverge da main (histórico 34px)');
+            assert.ok(perto(result.pr_desktop.tile.x,result.main_desktop.tile.x),'Desktop: tile começa fora da área de conteúdo');
+            assert.ok(perto(result.pr_desktop.tile.width,result.pr_desktop.heading.width),'Desktop: tile não acompanha a largura do cabeçalho');
+            assert.ok(perto(result.pr_desktop.tile.width,result.pr_desktop.track.width),'Desktop: tile não acompanha a grade de cards');
+            assert.ok(perto(result.pr_desktop.card.width,result.main_desktop.card.width),'Desktop: a largura dos cards existentes não deve mudar');
           } finally { await browser.close(); servers.forEach(s=>s.kill()); }
           JS
       - name: Diagnosticar lazy-load da Biblioteca em navegador controlado

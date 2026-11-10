@@ -1002,10 +1002,11 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
  margin-top:4px!important;
 }
 
-/* Desktop: tile usa a largura total. No mobile, alinhar ao conteúdo
-   do grupo de Campanha (12px de cada lado), validado contra main. */
+/* Desktop: alinhar o tile ao cabeçalho e à grade interna do grupo
+   (17px por lado, incluindo a borda), como na main.
+   Mobile mantém a correção independente de 12px externos, sem padding. */
 #adventure-root .adventure-create-tile-row{
- padding-inline:0!important;
+ padding-inline:17px!important;
  gap:clamp(14px,1.5vw,22px)!important;
 }
 @media(max-width:680px){

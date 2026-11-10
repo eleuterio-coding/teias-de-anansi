@@ -103,12 +103,25 @@ test('Nova aventura ocupa toda a largura e abre a oficina de criação',async({p
  const link=row.locator('#open-adventure-create');
  await expect(link).toBeVisible();
  const sizes=await row.evaluate(el=>{
-  const a=el.getBoundingClientRect(),b=el.querySelector('a').getBoundingClientRect();
-  return {rowWidth:a.width,linkWidth:b.width,leftDelta:Math.abs(a.left-b.left)};
+  const rowBox=el.getBoundingClientRect(),tile=el.querySelector('a').getBoundingClientRect();
+  const heading=document.querySelector('#adventure-list .adventure-campaign-group-heading').getBoundingClientRect();
+  const track=document.querySelector('#adventure-list .adventure-campaign-track').getBoundingClientRect();
+  const style=getComputedStyle(el);
+  return {rowWidth:rowBox.width,tileWidth:tile.width,tileLeft:tile.left,tileRight:tile.right,
+   headingWidth:heading.width,headingLeft:heading.left,headingRight:heading.right,
+   trackWidth:track.width,trackLeft:track.left,
+   paddingLeft:parseFloat(style.paddingLeft),paddingRight:parseFloat(style.paddingRight),
+   viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth};
  });
- expect(sizes.linkWidth).toBeGreaterThan(0);
- expect(Math.abs(sizes.rowWidth-sizes.linkWidth)).toBeLessThanOrEqual(3);
- expect(sizes.leftDelta).toBeLessThanOrEqual(3);
+ expect(sizes.tileWidth).toBeGreaterThan(0);
+ expect(Math.abs(sizes.tileWidth-sizes.headingWidth)).toBeLessThanOrEqual(3);
+ expect(Math.abs(sizes.tileLeft-sizes.headingLeft)).toBeLessThanOrEqual(3);
+ expect(Math.abs(sizes.tileRight-sizes.headingRight)).toBeLessThanOrEqual(3);
+ expect(Math.abs(sizes.tileWidth-sizes.trackWidth)).toBeLessThanOrEqual(3);
+ expect(Math.abs(sizes.tileLeft-sizes.trackLeft)).toBeLessThanOrEqual(3);
+ expect(Math.abs(sizes.paddingLeft-17)).toBeLessThanOrEqual(1);
+ expect(Math.abs(sizes.paddingRight-17)).toBeLessThanOrEqual(1);
+ expect(sizes.scroll).toBeLessThanOrEqual(sizes.viewport+2);
  await link.click();
  await page.locator('#new-adventure-title').fill('A Jornada');
  await page.locator('#create-adventure').click();
@@ -124,12 +137,21 @@ test('Nova aventura usa a largura disponível também no celular',async({page})=
  await expect(link).toBeVisible();
  const layout=await row.evaluate(node=>{
   const a=node.getBoundingClientRect(),b=node.querySelector('a').getBoundingClientRect();
+  const heading=document.querySelector('#adventure-list .adventure-campaign-group-heading').getBoundingClientRect();
+  const track=document.querySelector('#adventure-list .adventure-campaign-track').getBoundingClientRect();
   return{rowWidth:a.width,linkWidth:b.width,leftDelta:Math.abs(a.left-b.left),
+   headingWidth:heading.width,headingLeft:heading.left,trackWidth:track.width,trackLeft:track.left,
+   tileLeft:b.left,paddingLeft:parseFloat(getComputedStyle(node).paddingLeft),
    viewport:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth};
  });
  expect(layout.linkWidth).toBeGreaterThan(0);
  expect(Math.abs(layout.rowWidth-layout.linkWidth)).toBeLessThanOrEqual(3);
  expect(layout.leftDelta).toBeLessThanOrEqual(3);
+ expect(Math.abs(layout.linkWidth-layout.headingWidth)).toBeLessThanOrEqual(3);
+ expect(Math.abs(layout.tileLeft-layout.headingLeft)).toBeLessThanOrEqual(3);
+ expect(Math.abs(layout.linkWidth-layout.trackWidth)).toBeLessThanOrEqual(3);
+ expect(Math.abs(layout.tileLeft-layout.trackLeft)).toBeLessThanOrEqual(3);
+ expect(layout.paddingLeft).toBe(0);
  expect(layout.scroll).toBeLessThanOrEqual(layout.viewport+2);
  await link.click();
  await expect(page.locator('#new-adventure-title')).toBeVisible();
