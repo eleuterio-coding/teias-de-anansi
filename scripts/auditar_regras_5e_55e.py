@@ -83,12 +83,14 @@ curated_house = required_house - {
     'Base Ability Score Distribution (House Rule)',
     'Wealth by Level (House Rule)',
 }
-require(curated.get('total_regras') == 160,
-        f'Matriz curada com contagem inesperada: {curated.get("total_regras")}/160')
+require(curated.get('total_regras') == 198 and len(curated.get('regras', {})) == 198,
+        f'Matriz curada com contagem inesperada: {curated.get("total_regras")}/198')
+require(curated.get('total_referencias') == 499,
+        'Matriz curada deve preservar as 499 referências auditadas')
 require(curated_house.issubset(set(curated.get('regras', {}))),
         'Matriz curada não inclui as Regras da Casa historicamente relacionadas')
 curated_js = text('scripts/referencias-regras-curadas.js')
-require('curated.total_regras!==160' in curated_js,
+require('curated.total_regras!==198||curated.total_referencias!==499' in curated_js,
         'Consumidor da matriz curada diverge da contagem publicada')
 
 # Criador de personagem: progressão da casa e compatibilidade 2014/2024.
