@@ -163,8 +163,11 @@ require('5.5e/2024 prevalece' in magic.get('politica_sobreposicao', ''),
 require(magic.get('controle', {}).get('srd51_legado_ativo', 0) >= 1,
         'Legado único de itens mágicos foi perdido')
 magic_page = text('itens-magicos.html')
-require('Espaços de Itens Mágicos' in magic_page and 'Sintonização no Hub' in magic_page,
-        'Itens mágicos ainda tratam Sintonização padrão como regra operacional')
+require('function regraHubDoItem(i)' in magic_page
+        and 'apenas um item fornece benefícios por espaço, exceto Anéis (dois)' in magic_page
+        and 'A exigência de Sintonização impressa na fonte é substituída pela Regra da Casa.' in magic_page
+        and 'Sintonização no Hub:</strong> Não usada' in magic_page,
+        'Itens mágicos devem aplicar espaços corporais da Regra da Casa, dois Anéis e substituir a Sintonização padrão')
 
 # Magias: o catálogo consolidado precisa manter 2024 + conteúdo 2014 sem equivalente.
 spell_loader = text('scripts/character-builder/spells.js')
