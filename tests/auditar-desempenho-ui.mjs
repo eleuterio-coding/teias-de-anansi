@@ -31,7 +31,13 @@ assert.ok(library.includes("async function ensureSemanticIndex()")&&library.incl
 
 const tableRouter=read('scripts/campaign-table-router.js'),adventureRouter=read('scripts/adventure-router.js');
 assert.ok(tableRouter.includes('Promise.all([import('),'Módulos da Mesa devem carregar em paralelo.');
-assert.ok(adventureRouter.includes('Promise.all([import('),'Módulos de Aventuras devem carregar em paralelo.');
+// Aventuras deve reconciliar vínculos no armazenamento ANTES de inicializar a UI.
+const integrityImport=adventureRouter.indexOf("await import('./adventure-integrity-ui.js");
+const adventureUiImport=adventureRouter.indexOf("await import('./adventure-ui.js");
+assert.ok(integrityImport!==-1&&adventureUiImport>integrityImport,
+  'Aventuras deve executar a integridade antes da UI: paralelizar imports com efeitos de escrita cria corrida.');
+assert.ok(!adventureRouter.slice(integrityImport,adventureUiImport).includes('Promise.all('),
+  'Reconciliador de vínculos não pode ser executado em paralelo com a UI de Aventuras.');
 
 const users=read('usuarios.html');
 for(const origin of['https://www.gstatic.com','https://identitytoolkit.googleapis.com','https://firestore.googleapis.com'])assert.ok(users.includes(`rel="preconnect" href="${origin}"`),`Jogadores sem preconnect para ${origin}.`);
