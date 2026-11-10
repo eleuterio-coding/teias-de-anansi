@@ -1,0 +1,48 @@
+name: Etapa 7 — Criadores visuais (sem deploy)
+
+on:
+  pull_request:
+    paths:
+      - 'e2e/etapa7-criadores-visual.spec.js'
+      - 'adventure-content-workspace.css'
+      - 'adventure-exploration.css'
+      - 'adventures.css'
+      - 'hub-directories.css'
+      - 'encounters.css'
+      - 'character-pages.css'
+      - '.github/workflows/validar-etapa7-criadores.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  criadores-etapa7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contratos da PR e sintaxe de teste
+        run: |
+          node --check e2e/etapa7-criadores-visual.spec.js
+          node --test tests/design-system-tokens.test.mjs tests/componentes-globais.test.mjs
+          node tests/auditar-layout-unificado.mjs
+      - name: Preparar Chromium isolado
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Testar criadores e permissões nos dois dispositivos
+        run: npx playwright test e2e/etapa7-criadores-visual.spec.js --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
+      - name: Guardar capturas sem publicar a aplicação
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: etapa7-criadores-evidencias
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
