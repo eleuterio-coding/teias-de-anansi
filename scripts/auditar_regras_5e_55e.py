@@ -244,29 +244,53 @@ class_detail = text('classes-v3.html')
 require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail and 'Talento — Regra da Casa' in class_detail,
         'Classes ainda expõem os ASIs regulares substituídos como progressão ativa')
 
-# Armas, armaduras e maestrias.
+# Armas, armaduras e maestrias: o registro canônico ativo é localizado,
+# e as três armas de 5e sem equivalente são preservadas no catálogo consolidado.
 mastery = load('dados/maestrias-de-arma-pdfs.json')
-canonical = {
-    x.get('nome') for x in mastery.get('itens', [])
+published = [
+    x for x in mastery.get('itens', [])
     if x.get('classificacao', {}).get('origem') == 'oficial_aberta'
     and x.get('classificacao', {}).get('status') == 'atual'
-}
-required_masteries = {'Cleave', 'Graze', 'Nick', 'Push', 'Sap', 'Slow', 'Topple', 'Vex'}
-require(required_masteries.issubset(canonical),
-        f'Maestrias 2024 ausentes: {sorted(required_masteries - canonical)}')
-require(mastery.get('controle', {}).get('oficiais_canonicas') == 8,
-        'Quantidade de maestrias oficiais 2024 divergente')
+    and x.get('controle', {}).get('canonico') is True
+]
+required_masteries = {'Afligir', 'Arranhão', 'Debilitar', 'Derrubar', 'Empurrar', 'Lento', 'Talho', 'Trespassar'}
+require(mastery.get('controle', {}).get('quantidade') == 8
+        and len(published) == 8
+        and {x.get('nome') for x in published} == required_masteries
+        and all(x.get('conteudo', {}).get('descricao') for x in published),
+        'Oito maestrias oficiais de 2024 devem existir com nomes PT-BR e efeitos definidos')
+require(not any(x.get('nome') == 'Perfurar' for x in published),
+        'Não canonizar Perfurar sem texto normativo de efeito publicado')
+
 weapons = load('dados/armas-srd.json')
-require(weapons.get('controle', {}).get('legados_5e', 0) >= 1,
-        'Catálogo de armas perdeu conteúdo 5e sem equivalente')
-require(any(x.get('ruleset') == '5e' for x in weapons.get('itens', [])),
-        'Nenhuma arma 5e única permanece no catálogo consolidado')
+merged_weapons = load('cache/armas-catalogo.json')
+core_weapons = weapons.get('itens', [])
+merged_items = merged_weapons.get('itens', [])
+require(weapons.get('controle', {}).get('validado') is True
+        and weapons.get('controle', {}).get('atuais_5_5e') == 38
+        and len(core_weapons) == 38
+        and all(x.get('ruleset') == '5.5e' and x.get('status') == 'atual' for x in core_weapons),
+        'Base oficial 2024 de 38 armas não está íntegra')
+legacy_weapons = [x for x in merged_items if x.get('ruleset') == '5e' and x.get('status') == 'suplementar']
+require(merged_weapons.get('controle', {}).get('quantidade') == 41
+        and merged_weapons.get('controle', {}).get('core') == 38
+        and merged_weapons.get('controle', {}).get('pdf') == 3
+        and len(merged_items) == 41 and len(legacy_weapons) == 3
+        and {x.get('id') for x in core_weapons}.issubset({x.get('id') for x in merged_items})
+        and len({x.get('id') for x in merged_items}) == 41,
+        'Catálogo unificado deve preservar 38 armas 2024 e 3 suplementos 5e únicos')
 weapon_page = text('armas.html')
 armor_page = text('armaduras.html')
-require('NÃO CANONIZAR' in weapon_page,
-        'Armas demonstrativas não estão protegidas contra canonização')
-require('não canonizar' in armor_page.lower(),
-        'Armaduras demonstrativas não estão protegidas contra canonização')
+require("fetch('cache/armas-catalogo.json" in weapon_page
+        and "!['demonstrativo','nao_canonizar'].includes(norm(x.status))" in weapon_page
+        and "!['demonstrativo','nao_canonizar'].includes(norm(x.natureza))" in weapon_page,
+        'Biblioteca de armas deve exibir o catálogo consolidado sem canonizar demonstrações')
+armor = load('dados/armaduras-pdfs.json')
+require(armor.get('controle', {}).get('validado') is True
+        and armor.get('controle', {}).get('quantidade_oficial_2024') == 13
+        and len([x for x in armor.get('armaduras', []) if x.get('canonico')]) == 13
+        and "ALL=(DATA.armaduras||[]).filter(x=>x.canonico)" in armor_page,
+        'Biblioteca de armaduras deve exibir somente 13 entradas oficiais canônicas')
 
 # PDFs registrados: fontes, manifesto e artefatos de runtime precisam ser rastreáveis.
 # `artefatos_relacionados` também guarda linhagem histórica/intermediária e não implica
