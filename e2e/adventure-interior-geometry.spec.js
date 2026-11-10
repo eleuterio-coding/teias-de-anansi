@@ -124,3 +124,16 @@ test('Oficina: Locais recolhidos formam grade de cartões quadrados; aberto ocup
   expect(expanded.cardWidth).toBeGreaterThanOrEqual(expanded.gridWidth-3);
   await noPageOverflow(page);
 });
+
+test('Oficina: categorias de criação mantêm alvos de toque mínimos de 44px',async({page},testInfo)=>{
+  await visit(page);
+  await page.locator('#adventure-create-tab').click();
+  const controls=await page.locator('.adventure-creation-choices>button').evaluateAll(nodes=>nodes.map(el=>{
+    const r=el.getBoundingClientRect();
+    return {label:el.textContent.trim(),height:r.height};
+  }));
+  console.log('LAYOUT_INTERIOR_TABS '+testInfo.project.name+' '+JSON.stringify(controls));
+  expect(controls).toHaveLength(7);
+  for(const control of controls)expect(control.height,control.label+' deve permitir toque confortável').toBeGreaterThanOrEqual(44);
+  await noPageOverflow(page);
+});

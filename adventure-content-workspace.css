@@ -219,7 +219,7 @@
   position:relative;
   flex:1 1 115px;
   min-width:0;
-  min-height:43px;
+  min-height:var(--hub-touch,44px);
   padding:10px 13px;
   border:1px solid transparent;
   border-radius:8px;
@@ -285,7 +285,7 @@
 }
 @media(max-width:520px){
   #adventure-root .adventure-creation-choices{gap:4px;padding:4px}
-  #adventure-root .adventure-creation-choices>button{flex:1 1 105px;min-height:42px;padding:9px 7px;font-size:.86rem}
+  #adventure-root .adventure-creation-choices>button{flex:1 1 105px;min-height:var(--hub-touch,44px);padding:9px 7px;font-size:.86rem}
 }
 @media(prefers-reduced-motion:reduce){
   #adventure-root .adventure-creation-choices>button{transition:none}
@@ -410,4 +410,26 @@
 /* Cards aninhados do editor não duplicam molduras. */
 #adventure-root #adventure-overview-content .adventure-overview-panel > :is(#linha-tempo,#notas-mestre){
  border:0;box-shadow:none;background:transparent;padding:0;
+}
+
+/* Auditoria Etapa 5 (PR #275): a Oficina mantinha uma coluna de Locais
+   retangulares (1042x156 desktop; 308x144 mobile). Os Locais recolhidos
+   voltam à grade compacta e quadrada, sem alterar o editor expandido.
+   Mapas, notas e formulários continuam com largura total. */
+#adventure-root .adventure-workspace-editors #exploracao .explore-area-grid{
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,188px),1fr))!important;
+  align-items:start;
+}
+#adventure-root .adventure-workspace-editors #exploracao .explore-area-grid>.explore-area-card:not(:has(>.explore-record-editor[open])){
+  grid-column:auto;
+  min-width:0;
+  width:100%;
+  height:auto;
+  min-height:0;
+  aspect-ratio:1/1;
+}
+@media(min-width:360px) and (max-width:620px){
+  #adventure-root .adventure-workspace-editors #exploracao .explore-area-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
 }
