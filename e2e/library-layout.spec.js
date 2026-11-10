@@ -49,8 +49,11 @@ test('os 18 links da Biblioteca abrem módulos no layout compartilhado',async({p
   const hrefs=await page.locator('.modulos > li > a').evaluateAll(anchors=>
     anchors.map(a=>new URL(a.href).pathname.split('/').pop())
   );
-  expect(hrefs).toEqual(modules);
+  // O catálogo é exibido em ordem alfabética; a lista técnica não deve impor outra ordem.
+  expect([...hrefs].sort()).toEqual([...modules].sort());
   expect(new Set(hrefs).size).toBe(modules.length);
+  const names=await page.locator('.modulos > li > a .nome').allTextContents();
+  expect(names).toEqual([...names].sort((a,b)=>a.localeCompare(b,'pt-BR')));
   for(const filename of modules){
     await test.step(filename,async()=>checkHubLayout(page,'/'+filename));
   }
@@ -121,6 +124,8 @@ test('cards compactos sem selos exibem contagens de itens em todos os 18 módulo
   const modulesWithCounts=['Regras','Classes','Subclasses','Espécies','Antecedentes','Talentos','Maestrias de Arma','Monstros','Armaduras','Armas','Equipamentos de Aventura','Ferramentas','Montarias e Veículos','Comércio e Despesas','Bugigangas','Itens Mágicos','Magias','Idiomas'];
   // Fixture de interface; em produção os dados são gerados do índice semântico.
   const modulos=Object.fromEntries(modulesWithCounts.map((name,i)=>[name,i===0?1:i+1]));
+  // O primeiro card alfabético é Antecedentes, não Regras.
+  modulos.Antecedentes=1;
   modulos.Magias=581;
   await page.route('**/dados/biblioteca-contagens.json*',route=>route.fulfill({
     status:200,contentType:'application/json',
@@ -128,6 +133,7 @@ test('cards compactos sem selos exibem contagens de itens em todos os 18 módulo
   }));
   await checkHubLayout(page,'/bibliotecas.html');
   await expect(page.locator('.modulos > li')).toHaveCount(18);
+  await expect(page.locator('.modulos > li:first-child .nome')).toHaveText('Antecedentes');
   await expect(page.locator('.modulos > li:first-child .contagem')).toHaveText('1 item');
   await expect(page.locator('.modulos > li[data-catalog-id="spells"] .contagem')).toHaveText('581 itens');
   await expect(page.locator('.modulos')).not.toContainText('Publicado');
