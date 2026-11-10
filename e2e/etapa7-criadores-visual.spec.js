@@ -184,7 +184,8 @@ test('Jogador: NPCs restritos e criação própria não viram edição do Mestre
  await identity(page,'Jogador');
  await page.goto('/lista-npcs.html');
  await stable(page,'#npc-list');
- await expect(page.locator('#npc-master-actions,#npc-editor')).toBeHidden();
+ await expect(page.locator('#npc-master-actions')).toBeHidden();
+ await expect(page.locator('#npc-editor')).toBeHidden();
  await geom(page,'Lista de NPCs','#main-content');
  await page.goto('/criacao-personagem.html');
  await stable(page,'#builder');
