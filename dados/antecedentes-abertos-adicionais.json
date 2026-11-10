@@ -24,7 +24,7 @@
           "Legacy"
         ],
         "tags": [
-          "Player’s Handbook 2014",
+          "Player’s Handbook",
           "5e",
           "variante de Criminal",
           "conteúdo oficial aberto"
@@ -109,7 +109,7 @@
       "fonte": {
         "publicacao_id": "phb-2014",
         "titulo": "Player’s Handbook",
-        "titulo_original": "Player’s Handbook (2014)",
+        "titulo_original": "Player’s Handbook",
         "editora": "Wizards of the Coast LLC",
         "ano": 2014,
         "natureza": "Core",
