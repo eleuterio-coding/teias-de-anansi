@@ -45,7 +45,7 @@ precedencia = ' '.join(policy.get('precedencia', []))
 require('versão 5.5e/2024' in precedencia and 'permanece disponível' in precedencia,
         'Política não expressa simultaneamente precedência 2024 e preservação do legado único')
 
-# As sete Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
+# As oito Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
 hub_rules = load('dados/regras-hub.json')
 extra_rules = load('dados/regras-casa-adicionais.json')
 house = [*hub_rules.get('itens', []), *extra_rules.get('itens', [])]
@@ -58,12 +58,13 @@ required_house = {
     'Universal Feat and Ability Progression (House Rule)',
     'Base Ability Score Distribution (House Rule)',
     'Wealth by Level (House Rule)',
+    'Ability Score Improvement (House Rule)',
 }
-require(len(house) == 7, f'Quantidade inesperada de Regras da Casa: {len(house)}/7')
+require(len(house) == 8, f'Quantidade inesperada de Regras da Casa: {len(house)}/8')
 require(required_house.issubset(house_names),
         f'Regras da Casa ausentes: {sorted(required_house - house_names)}')
 viewer = text('scripts/regras-srd-view-v7.js')
-require('HOUSE.length!==7' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/7' in viewer,
+require('HOUSE.length!==8' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/8' in viewer,
         'Catálogo de Regras ainda espera quantidade antiga de Regras da Casa')
 wealth_rules = [x for x in house if x.get('original') == 'Wealth by Level (House Rule)']
 require(len(wealth_rules) == 1, 'Riqueza por Level deve existir uma única vez e substituir a versão anterior')
