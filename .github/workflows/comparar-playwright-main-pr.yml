@@ -135,3 +135,44 @@ jobs:
             test-results/
           retention-days: 7
           if-no-files-found: ignore
+
+  comparar-biblioteca:
+    # Mesma auditoria visual real em ambos os SHAs, sem alterar expectativas.
+    name: Biblioteca visual ${{ matrix.version }} — paridade E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout do commit exato main ou PR sem credenciais persistidas
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Conferir revisão e integridade do spec
+        run: |
+          git log -1 --format="%H %s"
+          sha256sum e2e/biblioteca-auditoria-visual.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Reproduzir a auditoria visual integral em desktop e mobile
+        run: |
+          npx playwright test e2e/biblioteca-auditoria-visual.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=list
+      - name: Preservar screenshots, traces e evidências sem publicar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biblioteca-paridade-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            artifacts/biblioteca-visual/
+          retention-days: 7
+          if-no-files-found: ignore
