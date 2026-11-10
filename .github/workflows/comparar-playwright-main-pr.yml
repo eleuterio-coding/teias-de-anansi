@@ -176,3 +176,21 @@ jobs:
             artifacts/biblioteca-visual/
           retention-days: 7
           if-no-files-found: ignore
+
+  verificar-reparos-herdados:
+    # Auditoria adicional fail-closed: nao substitui nenhum gate existente.
+    name: Validar nomenclatura canonica e inventario de Regras da Casa
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout do HEAD exato da PR sem credenciais persistidas
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Registrar o SHA auditado
+        run: git log -1 --format="%H %s"
+      - name: Validar o titulo canonico sem excecoes
+        run: node tests/auditar-titulo-players-handbook.mjs
+      - name: Validar 8 regras distintas e integridade normativa 5e/5.5e
+        run: python3 scripts/auditar_regras_5e_55e.py
