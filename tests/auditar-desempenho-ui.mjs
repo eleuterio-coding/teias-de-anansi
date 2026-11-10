@@ -19,7 +19,15 @@ assert.ok(css.includes('content-visibility:auto'),'Seções longas fora da viewp
 const library=read('scripts/library-catalog-status.js');
 assert.ok(library.includes('ensureSemanticIndex'),'Índice semântico deve ser carregado sob demanda.');
 assert.equal(library.includes("fetch('dados/referencias-hub-index.json',{cache:'no-store'})"),false,'Índice semântico não deve forçar novo download.');
-assert.ok(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);\s*$/.test(library),'Biblioteca não deve baixar o índice semântico na inicialização.');
+// A inicialização pode carregar apenas contagens: o índice semântico continua lazy.
+assert.ok(/injectStyle\\(\\);injectControls\\(\\);decorateCards\\(\\);applyFilters\\(\\);loadCounts\\(\\);\\s*$/.test(library),
+  'Inicialização deve carregar somente controles e contagens, sem requisitar o índice semântico.');
+assert.ok(library.includes("if(q.length>=2&&!semanticIndex)ensureSemanticIndex()"),
+  'Busca semântica só deve carregar o índice sob demanda após dois caracteres.');
+assert.equal((library.match(/fetch\\('dados\\/referencias-hub-index\\.json'\\)/g)||[]).length,1,
+  'Índice semântico deve ter uma única requisição, isolada no carregador lazy.');
+assert.ok(library.includes("async function ensureSemanticIndex()")&&library.includes("async function loadCounts()")&&library.includes("fetch('dados/biblioteca-contagens.json"),
+  'Carregadores de índice e contagens devem permanecer separados.');
 
 const tableRouter=read('scripts/campaign-table-router.js'),adventureRouter=read('scripts/adventure-router.js');
 assert.ok(tableRouter.includes('Promise.all([import('),'Módulos da Mesa devem carregar em paralelo.');
