@@ -84,7 +84,7 @@ test('Aventura: visual responsivo evita overflow em celular',async({page})=>{
  expect(ui.imageBottom).toBeLessThanOrEqual(ui.infoTop+3);
  expect(ui.scroll).toBeLessThanOrEqual(ui.viewport+2);
  expect(ui.widths.every(x=>x>=80)).toBe(true);
- expect(ui.heights.every(x=>x>=40)).toBe(true);
+ expect(ui.heights.every(x=>x>=44)).toBe(true);
 });
 test('Aventura: alteração de status mantém seletor e persistência',async({page})=>{
  await page.goto('/aventuras.html?campaign=adventure-layout-campaign');

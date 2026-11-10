@@ -7,6 +7,7 @@ const components = file('hub-components.css');
 const ux = file('hub-ux.css');
 const menus = file('hub-area-menus.css');
 const roster = file('hub-roster.css');
+const collectionCards = file('campaign-collection-cards.css');
 
 test('o estilo global importa componentes após os tokens de identidade', () => {
   assert.match(ux, /^@import url\("\.\/hub-design-tokens\.css\?v=20261104-design-system-v1"\);\s*@import url\("\.\/hub-components\.css\?v=20261104-components-v1"\);/);
@@ -36,4 +37,10 @@ test('primitivos opt-in estão disponíveis sem reestilizar todas as tags do HUB
     assert.ok(components.includes('.' + cls), cls);
   }
   assert.doesNotMatch(components, /(^|\n)\s*(?:button|input|select|textarea|dialog)\s*\{/);
+});
+
+test('acoes de Aventuras e Sessoes respeitam o alvo de toque global de 44px', () => {
+  assert.match(collectionCards, /:is\(#adventure-list,#sessions-list\) \.campaign-card-featured>\.campaign-card-actions>a\.btn,/);
+  assert.match(collectionCards, /height:var\(--hub-touch,44px\)!important;min-height:var\(--hub-touch,44px\)!important;/);
+  assert.doesNotMatch(collectionCards, /height:42px!important;min-height:42px!important;/);
 });
