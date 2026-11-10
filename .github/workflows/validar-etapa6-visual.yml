@@ -1,0 +1,45 @@
+name: Etapa 6 — Biblioteca, fichas e formulários (visual)
+on:
+  pull_request:
+    paths:
+      - 'e2e/etapa6-visual.spec.js'
+      - 'character-pages.css'
+      - 'biblioteca-light.css'
+      - 'settings.css'
+      - '.github/workflows/validar-etapa6-visual.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-etapa6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Contratos estáticos preservados
+        run: |
+          node --check e2e/etapa6-visual.spec.js
+          node tests/auditar-layout-bibliotecas.mjs
+          node tests/auditar-ux-mobile-final.mjs
+          node --test tests/design-system-tokens.test.mjs tests/componentes-globais.test.mjs
+      - name: Preparar navegador isolado
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Auditar desktop/mobile e Mestre/Jogador
+        run: npx playwright test e2e/etapa6-visual.spec.js e2e/library-layout.spec.js e2e/character-sheet-shared-opening.spec.js e2e/character-creation-layout-portrait.spec.js --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
+      - name: Preservar evidências de testes, sem deploy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: etapa6-visual-evidencias
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
