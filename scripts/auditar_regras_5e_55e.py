@@ -313,11 +313,20 @@ critical_pdf_artifacts = [
     'dados/bugigangas-pdfs.json',
     'dados/armaduras-pdfs.json',
     'dados/armas-pdfs-manifest.json',
-    'dados/equipamentos-aventura-pdfs.json',
     'dados/equipamentos-aventura-core-pdfs.json',
 ]
 for artifact in critical_pdf_artifacts:
     require((ROOT / artifact).exists(), f'Artefato PDF materializado ausente: {artifact}')
+
+# O arquivo histórico dados/equipamentos-aventura-pdfs.json foi substituído pela fonte
+# core de 88 entradas; a Biblioteca carrega exclusivamente a fonte validada atual.
+core_gear = load('dados/equipamentos-aventura-core-pdfs.json')
+require(core_gear.get('auditoria', {}).get('adicionados') == 88
+        and core_gear.get('auditoria', {}).get('phb2024') == 79
+        and core_gear.get('auditoria', {}).get('heroes2025') == 9
+        and 'fetch("dados/equipamentos-aventura-core-pdfs.json' in text('equipamentos-aventura.html')
+        and 'expandCore(core)' in text('equipamentos-aventura.html'),
+        'Equipamentos de aventura devem preservar 88 registros na fonte core publicada')
 
 historical_missing = []
 for src in pdf_registry.get('fontes', []):
