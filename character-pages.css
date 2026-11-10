@@ -96,3 +96,14 @@ body.hub-shell-enabled #sheet .slot button{
  width:auto;
  height:auto;
 }
+
+/* Etapa 6 — impedir que o tamanho mínimo intrínseco dos painéis da
+   ficha amplie a única coluna da grade no celular; nenhum conteúdo é ocultado. */
+body.hub-shell-enabled #sheet{
+ grid-template-columns:minmax(0,1fr);
+ min-width:0;
+ max-width:100%;
+}
+body.hub-shell-enabled #sheet > *{
+ min-width:0;
+}
