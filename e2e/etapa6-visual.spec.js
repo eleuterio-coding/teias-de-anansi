@@ -47,11 +47,18 @@ async function shell(page,path,theme){
  await expect(page.locator('.hub-app-shell')).toBeVisible({timeout:25000});
  await page.addStyleTag({url:'/site-light.css?v=etapa6-visual'});
  await expect(page.locator('body')).toHaveClass(theme==='library'?/hub-content-library/:/hub-content-light/);
+ if(path.includes('/ficha-personagem.html')) await expect(page.locator('#sheet')).toBeVisible({timeout:45000});
  const metrics=await page.evaluate(()=>{
   const content=document.querySelector('.hub-app-content');
   return {background:getComputedStyle(content).backgroundColor,
    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
  });
+ if(metrics.overflow>3){
+  const offenders=await page.evaluate(()=>[...document.querySelectorAll('body *')].map(el=>{
+   const r=el.getBoundingClientRect();return {tag:el.tagName,id:el.id,cls:String(el.className||'').slice(0,75),right:Math.round(r.right),width:Math.round(r.width),client:document.documentElement.clientWidth};
+  }).filter(x=>x.right>x.client+3&&x.width>0).sort((a,b)=>b.right-a.right).slice(0,12));
+  console.log('ETAPA6_OVERFLOW',path,metrics.overflow,JSON.stringify(offenders));
+ }
  expect(metrics.overflow,path+' não deve estourar horizontalmente').toBeLessThanOrEqual(3);
  expect(metrics.background).toBe(theme==='library'?'rgb(8, 13, 20)':'rgb(244, 247, 251)');
 }
