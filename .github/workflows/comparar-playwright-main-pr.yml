@@ -94,3 +94,44 @@ jobs:
             test-results/
           retention-days: 7
           if-no-files-found: ignore
+
+  comparar-exploracao:
+    # Comparação de regressões. Mesmos specs (SHAs idênticos) executados nos dois commits.
+    # Não atenua as asserções já existentes nem converte falhas da main em aprovação.
+    name: Exploração de Aventuras ${{ matrix.version }} — paridade E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout imutável da versão correspondente
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Registrar commit e hashes dos mesmos specs
+        run: |
+          git log -1 --format="%H %s"
+          sha256sum e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar runner e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Executar asserções integrais de exploração nos dois ambientes
+        run: |
+          npx playwright test e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=list
+      - name: Guardar traces e capturas para auditoria diferencial
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exploracao-paridade-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
