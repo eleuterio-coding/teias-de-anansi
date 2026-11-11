@@ -62,10 +62,11 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await capture(page,`classes-${info.project.name}.png`);
     await page.getByRole('link',{name:/Artífice/}).first().click();
     await expect(page).toHaveURL(/classes-v3.html/);
-    await expect(page.locator('#lista details.classe')).toHaveCount(13,{timeout:35000});
-    await expect(page.locator('#lista details.classe[open]')).toHaveCount(1);
-    const art=page.locator('#lista details[data-id="artificer"]');
-    await expect(art).toHaveAttribute('open','');
+    // A lista contém 13 cards; o clique abre o artigo individual da classe.
+    // O detalhe não é mais um acordeão com 13 classes.
+    await expect(page.locator('#lista article.classe')).toHaveCount(1,{timeout:35000});
+    const art=page.locator('#lista article.classe');
+    await expect(art.locator('.classe-title h2')).toHaveText('Artífice');
     await expect(art.locator('.tabela-wrap tbody tr')).toHaveCount(20);
     await capture(page,`artifice-detalhe-${info.project.name}.png`);
     const geom=await overflow(page);
@@ -135,7 +136,7 @@ test.describe('Auditoria da Biblioteca — desktop e celular',()=>{
     await expect(page.locator('.armor-heading h2')).toHaveText('Armadura Acolchoada');
     await expect(page.locator('#detalhe .stat').filter({hasText:'Peso'})).toContainText('3,6 kg');
     await expect(page.locator('.armor-heading .armor-type')).toHaveText('Leve');
-    await expect(page.locator('.armor-source')).toContainText('Fonte: Livro do Jogador');
+    await expect(page.locator('.armor-source')).toContainText('Livro: Livro do Jogador');
     // A tradução aparece de imediato; o inglês permanece recolhido até ser solicitado.
     await expect(page.locator('#detalhe .armor-description h3')).toHaveText('Efeito e descrição');
     await expect(page.locator('#detalhe .armor-description-status')).toContainText('Descrição em português');
