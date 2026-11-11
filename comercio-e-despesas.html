@@ -22,7 +22,9 @@
     .corpo { padding: 0 16px 16px; }
     .corpo h3 { margin: 18px 0 7px; font-size: 1rem; }
     .corpo p { margin: 7px 0; }
-    .tabela { overflow-x: auto; margin: 8px 0 14px; }
+    .tabela { overflow-x:auto; margin:8px 0 4px; }
+    .tabela-card {border:1px solid #8885;border-radius:11px;padding:13px 15px 15px;margin:13px 0}
+    .tabela-card h3 {margin:0 0 10px;font-size:1.05rem}
     table { width: 100%; border-collapse: collapse; font-size: .94rem; }
     th, td { border: 1px solid #8884; padding: 7px 9px; text-align: left; vertical-align: top; }
     th { background: #8881; }
@@ -44,7 +46,7 @@
   </header>
 
   <div class="controles">
-    <input id="busca" type="search" placeholder="Buscar moeda, serviço, preço, fonte ou regra...">
+    <input id="busca" type="search" placeholder="Buscar moeda, serviço, preço, livro ou regra...">
     <select id="filtro">
       <option value="">Todos os grupos</option>
     </select>
@@ -74,7 +76,7 @@ const GRUPOS = [
     ]
   },
   {
-    nome:'Tesouro e Economia do Mestre', categoria:'Economia do Mestre', fonte:'Dungeon Master’s Guide (2024)', paginas:'211–408', status:'Vigente — versão mais recente',
+    nome:'Tesouros e Bens Comerciais', categoria:'Economia do Mestre', fonte:'Dungeon Master’s Guide (2024)', paginas:'211–408', status:'Vigente — versão mais recente',
     resumo:'Moedas e tesouro negociável, barras comerciais, mercadorias, gemas, objetos de arte, economia de criação de itens mágicos e custos operacionais de Bastiões.',
     secoes:[
       {titulo:'Moedas e barras comerciais', colunas:['Entrada','Valor','Detalhe'], linhas:[
@@ -146,12 +148,12 @@ const GRUPOS = [
 GRUPOS.splice(2); // Mantemos exclusivamente os dois grupos econômicos gerais.
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const filtro = document.getElementById('filtro');
-[...new Set(GRUPOS.map(g => g.categoria))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(c => {
+[...new Set(GRUPOS.map(g => g.nome))].sort((a,b)=>a.localeCompare(b,'pt-BR')).forEach(c => {
   const o=document.createElement('option'); o.value=c; o.textContent=c; filtro.appendChild(o);
 });
 
 function secao(s){
-  let h=`<section ${s.titulo==='Moedas e barras comerciais'?'id="moedas"':''}><h3>${esc(s.titulo)}</h3>`;
+  let h=`<section class="tabela-card" ${s.titulo==='Moedas e barras comerciais'?'id="moedas"':''}><h3>${esc(s.titulo)}</h3>`;
   if(s.nota) h+=`<p>${HubBiblioteca.moedaHtml(s.nota)}</p>`;
   if(s.linhas){
     h+=`<div class="tabela"><table><thead><tr>${s.colunas.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>`;
@@ -165,18 +167,18 @@ function render(){
   const q=document.getElementById('busca').value.trim().toLocaleLowerCase('pt-BR');
   const cat=filtro.value;
   const filtrados=GRUPOS.filter(g=>{
-    if(cat && g.categoria!==cat) return false;
+    if(cat && g.nome!==cat) return false;
     if(!q) return true;
     return JSON.stringify(g).toLocaleLowerCase('pt-BR').includes(q);
   });
   document.getElementById('resultado').textContent='';
   document.getElementById('lista').innerHTML=filtrados.map(g=>`
     <details class="grupo" ${location.hash==="#moedas"&&g.secoes.some(x=>x.titulo==="Moedas e barras comerciais")?"open":""}>
-      <summary><strong>${esc(g.nome)}</strong><span class="categoria">${esc(g.categoria)}</span></summary>
+      <summary><strong>${esc(g.nome)}</strong></summary>
       <div class="corpo">
-        <p>${esc(g.resumo)}</p>
+        
         ${g.secoes.map(secao).join('')}
-        <div class="meta"><span><strong>Livro:</strong> ${esc(HubBiblioteca.livro(g.fonte))}</span><span><strong>Páginas-fonte:</strong> ${esc(g.paginas)}</span><span><strong>Status:</strong> ${esc(g.status)}</span></div>
+        <div class="meta"><span><strong>Livro:</strong> ${esc(HubBiblioteca.livro(g.fonte))}</span></div>
       </div>
     </details>`).join('');
 }

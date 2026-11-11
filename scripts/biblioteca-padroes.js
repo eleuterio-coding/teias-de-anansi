@@ -47,7 +47,10 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 function livro(v){
  let s=String(v||'').trim();
- if(/(?:Player[’']?s Handbook|Livro do Jogador|PHB\s*2024)/i.test(s))return 'Livro do Jogador · 2024';
+ if(/(?:Player[’']?s Handbook|Livro do Jogador|PHB(?:\s*2024)?)/i.test(s))return 'Livro do Jogador · 2024';
+ if(/^MM(?:\s*(?:2024|2025))?$/i.test(s)||/^Monster Manual(?:\s*\(?(?:2024|2025)\)?)?$/i.test(s))return 'Manual dos Monstros';
+ if(/^Dungeon Master[’']?s Guide/i.test(s))return 'Guia do Mestre';
+ if(/^SRD 5\.2\.1$/i.test(s))return 'Livro do Jogador · 2024';
  s=s.replace(/\s*\((?:19|20)\d{2}\)\s*$/,'');
  // Series names written as "Series (Volume)" are displayed uniformly.
  s=s.replace(/^([^()]+?)\s*\(([^()]+)\)$/,(_,serie,volume)=>serie.trim()+': '+volume.trim());
