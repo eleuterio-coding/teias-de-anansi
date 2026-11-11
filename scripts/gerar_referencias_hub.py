@@ -533,7 +533,14 @@ def main():
     # Alguns termos em português são aliases canônicos de uma regra que
     # pode estar catalogada com título em inglês de edição mais recente.
     # Vincule explicitamente ao original da regra, sem desempatar por acaso.
-    canonical_rules = {"pontos de vida": "Hit Points"}
+    canonical_rules = {
+        "pontos de vida": "Hit Points",
+        "sangrando": "Bloodied",
+        "desvantagem": "Disadvantage",
+        "vantagem": "Advantage",
+        "acao": "Action",
+        "reacao": "Reaction",
+    }
     for k, rows in amap.items():
         if k in canonical_rules:
             target = [
