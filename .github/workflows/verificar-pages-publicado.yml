@@ -1,0 +1,47 @@
+name: Verificar arquivos publicados no GitHub Pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'regras.html'
+      - 'scripts/regras-srd-view-v7.js'
+      - '.github/workflows/verificar-pages-publicado.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar-site-publico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Confirmar acesso e revisao publicada
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://eleuterio-coding.github.io/teias-de-anansi'
+          marker='20261111-ordem-visivel1'
+          script_marker='name:weaponPropertyTitle(x)'
+          for attempt in $(seq 1 24); do
+            echo "Verificação $attempt/24: $base/"
+            if curl -fsSL --connect-timeout 10 --max-time 25 \
+                -H 'Cache-Control: no-cache' \
+                "$base/?deploy-check=$GITHUB_SHA-$attempt" -o /tmp/hub-index.html \
+              && curl -fsSL --connect-timeout 10 --max-time 25 \
+                -H 'Cache-Control: no-cache' \
+                "$base/regras.html?deploy-check=$GITHUB_SHA-$attempt" -o /tmp/hub-regras.html \
+              && curl -fsSL --connect-timeout 10 --max-time 25 \
+                -H 'Cache-Control: no-cache' \
+                "$base/scripts/regras-srd-view-v7.js?deploy-check=$GITHUB_SHA-$attempt" -o /tmp/hub-regras.js \
+              && grep -Fq '<title>Teias de Anansi</title>' /tmp/hub-index.html \
+              && grep -Fq "$marker" /tmp/hub-regras.html \
+              && grep -Fq "$script_marker" /tmp/hub-regras.js; then
+              echo 'PUBLICAÇÃO CONFIRMADA: página inicial, regras.html e script corrigido estão acessíveis no GitHub Pages.'
+              echo "URL: $base/"
+              exit 0
+            fi
+            if [ "$attempt" -lt 24 ]; then sleep 15; fi
+          done
+          echo 'PUBLICAÇÃO NÃO CONFIRMADA: o site não serviu os três arquivos esperados durante a verificação.' >&2
+          exit 1
