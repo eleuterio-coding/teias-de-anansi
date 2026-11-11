@@ -1,11 +1,18 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><title>Classes - Biblioteca - Teias de Anansi</title><style>:root{color-scheme:light;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--b:#8885;--soft:#f5f5f5}*{box-sizing:border-box}html,body{background:#fff;color:#000}body{max-width:1180px;margin:auto;padding:24px;line-height:1.55}a{color:inherit}.muted{opacity:.72}.nota,.erro,.vazio{padding:13px 15px;border:1px dashed #8888;border-radius:10px;margin:14px 0}.controles{display:grid;grid-template-columns:minmax(230px,1fr) minmax(180px,260px);gap:10px;margin:18px 0 8px}input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid #8887;border-radius:8px;background:#fff;color:#000}.resultado{opacity:.7}.classe{border:1px solid var(--b);border-radius:12px;margin:10px 0;overflow:hidden}.classe>summary{cursor:pointer;padding:14px 16px;display:flex;justify-content:space-between;gap:16px}.classe>summary:hover{background:var(--soft)}.sub{font-size:.85rem;opacity:.68}.corpo{padding:0 16px 18px}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px}.stat{border:1px solid var(--b);border-radius:9px;padding:9px 10px}.stat strong{display:block;font-size:.78rem;opacity:.7;text-transform:uppercase}.bloco{margin-top:18px}.feature{border-left:3px solid #8886;padding-left:11px;margin:11px 0}.feature h4{margin:0}.feature p{white-space:pre-line}.tabela-wrap{overflow:auto;border:1px solid var(--b);border-radius:10px}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid #8883}th{background:#fff;font-size:.82rem}.meta{border-top:1px solid #8883;margin-top:18px;padding-top:11px;font-size:.88rem;opacity:.78;display:flex;gap:8px 20px;flex-wrap:wrap}@media(max-width:700px){body{padding:16px}.controles{grid-template-columns:1fr}.classe>summary{display:block}.sub{display:block;margin-top:4px}} .classe-title{padding:14px 16px 0}.classe-title h2{margin:0;font-size:1.45rem}.classe .corpo{padding-top:8px}
+.proficiencias-card{border:1px solid var(--b);border-radius:10px;padding:13px 15px}
+.proficiencias-card h3{margin:0 0 9px}.proficiencias-card p{margin:0;line-height:1.85}
+.proficiencias-card a,.subclasses-card a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.subclasses-card{grid-column:1/-1}.subclasse-links{display:flex;flex-wrap:wrap;gap:7px 15px;margin-top:8px}
+.subclasse-links a{display:inline-block;padding:3px 0}
+.tabela-wrap{max-width:100%;overflow-x:auto}.tabela-wrap td{text-wrap:nowrap}
+.tabela-wrap td:nth-child(3){text-wrap:wrap;min-width:220px}
 </style><link rel="stylesheet" href="biblioteca-light.css?v=20261028-hub-layout1"></head><body>
 <p><a href="classes.html?v=20261028-library-hub-layout1">← Classes</a></p><header><h1>Classes</h1></header><p class="resultado" id="resultado">Carregando...</p><main id="lista"></main>
 <script>
 const METRIC_PT={bardic_inspiration_die:'Dado de Inspiração Bárdica',channel_divinity_charges:'Usos de Canalizar Divindade',eldritch_invocations:'Invocações Místicas',favored_enemies:'Inimigos Favoritos',focus_points:'Pontos de Foco',martial_arts_die:'Dado de Artes Marciais',rage_count:'Usos de Fúria',rage_damage_bonus:'Dano Adicional da Fúria',second_wind_uses:'Usos de Retomar o Fôlego',sneak_attack:'Ataque Furtivo',sorcery_points:'Pontos de Feitiçaria',unarmored_movement_bonus:'Deslocamento sem Armadura',weapon_mastery:'Maestrias de Arma',wild_shape_uses:'Usos de Forma Selvagem'};
-const PIN='bfd3db4bcc31699cce703b46feb9af3f0ff08999',RAW=`https://raw.githubusercontent.com/5e-bits/5e-database/${PIN}/src/2024/en`,V='20261104-classes-ptbr1',STANDARD_ASI=new Set([4,8,12,16,19]);
-const EXPECTED=['barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'],LOCFILES={barbarian:'barbaro',bard:'bardo',cleric:'clerigo',druid:'druida',fighter:'guerreiro',monk:'monge',paladin:'paladino',ranger:'patrulheiro',rogue:'ladino',sorcerer:'feiticeiro',warlock:'bruxo',wizard:'mago'},DESCR={barbarian:'Guerreiro movido por poder primal e Fúria.',bard:'Conjurador e especialista versátil.',cleric:'Campeão de poder divino.',druid:'Conjurador primal ligado à natureza.',fighter:'Especialista marcial completo.',monk:'Artista marcial móvel e disciplinado.',paladin:'Guerreiro sagrado de juramento.',ranger:'Guerreiro explorador e conjurador primal.',rogue:'Especialista em precisão, furtividade e perícias.',sorcerer:'Conjurador de poder inato.',warlock:'Ocultista de pactos e invocações.',wizard:'Estudioso da magia arcana.'};
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),arr=v=>Array.isArray(v)?v:[],fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');let G={},LOC={},DATA=[],SUBLOC={};
+const PIN='bfd3db4bcc31699cce703b46feb9af3f0ff08999',RAW=`https://raw.githubusercontent.com/5e-bits/5e-database/${PIN}/src/2024/en`,V='20261111-classes-upgrade1',STANDARD_ASI=new Set([4,8,12,16,19]);
+const EXPECTED=['barbarian','bard','cleric','druid','fighter','monk','paladin','ranger','rogue','sorcerer','warlock','wizard'],LOCFILES={barbarian:'barbaro',bard:'bardo',cleric:'clerigo',druid:'druida',fighter:'guerreiro',monk:'monge',paladin:'paladino',ranger:'patrulheiro',rogue:'ladino',sorcerer:'feiticeiro',warlock:'bruxo',wizard:'mago'},DESCR={"artificer":"Mestres da invenção, artífices usam a engenhosidade e a magia para desbloquear capacidades extraordinárias em objetos.","barbarian":"Um guerreiro feroz de origem primitiva que pode entrar em uma fúria de batalha.","bard":"Um mágico inspirador cujo poder ecoa a música da criação.","warlock":"Um portador de magia derivada de uma barganha com uma entidade extraplanar.","cleric":"Um campeão sacerdotal que empunha magia divina a serviço de um poder superior.","druid":"Um sacerdote da Crença Antiga, empunhando os poderes da natureza e adotando formas animais.","sorcerer":"Um conjurador que extrai magia inerente de um dom ou linhagem sanguínea.","fighter":"Um mestre do combate marcial, habilidoso com uma variedade de armas e armaduras.","rogue":"Um trapaceiro que usa furtividade e astúcia para superar obstáculos e inimigos.","wizard":"Um usuário de magia erudito capaz de manipular as estruturas da realidade.","monk":"Um mestre das artes marciais, aproveitando o poder do corpo em busca da perfeição física e espiritual.","paladin":"Um guerreiro sagrado vinculado a um juramento sagrado.","ranger":"Um guerreiro que combate ameaças nos limites da civilização."};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),arr=v=>Array.isArray(v)?v:[],fold=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');let G={},LOC={},DATA=[],SUBLOC={},SUBCLASSES=[];
 async function json(u){const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json()}
 const ABREV={STR:'Força',DEX:'Destreza',CON:'Constituição',INT:'Inteligência',WIS:'Sabedoria',CHA:'Carisma'};
 function t(v){
@@ -43,7 +50,7 @@ function artNames(s){return String(s||'—').split(';').map(x=>ARTIFICER_FEATURE
 function normalizeArtificer(pkg){
   if(!pkg?.controle?.completo||!pkg.classe)throw new Error('Artífice: registro incompleto.');
   const c=pkg.classe;
-  return {slug:'artificer',nome:'Artífice',descricao:c.descricao,
+  return {slug:'artificer',nome:'Artífice',descricao:DESCR.artificer,
     dados:{hit_die:8},levels:arr(c.progressao),features:arr(c.caracteristicas),
     caster:true,artificer:c};
 }
@@ -62,24 +69,84 @@ function renderArtificer(i){
     <div class="stats"><div class="stat"><strong>Atributo principal</strong>Inteligência</div>
       <div class="stat"><strong>Dado de Vida</strong>d8</div>
       <div class="stat"><strong>Salvaguardas</strong>Constituição, Inteligência</div>
-      <div class="stat"><strong>Subclasses</strong>Alquimista, Armeiro, Artilheiro, Ferreiro de Batalha, Cartógrafo</div>
+      <div class="stat subclasses-card"><strong>Subclasses</strong>${subclassLinks('artificer')}</div>
     </div>
-    <section class="bloco"><h3>Proficiências</h3>
-      <p><strong>Armas:</strong> Armas simples. <strong>Armaduras:</strong> Armaduras leves, médias e escudos.
-      <strong>Perícias:</strong> ${show(d.pericias)}
-      <strong>Ferramentas:</strong> ${show(d.ferramentas)}</p></section>
+    <section class="bloco proficiencias-card"><h3>Proficiências</h3>
+      <p><strong>Armas:</strong> <a class="hub-verbete" href="armas.html">Armas simples</a>. <strong>Armaduras:</strong> <a class="hub-verbete" href="armaduras.html">Armaduras leves, médias e escudos</a>.
+      <strong>Perícias:</strong> <a class="hub-verbete" href="regras.html">${show(d.pericias)}</a>
+      <strong>Ferramentas:</strong> <a class="hub-verbete" href="ferramentas.html">${show(d.ferramentas)}</a></p></section>
     <section class="bloco"><h3>Progressão — níveis 1–20</h3>
-      <div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características</th><th>Planos</th><th>Itens mágicos</th><th>Truques</th><th>Magias preparadas</th></tr></thead>
-      <tbody>${levels.map(l=>`<tr><td>${l.nivel}</td><td>${show(l.pb)}</td><td>${show(artNames(l.caracteristicas))}</td><td>${show(l.planos)}</td><td>${show(l.itens_magicos)}</td><td>${show(l.cantrips)}</td><td>${show(l.magias_preparadas)}</td></tr>`).join('')}</tbody></table></div></section>
+      <div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características</th><th>Planos</th><th>Itens mágicos</th><th>Truques</th><th>Magias preparadas</th><th>1º</th><th>2º</th><th>3º</th><th>4º</th><th>5º</th></tr></thead>
+      <tbody>${levels.map(l=>`<tr><td>${l.nivel}</td><td>${show(l.pb)}</td><td>${show(artNames(l.caracteristicas))}</td><td>${show(l.planos)}</td><td>${show(l.itens_magicos)}</td><td>${show(l.cantrips)}</td><td>${show(l.magias_preparadas)}</td>${Array.from({length:5},(_,k)=>'<td>'+show(l.slots?.[k]??0)+'</td>').join('')}</tr>`).join('')}</tbody></table></div></section>
     <section class="bloco"><h3>Características ativas da classe</h3>
       ${features.map(f=>`<article class="feature"><h4>${show(f.nome)} <span class="muted">— nível ${show(f.nivel)}</span></h4><p>${show(f.descricao)}</p></article>`).join('')}
     </section>
     <div class="meta"><span><strong>Livro:</strong> Eberron: Forge of the Artificer</span>
-    <span><strong>Progressão Talento/atributo:</strong> Regra da Casa do Hub</span></div></div>`;
+     </div></div>`;
 }
 
-function progress(i){const metrics=[...new Set(i.levels.flatMap(l=>Object.keys(l.class_specific||{})))];return`<div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características ativas no Hub</th>${metrics.map(k=>`<th>${esc(METRIC_PT[k]||t(k.replaceAll('_',' ')))}</th>`).join('')}</tr></thead><tbody>${i.levels.map(l=>{const fs=arr(l.features).filter(f=>activeRef(i.slug,f,l.level)).map(f=>featureLoc(i.slug,f).nome);const house=[];if([1,3,6,9,12,15,18].includes(Number(l.level)))house.push('Talento — Regra da Casa');if([4,8,12,16,20].includes(Number(l.level)))house.push('+1 atributo — Regra da Casa');return`<tr><td>${l.level}</td><td>+${l.prof_bonus}</td><td>${esc([...fs,...house].join(', ')||'—')}</td>${metrics.map(k=>`<td>${esc(l.class_specific?.[k]??'—')}</td>`).join('')}</tr>`}).join('')}</tbody></table></div>`}
-function renderClass(i){if(i.slug==='artificer')return renderArtificer(i);const c=i.dados;return`<div class="corpo"><p>${esc(i.descricao)}</p><div class="stats"><div class="stat"><strong>Atributo principal</strong>${esc(primary(c))}</div><div class="stat"><strong>Dado de Vida</strong>d${esc(c.hit_die)}</div><div class="stat"><strong>Salvaguardas</strong>${esc(nomes(c.saving_throws))}</div><div class="stat"><strong>Subclasse SRD</strong>${esc(nomes(arr(c.subclasses).map(x=>({name:SUBLOC[x.name]||t(x.name)})))||'—')}</div></div><section class="bloco"><h3>Proficiências</h3><p>${esc(nomes(c.proficiencies)||'—')}</p></section><section class="bloco"><h3>Progressão — níveis 1–20</h3>${progress(i)}</section><section class="bloco"><h3>Características ativas da classe</h3>${i.features.map(f=>`<article class="feature"><h4>${esc(f.nome)} <span class="muted">— nível ${esc(f._nivel)}</span></h4><p>${esc(f.descricao)}</p></article>`).join('')}</section><div class="meta"><span><strong>Regras-base:</strong> 5.5e / 2024</span><span><strong>Progressão Talento/atributo:</strong> Regra da Casa do Hub</span></div></div>`}
+const EN_CLASSES={artificer:'Artificer',barbarian:'Barbarian',bard:'Bard',warlock:'Warlock',cleric:'Cleric',druid:'Druid',sorcerer:'Sorcerer',fighter:'Fighter',rogue:'Rogue',wizard:'Wizard',monk:'Monk',paladin:'Paladin',ranger:'Ranger'};
+function subclassLinks(slug){
+ const rows=SUBCLASSES.filter(x=>x.classe===EN_CLASSES[slug]);
+ if(!rows.length)return '—';
+ return '<div class="subclasse-links">'+rows.sort((a,b)=>(SUBLOC[a.nome]||a.nome).localeCompare(SUBLOC[b.nome]||b.nome,'pt-BR')).map(x=>'<a class="hub-verbete" href="subclasses.html?item='+encodeURIComponent(x.nome)+'">'+esc(SUBLOC[x.nome]||x.nome)+'</a>').join('')+'</div>';
+}
+function profHtml(c){
+ return arr(c.proficiencies).map(x=>{
+  const original=String(x?.name||''),label=t(original);
+  const url=/armor|shield/i.test(original)?'armaduras.html':/weapon/i.test(original)?'armas.html':/tools?|instrument|kit/i.test(original)?'ferramentas.html':'regras.html?original='+encodeURIComponent(original);
+  return '<a class="hub-verbete" href="'+esc(url)+'">'+esc(label)+'</a>';
+ }).join(' · ')||'—';
+}
+function metricValue(key,value){
+ if(key==='sneak_attack'&&value&&typeof value==='object')return String(value.dice_count||0)+'d'+String(value.dice_value||6);
+ if(key==='unarmored_movement_bonus'&&Number.isFinite(Number(value)))return (Number(value)*0.3).toLocaleString('pt-BR',{maximumFractionDigits:2})+' m';
+ return String(value??'—');
+}
+function spellColumns(slug){
+ if(slug==='ranger')return '<th>Magias preparadas</th>'+Array.from({length:9},(_,i)=>'<th>Espaços '+(i+1)+'º</th>').join('');
+ if(slug==='warlock')return '<th>Truques</th><th>Magias preparadas</th><th>Espaços de Magia</th><th>Nível dos Espaços</th>';
+ return '<th>Truques</th><th>Magias preparadas</th>'+Array.from({length:9},(_,i)=>'<th>Espaços '+(i+1)+'º</th>').join('');
+}
+function spellCells(slug,level){
+ const m=level.spellcasting||{},prepared=Number(m.prepared_spells??0);
+ if(slug==='warlock'){
+  const slots=Array.from({length:9},(_,i)=>Number(m['spell_slots_level_'+(i+1)]||0));
+  const highest=slots.findLastIndex(v=>v>0);
+  return '<td>'+esc(m.cantrips_known??'—')+'</td><td>'+prepared+'</td><td>'+slots.reduce((a,b)=>a+b,0)+'</td><td>'+(highest<0?'—':(highest+1)+'º')+'</td>';
+ }
+ const cantrips=slug==='ranger'?'':'<td>'+esc(m.cantrips_known??'—')+'</td>';
+ return cantrips+'<td>'+prepared+'</td>'+Array.from({length:9},(_,i)=>'<td>'+Number(m['spell_slots_level_'+(i+1)]||0)+'</td>').join('');
+}
+function progress(i){
+ const metrics=[...new Set(i.levels.flatMap(l=>Object.keys(l.class_specific||{})))];
+ const spellcaster=['bard','cleric','druid','paladin','ranger','sorcerer','warlock','wizard'].includes(i.slug);
+ return '<div class="tabela-wrap"><table><thead><tr><th>Nível</th><th>BP</th><th>Características ativas no Hub</th>'+
+ metrics.map(k=>'<th>'+esc(METRIC_PT[k]||t(k.replaceAll('_',' ')))+'</th>').join('')+
+ (spellcaster?spellColumns(i.slug):'')+'</tr></thead><tbody>'+
+ i.levels.map(l=>{
+ const fs=arr(l.features).filter(f=>activeRef(i.slug,f,l.level)).map(f=>featureLoc(i.slug,f).nome);
+ const house=[];if([1,3,6,9,12,15,18].includes(Number(l.level)))house.push('Talento');
+ if([4,8,12,16,20].includes(Number(l.level)))house.push('+1 atributo — Regra da Casa');
+ return '<tr><td>'+l.level+'</td><td>+'+l.prof_bonus+'</td><td>'+esc([...fs,...house].join(', ')||'—')+'</td>'+
+ metrics.map(k=>'<td>'+esc(metricValue(k,l.class_specific?.[k]))+'</td>').join('')+
+ (spellcaster?spellCells(i.slug,l):'')+'</tr>';
+ }).join('')+'</tbody></table></div>';
+}
+function renderClass(i){
+ if(i.slug==='artificer')return renderArtificer(i);
+ const c=i.dados;
+ return '<div class="corpo"><p>'+esc(i.descricao)+'</p><div class="stats">'+
+ '<div class="stat"><strong>Atributo principal</strong>'+esc(primary(c))+'</div>'+
+ '<div class="stat"><strong>Dado de Vida</strong>d'+esc(c.hit_die)+'</div>'+
+ '<div class="stat"><strong>Salvaguardas</strong>'+esc(nomes(c.saving_throws))+'</div>'+
+ '<div class="stat subclasses-card"><strong>Subclasses</strong>'+subclassLinks(i.slug)+'</div></div>'+
+ '<section class="bloco proficiencias-card"><h3>Proficiências</h3><p>'+profHtml(c)+'</p></section>'+
+ '<section class="bloco"><h3>Progressão — níveis 1–20</h3>'+progress(i)+'</section>'+
+ '<section class="bloco"><h3>Características ativas da classe</h3>'+
+ i.features.map(f=>'<article class="feature"><h4>'+esc(f.nome)+' <span class="muted">— nível '+esc(f._nivel)+'</span></h4><p>'+esc(f.descricao)+'</p></article>').join('')+
+ '</section><div class="meta"><span><strong>Livro:</strong> Livro do Jogador · 2024</span></div></div>';
+}
 function render(){
  const ref=new URLSearchParams(location.search).get('ref')||'';
  if(!ref){location.replace('classes.html');return}
@@ -88,6 +155,6 @@ function render(){
  const box=document.getElementById('lista');
  box.innerHTML=items.map(i=>'<article class="classe" id="ref-'+esc(ref)+'"><div class="classe-title"><h2>'+esc(i.nome)+'</h2></div>'+renderClass(i)+'</article>').join('')||'<div class="vazio">Classe não encontrada.</div>';
 }
-(async()=>{try{const res=await Promise.all([json(`dados/localizacao-ptbr-global.json?v=${V}`),...EXPECTED.map(s=>json(`dados/classes-ptbr/${LOCFILES[s]}.json?v=${V}`)),json(`${RAW}/5e-SRD-Classes.json`),json(`${RAW}/5e-SRD-Levels.json`),json(`${RAW}/5e-SRD-Features.json`),json(`dados/artificer-2025.json?v=${V}`),json(`dados/localizacao-ptbr-subclasses.json?v=${V}`)]);G=res[0];SUBLOC=res[17]?.nomes||{};EXPECTED.forEach((s,i)=>LOC[s]=res[1+i]);const classes=res[13],levels=res[14],features=res[15],fmap=new Map(arr(features).map(f=>[f.index,f]));DATA=arr(classes).filter(c=>EXPECTED.includes(c.index)).map(c=>normalize(c,levels,fmap));DATA.push(normalizeArtificer(res[16]));DATA.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));render()}catch(e){document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<div class="erro">${esc(e.message)}</div>`}})();
+(async()=>{try{const res=await Promise.all([json(`dados/localizacao-ptbr-global.json?v=${V}`),...EXPECTED.map(s=>json(`dados/classes-ptbr/${LOCFILES[s]}.json?v=${V}`)),json(`${RAW}/5e-SRD-Classes.json`),json(`${RAW}/5e-SRD-Levels.json`),json(`${RAW}/5e-SRD-Features.json`),json(`dados/artificer-2025.json?v=${V}`),json(`dados/localizacao-ptbr-subclasses.json?v=${V}`),json(`dados/subclasses-pdfs.json?v=${V}`)]);G=res[0];SUBLOC=res[17]?.nomes||{};SUBCLASSES=arr(res[18]?.subclasses);EXPECTED.forEach((s,i)=>LOC[s]=res[1+i]);const classes=res[13],levels=res[14],features=res[15],fmap=new Map(arr(features).map(f=>[f.index,f]));DATA=arr(classes).filter(c=>EXPECTED.includes(c.index)).map(c=>normalize(c,levels,fmap));DATA.push(normalizeArtificer(res[16]));DATA.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR',{sensitivity:'base'}));render()}catch(e){document.getElementById('resultado').textContent='Falha ao carregar';document.getElementById('lista').innerHTML=`<div class="erro">${esc(e.message)}</div>`}})();
 </script><script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>
