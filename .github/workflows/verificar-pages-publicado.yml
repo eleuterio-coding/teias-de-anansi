@@ -1,5 +1,9 @@
 name: Verificar arquivos publicados no GitHub Pages
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/verificar-pages-publicado.yml'
   push:
     branches: [main]
     paths:
