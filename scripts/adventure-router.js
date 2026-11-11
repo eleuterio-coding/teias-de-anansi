@@ -136,11 +136,13 @@ function alignReadOnlyAdventure(root,active,campaignRow,players,characters,sessi
   (nodes.length?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):'<div class="story-empty">Nenhuma cena publicada nesta Aventura.</div>')+'</section>';
  if(timeline.content.firstElementChild)detailGrid.append(timeline.content.firstElementChild);
  if(active.dmNoteEntries?.length){const notes=document.createElement('template');notes.innerHTML=noteSection(active.dmNoteEntries,{readOnly:true});detailGrid.append(notes.content.firstElementChild)}
- for(const id of['pistas','materiais','tesouros','capitulos'])detailGrid.querySelector('#'+id)?.remove();
+ // Pistas descobertas e materiais revelados já foram filtrados pela projeção
+  // compartilhada: mantê-los visíveis não concede acesso aos dados do Mestre.
+  for(const id of['tesouros','capitulos'])detailGrid.querySelector('#'+id)?.remove();
  if(list){list.id='outras-aventuras';list.classList.add('campaign-editor-card');list.removeAttribute('style');detailGrid.append(list)}
  if(picker){picker.id='campanhas-disponiveis';picker.classList.add('campaign-editor-card');picker.removeAttribute('style');detailGrid.append(picker)}
  const nav=document.createElement('nav');nav.className='section-nav adventure-nav hub-detail-nav';nav.setAttribute('aria-label','Seções da Aventura');
- const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['cenas','Cenas'],['locais','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
+ const navLinks=[['participantes','Participantes'],['personagens','Personagens'],['cenas','Cenas'],['locais','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['pistas','Pistas reveladas'],['materiais','Materiais publicados'],['sessoes','Sessões'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre'],['outras-aventuras','Outras Aventuras']];
  for(const [id,label] of navLinks){if(!detailGrid.querySelector('#'+id))continue;const a=document.createElement('a');a.href='#'+id;a.textContent=label;nav.append(a)}
  wrapper.append(overview,summary,plan,nav,detailGrid);
  root.replaceChildren(wrapper);

@@ -1,0 +1,196 @@
+name: Comparar regressões Playwright — main x PR
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/comparar-playwright-main-pr.yml'
+      - 'hub-ux.css'
+      - 'hub-layout.css'
+      - 'hub-design-tokens.css'
+      - 'hub-components.css'
+      - 'hub-area-menus.css'
+      - 'hub-roster.css'
+      - 'biblioteca-light.css'
+      - 'scripts/hub-ux.js'
+      - 'scripts/firebase-collaboration-provider.js'
+      - 'e2e/layout-unificado.spec.js'
+      - 'e2e/dashboard-viewport.spec.js'
+      - 'e2e/campaign-nav-roster-timeline.spec.js'
+      - 'e2e/player-visibility.spec.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  comparar:
+    name: Playwright ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout da versão correspondente, sem alterar main
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+      - name: Registrar código exato em comparação
+        run: git log -1 --format="%H %s"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e navegador
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Executar os mesmos cenários em ambas as versões
+        run: |
+          npx playwright test e2e/layout-unificado.spec.js e2e/dashboard-viewport.spec.js e2e/campaign-nav-roster-timeline.spec.js e2e/player-visibility.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line
+      - name: Guardar evidências para comparação manual
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  comparar-criacao:
+    name: Criação e retratos ${{ matrix.version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout do mesmo commit-base ou HEAD da PR
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+      - name: Registrar proveniência da comparação
+        run: git log -1 --format="%H %s"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Reproduzir três cenários de criação em desktop e mobile
+        run: |
+          npx playwright test e2e/character-creation-layout-portrait.spec.js --project=desktop-chromium --project=mobile-chromium --grep 'criação: Raça precede Origem|retrato escolhido na Origem|imagem clicável abre a seleção' --reporter=line
+      - name: Guardar evidências dos mesmos cenários em cada versão
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: criacao-retratos-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  comparar-exploracao:
+    # Comparação de regressões. Mesmos specs (SHAs idênticos) executados nos dois commits.
+    # Não atenua as asserções já existentes nem converte falhas da main em aprovação.
+    name: Exploração de Aventuras ${{ matrix.version }} — paridade E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout imutável da versão correspondente
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Registrar commit e hashes dos mesmos specs
+        run: |
+          git log -1 --format="%H %s"
+          sha256sum e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar runner e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Executar asserções integrais de exploração nos dois ambientes
+        run: |
+          npx playwright test e2e/adventure-exploration.spec.js e2e/adventure-six-panels-actions.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=list
+      - name: Guardar traces e capturas para auditoria diferencial
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exploracao-paridade-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  comparar-biblioteca:
+    # Mesma auditoria visual real em ambos os SHAs, sem alterar expectativas.
+    name: Biblioteca visual ${{ matrix.version }} — paridade E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - name: Checkout do commit exato main ou PR sem credenciais persistidas
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && github.event.pull_request.base.sha || github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Conferir revisão e integridade do spec
+        run: |
+          git log -1 --format="%H %s"
+          sha256sum e2e/biblioteca-auditoria-visual.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Reproduzir a auditoria visual integral em desktop e mobile
+        run: |
+          npx playwright test e2e/biblioteca-auditoria-visual.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=list
+      - name: Preservar screenshots, traces e evidências sem publicar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: biblioteca-paridade-${{ matrix.version }}-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+            artifacts/biblioteca-visual/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  verificar-reparos-herdados:
+    # Auditoria adicional fail-closed: nao substitui nenhum gate existente.
+    name: Validar nomenclatura canonica e inventario de Regras da Casa
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout do HEAD exato da PR sem credenciais persistidas
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Registrar o SHA auditado
+        run: git log -1 --format="%H %s"
+      - name: Validar o titulo canonico sem excecoes
+        run: node tests/auditar-titulo-players-handbook.mjs
+      - name: Validar 8 regras distintas e integridade normativa 5e/5.5e
+        run: python3 scripts/auditar_regras_5e_55e.py

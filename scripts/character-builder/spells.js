@@ -1,5 +1,5 @@
 import{state,arr,num,slug,json}from'./state.js';
-import{SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP}from'../catalog-registry.js?v=20261029-sem-phb1';
+import{SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP,SPELL_CANONICAL_FILE}from'../catalog-registry.js?v=20261108-magias-581-canonicas1';
 const SOURCE_META_BY_FILE={
   'spells-xge.json':['XGE',20171121],
  'spells-tce.json':['TCE',20201117],
@@ -29,7 +29,7 @@ async function localizeSpellCatalog(items){
 }
 // Fonte única de magias em todas as etapas da criação de personagem.
 export async function loadSpells(){
- const catalog=await json('dados/catalogo-magias-20261104.json?v=20261104');
+ const catalog=await json(SPELL_CANONICAL_FILE+'?v=20261104');
  if(!Array.isArray(catalog.itens)||catalog.itens.length!==581)throw new Error('Catálogo de magias incompleto');
  return catalog.itens.map(x=>{
   const componentes=String(x.componentes||'');

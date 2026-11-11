@@ -12,6 +12,9 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-catalogo.json'
+      - 'dados/catalogo-magias-20261104.json'
+      - 'scripts/catalog-registry.js'
+      - 'tests/auditar-fonte-unica-magias.mjs'
       - 'dados/talentos-phb-2024.json'
   push:
     branches: [main]
@@ -25,6 +28,9 @@ on:
       - 'scripts/character-builder.js'
       - 'scripts/character-builder/**'
       - 'dados/magias-catalogo.json'
+      - 'dados/catalogo-magias-20261104.json'
+      - 'scripts/catalog-registry.js'
+      - 'tests/auditar-fonte-unica-magias.mjs'
       - 'dados/talentos-phb-2024.json'
 
 permissions:
@@ -97,7 +103,7 @@ jobs:
           forbidden=['id="hp-mode"','hpMode','hpRolls','Valores antes dos bônus de origem','A armadura, o escudo e a arma selecionados','Alterações ficam locais até salvar','Escolhas permitidas para','Regras 2024','Proveniência mecânica','bg-p111']
           for token in forbidden:
               if token in html or token in list_html or token in js: raise RuntimeError('Texto ou controle proibido na interface: '+token)
-          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","magias-catalogo.json","k.hitDie+con","initializeHouseBackgroundChoices","stableFeatSlot","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed","initWizardUi","starting-equipment-choice","profile-notes"]
+          required_tokens=["hub-rpg:characters:v4","subclassLevel","trainedArmor","spellProgress","spellOptions","loadSpells","SPELL_CANONICAL_FILE","k.hitDie+con","initializeHouseBackgroundChoices","stableFeatSlot","ensureSheetState","initCharacterProfileUi","speciesTraitChoiceDefs","sanitizeSpeciesTraitChoices","traitChoices","initSpeciesTraitUi","initSpellSelectionUi","hub:spell-selection-changed","renderSpellPreview","spellCreditState","FEAT_RULES","featMechanicalOutcome","sanitizeFeatChoices","expertiseSkills","saveProficiencies","initFeatUi","initClassSkillUi","hub:class-skills-changed","initWizardUi","starting-equipment-choice","profile-notes"]
           for token in required_tokens:
               if token not in js and token not in loader and token not in html:
                   raise RuntimeError('Contrato mecânico ausente: '+token)
@@ -144,3 +150,5 @@ jobs:
               if token not in sheet_feat_js: raise RuntimeError('Integração de talentos ausente na ficha digital: '+token)
           print(f'Construtor e ficha validados: {len(core)} talentos de Origem/Geral auditados e {len(catalog)} talentos PHB cobertos pelo catálogo, fluxo em 7 etapas ativo e escolhas mecânicas preservadas.')
           PY
+      - name: Auditar fonte unica de Magias na criacao e ficha
+        run: node tests/auditar-fonte-unica-magias.mjs

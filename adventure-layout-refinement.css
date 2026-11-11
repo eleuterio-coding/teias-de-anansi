@@ -1002,12 +1002,18 @@ body.hub-shell-enabled #adventure-root .adventure-shell.hub-detail-page>.hub-det
  margin-top:4px!important;
 }
 
-/* Mesma largura matemática das células da grade de Aventuras,
-   descontando borda e padding de 16px do grupo da Campanha. */
+/* Desktop: alinhar o tile ao cabeçalho e à grade interna do grupo
+   (17px por lado, incluindo a borda), como na main.
+   Mobile mantém a correção independente de 12px externos, sem padding. */
 #adventure-root .adventure-create-tile-row{
  padding-inline:17px!important;
  gap:clamp(14px,1.5vw,22px)!important;
 }
 @media(max-width:680px){
- #adventure-root .adventure-create-tile-row{padding-inline:12px!important}
+ /* Largura do próprio grid = largura do tile = largura do card (338px em 390px). */
+ #adventure-root .adventure-create-tile-row{
+  width:calc(100% - 24px)!important;
+  margin-inline:12px!important;
+  padding-inline:0!important;
+ }
 }

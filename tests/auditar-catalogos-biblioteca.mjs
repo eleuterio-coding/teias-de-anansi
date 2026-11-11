@@ -1,6 +1,6 @@
 import fs from'node:fs';
 import path from'node:path';
-import{CATALOG_MODULES,DATA_STAGES,BACKGROUND_BUILDER_FILES,SPECIES_BUILDER_FILES,FEAT_BUILDER_FILES,SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP}from'../scripts/catalog-registry.js';
+import{CATALOG_MODULES,DATA_STAGES,BACKGROUND_BUILDER_FILES,SPECIES_BUILDER_FILES,FEAT_BUILDER_FILES,SPELL_REMOTE_SOURCES,SPELL_SOURCE_LOOKUP,SPELL_CANONICAL_FILE}from'../scripts/catalog-registry.js';
 
 const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
 const read=file=>fs.readFileSync(file,'utf8');
@@ -36,10 +36,11 @@ for(const file of[...BACKGROUND_BUILDER_FILES,...SPECIES_BUILDER_FILES,...FEAT_B
 assert(BACKGROUND_BUILDER_FILES.length===6,`Antecedentes ativos no construtor divergiram: ${BACKGROUND_BUILDER_FILES.length}`);
 assert(SPECIES_BUILDER_FILES.length===4,`Pacotes locais de espécies ativos divergiram: ${SPECIES_BUILDER_FILES.length}`);
 assert(FEAT_BUILDER_FILES.length===7,`Fontes de talentos ativas divergiram: ${FEAT_BUILDER_FILES.length}`);
+assert(SPELL_CANONICAL_FILE==='dados/catalogo-magias-20261104.json','A fonte ativa de Magias deve ser o catalogo de 581 fichas.');
 assert(SPELL_REMOTE_SOURCES.length===4,`Fontes remotas de magias divergiram: ${SPELL_REMOTE_SOURCES.length}`);
 assert(/gendata-spell-source-lookup\.json$/.test(SPELL_SOURCE_LOOKUP),'Lookup de classes de Magias não está registrado.');
 const spells=read('scripts/character-builder/spells.js');
-assert(spells.includes('SPELL_REMOTE_SOURCES')&&spells.includes('SPELL_SOURCE_LOOKUP'),'Magias não consomem o registro canônico.');
+assert(spells.includes('SPELL_CANONICAL_FILE')&&spells.includes('SPELL_REMOTE_SOURCES')&&spells.includes('SPELL_SOURCE_LOOKUP'),'Magias não consomem o registro canônico.');
 assert(!spells.includes("const BASE='https://raw.githubusercontent.com/5etools-mirror-3/5etools-src/main/data'"),'Magias voltou a manter base remota paralela.');
 
 const lib=read('bibliotecas.html');
@@ -52,11 +53,12 @@ assert(!libraryUi.includes("fetch('dados/referencias-hub-index.json',{cache:'no-
 assert(/injectStyle\(\);injectControls\(\);decorateCards\(\);applyFilters\(\);loadCounts\(\);\s*$/.test(libraryUi),'Biblioteca deve abrir sem baixar o índice semântico; a busca carrega o índice sob demanda.');
 assert(!libraryUi.includes('stageLabel')&&!libraryUi.includes('catalog-badge')&&!libraryUi.includes('consumerBadges'),'Cards da Biblioteca não devem exibir selos nem o estágio Publicado.');
 const countScript=read('scripts/gerar_biblioteca_contagens.py');
-assert(countScript.includes('status')&&countScript.includes('publicado')&&countScript.includes('magias-catalogo.json'),'Contagem deve excluir stubs e usar catálogo canônico de Magias.');
+assert(countScript.includes('status')&&countScript.includes('publicado')&&countScript.includes('catalogo-magias-20261104.json'),'Contagem deve excluir stubs e usar catálogo canônico de Magias.');
+assert(json('dados/biblioteca-contagens.json').modulos.Magias===581,'A contagem da Biblioteca de Magias deve ser 581.');
 const deployWorkflow=read('.github/workflows/deploy-pages.yml');
 assert(deployWorkflow.includes('python scripts/gerar_biblioteca_contagens.py'),'Deploy deve produzir as contagens dos 18 módulos.');
 const weaponsPage=read('armas.html');
-assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261101-usuario-armas1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
+assert(weaponsPage.includes("cache/armas-catalogo.json?v=20261104-clava-grande1"),'Biblioteca de Armas não usa o catálogo consolidado de carregamento rápido.');
 assert(!weaponsPage.includes('dados/armas-pdfs-manifest.json'),'Biblioteca de Armas voltou a carregar os fragmentos PDF individualmente.');
 assert(!/cache\s*:\s*['"]no-store['"]/.test(weaponsPage),'Biblioteca de Armas não deve ignorar o cache do navegador.');
 const weaponsCache=json('cache/armas-catalogo.json'),weaponsCore=json('dados/armas-srd.json'),weaponsManifest=json('dados/armas-pdfs-manifest.json');

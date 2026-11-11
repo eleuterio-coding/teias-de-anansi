@@ -15,7 +15,7 @@ on:
       - 'campanhas.html'
       - 'index.html'
       - 'tests/auditar-configuracoes.mjs'
-      - 'tests/auditar-persistencia-portabilidade.mjs'
+      - 'tests/auditar-armazenamento-classificado.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
       - 'ROADMAP-V1.md'
       - '.github/workflows/auditar-configuracoes.yml'
@@ -32,7 +32,7 @@ on:
       - 'campanhas.html'
       - 'index.html'
       - 'tests/auditar-configuracoes.mjs'
-      - 'tests/auditar-persistencia-portabilidade.mjs'
+      - 'tests/auditar-armazenamento-classificado.mjs'
       - 'tests/auditar-ux-mobile-final.mjs'
       - 'ROADMAP-V1.md'
       - '.github/workflows/auditar-configuracoes.yml'
@@ -52,6 +52,7 @@ jobs:
           node --check scripts/hub-ux.js
           node --check scripts/campaign-list-ui.js
           node --check tests/auditar-configuracoes.mjs
+          node --check tests/auditar-armazenamento-classificado.mjs
       - name: Bloco 17 · Configurações
         run: node tests/auditar-configuracoes.mjs
       - name: Regressão UX
@@ -59,4 +60,4 @@ jobs:
       - name: Regressão Campanhas/Mesas
         run: node tests/auditar-campanhas-mesas.mjs
       - name: Regressão persistência
-        run: node tests/auditar-persistencia-portabilidade.mjs
+        run: node tests/auditar-armazenamento-classificado.mjs

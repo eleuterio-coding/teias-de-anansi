@@ -23,12 +23,14 @@ test.beforeEach(async({page})=>{
 test('resumo usa ordem fixa, links diretos e flexão gramatical',async({page})=>{
  await page.goto('/mesa.html?id=e2e-cards-lift');
  const cards=page.locator('.campaign-product-summary .metric');
- await expect(cards).toHaveCount(4);
- expect(await cards.locator('span').allTextContents()).toEqual(['Status','Sessões','Personagens','Sessão anterior']);
+ await expect(cards).toHaveCount(5);
+ expect(await cards.locator('span').allTextContents()).toEqual(['Aventuras','Sessões','Personagens','Sessão Anterior','Próxima Sessão']);
+ await expect(cards.nth(0)).toHaveAttribute('href','#aventuras');
  await expect(cards.nth(1)).toHaveAttribute('href','#sessoes');
  await expect(cards.nth(2)).toHaveAttribute('href','#jogadores');
  await expect(cards.nth(3)).toContainText('Nenhuma sessão anterior');
  await expect(cards.nth(3)).not.toHaveAttribute('href',/./);
+ await expect(cards.nth(4)).toContainText('Próxima Sessão');
  await expect(page.locator('.campaign-product-meta')).toContainText('1 jogador');
  await expect(page.locator('.campaign-product-meta')).toContainText('1 aventura');
  await cards.nth(1).click();

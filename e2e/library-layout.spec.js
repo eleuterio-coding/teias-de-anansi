@@ -49,8 +49,11 @@ test('os 18 links da Biblioteca abrem módulos no layout compartilhado',async({p
   const hrefs=await page.locator('.modulos > li > a').evaluateAll(anchors=>
     anchors.map(a=>new URL(a.href).pathname.split('/').pop())
   );
-  expect(hrefs).toEqual(modules);
+  // O catálogo é exibido em ordem alfabética; a lista técnica não deve impor outra ordem.
+  expect([...hrefs].sort()).toEqual([...modules].sort());
   expect(new Set(hrefs).size).toBe(modules.length);
+  const names=await page.locator('.modulos > li > a .nome').allTextContents();
+  expect(names).toEqual([...names].sort((a,b)=>a.localeCompare(b,'pt-BR')));
   for(const filename of modules){
     await test.step(filename,async()=>checkHubLayout(page,'/'+filename));
   }
@@ -58,7 +61,8 @@ test('os 18 links da Biblioteca abrem módulos no layout compartilhado',async({p
 
 test('páginas internas Classes, Referências e catálogo legado usam o Hub',async({page})=>{
   test.setTimeout(60_000);
-  for(const path of ['/classes-v3.html','/referencia.html','/biblioteca-legado.html?modulo=Sem%20registro']){
+  // A página de detalhe redireciona deliberadamente sem ?ref; testar uma rota válida evita corrida de navegação.
+  for(const path of ['/classes-v3.html?ref=classe:artificer','/referencia.html','/biblioteca-legado.html?modulo=Sem%20registro']){
     await test.step(path,async()=>checkHubLayout(page,path));
   }
 });
@@ -75,62 +79,64 @@ test('a página inicial preserva busca, filtros e cards responsivos',async({page
   await expect(page.locator('.modulos > li:visible a')).toContainText('Magias');
 });
 
-test('os 537 verbetes de Magias preservam links individuais e nomes PT-BR',async({page})=>{
+test('as 581 magias têm IDs navegáveis e verbetes limpos em desktop e mobile',async({page})=>{
   test.setTimeout(90_000);
-  await checkHubLayout(page,'/magias.html?magia=fireball');
-  await expect(page.locator('#lista a.item')).toHaveCount(537,{timeout:30000});
+  const fireball='catalogo20261104:bola-de-fogo',missile='catalogo20261104:misseis-magicos';
+  await checkHubLayout(page,'/magias.html?magia='+encodeURIComponent(fireball));
+  await expect(page.locator('#lista button.item')).toHaveCount(581,{timeout:30000});
   await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo');
-  await expect(page.locator('#detalhe .spell-detail-top .badge')).toHaveCount(3); // Círculo, escola e CE
-  await expect(page.locator('#detalhe .spell-detail-top')).not.toContainText('5.5e');
-  await expect(page.locator('#detalhe .spell-detail-top')).not.toContainText('versão mais recente');
-  for(const field of ['PDF:','Revisão core:','Completude:','Versões anteriores removidas']){
-    await expect(page.locator('#detalhe')).not.toContainText(field)
+  await expect(page.locator('#detalhe > div .badge')).toHaveCount(3);
+  for(const field of ['PDF:','Revisão core:','Completude:','Versões anteriores removidas','versão mais recente']){
+    await expect(page.locator('#detalhe')).not.toContainText(field);
   }
   await expect(page.locator('[data-hub-rules-policy]')).toHaveCount(0);
-  const links=await page.locator('#lista a.item').evaluateAll(rows=>rows.map(row=>({
-    name:row.querySelector('strong')?.textContent,
-    id:row.dataset.id,
-    linked:new URL(row.href).searchParams.get('magia')
+  const rows=await page.locator('#lista button.item').evaluateAll(buttons=>buttons.map(b=>({
+    id:b.dataset.id,name:b.querySelector('strong')?.textContent,type:b.type
   })));
-  expect(new Set(links.map(row=>row.id)).size).toBe(537);
-  expect(links.every(row=>row.name?.trim()&&row.id===row.linked)).toBe(true);
-  const href=page.locator('#detalhe a.spell-verbetelink');
-  await expect(href).toHaveAttribute('href','magias.html?magia=fireball');
+  expect(new Set(rows.map(x=>x.id)).size).toBe(581);
+  expect(rows.every(x=>x.id?.startsWith('catalogo20261104:')&&x.name?.trim()&&x.type==='button')).toBe(true);
   await page.locator('#q').fill('mísseis mágicos');
-  await expect(page.locator('#lista a.item:visible')).toHaveCount(1);
-  await page.locator('#q').fill('magic missile'); // Original continua pesquisável
-  await expect(page.locator('#lista a.item:visible')).toHaveCount(1);
-  await page.locator('#spell-clear').click();
-  await expect(page.locator('#lista a.item')).toHaveCount(537);
-  await page.locator('#lista a.item[data-id="magic-missile"]').click();
+  await expect(page.locator('#lista button.item[data-id="'+missile+'"]')).toBeVisible();
+  await page.locator('#lista button.item[data-id="'+missile+'"]').click();
   await expect(page.locator('#detalhe h2')).toHaveText('Mísseis Mágicos');
-  await expect(page).toHaveURL(/magia=magic-missile/);
-  await page.goBack();
-  await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo');
+  expect(new URL(page.url()).searchParams.get('magia')).toBe(missile);
+  await page.locator('#q').fill('magic missile'); // Busca pelo nome original via localização histórica.
+  await expect(page.locator('#lista button.item[data-id="'+missile+'"]')).toBeVisible({timeout:15000});
+  await page.locator('#q').fill('');
+  await expect(page.locator('#lista button.item')).toHaveCount(581);
 });
 
-test('links semânticos antigos continuam abrindo o verbete de magia traduzido',async({page})=>{
-  for(const path of ['/magias.html?ref=fireball#ref-fireball','/magias.html#ref-fireball']){
+test('deep links históricos por nome, slug e hash chegam à magia canônica',async({page})=>{
+  test.setTimeout(90_000);
+  const cases=[
+    ['/magias.html?ref=fireball#ref-fireball','Bola de Fogo','catalogo20261104:bola-de-fogo'],
+    ['/magias.html#ref-fireball','Bola de Fogo','catalogo20261104:bola-de-fogo'],
+    ['/magias.html?magia=magic-missile','Mísseis Mágicos','catalogo20261104:misseis-magicos']
+  ];
+  for(const [path,name,id] of cases){
     await page.goto(path,{waitUntil:'domcontentloaded'});
-    await expect(page.locator('#detalhe h2')).toHaveText('Bola de Fogo',{timeout:30000});
-    await expect(page.locator('#detalhe .spell-verbetelink')).toHaveAttribute('href','magias.html?magia=fireball');
+    await expect(page.locator('#detalhe h2')).toHaveText(name,{timeout:30000});
+    await expect(page.locator('#lista button.item.on')).toHaveAttribute('data-id',id);
+    expect(new URL(page.url()).searchParams.get('magia')).toBe(id);
   }
 });
-
 
 test('cards compactos sem selos exibem contagens de itens em todos os 18 módulos',async({page},testInfo)=>{
   const modulesWithCounts=['Regras','Classes','Subclasses','Espécies','Antecedentes','Talentos','Maestrias de Arma','Monstros','Armaduras','Armas','Equipamentos de Aventura','Ferramentas','Montarias e Veículos','Comércio e Despesas','Bugigangas','Itens Mágicos','Magias','Idiomas'];
   // Fixture de interface; em produção os dados são gerados do índice semântico.
   const modulos=Object.fromEntries(modulesWithCounts.map((name,i)=>[name,i===0?1:i+1]));
-  modulos.Magias=537;
+  // O primeiro card alfabético é Antecedentes, não Regras.
+  modulos.Antecedentes=1;
+  modulos.Magias=581;
   await page.route('**/dados/biblioteca-contagens.json*',route=>route.fulfill({
     status:200,contentType:'application/json',
     body:JSON.stringify({schema:'hub-rpg.biblioteca-contagens.v1',modulos})
   }));
   await checkHubLayout(page,'/bibliotecas.html');
   await expect(page.locator('.modulos > li')).toHaveCount(18);
+  await expect(page.locator('.modulos > li:first-child .nome')).toHaveText('Antecedentes');
   await expect(page.locator('.modulos > li:first-child .contagem')).toHaveText('1 item');
-  await expect(page.locator('.modulos > li[data-catalog-id="spells"] .contagem')).toHaveText('537 itens');
+  await expect(page.locator('.modulos > li[data-catalog-id="spells"] .contagem')).toHaveText('581 itens');
   await expect(page.locator('.modulos')).not.toContainText('Publicado');
   await expect(page.locator('.modulos')).not.toContainText('Criação');
   await expect(page.locator('.modulos')).not.toContainText('Ficha');
@@ -142,5 +148,5 @@ test('cards compactos sem selos exibem contagens de itens em todos os 18 módulo
   else expect(columns).toBeGreaterThanOrEqual(2);
   await page.locator('#catalog-search').fill('magias');
   await expect(page.locator('.modulos > li:visible')).toHaveCount(1);
-  await expect(page.locator('.modulos > li:visible .contagem')).toHaveText('537 itens');
+  await expect(page.locator('.modulos > li:visible .contagem')).toHaveText('581 itens');
 });

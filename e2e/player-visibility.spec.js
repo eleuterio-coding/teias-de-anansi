@@ -17,20 +17,33 @@ test('Jogador vê conteúdo atribuído e fichas da Campanha, mas só a própria 
  await expect(page.getByRole('button',{name:'Excluir'})).toHaveCount(0);
 
  await page.goto('/sessoes.html');
- await expect(page.getByText('Sessão do Gus',{exact:true})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Sessão 1 · Sessão do Gus',exact:true})).toBeVisible();
  await expect(page.getByText('SESSÃO SECRETA')).toHaveCount(0);
 
  await page.goto('/mesa.html?id=c-gus');
  await expect(page.locator('.campaign-player-readonly')).toHaveCount(0);
- await expect(page.locator('#campanha .campaign-player-campaign-overview')).toBeVisible();
- await expect(page.getByText('NOTA COMPARTILHADA GUS')).toBeVisible();
- await expect(page.getByRole('heading',{name:/Sessão 1 · Sessão do Gus/})).toBeVisible();
- await expect(page.getByText('Aventura do Gus',{exact:true})).toBeVisible();
- await expect(page.getByRole('button')).toHaveCount(0);
+ // A visão do Jogador compartilha a árvore do Mestre, mas usa campos somente leitura.
+ await expect(page.locator('#campanha')).toBeVisible();
+ await expect(page.locator('#campanha input[readonly]').first()).toBeVisible();
+ await expect(page.locator('#notas-compartilhadas textarea[readonly]')).toHaveValue('NOTA COMPARTILHADA GUS');
+ // A Campanha destaca somente sessões elegíveis ao resumo; a sessão planejada
+ // permanece acessível pela lista, já validada acima.
+ await expect(page.locator('#table-root a.campaign-reference-title-link[href^="sessoes.html"]')).toBeVisible();
+ const assignedAdventure=page.locator('#aventuras .campaign-adventure-featured-card[href="aventuras.html?campaign=c-gus&id=a-gus"]');
+ await expect(assignedAdventure).toHaveCount(1);
+ await expect(assignedAdventure).toBeVisible();
+ await expect(assignedAdventure.locator('h3')).toHaveText('Aventura do Gus');
+ // Botões globais de busca/menu continuam acessíveis ao Jogador.
+ // O formulário da Campanha é somente leitura e não deve ter ações de edição.
+ await expect(page.locator('#campanha button')).toHaveCount(0);
 
+ // A lista mostra somente as Aventuras atribuídas; pistas pertencem à tela de detalhe.
  await page.goto('/aventuras.html?campaign=c-gus');
  await expect(page.getByRole('heading',{name:'Aventura do Gus'})).toBeVisible();
- await expect(page.getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
+ await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
+ await page.goto('/aventuras.html?campaign=c-gus&id=a-gus');
+ await expect(page.locator('#pistas')).toBeVisible();
+ await expect(page.locator('#pistas').getByText('PISTA VISÍVEL',{exact:true})).toBeVisible();
  await expect(page.getByText('AVENTURA SECRETA DO MESTRE')).toHaveCount(0);
 
  await page.goto('/lista-personagens.html');

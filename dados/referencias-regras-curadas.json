@@ -1,11 +1,11 @@
 {
   "schema": "hub-rpg.referencias-regras-curadas.v1",
   "modulo_origem": "Regras",
-  "data_auditoria": "2026-11-03",
+  "data_auditoria": "2026-11-06",
   "criterio": "Relações direcionais curadas; dependência, modificação, exceção ou utilidade mecânica concreta. Coocorrência lexical e uso universal não bastam.",
   "precedencia": "2024/5.5e > 2014/5e; Regras da Casa > Regras Gerais em conflito, conforme a Biblioteca.",
-  "total_regras": 170,
-  "total_referencias": 419,
+  "total_regras": 198,
+  "total_referencias": 499,
   "modulos_analisados": [
     "Regras",
     "Classes",
@@ -765,6 +765,142 @@
     "Propriedade de Arma: Versátil": [
       "Weapon Attack",
       "Damage Roll"
+    ],
+    "Ability Score Improvement (House Rule)": [
+      "Ability Score and Modifier",
+      "Backgrounds: Mechanical Rule (House Rule)"
+    ],
+    "Ability: Strength": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Ability: Dexterity": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Ability: Constitution": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Ability: Intelligence": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Ability: Wisdom": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Ability: Charisma": [
+      "Ability Score and Modifier",
+      "Ability Check",
+      "Saving Throw"
+    ],
+    "Skill: Athletics": [
+      "Skill",
+      "Ability Check",
+      "Ability: Strength"
+    ],
+    "Skill: Acrobatics": [
+      "Skill",
+      "Ability Check",
+      "Ability: Dexterity"
+    ],
+    "Skill: Sleight of Hand": [
+      "Skill",
+      "Ability Check",
+      "Ability: Dexterity"
+    ],
+    "Skill: Stealth": [
+      "Skill",
+      "Ability Check",
+      "Ability: Dexterity"
+    ],
+    "Skill: Arcana": [
+      "Skill",
+      "Ability Check",
+      "Ability: Intelligence"
+    ],
+    "Skill: History": [
+      "Skill",
+      "Ability Check",
+      "Ability: Intelligence"
+    ],
+    "Skill: Investigation": [
+      "Skill",
+      "Ability Check",
+      "Ability: Intelligence"
+    ],
+    "Skill: Nature": [
+      "Skill",
+      "Ability Check",
+      "Ability: Intelligence"
+    ],
+    "Skill: Religion": [
+      "Skill",
+      "Ability Check",
+      "Ability: Intelligence"
+    ],
+    "Skill: Animal Handling": [
+      "Skill",
+      "Ability Check",
+      "Ability: Wisdom"
+    ],
+    "Skill: Insight": [
+      "Skill",
+      "Ability Check",
+      "Ability: Wisdom"
+    ],
+    "Skill: Medicine": [
+      "Skill",
+      "Ability Check",
+      "Ability: Wisdom"
+    ],
+    "Skill: Perception": [
+      "Skill",
+      "Ability Check",
+      "Ability: Wisdom"
+    ],
+    "Skill: Survival": [
+      "Skill",
+      "Ability Check",
+      "Ability: Wisdom"
+    ],
+    "Skill: Deception": [
+      "Skill",
+      "Ability Check",
+      "Ability: Charisma"
+    ],
+    "Skill: Intimidation": [
+      "Skill",
+      "Ability Check",
+      "Ability: Charisma"
+    ],
+    "Skill: Performance": [
+      "Skill",
+      "Ability Check",
+      "Ability: Charisma"
+    ],
+    "Skill: Persuasion": [
+      "Skill",
+      "Ability Check",
+      "Ability: Charisma"
+    ],
+    "Damage Type: Bludgeoning": [
+      "Damage Types",
+      "Damage"
+    ],
+    "Damage Type: Piercing": [
+      "Damage Types",
+      "Damage"
+    ],
+    "Damage Type: Slashing": [
+      "Damage Types",
+      "Damage"
     ]
   }
 }

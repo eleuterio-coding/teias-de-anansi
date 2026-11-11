@@ -45,7 +45,7 @@ precedencia = ' '.join(policy.get('precedencia', []))
 require('versão 5.5e/2024' in precedencia and 'permanece disponível' in precedencia,
         'Política não expressa simultaneamente precedência 2024 e preservação do legado único')
 
-# As sete Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
+# As oito Regras da Casa devem existir como dados pesquisáveis, e não apenas como texto de interface.
 hub_rules = load('dados/regras-hub.json')
 extra_rules = load('dados/regras-casa-adicionais.json')
 house = [*hub_rules.get('itens', []), *extra_rules.get('itens', [])]
@@ -58,12 +58,13 @@ required_house = {
     'Universal Feat and Ability Progression (House Rule)',
     'Base Ability Score Distribution (House Rule)',
     'Wealth by Level (House Rule)',
+    'Ability Score Improvement (House Rule)',
 }
-require(len(house) == 7, f'Quantidade inesperada de Regras da Casa: {len(house)}/7')
+require(len(house) == 8, f'Quantidade inesperada de Regras da Casa: {len(house)}/8')
 require(required_house.issubset(house_names),
         f'Regras da Casa ausentes: {sorted(required_house - house_names)}')
 viewer = text('scripts/regras-srd-view-v7.js')
-require('HOUSE.length!==7' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/7' in viewer,
+require('HOUSE.length!==8' in viewer and 'Regras da Casa inesperadas: ${HOUSE.length}/8' in viewer,
         'Catálogo de Regras ainda espera quantidade antiga de Regras da Casa')
 wealth_rules = [x for x in house if x.get('original') == 'Wealth by Level (House Rule)']
 require(len(wealth_rules) == 1, 'Riqueza por Level deve existir uma única vez e substituir a versão anterior')
@@ -82,12 +83,14 @@ curated_house = required_house - {
     'Base Ability Score Distribution (House Rule)',
     'Wealth by Level (House Rule)',
 }
-require(curated.get('total_regras') == 160,
-        f'Matriz curada com contagem inesperada: {curated.get("total_regras")}/160')
+require(curated.get('total_regras') == 198 and len(curated.get('regras', {})) == 198,
+        f'Matriz curada com contagem inesperada: {curated.get("total_regras")}/198')
+require(curated.get('total_referencias') == 499,
+        'Matriz curada deve preservar as 499 referências auditadas')
 require(curated_house.issubset(set(curated.get('regras', {}))),
         'Matriz curada não inclui as Regras da Casa historicamente relacionadas')
 curated_js = text('scripts/referencias-regras-curadas.js')
-require('curated.total_regras!==160' in curated_js,
+require('curated.total_regras!==198||curated.total_referencias!==499' in curated_js,
         'Consumidor da matriz curada diverge da contagem publicada')
 
 # Criador de personagem: progressão da casa e compatibilidade 2014/2024.
@@ -121,8 +124,12 @@ require("weapons:arr(w.itens).filter(x=>x.status!=='nao_canonizar'&&(x.ruleset==
         'Criador está descartando armas 5e únicas do catálogo já consolidado')
 require("import('./spells.js')" in catalogs,
         'Carregador secundário de magias diverge do carregador consolidado do criador')
-require("fixed:['Comum'],choose:2" in languages,
-        'Idiomas iniciais 5.5e devem ser Comum + 2 padrão')
+require("const CORE_LANGUAGE_CHOICES=['Comum',...STANDARD_LANGUAGES]" in languages
+        and "key:'core:languages',label:'Criação de Personagem',fixed:[],choose:2,pool:CORE_LANGUAGE_CHOICES" in languages
+        and 'speciesLanguageDefinitions(species)' in languages
+        and 'nativeLanguagesForSpecies' in languages
+        and "fixed:['Comum'],choose:2" not in languages,
+        'Política do Hub: idiomas nativos raciais + 2 escolhas; Comum não pode ser concedido obrigatoriamente pelo núcleo')
 require('type="importmap"' not in creation,
         'Criador não deve depender de importmap para carregar os dropdowns')
 require('Carregando catálogos e regras...' not in creation,
@@ -156,26 +163,44 @@ require('5.5e/2024 prevalece' in magic.get('politica_sobreposicao', ''),
 require(magic.get('controle', {}).get('srd51_legado_ativo', 0) >= 1,
         'Legado único de itens mágicos foi perdido')
 magic_page = text('itens-magicos.html')
-require('Espaços de Itens Mágicos' in magic_page and 'Sintonização no Hub' in magic_page,
-        'Itens mágicos ainda tratam Sintonização padrão como regra operacional')
+require('function regraHubDoItem(i)' in magic_page
+        and 'apenas um item fornece benefícios por espaço, exceto Anéis (dois)' in magic_page
+        and 'A exigência de Sintonização impressa na fonte é substituída pela Regra da Casa.' in magic_page
+        and 'Sintonização no Hub:</strong> Não usada' in magic_page,
+        'Itens mágicos devem aplicar espaços corporais da Regra da Casa, dois Anéis e substituir a Sintonização padrão')
 
-# Magias: o catálogo consolidado precisa manter 2024 + conteúdo 2014 sem equivalente.
+# Magias: 581 entradas canônicas em criação, ficha e Biblioteca; corpus histórico preservado.
+# O catálogo histórico de 138 entradas é de proveniência, não a fonte ativa 2024/legados.
 spell_loader = text('scripts/character-builder/spells.js')
-require("json('dados/magias-catalogo.json" in spell_loader,
-        'Criador não usa o catálogo consolidado de magias')
+registry = text('scripts/catalog-registry.js')
+spell_page = text('magias.html')
+require("SPELL_CANONICAL_FILE=firstLocal('spells','builder',p=>p==='dados/catalogo-magias-20261104.json')" in registry
+        and "json(SPELL_CANONICAL_FILE+'?v=20261104')" in spell_loader
+        and "catalog.itens.length!==581" in spell_loader,
+        'O construtor deve consumir o catálogo canônico de 581 magias sem cair silenciosamente em fonte anterior')
 require('SPELL_REMOTE_SOURCES' in spell_loader and 'SPELL_SOURCE_LOOKUP' in spell_loader,
         'Fallback remoto de Magias não deriva do registro canônico')
-spells = load('dados/magias-catalogo.json')
+require("fetch('dados/catalogo-magias-20261104.json?v=20261104'" in spell_page
+        and "data.itens?.length!==581" in spell_page
+        and "args.get('magia')||args.get('ref')" in spell_page,
+        'Biblioteca de Magias deve compartilhar as 581 entradas e preservar os links por ID/ref')
+spells = load('dados/catalogo-magias-20261104.json')
 spell_items = spells.get('itens', [])
-require(spells.get('controle', {}).get('validado') is True and len(spell_items) >= 500,
-        'Catálogo consolidado de magias está incompleto ou não validado')
-require(any(x.get('ruleset') == '5.5e' for x in spell_items),
-        'Catálogo de magias perdeu conteúdo 5.5e/2024')
-require(any(x.get('ruleset') == '5e' for x in spell_items),
-        'Catálogo de magias perdeu conteúdo legado 5e sem equivalente')
-spell_page = text('magias.html')
-require('const groups=new Map()' in spell_page and 'versoes_anteriores_descartadas' in spell_page,
-        'Biblioteca de Magias não está consolidando versões por identidade')
+require(spells.get('total') == 581 and len(spell_items) == 581,
+        'Catálogo ativo de magias deve possuir exatamente 581 entradas')
+require(len({x.get('id') for x in spell_items}) == 581 and len({norm(x.get('nome')) for x in spell_items}) == 581
+        and all(x.get('id') and x.get('nome') and x.get('livro') and x.get('descricao') for x in spell_items),
+        'Catálogo canônico possui IDs, nomes ou proveniência incompletos/duplicados')
+def count_spells(book):
+    return sum(x.get('livro') == book for x in spell_items)
+require(count_spells('Livro do Jogador · 2024') == 391
+        and count_spells("Xanathar's Guide to Everything") == 79
+        and count_spells("Tasha's Cauldron of Everything") == 11,
+        'Catálogo ativo perdeu conteúdo 2024 ou legado de Xanathar/Tasha')
+historical_spells = load('dados/magias-catalogo.json')
+require(historical_spells.get('controle', {}).get('validado') is True
+        and len(historical_spells.get('itens', [])) == 138,
+        'Corpus histórico de proveniência de magias perdeu a validação ou entradas')
 
 # Concentração Expandida: 2024 determina concentração; classificação é explícita, nunca heurística.
 ce = text('scripts/concentracao-expandida-selos.js')
@@ -187,18 +212,23 @@ for forbidden in ('miscTags', 'areaTags', 'strongConditions', 'majorName'):
 for conjure in ('Conjure Celestial', 'Conjure Minor Elementals', 'Conjure Woodland Beings'):
     require(conjure in ce, f'Reclassificação 2024 ausente na Concentração Expandida: {conjure}')
 no_concentration_2024 = {
-    'Barkskin', 'Divine Favor', 'Magic Weapon', 'True Strike',
-    'Searing Smite', 'Thunderous Smite', 'Wrathful Smite'
+    'Pele-Casca': 'Barkskin',
+    'Favor Divino': 'Divine Favor',
+    'Arma Mágica': 'Magic Weapon',
+    'Golpe Certeiro': 'True Strike',
+    'Destruição Ardente': 'Searing Smite',
+    'Destruição Trovejante': 'Thunderous Smite',
+    'Destruição Colérica': 'Wrathful Smite',
 }
 current_by_name = {
-    norm(x.get('nome_original') or x.get('nome')): x
-    for x in spell_items if x.get('ruleset') == '5.5e'
+    norm(x.get('nome')): x
+    for x in spell_items if x.get('livro') == 'Livro do Jogador · 2024'
 }
-for name in no_concentration_2024:
-    row = current_by_name.get(norm(name))
-    require(row is not None, f'Magia 2024 ausente do catálogo: {name}')
-    require(row.get('concentracao') is False,
-            f'{name} 2024 não pode ocupar vaga da Concentração Expandida')
+for localized, original in no_concentration_2024.items():
+    row = current_by_name.get(norm(localized))
+    require(row is not None, f'Magia 2024 ausente do catálogo: {original} ({localized})')
+    require(row.get('concentracao') == 'Não',
+            f'{original} ({localized}) 2024 não pode ocupar vaga da Concentração Expandida')
 
 # Talentos e raças: visualização ativa prefere 2024 e preserva legado único.
 feat_page = text('dados/_module-source/talentos.html')
@@ -214,29 +244,53 @@ class_detail = text('classes-v3.html')
 require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail and 'Talento — Regra da Casa' in class_detail,
         'Classes ainda expõem os ASIs regulares substituídos como progressão ativa')
 
-# Armas, armaduras e maestrias.
+# Armas, armaduras e maestrias: o registro canônico ativo é localizado,
+# e as três armas de 5e sem equivalente são preservadas no catálogo consolidado.
 mastery = load('dados/maestrias-de-arma-pdfs.json')
-canonical = {
-    x.get('nome') for x in mastery.get('itens', [])
+published = [
+    x for x in mastery.get('itens', [])
     if x.get('classificacao', {}).get('origem') == 'oficial_aberta'
     and x.get('classificacao', {}).get('status') == 'atual'
-}
-required_masteries = {'Cleave', 'Graze', 'Nick', 'Push', 'Sap', 'Slow', 'Topple', 'Vex'}
-require(required_masteries.issubset(canonical),
-        f'Maestrias 2024 ausentes: {sorted(required_masteries - canonical)}')
-require(mastery.get('controle', {}).get('oficiais_canonicas') == 8,
-        'Quantidade de maestrias oficiais 2024 divergente')
+    and x.get('controle', {}).get('canonico') is True
+]
+required_masteries = {'Afligir', 'Arranhão', 'Debilitar', 'Derrubar', 'Empurrar', 'Lento', 'Talho', 'Trespassar'}
+require(mastery.get('controle', {}).get('quantidade') == 8
+        and len(published) == 8
+        and {x.get('nome') for x in published} == required_masteries
+        and all(x.get('conteudo', {}).get('descricao') for x in published),
+        'Oito maestrias oficiais de 2024 devem existir com nomes PT-BR e efeitos definidos')
+require(not any(x.get('nome') == 'Perfurar' for x in published),
+        'Não canonizar Perfurar sem texto normativo de efeito publicado')
+
 weapons = load('dados/armas-srd.json')
-require(weapons.get('controle', {}).get('legados_5e', 0) >= 1,
-        'Catálogo de armas perdeu conteúdo 5e sem equivalente')
-require(any(x.get('ruleset') == '5e' for x in weapons.get('itens', [])),
-        'Nenhuma arma 5e única permanece no catálogo consolidado')
+merged_weapons = load('cache/armas-catalogo.json')
+core_weapons = weapons.get('itens', [])
+merged_items = merged_weapons.get('itens', [])
+require(weapons.get('controle', {}).get('validado') is True
+        and weapons.get('controle', {}).get('atuais_5_5e') == 38
+        and len(core_weapons) == 38
+        and all(x.get('ruleset') == '5.5e' and x.get('status') == 'atual' for x in core_weapons),
+        'Base oficial 2024 de 38 armas não está íntegra')
+legacy_weapons = [x for x in merged_items if x.get('ruleset') == '5e' and x.get('status') == 'suplementar']
+require(merged_weapons.get('controle', {}).get('quantidade') == 41
+        and merged_weapons.get('controle', {}).get('core') == 38
+        and merged_weapons.get('controle', {}).get('pdf') == 3
+        and len(merged_items) == 41 and len(legacy_weapons) == 3
+        and {x.get('id') for x in core_weapons}.issubset({x.get('id') for x in merged_items})
+        and len({x.get('id') for x in merged_items}) == 41,
+        'Catálogo unificado deve preservar 38 armas 2024 e 3 suplementos 5e únicos')
 weapon_page = text('armas.html')
 armor_page = text('armaduras.html')
-require('NÃO CANONIZAR' in weapon_page,
-        'Armas demonstrativas não estão protegidas contra canonização')
-require('não canonizar' in armor_page.lower(),
-        'Armaduras demonstrativas não estão protegidas contra canonização')
+require("fetch('cache/armas-catalogo.json" in weapon_page
+        and "!['demonstrativo','nao_canonizar'].includes(norm(x.status))" in weapon_page
+        and "!['demonstrativo','nao_canonizar'].includes(norm(x.natureza))" in weapon_page,
+        'Biblioteca de armas deve exibir o catálogo consolidado sem canonizar demonstrações')
+armor = load('dados/armaduras-pdfs.json')
+require(armor.get('controle', {}).get('validado') is True
+        and armor.get('controle', {}).get('quantidade_oficial_2024') == 13
+        and len([x for x in armor.get('armaduras', []) if x.get('canonico')]) == 13
+        and "ALL=(DATA.armaduras||[]).filter(x=>x.canonico)" in armor_page,
+        'Biblioteca de armaduras deve exibir somente 13 entradas oficiais canônicas')
 
 # PDFs registrados: fontes, manifesto e artefatos de runtime precisam ser rastreáveis.
 # `artefatos_relacionados` também guarda linhagem histórica/intermediária e não implica
@@ -259,11 +313,20 @@ critical_pdf_artifacts = [
     'dados/bugigangas-pdfs.json',
     'dados/armaduras-pdfs.json',
     'dados/armas-pdfs-manifest.json',
-    'dados/equipamentos-aventura-pdfs.json',
     'dados/equipamentos-aventura-core-pdfs.json',
 ]
 for artifact in critical_pdf_artifacts:
     require((ROOT / artifact).exists(), f'Artefato PDF materializado ausente: {artifact}')
+
+# O arquivo histórico dados/equipamentos-aventura-pdfs.json foi substituído pela fonte
+# core de 88 entradas; a Biblioteca carrega exclusivamente a fonte validada atual.
+core_gear = load('dados/equipamentos-aventura-core-pdfs.json')
+require(core_gear.get('auditoria', {}).get('adicionados') == 88
+        and core_gear.get('auditoria', {}).get('phb2024') == 79
+        and core_gear.get('auditoria', {}).get('heroes2025') == 9
+        and 'fetch("dados/equipamentos-aventura-core-pdfs.json' in text('equipamentos-aventura.html')
+        and 'expandCore(core)' in text('equipamentos-aventura.html'),
+        'Equipamentos de aventura devem preservar 88 registros na fonte core publicada')
 
 historical_missing = []
 for src in pdf_registry.get('fontes', []):

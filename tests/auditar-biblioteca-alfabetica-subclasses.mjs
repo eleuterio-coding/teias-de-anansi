@@ -53,7 +53,7 @@ assert.deepEqual(Object.keys(features.nomes).filter(n=>!featuresReais.has(n)),[]
 
 const ui=read('scripts/subclasses-biblioteca-ui.js');
 for(const id of fonteIds)assert.ok(ui.includes("'"+id+"'"),'Selo/livro ausente: '+id);
-for(const term of ['dataset.nomePtbr','dataset.livro','ficha.replaceChildren()',"field(ficha,'Livro'","field(ficha,'Classe'",'.pdf-rastreio','.corpo .fonte','lista.append(...cards)'])
+for(const term of ['dataset.nomePtbr','dataset.livro','ficha.remove()',"card.querySelector('.corpo').append(footer)","footer.className='meta subclass-book'",'.pdf-rastreio','.corpo .fonte','lista.append(...cards)'])
  assert.ok(ui.includes(term),'Contrato de UI das subclasses ausente: '+term);
 assert.ok(ui.includes("features.nomes"),'Interface deve carregar nomes traduzidos de características.');
 assert.ok(ui.includes("cards.length!==112"),'A interface deve bloquear cobertura incompleta.');

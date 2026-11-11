@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,read,write}from'./character-builder/state.js';
-import{derive,spellOptions}from'./character-builder/rules.js';
+import{derive,spellOptions}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{featMechanicalOutcome}from'./character-builder/feat-mechanics.js';
 import{weaponPropertyProfile,ensureCombatState}from'./character-sheet-combat-rules.js?v=20260901-combat1';
 import{spellComponentProfile,concentrationDc,activeConcentrations,previewConcentration,effectiveConcentrationLevel,pendingConcentrationFailure,failConcentrationSave,resolveConcentrationFailure,startConcentration,endConcentration,enforceConcentrationState,spellCastReadiness,ritualEligible,recordRitualCast,preparationWindow,preparationChangeAllowed}from'./character-sheet-spellcasting-rules.js?v=20261029-concentracao-combate1';

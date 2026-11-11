@@ -57,7 +57,8 @@ test('Jogador vê cards com links de ficha, capas e registros públicos sem edi�
  const roster=page.locator('#jogadores .roster-player');
  await expect(roster).toHaveCount(2);
  await expect(roster.last()).toContainText('Dongron');
- await expect(roster.last().locator('a.campaign-readonly-character-control')).toHaveAttribute('href',/ficha-personagem\.html\?.*id=char-g/);
+ await expect(roster.last().locator('.roster-player-character a.roster-player-profile-link')).toHaveAttribute('href',/ficha-personagem\.html\?.*id=char-g/);
+ await expect(roster.last().locator('.roster-player-character a.roster-player-profile-link')).toHaveAttribute('aria-label','Abrir ficha de Dongron');
  await expect(page.locator('#jogadores select,#jogadores input,#jogadores [data-remove-member],#jogadores [data-roster-move]')).toHaveCount(0);
  await expect(page.locator('#aventuras .campaign-player-story-card')).toHaveCount(1);
  await expect(page.locator('#sessoes .campaign-player-story-card')).toHaveCount(1);

@@ -10,9 +10,15 @@ const deploy=read('.github/workflows/deploy-pages.yml');
 
 assert.equal((html.match(/<li><a href=/g)||[]).length,18,'A Biblioteca precisa manter 18 módulos.');
 assert.equal((html.match(/class="contagem"/g)||[]).length,18,'Cada card precisa ter uma área de contagem.');
-assert.ok(html.includes('scripts/library-catalog-status.js?v=20261031-library-clean1'),'O script de contagem precisa ter cache atualizado.');
+assert.match(html, /<script[^>]+src="scripts\/library-catalog-status\.js\?v=2026\d{4}-[a-z0-9-]+"/i,
+ 'O script de contagem precisa de URL de versão explícita para invalidar cache.');
 assert.ok(!/\bPublicado\b|catalog-badge|catalog-badges/.test(html),'HTML dos cards não pode ter status ou selos.');
-assert.ok(js.includes("fetch('dados/biblioteca-contagens.json?v=20261028-compact1')"),'Os cards devem usar o arquivo leve de contagens.');
+assert.match(js, /fetch\('dados\/biblioteca-contagens\.json\?v=2026\d{4}-[a-z0-9-]+'/i,
+ 'Os cards precisam buscar o JSON leve de contagens com cache versionado.');
+const publishedCounts=JSON.parse(read('dados/biblioteca-contagens.json'));
+assert.equal(publishedCounts.schema,'hub-rpg.biblioteca-contagens.v1');
+assert.equal(Object.keys(publishedCounts.modulos||{}).length,18,'O resumo deve cobrir os 18 módulos.');
+assert.equal(publishedCounts.modulos.Magias,581,'A contagem publicada deve refletir o catálogo atual de 581 magias.');
 assert.ok(js.includes('count.toLocaleString(\'pt-BR\')'),'Contagens devem ter formatação em pt-BR.');
 assert.ok(js.includes('countPublished(semanticIndex)'),'O índice semântico deve ser fallback após busca.');
 assert.ok(!/stageLabel|consumerBadges|catalog-badge/.test(js),'JS dos cards não pode gerar selos ou Publicado.');

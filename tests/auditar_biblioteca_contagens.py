@@ -16,7 +16,7 @@ entities = [
 ]
 entities.append({"modulo": "Regras", "id": "pendente", "status": "pendente"})
 index = {"schema": "hub-rpg.referencias.v3", "entidades": entities}
-spells = json.loads((ROOT / "dados/magias-catalogo.json").read_text(encoding="utf-8"))
+spells = json.loads((ROOT / "dados/catalogo-magias-20261104.json").read_text(encoding="utf-8"))
 counts = count_records(index, spells)
 
 expected = {
@@ -25,7 +25,7 @@ expected = {
     "Talentos": 145,
     "Maestrias de Arma": 8,
     "Equipamentos de Aventura": 88,
-    "Magias": 510,
+    "Magias": 581,
 }
 for module, total in expected.items():
     assert counts[module] == total, f"{module}: {counts[module]} != {total}"

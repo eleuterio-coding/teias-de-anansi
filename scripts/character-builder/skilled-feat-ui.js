@@ -1,5 +1,5 @@
 import{state,$,SKILL_AB,arr,esc,fold}from'./state.js';
-import{derive}from'./rules.js?v=20260831-tasha-metamagic1';
+import{derive}from'./rules.js?v=20261106-rules-singleton1';
 
 const ALL_SKILLS=Object.keys(SKILL_AB);
 const TOOL_VALUE='__tool__';

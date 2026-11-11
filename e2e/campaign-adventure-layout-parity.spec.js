@@ -53,16 +53,24 @@ test('Lista usa Campanha: Nome com link, contador à direita e tile da largura d
  await expect(section.locator('h3 a')).toHaveAttribute('href','mesa.html?id='+campaign.id);
  const count=section.locator('.adventure-campaign-group-count');
  await expect(count).toContainText('2');
- const [headRect,countRect,cardRect,tileRect]=await Promise.all([
+ const [headRect,countRect,cardRect,tileRect,trackRect]=await Promise.all([
   section.locator('.adventure-campaign-group-heading').boundingBox(),
   count.boundingBox(),
   section.locator('[data-adventure-card="layout-parity-a1"]').boundingBox(),
-  page.locator('#open-adventure-create').boundingBox()
+  page.locator('#open-adventure-create').boundingBox(),
+  section.locator('.adventure-campaign-track').boundingBox()
  ]);
- expect(headRect&&countRect&&cardRect&&tileRect).toBeTruthy();
+ expect(headRect&&countRect&&cardRect&&tileRect&&trackRect).toBeTruthy();
  expect(countRect.x+countRect.width).toBeGreaterThan(headRect.x+headRect.width-28);
- near(tileRect.width,cardRect.width,9);
- await expect(section.locator('[data-adventure-card="layout-parity-a1"] .hub-parent-link')).toContainText('Campanha: As Labaredas');
+ // O tile é uma faixa inteira: comparar ao cabeçalho/track, não a um card da grade.
+ near(tileRect.width,headRect.width,3);
+ near(tileRect.x,headRect.x,3);
+ near(tileRect.width,trackRect.width,3);
+ near(tileRect.x,trackRect.x,3);
+ expect(cardRect.width).toBeLessThanOrEqual(trackRect.width+2);
+ const ancestry=section.locator('[data-adventure-card="layout-parity-a1"] .hub-parent-link');
+ await expect(ancestry).toHaveText('Campanha: '+campaign.name);
+ await expect(ancestry).not.toContainText(adventures[0].title);
 });
 test('Cenas compartilha o layout de Mapas e a criação exibe somente o básico',async({page})=>{
  await page.goto('/aventuras.html?campaign='+campaign.id+'&id='+adventures[0].id);

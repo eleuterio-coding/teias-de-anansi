@@ -36,3 +36,57 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Testar reatribuição no navegador
         run: npx playwright test e2e/adventure-reassignment.spec.js e2e/adventure-roster-important-location-images.spec.js --project=desktop-chromium
+  integridade:
+    name: Integridade da reatribuição ${{ matrix.version }} — desktop/mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && (github.event.pull_request.base.sha || 'main') || (github.event.pull_request.head.sha || github.sha) }}
+      - name: Usar a mesma especificação atualizada na main sem modificar a branch
+        if: matrix.version == 'baseline-main'
+        run: |
+          git fetch --no-tags origin "${{ github.event.pull_request.head.sha || github.sha }}"
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/adventure-reassignment.spec.js" > e2e/adventure-reassignment.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Auditar consistência dos registros
+        run: node tests/auditar-aventuras.mjs
+      - name: Instalar Chromium e dependências
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Verificar reatribuição, sessões e conteúdo preservado
+        run: npx playwright test e2e/adventure-reassignment.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line
+  cards-campanha:
+    name: Cards de locais e elenco ${{ matrix.version }} — desktop/mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [baseline-main, design-pr]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.version == 'baseline-main' && (github.event.pull_request.base.sha || 'main') || (github.event.pull_request.head.sha || github.sha) }}
+      - name: Aplicar a mesma especificação de cards ao baseline
+        if: matrix.version == 'baseline-main'
+        run: |
+          git fetch --no-tags origin "${{ github.event.pull_request.head.sha || github.sha }}"
+          git show "${{ github.event.pull_request.head.sha || github.sha }}:e2e/adventure-roster-important-location-images.spec.js" > e2e/adventure-roster-important-location-images.spec.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Chromium
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Validar cards do Mestre e herança de jogadores
+        run: npx playwright test e2e/adventure-roster-important-location-images.spec.js --project=desktop-chromium --project=mobile-chromium --reporter=line

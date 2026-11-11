@@ -68,10 +68,10 @@ jobs:
           ui=Path('scripts/character-builder/ability-score-ui.js').read_text(encoding='utf-8')
           rules=Path('scripts/character-builder/ability-score-rules.js').read_text(encoding='utf-8')
           assert 'ability-score-ui.js' in loader, 'Extensão de atributos não carregada.'
-          assert 'ability-budget4' in loader, 'Cache da extensão de atributos não está na revisão vigente.'
+          assert 'ability-score-ui.js?v=20261106-rules-singleton1' in loader, 'Cache da extensão de atributos não está na revisão vigente.'
           assert "addEventListener('change',onAbilityChange,true)" in ui, 'A validação deve interceptar o campo antes do handler legado.'
           assert 'state.c.baseAbilities=result.scores' in ui, 'A alteração não está sendo persistida no estado.'
-          assert "import{derive}from'./rules.js" in ui, 'A Etapa 4 deve ler o valor final calculado pelo motor de regras.'
+          assert "import{derive}from'./rules.js?v=20261106-rules-singleton1'" in ui, 'A Etapa 4 deve ler o valor final calculado pelo motor de regras.'
           assert 'Total ${display.final} · Modificador ${signed(display.modifier)}' in ui, 'Total final e modificador não estão sendo exibidos juntos.'
           assert 'Bônus acumulados ${signed(display.bonus)}' in ui, 'Bônus acumulados não estão visíveis ao lado do atributo.'
           assert 'choices.background' not in ui and 'refs.species' not in ui and 'refs.class' not in ui, 'Etapa Atributos não pode reescrever etapas anteriores.'

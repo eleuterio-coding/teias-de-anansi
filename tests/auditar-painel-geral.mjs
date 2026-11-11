@@ -51,13 +51,17 @@ assert.ok(css.includes('.dashboard-row-cover')&&css.includes('.focus-card-cover'
 assert.ok(css.includes('@media(max-width:820px)')&&css.includes('@media(max-width:520px)'),'Painel deve ser responsivo.');
 assert.ok(home.includes('href="painel.html'),'Início deve expor o Painel Geral.');
 assert.ok(page.includes('class="dashboard-page"'),'Painel deve habilitar a configuração específica da janela.');
-assert.ok(page.includes('id="dashboard-pagination"'),'Painel deve oferecer navegação paginada.');
-assert.ok(css.includes('Dashboard viewport-fit')&&css.includes('overflow:hidden'),'Painel deve restringir a grade à janela.');
-assert.ok(css.includes('grid-template-rows:minmax(0,1fr) auto'),'Modo paginado deve reservar área para controles.');
-for(const token of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor','requestAnimationFrame','window.addEventListener'])assert.ok(ui.includes(token),'Painel sem ajuste responsivo: '+token);
+// O contrato de 16/10/2026 substituiu a paginacao por rolagem para nao cortar cards.
+assert.ok(!page.includes('id="dashboard-pagination"'),'Painel rolavel nao deve esconder cards em paginas artificiais.');
+assert.ok(css.includes('Início rolável')&&css.includes('overflow-y:auto')&&css.includes('overflow:visible'),'Painel deve permitir rolagem sem corte.');
+assert.ok(css.indexOf('Dashboard viewport-fit')<css.indexOf('Início rolável'),'Regra posterior de rolagem deve prevalecer sobre CSS legado.');
+for(const token of ['renderCampaigns(summary.campaigns)','renderAdventures(summary.adventures)','renderSessions(summary.sessions)','renderContext(summary)'])assert.ok(ui.includes(token),'Todos os cards precisam ser renderizados: '+token);
+for(const legacy of ['initDashboardViewport','updateCollectionPager','dashboardPagesFor'])assert.ok(!ui.includes(legacy),'Nao ocultar registros por paginacao desativada: '+legacy);
 const semanticJs=fs.readFileSync(new URL('../scripts/referencias-hub.js',import.meta.url),'utf8');
 const deploy=fs.readFileSync(new URL('../.github/workflows/deploy-pages.yml',import.meta.url),'utf8');
-assert.match(semanticJs,/if\(\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\)===\'painel\.html\'\)return;/,'Painel Geral deve impedir links semânticos mesmo se o script for carregado.');
+assert.match(semanticJs,/const page=\(location\.pathname\.split\('\/'\)\.pop\(\)\|\|'index\.html'\)\.toLowerCase\(\);/,'Resolver a pagina antes de aplicar links semanticos.');
+assert.match(semanticJs,/if\(new Set\(\[[^\]]*'painel\.html'[^\]]*\]\)\.has\(page\)\)return;/,'Painel precisa continuar excluido dos verbetes.');
+assert.ok(semanticJs.indexOf('if(new Set(')<semanticJs.indexOf('fetch(INDEX_URL'),'A exclusao de verbetes deve ocorrer antes de carregar o indice.');
 assert.ok(deploy.includes("if path.name == 'painel.html':"),'Deploy não deve injetar resolutor de verbetes no Painel Geral.');
 assert.ok(page.includes('href="campanhas.html"')&&page.includes('href="aventuras.html"')&&page.includes('href="sessoes.html"'),'Links operacionais dos cards devem permanecer.');
 
@@ -83,7 +87,7 @@ assert.equal(statusDash.currentCampaign.id,'c-new','A Campanha marcada como Atua
 assert.equal(statusDash.currentSession.session.id,'s-new','A Sessão marcada como Atual precisa vencer a Sessão em andamento.');
 assert.equal(statusDash.currentAdventure.id,'a-new','A Aventura marcada como Atual precisa vencer a Aventura em andamento.');
 assert.equal(statusDash.sessions.find(s=>s.id==='s-new').campaignName,'Reinos de Prata');
-assert.equal(statusDash.sessions.find(s=>s.id==='s-new').adventureName,'As Rainhas');
+assert.equal(statusDash.sessions.find(s=>s.id==='s-new').adventureName,'Aventura 1 · As Rainhas','O Painel deve manter a numeração registrada na Ordem da Aventura.');
 assert.equal(statusDash.sessions[0].id,'s-new','Listas do Painel devem priorizar o status Atual.');
 assert.equal(statusDash.adventures[0].id,'a-new');
 assert.equal(statusDash.campaigns[0].id,'c-new');

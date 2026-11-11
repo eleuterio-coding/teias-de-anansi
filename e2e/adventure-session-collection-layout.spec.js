@@ -233,7 +233,7 @@ test('desktop: capa à esquerda, painel à direita, status no alto e ações na 
   expect(Math.abs(g.open.width-g.del.width)).toBeLessThan(2);
   expect(Math.abs(g.open.height-g.del.height)).toBeLessThan(2);
   expect(Math.abs(g.open.top-g.del.top)).toBeLessThan(2);
-  expect(g.open.height).toBeGreaterThanOrEqual(42);
+  expect(g.open.height).toBeGreaterThanOrEqual(44);
   await testInfo.attach((item.url.includes('aventuras')?'aventura':'sessao')+'-desktop',
     {body:await card.screenshot(),contentType:'image/png'});
  }
@@ -276,7 +276,7 @@ test('celular: capa acima das informações, ações abaixo e sem overflow horiz
   expect(g.art.bottom).toBeLessThanOrEqual(g.detail.top+3);
   expect(g.actions.top).toBeGreaterThanOrEqual(g.detail.bottom-2);
   expect(g.open.width).toBeGreaterThanOrEqual(80);
-  expect(g.open.height).toBeGreaterThanOrEqual(42);
+  expect(g.open.height).toBeGreaterThanOrEqual(44);
   expect(Math.abs(g.open.width-g.del.width)).toBeLessThan(2);
   expect(Math.abs(g.open.top-g.del.top)).toBeLessThan(2);
   expect(g.del.right).toBeLessThanOrEqual(g.card.right+2);

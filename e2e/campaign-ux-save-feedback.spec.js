@@ -40,18 +40,21 @@ test('jogadores organizados e confirmação acessível após salvar',async({page
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const rows=page.locator('#jogadores .roster-player');
  await expect(rows).toHaveCount(2);
- await expect(page.locator('.roster-count')).toContainText('2 jogadores');
+ // A contagem visível fica no resumo geral; o roster valida os dois cards reais.
+ await expect(page.locator('.campaign-product-meta')).toContainText('2 jogadores');
  for(const row of await rows.all()){
   await expect(row.locator('.roster-player-name')).toBeVisible();
   await expect(row.locator('[data-member-user]')).toHaveCount(0);
   await expect(row.locator('[data-member-character]')).toBeVisible();
   await expect(row.getByText('Notas',{exact:true})).toHaveCount(0);
-  await expect(row.locator('.roster-player-label')).toHaveText('Jogador');
+  // Os rótulos são verificados por participante logo após validar os dois cards.
   await expect(row.locator('.roster-player-character label')).toContainText('Personagem');
   await expect(row.locator('.roster-open-button')).toBeVisible();
   await expect(row.locator('.roster-open-button')).toHaveText('Abrir');
   await expect(row.getByRole('button',{name:'Remover'})).toBeVisible();
  }
+ await expect(page.locator('#jogadores [data-member-row="m1"] .roster-player-label')).toHaveText('Jogadora');
+ await expect(page.locator('#jogadores [data-member-row="m2"] .roster-player-label')).toHaveText('Jogador');
  await page.locator('#jogadores [data-save-campaign-section]').click();
  await expect(page.locator('#hub-save-notice')).toBeVisible();
  await expect(page.locator('#hub-save-notice .hub-save-title')).toHaveText('Alterações salvas');
@@ -78,7 +81,9 @@ test('personagem ocupado não pode ser selecionado por outro jogador',async({pag
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const fernanda=page.locator('[data-member-row="m1"]'),bruno=page.locator('[data-member-row="m2"]');
  await expect(fernanda.locator('[data-member-character]')).toHaveValue('pc-fernanda');
- await expect(fernanda.locator('.roster-open-button')).toHaveAttribute('href',/ficha-personagem\.html\?id=pc-fernanda/);
+ const sheetHref=await fernanda.locator('.roster-open-button').getAttribute('href');
+ expect(new URL(sheetHref,page.url()).pathname).toMatch(/\/ficha-personagem\.html$/);
+ expect(new URL(sheetHref,page.url()).searchParams.get('id')).toBe('pc-fernanda');
  await expect(bruno.locator('[data-member-character] option[value="pc-fernanda"]')).toHaveCount(0);
  await expect(bruno.locator('[data-member-character] option[value="pc-bruno"]')).toHaveCount(1);
  await bruno.locator('[data-member-character]').selectOption('pc-bruno');
@@ -256,12 +261,13 @@ test('arrastar jogador sobre outro reordena sem perder personagens',async({page}
  await expect(list.locator('[data-member-row]').last()).toHaveAttribute('data-member-row','m1');
 });
 
-test('borda da capa é suave e ações do editor continuam operacionais',async({page})=>{
+test('borda branca da capa mantém espessura e opacidade especificadas e ações operacionais',async({page})=>{
  await page.goto('/mesa.html?id=e2e-campaign-ux');
  const preview=page.locator('#campanha .image-picker-preview');
  await expect(preview).toBeVisible();
- const border=await preview.evaluate(el=>getComputedStyle(el).borderColor);
- expect(border).toMatch(/rgba\(255, 255, 255, 0\.17\)/);
+ const border=await preview.evaluate(el=>({color:getComputedStyle(el).borderColor,
+  style:getComputedStyle(el).borderStyle,width:getComputedStyle(el).borderWidth}));
+ expect(border).toEqual({color:'rgba(255, 255, 255, 0.7)',style:'dashed',width:'2px'});
  const section=page.locator('#campanha');
  await expect(section.locator('[data-campaign-field="name"]')).toBeVisible();
  await expect(section.locator('[data-image-input]')).toHaveCount(1);

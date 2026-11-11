@@ -1,5 +1,5 @@
 import{state,arr,num,fold,uniq}from'./state.js';
-import{selected,item}from'./rules.js';
+import{selected,item}from'./rules.js?v=20261106-rules-singleton1';
 import{nativeLanguagesForSpecies}from'../species-language-rules.js?v=20261031-idiomas-40-ptbr1';
 
 export const STANDARD_LANGUAGES=['Língua de Sinais Comum','Dracônico','Anão','Élfico','Gigante','Gnômico','Goblin','Pequenino','Orc'];

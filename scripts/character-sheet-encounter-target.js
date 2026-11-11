@@ -1,7 +1,7 @@
 import{state}from'./character-builder/state.js';
 import{readCampaigns,findCampaignForCharacter}from'./campaign-state.js?v=20260924-session-encounters1';
 import{setResolutionTarget,resolutionTarget}from'./character-sheet-resolution-rules.js?v=20260902-resolution1';
-import{renderResolutionPanel}from'./character-sheet-resolution-ui.js?v=20260902-resolution1';
+import{renderResolutionPanel}from'./character-sheet-resolution-ui.js?v=20261106-rules-singleton1';
 import{spellSaveAbility,encounterSpellSaveModifier}from'./encounter-target-rules.js?v=20260902-encounters2';
 
 export const ENCOUNTER_TARGET_KEY='hub-rpg:encounter-target:v1';

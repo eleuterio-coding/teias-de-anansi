@@ -15,7 +15,7 @@ from gerar_referencias_hub import ROUTES
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "dados/referencias-hub-index.json"
-SPELLS = ROOT / "dados/magias-catalogo.json"
+SPELLS = ROOT / "dados/catalogo-magias-20261104.json"
 OUTPUT = ROOT / "dados/biblioteca-contagens.json"
 
 
@@ -93,23 +93,19 @@ def count_records(index: dict, spells: dict) -> dict[str, int]:
         empty = [module for module, n in counts.items() if n < 1]
         raise ValueError(f"Módulos sem registros publicados: {empty}")
 
+    # Fonte navegavel unica apos 04/11/2026; nao recombinar PDFs antigos.
     spells_list = spells.get("itens")
-    if not isinstance(spells_list, list) or not spells_list:
-        raise ValueError("Catálogo unificado de Magias vazio.")
+    if spells.get("schema") != "hub-rpg/catalogo-magias-20261104/v1":
+        raise ValueError("Schema do catalogo consolidado de Magias divergente.")
+    if not isinstance(spells_list, list) or spells.get("total") != 581 or len(spells_list) != 581:
+        raise ValueError("Catalogo consolidado incompleto: esperado 581 Magias.")
     valid_ids = {row.get("id") for row in spells_list if isinstance(row, dict) and row.get("id")}
     if len(valid_ids) != len(spells_list):
-        raise ValueError("Catálogo unificado de Magias possui IDs ausentes/duplicados.")
-    # O catálogo suplementar é combinado com o índice do Livro do Jogador
-    # no navegador; versões recuperadas de Xanathar/Tasha não são duplicadas.
-    from unicodedata import normalize as unicode_normalize, combining
-    def normalized(name: str) -> str:
-        return "".join(c for c in unicode_normalize("NFD", str(name or "")) if not combining(c)).lower()
-    imported = {normalized(row.get("nome_original")) for row in spells_list
-                if row.get("fonte") in ("xanathar-2017", "tasha-2020")}
-    phb = json.loads((ROOT / "dados/magias-phb-2024-indice.json").read_text(encoding="utf-8"))
-    remaining_phb = [row for row in phb.get("itens", [])
-                     if normalized(row.get("nome_original")) not in imported]
-    counts["Magias"] = len(valid_ids) + len(remaining_phb)
+        raise ValueError("Magias com IDs ausentes ou duplicados.")
+    if any(not all(str(row.get(k, "")).strip() for k in ("nome", "descricao", "classes", "livro"))
+           for row in spells_list):
+        raise ValueError("Magias sem nome, descricao, classes ou livro.")
+    counts["Magias"] = len(valid_ids)
     return counts
 
 

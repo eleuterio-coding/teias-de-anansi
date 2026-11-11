@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,SKILL_AB,mod,signed}from'./state.js';
-import{selected,derive}from'./rules.js';
+import{selected,derive}from'./rules.js?v=20261106-rules-singleton1';
 import{activeFeatInstances}from'./feat-mechanics.js';
 
 const FAMILIAR_FORMS=['Morcego','Gato','Sapo','Falcão','Lagarto','Polvo','Coruja','Rato','Corvo','Aranha','Doninha','Outra Besta de ND 0'];

@@ -70,10 +70,11 @@ function renderSupplemental(rule,maps){
   return `<details class="item ddb-only" id="${esc(cardId)}" data-hub-original="${esc(rule.original)}" ${entity?`data-hub-entity-id="${esc(entity.id)}"`:''}><summary><span><strong>${esc(rule.nome)}</strong><small class="original">${esc(rule.original)}</small></span><span class="badge">${esc(rule.familia||'Regra Geral')}</span></summary><div class="corpo"><div class="source-strip"><span>D&D Beyond Basic Rules 2024</span><span>Referência oficial complementar</span></div><p class="copyright-note">Consulte a fonte oficial para a redação integral desta regra.</p><div class="meta"><span><a href="${esc(ddb)}" target="_blank" rel="noopener noreferrer">D&D Beyond — Rules Glossary</a></span></div></div></details>`;
 }
 
+function weaponPropertyTitle(rule){return norm(rule.nome)==='alcance'?'Alcance — Arma':rule.nome}
 function renderWeaponProperty(rule,maps){
   const entity=maps.byOriginal.get('Regras|'+norm(rule.original))||null;
   const cardId=entity?'ref-'+entity.id:'regra-propriedade-arma-'+slug(rule.nome);
-  const title=norm(rule.nome)==='alcance'?'Alcance — Arma':rule.nome;
+  const title=weaponPropertyTitle(rule);
   return `<details class='item weapon-property-item' id='${esc(cardId)}' data-hub-original='${esc(rule.original)}' ${entity?`data-hub-entity-id='${esc(entity.id)}'`:''}><summary><span><strong>${esc(title)}</strong></span><span class='badge badge-weapon-property'>Propriedade de Arma</span></summary><div class='corpo'><div class='source-strip'><span>Regra oficial · 5.5e (2024)</span><span>Livro do Jogador (2024)</span></div><p>${esc(rule.descricao)}</p><div class='meta'><span><a href='armas.html'>Consultar armas que utilizam esta propriedade</a></span></div></div></details>`;
 }
 
@@ -110,7 +111,7 @@ function allCards(){
   return [
     ...SRD.map(x=>({kind:'srd',original:x.original,name:localizedHeading(x,ptRule(x.original)),family:x.tag?familyPT(x.tag):(ptRule(x.original)?.familia||'Regra Geral'),html:renderOfficial(x,maps)})),
     ...DDB_ONLY.map(x=>({kind:'ddb',original:x.original,name:x.nome,family:x.familia||'Regra Geral',html:renderSupplemental(x,maps)})),
-    ...PROPERTIES.map(x=>({kind:'property',original:x.original,name:x.nome,family:'Propriedade de Arma',search:x.descricao,html:renderWeaponProperty(x,maps)})),
+    ...PROPERTIES.map(x=>({kind:'property',original:x.original,name:weaponPropertyTitle(x),family:'Propriedade de Arma',search:x.descricao,html:renderWeaponProperty(x,maps)})),
     ...OFFICIAL_5E.map(x=>({kind:'legacy',original:x.original,name:x.nome,family:x.familia||'Regra Geral',search:[x.descricao,...(x.secoes||[]).map(s=>s.titulo+' '+s.texto),...(x.tabela?.linhas||[]).flat()].join(' '),html:renderOfficial5e(x,maps)})),
     ...HOUSE.map(x=>({kind:'house',original:x.original,name:x.nome,family:'Regra da Casa',html:renderHouse(x,maps)})),
      ...TERMS.map(x=>({kind:'term',original:x.original,name:x.nome,family:x.familia,search:x.descricao,html:renderRuleTerm(x)}))

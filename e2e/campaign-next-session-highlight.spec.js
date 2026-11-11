@@ -29,7 +29,8 @@ test('remove Personagens vinculados e destaca Próxima sessão acima do editor',
  await page.goto('/mesa.html?id=e2e-campaign-next');
  const highlight=page.locator('#proxima-sessao');
  await expect(highlight).toBeVisible();
- await expect(highlight.getByRole('heading',{name:'Sessão Atual'})).toBeVisible();
+ await expect(highlight.getByRole('heading',{name:'Planejamento de Campanha'})).toBeVisible();
+ await expect(highlight.locator('.campaign-next-status')).toHaveText('Atual');
  await expect(highlight).toContainText('PLANEJAMENTO DA CAMPANHA');
  await expect(highlight.locator('.campaign-next-name')).toContainText('Sessão 7 · A rainha e o véu');
  await expect(highlight.locator('.campaign-next-status')).toHaveText('Atual');

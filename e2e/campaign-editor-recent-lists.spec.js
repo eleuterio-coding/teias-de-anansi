@@ -48,51 +48,53 @@ test('ordem numerica: maior para menor, com sessao proxima e concluidas',()=>{
  expect(recentCampaignSessions(campaign.sessions).map(s=>s.id))
   .toEqual(['session-7','session-9','session-6','session-5','session-4']);
 });
-test('Campanha mostra até cinco Aventuras por ordem e sessões da aventura em andamento',async({page})=>{
+test('Campanha destaca a Aventura ativa, a última concluída e até cinco Sessões vinculadas',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
  const adventuresArea=page.locator('#aventuras'),sessionsArea=page.locator('#sessoes');
  await expect(adventuresArea.locator('h2')).toHaveText('Aventuras da Campanha');
  await expect(sessionsArea.locator('h2')).toHaveText('Sessões da Campanha');
- await expect(adventuresArea.locator('.campaign-reference-row')).toHaveCount(5);
- await expect(sessionsArea.locator('.campaign-reference-row')).toHaveCount(5);
- const titles=await adventuresArea.locator('.campaign-reference-row strong').allTextContents();
- expect(titles).toEqual(['Mais tarde','A Cidadela','As Muralhas','A Fortaleza','As Rainhas']);
- const sessions=await sessionsArea.locator('.campaign-reference-row strong').allTextContents();
- expect(sessions).toEqual(['Sessão 7 · O Portal','Sessão 9 · Futura','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha']);
- await expect(adventuresArea).toContainText('Mais tarde');
+ const adventureCards=adventuresArea.locator('.campaign-adventures-feature-grid .campaign-adventure-featured-card');
+ const sessionCards=sessionsArea.locator('.campaign-player-sessions-grid .campaign-player-story-card');
+ await expect(adventureCards).toHaveCount(2);
+ await expect(sessionCards).toHaveCount(5);
+ const adventureNames=await adventureCards.locator('h3').allTextContents();
+ expect(adventureNames).toEqual([expect.stringContaining('A Cidadela'),expect.stringContaining('As Muralhas')]);
+ const sessionNames=await sessionCards.locator('h3').allTextContents();
+ expect(sessionNames).toEqual(['Sessão 7 · O Portal','Sessão 9 · Futura','Sessão 6 · A Travessia','Sessão 5 · Reunião','Sessão 4 · Muralha']);
+ await expect(adventureCards.first().locator('.campaign-player-story-status')).toHaveText('Em andamento');
+ await expect(adventureCards.nth(1).locator('.campaign-player-story-status')).toHaveText('Concluída');
+ await expect(sessionCards.first()).toHaveClass(/campaign-player-story-card-featured/);
+ await expect(sessionCards.first().locator('.status-current')).toHaveText('Atual');
+ await expect(sessionCards.nth(1).locator('.status-next')).toHaveText('Próxima');
+ await expect(adventuresArea).not.toContainText('Mais tarde');
  await expect(sessionsArea).not.toContainText('Amanhã');
- await expect(sessionsArea).toContainText('Futura');
- await expect(sessionsArea).toContainText('O Portal');
- await expect(adventuresArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa.svg');
- await expect(adventuresArea.locator('.campaign-reference-row').nth(1).locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');
- await expect(sessionsArea.locator('.campaign-reference-row').first().locator('.campaign-reference-cover')).toHaveAttribute('src','/capa-aventura.svg');
- await expect(adventuresArea.getByRole('link',{name:'Abrir Aventuras'})).toHaveAttribute('href','aventuras.html?campaign=e2e-retrospectiva');
+ await expect(adventureCards.first().locator('img.campaign-player-story-image')).toHaveAttribute('src','/capa-aventura.svg');
+ await expect(adventureCards.first()).toHaveAttribute('href',/campaign=e2e-retrospectiva&id=/);
+ await expect(sessionCards.first()).toHaveAttribute('href',/campaign=e2e-retrospectiva&id=session-7/);
+ await expect(adventuresArea.locator('.campaign-reference-title-link')).toHaveAttribute('href','aventuras.html?campaign=e2e-retrospectiva');
+ await expect(adventuresArea.getByRole('link',{name:'Planejar Aventura'})).toHaveAttribute('href','aventuras.html?campaign=e2e-retrospectiva&new=1#adventure-create-card');
  await expect(sessionsArea.getByRole('link',{name:'Planejar Sessão'})).toHaveAttribute('href','sessoes.html?campaign=e2e-retrospectiva&new=1#session-create-card');
 });
-test('Abrir Aventuras filtra e ordena por Ordem descrescente',async({page})=>{
+test('Abrir a lista de Aventuras pelo título filtra por Campanha e respeita a ordem',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
- await page.locator('#aventuras').getByRole('link',{name:'Abrir Aventuras'}).click();
+ await page.locator('#aventuras .campaign-reference-title-link').click();
  await expect(page).toHaveURL(/aventuras\.html\?campaign=e2e-retrospectiva/);
  const cards=page.locator('#adventure-list [data-adventure-card]');
  await expect(cards).toHaveCount(7);
  const ids=await cards.evaluateAll(items=>items.map(item=>item.dataset.adventureCard));
  expect(ids).toEqual(['adv-7','adv-6','adv-5','adv-4','adv-3','adv-2','adv-1']);
  await expect(cards.first()).toContainText('Planejada');
+ await expect(page.locator('[data-adventure-card="adv-other"]')).toHaveCount(0);
 });
-test('Planejar Sessão abre nova aba com formulário com Campanha preenchida automaticamente',async({page})=>{
+test('Planejar Sessão navega ao formulário da Campanha sem perder o vínculo',async({page})=>{
  await page.goto('/mesa.html?id=e2e-retrospectiva');
- const [newPage]=await Promise.all([
-  page.context().waitForEvent('page'),
-  page.locator('#sessoes').getByRole('link',{name:'Planejar Sessão'}).click()
- ]);
- await newPage.waitForLoadState('domcontentloaded');
- await expect(page).toHaveURL(/mesa\.html\?id=e2e-retrospectiva/);
- await expect(newPage).toHaveURL(/sessoes\.html\?campaign=e2e-retrospectiva&new=1#session-create-card/);
- await expect(newPage.locator('#session-create-card')).toBeVisible();
- await expect(newPage.locator('#new-session-campaign')).toHaveValue('e2e-retrospectiva');
- await expect(newPage.locator('#new-session-title')).toBeVisible();
+ await page.locator('#sessoes').getByRole('link',{name:'Planejar Sessão'}).click();
+ await expect(page).toHaveURL(/sessoes\.html\?campaign=e2e-retrospectiva&new=1#session-create-card/);
+ await expect(page.locator('#session-create-card')).toBeVisible();
+ await expect(page.locator('#new-session-campaign')).toHaveValue('e2e-retrospectiva');
+ await expect(page.locator('#new-session-title')).toBeVisible();
 });
-test('Salvar fica na borda inferior da capa e pontilhado é branco discreto',async({page},info)=>{
+test('Salvar alinha à capa e tracejado branco mantém opacidade de 70%',async({page},info)=>{
  test.skip(info.project.name!=='desktop-chromium','alinhamento de duas colunas');
  await page.setViewportSize({width:1450,height:950});
  await page.goto('/mesa.html?id=e2e-retrospectiva');
@@ -102,9 +104,13 @@ test('Salvar fica na borda inferior da capa e pontilhado é branco discreto',asy
   const image=img.getBoundingClientRect(),button=save.getBoundingClientRect();
   return {imageBottom:image.bottom,saveBottom:button.bottom,
    border:getComputedStyle(img).borderColor,
+   borderStyle:getComputedStyle(img).borderStyle,
+   borderWidth:getComputedStyle(img).borderWidth,
    left:image.left,right:button.right};
  });
  expect(Math.abs(positions.imageBottom-positions.saveBottom)).toBeLessThanOrEqual(14);
- expect(positions.border).toBe('rgba(255, 255, 255, 0.17)');
+ expect(positions.border).toBe('rgba(255, 255, 255, 0.7)');
+ expect(positions.borderStyle).toBe('dashed');
+ expect(positions.borderWidth).toBe('2px');
  expect(positions.right).toBeGreaterThan(positions.left);
 });

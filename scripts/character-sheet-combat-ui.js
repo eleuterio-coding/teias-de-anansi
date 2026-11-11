@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,fold,read,write,signed}from'./character-builder/state.js';
-import{derive}from'./character-builder/rules.js';
+import{derive}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 import{ownedEquipment}from'./character-builder/equipment-ownership.js?v=20260901-campaign-inventory1';
 import{featMechanicalOutcome}from'./character-builder/feat-mechanics.js';
 import{applyInventoryTransaction}from'./character-sheet-inventory-rules.js?v=20260901-combat1';

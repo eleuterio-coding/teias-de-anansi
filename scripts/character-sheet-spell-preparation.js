@@ -1,5 +1,5 @@
 import{state,$,arr,num,esc,read,write}from'./character-builder/state.js';
-import{derive,spellOptions}from'./character-builder/rules.js';
+import{derive,spellOptions}from'./character-builder/rules.js?v=20261106-rules-singleton1';
 
 let initialized=false,rendering=false;
 const LONG_REST_ONE=new Set(['paladin','ranger']);

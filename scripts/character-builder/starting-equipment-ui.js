@@ -1,5 +1,5 @@
 import{state,$,num,esc}from'./state.js';
-import{selected}from'./rules.js?v=20260831-tasha-metamagic1';
+import{selected}from'./rules.js?v=20261106-rules-singleton1';
 import{backgroundPackageOptions,classPackageOptions,creationBudgetBreakdown,itemsCurrencyCp,physicalItems}from'./starting-equipment-rules.js?v=20260922-wealth-class4';
 import{ownedEquipment,ownedItemCount,formatOwnedRows}from'./equipment-ownership.js?v=20260828-wealth-background1';
 

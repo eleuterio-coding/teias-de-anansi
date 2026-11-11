@@ -84,3 +84,26 @@ body.hub-shell-enabled #builder .hub-portrait-creation-preview{background:var(--
  #builder .hub-character-identity-row{grid-template-columns:minmax(0,1fr)}
  #builder .hub-portrait-creation-card .hub-portrait-creation-content{flex-direction:row;align-items:center;flex-wrap:wrap}
 }
+
+/* Etapa 6 — alvos de toque da ficha, corrigidos sem alterar mecânicas.
+   A navegação herdava 42px; os controles de espaços de magia tinham 34px de largura. */
+body.hub-shell-enabled #sheet .section-nav a{
+ min-height:var(--hub-touch,44px);
+}
+body.hub-shell-enabled #sheet .slot button{
+ min-width:var(--hub-touch,44px);
+ min-height:var(--hub-touch,44px);
+ width:auto;
+ height:auto;
+}
+
+/* Etapa 6 — impedir que o tamanho mínimo intrínseco dos painéis da
+   ficha amplie a única coluna da grade no celular; nenhum conteúdo é ocultado. */
+body.hub-shell-enabled #sheet{
+ grid-template-columns:minmax(0,1fr);
+ min-width:0;
+ max-width:100%;
+}
+body.hub-shell-enabled #sheet > *{
+ min-width:0;
+}

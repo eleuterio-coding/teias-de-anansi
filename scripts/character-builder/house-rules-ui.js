@@ -1,5 +1,5 @@
 import{state,$,AB,arr,num,esc,fold}from'./state.js';
-import{applyHouseRules,derive,selected,HOUSE_ABILITY_LEVELS,initializeHouseBackgroundChoices}from'./rules.js?v=20260831-tasha-metamagic1';
+import{applyHouseRules,derive,selected,HOUSE_ABILITY_LEVELS,initializeHouseBackgroundChoices}from'./rules.js?v=20261106-rules-singleton1';
 
 let rendering=false,raf=0;
 const GAMING_SET_OPTIONS=Object.freeze(['Jogo de Dados','Dragonchess','Baralho','Three-Dragon Ante']);

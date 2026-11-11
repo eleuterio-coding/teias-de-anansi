@@ -363,6 +363,12 @@
  width:100%;
  min-width:0;
 }
+/* A ação de abrir ficha da visão de leitura usa alvo de 44px também no celular. */
+#table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly .roster-player-character .roster-player-profile-link{
+ display:grid;place-items:center;
+ flex:0 0 44px;width:44px;min-width:44px;max-width:44px;
+ height:44px;min-height:44px;max-height:44px;
+}
 #table-root[data-campaign-access="player"] #jogadores .campaign-roster-readonly :is(.roster-player-label,.roster-player-name){
  display:flex;
  align-items:center;
@@ -472,7 +478,8 @@
 /* Desktop: jogador + personagem + ações, sem trilha flexível após o seletor. */
 @container campaign-roster (min-width:760px){
  #table-root:not([data-campaign-access="player"]) #jogadores .roster-player{
-  grid-template-columns:24px 40px minmax(0,1fr) minmax(0,1.35fr) max-content;
+  /* Paridade desktop com Jogadores da Sessão: reservar a mesma coluna de ações. */
+  grid-template-columns:24px 40px minmax(0,1fr) minmax(0,1.35fr) 170px;
  }
 }
 /* Intermediário: ações imediatamente ao lado do seletor, na segunda linha. */

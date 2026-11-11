@@ -61,11 +61,17 @@ assert.ok(mediaAccess.includes("data.entityType == 'adventure' && assignedAdvent
 assert.ok(mediaAccess.includes("data.entityType == 'session' && assignedSession(data.campaignId, data.entityId)"),'Jogador deve ler apenas capas de Sessões atribuídas.');
 
 const campanhas=read('campanhas.html');
-assert.match(campanhas,/id="campaign-cover-picker"/);
 assert.doesNotMatch(campanhas,/id="campaign-cover" type="url"/);
+const campaignLayout=read('scripts/campaign-shared-layout.js');
+assert.match(campaignLayout,/renderCampaignSettings/);
+assert.match(campaignLayout,/imagePickerHtml\?\.\(\{media:c\.coverImage/,'A Mesa deve renderizar o seletor real de capa da Campanha.');
+assert.match(media,/<input type="file" accept="image\/jpeg,image\/png,image\/webp" data-image-input/,'O seletor compartilhado deve aceitar arquivos de imagem e não URL textual.');
 
 const campaignList=read('scripts/campaign-list-ui.js'),campaignTable=read('scripts/campaign-table-ui.js'),adventureUi=read('scripts/adventure-ui.js'),sessionUi=read('scripts/campaign-sessions-ui.js');
-for(const [name,source] of [['Campanhas',campaignList],['Mesa',campaignTable],['Aventuras',adventureUi],['Sessões',sessionUi]])assert.match(source,/persistCampaignMediaState/,`${name} deve persistir o vínculo da imagem remotamente antes de concluir.`);
+assert.match(campaignList,/imageElementHtml\(c\.coverImage,c\.coverImageUrl/,'Lista de Campanhas deve exibir as capas salvas sem atuar como editor.');
+assert.match(campaignTable,/function bindCampaignCover\(\)/,'Mesa precisa vincular seu seletor de capa.');
+assert.ok(campaignTable.includes("#campanha [data-image-picker]"),'Mesa deve buscar o seletor de capa dentro da Campanha.');
+for(const [name,source] of [['Mesa',campaignTable],['Aventuras',adventureUi],['Sessões',sessionUi]])assert.match(source,/persistCampaignMediaState/,`${name} deve persistir o vínculo da imagem remotamente antes de concluir.`);
 assert.ok(campaignTable.indexOf("persistCampaignMediaState(campaignId,{entityType:'campaign',entityId:campaignId})")<campaignTable.indexOf('deleteImage(previous)'),'A capa anterior da Campanha só pode ser apagada após persistir a nova referência.');
 assert.ok(adventureUi.indexOf("persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})")<adventureUi.indexOf('deleteImage(previous)'),'A capa anterior da Aventura só pode ser apagada após persistir a nova referência.');
 

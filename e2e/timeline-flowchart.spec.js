@@ -11,6 +11,7 @@ const campaign={
 };
 const adventure={
  id:'timeline-flow-adv',campaignId:'timeline-flow-cmp',title:'As Rainhas',
+ scenes:[{id:'scene-old',title:'O Chamado',order:1,visibleToPlayers:true},{id:'scene-new',title:'O Conselho',order:2,visibleToPlayers:true}],
  timelineEvents:[
   {id:'evt-new',title:'O Conselho',text:'Uma nova decisão foi tomada.',at:'2026-10-18T16:00:00Z',automatic:true},
   {id:'evt-old',title:'O Chamado',text:'A jornada começou.',at:'2026-10-17T16:00:00Z',automatic:false}
@@ -49,25 +50,24 @@ test('campanha alterna lista e fluxograma e preserva os subeventos ao editar',as
  expect(stored.timelineNodes[0].children[0].id).toBe('child-1');
  expect(stored.timelineNodes[0].children[0].text).toBe('Pista recuperada');
 });
-test('aventura alterna lista e fluxograma cronológico sem duplicar registros',async({page})=>{
+test('Aventura exibe apenas Cenas na Linha do Tempo e alterna lista e fluxograma sem duplicar registros',async({page})=>{
  await page.goto('/aventuras.html?campaign=timeline-flow-cmp&id=timeline-flow-adv');
- const area=page.locator('#linha-tempo');
- await expect(area.locator('.timeline-row')).toHaveCount(2);
+ const area=page.locator('#linha-tempo'),entries=area.locator('.timeline-tree > .timeline-item');
+ await expect(entries).toHaveCount(2);
+ await expect(entries.locator('.campaign-timeline-title-link')).toHaveText(['O Chamado','O Conselho']);
+ await expect(area).not.toContainText('Uma nova decisão foi tomada.');
+ await expect(area).not.toContainText('A jornada começou.');
  await area.locator('[data-timeline-view="flowchart"]').click();
- await expect(area.locator('.hub-diagram-sequence-step')).toHaveCount(2);
- await expect(area.locator('.hub-diagram-sequence-step').first()).toContainText('O Chamado');
- await expect(area.locator('.hub-diagram-sequence-step').last()).toContainText('O Conselho');
- await area.locator('[data-diagram-edit="evt-old"]').click();
- await expect(area.locator('.timeline-row[data-entity-row="evt-old"]')).toHaveCount(1);
- await area.locator('#new-timeline-title').fill('Novo acontecimento');
- await area.locator('#new-timeline-text').fill('Outro registro narrativo');
- await area.locator('#add-timeline').click();
- await area.locator('[data-timeline-view="flowchart"]').click();
- await expect(area.locator('.hub-diagram-sequence-step')).toHaveCount(3);
+ const nodes=area.locator('.hub-diagram-node');
+ await expect(nodes).toHaveCount(2);
+ await expect(area.locator('[data-diagram-event="scene-old"]')).toContainText('O Chamado');
+ await expect(area.locator('[data-diagram-event="scene-new"]')).toContainText('O Conselho');
+ await area.locator('[data-timeline-view="list"]').click();
+ await expect(area.locator('.timeline-tree > .timeline-item')).toHaveCount(2);
  const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('hub-rpg:adventures:v1'))[0]);
- expect(stored.timelineEvents).toHaveLength(3);
+ expect(stored.scenes).toHaveLength(2);
+ expect(stored.timelineEvents).toHaveLength(2);
 });
-
 test('eventos principais são cartões independentes em Lista e Fluxograma',async({page},testInfo)=>{
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
@@ -128,7 +128,10 @@ test('subeventos aninhados podem ser revelados por seus próprios cards, sem cri
  await page.goto('/mesa.html?id=timeline-flow-cmp');
  const area=page.locator('#linha-tempo');
  await expect(area.locator('[data-timeline-add-child],[data-timeline-add-root]')).toHaveCount(0);
- await area.locator('.timeline-tree [data-timeline-card-toggle="root-1"]').click();
+ const rootToggle=area.locator('.timeline-tree [data-timeline-toggle="root-1"]');
+ const rootChildren=area.locator('#timeline-list-children-root-1');
+ if(await rootToggle.getAttribute('aria-expanded')==='false')await rootToggle.click();
+ await expect(rootChildren).toBeVisible();
  await area.locator('[data-timeline-move="indent"][data-timeline-target="child-2"]').click();
  await expect(area.locator('#timeline-list-children-child-1 > .timeline-item')).toHaveCount(1);
  const childToggle=area.locator('[data-timeline-toggle="child-1"]');

@@ -16,13 +16,22 @@ const directory=read('usuario.html');
 const login=read('usuarios.html');
 const campaigns=read('scripts/campaign-list-ui.js');
 const styles=read('campaigns.css');
-assert.ok(player.includes('function playerCampaignSessions(items)'), 'Selecionador de sessões do jogador');
-assert.ok(player.includes('recentCampaignSessions(all,{limit:Infinity})'), 'Prioridade compartilhada');
-assert.ok(player.includes('return [...priority,...remaining].slice(0,3)'), 'Máximo três sessões');
-assert.ok(player.includes("sessionStories(sessions,c.id)"), 'Layout próprio de Sessões');
-assert.ok(player.includes("'Sessões da Campanha'")&&player.includes("'Aventuras da Campanha'"),'Títulos');
-assert.ok(player.includes('campaign-player-story-card-featured'),'Destaque para Atual');
-assert.ok(player.includes('const footer=isAdventure?action:'),'Rodapé específico das sessões');
+// O Mestre e o Jogador agora compartilham os cards; a proteção vem do readOnly
+// e do payload já filtrado, não de renderizadores duplicados.
+const shared=read('scripts/campaign-shared-layout.js');
+const sessionCards=read('scripts/campaign-session-card.js');
+assert.ok(player.includes('renderCampaignOverview(c,adventures,{readOnly:true})'),'Resumo compartilhado em modo Jogador');
+assert.ok(player.includes('renderCampaignSettings(c,{readOnly:true})'),'Configurações sem edição');
+assert.ok(player.includes('renderCampaignAdventuresSection(c.id,adventures,{readOnly:true})'),'Aventuras compartilhadas sem controles do Mestre');
+assert.ok(player.includes('renderCampaignSessionsSection(c,adventures,{readOnly:true})'),'Sessões compartilhadas sem controles do Mestre');
+assert.ok(player.includes('renderStructuredDetails(c,[],{readOnly:true})'),'NPCs e locais somente a partir de dados já revelados');
+assert.ok(player.includes("renderTimeline(c,'list',null,{readOnly:true,adventures})"),'Linha do Tempo sem ações de edição');
+assert.ok(player.includes('canOpenCharacter('),'Abertura de ficha condicionada à permissão');
+assert.ok(!player.includes('readNpcs('),'Visão do Jogador não consulta a biblioteca privada de NPCs');
+assert.ok(shared.includes('recentCampaignSessions(campaign.sessions||[],{limit:5'),'Limite atual de cinco sessões');
+assert.ok(shared.includes('renderCampaignSessionCard(s,campaign.id,'),'Cards de Sessões compartilhados');
+assert.ok(sessionCards.includes('campaign-player-story-footer'),'Sessões conservam rodapé com estado e abertura');
+assert.ok(shared.includes("Sessões da Campanha")&&shared.includes("Aventuras da Campanha"),'Títulos das seções');
 const sampleAdventures=[
  {id:'old-completed',status:'completed',order:2},
  {id:'planned',status:'planned',order:11},
@@ -36,20 +45,16 @@ assert.deepEqual(featuredCampaignAdventures(sampleAdventures).map(a=>a.id),['new
 assert.equal(JSON.stringify(sampleAdventures),snapshot,'Seleção não altera os dados');
 assert.deepEqual(featuredCampaignAdventures(sampleAdventures.filter(a=>a.status==='completed')).map(a=>a.id),['new-completed'],'Uma aventura concluída ocupa a seção sozinha');
 assert.deepEqual(featuredCampaignAdventures(sampleAdventures.filter(a=>a.status==='planned')),[],'Não promove planejadas');
-assert.ok(masterCampaign.includes('featuredCampaignAdventures(adventuresForCampaign('),'Mestre usa o mesmo seletor');
-assert.ok(player.includes('featuredCampaignAdventures(arr(row.adventures))'),'Jogadores usam o mesmo seletor');
-assert.ok(masterCampaign.includes('renderCampaignAdventureCard(a,campaignId)'),'Mestre usa o mesmo card de aventura');
-assert.ok(player.includes("return renderCampaignAdventureCard(item,campaignId)"),'Jogadores usam o mesmo card de aventura');
-assert.ok(adventureCards.includes('campaign-adventure-featured-card'),'Card compartilhado mantém estrutura unificada');
-assert.ok(styles.includes('#table-root #aventuras .campaign-adventures-feature-grid{'),'Grade de duas aventuras preenche a seção');
-
-assert.ok(player.includes('class="campaign-player-story-footer"'),'Selo e botão no rodapé da sessão');
-assert.ok(styles.includes('.campaign-player-sessions-grid .campaign-player-story-footer{'),'CSS do rodapé da sessão presente');
-assert.ok(styles.includes('margin-left:auto;white-space:nowrap'),'Ação Abrir à direita');
-assert.ok(styles.includes('campaign-player-story-card-featured'),'Estilo do destaque');
-assert.ok(player.includes('campaign-player-campaign-summary')&&player.includes('campaign-player-facts'),'Informação hierarquizada');
-assert.ok(!player.includes('campaign-player-readonly'),'Sem selo Somente leitura da mesa');
-assert.ok(!campaigns.includes('<span class="badge">Somente leitura</span>'),'Sem selo nos cards da lista');
+assert.ok(masterCampaign.includes('renderCampaignAdventuresSection(campaignId,adventuresForCampaign('),'Mestre usa os mesmos cards de aventura');
+assert.ok(shared.includes('featuredCampaignAdventures(allAdventures)'),'Seletor de Aventuras compartilhado');
+assert.ok(shared.includes('renderCampaignAdventureCard('),'Card de Aventura compartilhado');
+assert.ok(adventureCards.includes('campaign-adventure-featured-card'),'Card de Aventura mantém destaque');
+assert.ok(styles.includes('#table-root #aventuras .campaign-adventures-feature-grid{'),'Grid das Aventuras presente');
+assert.ok(styles.includes('.campaign-player-sessions-grid .campaign-player-story-footer{'),'Rodapé das Sessões estilizado');
+assert.ok(styles.includes('margin-left:auto;white-space:nowrap'),'Ação Abrir alinhada à direita');
+assert.ok(sessionCards.includes('campaign-player-story-card-featured'),'Sessão Atual destacada');
+assert.ok(!player.includes('campaign-player-readonly'),'Sem selo desnecessário de somente leitura');
+assert.ok(!campaigns.includes('<span class="badge">Somente leitura</span>'),'Sem selo desnecessário na lista');
 assert.ok(shell.includes("function userAreaLabel(){return masterNpcAccess()?'Usuários':'Usuário'}"),'Menu por permissão');
 assert.ok(shell.includes("profile.href='usuario.html'"),'Atalho de perfil no topo');
 assert.ok(directory.includes('hub-user-directory" hidden'), 'Diretório inicialmente oculto');
@@ -64,7 +69,9 @@ const samples=[
  {id:'next-high',status:'next',number:4,order:4}
 ];
 assert.deepEqual(recentCampaignSessions(samples,{limit:3}).map(x=>x.id),['current','next-high','next-low']);
-assert.ok(!player.includes('campaign-editor-count'), 'Cards da campanha do jogador sem selo numérico de quantidade');
-assert.ok(!masterStructured.includes('class="campaign-editor-count"'), 'Cards estruturados do mestre sem selo numérico de quantidade');
+assert.ok(!player.includes('campaign-editor-count'), 'Jogador não recebe contadores de edição fora dos componentes compartilhados');
+assert.ok(masterStructured.includes('class="campaign-editor-count"'), 'Linha do Tempo usa o contador de eventos validado no navegador');
+const structuredCards=masterStructured.slice(masterStructured.indexOf('function roster('),masterStructured.indexOf('function linkedTimelineHtml('));
+assert.ok(!structuredCards.includes('campaign-editor-count'), 'Cards de NPCs e Locais não ganham contadores extras');
 assert.ok(!masterCampaign.includes('class="roster-count"'), 'Card de jogadores do mestre sem contador no cabeçalho');
-console.log('OK: 3 sessões por prioridade, perfil individual e cards de campanhas sem indicadores de quantidade.');
+console.log('OK: cards compartilhados, até cinco sessões na UI, visibilidade e ações readOnly, perfis e eventos de Linha do Tempo.');

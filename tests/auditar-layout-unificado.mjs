@@ -31,6 +31,9 @@ assert.deepEqual(navOrder,[
 ],'A ordem do menu lateral não deve mudar.');
 assert.match(shell,/hub-content-library/,'Biblioteca deve receber um tema distinto do leitor legado.');
 assert.match(shell,/LIBRARY_PAGES\.has\(currentPage\(\)\)/);
+assert.match(shell,/if\(CHARACTER_PAGES\.has\(currentPage\(\)\)\)document\.body\.classList\.add\("hub-content-light"\)/,'Criação e Ficha devem ativar leitura clara sem mudar a Biblioteca escura.');
+assert.ok(![...libraryPages,...wrappedPages].some(file=>['criacao-personagem.html','ficha-personagem.html'].includes(file)),'Fichas não podem ser classificadas como Biblioteca.');
+
 assert.match(shell,/data-hub-preview-user/);
 assert.match(ux,/hub-layout\.css\?v=/);
 assert.match(ux,/app-shell\.js\?v=/);
@@ -53,7 +56,7 @@ for(const file of standardPages) {
 for(const file of libraryPages) {
   const html=read(file);
   assert.match(html,/scripts\/hub-ux\.js\?v=/,file+' deve carregar o shell.');
-  const theme=file==='bibliotecas.html'?/biblioteca-light\.css\?v=20261028-library-compact-cards1/:/biblioteca-light\.css\?v=20261028-hub-layout1/;
+  const theme=/\bbiblioteca-light\.css\?v=[\w.-]+/; // O contrato é a folha compartilhada; o cache-buster varia entre módulos.
   assert.match(html,theme,file+' deve carregar o tema escuro.');
   assert.ok(shell.includes('"'+file+'"'),file+' precisa constar no shell.');
   assert.ok(!html.includes('id="hub-force-light-theme"'),file+' não deve forçar o tema antigo.');

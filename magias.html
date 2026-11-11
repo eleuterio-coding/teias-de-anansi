@@ -39,7 +39,19 @@ a{color:inherit}.layout{display:grid;grid-template-columns:minmax(270px,355px) m
 const esc=HubBiblioteca.esc;
 const norm=s=>HubBiblioteca.normalize(s);
 const campos=[['tempo_conjuracao','Tempo de Conjuração'],['alcance','Alcance'],['componentes','Componentes'],['duracao','Duração'],['concentracao','Concentração'],['ritual','Ritual'],['ataque_salvaguarda','Ataque/Salvaguarda'],['dano','Dano']];
-let magias=[],selecionada='';
+let magias=[],selecionada='',aliasNames=null,aliasLoading=null;
+async function carregarNomesLegados(){
+ if(aliasNames)return aliasNames;
+ if(!aliasLoading)aliasLoading=fetch('dados/localizacao-ptbr-magias-completo.json?v=20261028-spells-ptbr1',{cache:'default'})
+  .then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()})
+  .then(d=>{
+   if(d.total!==510||Object.keys(d.nomes||{}).length!==510)throw Error('Localização de magias incompleta');
+   const originalParaPt=new Map(),ptParaOriginal=new Map();
+   for(const [original,pt] of Object.entries(d.nomes)){originalParaPt.set(norm(original),pt);ptParaOriginal.set(norm(pt),original)}
+   aliasNames={originalParaPt,ptParaOriginal};return aliasNames
+  }).catch(e=>{aliasLoading=null;throw e});
+ return aliasLoading
+}
 const q=document.getElementById('q'),circulo=document.getElementById('circulo'),classe=document.getElementById('classe'),lista=document.getElementById('lista'),resultado=document.getElementById('resultado'),detalhe=document.getElementById('detalhe');
 function fragmento(s){return esc(s||'—').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').split(/\n\s*\n/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('')}
 function renderDetalhe(m){
@@ -55,22 +67,28 @@ function renderDetalhe(m){
 }
 function renderLista(){
  const termo=norm(q.value.trim()),n=circulo.value,c=norm(classe.value);
- const items=magias.filter(m=>(!n||String(m.nivel)===n)&&(!c||norm(m.classes).includes(c))&&(!termo||norm([m.nome,m.escola,m.descricao,m.livro,m.classes].join(' ')).includes(termo)));
+ const items=magias.filter(m=>(!n||String(m.nivel)===n)&&(!c||norm(m.classes).includes(c))&&(!termo||norm([m.nome,aliasNames?.ptParaOriginal.get(norm(m.nome))||'',m.escola,m.descricao,m.livro,m.classes].join(' ')).includes(termo)));
+ if(termo.length>=3&&!items.length&&!aliasNames&&!aliasLoading)carregarNomesLegados().then(renderLista).catch(()=>{});
  resultado.textContent=items.length+' de '+magias.length+' magias';
  lista.innerHTML=items.map(m=>'<button type="button" class="item '+(m.id===selecionada?'on':'')+'" data-id="'+esc(m.id)+'"><strong>'+esc(m.nome)+'</strong><small>'+esc(m.circulo)+' · '+esc(m.escola)+'</small></button>').join('')||'<p class="resultado">Nenhuma magia encontrada.</p>';
 }
 lista.addEventListener('click',event=>{const b=event.target.closest('button.item');if(b){const m=magias.find(x=>x.id===b.dataset.id);if(m)renderDetalhe(m)}});
 q.addEventListener('input',renderLista);circulo.addEventListener('change',renderLista);classe.addEventListener('change',renderLista);
-fetch('dados/catalogo-magias-20261104.json?v=20261104',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(data=>{
+fetch('dados/catalogo-magias-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(async data=>{
  if(data.itens?.length!==581)throw Error('O catálogo não contém 581 magias.');
  magias=data.itens;
  circulo.innerHTML='<option value="">Todos os círculos</option>'+Array.from({length:10},(_,n)=>'<option value="'+n+'">'+(n?n+'º círculo':'Truques')+'</option>').join('');
  const classes=[...new Set(magias.flatMap(m=>(m.classes||'').split(',').map(x=>x.trim().replace(/\s*\(.*$/,'')).filter(x=>/^(Artífice|Bardo|Bruxo|Clérigo|Druida|Feiticeiro|Mago|Paladino|Patrulheiro)$/.test(x))))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
  classe.innerHTML='<option value="">Todas as classes</option>'+classes.map(x=>'<option>'+esc(x)+'</option>').join('');
  renderLista();
- const args=new URLSearchParams(location.search),ref=args.get('magia')||args.get('ref')||'';
- const m=magias.find(x=>x.id===ref)||magias.find(x=>norm(x.nome)===norm(ref))||magias[0];
- if(m)renderDetalhe(m);
+ const args=new URLSearchParams(location.search),ref=args.get('magia')||args.get('ref')||(location.hash.startsWith('#ref-')?location.hash.slice(5):'');
+ let m=magias.find(x=>x.id===ref)||magias.find(x=>norm(x.nome)===norm(ref));
+ if(!m&&ref){
+  const names=await carregarNomesLegados().catch(()=>null);
+  const translated=names?.originalParaPt.get(norm(ref.replace(/-/g,' ')));
+  if(translated)m=magias.find(x=>norm(x.nome)===norm(translated));
+ }
+ if(m||magias[0])renderDetalhe(m||magias[0]);
 }).catch(e=>{resultado.textContent='Não foi possível carregar as magias.';detalhe.textContent=e.message});
 </script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
