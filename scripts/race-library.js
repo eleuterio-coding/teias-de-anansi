@@ -6,12 +6,12 @@ const NOMES_NATIVOS_PTBR={Common:'Comum',Draconic:'Dracônico',Dwarvish:'Anão',
 const nomesNativos=items=>items.filter(x=>!['Minotaur','Minotauro','Kharolian','Kharoliano'].includes(x)).map(x=>NOMES_NATIVOS_PTBR[x]||x);
 
 const $=id=>document.getElementById(id);
-let DATA=[];
+let DATA=[],RACAS_EXTRAS={};
 
 function lineageTraits(lineage){return arr(lineage?.traits)}
 function sourceLabel(lineage,species){return lineage?.source||species?.source||'Fonte não informada'}
 function statusLabel(row){return row?.ruleset==='5e'?'Legado 5e compatível':'5.5e / 2024'}
-function searchable(species){return fold([
+function searchable(species){return fold([traduz(species.name),
  species.name,species.source,species.lineageLabel,...nomesNativos(arr(species.nativeLanguages).length?species.nativeLanguages:nativeLanguagesForSpecies(species.name)),...arr(species.traits).flatMap(t=>[t.name,t.originalName,t.text]),
  ...arr(species.lineages).flatMap(l=>[l.name,...arr(l.aliases),l.source,...lineageTraits(l).flatMap(t=>[t.name,t.originalName,t.text])])
 ].filter(Boolean).join(' '))}
@@ -27,7 +27,7 @@ const medida=v=>String(v??'')
  .replace(/(\d+(?:[.,]\d+)?)\s*(?:ft\.?|feet|pés)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.3)+' m')
  .replace(/(\d+(?:[.,]\d+)?)\s*(?:lb\.?|lbs\.?|libras?)\b/gi,(_,n)=>formatNumber(parseFloat(n.replace(',','.'))*.45359237)+' kg');
 function formatNumber(n){return (Math.round(n*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2})}
-const traduz=txt=>traduzirTermos(medida(txt)).replace(/\bMedium\b/gi,'Médio').replace(/\bSmall\b/gi,'Pequeno')
+const traduz=txt=>traduzirTermos(medida(RACAS_EXTRAS[String(txt||'')]||txt)).replace(/\bMedium\b/gi,'Médio').replace(/\bSmall\b/gi,'Pequeno')
  .replace(/\bLarge\b/gi,'Grande').replace(/\bTiny\b/gi,'Minúsculo')
  .replace(/\bDarkvision\b/gi,'Visão no Escuro').replace(/\bFlight\b/gi,'Voo')
  .replace(/\bHumanoid\b/gi,'Humanoide').replace(/\bFey\b/gi,'Fada')
@@ -61,15 +61,15 @@ function renderSpecies(species){
  (lineages.length?'<section class="bloco"><h3>'+esc(traduz(species.lineageLabel||'Linhagens / escolhas'))+'</h3>'+lineages.map(l=>renderLineage(l,species)).join('')+'</section>':'')+
  '<footer class="livro-raca"><strong>Livro:</strong> '+esc(base)+'</footer></div></details>';
 }
+function livroFonte(src){return HubBiblioteca.livro(src)}
 function buildSources(){
- const sel=$('fonte'),sources=[...new Set(DATA.flatMap(s=>[s.source,...arr(s.lineages).map(l=>l.source)].filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
- sel.innerHTML='<option value="">Todas as fontes</option>'+sources.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')
+ const sel=$('fonte'),sources=[...new Set(DATA.flatMap(s=>[s.source,...arr(s.lineages).map(l=>l.source)].filter(Boolean)).filter(s=>!/^SRD 5\.1$/i.test(s)).map(livroFonte))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+ sel.innerHTML='<option value="">Todos os livros</option>'+sources.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('')
 }
 function render(){
- const q=fold($('busca').value),rs=$('ruleset').value,src=$('fonte').value;
+ const q=fold($('busca').value),src=$('fonte').value;
  const rows=DATA.filter(s=>{
-  if(rs&&s.ruleset!==rs&&!arr(s.lineages).some(l=>l.ruleset===rs))return false;
-  if(src&&s.source!==src&&!arr(s.lineages).some(l=>l.source===src))return false;
+  if(src&&livroFonte(s.source)!==src&&!arr(s.lineages).some(l=>livroFonte(l.source)===src))return false;
   return!q||searchable(s).includes(q)
  });
  $('resultado').textContent='';
@@ -78,15 +78,16 @@ function render(){
 
 async function init(){
  state.c=blank();
- const[g,loc,glossario]=await Promise.all([
+ const[g,loc,glossario,adicionais]=await Promise.all([
   json('dados/localizacao-ptbr-global.json').catch(()=>({})),
   json('dados/localizacao-ptbr-especies.json').catch(()=>({species:{},lineages:{},traits:{}})),
-  json('dados/localizacao-ptbr-termos-mecanicos.json').catch(()=>({termos:{}}))
+  json('dados/localizacao-ptbr-termos-mecanicos.json').catch(()=>({termos:{}})),
+   json('dados/localizacao-ptbr-especies-adicionais.json').catch(()=>({species:{}}))
  ]);
- state.G=g;state.LOCSP=loc;carregarGlossario(glossario.termos);DATA=await loadSpecies();state.catalogs.species=DATA;
+ state.G=g;state.LOCSP=loc;RACAS_EXTRAS={...(adicionais.species||{}),...(loc.species||{})};carregarGlossario(glossario.termos);DATA=await loadSpecies();state.catalogs.species=DATA;
  const lineages=DATA.reduce((n,s)=>n+arr(s.lineages).length,0),playable=DATA.length+lineages;
  $('resumo').textContent=`${DATA.length} raças-base · ${lineages} linhagens, legados e ancestralidades · ${playable} opções jogáveis.`;
- buildSources();['busca','ruleset','fonte'].forEach(id=>$(id).addEventListener(id==='busca'?'input':'change',render));render()
+ buildSources();['busca','fonte'].forEach(id=>$(id).addEventListener(id==='busca'?'input':'change',render));render()
 }
 
 init().catch(err=>{
