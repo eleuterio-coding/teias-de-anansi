@@ -1,0 +1,47 @@
+name: Validar ajustes visuais finais (sem publicacao)
+on:
+  pull_request:
+    paths:
+      - 'regras.html'
+      - 'scripts/regras-srd-view-v7.js'
+      - 'e2e/biblioteca-auditoria-visual.spec.js'
+      - 'e2e/etapa7-criadores-visual.spec.js'
+      - '.github/workflows/validar-ajustes-visuais-finais.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-final:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Conferir sintaxe e layout compartilhado
+        run: |
+          node --check scripts/regras-srd-view-v7.js
+          node --check e2e/biblioteca-auditoria-visual.spec.js
+          node tests/auditar-layout-bibliotecas.mjs
+      - name: Preparar navegador isolado
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Conferir ordenacao e detalhe atual da Biblioteca (desktop/mobile)
+        run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --grep 'Regras:|Classes:|Armaduras e escudo:' --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
+      - name: Preservar criadores visuais de Mestre e Jogador
+        run: npx playwright test e2e/etapa7-criadores-visual.spec.js --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
+      - name: Guardar capturas, sem merge nem deploy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ajustes-visuais-finais-evidencias
+          path: |
+            test-results/
+            playwright-report/
+            artifacts/biblioteca-visual/
+          retention-days: 7
+          if-no-files-found: ignore
