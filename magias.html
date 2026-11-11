@@ -12,17 +12,17 @@ a{color:inherit}.layout{display:grid;grid-template-columns:minmax(270px,355px) m
 .tools{display:grid;gap:9px;padding:13px;background:#fff;border-bottom:1px solid var(--line)}
 .tools input,.tools select{font:inherit;padding:10px;width:100%;border:1px solid var(--line);border-radius:7px;background:#fff}
 .lista{max-height:72vh;overflow:auto}.item{display:block;width:100%;background:#fff;text-align:left;border:0;border-bottom:1px solid var(--line);padding:10px 13px;cursor:pointer;font:inherit}
-.item:hover,.item.on{background:#f3f6f9}.item strong,.item small{display:block}.item small,.muted{color:#667180}
+.item:hover,.item.on{background:#f3f6f9}.item strong,.item small{display:block;text-align:left}.item small{margin-top:4px;font-size:.78rem}.item small,.muted{color:#667180}
 .detalhe{padding:18px;min-height:340px}.detalhe h2{margin:0 0 8px}
 .badge{display:inline-block;border:1px solid #cbd5df;border-radius:40px;padding:3px 9px;font-size:.8rem;margin:3px 4px 3px 0}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0}
 .stat{padding:10px 12px;overflow-wrap:anywhere}.stat strong,.stat span{display:block}.stat strong{font-size:.78rem;color:#5d6875;text-transform:uppercase}
-.box{padding:14px 16px;margin-top:12px}.box h3{margin:0 0 8px}.box p{margin:8px 0;white-space:pre-line}
-.livro{border-top:1px solid var(--line);margin-top:18px;padding-top:13px;font-size:.9rem}
+.box{padding:14px 16px;margin-top:12px}.box h3{margin:0 0 8px}.box p{margin:9px 0;line-height:1.65;white-space:normal}.box p+p{margin-top:15px}.box a.hub-verbete{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.livro{border:0;margin-top:18px;padding-top:0;font-size:.9rem}
 .resultado{padding:0 13px;font-size:.82rem;color:#667180}
 @media(max-width:800px){body{padding:13px}.layout{grid-template-columns:1fr}.lista{max-height:320px}.detalhe{padding:14px}}
 </style>
-<script src="scripts/biblioteca-padroes.js?v=20261104"></script>
+<script src="scripts/biblioteca-padroes.js?v=20261111-regra-magna"></script>
 </head>
 <body>
 <p><a href="bibliotecas.html">← Bibliotecas</a></p>
@@ -53,13 +53,14 @@ async function carregarNomesLegados(){
  return aliasLoading
 }
 const q=document.getElementById('q'),circulo=document.getElementById('circulo'),classe=document.getElementById('classe'),lista=document.getElementById('lista'),resultado=document.getElementById('resultado'),detalhe=document.getElementById('detalhe');
-function fragmento(s){return esc(s||'—').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').split(/\n\s*\n/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('')}
+function fragmento(s){return String(s||'—').split(/\n\s*\n/).filter(Boolean).map(p=>'<p>'+esc(p).replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+'</p>').join('')}
+function concentracaoHtml(value){const m=String(value||'').match(/^(C[LMZI])\s*[—–-]\s*(Concentração[^\n]+)/i);return m?'<span>'+esc(m[1])+' — <a class="hub-verbete" href="concentracao-expandida.html?tipo='+encodeURIComponent(m[1])+'">'+esc(m[2])+'</a></span>':fragmento(value)}
 function renderDetalhe(m){
  selecionada=m.id;
  const params=new URL(location.href);params.searchParams.set('magia',m.id);params.searchParams.delete('ref');history.replaceState(null,'',params);
  detalhe.innerHTML='<h2>'+esc(m.nome)+'</h2><div><span class="badge">'+esc(m.circulo)+'</span><span class="badge">'+esc(m.escola)+'</span><span class="badge">CE · '+esc(m.concentracao_expandida)+'</span></div>'+
  '<div class="stats">'+campos.map(([key,label])=>'<div class="stat"><strong>'+label+'</strong><span>'+esc(m[key]||'—')+'</span></div>').join('')+'</div>'+
- '<section class="box"><h3>Concentração Expandida</h3>'+fragmento(m.concentracao_expandida)+'</section>'+
+ '<section class="box"><h3>Concentração Expandida</h3>'+concentracaoHtml(m.concentracao_expandida)+'</section>'+
  '<section class="box"><h3>Efeito e Descrição</h3>'+fragmento(m.descricao)+'</section>'+
  '<section class="box"><h3>Classes</h3>'+fragmento(m.classes)+'</section>'+
  '<footer class="livro"><strong>Livro:</strong> '+esc(HubBiblioteca.livro(m.livro))+'</footer>';
@@ -70,7 +71,7 @@ function renderLista(){
  const items=magias.filter(m=>(!n||String(m.nivel)===n)&&(!c||norm(m.classes).includes(c))&&(!termo||norm([m.nome,aliasNames?.ptParaOriginal.get(norm(m.nome))||'',m.escola,m.descricao,m.livro,m.classes].join(' ')).includes(termo)));
  if(termo.length>=3&&!items.length&&!aliasNames&&!aliasLoading)carregarNomesLegados().then(renderLista).catch(()=>{});
  resultado.textContent=items.length+' de '+magias.length+' magias';
- lista.innerHTML=items.map(m=>'<button type="button" class="item '+(m.id===selecionada?'on':'')+'" data-id="'+esc(m.id)+'"><strong>'+esc(m.nome)+'</strong><small>'+esc(m.circulo)+' · '+esc(m.escola)+'</small></button>').join('')||'<p class="resultado">Nenhuma magia encontrada.</p>';
+ lista.innerHTML=items.map(m=>'<button type="button" class="item '+(m.id===selecionada?'on':'')+'" data-id="'+esc(m.id)+'"><strong>'+esc(m.nome)+'</strong><small>'+esc(m.circulo)+'</small><small>'+esc(m.escola)+'</small></button>').join('')||'<p class="resultado">Nenhuma magia encontrada.</p>';
 }
 lista.addEventListener('click',event=>{const b=event.target.closest('button.item');if(b){const m=magias.find(x=>x.id===b.dataset.id);if(m)renderDetalhe(m)}});
 q.addEventListener('input',renderLista);circulo.addEventListener('change',renderLista);classe.addEventListener('change',renderLista);

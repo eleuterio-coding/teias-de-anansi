@@ -4,7 +4,7 @@
 <style>
 :root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
 body{max-width:1150px;margin:0 auto;padding:24px;background:#fff;color:#14191f}
-a{color:inherit}.controles{display:grid;grid-template-columns:minmax(210px,1fr) minmax(200px,300px);gap:9px;margin:17px 0}
+a{color:inherit}.controles{display:grid;grid-template-columns:minmax(210px,1fr) minmax(170px,230px) minmax(170px,230px);gap:9px;margin:17px 0}
 input,select{width:100%;font:inherit;padding:10px;border:1px solid #ccd4dc;border-radius:8px;background:#fff}
 .registro{border:1px solid #d5dce4;border-radius:10px;margin:10px 0;overflow:hidden}
 .registro summary{padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;gap:12px}
@@ -14,27 +14,28 @@ input,select{width:100%;font:inherit;padding:10px;border:1px solid #ccd4dc;borde
 .nota{padding:11px 14px;border:1px solid #d5dce4;border-radius:9px;margin:8px 0}
 .resultado{color:#667180;font-size:.85rem}
 @media(max-width:700px){body{padding:14px}.controles{grid-template-columns:1fr}.registro summary{display:block}}
-</style><script src="scripts/biblioteca-padroes.js?v=20261104"></script></head><body>
+</style><script src="scripts/biblioteca-padroes.js?v=20261111-regra-magna"></script></head><body>
 <p><a href="bibliotecas.html">← Bibliotecas</a></p><h1>Montarias e Veículos</h1>
-<div class="controles"><input id="busca" type="search" placeholder="Buscar montaria, veículo ou acessório..." aria-label="Buscar itens"><select id="grupo" aria-label="Filtrar tipo"><option value="">Todos os grupos</option></select></div>
+<div class="controles"><input id="busca" type="search" placeholder="Buscar montaria, veículo ou acessório..." aria-label="Buscar itens"><select id="grupo" aria-label="Filtrar tipo"><option value="">Todos os tipos</option></select><select id="livro" aria-label="Filtrar por livro"><option value="">Todos os livros</option></select></div>
 <p id="resultado" class="resultado">Carregando catálogo...</p><main id="lista"></main><section id="notas"></section>
 <script>
 'use strict';
 const esc=HubBiblioteca.esc,norm=HubBiblioteca.normalize;
 let data=null;
-const busca=document.getElementById('busca'),grupo=document.getElementById('grupo'),lista=document.getElementById('lista'),resultado=document.getElementById('resultado');
+const busca=document.getElementById('busca'),grupo=document.getElementById('grupo'),livroFiltro=document.getElementById('livro'),lista=document.getElementById('lista'),resultado=document.getElementById('resultado');
 function medidas(v){return HubBiblioteca.medidas(v).replace(/\b(po|pc|pp)\b/g,m=>m.toUpperCase())}
+function grupoLegivel(v){return v.replace(/\s*\([^)]*\)\s*$/,'').toLocaleLowerCase('pt-BR').replace(/^./,c=>c.toLocaleUpperCase('pt-BR'))}
 function render(){
  if(!data)return;
- const q=norm(busca.value),g=grupo.value;
- const items=data.itens.filter(x=>(!g||x.grupo===g)&&(!q||norm([x.nome,x.original,x.grupo,x.livro,...x.dados].join(' ')).includes(q)));
+ const q=norm(busca.value),g=grupo.value,lf=livroFiltro.value;
+ const items=data.itens.filter(x=>(!g||x.grupo===g)&&(!lf||HubBiblioteca.livro(x.livro)===lf)&&(!q||norm([x.nome,x.original,x.grupo,x.livro,...x.dados].join(' ')).includes(q)));
  resultado.textContent=items.length+' de '+data.itens.length+' entradas';
- lista.innerHTML=items.map(x=>'<details class="registro" id="'+esc(x.id)+'"><summary><strong>'+esc(x.nome)+'</strong><span class="grupo">'+esc(x.grupo)+'</span></summary><div class="corpo"><ul class="dados">'+x.dados.map(d=>'<li>'+esc(medidas(d))+'</li>').join('')+'</ul><footer class="livro"><strong>Livro:</strong> '+esc(HubBiblioteca.livro(x.livro))+'</footer></div></details>').join('')||'<p>Nenhum item corresponde à busca.</p>';
- document.getElementById('notas').innerHTML=data.grupos.filter(x=>x.notas?.length).map(x=>'<div class="nota"><strong>'+esc(x.nome)+'</strong><p>'+x.notas.map(esc).join(' ')+'</p></div>').join('');
+ lista.innerHTML=items.map(x=>'<details class="registro" id="'+esc(x.id)+'"><summary><strong>'+esc(x.nome)+'</strong></summary><div class="corpo"><ul class="dados">'+x.dados.map(d=>'<li>'+esc(medidas(d))+'</li>').join('')+'</ul><footer class="livro"><strong>Livro:</strong> '+esc(HubBiblioteca.livro(x.livro))+'</footer></div></details>').join('')||'<p>Nenhum item corresponde à busca.</p>';
+ document.getElementById('notas').innerHTML=data.grupos.filter(x=>x.notas?.length&&!/^(MONTARIAS COMPRÁVEIS|VEÍCULOS AQUÁTICOS)/i.test(x.nome)).map(x=>'<div class="nota"><strong>'+esc(x.nome)+'</strong><p>'+x.notas.map(esc).join(' ')+'</p></div>').join('');
  const selected=new URLSearchParams(location.search).get('item');
  if(selected){const found=items.find(x=>x.nome===selected||x.id===selected);if(found){const el=document.getElementById(found.id);if(el)el.open=true}}
 }
-busca.addEventListener('input',render);grupo.addEventListener('change',render);
-fetch('dados/catalogo-montarias-veiculos-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d.itens?.length!==36)throw Error('Quantidade de entradas inválida');data=d;grupo.innerHTML='<option value="">Todos os grupos</option>'+d.grupos.map(x=>'<option>'+esc(x.nome)+'</option>').join('');render()}).catch(e=>{resultado.textContent='Não foi possível carregar o catálogo.';lista.textContent=e.message});
+busca.addEventListener('input',render);grupo.addEventListener('change',render);livroFiltro.addEventListener('change',render);
+fetch('dados/catalogo-montarias-veiculos-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(d=>{if(d.itens?.length!==36)throw Error('Quantidade de entradas inválida');data=d;grupo.innerHTML='<option value="">Todos os tipos</option>'+d.grupos.map(x=>'<option value="'+esc(x.nome)+'">'+esc(grupoLegivel(x.nome))+'</option>').join('');livroFiltro.innerHTML='<option value="">Todos os livros</option>'+[...new Set(d.itens.map(x=>HubBiblioteca.livro(x.livro)))].sort().map(x=>'<option>'+esc(x)+'</option>').join('');render()}).catch(e=>{resultado.textContent='Não foi possível carregar o catálogo.';lista.textContent=e.message});
 </script><script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body></html>
