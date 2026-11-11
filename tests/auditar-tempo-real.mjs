@@ -33,7 +33,9 @@ for(const [name,source] of Object.entries({campaignList,sessions,tableRouter,adv
  assert.ok(source.includes('hub-rpg:remote-updated'),`${name} não reage a mudanças remotas.`);
  assert.ok(source.includes('claim?.()'),`${name} não assume a atualização sem recarregar a página.`)
 }
-assert.ok(ux.includes("import('./collaboration-realtime.js?v=20260918-master-delete1')"),'UX global precisa iniciar a revisão atual do realtime.');
+assert.match(ux,/import\('\.\/collaboration-realtime\.js\?v=\d{8}[a-z0-9-]*'\)/,'UX global precisa importar o realtime com versão de cache válida.');
+assert.ok(ux.includes('module?.startRealtime?.()'),'UX global precisa iniciar o módulo realtime após o carregamento.');
+assert.ok(ux.includes('if(visualPreviewActive())return;'),'Prévia isolada não pode iniciar o Firebase real.');
 assert.ok(ux.includes('COLLAB_SESSION_KEY'),'Realtime só deve iniciar com sessão conectada.');
 assert.ok(users.includes('Bruno')&&users.includes('Gustavo')&&users.includes('Léo')&&users.includes('Fernanda'),'Login precisa expor as quatro contas de jogadores.');
 assert.ok(users.includes('Atualizar agora'),'Sincronização manual pode permanecer como fallback, sem ser necessária ao fluxo normal.');
