@@ -23,15 +23,21 @@ input,select{width:100%;font:inherit;padding:10px;border:1px solid #ccd4dc;borde
 const esc=HubBiblioteca.esc,norm=HubBiblioteca.normalize;
 let data=null;
 const busca=document.getElementById('busca'),grupo=document.getElementById('grupo'),livroFiltro=document.getElementById('livro'),lista=document.getElementById('lista'),resultado=document.getElementById('resultado');
-function medidas(v){return HubBiblioteca.medidas(v).replace(/\b(po|pc|pp)\b/g,m=>m.toUpperCase())}
+function medidas(v){
+ const velocidades=String(v??'').replace(/(\d+(?:[.,]\d+)?)(\s*½|½)?\s*mph\b/gi,(_,valor,metade)=>{
+  const milhas=Number(valor.replace(',','.'))+(metade?0.5:0);
+  return (milhas*1.609344).toLocaleString('pt-BR',{maximumFractionDigits:1})+' km/h';
+ });
+ return HubBiblioteca.medidas(velocidades);
+}
 function grupoLegivel(v){return v.replace(/\s*\([^)]*\)\s*$/,'').toLocaleLowerCase('pt-BR').replace(/^./,c=>c.toLocaleUpperCase('pt-BR'))}
 function render(){
  if(!data)return;
  const q=norm(busca.value),g=grupo.value,lf=livroFiltro.value;
  const items=data.itens.filter(x=>(!g||x.grupo===g)&&(!lf||HubBiblioteca.livro(x.livro)===lf)&&(!q||norm([x.nome,x.original,x.grupo,x.livro,...x.dados].join(' ')).includes(q)));
  resultado.textContent=items.length+' de '+data.itens.length+' entradas';
- lista.innerHTML=items.map(x=>'<details class="registro" id="'+esc(x.id)+'"><summary><strong>'+esc(x.nome)+'</strong></summary><div class="corpo"><ul class="dados">'+x.dados.map(d=>'<li>'+esc(medidas(d))+'</li>').join('')+'</ul><footer class="livro"><strong>Livro:</strong> '+esc(HubBiblioteca.livro(x.livro))+'</footer></div></details>').join('')||'<p>Nenhum item corresponde à busca.</p>';
- document.getElementById('notas').innerHTML=data.grupos.filter(x=>x.notas?.length&&!/^(MONTARIAS COMPRÁVEIS|VEÍCULOS AQUÁTICOS)/i.test(x.nome)).map(x=>'<div class="nota"><strong>'+esc(x.nome)+'</strong><p>'+x.notas.map(esc).join(' ')+'</p></div>').join('');
+ lista.innerHTML=items.map(x=>'<details class="registro" id="'+esc(x.id)+'"><summary><strong>'+esc(x.nome)+'</strong></summary><div class="corpo"><ul class="dados">'+x.dados.map(d=>'<li>'+HubBiblioteca.moedaHtml(medidas(d))+'</li>').join('')+'</ul><footer class="livro"><strong>Livro:</strong> '+esc(HubBiblioteca.livro(x.livro))+'</footer></div></details>').join('')||'<p>Nenhum item corresponde à busca.</p>';
+ document.getElementById('notas').innerHTML=data.grupos.filter(x=>x.notas?.length&&!/^(MONTARIAS COMPRÁVEIS|VEÍCULOS AQUÁTICOS)/i.test(x.nome)).map(x=>'<div class="nota"><strong>'+esc(x.nome)+'</strong><p>'+x.notas.map(n=>HubBiblioteca.moedaHtml(medidas(n))).join(' ')+'</p></div>').join('');
  const selected=new URLSearchParams(location.search).get('item');
  if(selected){const found=items.find(x=>x.nome===selected||x.id===selected);if(found){const el=document.getElementById(found.id);if(el)el.open=true}}
 }

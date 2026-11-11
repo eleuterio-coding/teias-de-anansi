@@ -12,7 +12,9 @@ a{color:inherit}.layout{display:grid;grid-template-columns:minmax(270px,355px) m
 .tools{display:grid;gap:9px;padding:13px;background:#fff;border-bottom:1px solid var(--line)}
 .tools input,.tools select{font:inherit;padding:10px;width:100%;border:1px solid var(--line);border-radius:7px;background:#fff}
 .lista{max-height:72vh;overflow:auto}.item{display:block;width:100%;background:#fff;text-align:left;border:0;border-bottom:1px solid var(--line);padding:10px 13px;cursor:pointer;font:inherit}
-.item:hover,.item.on{background:#f3f6f9}.item strong,.item small{display:block;text-align:left}.item small{margin-top:4px;font-size:.78rem}.item small,.muted{color:#667180}
+.item:hover,.item.on{background:#f3f6f9}
+#lista > button.item{display:block!important;width:100%;text-align:left!important;justify-content:flex-start!important;align-items:flex-start!important}
+#lista > button.item :is(strong,small){display:block!important;width:100%;text-align:left!important;margin-left:0!important;margin-right:auto!important}.item strong,.item small{display:block;text-align:left}.item small{margin-top:4px;font-size:.78rem}.item small,.muted{color:#667180}
 .detalhe{padding:18px;min-height:340px}.detalhe h2{margin:0 0 8px}
 .badge{display:inline-block;border:1px solid #cbd5df;border-radius:40px;padding:3px 9px;font-size:.8rem;margin:3px 4px 3px 0}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:16px 0}
