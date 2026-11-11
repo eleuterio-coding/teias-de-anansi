@@ -241,8 +241,11 @@ require('scripts/race-library.js' in race_page and 'loadSpecies' in race_library
 require('precedência 2024' in race_page and 'mesmo catálogo do construtor' in race_page,
         'Biblioteca de raças não explicita a política de precedência e sincronização')
 class_detail = text('classes-v3.html')
-require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail and 'Talento — Regra da Casa' in class_detail,
-        'Classes ainda expõem os ASIs regulares substituídos como progressão ativa')
+require('STANDARD_ASI=new Set([4,8,12,16,19])' in class_detail
+        and 'activeRef(' in class_detail
+        and "house.push('Talento')" in class_detail
+        and 'Talento — Regra da Casa' not in class_detail,
+        'Classes devem ocultar ASIs regulares substituídos e exibir apenas Talento na progressão')
 
 # Armas, armaduras e maestrias: o registro canônico ativo é localizado,
 # e as três armas de 5e sem equivalente são preservadas no catálogo consolidado.

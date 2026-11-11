@@ -545,6 +545,18 @@ def main():
         if len(official) > 1:
             amb.append({"termo": k, "ids": [r["id"] for r in official]})
             continue
+        # Quando o mesmo termo descreve entidades de módulos distintos,
+        # priorize o verbete publicado de Regras cujo título coincide exatamente.
+        # Se houver duas regras com o mesmo título, preserve a ambiguidade.
+        exact_rules = [
+            r for r in rs
+            if r["modulo"] == "Regras"
+            and r.get("status") == "publicado"
+            and norm(r.get("nome")) == k
+        ]
+        if len(exact_rules) == 1:
+            resolved.append({"termo": k, "id": exact_rules[0]["id"]})
+            continue
         mods = {r["modulo"] for r in rs}
         if len(rs) == 1:
             resolved.append({"termo": k, "id": rs[0]["id"]})
