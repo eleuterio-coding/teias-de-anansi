@@ -530,7 +530,22 @@ def main():
             amap[norm(x)].append(r)
 
     resolved, amb = [], []
+    # Alguns termos em português são aliases canônicos de uma regra que
+    # pode estar catalogada com título em inglês de edição mais recente.
+    # Vincule explicitamente ao original da regra, sem desempatar por acaso.
+    canonical_rules = {"pontos de vida": "Hit Points"}
     for k, rows in amap.items():
+        if k in canonical_rules:
+            target = [
+                r for r in allr
+                if r.get("modulo") == "Regras"
+                and r.get("status") == "publicado"
+                and norm(r.get("original")) == norm(canonical_rules[k])
+            ]
+            if len(target) != 1:
+                raise RuntimeError(f"Alias canônico sem regra inequívoca: {k} => {canonical_rules[k]}")
+            resolved.append({"termo": k, "id": target[0]["id"]})
+            continue
         by_id = {r["id"]: r for r in rows}
         rs = sorted(by_id.values(), key=lambda x: (x.get("status") == "publicado", x.get("prioridade", 0)), reverse=True)
         official = [
