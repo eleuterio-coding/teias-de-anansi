@@ -61,7 +61,8 @@ test('os 18 links da Biblioteca abrem módulos no layout compartilhado',async({p
 
 test('páginas internas Classes, Referências e catálogo legado usam o Hub',async({page})=>{
   test.setTimeout(60_000);
-  for(const path of ['/classes-v3.html','/referencia.html','/biblioteca-legado.html?modulo=Sem%20registro']){
+  // A página de detalhe redireciona deliberadamente sem ?ref; testar uma rota válida evita corrida de navegação.
+  for(const path of ['/classes-v3.html?ref=classe:artificer','/referencia.html','/biblioteca-legado.html?modulo=Sem%20registro']){
     await test.step(path,async()=>checkHubLayout(page,path));
   }
 });
