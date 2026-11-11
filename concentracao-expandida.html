@@ -1,0 +1,17 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Concentração Expandida - Biblioteca - Teias de Anansi</title>
+<link rel="stylesheet" href="biblioteca-light.css?v=20261111">
+<style>body{max-width:1000px;margin:auto;padding:24px;font:16px/1.55 system-ui,sans-serif;color:#171c23;background:#fff}.card{border:1px solid #d4dce6;border-radius:12px;padding:16px;margin:14px 0}.card h2{margin:0 0 8px;font-size:1.2rem}.list{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}.list a{display:block;padding:9px 12px;border:1px solid #d4dce6;border-radius:8px;color:inherit;text-decoration:none}.list a:hover{background:#f0f4f9}.muted{color:#647181}@media(max-width:650px){body{padding:16px}}</style></head>
+<body><p><a href="magias.html">← Magias</a></p><header><h1>Concentração Expandida</h1><p class="muted">Categorias de Concentração Expandida usadas na classificação de magias do Hub.</p></header><main id="lista"></main>
+<script>
+const labels={CL:'Concentração Leve',CM:'Concentração Maior',CZ:'Concentração de Zona',CI:'Concentração de Invocação'};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('dados/catalogo-magias-20261104.json?v=20261104',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Falha ao carregar magias');return r.json()}).then(d=>{
+const tipo=new URLSearchParams(location.search).get('tipo');
+document.getElementById('lista').innerHTML=Object.entries(labels).map(([sigla,nome])=>{
+const magias=(d.itens||[]).filter(m=>(m.concentracao_expandida||'').startsWith(sigla+' —'));
+return '<section class="card" id="'+sigla+'"><h2>'+sigla+' — '+nome+'</h2><p class="muted">'+magias.length+' magias com esta classificação.</p><div class="list">'+magias.map(m=>'<a href="magias.html?magia='+encodeURIComponent(m.id)+'">'+esc(m.nome)+'</a>').join('')+'</div></section>'
+}).join('');
+if(tipo&&labels[tipo])document.getElementById(tipo)?.scrollIntoView({block:'start'});
+}).catch(e=>{document.getElementById('lista').textContent=e.message});
+</script></body></html>
