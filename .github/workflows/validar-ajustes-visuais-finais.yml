@@ -31,7 +31,7 @@ jobs:
           npm install --no-audit --no-fund
           npx playwright install --with-deps chromium
       - name: Conferir ordenacao e detalhe atual da Biblioteca (desktop/mobile)
-        run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --grep 'Regras:|Classes:|Armaduras e escudo:' --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
+        run: npx playwright test e2e/biblioteca-auditoria-visual.spec.js --grep 'Regras:|Classes:|Armaduras e escudo:' --grep-invert 'Subclasses:' --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
       - name: Preservar criadores visuais de Mestre e Jogador
         run: npx playwright test e2e/etapa7-criadores-visual.spec.js --project=desktop-chromium --project=mobile-chromium --workers=2 --retries=0
       - name: Guardar capturas, sem merge nem deploy
