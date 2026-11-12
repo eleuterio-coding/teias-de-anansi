@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='20261111-talentos-fonte-sem-ano2';
+  const VERSION='20261112-talentos-livro-jogador-filtro1';
   const LAYOUT='biblioteca-light.css?v=20261031-biblioteca-az-classes-ptbr1';
   const key=document.documentElement.dataset.cleanModule;
   const raceRules=[
