@@ -15,6 +15,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',sessionId=params.get('id')||'';let adventureFilter=params.get('adventure')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false,showCreationPanel=params.get('new')==='1';
+let collectionSearch='',collectionStatus='all',collectionCampaign='all',collectionAdventure='all',collectionView='cards',sessionViewStage='overview';
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
@@ -41,6 +42,25 @@ function allSessions(){
 }
 function filteredSessions(rows){
  return rows.filter(s=>(!campaignFilter||s.campaignId===campaignFilter)&&(!adventureFilter||s.adventureId===adventureFilter))
+}
+const searchKey=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+function updateSessionDiscovery(rows,knownAdventures){
+ const bar=$('session-discovery');if(!bar)return;bar.hidden=Boolean(sessionId);if(sessionId)return;
+ const makeOptions=(id,items,state)=>{const node=$(id);if(!node)return;node.innerHTML=items.map(([value,label])=>option(value,label,state)).join('')};
+ const campaignsAvailable=[...new Set(rows.map(s=>s.campaignId).filter(Boolean))];
+ makeOptions('session-campaign-filter',[['all','Todas as campanhas'],...campaignsAvailable.map(id=>[id,campaignById(id)?.name||rows.find(s=>s.campaignId===id)?.campaignName||'Campanha'])],collectionCampaign);
+ const adventuresAvailable=[...new Set(rows.map(s=>s.adventureId).filter(Boolean))];
+ makeOptions('session-adventure-filter',[['all','Todas as aventuras'],...adventuresAvailable.map(id=>[id,knownAdventures.find(a=>a.id===id)?.title||'Aventura não disponível'])],collectionAdventure);
+ makeOptions('session-status-filter',[['all','Todos os status'],...['current','next','active','planned','completed','cancelled'].filter(status=>rows.some(s=>s.status===status)).map(status=>[status,statusLabel(status)])],collectionStatus);
+ for(const [id,value] of [['session-campaign-filter',collectionCampaign],['session-adventure-filter',collectionAdventure],['session-status-filter',collectionStatus]]){const node=$(id);if(node&&![...node.options].some(o=>o.value===value)){node.value='all';if(id==='session-campaign-filter')collectionCampaign='all';if(id==='session-adventure-filter')collectionAdventure='all';if(id==='session-status-filter')collectionStatus='all'}}
+ for(const button of document.querySelectorAll('[data-session-collection-view]'))button.setAttribute('aria-pressed',String(button.dataset.sessionCollectionView===collectionView));
+}
+function applySessionDiscovery(rows,knownAdventures){
+ const needle=searchKey(collectionSearch.trim());
+ return rows.filter(s=>(collectionStatus==='all'||s.status===collectionStatus)&&
+  (collectionCampaign==='all'||s.campaignId===collectionCampaign)&&
+  (collectionAdventure==='all'||s.adventureId===collectionAdventure)&&
+  (!needle||searchKey([s.title,numberedSessionTitle(s),s.summary,s.objective,s.campaignName,knownAdventures.find(a=>a.id===s.adventureId)?.title].join(' ')).includes(needle)));
 }
 function adventureById(id){return adventures.find(a=>a.id===id)||null}
 function campaignById(id){return campaigns.find(c=>c.id===id)||null}
@@ -456,8 +476,11 @@ function render(){
  if(homeLink)homeLink.hidden=detailMode;
  const restricted=playerMode();
  if(!restricted)reload();
- const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
+ const rows=restricted?sharedSessions():allSessions();
  const availableAdventures=restricted?sharedAdventures():adventures;
+ const scoped=filteredSessions(rows);
+ if(!sessionId)updateSessionDiscovery(scoped,availableAdventures);
+ const sessions=sessionId?scoped:applySessionDiscovery(scoped,availableAdventures);
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
  bindSessionAdventureScroll(null);
  box?.classList.remove('hub-collection-grid');
@@ -474,7 +497,8 @@ function render(){
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=`<div class="session-adventure-groups">
+ const resultCount=$('session-results-count');if(resultCount)resultCount.textContent=`${sessions.length} de ${scoped.length} ${scoped.length===1?'sessão':'sessões'}`;
+ box.innerHTML=`<div class="session-adventure-groups ${collectionView==='list'?'is-list-view':''}">
   ${sessionAdventureGroupsHtml(sessions,availableAdventures,row=>sessionListCard(row,restricted,availableAdventures),campaigns)}
  </div>${restricted?'':`<div class="session-create-tile-row">${sessionCreateTile()}</div>`}`;
  if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
@@ -644,6 +668,13 @@ $('new-session-adventure')?.addEventListener('change',event=>{
  const adventure=adventureById(event.target.value),campaignSelect=$('new-session-campaign');
  if(adventure&&campaignSelect&&!campaignSelect.value){campaignSelect.value=adventure.campaignId;syncCreationOptions()}
 });
+for(const [id,eventName,setter] of [
+ ['session-search-filter','input',value=>collectionSearch=value],
+ ['session-status-filter','change',value=>collectionStatus=value],
+ ['session-campaign-filter','change',value=>collectionCampaign=value],
+ ['session-adventure-filter','change',value=>collectionAdventure=value]
+ ])$(id)?.addEventListener(eventName,event=>{setter(event.target.value);render()});
+document.querySelectorAll('[data-session-collection-view]').forEach(button=>button.addEventListener('click',()=>{collectionView=button.dataset.sessionCollectionView;render()}));
 reload();render();
 document.addEventListener('pointerdown',event=>{
  if(event.target.closest?.('#sessions-list [data-status-disclosure]'))return;
