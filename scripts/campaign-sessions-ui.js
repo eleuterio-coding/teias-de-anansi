@@ -479,6 +479,7 @@ function sessionCard(s,restricted=false){
 }
 function render(){
  const detailMode=Boolean(sessionId);
+ const discovery=$('session-discovery');if(discovery)discovery.hidden=detailMode;
  const collectionTitle=document.querySelector('.hub-collection-top');
  if(collectionTitle)collectionTitle.hidden=detailMode;
  const homeLink=document.querySelector('.hub-collection-home');
