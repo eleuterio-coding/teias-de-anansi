@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sessões - Teias de Anansi</title><link rel="stylesheet" href="campaigns.css?v=20261022-status-palette2"><link rel="stylesheet" href="adventures.css?v=20261021-session-groups1"><link rel="stylesheet" href="encounters.css?v=20260924-session-planning1"><link rel="stylesheet" href="combat.css?v=20261016-status-corners1"><link rel="stylesheet" href="hub-collections.css?v=20261021-unified-status-colors1"><link rel="stylesheet" href="hub-ux.css?v=20261022-chronicles-final3"><link rel="stylesheet" href="hub-detail-layout.css?v=20261024-roster-campaign-parity3"><link rel="stylesheet" href="campaign-collection-cards.css?v=20261023-status-context13"></head><body>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sessões - Teias de Anansi</title><link rel="stylesheet" href="campaigns.css?v=20261022-status-palette2"><link rel="stylesheet" href="adventures.css?v=20261021-session-groups1"><link rel="stylesheet" href="encounters.css?v=20260924-session-planning1"><link rel="stylesheet" href="combat.css?v=20261016-status-corners1"><link rel="stylesheet" href="hub-collections.css?v=20261021-unified-status-colors1"><link rel="stylesheet" href="hub-ux.css?v=20261022-chronicles-final3"><link rel="stylesheet" href="hub-detail-layout.css?v=20261024-roster-campaign-parity3"><link rel="stylesheet" href="campaign-collection-cards.css?v=20261023-status-context13"><link rel="stylesheet" href="narrative-modern.css?v=20261113-proposta2-1"></head><body class="hub-narrative-modern">
 <p class="hub-collection-home"><a href="index.html?v=20260917-global-realtime1">← Início</a></p><div class="top hub-collection-top"><header><h1>Sessões</h1></header></div>
 <main id="main-content">
 <section id="session-create-card" class="card hub-collection-create-panel" hidden>
@@ -13,6 +13,23 @@
 <div class="row-actions" style="margin-top:9px"><button id="create-session" type="button">Salvar sessão</button></div>
 </section>
 <div id="session-feedback" class="status" hidden></div>
-<section id="session-list-section" class="hub-collection-section"><div class="top campaign-list-heading"><h2>Lista de Sessões</h2></div><div id="sessions-list" aria-live="polite"></div></section>
+<section id="session-list-section" class="hub-collection-section"><div class="top campaign-list-heading"><h2>Lista de Sessões</h2></div>
+<div id="session-discovery" class="hub-modern-discovery">
+ <div class="hub-modern-search-row">
+  <label for="session-search-filter">Buscar sessão<input id="session-search-filter" type="search" placeholder="Nome ou número da sessão…" autocomplete="off"></label>
+  <label for="session-status-filter">Status<select id="session-status-filter"><option value="all">Todos os status</option></select></label>
+ </div>
+ <div class="hub-modern-filter-row">
+  <label for="session-campaign-filter">Campanha<select id="session-campaign-filter"><option value="all">Todas as campanhas</option></select></label>
+  <label for="session-adventure-filter">Aventura<select id="session-adventure-filter"><option value="all">Todas as aventuras</option></select></label>
+ </div>
+ <div class="hub-modern-discovery-bottom">
+  <p id="session-results-count" role="status" aria-live="polite"></p>
+  <div class="hub-modern-view-switch" role="group" aria-label="Modo de visualização das sessões">
+   <button type="button" data-session-collection-view="cards" aria-pressed="true">▦ Cards</button>
+   <button type="button" data-session-collection-view="list" aria-pressed="false">☷ Lista</button>
+  </div>
+ </div>
+</div><div id="sessions-list" aria-live="polite"></div></section>
 </main>
-<script type="module" src="scripts/hub-ux.js?v=20261022-chronicles-final3"></script><script type="module" src="scripts/campaign-sessions-ui.js?v=20261027-auto-combat-roster1"></script><script type="module" src="scripts/session-encounter-ui.js?v=20261027-auto-combat-roster1"></script><script type="module" src="scripts/session-combat-ui.js?v=20261027-auto-combat-roster1"></script></body></html>
+<script type="module" src="scripts/hub-ux.js?v=20261022-chronicles-final3"></script><script type="module" src="scripts/campaign-sessions-ui.js?v=20261113-proposta2-1"></script><script type="module" src="scripts/session-encounter-ui.js?v=20261027-auto-combat-roster1"></script><script type="module" src="scripts/session-combat-ui.js?v=20261027-auto-combat-roster1"></script></body></html>

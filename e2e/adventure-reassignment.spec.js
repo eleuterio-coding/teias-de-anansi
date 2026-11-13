@@ -28,6 +28,7 @@ test.beforeEach(async({page})=>{
 test('mudar a campanha no editor reatribui a mesma aventura sem criar duplicata',async({page})=>{
  page.on('dialog',dialog=>dialog.accept());
  await page.goto('/aventuras.html?campaign=e2e-adv-source&id=adv-original');
+ await page.locator('[data-open-adventure-settings]').click();
  await expect(page.locator('#adventure-assignment')).toHaveValue('e2e-adv-source');
  await expect(page.locator('#create-adventure')).toHaveCount(0);
  await page.locator('#adventure-assignment').selectOption('e2e-adv-dest');

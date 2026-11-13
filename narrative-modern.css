@@ -1,0 +1,202 @@
+/* Teias de Anansi — Proposta 2: leitura mais compacta, hierarquia e contraste.
+   Aplica-se exclusivamente às áreas Aventuras e Sessões. */
+body.hub-narrative-modern{
+ --nm-accent:#b8a8ff;--nm-accent-solid:#7864dc;--nm-ink:#f3f0ff;--nm-muted:#c6c5db;
+ --nm-surface:#1f2234;--nm-raised:#292b42;--nm-soft:#31304b;--nm-border:#514d6b;
+ --nm-gradient:linear-gradient(135deg,#2c2746,#1e2237 75%,#1d2b38);
+}
+body.hub-narrative-modern.hub-content-light{
+ --nm-accent:#5742c6;--nm-accent-solid:#5845c9;--nm-ink:#1d2140;--nm-muted:#5d6581;
+ --nm-surface:#fff;--nm-raised:#f9f8ff;--nm-soft:#f0edfc;--nm-border:#dcd9f1;
+ --nm-gradient:linear-gradient(135deg,#fcfbff,#f6f5ff 74%,#f4f8ff);
+}
+/* Bases visuais para as duas telas */
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) :is(.campaign-product-hero,.campaign-editor-card,.adventure-panel-card,.session-adventure-group,.adventure-campaign-group){
+ border-color:var(--nm-border);border-radius:15px;box-shadow:none;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-product-hero{
+ background:var(--nm-gradient);border:1px solid var(--nm-border);overflow:hidden;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-product-title-row h1{
+ line-height:1.22;letter-spacing:-.02em;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-product-summary{gap:10px}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-product-summary .metric{
+ padding:12px 14px;background:var(--nm-raised);border:1px solid var(--nm-border);
+ border-radius:12px;box-shadow:none;min-width:0;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-product-summary .metric strong{
+ color:var(--nm-accent);font-weight:780;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) :is(.story-card,.adventure-read-card){
+ border-radius:12px;border-color:var(--nm-border);
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-card-featured{
+ border-radius:13px;border-color:var(--nm-border);box-shadow:none;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) .campaign-card-featured:hover{
+ border-color:var(--nm-accent);box-shadow:0 3px 18px rgba(40,31,100,.14);
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) :is(.campaign-card-status,.campaign-status-value){
+ border-radius:999px;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) :is(input,select,textarea){
+ border-radius:9px;
+}
+body.hub-narrative-modern :is(#adventure-root,#sessions-list) :is(button,a,input,select,textarea):focus-visible,
+body.hub-narrative-modern .hub-modern-edit-panel>summary:focus-visible{
+ outline:3px solid var(--nm-accent);outline-offset:3px;
+}
+/* Aventura: consulta primeiro, formulário só quando solicitado */
+body.hub-narrative-modern #adventure-root .adventure-content-tabs{
+ border-radius:13px;gap:5px;padding:6px;border-color:var(--nm-border);
+ background:var(--nm-raised);
+}
+body.hub-narrative-modern #adventure-root .adventure-content-tabs>button{
+ min-height:44px;border-radius:10px;
+}
+body.hub-narrative-modern #adventure-root .adventure-content-tabs>button.is-active{
+ background:var(--nm-accent-solid);color:#fff;border-color:var(--nm-accent-solid);
+}
+body.hub-narrative-modern #adventure-root .adventure-creation-choices>button.is-active{
+ border-color:var(--nm-accent);background:var(--nm-soft);color:var(--nm-ink);outline:0;
+}
+body.hub-narrative-modern #adventure-overview-settings{
+ scroll-margin-top:120px;border:1px solid var(--nm-border);
+ padding:14px;border-radius:12px;background:var(--nm-surface);
+}
+body.hub-narrative-modern .hub-modern-edit-panel{
+ margin-top:4px;background:var(--nm-raised);border:1px solid var(--nm-border);
+ border-radius:12px;padding:0;min-width:0;
+}
+body.hub-narrative-modern .hub-modern-edit-panel>summary{
+ display:flex;align-items:center;gap:9px;cursor:pointer;padding:13px 16px;
+ color:var(--nm-accent);font-weight:750;list-style:none;
+}
+body.hub-narrative-modern .hub-modern-edit-panel>summary::-webkit-details-marker{display:none}
+body.hub-narrative-modern .hub-modern-edit-panel>summary::before{content:'✎';font-size:1.05em}
+body.hub-narrative-modern .hub-modern-edit-panel[open]>summary{border-bottom:1px solid var(--nm-border)}
+body.hub-narrative-modern .hub-modern-edit-panel> :not(summary){margin:14px;min-width:0}
+body.hub-narrative-modern #adventure-root #adventure-overview-settings .hub-modern-edit-panel>section{
+ max-width:none;
+}
+/* Sessões: descoberta rápida e visualizações equivalentes */
+body.hub-narrative-modern .hub-modern-discovery{
+ background:var(--nm-surface);border:1px solid var(--nm-border);border-radius:14px;
+ margin:0 0 16px;padding:16px;display:grid;gap:12px;color:var(--nm-ink);
+}
+body.hub-narrative-modern .hub-modern-discovery[hidden]{display:none!important}
+body.hub-narrative-modern .hub-modern-search-row,
+body.hub-narrative-modern .hub-modern-filter-row{
+ display:grid;gap:10px;grid-template-columns:minmax(0,1.7fr) minmax(140px,1fr);
+}
+body.hub-narrative-modern .hub-modern-filter-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.hub-narrative-modern .hub-modern-discovery label{
+ display:grid;gap:5px;margin:0;font-size:.8rem;font-weight:650;color:var(--nm-muted);
+}
+body.hub-narrative-modern .hub-modern-discovery :is(input,select){
+ height:42px;max-width:100%;width:100%;padding:8px 11px;font-size:.93rem;
+ border:1px solid var(--nm-border);border-radius:9px;
+ background:var(--nm-raised);color:var(--nm-ink);
+}
+body.hub-narrative-modern .hub-modern-discovery-bottom{
+ display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap;
+}
+body.hub-narrative-modern .hub-modern-discovery-bottom p{margin:0;font-size:.86rem;color:var(--nm-muted)}
+body.hub-narrative-modern .hub-modern-view-switch{
+ display:flex;gap:4px;padding:4px;border-radius:11px;
+ background:var(--nm-soft);border:1px solid var(--nm-border);
+}
+body.hub-narrative-modern .hub-modern-view-switch button{
+ min-height:34px;padding:5px 14px;border:0;border-radius:8px;
+ background:transparent;color:var(--nm-muted);font-size:.84rem;font-weight:700;cursor:pointer;
+}
+body.hub-narrative-modern .hub-modern-view-switch button[aria-pressed="true"]{
+ background:var(--nm-accent-solid);color:#fff;box-shadow:0 2px 7px rgba(40,31,100,.16);
+}
+/* Lista compacta sem cópia de dados */
+body.hub-narrative-modern #sessions-list .is-list-view .session-adventure-group{padding:12px}
+body.hub-narrative-modern #sessions-list .is-list-view .session-adventure-track{
+ display:grid!important;grid-auto-flow:row!important;grid-template-columns:minmax(0,1fr)!important;
+ grid-auto-columns:auto!important;overflow:visible!important;scroll-snap-type:none!important;
+ gap:8px;padding:0;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-featured{
+ display:flex;flex-wrap:wrap;align-items:center;min-height:0!important;padding:12px 14px;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-main{
+ flex:1 1 320px;min-width:0;display:flex;align-items:center;gap:12px;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-art{display:none!important}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-details{
+ display:flex;flex:1;min-width:0;gap:12px;align-items:center;justify-content:space-between;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-intro{flex:1;min-width:0}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-intro h2{
+ font-size:1rem;margin:0 0 4px;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-description{display:none}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-metrics{
+ flex:0 0 auto;min-width:110px;gap:7px;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-actions{
+ flex:0 0 auto;justify-content:flex-end;gap:6px;margin:0 0 0 auto;
+}
+body.hub-narrative-modern #sessions-list .is-list-view .session-adventure-scroll-actions{display:none!important}
+body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-featured :is(.campaign-card-main,.campaign-card-details){
+ max-width:none;
+}
+/* Sessão: uma etapa de uso por vez */
+body.hub-narrative-modern #sessions-list .hub-modern-session-tabs{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;
+ background:var(--nm-raised);border:1px solid var(--nm-border);
+ padding:6px;border-radius:13px;
+}
+body.hub-narrative-modern #sessions-list .hub-modern-session-tabs>button{
+ min-width:0;min-height:44px;padding:9px 12px;background:transparent;
+ border:1px solid transparent;border-radius:9px;color:var(--nm-muted);
+ font-size:.91rem;font-weight:750;cursor:pointer;
+}
+body.hub-narrative-modern #sessions-list .hub-modern-session-tabs>button.is-active{
+ background:var(--nm-accent-solid);color:#fff;box-shadow:0 3px 9px rgba(40,31,100,.16);
+}
+body.hub-narrative-modern #sessions-list .hub-modern-session-tabs:has(>button:nth-child(3):last-child){
+ grid-template-columns:repeat(3,minmax(0,1fr));
+}
+/* Regras de visibilidade: nunca criar cópias dos editores e combates. */
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage] .hub-detail-grid>:is(#visao-geral,#participantes,#cenas,#registro-sessao,#linha-tempo){
+ display:none!important;
+}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage]>:is(#encontros,#combates){display:none!important}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="overview"] .hub-detail-grid>#visao-geral,
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="overview"] .hub-detail-grid>#participantes.roster-readonly,
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"] .hub-detail-grid>#participantes:not(.roster-readonly),
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"] .hub-detail-grid>#cenas,
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="record"] .hub-detail-grid>#linha-tempo{
+ display:block!important;
+}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="record"] .hub-detail-grid>#registro-sessao{display:grid!important}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"]>#encontros,
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="live"]>#combates{display:block!important}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage]:not([data-session-stage="overview"])>.hub-modern-next-session{display:none!important}
+body.hub-narrative-modern #sessions-list .hub-modern-session-overview-description{
+ margin:5px 0 13px;line-height:1.55;color:var(--nm-ink);
+}
+body.hub-narrative-modern #sessions-list .hub-modern-session-record{gap:13px}
+body.hub-narrative-modern #sessions-list .hub-modern-session-record label{display:grid;gap:7px}
+body.hub-narrative-modern #sessions-list .hub-modern-session-record textarea{min-height:105px}
+@media(max-width:760px){
+ body.hub-narrative-modern .hub-modern-search-row,
+ body.hub-narrative-modern .hub-modern-filter-row{grid-template-columns:1fr}
+ body.hub-narrative-modern #sessions-list .hub-modern-session-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.hub-narrative-modern #sessions-list .hub-modern-session-tabs:has(>button:nth-child(3):last-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+ body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-details{flex-wrap:wrap}
+ body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-metrics{min-width:0}
+}
+@media(max-width:480px){
+ body.hub-narrative-modern .hub-modern-discovery{padding:12px}
+ body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-actions{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ body.hub-narrative-modern :is(#adventure-root,#sessions-list) *{scroll-behavior:auto}
+}

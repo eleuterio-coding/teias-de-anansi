@@ -15,6 +15,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',sessionId=params.get('id')||'';let adventureFilter=params.get('adventure')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false,showCreationPanel=params.get('new')==='1';
+let collectionSearch='',collectionStatus='all',collectionCampaign='all',collectionAdventure='all',collectionView='cards',sessionViewStage='overview',sessionEditPanelOpen=false;
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
@@ -41,6 +42,25 @@ function allSessions(){
 }
 function filteredSessions(rows){
  return rows.filter(s=>(!campaignFilter||s.campaignId===campaignFilter)&&(!adventureFilter||s.adventureId===adventureFilter))
+}
+const searchKey=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR');
+function updateSessionDiscovery(rows,knownAdventures){
+ const bar=$('session-discovery');if(!bar)return;bar.hidden=Boolean(sessionId);if(sessionId)return;
+ const makeOptions=(id,items,state)=>{const node=$(id);if(!node)return;node.innerHTML=items.map(([value,label])=>option(value,label,state)).join('')};
+ const campaignsAvailable=[...new Set(rows.map(s=>s.campaignId).filter(Boolean))];
+ makeOptions('session-campaign-filter',[['all','Todas as campanhas'],...campaignsAvailable.map(id=>[id,campaignById(id)?.name||rows.find(s=>s.campaignId===id)?.campaignName||'Campanha'])],collectionCampaign);
+ const adventuresAvailable=[...new Set(rows.map(s=>s.adventureId).filter(Boolean))];
+ makeOptions('session-adventure-filter',[['all','Todas as aventuras'],...adventuresAvailable.map(id=>[id,knownAdventures.find(a=>a.id===id)?.title||'Aventura não disponível'])],collectionAdventure);
+ makeOptions('session-status-filter',[['all','Todos os status'],...['current','next','active','planned','completed','cancelled'].filter(status=>rows.some(s=>s.status===status)).map(status=>[status,statusLabel(status)])],collectionStatus);
+ for(const [id,value] of [['session-campaign-filter',collectionCampaign],['session-adventure-filter',collectionAdventure],['session-status-filter',collectionStatus]]){const node=$(id);if(node&&![...node.options].some(o=>o.value===value)){node.value='all';if(id==='session-campaign-filter')collectionCampaign='all';if(id==='session-adventure-filter')collectionAdventure='all';if(id==='session-status-filter')collectionStatus='all'}}
+ for(const button of document.querySelectorAll('[data-session-collection-view]'))button.setAttribute('aria-pressed',String(button.dataset.sessionCollectionView===collectionView));
+}
+function applySessionDiscovery(rows,knownAdventures){
+ const needle=searchKey(collectionSearch.trim());
+ return rows.filter(s=>(collectionStatus==='all'||s.status===collectionStatus)&&
+  (collectionCampaign==='all'||s.campaignId===collectionCampaign)&&
+  (collectionAdventure==='all'||s.adventureId===collectionAdventure)&&
+  (!needle||searchKey([s.title,numberedSessionTitle(s),s.summary,s.objective,s.campaignName,knownAdventures.find(a=>a.id===s.adventureId)?.title].join(' ')).includes(needle)));
 }
 function adventureById(id){return adventures.find(a=>a.id===id)||null}
 function campaignById(id){return campaigns.find(c=>c.id===id)||null}
@@ -386,11 +406,16 @@ function bindSessionRoster(card,ref){
   row.addEventListener('drop',event=>{event.preventDefault();const to=row.dataset.sessionRosterRow,names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);const i=names.indexOf(moving),j=names.indexOf(to);if(i<0||j<0)return;names.splice(j,0,names.splice(i,1)[0]);update(names);moving=''});
  }
 }
+function sessionStagesHtml(restricted){
+ const stages=[['overview','Visão geral'],['prepare','Preparar'],...(!restricted?[['live','Ao vivo']]:[]),['record','Registro']];
+ const active=restricted&&sessionViewStage==='live'?'overview':sessionViewStage;
+ return `<nav class="hub-modern-session-tabs" aria-label="Etapas da sessão">${stages.map(([value,label])=>`<button type="button" data-session-stage-button="${value}" aria-pressed="${active===value}" ${active===value?'class="is-active"':''}>${label}</button>`).join('')}</nav>`;
+}
 function sessionCard(s,restricted=false){
  const adv=(restricted?sharedAdventures():adventures).find(a=>a.id===s.adventureId)||null, published=restricted?sharedCampaignRows().flatMap(row=>row.characters||[]):characters,participants=(s.participantCharacterIds||[]).map(id=>published.find(c=>c.id===id)?.name).filter(Boolean),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-product-hero-media',alt:`Capa de ${s.title}`});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
  const currentCampaign=restricted?sharedCampaignRows().find(row=>row.campaign.id===s.campaignId)?.campaign:campaignById(s.campaignId);
- return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
+ return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-session-stage="${esc(restricted&&sessionViewStage==='live'?'overview':sessionViewStage)}">
  <section class="campaign-product-hero session-product-hero">
  ${cover}
  <div class="campaign-product-actions">${s.campaignId?`<a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir Aventura</a>`:''}</div>
@@ -407,11 +432,8 @@ function sessionCard(s,restricted=false){
  <div class="metric"><span>Personagens</span><strong>${participants.length}</strong></div>
  <div class="metric"><span>Encontros</span><strong>${s.encounterCount??(s.encounters||[]).length}</strong></div>
  </div>
- ${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}
- <nav class="section-nav hub-detail-nav" aria-label="Seções da Sessão">
- <a href="#visao-geral">Visão geral</a><a href="#participantes">Jogadores da Sessão</a>
- <a href="#cenas">Cenas</a>${restricted?'':`<a href="#encontros">Encontros</a><a href="#combates">Combates</a>`}
- <a href="#linha-tempo">Linha do tempo</a></nav>
+ ${sessionStagesHtml(restricted)}
+ <div class="hub-modern-next-session">${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}</div>
  <div class="campaign-sections campaign-editor-grid hub-detail-grid">
  ${restricted?`
   <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2>
@@ -421,7 +443,10 @@ function sessionCard(s,restricted=false){
   <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><div class="story-list">
   ${(adv?.scenes||[]).length?(adv.scenes||[]).map(scene=>`<article class="story-card"><strong>${esc(scene.title)}</strong></article>`).join(''):'<p class="mini">Nenhuma cena revelada nesta Aventura.</p>'}</div></section>
  `:`
- <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2><div class="form-grid two" style="margin-top:10px">
+ <section id="visao-geral" class="card campaign-editor-card"><h2>Resumo da sessão</h2>
+ <p class="hub-modern-session-overview-description">${esc(s.summary||s.objective||'Adicione um objetivo e um resumo para orientar esta sessão.')}</p>
+ <details class="hub-modern-edit-panel" ${sessionEditPanelOpen?'open':''}><summary>Editar informações da sessão</summary>
+ <div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
@@ -430,12 +455,9 @@ function sessionCard(s,restricted=false){
   <label>Aventura<select data-session-adventure ${s.campaignId?'':'disabled'}>${adventureOptions(s.adventureId,s.campaignId||'__sem_campanha__')}</select></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo da Sessão<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
-  <label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
-  <label class="wide">Registro rápido de acontecimentos<textarea data-session-field="quickLog">${esc(s.quickLog)}</textarea></label>
-  <label class="wide">Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
  </div>
- <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar</button></div>
- </section>${sessionRosterHtml(s,{readOnly:false})}
+ <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar informações</button></div>
+ </details></section>${sessionRosterHtml(s,{readOnly:false})}
 <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><section class="session-subsection">
  ${adv?`<div class="story-list adventure-scene-source-list">${adv.scenes.map(scene=>{
   const linked=s.scenes?.some(row=>row.adventureSceneId===scene.id),other=scene.sessionId&&scene.sessionId!==s.id;
@@ -445,19 +467,30 @@ function sessionCard(s,restricted=false){
  <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
  <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div>
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-scenes>Salvar</button></div></section></section>
+ <section id="registro-sessao" class="card campaign-editor-card hub-modern-session-record"><h2>Registro da sessão</h2>
+  <p class="mini">Anote acontecimentos e desfechos para consultar na próxima sessão.</p>
+  <label>Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
+  <label>Registro rápido de acontecimentos<textarea data-session-field="quickLog">${esc(s.quickLog)}</textarea></label>
+  <label>Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
+  <div class="row-actions"><button type="button" data-save-session-main-record>Salvar registro</button></div>
+ </section>
  ${encounterSummary(s)}
  `}${renderTimeline(s,'list',null,{readOnly:restricted})}</div></article>`
 }
 function render(){
  const detailMode=Boolean(sessionId);
+ const discovery=$('session-discovery');if(discovery)discovery.hidden=detailMode;
  const collectionTitle=document.querySelector('.hub-collection-top');
  if(collectionTitle)collectionTitle.hidden=detailMode;
  const homeLink=document.querySelector('.hub-collection-home');
  if(homeLink)homeLink.hidden=detailMode;
  const restricted=playerMode();
  if(!restricted)reload();
- const rows=restricted?sharedSessions():allSessions(),sessions=filteredSessions(rows);
+ const rows=restricted?sharedSessions():allSessions();
  const availableAdventures=restricted?sharedAdventures():adventures;
+ const scoped=filteredSessions(rows);
+ if(!sessionId)updateSessionDiscovery(scoped,availableAdventures);
+ const sessions=sessionId?scoped:applySessionDiscovery(scoped,availableAdventures);
  const box=$('sessions-list'),createCard=$('session-create-card'),listSection=$('session-list-section');
  bindSessionAdventureScroll(null);
  box?.classList.remove('hub-collection-grid');
@@ -474,7 +507,8 @@ function render(){
  if(listSection)listSection.querySelector('.campaign-list-heading').hidden=false;
  if(createCard)createCard.hidden=restricted||!showCreationPanel;
  if(!box)return;
- box.innerHTML=`<div class="session-adventure-groups">
+ const resultCount=$('session-results-count');if(resultCount)resultCount.textContent=`${sessions.length} de ${scoped.length} ${scoped.length===1?'sessão':'sessões'}`;
+ box.innerHTML=`<div class="session-adventure-groups ${collectionView==='list'?'is-list-view':''}">
   ${sessionAdventureGroupsHtml(sessions,availableAdventures,row=>sessionListCard(row,restricted,availableAdventures),campaigns)}
  </div>${restricted?'':`<div class="session-create-tile-row">${sessionCreateTile()}</div>`}`;
  if(restricted&&!sessions.length)box.innerHTML='<div class="empty">Nenhuma sessão foi atribuída à sua ficha.</div>';
@@ -602,13 +636,15 @@ function saveSessionScenesFromCard(ref,card){
 function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
+  const panel=card.querySelector('#visao-geral .hub-modern-edit-panel');panel?.querySelector('summary')?.addEventListener('click',()=>{sessionEditPanelOpen=!panel.open});
   const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});await saveSessionCoverPersistent(ref,{coverImage:media,coverImageUrl:''},{previous,newMedia:media,message:'Imagem salva e sincronizada.'})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;await saveSessionCoverPersistent(ref,{coverImage:null,coverImageUrl:''},{previous,message:'Imagem removida e sincronizada.'})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.type==='number'?Number(input.value):input.value})));
   card.querySelector('[data-session-adventure]')?.addEventListener('change',event=>changeSessionAdventure(ref,event.target.value));
   bindSessionRoster(card,ref);
-  card.querySelector('[data-save-session-main]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionMainFromCard(ref,card)});
-  card.querySelector('[data-save-session-participants]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionParticipantsFromCard(ref,card)});
-  card.querySelector('[data-save-session-scenes]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionScenesFromCard(ref,card)});
+  card.querySelector('[data-save-session-main]')?.addEventListener('click',()=>saveSessionMainFromCard(ref,card));
+  card.querySelector('[data-save-session-main-record]')?.addEventListener('click',()=>saveSessionMainFromCard(ref,card));
+  card.querySelector('[data-save-session-participants]')?.addEventListener('click',()=>saveSessionParticipantsFromCard(ref,card));
+  card.querySelector('[data-save-session-scenes]')?.addEventListener('click',()=>saveSessionScenesFromCard(ref,card));
   card.querySelector('[data-remove-session]')?.addEventListener('click',()=>{if(confirm('Excluir esta sessão?'))removeSession(ref)});
   card.querySelectorAll('[data-include-adventure-scene]').forEach(button=>button.addEventListener('click',()=>addAdventureSceneToSession(ref,button.dataset.includeAdventureScene)));
   card.querySelector('[data-add-adventure-scene]')?.addEventListener('click',()=>{
@@ -623,7 +659,7 @@ function bindSessionCards(){
     const session=findMutableSession(ref),value=input.type==='number'?Number(input.value):input.value,result=updateSessionScene(session,sceneId,{[input.dataset.sessionSceneField]:value});
     if(!result.ok)return feedback(result.reason,false);persistMutableSession(ref,session,'Cena atualizada.')
    }));
-   node.querySelector('[data-save-session-scene]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionSceneNode(ref,node)});
+   node.querySelector('[data-save-session-scene]')?.addEventListener('click',()=>saveSessionSceneNode(ref,node));
    node.querySelector('[data-session-scene-adventure]')?.addEventListener('change',e=>updateSceneLink(ref,sceneId,e.target.value||null));
    node.querySelector('[data-remove-session-scene]')?.addEventListener('click',()=>{
     if(!confirm('Excluir esta cena da sessão?'))return;
@@ -643,6 +679,25 @@ $('new-session-order')?.addEventListener('input',()=>{$('new-session-order').dat
 $('new-session-adventure')?.addEventListener('change',event=>{
  const adventure=adventureById(event.target.value),campaignSelect=$('new-session-campaign');
  if(adventure&&campaignSelect&&!campaignSelect.value){campaignSelect.value=adventure.campaignId;syncCreationOptions()}
+});
+for(const [id,eventName,setter] of [
+ ['session-search-filter','input',value=>collectionSearch=value],
+ ['session-status-filter','change',value=>collectionStatus=value],
+ ['session-campaign-filter','change',value=>collectionCampaign=value],
+ ['session-adventure-filter','change',value=>collectionAdventure=value]
+ ])$(id)?.addEventListener(eventName,event=>{setter(event.target.value);render()});
+document.querySelectorAll('[data-session-collection-view]').forEach(button=>button.addEventListener('click',()=>{collectionView=button.dataset.sessionCollectionView;render()}));
+$('sessions-list')?.addEventListener('click',event=>{
+ const button=event.target.closest('[data-session-stage-button]');if(!button)return;
+ const card=button.closest('.session-card');if(!card)return;
+ sessionViewStage=button.dataset.sessionStageButton;card.dataset.sessionStage=sessionViewStage;
+ card.querySelectorAll('[data-session-stage-button]').forEach(b=>{const active=b.dataset.sessionStageButton===sessionViewStage;b.setAttribute('aria-pressed',String(active));b.classList.toggle('is-active',active)})
+});
+$('sessions-list')?.addEventListener('keydown',event=>{
+ const button=event.target.closest('[data-session-stage-button]');if(!button||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+ const options=[...button.closest('.hub-modern-session-tabs').querySelectorAll('[data-session-stage-button]')];
+ const index=options.indexOf(button),next=event.key==='Home'?0:event.key==='End'?options.length-1:(index+(event.key==='ArrowRight'?1:-1)+options.length)%options.length;
+ event.preventDefault();options[next].focus();options[next].click();
 });
 reload();render();
 document.addEventListener('pointerdown',event=>{

@@ -193,6 +193,7 @@ test('Sessão replica o layout de Jogadores da Campanha e preserva as ações',a
  await expect(reference.locator('.roster-player-actions .roster-remove-button')).toHaveCount(1);
 
  await page.goto('/sessoes.html?campaign='+campaign.id+'&id=current');
+ await page.locator('[data-session-stage-button="prepare"]').click();
  const roster=page.locator('#sessions-list .session-participant-roster');
  await expect(roster.locator('.session-roster-item')).toHaveCount(2);
  await expect(roster.locator('.roster-heading h2')).toHaveText('Jogadores da Sessão');
