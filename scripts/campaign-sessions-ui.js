@@ -406,11 +406,16 @@ function bindSessionRoster(card,ref){
   row.addEventListener('drop',event=>{event.preventDefault();const to=row.dataset.sessionRosterRow,names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);const i=names.indexOf(moving),j=names.indexOf(to);if(i<0||j<0)return;names.splice(j,0,names.splice(i,1)[0]);update(names);moving=''});
  }
 }
+function sessionStagesHtml(restricted){
+ const stages=[['overview','Visão geral'],['prepare','Preparar'],...(!restricted?[['live','Ao vivo']]:[]),['record','Registro']];
+ const active=restricted&&sessionViewStage==='live'?'overview':sessionViewStage;
+ return `<nav class="hub-modern-session-tabs" aria-label="Etapas da sessão">${stages.map(([value,label])=>`<button type="button" data-session-stage-button="${value}" aria-pressed="${active===value}" ${active===value?'class="is-active"':''}>${label}</button>`).join('')}</nav>`;
+}
 function sessionCard(s,restricted=false){
  const adv=(restricted?sharedAdventures():adventures).find(a=>a.id===s.adventureId)||null, published=restricted?sharedCampaignRows().flatMap(row=>row.characters||[]):characters,participants=(s.participantCharacterIds||[]).map(id=>published.find(c=>c.id===id)?.name).filter(Boolean),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-product-hero-media',alt:`Capa de ${s.title}`});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
  const currentCampaign=restricted?sharedCampaignRows().find(row=>row.campaign.id===s.campaignId)?.campaign:campaignById(s.campaignId);
- return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}">
+ return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-session-stage="${esc(restricted&&sessionViewStage==='live'?'overview':sessionViewStage)}">
  <section class="campaign-product-hero session-product-hero">
  ${cover}
  <div class="campaign-product-actions">${s.campaignId?`<a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(s.campaignId)}">Abrir Campanha</a>`:''}${adv?`<a class="btn campaign-product-create-action" href="aventuras.html?campaign=${encodeURIComponent(adv.campaignId)}&id=${encodeURIComponent(adv.id)}">Abrir Aventura</a>`:''}</div>
@@ -427,11 +432,8 @@ function sessionCard(s,restricted=false){
  <div class="metric"><span>Personagens</span><strong>${participants.length}</strong></div>
  <div class="metric"><span>Encontros</span><strong>${s.encounterCount??(s.encounters||[]).length}</strong></div>
  </div>
- ${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}
- <nav class="section-nav hub-detail-nav" aria-label="Seções da Sessão">
- <a href="#visao-geral">Visão geral</a><a href="#participantes">Jogadores da Sessão</a>
- <a href="#cenas">Cenas</a>${restricted?'':`<a href="#encontros">Encontros</a><a href="#combates">Combates</a>`}
- <a href="#linha-tempo">Linha do tempo</a></nav>
+ ${sessionStagesHtml(restricted)}
+ <div class="hub-modern-next-session">${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}</div>
  <div class="campaign-sections campaign-editor-grid hub-detail-grid">
  ${restricted?`
   <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2>
@@ -675,6 +677,18 @@ for(const [id,eventName,setter] of [
  ['session-adventure-filter','change',value=>collectionAdventure=value]
  ])$(id)?.addEventListener(eventName,event=>{setter(event.target.value);render()});
 document.querySelectorAll('[data-session-collection-view]').forEach(button=>button.addEventListener('click',()=>{collectionView=button.dataset.sessionCollectionView;render()}));
+$('sessions-list')?.addEventListener('click',event=>{
+ const button=event.target.closest('[data-session-stage-button]');if(!button)return;
+ const card=button.closest('.session-card');if(!card)return;
+ sessionViewStage=button.dataset.sessionStageButton;card.dataset.sessionStage=sessionViewStage;
+ card.querySelectorAll('[data-session-stage-button]').forEach(b=>{const active=b.dataset.sessionStageButton===sessionViewStage;b.setAttribute('aria-pressed',String(active));b.classList.toggle('is-active',active)})
+});
+$('sessions-list')?.addEventListener('keydown',event=>{
+ const button=event.target.closest('[data-session-stage-button]');if(!button||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+ const options=[...button.closest('.hub-modern-session-tabs').querySelectorAll('[data-session-stage-button]')];
+ const index=options.indexOf(button),next=event.key==='Home'?0:event.key==='End'?options.length-1:(index+(event.key==='ArrowRight'?1:-1)+options.length)%options.length;
+ event.preventDefault();options[next].focus();options[next].click();
+});
 reload();render();
 document.addEventListener('pointerdown',event=>{
  if(event.target.closest?.('#sessions-list [data-status-disclosure]'))return;
