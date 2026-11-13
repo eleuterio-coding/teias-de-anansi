@@ -92,7 +92,7 @@ function operationalHtml(a){
  const metrics=[['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)]];
  return `<section class="campaign-product-hero adventure-product-hero">
  ${imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-product-hero-media',alt:''})}
- <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a></div>
+ <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a><button class="btn secondary" type="button" data-open-adventure-settings>Editar aventura</button></div>
  <div class="campaign-product-hero-content"><div class="campaign-product-kicker">Campanha · ${esc(c?.name||'Campanha')}</div>
  <div class="campaign-product-title-row"><h1>${esc(numberedAdventureTitle(a))}</h1><span class="badge ${esc(a.status)}">${esc(advStatus(a.status))}</span></div>
  ${a.description||a.summary?'<p class="campaign-product-description">'+esc(a.description||a.summary)+'</p>':''}
@@ -310,6 +310,7 @@ function section(title,id,body,form=''){
 function overviewPanel(id,title,content){
  return id==="adventure-overview-settings"?`<div id="${esc(id)}" class="adventure-overview-panel">${content}</div>`:`<section id="${esc(id)}" class="adventure-read-section adventure-overview-panel adventure-panel-card"><header class="adventure-read-section-head"><div><h2>${esc(title)}</h2></div></header>${content}</section>`
 }
+function adventureSettingsHtml(a){return `<details class="hub-modern-edit-panel" data-adventure-settings><summary>Editar informações da aventura</summary>${basicsHtml(a)}</details>`}
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Dados gerais'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
@@ -336,11 +337,11 @@ function workspaceHtml(a){
  return`${operationalHtml(a)}
  <div class="adventure-content-tabs" role="tablist" aria-label="Áreas da Aventura">
   <button type="button" role="tab" id="adventure-overview-tab" data-adventure-content-tab="overview" aria-controls="adventure-overview-content">Visão Geral</button>
-  <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Criar conteúdo</button>
+  <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Gerenciar conteúdo</button>
  </div>
  <div id="adventure-overview-content" class="adventure-workspace-pane" role="tabpanel" aria-labelledby="adventure-overview-tab">
-  ${overviewPanel('adventure-overview-settings','Visão geral',basicsHtml(a))}
   ${renderAdventureOverview(a,c,characters)}
+  ${overviewPanel('adventure-overview-settings','Editar aventura',adventureSettingsHtml(a))}
   ${overviewPanel('adventure-overview-timeline','Linha do tempo',adventureTimelineHtml(a))}
   ${overviewPanel('adventure-overview-notes','Notas do Mestre',noteSection(a.dmNoteEntries))}
  </div>
@@ -427,7 +428,8 @@ function arrangeAdventureContentWorkspace(){
 }
 
 function render(){const keepScroll=Boolean(document.querySelector('#adventure-root .adventure-shell.hub-detail-page')&&adventureId),scrollX=window.scrollX,scrollY=window.scrollY;const root=$('adventure-root');if(!root)return;campaigns=readCampaigns();characters=readCharacters();if(campaignId&&!campaignById(campaigns,campaignId))campaignId=campaigns[0]?.id||'';normalizeRefs();if(adventureId&&!adventureById(adventures,adventureId)){adventureId='';expandedSceneIds.clear()}const a=adventure();if(a)campaignId=a.campaignId;root.innerHTML=`${a?"":topHtml()}<div id="adventure-feedback" class="status" hidden></div><div class="adventure-shell ${a?"hub-detail-page":""}">${a?`${workspaceHtml(a)}`:listHtml()}</div>`;bind();arrangeAdventureContentWorkspace();updateAppShellContext();hydrateMediaImages(root).catch(()=>{});if(keepScroll){window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});requestAnimationFrame(()=>window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'}))}}
-function bindAdventureFields(){document.querySelectorAll('[data-adventure-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'||input.type==='text'||input.type==='url'?'input':'change';input.addEventListener(eventName,()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>commit(updateAdventure(adventures,adventureId,{[input.dataset.adventureField]:input.type==='number'?Number(input.value):input.value}),'Aventura salva.'),eventName==='input'?350:0)})})}
+function bindAdventureFields(){
+ document.querySelector('[data-open-adventure-settings]')?.addEventListener('click',()=>{document.getElementById('adventure-overview-tab')?.click();const details=document.querySelector('[data-adventure-settings]');if(details){details.open=true;details.scrollIntoView({block:'start',behavior:'smooth'});details.querySelector('summary')?.focus({preventScroll:true})}});document.querySelectorAll('[data-adventure-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'||input.type==='text'||input.type==='url'?'input':'change';input.addEventListener(eventName,()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>commit(updateAdventure(adventures,adventureId,{[input.dataset.adventureField]:input.type==='number'?Number(input.value):input.value}),'Aventura salva.'),eventName==='input'?350:0)})})}
 function bindAdventureCover(){const picker=document.querySelector('#visao-geral [data-image-picker]'),a=adventure();if(!picker||!a)return;bindImagePicker(picker,{onSelect:async file=>{const before=adventures,previous=a.coverImage,media=await uploadImage({campaignId:a.campaignId,entityType:'adventure',entityId:a.id,file}),result=updateAdventure(adventures,a.id,{coverImage:media,coverImageUrl:''});if(!result.ok){deleteImage(media).catch(()=>{});throw new Error(result.reason)}adventures=writeAdventures(result.list);try{await persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})}catch(error){adventures=writeAdventures(before);await deleteImage(media).catch(()=>{});render();throw new Error('A imagem não pôde ser sincronizada. A capa anterior foi preservada.')}render();feedback('Imagem salva e sincronizada.',true);if(previous?.id&&previous.id!==media.id)await deleteImage(previous).catch(()=>{})},onRemove:async()=>{const before=adventures,previous=a.coverImage,result=updateAdventure(adventures,a.id,{coverImage:null,coverImageUrl:''});if(!result.ok)throw new Error(result.reason);adventures=writeAdventures(result.list);try{await persistCampaignMediaState(a.campaignId,{entityType:'adventure',entityId:a.id})}catch(error){adventures=writeAdventures(before);render();throw new Error('A remoção não pôde ser sincronizada. A imagem foi preservada.')}render();feedback('Imagem removida e sincronizada.',true);if(previous?.id)await deleteImage(previous).catch(()=>{})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)})}
 function bindParticipants(){
  bindAdventureRoster({getAdventure:adventure,getCampaign:campaign,characters,feedback,
