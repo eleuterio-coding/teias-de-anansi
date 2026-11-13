@@ -443,7 +443,10 @@ function sessionCard(s,restricted=false){
   <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><div class="story-list">
   ${(adv?.scenes||[]).length?(adv.scenes||[]).map(scene=>`<article class="story-card"><strong>${esc(scene.title)}</strong></article>`).join(''):'<p class="mini">Nenhuma cena revelada nesta Aventura.</p>'}</div></section>
  `:`
- <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2><div class="form-grid two" style="margin-top:10px">
+ <section id="visao-geral" class="card campaign-editor-card"><h2>Resumo da sessão</h2>
+ <p class="hub-modern-session-overview-description">${esc(s.summary||s.objective||'Adicione um objetivo e um resumo para orientar esta sessão.')}</p>
+ <details class="hub-modern-edit-panel"><summary>Editar informações da sessão</summary>
+ <div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
   <label>Data<input type="date" data-session-field="date" value="${esc(s.date)}"></label>
@@ -452,12 +455,9 @@ function sessionCard(s,restricted=false){
   <label>Aventura<select data-session-adventure ${s.campaignId?'':'disabled'}>${adventureOptions(s.adventureId,s.campaignId||'__sem_campanha__')}</select></label>
   <label>Objetivo<input data-session-field="objective" value="${esc(s.objective)}"></label>
   <label class="wide">Resumo da Sessão<textarea data-session-field="summary">${esc(s.summary)}</textarea></label>
-  <label class="wide">Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
-  <label class="wide">Registro rápido de acontecimentos<textarea data-session-field="quickLog">${esc(s.quickLog)}</textarea></label>
-  <label class="wide">Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
  </div>
- <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar</button></div>
- </section>${sessionRosterHtml(s,{readOnly:false})}
+ <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-main>Salvar informações</button></div>
+ </details></section>${sessionRosterHtml(s,{readOnly:false})}
 <section id="cenas" class="card campaign-editor-card"><h2>Cenas</h2><section class="session-subsection">
  ${adv?`<div class="story-list adventure-scene-source-list">${adv.scenes.map(scene=>{
   const linked=s.scenes?.some(row=>row.adventureSceneId===scene.id),other=scene.sessionId&&scene.sessionId!==s.id;
@@ -467,6 +467,13 @@ function sessionCard(s,restricted=false){
  <div class="row-actions" style="margin:8px 0 10px"><button type="button" class="secondary" data-add-session-scene>Criar cena na Sessão</button></div>
  <div class="story-list">${s.scenes?.length?s.scenes.map(scene=>sceneCard(s,scene)).join(''):'<div class="story-empty">Nenhuma cena nesta sessão.</div>'}</div>
  <div class="row-actions" style="margin-top:10px"><button type="button" data-save-session-scenes>Salvar</button></div></section></section>
+ <section id="registro-sessao" class="card campaign-editor-card hub-modern-session-record"><h2>Registro da sessão</h2>
+  <p class="mini">Anote acontecimentos e desfechos para consultar na próxima sessão.</p>
+  <label>Notas do Mestre<textarea data-session-field="dmNotes">${esc(s.dmNotes)}</textarea></label>
+  <label>Registro rápido de acontecimentos<textarea data-session-field="quickLog">${esc(s.quickLog)}</textarea></label>
+  <label>Resumo final<textarea data-session-field="finalSummary">${esc(s.finalSummary)}</textarea></label>
+  <div class="row-actions"><button type="button" data-save-session-main-record>Salvar registro</button></div>
+ </section>
  ${encounterSummary(s)}
  `}${renderTimeline(s,'list',null,{readOnly:restricted})}</div></article>`
 }
@@ -632,9 +639,10 @@ function bindSessionCards(){
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.type==='number'?Number(input.value):input.value})));
   card.querySelector('[data-session-adventure]')?.addEventListener('change',event=>changeSessionAdventure(ref,event.target.value));
   bindSessionRoster(card,ref);
-  card.querySelector('[data-save-session-main]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionMainFromCard(ref,card)});
-  card.querySelector('[data-save-session-participants]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionParticipantsFromCard(ref,card)});
-  card.querySelector('[data-save-session-scenes]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionScenesFromCard(ref,card)});
+  card.querySelector('[data-save-session-main]')?.addEventListener('click',()=>saveSessionMainFromCard(ref,card));
+  card.querySelector('[data-save-session-main-record]')?.addEventListener('click',()=>saveSessionMainFromCard(ref,card));
+  card.querySelector('[data-save-session-participants]')?.addEventListener('click',()=>saveSessionParticipantsFromCard(ref,card));
+  card.querySelector('[data-save-session-scenes]')?.addEventListener('click',()=>saveSessionScenesFromCard(ref,card));
   card.querySelector('[data-remove-session]')?.addEventListener('click',()=>{if(confirm('Excluir esta sessão?'))removeSession(ref)});
   card.querySelectorAll('[data-include-adventure-scene]').forEach(button=>button.addEventListener('click',()=>addAdventureSceneToSession(ref,button.dataset.includeAdventureScene)));
   card.querySelector('[data-add-adventure-scene]')?.addEventListener('click',()=>{
@@ -649,7 +657,7 @@ function bindSessionCards(){
     const session=findMutableSession(ref),value=input.type==='number'?Number(input.value):input.value,result=updateSessionScene(session,sceneId,{[input.dataset.sessionSceneField]:value});
     if(!result.ok)return feedback(result.reason,false);persistMutableSession(ref,session,'Cena atualizada.')
    }));
-   node.querySelector('[data-save-session-scene]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveSessionSceneNode(ref,node)});
+   node.querySelector('[data-save-session-scene]')?.addEventListener('click',()=>saveSessionSceneNode(ref,node));
    node.querySelector('[data-session-scene-adventure]')?.addEventListener('change',e=>updateSceneLink(ref,sceneId,e.target.value||null));
    node.querySelector('[data-remove-session-scene]')?.addEventListener('click',()=>{
     if(!confirm('Excluir esta cena da sessão?'))return;
