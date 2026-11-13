@@ -25,6 +25,8 @@ on:
       - 'e2e/campaign-list-layout.spec.js'
       - 'e2e/campaign-adventure-layout-parity.spec.js'
       - 'e2e/session-roster-campaign-parity.spec.js'
+      - 'e2e/narrative-modern-layout.spec.js'
+      - 'narrative-modern.css'
       - '.github/workflows/validar-listas-aventuras-sessoes.yml'
   pull_request:
     paths:
@@ -50,6 +52,8 @@ on:
       - 'e2e/campaign-list-layout.spec.js'
       - 'e2e/campaign-adventure-layout-parity.spec.js'
       - 'e2e/session-roster-campaign-parity.spec.js'
+      - 'e2e/narrative-modern-layout.spec.js'
+      - 'narrative-modern.css'
       - '.github/workflows/validar-listas-aventuras-sessoes.yml'
   workflow_dispatch:
 jobs:
@@ -75,7 +79,7 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Validar layout, navegação e ausência de verbetes
         run: |
-          npx playwright test e2e/campaign-list-layout.spec.js e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/adventure-reassignment.spec.js e2e/campaign-avatars-user-current-session.spec.js e2e/session-roster-campaign-parity.spec.js --project=desktop-chromium --project=mobile-chromium
+          npx playwright test e2e/campaign-list-layout.spec.js e2e/adventure-session-collection-layout.spec.js e2e/adventure-list-layout.spec.js e2e/narrative-modern-layout.spec.js e2e/adventure-reassignment.spec.js e2e/campaign-avatars-user-current-session.spec.js e2e/session-roster-campaign-parity.spec.js --project=desktop-chromium --project=mobile-chromium
           # Somente o teste de geometria foi incorporado neste workflow.
           # Os testes funcionais de Oficina/Cenas continuam integrais em seu workflow de origem.
           npx playwright test e2e/campaign-adventure-layout-parity.spec.js --grep 'Lista usa Campanha:' --project=desktop-chromium --project=mobile-chromium
