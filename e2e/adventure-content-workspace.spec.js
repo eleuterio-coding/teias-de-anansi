@@ -19,18 +19,21 @@ test.beforeEach(async({page})=>{
 const visit=async page=>page.goto('/aventuras.html?campaign=qa-oficina-campanha&id=qa-oficina-aventura');
 const create=async(page,kind)=>{await page.locator('#adventure-create-tab').click();await page.locator('[data-adventure-creation-kind="'+kind+'"]').click()};
 
-test('Visão Geral abre com Dados, mostra as coleções e termina com Cronologia e Notas',async({page})=>{
+test('Visão Geral prioriza consulta e mantém edição sob demanda e cronologia e notas',async({page})=>{
  const errors=[];page.on('pageerror',err=>errors.push(err.message));
  await visit(page);
  await expect(page.locator('#adventure-overview-content')).toBeVisible();
  await expect(page.locator('#adventure-create-content')).toBeHidden();
  const sections=await page.locator('#adventure-overview-content > *').evaluateAll(items=>items.map(item=>item.id));
- expect(sections[0]).toBe('adventure-overview-settings');
+ expect(sections).toContain('adventure-overview-settings');
+ expect(sections.indexOf('adventure-overview-settings')).toBeGreaterThan(sections.indexOf('overview-cenas'));
  expect(sections.slice(-2)).toEqual(['adventure-overview-timeline','adventure-overview-notes']);
  for(const id of ['overview-participantes','overview-cenas','overview-locais','overview-mapas','overview-npcs','overview-monstros'])
   await expect(page.locator('#'+id)).toBeVisible();
  await expect(page.locator('#proxima-sessao')).toBeVisible();
- await expect(page.locator('#visao-geral')).toBeVisible();
+ await expect(page.locator('#visao-geral')).toBeHidden();
+ await expect(page.locator('[data-adventure-settings] > summary')).toBeVisible();
+ await expect(page.locator('[data-open-adventure-settings]')).toBeVisible();
  await expect(page.locator('#linha-tempo')).toBeVisible();
  await expect(page.locator('#notas-mestre')).toBeVisible();
  await expect(page.locator('#adventure-create-content #visao-geral,#adventure-create-content #linha-tempo,#adventure-create-content #notas-mestre,#adventure-create-content #proxima-sessao')).toHaveCount(0);
@@ -70,7 +73,7 @@ test('Cenas criadas reaparecem na Visão Geral e editores preservam campos avan�
  await expect(page.locator('#criar-cena')).toBeVisible();
  await expect(page.locator('#cenas')).toBeVisible();
  await expect(page.locator('#adventure-workspace-hint')).toHaveCount(0);
- await expect(page.locator('#adventure-create-tab')).toHaveText('Criar conteúdo');
+ await expect(page.locator('#adventure-create-tab')).toHaveText('Gerenciar conteúdo');
  await expect(page.locator('[data-adventure-creation-kind="scene"]')).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('#adventure-active-section-title')).toHaveText('Cenas');
  await expect(page.locator('.adventure-editing-location')).toHaveCount(0);
@@ -154,6 +157,8 @@ test('Dados e notas ficam na Visão Geral, enquanto a Oficina conserva os editor
  await expect(page.locator('#notas-mestre')).toBeHidden();
  await expect(page.locator('#new-adventure-monster')).toBeHidden();
  await page.locator('#adventure-overview-tab').click();
+ await expect(page.locator('#visao-geral')).toBeHidden();
+ await page.locator('[data-open-adventure-settings]').click();
  await expect(page.locator('#visao-geral')).toBeVisible();
  await expect(page.locator('#notas-mestre')).toBeVisible();
  await expect(page.locator('#adventure-overview-content .adventure-read-grid :is(button,input,select,textarea)')).toHaveCount(0);
@@ -162,6 +167,8 @@ test('Dados e notas ficam na Visão Geral, enquanto a Oficina conserva os editor
 test('Dados gerais e notas salvam na Visão Geral e a cronologia abre o editor de Cenas',async({page})=>{
  const errors=[];page.on('pageerror',err=>errors.push(err.message));
  await visit(page);
+ await page.locator('[data-open-adventure-settings]').click();
+ await expect(page.locator('#visao-geral')).toBeVisible();
  await page.locator('#visao-geral [data-adventure-field="title"]').fill('Trono de Prata');
  await page.locator('#visao-geral [data-save-adventure-section]').click();
  await expect.poll(async()=>(await saved(page)).title).toBe('Trono de Prata');
