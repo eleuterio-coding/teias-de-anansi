@@ -15,7 +15,7 @@ const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const params=new URLSearchParams(location.search),campaignFilter=params.get('campaign')||'',sessionId=params.get('id')||'';let adventureFilter=params.get('adventure')||'';
 let campaigns=[],standalone=[],adventures=[],characters=[],pendingSessionCoverFile=null,createSelectInitialized=false,showCreationPanel=params.get('new')==='1';
-let collectionSearch='',collectionStatus='all',collectionCampaign='all',collectionAdventure='all',collectionView='cards',sessionViewStage='overview';
+let collectionSearch='',collectionStatus='all',collectionCampaign='all',collectionAdventure='all',collectionView='cards',sessionViewStage='overview',sessionEditPanelOpen=false;
 
 const statusLabel=s=>({planned:'Planejada',next:'Próxima',current:'Atual',active:'Em andamento',completed:'Concluída',cancelled:'Cancelada'}[s]||s);
 const sceneStatus=s=>({planned:'Planejada',active:'Em andamento',completed:'Concluída',skipped:'Ignorada'}[s]||s);
@@ -445,7 +445,7 @@ function sessionCard(s,restricted=false){
  `:`
  <section id="visao-geral" class="card campaign-editor-card"><h2>Resumo da sessão</h2>
  <p class="hub-modern-session-overview-description">${esc(s.summary||s.objective||'Adicione um objetivo e um resumo para orientar esta sessão.')}</p>
- <details class="hub-modern-edit-panel"><summary>Editar informações da sessão</summary>
+ <details class="hub-modern-edit-panel" ${sessionEditPanelOpen?'open':''}><summary>Editar informações da sessão</summary>
  <div class="form-grid two" style="margin-top:10px">
    <div class="wide"><strong>Imagem/capa</strong>${imagePickerHtml({media:s.coverImage,legacyUrl:s.coverImageUrl,alt:`Capa de ${s.title}`,className:'session-cover'})}</div>
   <label>Título<input data-session-field="title" value="${esc(s.title)}"></label>
@@ -636,6 +636,7 @@ function saveSessionScenesFromCard(ref,card){
 function bindSessionCards(){
  document.querySelectorAll('[data-session-id]').forEach(card=>{
   const ref=sessionRef(card.dataset.sessionId,card.dataset.sessionSource);if(!ref)return;
+  const panel=card.querySelector('#visao-geral .hub-modern-edit-panel');panel?.querySelector('summary')?.addEventListener('click',()=>{sessionEditPanelOpen=!panel.open});
   const picker=card.querySelector('[data-image-picker]');if(picker)bindImagePicker(picker,{onSelect:async file=>{const current=findMutableSession(ref),previous=current?.coverImage,media=await uploadImage({campaignId:ref.campaignId||null,entityType:'session',entityId:ref.id,file});await saveSessionCoverPersistent(ref,{coverImage:media,coverImageUrl:''},{previous,newMedia:media,message:'Imagem salva e sincronizada.'})},onRemove:async()=>{const current=findMutableSession(ref),previous=current?.coverImage;await saveSessionCoverPersistent(ref,{coverImage:null,coverImageUrl:''},{previous,message:'Imagem removida e sincronizada.'})},onError:error=>feedback(error?.message||'Não foi possível salvar a imagem.',false)});
   card.querySelectorAll('[data-session-field]').forEach(input=>input.addEventListener('change',()=>saveSession(ref,{[input.dataset.sessionField]:input.type==='number'?Number(input.value):input.value})));
   card.querySelector('[data-session-adventure]')?.addEventListener('change',event=>changeSessionAdventure(ref,event.target.value));
