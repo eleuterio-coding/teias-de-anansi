@@ -35,6 +35,8 @@ test('Sessão compartilha hierarquia visual, alinhamento e ações do elenco da 
  await expect(campaignRow).toBeVisible();
  const expected=await inspect('#jogadores .roster-player');
  await page.goto('/sessoes.html?campaign=qa-roster-parity&id=qa-session');
+ await expect(page.locator('[data-session-stage-button="overview"]')).toHaveAttribute('aria-pressed','true');
+ await page.locator('[data-session-stage-button="prepare"]').click();
  const sessionRow=page.locator('#participantes .session-roster-item').first();
  await expect(sessionRow).toBeVisible();
  await expect(page.locator('#participantes h2')).toHaveText('Jogadores da Sessão');
