@@ -152,7 +152,7 @@ function managerHtml(ctx){
     <section class="combat-setup-card">
      <h5>Encontro já existente</h5>
      <label>Selecionar encontro<select data-combat-encounter>${encounterOptions(ctx.session)}</select></label>
-     <button type="button" class="secondary" data-create-from-encounter>Criar a partir do encontro</button>
+     <button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button>
     </section>
    </div>
   </div>`;
