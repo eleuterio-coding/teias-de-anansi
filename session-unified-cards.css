@@ -350,6 +350,15 @@ body.hub-narrative-modern #sessions-list #combates .combat-table-row{
 body.hub-narrative-modern #sessions-list #combates .combat-table-row.is-turn{
  background:rgba(120,100,220,.15);
 }
+/* Hover da iniciativa: utilizar a paleta da sessão, nunca o --soft claro herdado. */
+@media (hover:hover) and (pointer:fine){
+ body.hub-narrative-modern #sessions-list #combates .combat-table-row:not(.is-turn):hover{
+  background:var(--session-inner);
+ }
+ body.hub-narrative-modern #sessions-list #combates .combat-table-row.is-turn:hover{
+  background:rgba(120,100,220,.22);
+ }
+}
 body.hub-narrative-modern #sessions-list #combates .combat-add-panel,
 body.hub-narrative-modern #sessions-list #combates .combat-master-details{
  padding:13px;margin-top:12px;
