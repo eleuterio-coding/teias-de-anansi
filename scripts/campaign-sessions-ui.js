@@ -399,18 +399,211 @@ function bindSessionRoster(card,ref){
   const usernames=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
   update(usernames);
  });
- for(const b of card.querySelectorAll('[data-session-roster-action]'))b.addEventListener('click',()=>{
-  let names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow),user=b.dataset.username,i=names.indexOf(user);
-  if(b.dataset.sessionRosterAction==='remove')names=names.filter(n=>n!==user);
-  else{const j=i+(b.dataset.sessionRosterAction==='up'?-1:1);if(i<0||j<0||j>=names.length)return;[names[i],names[j]]=[names[j],names[i]]}
-  update(names)
+ for(const b of card.querySelectorAll('[data-session-roster-action="remove"]'))b.addEventListener('click',()=>{
+  const names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
+  update(names.filter(name=>name!==b.dataset.username))
  });
- let moving='';
- for(const row of card.querySelectorAll('[data-session-roster-row]')){
-  row.addEventListener('dragstart',event=>{moving=row.dataset.sessionRosterRow;event.dataTransfer?.setData('text/plain',moving)});
-  row.addEventListener('dragover',event=>{if(moving&&moving!==row.dataset.sessionRosterRow)event.preventDefault()});
-  row.addEventListener('drop',event=>{event.preventDefault();const to=row.dataset.sessionRosterRow,names=[...card.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);const i=names.indexOf(moving),j=names.indexOf(to);if(i<0||j<0)return;names.splice(j,0,names.splice(i,1)[0]);update(names);moving=''});
- }
+ bindSessionRosterOrdering(card,update);
+}
+/* Interações de ordem reproduzidas da área Jogadores da Campanha:
+   mouse, touch, drag nativo, setas do teclado e confirmação visual. */
+function bindSessionRosterOrdering(card,update){
+ const list=card.querySelector('#participantes .session-roster-list');
+ if(!list)return;
+ if(list.dataset.rosterOrderBound==='true')return;
+ list.dataset.rosterOrderBound='true';
+ let dragging=null,mouse=null,touch=null,floating=null;
+ const rowFor=target=>target?.closest?.('#participantes [data-session-roster-row]')||null;
+ const interactive=target=>Boolean(target?.closest?.('input,textarea,select,a,button:not(.roster-grip),[contenteditable="true"]'));
+ const lift=(row,x,y)=>{
+  if(floating)return;
+  const section=list.closest('#participantes');
+  if(!section)return;
+  const rect=row.getBoundingClientRect(),sectionRect=section.getBoundingClientRect(),clone=row.cloneNode(true);
+  clone.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+  clone.querySelectorAll('input,select,button,a').forEach(el=>{el.tabIndex=-1;el.setAttribute('aria-hidden','true')});
+  clone.removeAttribute('draggable');clone.removeAttribute('tabindex');clone.removeAttribute('data-session-roster-row');
+  clone.classList.add('campaign-floating-card','roster-floating-card');
+  clone.setAttribute('aria-hidden','true');
+  // O card precisa permanecer sob #participantes para herdar as regras de grid,
+  // os estilos dos botões e as container queries da linha original.
+  // #participantes possui container-type: inline-size e é o containing block.
+  clone.style.setProperty('position','absolute','important');
+  clone.style.display='grid';
+  clone.style.gridTemplateColumns=getComputedStyle(row).gridTemplateColumns;
+  clone.style.gridTemplateRows=getComputedStyle(row).gridTemplateRows;
+  clone.style.left=(rect.left-sectionRect.left-section.clientLeft+section.scrollLeft)+'px';
+  clone.style.top=(rect.top-sectionRect.top-section.clientTop+section.scrollTop)+'px';
+  clone.style.width=rect.width+'px';clone.style.height=rect.height+'px';
+  section.appendChild(clone);
+  floating={element:clone,y};
+ };
+ const moveLift=(x,y)=>{
+  // A lista é vertical: deslocar o card lateralmente estourava a viewport.
+  if(floating)floating.element.style.transform='translate3d(0,'+(y-floating.y)+'px,0)';
+ };
+ const clearHighlight=()=>{
+  list.querySelectorAll('.roster-order-moving,.roster-order-before,.roster-order-after').forEach(row=>{
+   row.classList.remove('roster-order-moving','roster-order-before','roster-order-after');
+   delete row.dataset.dropPosition;
+  });
+ };
+ const clearVisual=()=>{
+  clearHighlight();floating?.element.remove();floating=null;
+ };
+ const dropAt=(source,target,y)=>{
+  const row=rowFor(target);
+  if(!row||row.dataset.sessionRosterRow===source)return null;
+  const box=row.getBoundingClientRect();
+  return {target:row.dataset.sessionRosterRow,row,position:y<box.top+box.height/2?'before':'after'};
+ };
+ const mark=(source,drop)=>{
+  clearHighlight();
+  const row=[...list.querySelectorAll('[data-session-roster-row]')].find(item=>item.dataset.sessionRosterRow===source);
+  if(row)row.classList.add('roster-order-moving');
+  if(drop){
+   drop.row.classList.add(drop.position==='before'?'roster-order-before':'roster-order-after');
+   drop.row.dataset.dropPosition=drop.position;
+  }
+ };
+ const confirm=(id)=>{
+  const row=[...document.querySelectorAll('#participantes [data-session-roster-row]')].find(item=>item.dataset.sessionRosterRow===id);
+  row?.classList.add('campaign-reorder-confirmed');
+  const heading=document.querySelector('#participantes .roster-heading');
+  if(!heading)return;
+  heading.querySelector('[data-reorder-confirmation]')?.remove();
+  const tag=document.createElement('span');
+  tag.className='campaign-reorder-feedback';tag.dataset.reorderConfirmation='';
+  tag.setAttribute('role','status');tag.textContent='✓ Ordem atualizada';
+  heading.appendChild(tag);
+  setTimeout(()=>{row?.classList.remove('campaign-reorder-confirmed');tag.remove()},2200);
+ };
+ const reorder=(source,target,position,focusName='')=>{
+  if(!source||!target||source===target)return false;
+  const names=[...list.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
+  const from=names.indexOf(source),to=names.indexOf(target);
+  if(from<0||to<0)return false;
+  names.splice(from,1);
+  const insert=names.indexOf(target)+(position==='after'?1:0);
+  names.splice(insert,0,source);
+  const original=[...list.querySelectorAll('[data-session-roster-row]')].map(row=>row.dataset.sessionRosterRow);
+  if(names.join('|')===original.join('|'))return false;
+  update(names);
+  confirm(source);
+  if(focusName){
+   const moved=document.querySelector('#participantes [data-session-roster-row="'+CSS.escape(source)+'"]');
+   (moved?.querySelector('[data-session-roster-action="'+focusName+'"]')||moved?.querySelector('.roster-grip'))?.focus();
+  }
+  return true
+ };
+ const neighborMove=(row,dir,focusName)=>{
+  const other=dir==='up'?row?.previousElementSibling:row?.nextElementSibling;
+  if(row?.dataset.sessionRosterRow&&other?.dataset.sessionRosterRow)
+   reorder(row.dataset.sessionRosterRow,other.dataset.sessionRosterRow,dir==='up'?'before':'after',focusName)
+ };
+ list.addEventListener('click',event=>{
+  const btn=event.target.closest?.('[data-session-roster-action="up"],[data-session-roster-action="down"]');
+  if(btn){event.preventDefault();neighborMove(rowFor(btn),btn.dataset.sessionRosterAction,btn.dataset.sessionRosterAction)}
+ });
+ list.addEventListener('keydown',event=>{
+  if(!['ArrowUp','ArrowDown'].includes(event.key))return;
+  const grip=event.target.closest?.('.roster-grip');
+  if(!grip&&!event.target.matches?.('[data-session-roster-row]'))return;
+  event.preventDefault();
+  neighborMove(rowFor(event.target),event.key==='ArrowUp'?'up':'down','grip')
+ });
+ const clearMouse=()=>{
+  if(!mouse)return;
+  const {row,pointerId,timer}=mouse;
+  clearTimeout(timer);mouse=null;
+  row.draggable=true;
+  if(row.hasPointerCapture?.(pointerId))row.releasePointerCapture(pointerId);
+  clearVisual()
+ };
+ list.addEventListener('pointerdown',event=>{
+  if(event.pointerType!=='mouse'||event.button!==0||interactive(event.target))return;
+  const row=rowFor(event.target);
+  if(!row)return;
+  const info={row,source:row.dataset.sessionRosterRow,pointerId:event.pointerId,x:event.clientX,y:event.clientY,active:false};
+  info.timer=setTimeout(()=>{
+   if(mouse===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
+  },160);
+  mouse=info;row.draggable=false;
+  row.setPointerCapture?.(event.pointerId);
+  event.preventDefault()
+ });
+ list.addEventListener('pointermove',event=>{
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  if(!mouse.active&&Math.hypot(event.clientX-mouse.x,event.clientY-mouse.y)<6)return;
+  mouse.active=true;event.preventDefault();
+  lift(mouse.row,mouse.x,mouse.y);
+  moveLift(event.clientX,event.clientY);
+  const drop=dropAt(mouse.source,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  mark(mouse.source,drop)
+ });
+ list.addEventListener('pointerup',event=>{
+  if(!mouse||mouse.pointerId!==event.pointerId)return;
+  const {source,active}=mouse;
+  const drop=dropAt(source,document.elementFromPoint(event.clientX,event.clientY),event.clientY);
+  clearMouse();if(active&&drop)reorder(source,drop.target,drop.position)
+ });
+ list.addEventListener('pointercancel',clearMouse);
+ list.addEventListener('dragstart',event=>{
+  const row=rowFor(event.target);
+  if(mouse){event.preventDefault();return}
+  if(!row||interactive(event.target)){event.preventDefault();return}
+  dragging={source:row.dataset.sessionRosterRow};
+  if(event.dataTransfer){event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',dragging.source)}
+  mark(dragging.source,null)
+ });
+ list.addEventListener('dragover',event=>{
+  if(!dragging)return;
+  const drop=dropAt(dragging.source,event.target,event.clientY);
+  if(!drop)return;
+  event.preventDefault();if(event.dataTransfer)event.dataTransfer.dropEffect='move';
+  mark(dragging.source,drop)
+ });
+ list.addEventListener('drop',event=>{
+  if(!dragging)return;
+  event.preventDefault();
+  const source=dragging.source,drop=dropAt(source,event.target,event.clientY);
+  dragging=null;clearVisual();if(drop)reorder(source,drop.target,drop.position)
+ });
+ list.addEventListener('dragend',()=>{dragging=null;clearVisual()});
+ const clearTouch=()=>{
+  if(touch?.timer)clearTimeout(touch.timer);
+  touch=null;clearVisual()
+ };
+ list.addEventListener('touchstart',event=>{
+  if(touch||interactive(event.target))return;
+  const row=rowFor(event.target),point=event.changedTouches[0];
+  if(!row||!point)return;
+  const info={source:row.dataset.sessionRosterRow,row,identifier:point.identifier,x:point.clientX,y:point.clientY,active:false};
+  info.timer=setTimeout(()=>{
+   if(touch===info&&!info.active){info.active=true;lift(row,info.x,info.y);mark(info.source,null)}
+  },280);
+  touch=info
+ },{passive:true});
+ list.addEventListener('touchmove',event=>{
+  if(!touch)return;
+  const point=[...event.touches].find(t=>t.identifier===touch.identifier);
+  if(!point)return;
+  if(!touch.active){
+   if(Math.hypot(point.clientX-touch.x,point.clientY-touch.y)>9)clearTouch();
+   return
+  }
+  event.preventDefault();
+  moveLift(point.clientX,point.clientY);
+  mark(touch.source,dropAt(touch.source,document.elementFromPoint(point.clientX,point.clientY),point.clientY))
+ },{passive:false});
+ list.addEventListener('touchend',event=>{
+  if(!touch)return;
+  const point=[...event.changedTouches].find(t=>t.identifier===touch.identifier);
+  if(!point)return;
+  const {source,active}=touch,drop=dropAt(source,document.elementFromPoint(point.clientX,point.clientY),point.clientY);
+  clearTouch();if(active){event.preventDefault();if(drop)reorder(source,drop.target,drop.position)}
+ },{passive:false});
+ list.addEventListener('touchcancel',clearTouch);
 }
 function sessionStagesHtml(restricted){
  const stages=[['overview','Visão geral'],['prepare','Preparar'],...(!restricted?[['live','Ao vivo']]:[]),['record','Registro']];
