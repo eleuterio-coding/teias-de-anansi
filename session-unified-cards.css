@@ -254,8 +254,9 @@ body.hub-narrative-modern #sessions-list #participantes .roster-floating-card :i
 
 /* Controle de Combates: cards internos, leitura no tema ativo, campos íntegros. */
 body.hub-narrative-modern #sessions-list #combates.session-combat-manager{
- display:grid;gap:14px;min-width:0;color:var(--session-text);
+ gap:14px;min-width:0;color:var(--session-text);
 }
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="live"]>#combates.session-combat-manager{display:grid!important}
 body.hub-narrative-modern #sessions-list #combates :is(.combat-empty-state,.combat-workspace,.combat-history-card,.combat-add-panel,.combat-master-details,.combat-finish-panel){
  min-width:0;border:1px solid var(--session-border);
  border-radius:12px;background:var(--session-inner);
