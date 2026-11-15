@@ -142,6 +142,7 @@ function managerHtml(ctx){
     <section class="combat-setup-card">
      <h5>Novo encontro</h5>
      <p class="mini">Crie um encontro da Sessão e prepare seu combate.</p>
+     <label>Nome do encontro<input data-new-encounter-combat-title placeholder="Nome do encontro"></label>
      <button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro e preparar combate</button>
     </section>
     <section class="combat-setup-card">
@@ -248,7 +249,7 @@ function bindCombatNode(ctx,node,combat){
 function bindManager(card,ctx){
  const manager=card.querySelector('.session-combat-manager');
  manager?.querySelector('[data-create-new-encounter-combat]')?.addEventListener('click',()=>{
-  const title=manager.querySelector('[data-new-combat-title]')?.value.trim()||'Encontro da Sessão',encounter=createEncounter(ctx.session,{title,kind:'combat'});
+  const title=manager.querySelector('[data-new-encounter-combat-title]')?.value.trim()||'Encontro da Sessão',encounter=createEncounter(ctx.session,{title,kind:'combat'});
   if(!encounter.ok)return announce(encounter.reason,false);
   const r=createCombatFromEncounter(ctx.session,encounter.encounter?.id||ctx.session.encounters.at(-1)?.id);if(!r.ok)return announce(r.reason,false);
   addSessionCharacters(ctx,r.combat);hydrateCombatCharacters(ctx,r.combat);persist(ctx,'Encontro criado e combate preparado. Agora adicione NPCs e monstros da Aventura.')
