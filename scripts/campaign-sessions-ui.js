@@ -247,8 +247,14 @@ function encounterSummary(session){
 }
 
 const SESSION_CARD_STATUSES=['current','next','active','planned','completed','cancelled'];
+/* Usar dados reais do Mestre; publicar contagem resumida quando não houver array. */
+function sessionEncounterCount(s){
+ if(Array.isArray(s.encounters))return s.encounters.length;
+ const count=Number(s.encounterCount);
+ return Number.isFinite(count)?Math.max(0,Math.floor(count)):0
+}
 function sessionListCard(s,restricted=false,availableAdventures=adventures){
- const adv=availableAdventures.find(a=>a.id===s.adventureId)||null,scenes=(s.scenes||[]).length,encounters=(s.encounters||[]).length;
+ const adv=availableAdventures.find(a=>a.id===s.adventureId)||null,scenes=(s.scenes||[]).length,encounters=sessionEncounterCount(s);
  const cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-card-cover',alt:''});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
  const description=s.summary||s.objective||'';
@@ -414,6 +420,7 @@ function sessionStagesHtml(restricted){
 function sessionCard(s,restricted=false){
  const adv=(restricted?sharedAdventures():adventures).find(a=>a.id===s.adventureId)||null, published=restricted?sharedCampaignRows().flatMap(row=>row.characters||[]):characters,participants=(s.participantCharacterIds||[]).map(id=>published.find(c=>c.id===id)?.name).filter(Boolean),playerNames=(s.participantUsernames||[]),cover=imageElementHtml(s.coverImage,s.coverImageUrl,{className:'campaign-product-hero-media',alt:`Capa de ${s.title}`});
  const campaignName=s.campaignName||campaignById(s.campaignId)?.name||'Sem campanha';
+ const encounterCount=sessionEncounterCount(s);
  const currentCampaign=restricted?sharedCampaignRows().find(row=>row.campaign.id===s.campaignId)?.campaign:campaignById(s.campaignId);
  return `<article id="session-${esc(s.id)}" class="session-card hub-detail-page ${s.status==='active'?'active':''}" data-session-id="${esc(s.id)}" data-session-source="${esc(s.source)}" data-session-stage="${esc(restricted&&sessionViewStage==='live'?'overview':sessionViewStage)}">
  <section class="campaign-product-hero session-product-hero">
@@ -423,14 +430,14 @@ function sessionCard(s,restricted=false){
  <div class="campaign-product-kicker">Campanha: ${esc(campaignName)}${adv?' · Aventura: '+esc(numberedAdventureTitle(adv)):''}</div>
  <div class="campaign-product-title-row"><h1>${esc(numberedSessionTitle(s))}</h1><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span></div>
  <p class="campaign-product-description">${esc(s.summary||s.objective||'Resumo da Sessão')}</p>
- <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge">${(s.encounterCount??(s.encounters||[]).length)} {(s.encounterCount??(s.encounters||[]).length)===1?'encontro':'encontros'}</span></div>
+ <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge">${encounterCount} {encounterCount===1?'encontro':'encontros'}</span></div>
  </div></section>
  <div class="campaign-product-summary">
  <div class="metric"><span>Status</span><strong>${esc(statusLabel(s.status))}</strong></div>
  <div class="metric"><span>Campanha</span><strong>${esc(campaignName)}</strong></div>
  <div class="metric"><span>Aventura</span><strong>${adv?esc(numberedAdventureTitle(adv)):'Sem aventura'}</strong></div>
  <div class="metric"><span>Personagens</span><strong>${participants.length}</strong></div>
- <div class="metric"><span>Encontros</span><strong>${s.encounterCount??(s.encounters||[]).length}</strong></div>
+ <div class="metric"><span>Encontros</span><strong>${encounterCount}</strong></div>
  </div>
  ${sessionStagesHtml(restricted)}
  <div class="hub-modern-next-session">${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}</div>
