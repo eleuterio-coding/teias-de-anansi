@@ -430,7 +430,7 @@ function sessionCard(s,restricted=false){
  <div class="campaign-product-kicker">Campanha: ${esc(campaignName)}${adv?' · Aventura: '+esc(numberedAdventureTitle(adv)):''}</div>
  <div class="campaign-product-title-row"><h1>${esc(numberedSessionTitle(s))}</h1><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span></div>
  <p class="campaign-product-description">${esc(s.summary||s.objective||'Resumo da Sessão')}</p>
- <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge">${encounterCount} {encounterCount===1?'encontro':'encontros'}</span></div>
+ <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge">${encounterCount} ${encounterCount===1?'encontro':'encontros'}</span></div>
  </div></section>
  <div class="campaign-product-summary">
  <div class="metric"><span>Status</span><strong>${esc(statusLabel(s.status))}</strong></div>
