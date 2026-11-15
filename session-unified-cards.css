@@ -394,3 +394,8 @@ body.hub-narrative-modern #sessions-list #combates .combat-history-section .mini
   padding:12px;
  }
 }
+
+/* O card externo da sessão não deve colorir os intervalos entre os cards internos. */
+body.hub-shell-enabled.hub-narrative-modern #sessions-list article.session-card.hub-detail-page{
+  background:transparent!important;
+}
