@@ -260,7 +260,6 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
  const description=s.summary||s.objective||'';
  const status=SESSION_CARD_STATUSES.includes(s.status)?s.status:'planned';
  const href=detailHref(s);
- const counts=`${scenes} ${scenes===1?'cena':'cenas'} · ${encounters} ${encounters===1?'encontro':'encontros'}`;
  const campaignLink=`<strong>${esc(campaignName)}</strong>`;
  const adventureLink=adv?`<strong>${esc(numberedAdventureTitle(adv))}</strong>`:`<strong>${s.adventureId?'Aventura não disponível':'Sem aventura'}</strong>`;
  const statusControl=restricted
@@ -286,7 +285,7 @@ function sessionListCard(s,restricted=false,availableAdventures=adventures){
     </div>
     <div class="campaign-card-metrics" role="group" aria-label="Cenas e encontros da sessão">
      <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${scenes}</strong><span>${scenes===1?'Cena':'Cenas'}</span></span></div>
-     <div class="campaign-card-stat"><span class="campaign-card-stat-copy"><strong>${encounters}</strong><span>${encounters===1?'Encontro':'Encontros'}</span></span></div>
+     <div class="campaign-card-stat session-encounter-count-stat" data-session-encounter-count="${encounters}" aria-label="${encounters} ${encounters===1?'encontro':'encontros'}"><span class="campaign-card-stat-copy"><strong>${encounters}</strong><span>${encounters===1?'Encontro':'Encontros'}</span></span></div>
     </div>
    </div>
   </div>
@@ -623,7 +622,7 @@ function sessionCard(s,restricted=false){
  <div class="campaign-product-kicker">Campanha: ${esc(campaignName)}${adv?' · Aventura: '+esc(numberedAdventureTitle(adv)):''}</div>
  <div class="campaign-product-title-row"><h1>${esc(numberedSessionTitle(s))}</h1><span class="badge ${esc(s.status)}">${esc(statusLabel(s.status))}</span></div>
  <p class="campaign-product-description">${esc(s.summary||s.objective||'Resumo da Sessão')}</p>
- <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge">${encounterCount} ${encounterCount===1?'encontro':'encontros'}</span></div>
+ <div class="campaign-product-meta">${s.date?`<span class="badge">${esc(s.date)}</span>`:''}<span class="badge">${playerNames.length} ${playerNames.length===1?'jogador':'jogadores'}</span><span class="badge">${(s.scenes||[]).length} ${(s.scenes||[]).length===1?'cena':'cenas'}</span><span class="badge session-encounter-count-badge" data-session-encounter-count="${encounterCount}" aria-label="${encounterCount} ${encounterCount===1?'encontro':'encontros'}">${encounterCount} ${encounterCount===1?'encontro':'encontros'}</span></div>
  </div></section>
  <div class="campaign-product-summary">
  <div class="metric"><span>Status</span><strong>${esc(statusLabel(s.status))}</strong></div>
