@@ -354,7 +354,7 @@ body.hub-narrative-modern #sessions-list .session-participant-roster .roster-lis
  min-width:0;
 }
 body.hub-narrative-modern #sessions-list .session-participant-roster .session-roster-item{
- grid-template-columns:28px 44px minmax(0,1fr) minmax(180px,1.1fr) 170px;
+ grid-template-columns:24px 40px minmax(0,1fr) minmax(180px,1.1fr) 170px;
  grid-template-rows:18px 44px;column-gap:12px;row-gap:6px;
  padding:13px 15px;min-width:0;max-width:100%;width:100%;
  border-radius:12px;border-color:var(--hub-border,#37506a);
@@ -365,14 +365,14 @@ body.hub-narrative-modern.hub-content-light #sessions-list .session-participant-
  background:var(--hub-reader-paper,#fff);border-color:var(--hub-reader-border,#cdd9e4);
 }
 body.hub-narrative-modern #sessions-list .session-participant-roster .session-roster-item .roster-grip{
- min-width:28px;width:28px;height:44px;min-height:44px;
+ min-width:24px;width:24px;height:40px;min-height:40px;
  border:1px solid var(--hub-border,#37506a);
  background:var(--hub-surface,#102033);
  border-radius:9px;
 }
 body.hub-narrative-modern #sessions-list .session-participant-roster .session-roster-item .roster-player-identity>.campaign-avatar-trigger,
 body.hub-narrative-modern #sessions-list .session-participant-roster .session-roster-item .roster-player-identity>.roster-avatar{
- width:44px;min-width:44px;height:44px;
+ width:40px;min-width:40px;height:44px;
  border-radius:9px;overflow:hidden;
 }
 body.hub-narrative-modern #sessions-list .session-participant-roster .session-roster-item .roster-player-name-line{
@@ -393,7 +393,7 @@ body.hub-narrative-modern #sessions-list .session-participant-roster .session-ro
 /* Container query é baseada no espaço real do card, não na janela. */
 @container session-roster (max-width:860px){
  body.hub-narrative-modern #sessions-list .session-participant-roster:not(.roster-readonly) .session-roster-item{
-  grid-template-columns:28px 44px minmax(0,1fr);
+  grid-template-columns:24px 40px minmax(0,1fr);
   grid-template-rows:18px 44px 18px 44px auto;
   gap:6px 10px;
  }
