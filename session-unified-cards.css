@@ -208,6 +208,19 @@ body.hub-narrative-modern #sessions-list #participantes .roster-floating-card{
  overflow:hidden;cursor:grabbing;box-shadow:0 14px 35px #0006!important;
 }
 body.hub-narrative-modern #sessions-list #participantes .roster-floating-card :is(a,button,select){pointer-events:none!important}
+/* Modo de leitura do jogador mantém as colunas de retrato, nome e personagem. */
+body.hub-narrative-modern #sessions-list #participantes.roster-readonly .session-roster-item{
+ cursor:default;grid-template-columns:40px minmax(0,1fr) minmax(0,1.12fr);
+}
+body.hub-narrative-modern #sessions-list #participantes.roster-readonly .session-roster-item .roster-player-identity>:is(.campaign-avatar-trigger,.roster-avatar){
+ grid-column:1;grid-row:2;
+}
+body.hub-narrative-modern #sessions-list #participantes.roster-readonly .session-roster-item .roster-player-identity>.roster-player-display{
+ grid-column:2;grid-row:1/3;
+}
+body.hub-narrative-modern #sessions-list #participantes.roster-readonly .session-roster-item .roster-player-character{
+ grid-column:3;grid-row:1/3;
+}
 /* Mesmo breakpoint do roster da Campanha: evita cortar ações antes do celular. */
 @container campaign-roster (max-width:710px){
  body.hub-narrative-modern #sessions-list #participantes:not(.roster-readonly) .session-roster-item{
