@@ -29,13 +29,21 @@ function participantOptions(ctx,encounter){const existing=new Set((encounter.com
 function blueprintRow(c){const meta=c.kind==='character'?'Personagem':c.kind==='monster'?'Monstro':'NPC';const details=c.kind==='character'?'Dados de combate vêm da Ficha Digital':[c.ac?'CA '+c.ac:'',c.maxHp?'PV '+c.maxHp:'',c.cr?'CR '+c.cr:''].filter(Boolean).join(' · ');return`<div class="encounter-blueprint-row" data-encounter-combatant="${esc(c.id)}"><div><strong>${esc(c.name)}</strong> <span class="badge">${meta}</span><div class="encounter-source">${esc(details||c.source||'')}</div></div><button type="button" class="danger" data-remove-encounter-combatant>Remover</button></div>`}
 function addToolsHtml(encounter,ctx){
  const listId='encounter-monsters-'+encounter.id;
- return`<div class="encounter-subcard"><h4>Participantes previstos</h4>
- <div class="monster-picker"><label>Personagem da Sessão<select data-add-encounter-character>${participantOptions(ctx,encounter)}</select></label><button type="button" data-add-encounter-character-button>Adicionar</button></div>
- <div class="monster-picker" style="margin-top:8px"><label>Monstro da Biblioteca<input type="search" data-encounter-monster-search list="${esc(listId)}" placeholder="Digite o nome do monstro"><datalist id="${esc(listId)}"></datalist></label><button type="button" data-add-encounter-monster>Adicionar</button></div>
- <div class="form-grid two"><label>NPC da Aventura<select data-encounter-adventure-npc>${adventureNpcOptions(ctx)}</select></label><button type="button" data-add-adventure-npc>Adicionar NPC</button>
- <label>Monstro da Aventura<select data-encounter-adventure-monster>${adventureMonsterOptions(ctx)}</select></label><button type="button" data-add-adventure-monster>Adicionar monstro</button></div><p class="mini" data-encounter-monster-status></p>
- <div class="npc-grid" style="margin-top:8px"><label>NPC personalizado<input data-encounter-npc-name placeholder="Nome"></label><label>CA<input data-encounter-npc-ac type="number" min="0" value="10"></label><label>PV<input data-encounter-npc-hp type="number" min="1" value="10"></label><label>Mod. iniciativa<input data-encounter-npc-init type="number" value="0"></label></div>
- <button type="button" class="secondary" data-add-encounter-npc style="margin-top:8px">Adicionar NPC</button></div>`
+ return`<section class="encounter-subcard encounter-participants-editor" aria-label="Adicionar participantes ao encontro">
+  <h4>Participantes previstos</h4>
+  <div class="encounter-picker-grid">
+   <div class="encounter-picker-row"><label>Personagem da Sessão<select data-add-encounter-character>${participantOptions(ctx,encounter)}</select></label><button type="button" data-add-encounter-character-button>Adicionar personagem</button></div>
+   <div class="encounter-picker-row"><label>Monstro da Biblioteca<input type="search" data-encounter-monster-search list="${esc(listId)}" placeholder="Digite o nome do monstro"><datalist id="${esc(listId)}"></datalist></label><button type="button" data-add-encounter-monster>Adicionar monstro</button></div>
+   <div class="encounter-picker-row"><label>NPC da Aventura<select data-encounter-adventure-npc>${adventureNpcOptions(ctx)}</select></label><button type="button" data-add-adventure-npc>Adicionar NPC</button></div>
+   <div class="encounter-picker-row"><label>Monstro da Aventura<select data-encounter-adventure-monster>${adventureMonsterOptions(ctx)}</select></label><button type="button" data-add-adventure-monster>Adicionar monstro</button></div>
+  </div>
+  <p class="mini" data-encounter-monster-status aria-live="polite"></p>
+  <div class="encounter-custom-npc">
+   <h5>NPC personalizado</h5>
+   <div class="npc-grid"><label>Nome<input data-encounter-npc-name placeholder="Nome"></label><label>CA<input data-encounter-npc-ac type="number" min="0" value="10"></label><label>PV<input data-encounter-npc-hp type="number" min="1" value="10"></label><label>Mod. iniciativa<input data-encounter-npc-init type="number" value="0"></label></div>
+   <div class="row-actions"><button type="button" class="secondary" data-add-encounter-npc>Adicionar NPC personalizado</button></div>
+  </div>
+ </section>`
 }
 function encounterCard(encounter,ctx){
  const legacy=encounter.status!=='planned';
@@ -87,7 +95,7 @@ function bindManager(card,ctx){
  });
  for(const node of manager.querySelectorAll('[data-encounter]')){
   const encounter=findEncounter(ctx,node.dataset.encounter);if(!encounter)continue;
-  node.querySelector('[data-save-encounter]')?.addEventListener('pointerdown',event=>{event.preventDefault();saveNode(ctx,node)});
+  node.querySelector('[data-save-encounter]')?.addEventListener('click',()=>saveNode(ctx,node));
   node.querySelector('[data-create-combat-from-encounter]')?.addEventListener('click',()=>{const previous=encounter.sessionSceneId,result=nodeData(node,ctx);if(result.error)return announce(result.error,false);const r=updateEncounter(ctx.session,encounter.id,result.patch);if(!r.ok)return announce(r.reason,false);if(result.resolved.adventureScene){populateSceneOpponents(ctx,r.encounter,result.resolved.adventureScene);populateScenePlayers(ctx,r.encounter);}if(persist(ctx,'Encontro salvo.')){syncAdventureCombatLink(ctx,{...result.resolved,encounter:r.encounter});window.dispatchEvent(new CustomEvent('hub-rpg:create-combat-from-encounter',{detail:{sessionId:ctx.session.id,encounterId:encounter.id}}))}});
   node.querySelector('[data-remove-encounter]')?.addEventListener('click',()=>{if(!confirm('Excluir este encontro? O histórico de combates já realizados não será apagado.'))return;const r=removeEncounter(ctx.session,encounter.id);if(!r.ok)return announce(r.reason,false);persist(ctx,'Encontro excluído.')});
   node.querySelector('[data-add-encounter-character-button]')?.addEventListener('click',()=>{const characterId=node.querySelector('[data-add-encounter-character]')?.value,character=ctx.characters.find(c=>c.id===characterId),r=addCharacterCombatant(encounter,{characterId,name:character?.name||characterId});if(!r.ok)return announce(r.reason,false);persist(ctx,'Personagem adicionado ao Encontro.')});
