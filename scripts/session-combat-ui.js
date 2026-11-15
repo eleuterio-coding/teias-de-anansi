@@ -125,11 +125,46 @@ function historyHtml(combat,ctx){
 }
 function encounterOptions(session){return'<option value="">— Selecione —</option>'+(session.encounters||[]).map(e=>'<option value="'+esc(e.id)+'">'+esc(e.title)+' · '+esc(e.kind||'combat')+'</option>').join('')}
 function managerHtml(ctx){
- const active=activeCombat(ctx.session),drafts=(ctx.session.combats||[]).filter(c=>c.status==='draft'),history=(ctx.session.combats||[]).filter(c=>c.status==='completed'||c.status==='cancelled').sort((a,b)=>String(b.endedAt||b.updatedAt).localeCompare(String(a.endedAt||a.updatedAt)));
- return'<section id="combates" class="session-subsection session-combat-manager"><div class="combat-section-title"><div><span class="combat-kicker">⚔ CONTROLE DE COMBATE</span><h4>Combates da Sessão</h4></div></div>'+
- (active?activeCombatHtml(active,ctx):'<div class="combat-empty-state"><strong>Nenhum combate em andamento</strong><div class="combat-create-grid"><label>Combate rápido<input data-new-combat-title placeholder="Nome do combate"></label><button type="button" data-create-quick-combat>Criar combate rápido</button><button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro do zero e preparar combate</button><label>Cena de combate da Aventura / Sessão<select data-combat-adventure-scene>'+combatSceneOptions(ctx.session,ctx.adventure)+'</select></label><button type="button" class="secondary" data-create-from-adventure-scene>Preparar combate da cena</button><label>Usar Encontro existente<select data-combat-encounter>'+encounterOptions(ctx.session)+'</select></label><button type="button" class="secondary" data-create-from-encounter>Criar a partir do Encontro</button></div></div>')+
- (drafts.length?'<div class="combat-history-section"><h4>Preparados</h4>'+drafts.map(c=>draftCombatHtml(c,ctx)).join('')+'</div>':'')+
- '<div class="combat-history-section"><h4>Histórico</h4>'+(history.length?history.map(c=>historyHtml(c,ctx)).join(''):'<div class="encounter-empty">Nenhum combate finalizado nesta Sessão.</div>')+'</div></section>'
+ const active=activeCombat(ctx.session);
+ const drafts=(ctx.session.combats||[]).filter(c=>c.status==='draft');
+ const history=(ctx.session.combats||[]).filter(c=>c.status==='completed'||c.status==='cancelled').sort((a,b)=>String(b.endedAt||b.updatedAt).localeCompare(String(a.endedAt||a.updatedAt)));
+ const setup=active?'':`
+  <div class="combat-empty-state">
+   <strong>Nenhum combate em andamento</strong>
+   <p class="mini">Escolha como deseja preparar o próximo combate.</p>
+   <div class="combat-setup-grid">
+    <section class="combat-setup-card">
+     <h5>Combate rápido</h5>
+     <p class="mini">Prepare uma luta independente de cenas e encontros.</p>
+     <label>Nome do combate<input data-new-combat-title placeholder="Nome do combate"></label>
+     <button type="button" data-create-quick-combat>Criar combate rápido</button>
+    </section>
+    <section class="combat-setup-card">
+     <h5>Novo encontro</h5>
+     <p class="mini">Crie um encontro da Sessão e prepare seu combate.</p>
+     <button type="button" class="secondary" data-create-new-encounter-combat>Criar encontro e preparar combate</button>
+    </section>
+    <section class="combat-setup-card">
+     <h5>Cena da Aventura ou Sessão</h5>
+     <label>Selecionar cena<select data-combat-adventure-scene>${combatSceneOptions(ctx.session,ctx.adventure)}</select></label>
+     <button type="button" class="secondary" data-create-from-adventure-scene>Preparar combate da cena</button>
+    </section>
+    <section class="combat-setup-card">
+     <h5>Encontro já existente</h5>
+     <label>Selecionar encontro<select data-combat-encounter>${encounterOptions(ctx.session)}</select></label>
+     <button type="button" class="secondary" data-create-from-encounter>Criar a partir do encontro</button>
+    </section>
+   </div>
+  </div>`;
+ return`<section id="combates" class="session-subsection session-combat-manager">
+  <div class="combat-section-title"><div><span class="combat-kicker">⚔ CONTROLE DE COMBATE</span><h4>Combates da Sessão</h4></div></div>
+  ${active?activeCombatHtml(active,ctx):setup}
+  ${drafts.length?`<div class="combat-history-section"><h4>Preparados</h4>${drafts.map(c=>draftCombatHtml(c,ctx)).join('')}</div>`:''}
+  <div class="combat-history-section">
+   <h4>Histórico</h4>
+   ${history.length?history.map(c=>historyHtml(c,ctx)).join(''):'<div class="encounter-empty">Nenhum combate finalizado nesta Sessão.</div>'}
+  </div>
+ </section>`
 }
 function injectCard(card){
  if(!card.querySelector('[data-save-session-main]')||card.querySelector('.session-combat-manager'))return;const ctx=contextForCard(card);if(!ctx.session)return;card.insertAdjacentHTML('beforeend',managerHtml(ctx));bindManager(card,ctx)
