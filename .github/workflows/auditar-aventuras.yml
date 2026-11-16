@@ -9,6 +9,9 @@ on:
       - 'scripts/adventure-integrity-ui.js'
       - 'scripts/adventure-ui.js'
       - 'scripts/adventure-session-structure.js'
+      - 'scripts/narrative-parchment-dashboard.js'
+      - 'narrative-parchment.css'
+      - 'tests/auditar-layout-pergaminho.mjs'
       - 'scripts/adventure-overview-ui.js'
       - 'scripts/campaign-sessions-ui.js'
       - 'scripts/campaign-state.js'
@@ -45,6 +48,8 @@ jobs:
           node --check scripts/adventure-integrity-ui.js
           node --check scripts/adventure-ui.js
           node --check scripts/adventure-session-structure.js
+          node --check scripts/narrative-parchment-dashboard.js
+          node --check tests/auditar-layout-pergaminho.mjs
           node --check scripts/adventure-overview-ui.js
           node --check scripts/campaign-sessions-ui.js
           node --check scripts/campaign-state.js
@@ -56,6 +61,8 @@ jobs:
         run: node tests/auditar-aventuras.mjs
       - name: Aventuras/Sessões · Referências, desenrolares e preservação
         run: node tests/auditar-aventuras-sessoes-desenrolares.mjs
+      - name: Layout Pergaminho · Aventuras e Sessões
+        run: node tests/auditar-layout-pergaminho.mjs
       - name: Exploração · Integridade, privacidade e migração
         run: node tests/auditar-exploracao.mjs
       - name: 13I · Regressão Campanhas/Mesas
