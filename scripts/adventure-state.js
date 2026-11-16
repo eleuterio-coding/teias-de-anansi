@@ -116,7 +116,7 @@ export function reassignAdventureCampaign(list=[],campaigns=[],adventureId,targe
    const linked=session.adventureId===source.id;
    const scenes=session.scenes.map(scene=>sceneIds.has(scene.adventureSceneId)?{...scene,adventureSceneId:null}:scene);
    if(!linked&&!scenes.some((scene,i)=>scene!==session.scenes[i]))return session;
-   changed=true;return{...session,adventureId:linked?null:session.adventureId,scenes,updatedAt:now()}
+   changed=true;return{...session,adventureId:linked?null:session.adventureId,scenes,mapIds:linked?[]:session.mapIds,objectiveIds:linked?[]:session.objectiveIds,updatedAt:now()}
   });
   return changed?sanitizeCampaign({...campaign,sessions,updatedAt:now()}):campaign
  });
