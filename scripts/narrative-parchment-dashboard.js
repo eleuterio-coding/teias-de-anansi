@@ -81,7 +81,11 @@ export function renderSessionParchmentDashboard(s,a,restricted=false){
  const developments=rows(a?.developments).filter(x=>x.sessionId===s.id);
  const players=rows(s.participantUsernames).length;
  const encounters=rows(s.encounters).length;
- const items=[
+ const items=restricted?[
+  {kind:'scene',title:'Visão Geral',hint:'Resumo compartilhado da sessão.',count:scenes.length,singular:'cena',plural:'cenas',anchor:'visao-geral'},
+  {kind:'player',title:'Jogadores',hint:'Participantes com acesso à sessão.',count:players,singular:'jogador',plural:'jogadores',anchor:'participantes'},
+  {kind:'timeline',title:'Linha do Tempo',hint:'Acontecimentos revelados durante a sessão.',count:scenes.length,singular:'cena',plural:'cenas',anchor:'linha-tempo'}
+ ]:[
   {kind:'map',title:'Mapas',hint:'Mapas selecionados da aventura.',count:maps.length,singular:'mapa',plural:'mapas',anchor:'session-adventure-overview'},
   {kind:'scene',title:'Cenas',hint:'Cenas preparadas para esta sessão.',count:scenes.length,singular:'cena',plural:'cenas',anchor:'session-adventure-overview'},
   {kind:'objective',title:'Objetivos',hint:'Objetivos escolhidos para a sessão.',count:objectives.length,singular:'objetivo',plural:'objetivos',anchor:'session-adventure-overview'},
