@@ -241,18 +241,31 @@ function adventureTimelineHtml(a){
 }
 function monstersHtml(a){
  const current=ordered(a.monsters||[]);
+ const sheetFields=[['size','Tamanho'],['type','Tipo'],['alignment','Alinhamento'],['speed','Deslocamento'],['challenge','Nível de desafio'],['str','Força'],['dex','Destreza'],['con','Constituição'],['int','Inteligência'],['wis','Sabedoria'],['cha','Carisma'],['savingThrows','Salvaguardas'],['skills','Perícias'],['resistances','Resistências'],['immunities','Imunidades'],['senses','Sentidos'],['languages','Idiomas'],['features','Características'],['actions','Ações'],['reactions','Reações'],['legendaryActions','Ações lendárias'],['notes','Notas']];
  return `<section id="monstros" class="card adventure-monster-library">
  <div class="explore-title"><div class="explore-title-copy"><h2>Monstros</h2></div><span class="badge">${monsterCatalogReady?monsterCatalog.length:'…'} na Biblioteca</span></div>
  <div class="adventure-monster-picker">
  <label>Monstro da Biblioteca<select id="new-adventure-monster" aria-describedby="adventure-monster-status" disabled><option value="">Carregando Biblioteca...</option></select></label>
- <div class="row-actions adventure-monster-actions"><button type="button" class="secondary" id="adventure-monster-consult" disabled>Consultar ficha</button><button type="button" id="add-adventure-monster" disabled>Adicionar à Aventura</button></div>
- <p id="adventure-monster-status" class="mini" role="status" aria-live="polite">Carregando Biblioteca...</p>
- </div>
+ <div class="row-actions adventure-monster-actions"><button type="button" class="secondary" id="adventure-monster-consult" disabled>Consultar ficha</button><button type="button" id="add-adventure-monster" disabled>Adicionar monstro existente</button></div>
+ <p id="adventure-monster-status" class="mini" role="status" aria-live="polite">Carregando Biblioteca...</p></div>
  <div id="adventure-monster-preview" class="adventure-monster-preview" role="status" aria-live="polite"></div>
+ <div class="explore-create-form"><h3>Criar monstro (simplificado)</h3><label>Nome<input id="quick-monster-name" placeholder="Nome do monstro"></label>
+ <label>Classe de Armadura<input id="quick-monster-ac" type="number" min="0" value="10"></label>
+ <label>Pontos de Vida<input id="quick-monster-hp" type="number" min="1" value="1"></label>
+ <button type="button" id="quick-create-monster">Criar monstro</button></div>
  <details class="adventure-monsters-attached" ${attachedMonstersExpanded?'open':''}><summary>Monstros adicionados à Aventura (${current.length})</summary>
- <div class="story-list">${current.length?current.map((monster,i)=>`<article class="story-card campaign-bullet-entry" data-reorder-adventure="monsters" data-monster-row="${esc(monster.id)}" tabindex="0"><strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Biblioteca')}</p><div class="campaign-line-actions">${moveTools('monsters',monster.id,i,current.length)}<button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></div></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div>
- </details>
- </section>`;
+ <div class="story-list">${current.length?current.map((monster,i)=>`<article class="story-card campaign-bullet-entry" data-reorder-adventure="monsters" data-monster-row="${esc(monster.id)}" tabindex="0">
+ <strong>${esc(monster.name)}</strong><p class="mini">${esc(monster.source||'Criação própria')}</p>
+ <details class="hub-modern-edit-panel"><summary>Editar ficha completa</summary><div class="form-grid two">
+ <label>Nome<input data-monster-property="name" value="${esc(monster.name)}"></label>
+ <label>Origem<input data-monster-property="source" value="${esc(monster.source)}"></label>
+ <label>CA<input data-monster-property="ac" type="number" min="0" value="${monster.ac}"></label>
+ <label>PV<input data-monster-property="maxHp" type="number" min="1" value="${monster.maxHp}"></label>
+ <label>Iniciativa<input data-monster-property="initiativeModifier" type="number" value="${monster.initiativeModifier}"></label>
+ ${sheetFields.map(([key,label])=>`<label>${label}<textarea data-monster-sheet-field="${key}" rows="2">${esc(monster.sheet?.[key]||'')}</textarea></label>`).join('')}
+ </div><button type="button" data-save-monster-sheet>Salvar ficha</button></details>
+ <div class="campaign-line-actions">${moveTools('monsters',monster.id,i,current.length)}
+ <button type="button" class="danger" data-remove-entity="${esc(monster.id)}" data-key="monsters">Remover da aventura</button></div></article>`).join(''):'<div class="story-empty">Nenhum monstro associado.</div>'}</div></details></section>`;
 }
 function bindAttachedSections(){
  document.querySelectorAll('[data-attached-section]').forEach(details=>details.addEventListener('toggle',()=>{
@@ -326,7 +339,8 @@ function workspaceHtml(a){
  const nav=[['visao-geral','Dados gerais'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
  const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
  const npcPanel=section('Adicionar NPC','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="adventure-npc-create">
- <div class="adventure-npc-new-row"><label>Nome<input id="new-npc-name" placeholder="Nome do NPC"></label><label>Papel<select id="new-npc-role">${npcRoleOptions()}</select></label><button type="button" id="add-campaign-npc">Adicionar NPC</button></div>
+ <div class="adventure-npc-new-row"><label>Nome<input id="new-npc-name" placeholder="Nome do NPC"></label><label>Papel<select id="new-npc-role">${npcRoleOptions()}</select></label><label>Descrição<input id="new-npc-description" placeholder="Descrição resumida"></label><button type="button" id="add-campaign-npc">Criar NPC (simplificado)</button></div>
+ <div class="adventure-npc-new-row"><label>NPC existente na Campanha<select id="attach-campaign-npc"><option value="">— Selecione —</option>${(c?.npcs||[]).filter(n=>!a.npcIds.includes(n.id)).map(n=>option(n.id,n.name,'')).join('')}</select></label><button type="button" id="add-existing-campaign-npc">Adicionar NPC existente</button></div>
  <div class="adventure-npc-actions">
   <a class="btn secondary adventure-npc-create-sheet" href="criacao-personagem.html?npc=1">Criar NPC</a>
   <div class="adventure-npc-registered-card"><div class="adventure-npc-registered-head"><strong>Vincular NPC existente</strong><span>Selecione uma ficha já cadastrada na Biblioteca.</span></div>
@@ -750,7 +764,7 @@ $('adventure-assignment')?.addEventListener('change',event=>{void reassignSelect
  const result=addCampaignNpc(campaigns,campaignId,{name:entry.name||'NPC',sheetId:entry.id,role:entry.role||''});
  if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);
  finishCreatingAdventureContent(updateAdventure(adventures,adventureId,{npcIds:[...new Set([...adventure().npcIds,result.entity.id])]}),'npc','NPC cadastrado vinculado à Campanha e à Aventura.')
- });$('add-campaign-npc')?.addEventListener('click',()=>{const result=addCampaignNpc(campaigns,campaignId,{name:$('new-npc-name')?.value,role:$('new-npc-role')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);finishCreatingAdventureContent(updateAdventure(adventures,adventureId,{npcIds:[...new Set([...adventure().npcIds,result.entity.id])]}),'npc','NPC adicionado à Campanha e à Aventura.')});$('add-campaign-location')?.addEventListener('click',()=>{const result=addCampaignLocation(campaigns,campaignId,{name:$('new-location-name')?.value,type:$('new-location-type')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);commit(updateAdventure(adventures,adventureId,{locationIds:[...new Set([...adventure().locationIds,result.entity.id])]}),'Local adicionado à Campanha e à Aventura.')});document.querySelectorAll('[data-delete-campaign-npc]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este NPC da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('npc',b.dataset.deleteCampaignNpc);commitCampaign(removeCampaignNpc(campaigns,campaignId,b.dataset.deleteCampaignNpc),'NPC excluído da Campanha.')}));document.querySelectorAll('[data-delete-campaign-location]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este Local da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('location',b.dataset.deleteCampaignLocation);commitCampaign(removeCampaignLocation(campaigns,campaignId,b.dataset.deleteCampaignLocation),'Local excluído da Campanha.')}));document.querySelectorAll('[data-deliver-treasure]').forEach(b=>b.addEventListener('click',()=>deliverTreasure(b.dataset.deliverTreasure)))}
+ });$('add-campaign-npc')?.addEventListener('click',()=>{const result=addCampaignNpc(campaigns,campaignId,{name:$('new-npc-name')?.value,role:$('new-npc-role')?.value,description:$('new-npc-description')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);finishCreatingAdventureContent(updateAdventure(adventures,adventureId,{npcIds:[...new Set([...adventure().npcIds,result.entity.id])]}),'npc','NPC adicionado à Campanha e à Aventura.')});$('add-campaign-location')?.addEventListener('click',()=>{const result=addCampaignLocation(campaigns,campaignId,{name:$('new-location-name')?.value,type:$('new-location-type')?.value});if(!result.ok)return feedback(result.reason,false);campaigns=writeCampaigns(result.list);commit(updateAdventure(adventures,adventureId,{locationIds:[...new Set([...adventure().locationIds,result.entity.id])]}),'Local adicionado à Campanha e à Aventura.')});document.querySelectorAll('[data-delete-campaign-npc]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este NPC da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('npc',b.dataset.deleteCampaignNpc);commitCampaign(removeCampaignNpc(campaigns,campaignId,b.dataset.deleteCampaignNpc),'NPC excluído da Campanha.')}));document.querySelectorAll('[data-delete-campaign-location]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este Local da Campanha e remover seus vínculos em todas as Aventuras?'))return;removeCampaignEntityRefs('location',b.dataset.deleteCampaignLocation);commitCampaign(removeCampaignLocation(campaigns,campaignId,b.dataset.deleteCampaignLocation),'Local excluído da Campanha.')}));document.querySelectorAll('[data-deliver-treasure]').forEach(b=>b.addEventListener('click',()=>deliverTreasure(b.dataset.deliverTreasure)))}
 normalizeRefs();render();
 document.addEventListener('pointerdown',event=>{
  if(event.target.closest?.('#adventure-list [data-status-disclosure]'))return;
