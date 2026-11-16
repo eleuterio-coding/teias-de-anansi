@@ -114,7 +114,7 @@ function factionSection(exploration,a,c){
     '</div><div class="row-actions"><button type="button" data-ex-save-faction>Salvar facção</button><button type="button" class="secondary" data-ex-delete="faction" data-ex-id="'+esc(f.id)+'">Excluir</button><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Fechar</button></div>':
     '<p class="mini">'+esc(f.relationship||f.publicDescription||'Sem relação registrada.')+'</p><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Editar facção</button>')+
   '</article>').join('')+'</div></details>'+
-  '<form id="ex-new-faction" class="explore-create-form"><label>Nome da facção<input name="name" required placeholder="Nome da facção"></label><label>Local de atuação<input name="operationArea" placeholder="Cidade, região ou território"></label><label>Descrição<textarea name="description" rows="3" placeholder="Descrição da facção"></textarea></label><button type="submit">Criar facção</button></form></section>'
+  '<form id="ex-new-faction" class="explore-create-form"><label>Nome da facção<input name="name" required placeholder="Nome da facção"></label>'+'<fieldset class="explore-reference"><legend>Membros conhecidos</legend>'+ (arr(c?.npcs).filter(n=>a.npcIds.includes(n.id)).map(n=>'<label><input type="checkbox" name="npcIds" value="'+esc(n.id)+'">'+esc(n.name)+'</label>').join('')||'<p class="mini">Adicione NPCs à Aventura para selecionar membros.</p>')+'</fieldset>'+'<label>Local de atuação<input name="operationArea" placeholder="Cidade, região ou território"></label><label>Descrição<textarea name="description" rows="3" placeholder="Descrição da facção"></textarea></label><button type="submit">Criar facção</button></form></section>'
 }
 export function renderAdventureFactions(a,c){
  const exploration=a.exploration||{factions:[]};
@@ -247,7 +247,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  factions?.querySelector('#ex-new-faction')?.addEventListener('submit',event=>{
   event.preventDefault();
   const name=event.target.elements.name.value.trim();if(!name)return;
-  const result=createExplorationEntity(get(),'faction',{name,operationArea:event.target.elements.operationArea.value,description:event.target.elements.description.value});
+  const result=createExplorationEntity(get(),'faction',{name,npcIds:[...event.target.querySelectorAll('input[name="npcIds"]:checked')].map(input=>input.value),operationArea:event.target.elements.operationArea.value,description:event.target.elements.description.value});
   if(result){expandedFactionId=result.entity.id;apply(result,'Facção criada.')}
  });
  mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
