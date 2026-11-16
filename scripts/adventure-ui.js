@@ -7,7 +7,7 @@ import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{timelineViewToggle,renderCampaignTimelineDiagram}from'./timeline-flowchart.js?v=20261027-scenes-timeline1';
 import{readCampaigns,writeCampaigns,campaignById,addCampaignNpc,updateCampaignNpc,removeCampaignNpc,addCampaignLocation,updateCampaignLocation,removeCampaignLocation,updateCampaignSession,updateSessionScene}from'./campaign-state.js?v=20261022-chronicles-final3';
 import{read as readCharacters,write as writeCharacters,readNpcs as readRegisteredNpcs}from'./character-builder/state.js';
-import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,SCENE_TYPE_LABELS,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureMonster,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,completeAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261027-auto-combat-roster1';
+import{readAdventures,writeAdventures,adventureById,adventuresForCampaign,createAdventure,updateAdventure,reassignAdventureCampaign,removeAdventure,addAdventureChapter,addAdventureScene,SCENE_TYPE_LABELS,addAdventureClue,addAdventureHandout,addAdventureTreasure,addAdventureMission,addAdventureMonster,addAdventureDevelopment,addAdventureTimelineEntry,updateAdventureEntity,removeAdventureEntity,unlinkAdventureCampaignEntity,completeAdventureScene,setAdventureClueStatus,setAdventureHandoutRevealed,setAdventureTreasureStatus,setAdventureMissionStatus}from'./adventure-state.js?v=20261027-auto-combat-roster1';
 import{reconcileAdventureCampaignRefs}from'./adventure-integrity.js?v=20261016-current-status2';
 import{uploadImage,copyAdventureCoverToCampaign,deleteImage,persistCampaignMediaState,persistAdventureCampaignReassignment,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20261023-simplified3';
 
@@ -15,7 +15,8 @@ import{renderAdventureExploration,renderAdventureFactions,bindAdventureExplorati
 import{bindAdventureAnimatedReorder}from'./adventure-animated-reorder.js?v=20261027-release-reset3';
 import{explorationProgress}from'./adventure-exploration-state.js?v=20261027-scenes-cast-v1';
 import{adventureRosterHtml,adventureMembers,bindAdventureRoster}from'./adventure-roster-ui.js?v=20261027-release-reset3';
-import{renderAdventureOverview}from'./adventure-overview-ui.js?v=20261031-workspace-clean1';
+import{renderAdventureOverview}from'./adventure-overview-ui.js?v=20261116-desfechos1';
+import{renderDevelopmentEditor}from'./adventure-session-structure.js?v=20261116-estrutura1';
 import{adventureCreateTile,ADVENTURE_STATUSES}from'./adventure-list-card.js?v=20261027-campaign-adventure-layout3';
 import{adventureFiltersHtml,adventureGroupsHtml,bindAdventureGroupScroll}from'./adventure-list-groups.js?v=20261027-campaign-adventure-layout3';
 
@@ -27,7 +28,7 @@ const campaign=()=>campaignById(campaigns,campaignId),adventure=()=>adventureByI
 let monsterCatalog=[],monsterCatalogReady=false;
 const expandedSceneIds=new Set(),attachedSectionsExpanded=new Set();
 let adventureContentTab='overview',adventureCreationKind='scene',adventureEditingContent=null,adventureSettingsOpen=false;
-const adventureContentKinds=[['player','Jogadores'],['scene','Cenas'],['area','Locais'],['map','Mapas'],['npc','NPCs'],['monster','Monstros'],['more','Facções e objetivos']];
+const adventureContentKinds=[['player','Jogadores'],['map','Mapas'],['scene','Cenas'],['npc','NPCs'],['monster','Monstros'],['faction','Facções'],['objective','Objetivos'],['development','Desenrolares'],['area','Locais']];
 const creationTarget={player:'participantes',scene:'criar-cena',area:'criar-area',map:'criar-mapa',npc:'npcs',monster:'monstros'};
 function finishCreatingAdventureContent(result,kind,message){
  if(!result?.ok)return commit(result,message);
@@ -219,14 +220,23 @@ function sceneCard(scene,a,i=0){
  </article>`;
 }
 function adventureTimelineHtml(a){
- // A única fonte é a coleção de Cenas. Não criar eventos paralelos e
- // não duplicar alterações de status ou objetivos do Mestre na linha do tempo.
- const nodes=ordered(a.scenes).map(scene=>({id:scene.id,text:scene.title,kind:'scene',automatic:true,href:'#cenas',children:[],visibleToPlayers:scene.visibleToPlayers}));
+ const nodes=ordered(a.scenes).map(scene=>({
+   id:scene.id,text:scene.title,kind:'scene',automatic:true,href:'#cenas',visibleToPlayers:scene.visibleToPlayers,
+   children:(a.developments||[]).filter(d=>d.sceneId===scene.id).map(d=>({id:d.id,text:d.description,kind:'development',automatic:false,children:[],visibleToPlayers:d.visibleToPlayers}))
+ })).concat((a.developments||[]).filter(d=>!d.sceneId).map(d=>({id:d.id,text:d.description,kind:'development',automatic:false,children:[],visibleToPlayers:d.visibleToPlayers})));
  const flowchart=adventureTimelineView==='flowchart';
- const list=nodes.map((node,index)=>`<li class="timeline-item timeline-item-linked" data-timeline-id="${esc(node.id)}"><div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${index+1}</span><div class="campaign-flow-card campaign-linked-card"><span class="campaign-linked-title"><span class="campaign-linked-kind">Cena</span><a class="campaign-linked-name campaign-timeline-title-link" href="#cenas" aria-label="Ver cena: ${esc(node.text)}">${esc(node.text)}</a></span></div></div></li>`).join('');
- return`<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section adventure-timeline-section">
-  <div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(adventureTimelineView)}</div>
-  ${flowchart?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):`<ol class="campaign-timeline-flow timeline-tree">${list||'<li class="campaign-blank-state">Nenhuma cena criada.</li>'}</ol>`}
+ const list=nodes.map((node,index)=>`<li class="timeline-item timeline-item-linked" data-timeline-id="${esc(node.id)}">
+   <div class="campaign-flow-step campaign-linked-step"><span class="campaign-flow-node" aria-hidden="true">${index+1}</span>
+     <div class="campaign-flow-card campaign-linked-card"><span class="campaign-linked-title"><span class="campaign-linked-kind">${node.kind==='scene'?'Cena':'Desenrolar'}</span>
+       ${node.kind==='scene'?`<a class="campaign-linked-name campaign-timeline-title-link" href="#cenas" aria-label="Ver cena: ${esc(node.text)}">${esc(node.text)}</a>`:`<span class="campaign-linked-name">${esc(node.text)}</span>`}</span></div>
+   </div>
+   ${node.children.length?`<ol class="timeline-children">${node.children.map(child=>`<li class="timeline-item"><div class="campaign-flow-step">
+    <span class="campaign-flow-node" aria-hidden="true">↳</span><div class="campaign-flow-card"><strong>Desenrolar</strong><p>${esc(child.text)}</p></div>
+   </div></li>`).join('')}</ol>`:''}
+   </li>`).join('');
+ return `<section id="linha-tempo" class="card campaign-editor-card campaign-timeline-section adventure-timeline-section">
+ <div class="campaign-editor-head hub-timeline-heading"><div class="hub-timeline-title-group"><h2>Linha do tempo</h2></div>${timelineViewToggle(adventureTimelineView)}</div>
+ ${flowchart?renderCampaignTimelineDiagram(nodes,new Set(),{readOnly:true}):`<ol class="campaign-timeline-flow timeline-tree">${list||'<li class="campaign-blank-state">Nenhuma cena ou desenrolar criado.</li>'}</ol>`}
  </section>`;
 }
 function monstersHtml(a){
@@ -314,7 +324,7 @@ function adventureSettingsHtml(a){return `<details class="hub-modern-edit-panel"
 function workspaceHtml(a){
  const c=campaign(),npcs=(c?.npcs||[]).filter(n=>a.npcIds.includes(n.id)).sort((x,y)=>a.npcIds.indexOf(x.id)-a.npcIds.indexOf(y.id)),locations=(c?.locations||[]).filter(l=>a.locationIds.includes(l.id)).sort((x,y)=>a.locationIds.indexOf(x.id)-a.locationIds.indexOf(y.id));
  const nav=[['visao-geral','Dados gerais'],['participantes','Participantes'],['cenas','Cenas'],['exploracao','Locais'],['mapas','Mapas'],['npcs','NPCs'],['faccoes','Facções'],['missoes','Objetivos'],['monstros','Monstros'],['linha-tempo','Linha do tempo'],['notas-mestre','Notas do Mestre']];
- const objectives=section('Adicionar Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
+ const objectives=section('Objetivos','missoes',ordered(a.missions).map((m,i)=>missionCard(m,a,i)).join(''),`<div class="form-grid two"><label>Objetivo<input id="new-mission-title"></label><label>Descrição<input id="new-mission-description"></label><button type="button" id="add-mission">Adicionar objetivo</button></div>`);
  const npcPanel=section('Adicionar NPC','npcs',npcs.map((n,i)=>npcCard(n,a,c,i)).join(''),`<div class="adventure-npc-create">
  <div class="adventure-npc-new-row"><label>Nome<input id="new-npc-name" placeholder="Nome do NPC"></label><label>Papel<select id="new-npc-role">${npcRoleOptions()}</select></label><button type="button" id="add-campaign-npc">Adicionar NPC</button></div>
  <div class="adventure-npc-actions">
@@ -354,7 +364,7 @@ function workspaceHtml(a){
   </header>
   <div class="campaign-sections campaign-editor-grid hub-detail-grid adventure-workspace-editors">
    ${participantsHtml(a)}${scenes}
-   ${renderAdventureExploration(a,c)}${addScene}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}
+   ${renderAdventureExploration(a,c)}${addScene}${npcPanel}${renderAdventureFactions(a,c)}${objectives}${monstersHtml(a)}${renderDevelopmentEditor(a,c)}
    
   </div>
   <div class="adventure-creation-footer"><button type="button" class="secondary" data-adventure-overview-return>Voltar à Visão Geral</button><button type="button" data-save-adventure-workspace>Salvar</button></div>
@@ -368,7 +378,7 @@ function arrangeAdventureContentWorkspace(){
  const groups={
   participantes:'player',cenas:'scene','criar-cena':'scene',
   exploracao:'area','criar-area':'area',mapas:'map','criar-mapa':'map',
-  npcs:'npc',monstros:'monster',faccoes:'more',missoes:'more',
+  npcs:'npc',monstros:'monster',faccoes:'faction',missoes:'objective',desenrolares:'development',
   
  };
  const editor=creation.querySelector('.adventure-workspace-editors');
@@ -616,6 +626,41 @@ function bindAdventureVisibilityAndOrder(){
  bindStructuredDetails({getCampaign:()=>adventure(),getNpcs:()=>[],save:(patch,{message}={})=>commit(updateAdventure(adventures,adventureId,patch),message||'Linha do tempo atualizada.'),feedback})
 }
 
+function bindAdventureStructuralControls(){
+ document.getElementById('add-development')?.addEventListener('click',()=>{
+  const description=document.getElementById('new-development-description')?.value.trim();
+  if(!description)return feedback('Descreva o acontecimento.',false);
+  const result=addAdventureDevelopment(adventures,adventureId,{
+   description,sessionId:document.getElementById('new-development-session')?.value||null,
+   sceneId:document.getElementById('new-development-scene')?.value||null
+  });
+  finishCreatingAdventureContent(result,'development','Desenrolar registrado.');
+ });
+ document.querySelectorAll('[data-development-save]').forEach(button=>button.addEventListener('click',()=>{
+  const node=button.closest('[data-development-row]'),patch={};
+  node.querySelectorAll('[data-development-field]').forEach(field=>patch[field.dataset.developmentField]=field.value);
+  commit(updateAdventureEntity(adventures,adventureId,'developments',node.dataset.developmentRow,patch),'Desenrolar atualizado.');
+ }));
+ document.getElementById('add-existing-campaign-npc')?.addEventListener('click',()=>{
+  const id=document.getElementById('attach-campaign-npc')?.value,a=adventure();
+  if(!id||!campaign()?.npcs?.some(n=>n.id===id))return feedback('Selecione um NPC da Campanha.',false);
+  finishCreatingAdventureContent(updateAdventure(adventures,adventureId,{npcIds:[...new Set([...a.npcIds,id])]}),'npc','NPC existente vinculado.');
+ });
+ document.getElementById('quick-create-monster')?.addEventListener('click',()=>{
+  const name=document.getElementById('quick-monster-name')?.value.trim();
+  if(!name)return feedback('Informe o nome do monstro.',false);
+  finishCreatingAdventureContent(addAdventureMonster(adventures,adventureId,{
+   name,source:'Criação própria',ac:Number(document.getElementById('quick-monster-ac')?.value)||10,
+   maxHp:Number(document.getElementById('quick-monster-hp')?.value)||1
+  }),'monster','Monstro criado.');
+ });
+ document.querySelectorAll('[data-save-monster-sheet]').forEach(button=>button.addEventListener('click',()=>{
+  const node=button.closest('[data-monster-row]'),patch={},sheet={};
+  node.querySelectorAll('[data-monster-property]').forEach(input=>patch[input.dataset.monsterProperty]=input.type==='number'?Number(input.value):input.value);
+  node.querySelectorAll('[data-monster-sheet-field]').forEach(input=>sheet[input.dataset.monsterSheetField]=input.value);
+  commit(updateAdventureEntity(adventures,adventureId,'monsters',node.dataset.monsterRow,{...patch,sheet}),'Ficha do monstro atualizada.');
+ }));
+}
 function bindAdventureNotes(){
  const section=document.getElementById('notas-mestre');
  bindNoteSection(section,{
@@ -697,7 +742,7 @@ function bind(){
  $('cancel-adventure-create')?.addEventListener('click',()=>{createPanelOpen=false;render()});
 
  
-$('adventure-assignment')?.addEventListener('change',event=>{void reassignSelectedAdventure(event.target.value)});$('adventure-campaign')?.addEventListener('change',e=>{campaignId=e.target.value;adventureId='';syncUrl();render()});$('create-adventure')?.addEventListener('click',()=>{const result=createAdventure(adventures,newAdventureData());if(result?.ok){adventureContentTab='create';adventureCreationKind='scene'}commit(result,'Aventura criada.')});document.querySelectorAll('[data-open-adventure]').forEach(b=>b.addEventListener('click',()=>{adventureId=b.dataset.openAdventure;const selected=adventure();if(selected)campaignId=selected.campaignId;syncUrl();render()}));document.querySelectorAll('[data-delete-adventure]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir esta Aventura?'))return;const target=adventures.find(row=>row.id===b.dataset.deleteAdventure),result=removeAdventure(adventures,b.dataset.deleteAdventure);if(result.ok){adventures=writeAdventures(result.list);if(adventureId===b.dataset.deleteAdventure)adventureId='';render();feedback('Aventura excluída.');if(target?.coverImage)deleteImage(target.coverImage).catch(()=>{})}}));if(!adventure())return;bindAdventureExploration({getAdventure:adventure,getCampaign:campaign,feedback,save:(exploration,message,rerenderOnly=false)=>{if(rerenderOnly){render();return}if(message==='Mapa criado.'||message==='Local criado.'){adventureContentTab='create';adventureCreationKind=message==='Mapa criado.'?'map':'area';adventureEditingContent=null}commit(updateAdventure(adventures,adventureId,{exploration}),message);}});bindAdventureFields();bindAdventureCover();bindParticipants();bindAttachedSections();bindEntityRows();bindScenes();bindCampaignEntities();bindAdventureSaveButtons();bindAdventureNotes();bindAdventureVisibilityAndOrder();document.querySelectorAll('[data-remove-entity]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este registro da Aventura?'))return;commit(removeAdventureEntity(adventures,adventureId,b.dataset.key,b.dataset.removeEntity),'Registro excluído.')}));document.querySelectorAll('[data-complete-scene]').forEach(b=>b.addEventListener('click',()=>commit(completeAdventureScene(adventures,adventureId,b.dataset.completeScene),'Cena concluída.')));$('add-chapter')?.addEventListener('click',()=>commit(addAdventureChapter(adventures,adventureId,{title:$('new-chapter-title')?.value,arc:$('new-chapter-arc')?.value}),'Capítulo adicionado.'));$('add-mission')?.addEventListener('click',()=>commit(addAdventureMission(adventures,adventureId,{title:$('new-mission-title')?.value,kind:'side',description:$('new-mission-description')?.value}),'Missão adicionada.'));$('add-clue')?.addEventListener('click',()=>commit(addAdventureClue(adventures,adventureId,{title:$('new-clue-title')?.value,text:$('new-clue-text')?.value}),'Pista adicionada.'));$('add-material')?.addEventListener('click',()=>commit(addAdventureHandout(adventures,adventureId,{title:$('new-material-title')?.value,content:$('new-material-content')?.value}),'Material adicionado.'));$('add-treasure')?.addEventListener('click',()=>commit(addAdventureTreasure(adventures,adventureId,{name:$('new-treasure-name')?.value,description:$('new-treasure-description')?.value,type:'magic-item'}),'Tesouro adicionado.'));$('add-scene')?.addEventListener('click',()=>{const title=$('new-scene-title')?.value?.trim();if(!title)return feedback('Informe o nome da cena.',false);finishCreatingAdventureContent(addAdventureScene(adventures,adventureId,{title,sceneType:$('new-scene-type')?.value||'other',areaId:$('new-scene-location')?.value||null}),'scene','Cena adicionada.')});$('add-timeline')?.addEventListener('click',()=>commit(addAdventureTimelineEntry(adventures,adventureId,{title:$('new-timeline-title')?.value,text:$('new-timeline-text')?.value}),'Registro adicionado.'));$('add-registered-npc')?.addEventListener('click',()=>{
+$('adventure-assignment')?.addEventListener('change',event=>{void reassignSelectedAdventure(event.target.value)});$('adventure-campaign')?.addEventListener('change',e=>{campaignId=e.target.value;adventureId='';syncUrl();render()});$('create-adventure')?.addEventListener('click',()=>{const result=createAdventure(adventures,newAdventureData());if(result?.ok){adventureContentTab='create';adventureCreationKind='scene'}commit(result,'Aventura criada.')});document.querySelectorAll('[data-open-adventure]').forEach(b=>b.addEventListener('click',()=>{adventureId=b.dataset.openAdventure;const selected=adventure();if(selected)campaignId=selected.campaignId;syncUrl();render()}));document.querySelectorAll('[data-delete-adventure]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir esta Aventura?'))return;const target=adventures.find(row=>row.id===b.dataset.deleteAdventure),result=removeAdventure(adventures,b.dataset.deleteAdventure);if(result.ok){adventures=writeAdventures(result.list);if(adventureId===b.dataset.deleteAdventure)adventureId='';render();feedback('Aventura excluída.');if(target?.coverImage)deleteImage(target.coverImage).catch(()=>{})}}));if(!adventure())return;bindAdventureExploration({getAdventure:adventure,getCampaign:campaign,feedback,save:(exploration,message,rerenderOnly=false)=>{if(rerenderOnly){render();return}if(message==='Mapa criado.'||message==='Local criado.'){adventureContentTab='create';adventureCreationKind=message==='Mapa criado.'?'map':'area';adventureEditingContent=null}commit(updateAdventure(adventures,adventureId,{exploration}),message);}});bindAdventureFields();bindAdventureCover();bindParticipants();bindAttachedSections();bindEntityRows();bindScenes();bindCampaignEntities();bindAdventureSaveButtons();bindAdventureNotes();bindAdventureStructuralControls();bindAdventureVisibilityAndOrder();document.querySelectorAll('[data-remove-entity]').forEach(b=>b.addEventListener('click',()=>{if(!confirm('Excluir este registro da Aventura?'))return;commit(removeAdventureEntity(adventures,adventureId,b.dataset.key,b.dataset.removeEntity),'Registro excluído.')}));document.querySelectorAll('[data-complete-scene]').forEach(b=>b.addEventListener('click',()=>commit(completeAdventureScene(adventures,adventureId,b.dataset.completeScene),'Cena concluída.')));$('add-chapter')?.addEventListener('click',()=>commit(addAdventureChapter(adventures,adventureId,{title:$('new-chapter-title')?.value,arc:$('new-chapter-arc')?.value}),'Capítulo adicionado.'));$('add-mission')?.addEventListener('click',()=>commit(addAdventureMission(adventures,adventureId,{title:$('new-mission-title')?.value,kind:'side',description:$('new-mission-description')?.value}),'Missão adicionada.'));$('add-clue')?.addEventListener('click',()=>commit(addAdventureClue(adventures,adventureId,{title:$('new-clue-title')?.value,text:$('new-clue-text')?.value}),'Pista adicionada.'));$('add-material')?.addEventListener('click',()=>commit(addAdventureHandout(adventures,adventureId,{title:$('new-material-title')?.value,content:$('new-material-content')?.value}),'Material adicionado.'));$('add-treasure')?.addEventListener('click',()=>commit(addAdventureTreasure(adventures,adventureId,{name:$('new-treasure-name')?.value,description:$('new-treasure-description')?.value,type:'magic-item'}),'Tesouro adicionado.'));$('add-scene')?.addEventListener('click',()=>{const title=$('new-scene-title')?.value?.trim();if(!title)return feedback('Informe o nome da cena.',false);finishCreatingAdventureContent(addAdventureScene(adventures,adventureId,{title,sceneType:$('new-scene-type')?.value||'other',areaId:$('new-scene-location')?.value||null}),'scene','Cena adicionada.')});$('add-timeline')?.addEventListener('click',()=>commit(addAdventureTimelineEntry(adventures,adventureId,{title:$('new-timeline-title')?.value,text:$('new-timeline-text')?.value}),'Registro adicionado.'));$('add-registered-npc')?.addEventListener('click',()=>{
  const selected=$('attach-existing-npc')?.value,entry=readRegisteredNpcs().find(x=>x.id===selected);
  if(!entry)return feedback('Selecione um NPC cadastrado.',false);
  const existing=campaign()?.npcs?.find(x=>x.sheetId===entry.id);
