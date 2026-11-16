@@ -3,6 +3,7 @@ import {adventureAssignments,adventureMembers} from './adventure-roster-ui.js?v=
 import {playerAvatarHtml,characterAvatarHtml} from './profile-images.js?v=20261021-user1';
 import {renderCampaignSessionCard} from './campaign-session-card.js';
 import {imageElementHtml} from './image-media.js?v=20261023-simplified3';
+import {renderDevelopmentOverview} from './adventure-session-structure.js?v=20261116-estrutura1';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rows=value=>Array.isArray(value)?value:[];
 const ordered=value=>rows(value).slice().sort((a,b)=>(Number(a.order)||0)-(Number(b.order)||0));
@@ -57,7 +58,7 @@ export function renderAdventureOverview(a,c,characters=[]){
  const factions=rows(a.exploration?.factions),factionCards=factions.map(f=>card(f.name,
   ({friendly:'Amigável',neutral:'Neutra',hostile:'Hostil',allied:'Aliada',unknown:'Indefinida'})[f.stance]||f.stance,
   p(f.publicDescription||f.description||f.relationship),
-  fields([['Objetivo',f.objective],['Relações',f.relationship],['Descrição do Mestre',f.description],['Notas',f.dmNotes]]),'faction')).join('');
+  fields([['Objetivo',f.objective],['Relações',f.relationship],['Local de atuação',f.operationArea],['Membros conhecidos',names(f.npcIds,linkedNpcs)],['Descrição do Mestre',f.description],['Notas',f.dmNotes]]),'faction')).join('');
  const missionCards=ordered(a.missions).map(m=>card(m.title,
   ({hidden:'Oculta',active:'Ativa',completed:'Concluída',failed:'Falhou',abandoned:'Abandonada'})[m.status]||m.status,
   p(m.description),fields([['Recompensa',m.reward],['Consequência',m.consequence],['Notas',m.notes]]),'mission')).join('');
@@ -79,5 +80,6 @@ export function renderAdventureOverview(a,c,characters=[]){
   section('overview-monstros','Monstros',monsters.length,monsterCards)+
   section('overview-objetivos','Objetivos',rows(a.missions).length,missionCards)+
   section('overview-faccoes','Facções',factions.length,factionCards)+
+   renderDevelopmentOverview(a,c)+
   (sessionCards?'<section class="adventure-read-section adventure-read-sessions adventure-panel-card" id="overview-sessoes"><header class="adventure-read-section-head"><div><h2>Sessões vinculadas</h2></div><span class="adventure-read-count">'+sessions.length+'</span></header><div class="list campaign-player-story-grid adventure-overview-sessions-grid">'+sessionCards+'</div></section>':'');
 }
