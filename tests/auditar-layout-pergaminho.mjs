@@ -49,7 +49,7 @@ assert.match(css,/\.parchment-dashboard-columns/);
 const tokens=readFileSync(new URL('../hub-design-tokens.css',import.meta.url),'utf8');
 for(const variable of ['bg','surface','surface-2','surface-3','text','text-2','border','accent','accent-2']){
  assert.match(tokens,new RegExp('--hub-'+variable+':'),`Paleta global sem --hub-${variable}`);
- assert.match(css,new RegExp('var\\(--hub-'+variable.replace(/[.*+?^${}()|[\]\\]/g,'\\assert.match(css,/\.parchment-dashboard-columns/);')+'\\)'),`Tela deve herdar --hub-${variable}`);
+ assert.ok(css.includes('var(--hub-'+variable+')'),`Tela deve herdar --hub-${variable}`);
 }
 assert.match(css,/color-scheme:dark/,'Aventuras/Sessões devem compartilhar o tema escuro do Hub');
 assert.match(css,/\.parchment-dashboard-columns/,'Hierarquia visual preservada');
