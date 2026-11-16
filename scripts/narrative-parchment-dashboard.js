@@ -27,7 +27,7 @@ function lastDevelopments(items,scenes){
  return '<div class="parchment-recent-list">'+ordered.map(d=>{
   const label=rows(scenes).find(s=>s.id===d.sceneId)?.title||'Acontecimento sem cena vinculada';
   const dt=d.at||d.createdAt;
-  const formatted=dt&&!Number.isNaN(Date.parse(dt))?new Date(dt).toLocaleDateString('pt-BR',{timeZone:'UTC'}):'';
+  const formatted=dt&&!Number.isNaN(Date.parse(dt))?new Date(dt).toLocaleDateString('pt-BR'):'';
   return '<article class="parchment-recent-entry">'+emblem('development')+'<div><strong>'+esc(d.description||'Desenrolar')+'</strong><small>'+esc(label)+'</small></div>'+
    (formatted?'<time datetime="'+esc(dt)+'">'+esc(formatted)+'</time>':'')+'</article>';
  }).join('')+'</div>';
@@ -78,7 +78,7 @@ export function renderSessionParchmentDashboard(s,a,restricted=false){
  const maps=rows(a?.exploration?.levels).filter(x=>rows(s.mapIds).includes(x.id));
  const scenes=rows(s.scenes);
  const objectives=rows(a?.missions).filter(x=>rows(s.objectiveIds).includes(x.id));
- const developments=rows(a?.developments).filter(x=>x.sessionId===s.id);
+ const developments=rows(a?.developments).filter(x=>x.sessionId===s.id&&(!restricted||x.visibleToPlayers===true));
  const players=rows(s.participantUsernames).length;
  const encounters=rows(s.encounters).length;
  const items=restricted?[
