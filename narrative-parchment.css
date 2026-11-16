@@ -1,0 +1,387 @@
+/* Teias de Anansi — layout Pergaminho para Aventuras e Sessões.
+   Baseado na referência visual enviada; somente essas duas rotas usam o tema.
+   Componentes de criação, edição, dados e sincronização permanecem os originais. */
+body.hub-narrative-modern.hub-parchment {
+  background:#f6efe5;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list,#session-list-section) {
+  --hub-surface:#fffaf3;
+  --hub-surface-2:#f7eee3;
+  --hub-text:#36272a;
+  --hub-text-2:#715e5f;
+  --hub-border:#d9c5b7;
+  --hub-accent:#772d39;
+  --hub-accent-2:#8c4851;
+  --nm-accent:#79303a;
+  --nm-accent-solid:#752932;
+  --nm-ink:#36272a;
+  --nm-muted:#725e60;
+  --nm-surface:#fffaf4;
+  --nm-raised:#f8f0e7;
+  --nm-soft:#f4e8df;
+  --nm-border:#dcc9ba;
+  --nm-gradient:linear-gradient(115deg,#5c3037,#885a55 60%,#d8aa75);
+  color:#36272a;
+  color-scheme:light;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .hub-detail-page {
+  color:#332729;
+  background:transparent;
+}
+body.hub-parchment #adventure-root .adventure-shell.hub-detail-page,
+body.hub-parchment #sessions-list>.session-card.hub-detail-page {
+  max-width:1536px;
+  margin-inline:auto;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.campaign-product-hero,.campaign-editor-card,.adventure-panel-card,.adventure-read-card,.story-card,.session-adventure-group,.adventure-campaign-group) {
+  border-color:#ddcbbc;
+  box-shadow:0 2px 10px rgba(82,44,32,.045);
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero {
+  background:linear-gradient(90deg,rgba(57,26,34,.92) 0%,rgba(87,46,46,.80) 39%,rgba(97,61,52,.28) 100%),linear-gradient(128deg,#4d2b33,#b78067 66%,#dcc19a);
+  min-height:167px;
+  border:1px solid #bf9b87;
+  border-radius:17px 17px 9px 9px;
+  overflow:hidden;
+  isolation:isolate;
+  position:relative;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero::after {
+  content:"";
+  position:absolute;inset:0;
+  pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 78% 12%,rgba(255,228,170,.36),transparent 40%),
+             linear-gradient(to bottom,transparent 75%,rgba(57,27,29,.25));
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero-media {
+  object-fit:cover;
+  object-position:center 38%;
+  opacity:.69;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.campaign-product-hero-content,.campaign-product-actions){
+  position:relative;z-index:2;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero-content {
+  color:#fff8ef;
+  text-shadow:0 1px 4px rgba(23,10,14,.25);
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-title-row h1 {
+  color:#fff9ed;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(1.6rem,2.55vw,2.55rem);
+  font-weight:700;
+  letter-spacing:-.025em;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.campaign-product-kicker,.campaign-product-description){
+  color:#fff0e3;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .badge {
+  background:rgba(255,245,227,.92);border-color:rgba(255,246,230,.72);
+  color:#4b262f;text-shadow:none;font-weight:700;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .campaign-product-actions :is(a,button) {
+  background:#fff9f1;color:#5d2834;border:1px solid #e4cdbc;
+  border-radius:9px;font-weight:750;min-height:39px;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .campaign-product-actions :is(a,button):hover {
+  background:#f5ded1;border-color:#fff0e3;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,152px),1fr));
+  gap:0;
+  padding:8px 14px;
+  margin-top:-2px;
+  background:#fffaf4;
+  border:1px solid #dac6b8;
+  border-radius:0 0 13px 13px;
+  box-shadow:0 3px 9px rgba(62,27,32,.045);
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary .metric {
+  display:flex;flex-direction:row;align-items:center;justify-content:flex-start;
+  flex-wrap:wrap;gap:5px 8px;min-height:43px;
+  padding:6px 13px;background:transparent;border:0;
+  border-right:1px solid #e8d9cd;border-radius:0;box-shadow:none;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary .metric:last-child{border-right:0}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary .metric span {
+  color:#765e5a;font-size:.79rem;font-weight:650;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary .metric strong {
+  color:#5a2931;font-size:.88rem;overflow-wrap:anywhere;font-weight:750;
+}
+body.hub-parchment #adventure-root .adventure-content-tabs,
+body.hub-parchment #sessions-list .hub-modern-session-tabs {
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px;
+  margin:8px 0 0;padding:5px;
+  border:0;border-bottom:1px solid #dbc7b7;border-radius:0;
+  background:transparent;box-shadow:none;
+}
+body.hub-parchment #adventure-root .adventure-content-tabs>button,
+body.hub-parchment #sessions-list .hub-modern-session-tabs>button {
+  flex:0 1 auto;min-width:132px;min-height:44px;
+  border:1px solid transparent;border-radius:9px 9px 3px 3px;
+  background:transparent;color:#654b4b;
+  font-size:.94rem;font-weight:700;padding:10px 16px;
+  box-shadow:none;
+}
+body.hub-parchment #adventure-root .adventure-content-tabs>button.is-active,
+body.hub-parchment #sessions-list .hub-modern-session-tabs>button.is-active {
+  color:#fff8ef;border-color:#752f39;background:#752f39;
+}
+body.hub-parchment #sessions-list .hub-modern-session-tabs {
+  grid-template-columns:none;
+}
+body.hub-parchment #adventure-root #adventure-overview-content {
+  display:grid;grid-template-columns:minmax(0,1fr);
+  gap:17px;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard {
+  display:grid;gap:19px;min-width:0;
+  padding:2px 0 4px;
+}
+body.hub-parchment #sessions-list .session-card[data-session-stage]:not([data-session-stage="overview"]) #session-parchment-overview{
+  display:none!important;
+}
+body.hub-parchment #sessions-list .session-card[data-session-stage="overview"] #session-parchment-overview{
+  display:grid!important;
+}
+body.hub-parchment #sessions-list .hub-detail-grid {
+  grid-template-columns:minmax(0,1fr);
+}
+body.hub-parchment #sessions-list .hub-detail-grid>.parchment-dashboard {
+  grid-column:1/-1;min-width:0;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .parchment-stats {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:10px;width:100%;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .parchment-session-dashboard .parchment-stats {
+  grid-template-columns:repeat(6,minmax(0,1fr));
+}
+body.hub-parchment .parchment-stat{
+  display:grid;grid-template-columns:35px minmax(0,1fr);
+  grid-template-rows:auto auto;align-items:center;column-gap:8px;
+  min-height:82px;min-width:0;padding:11px 13px;
+  border:1px solid #d8b7aa;border-radius:12px;
+  background:linear-gradient(150deg,#fffaf6,#f6ebe6);
+  box-shadow:0 2px 4px rgba(79,42,33,.055);
+}
+body.hub-parchment .parchment-stat--scene{background:linear-gradient(135deg,#f8fbfd,#eaf1f6);border-color:#bbc8d8}
+body.hub-parchment .parchment-stat--npc{background:linear-gradient(135deg,#fff9f1,#f8ece0);border-color:#dfc4a5}
+body.hub-parchment .parchment-stat--monster{background:linear-gradient(135deg,#faf5fa,#f1e9f1);border-color:#d4bfd2}
+body.hub-parchment .parchment-stat--faction{background:linear-gradient(135deg,#fafbf5,#edf1e8);border-color:#c7d0bb}
+body.hub-parchment .parchment-stat--objective{background:linear-gradient(135deg,#fdf9f2,#f6ece2);border-color:#d7c3ab}
+body.hub-parchment .parchment-stat--development{background:linear-gradient(135deg,#faf8fc,#f1eef8);border-color:#c8bfdc}
+body.hub-parchment .parchment-stat .parchment-emblem{grid-column:1;grid-row:1/3;font-size:27px;}
+body.hub-parchment .parchment-stat strong {
+  grid-column:2;grid-row:1;font-size:clamp(1.18rem,1.9vw,1.6rem);
+  font-weight:800;line-height:1.2;color:#5b2831;
+  font-variant-numeric:tabular-nums;
+}
+body.hub-parchment .parchment-stat>span:last-child{
+  grid-column:2;grid-row:2;color:#433538;font-size:.81rem;
+}
+body.hub-parchment .parchment-emblem {
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:none;width:35px;height:35px;
+  color:#753037;font-family:Georgia,serif;font-weight:bold;line-height:1;
+  font-size:24px;
+}
+body.hub-parchment .parchment-emblem--scene{color:#27547d}
+body.hub-parchment .parchment-emblem--npc{color:#965721}
+body.hub-parchment .parchment-emblem--monster{color:#784781}
+body.hub-parchment .parchment-emblem--faction{color:#55723b}
+body.hub-parchment .parchment-emblem--objective{color:#915324}
+body.hub-parchment .parchment-emblem--development{color:#63477d}
+body.hub-parchment .parchment-emblem--timeline{color:#815a2a}
+body.hub-parchment .parchment-dashboard-columns{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(300px,.88fr);
+  align-items:start;gap:16px;
+}
+body.hub-parchment .parchment-dashboard-side{
+  display:grid;gap:16px;min-width:0;
+}
+body.hub-parchment .parchment-panel{
+  min-width:0;padding:18px 19px 20px;
+  background:#fffbf6;
+  border:1px solid #dbc8ba;border-radius:13px;
+  box-shadow:0 2px 10px rgba(87,44,30,.055);
+  color:#36272a;
+}
+body.hub-parchment .parchment-panel-head {padding:0 0 12px;border-bottom:1px solid #e5d6c9;margin-bottom:4px}
+body.hub-parchment .parchment-panel-title{display:flex;align-items:flex-start;gap:10px}
+body.hub-parchment .parchment-panel-title .parchment-emblem{width:30px;height:32px;font-size:23px}
+body.hub-parchment .parchment-panel-title h2{
+  margin:0;font:700 clamp(1.07rem,1.7vw,1.42rem)/1.2 Georgia,"Times New Roman",serif;
+  color:#582932;
+}
+body.hub-parchment .parchment-panel-title p{
+  margin:4px 0 0;color:#796763;font-size:.84rem;line-height:1.4;
+}
+body.hub-parchment .parchment-structure-list{display:grid;min-width:0}
+body.hub-parchment button.parchment-structure-row {
+  display:flex;align-items:center;gap:9px;min-width:0;width:100%;
+  padding:8px 5px;min-height:57px;
+  border:0;border-bottom:1px solid #eaded4;border-radius:0;
+  background:transparent;color:#33272a;text-align:left;cursor:pointer;
+}
+body.hub-parchment button.parchment-structure-row:last-child{border-bottom:0}
+body.hub-parchment button.parchment-structure-row:hover,
+body.hub-parchment button.parchment-structure-row:focus-visible{
+  background:#f6eae2;box-shadow:inset 3px 0 0 #843741;
+}
+body.hub-parchment .parchment-structure-copy{
+  display:grid;gap:2px;min-width:0;flex:1;
+}
+body.hub-parchment .parchment-structure-copy strong{
+  font-size:.92rem;font-weight:750;color:#36272a;
+}
+body.hub-parchment .parchment-structure-copy small{
+  font-size:.76rem;color:#756565;line-height:1.32;
+}
+body.hub-parchment .parchment-structure-count{
+  min-width:67px;margin-left:auto;
+  color:#5c4b47;font-size:.77rem;text-align:right;white-space:nowrap;
+}
+body.hub-parchment .parchment-row-arrow{font-size:26px;line-height:1;color:#8b655d}
+body.hub-parchment .parchment-actions-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+  margin-top:13px;
+}
+body.hub-parchment button.parchment-action{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  min-height:48px;min-width:0;padding:9px 11px;
+  border:1px solid #d5c4b7;border-radius:8px;
+  background:#fffaf5;color:#612b32;font-weight:750;font-size:.87rem;
+  cursor:pointer;
+}
+body.hub-parchment button.parchment-action:hover{background:#f1e2d8;border-color:#a77378}
+body.hub-parchment button.parchment-action.is-primary{
+  background:#6f2933;color:#fff8ed;border-color:#6f2933;
+}
+body.hub-parchment button.parchment-action.is-primary:hover{background:#8b3a44}
+body.hub-parchment .parchment-action.is-primary .parchment-emblem{color:#fff8ed}
+body.hub-parchment .parchment-action .parchment-emblem{font-size:20px;width:22px;height:24px}
+body.hub-parchment .parchment-recent-list{display:grid}
+body.hub-parchment .parchment-recent-entry{
+  display:flex;align-items:flex-start;gap:10px;padding:12px 0;
+  border-bottom:1px solid #e9ddd1;min-width:0;
+}
+body.hub-parchment .parchment-recent-entry:last-child{border-bottom:0}
+body.hub-parchment .parchment-recent-entry .parchment-emblem{
+  width:32px;height:32px;border:1px solid #e9d8c8;
+  border-radius:8px;background:#fff4e8;font-size:19px;
+}
+body.hub-parchment .parchment-recent-entry>div{display:grid;gap:4px;flex:1;min-width:0}
+body.hub-parchment .parchment-recent-entry strong{
+  font-size:.89rem;line-height:1.37;color:#35272a;overflow-wrap:anywhere;
+}
+body.hub-parchment .parchment-recent-entry small{
+  color:#806963;font-size:.76rem;line-height:1.3;
+}
+body.hub-parchment .parchment-recent-entry time{
+  color:#755e5b;font-size:.73rem;white-space:nowrap;
+}
+body.hub-parchment .parchment-empty{color:#745f5e;line-height:1.5;font-size:.9rem;margin:14px 0}
+body.hub-parchment button.parchment-text-link{
+  margin-top:12px;padding:7px 0;border:0;background:transparent;
+  color:#742f37;font-weight:750;font-size:.83rem;cursor:pointer;
+}
+body.hub-parchment .parchment-text-link:hover{text-decoration:underline}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.adventure-read-section,.adventure-overview-panel,.campaign-editor-card,.adventure-creation-workspace,.hub-modern-discovery) {
+  background:#fffbf5;color:#392c2c;
+  border-color:#decbbb;border-radius:12px;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.adventure-read-section,.adventure-overview-panel,.campaign-editor-card,.adventure-creation-workspace) :is(h2,h3,h4) {
+  color:#612e35;
+}
+body.hub-parchment #adventure-root .adventure-read-section-head h2,
+body.hub-parchment #sessions-list .hub-detail-grid>.card>h2 {
+  font-family:Georgia,"Times New Roman",serif;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.adventure-read-card,.story-card,.campaign-reference-row,.session-plan-overview-group) {
+  background:#fffaf3;color:#382b2b;border-color:#e3d0c1;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) .mini{color:#715f61}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(input:not([type="checkbox"]),select,textarea) {
+  background:#fffefb;color:#392b2b;border:1px solid #cbb6a7;
+  color-scheme:light;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(input,select,textarea):focus-visible {
+  outline:2px solid #8b4852;outline-offset:2px;
+}
+body.hub-parchment #adventure-root .adventure-creation-choices>button {
+  background:#fbf4ed;color:#603d3e;border-color:#e0cabc;
+}
+body.hub-parchment #adventure-root .adventure-creation-choices>button.is-active {
+  background:#752f39;color:#fffaf2;border-color:#752f39;
+}
+body.hub-parchment #sessions-list {
+  --session-panel:#fffaf4;
+  --session-inner:#f9f1e8;
+  --session-field:#fffdf8;
+  --session-border:#dfcbbd;
+  --session-text:#392c2c;
+  --session-muted:#725b5b;
+  --session-accent:#7d303c;
+}
+body.hub-parchment #sessions-list .session-card[data-session-stage="overview"] #session-adventure-overview,
+body.hub-parchment #sessions-list .session-card[data-session-stage="overview"] #visao-geral {
+  grid-column:1/-1;
+}
+body.hub-parchment #sessions-list #session-adventure-overview .session-plan-overview-grid {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.campaign-card-featured,.session-adventure-group,.adventure-campaign-group){
+  background:#fffaf5;color:#3c2b2b;border-color:#e0c9ba;
+}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.campaign-card-featured,.session-adventure-group,.adventure-campaign-group) :is(h2,h3,p){
+  color:inherit;
+}
+body.hub-parchment .hub-modern-discovery{background:#fffaf5;border-color:#e0c9ba}
+body.hub-parchment :is(#adventure-root,#sessions-list) :is(.adventure-read-section,.session-plan-overview-group,.hub-modern-edit-panel) {
+  scroll-margin-top:128px;
+}
+@media (max-width:1180px) {
+  body.hub-parchment .parchment-stats,
+  body.hub-parchment .parchment-session-dashboard .parchment-stats{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+@media (max-width:830px) {
+  body.hub-parchment .parchment-dashboard-columns{grid-template-columns:minmax(0,1fr)}
+  body.hub-parchment #sessions-list #session-adventure-overview .session-plan-overview-grid {
+    grid-template-columns:minmax(0,1fr);
+  }
+}
+@media (max-width:640px) {
+  body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero{
+    min-height:200px;
+  }
+  body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .campaign-product-actions{
+    display:flex;gap:6px;flex-wrap:wrap;position:relative;
+  }
+  body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary{
+    grid-template-columns:repeat(2,minmax(0,1fr));padding:8px;
+  }
+  body.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-summary .metric{
+    border-right:0;border-bottom:1px solid #ebdbcd;padding:8px 9px;
+  }
+  body.hub-parchment .parchment-stats,
+  body.hub-parchment .parchment-session-dashboard .parchment-stats {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  body.hub-parchment .parchment-panel{padding:14px 13px}
+  body.hub-parchment .parchment-structure-row .parchment-structure-count{font-size:.7rem;min-width:54px}
+  body.hub-parchment .parchment-structure-copy small{font-size:.72rem}
+  body.hub-parchment .parchment-actions-grid{grid-template-columns:minmax(0,1fr)}
+  body.hub-parchment #adventure-root .adventure-content-tabs>button,
+  body.hub-parchment #sessions-list .hub-modern-session-tabs>button{
+    flex:1 1 auto;min-width:0;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.hub-parchment .parchment-dashboard *{scroll-behavior:auto!important;transition:none!important}
+}
