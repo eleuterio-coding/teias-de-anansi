@@ -385,3 +385,70 @@ body.hub-parchment :is(#adventure-root,#sessions-list) :is(.adventure-read-secti
 @media (prefers-reduced-motion:reduce) {
   body.hub-parchment .parchment-dashboard *{scroll-behavior:auto!important;transition:none!important}
 }
+
+/* Especificidade contra os !important do tema global, sem afetar outras rotas. */
+body.hub-shell-enabled.hub-parchment .hub-app-shell,
+body.hub-shell-enabled.hub-parchment .hub-app-frame,
+body.hub-shell-enabled.hub-parchment .hub-app-content{
+  background:#f6efe5!important;
+}
+body.hub-shell-enabled.hub-parchment .hub-app-content {
+  color:#3b2b2b!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list,#session-list-section){
+  --hub-muted:#775e5c;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea) {
+  background:#fffdf9!important;color:#3a2b2b!important;
+  border-color:#cbb6a7!important;caret-color:#69333a;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) :is(input,textarea,select)::placeholder{
+  color:#8f7872;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) :is(input,select,textarea):focus{
+  border-color:#873f49!important;
+  box-shadow:0 0 0 3px rgba(129,55,67,.13)!important;
+}
+body.hub-shell-enabled.hub-parchment #adventure-root .adventure-content-tabs>button,
+body.hub-shell-enabled.hub-parchment #sessions-list .hub-modern-session-tabs>button{
+  background:transparent!important;color:#674548!important;border-color:transparent!important;
+}
+body.hub-shell-enabled.hub-parchment #adventure-root .adventure-content-tabs>button.is-active,
+body.hub-shell-enabled.hub-parchment #sessions-list .hub-modern-session-tabs>button.is-active{
+  background:#742c37!important;border-color:#742c37!important;color:#fff8f0!important;
+}
+body.hub-shell-enabled.hub-parchment #adventure-root .adventure-creation-choices>button{
+  background:#fff8f1!important;color:#603d3e!important;border-color:#e0cabc!important;
+}
+body.hub-shell-enabled.hub-parchment #adventure-root .adventure-creation-choices>button.is-active{
+  background:#752f39!important;color:#fffaf2!important;border-color:#752f39!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .badge{
+  background:#fff1e4!important;color:#5b2d35!important;border-color:#f2dfcc!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .campaign-product-hero .campaign-product-actions :is(a,button){
+  background:#fff9f1!important;color:#5d2834!important;border-color:#e4cdbc!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-structure-row{
+  background:transparent!important;color:#33272a!important;
+  border:0!important;border-bottom:1px solid #eaded4!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-structure-row:hover,
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-structure-row:focus-visible{
+  background:#f6eae2!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-action {
+  background:#fffaf5!important;color:#612b32!important;border-color:#d5c4b7!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-action.is-primary{
+  background:#6f2933!important;color:#fff8ed!important;border-color:#6f2933!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-action:hover:not(.is-primary){
+  background:#f1e2d8!important;border-color:#a77378!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard button.parchment-text-link {
+  background:transparent!important;color:#742f37!important;border:0!important;
+}
+body.hub-shell-enabled.hub-parchment :is(#adventure-root,#sessions-list) .parchment-dashboard :is(button,a):focus-visible{
+  outline:3px solid #9e5c69!important;outline-offset:3px;
+}
