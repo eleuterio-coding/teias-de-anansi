@@ -361,7 +361,7 @@ function workspaceHtml(a){
  return`${operationalHtml(a)}
  <div class="adventure-content-tabs" role="tablist" aria-label="Áreas da Aventura">
   <button type="button" role="tab" id="adventure-overview-tab" data-adventure-content-tab="overview" aria-controls="adventure-overview-content">Visão Geral</button>
-  <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Gerenciar conteúdo</button>
+  <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Criação</button>
  </div>
  <div id="adventure-overview-content" class="adventure-workspace-pane" role="tabpanel" aria-labelledby="adventure-overview-tab">
   ${renderAdventureOverview(a,c,characters)}
