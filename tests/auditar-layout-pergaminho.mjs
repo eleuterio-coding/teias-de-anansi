@@ -46,6 +46,19 @@ for(const route of ['aventuras.html','sessoes.html']){
 const css=readFileSync(new URL('../narrative-parchment.css',import.meta.url),'utf8');
 assert.match(css,/@media \(max-width:640px\)/,'Tema exige layout compacto');
 assert.match(css,/\.parchment-dashboard-columns/);
+const tokens=readFileSync(new URL('../hub-design-tokens.css',import.meta.url),'utf8');
+for(const variable of ['bg','surface','surface-2','surface-3','text','text-2','border','accent','accent-2']){
+ assert.match(tokens,new RegExp('--hub-'+variable+':'),`Paleta global sem --hub-${variable}`);
+ assert.ok(css.includes('var(--hub-'+variable+')'),`Tela deve herdar --hub-${variable}`);
+}
+assert.match(css,/color-scheme:dark/,'Aventuras/Sessões devem compartilhar o tema escuro do Hub');
+assert.match(css,/\.parchment-dashboard-columns/,'Hierarquia visual preservada');
+assert.doesNotMatch(css,/color-scheme:light|background:#(?:fff|faf|f6e)/i,'Não forçar fundo claro no layout');
+for(const route of ['aventuras.html','sessoes.html']){
+ const html=readFileSync(new URL('../'+route,import.meta.url),'utf8');
+ assert.match(html,/narrative-parchment\.css\?v=20261116-paleta-hub1/,'Cache novo da paleta');
+}
+
 const ui=readFileSync(new URL('../scripts/campaign-sessions-ui.js',import.meta.url),'utf8');
 assert.match(ui,/renderSessionParchmentDashboard\(s,adv,restricted\)/);
 const adventureUi=readFileSync(new URL('../scripts/adventure-ui.js',import.meta.url),'utf8');
