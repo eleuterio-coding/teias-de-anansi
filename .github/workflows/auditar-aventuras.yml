@@ -8,6 +8,12 @@ on:
       - 'scripts/adventure-integrity.js'
       - 'scripts/adventure-integrity-ui.js'
       - 'scripts/adventure-ui.js'
+      - 'scripts/adventure-session-structure.js'
+      - 'scripts/adventure-overview-ui.js'
+      - 'scripts/campaign-sessions-ui.js'
+      - 'scripts/campaign-state.js'
+      - 'sessoes.html'
+      - 'narrative-modern.css'
       - 'scripts/campaign-table-adventure-ui.js'
       - 'scripts/campaign-list-ui.js'
       - 'aventuras.html'
@@ -15,6 +21,7 @@ on:
       - 'mesa.html'
       - 'index.html'
       - 'tests/auditar-aventuras.mjs'
+      - 'tests/auditar-aventuras-sessoes-desenrolares.mjs'
       - 'tests/auditar-exploracao.mjs'
       - 'adventure-exploration.css'
       - 'ROADMAP-V1.md'
@@ -37,11 +44,18 @@ jobs:
           node --check scripts/adventure-integrity.js
           node --check scripts/adventure-integrity-ui.js
           node --check scripts/adventure-ui.js
+          node --check scripts/adventure-session-structure.js
+          node --check scripts/adventure-overview-ui.js
+          node --check scripts/campaign-sessions-ui.js
+          node --check scripts/campaign-state.js
+          node --check tests/auditar-aventuras-sessoes-desenrolares.mjs
           node --check scripts/campaign-table-adventure-ui.js
           node --check scripts/campaign-list-ui.js
           node --check tests/auditar-aventuras.mjs
       - name: 13A–13H · Conteúdo narrativo, vínculos e condução
         run: node tests/auditar-aventuras.mjs
+      - name: Aventuras/Sessões · Referências, desenrolares e preservação
+        run: node tests/auditar-aventuras-sessoes-desenrolares.mjs
       - name: Exploração · Integridade, privacidade e migração
         run: node tests/auditar-exploracao.mjs
       - name: 13I · Regressão Campanhas/Mesas
