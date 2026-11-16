@@ -100,7 +100,7 @@ export function renderSessionParchmentDashboard(s,a,restricted=false){
   (restricted?'':'<section class="parchment-panel parchment-actions-panel">'+
     panelTitle('scene','Ações Rápidas','Prepare e conduza sua próxima sessão.')+
     '<div class="parchment-actions-grid">'+
-    action('scene','Editar Sessão','data-session-parchment="create" data-session-scroll="visao-geral"','is-primary')+
+    action('scene','Editar Sessão','data-session-parchment="edit"','is-primary')+
     action('map','Selecionar Mapas','data-session-parchment="create" data-session-scroll="session-adventure-creation"')+
     action('development','Registrar Desenrolar','data-session-parchment="create" data-session-scroll="session-adventure-creation" data-session-focus-input="development"')+
     action('timeline','Abrir Ao vivo','data-session-parchment="live"')+
