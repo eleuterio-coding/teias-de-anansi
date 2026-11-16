@@ -148,7 +148,7 @@ body.hub-narrative-modern #sessions-list .is-list-view .campaign-card-featured :
 }
 /* Sessão: uma etapa de uso por vez */
 body.hub-narrative-modern #sessions-list .hub-modern-session-tabs{
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;
  background:var(--nm-raised);border:1px solid var(--nm-border);
  padding:6px;border-radius:13px;
 }
@@ -160,25 +160,55 @@ body.hub-narrative-modern #sessions-list .hub-modern-session-tabs>button{
 body.hub-narrative-modern #sessions-list .hub-modern-session-tabs>button.is-active{
  background:var(--nm-accent-solid);color:#fff;box-shadow:0 3px 9px rgba(40,31,100,.16);
 }
-body.hub-narrative-modern #sessions-list .hub-modern-session-tabs:has(>button:nth-child(3):last-child){
- grid-template-columns:repeat(3,minmax(0,1fr));
+body.hub-narrative-modern #sessions-list .hub-modern-session-tabs:has(>button:nth-child(1):last-child){
+ grid-template-columns:1fr;
 }
-/* Regras de visibilidade: nunca criar cópias dos editores e combates. */
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage] .hub-detail-grid>:is(#visao-geral,#participantes,#cenas,#registro-sessao,#linha-tempo){
+/* Uma fonte por bloco: a Visão Geral apenas lê; a Criação edita referências. */
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage] .hub-detail-grid>:is(#visao-geral,#session-adventure-overview,#session-adventure-creation,#participantes,#cenas,#registro-sessao,#linha-tempo){
  display:none!important;
 }
 body.hub-narrative-modern #sessions-list .session-card[data-session-stage]>:is(#encontros,#combates){display:none!important}
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="overview"] .hub-detail-grid>#visao-geral,
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="overview"] .hub-detail-grid>#participantes.roster-readonly,
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"] .hub-detail-grid>#participantes:not(.roster-readonly),
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"] .hub-detail-grid>#cenas,
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="record"] .hub-detail-grid>#linha-tempo{
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="overview"] .hub-detail-grid>:is(#visao-geral,#session-adventure-overview,#linha-tempo,#participantes.roster-readonly),
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="create"] .hub-detail-grid>:is(#session-adventure-creation,#participantes:not(.roster-readonly),#cenas){
  display:block!important;
 }
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="record"] .hub-detail-grid>#registro-sessao{display:grid!important}
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="prepare"]>#encontros,
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage="live"]>#combates{display:block!important}
-body.hub-narrative-modern #sessions-list .session-card[data-session-stage]:not([data-session-stage="overview"])>.hub-modern-next-session{display:none!important}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="create"] .hub-detail-grid>#registro-sessao{
+ display:grid!important;
+}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="create"]>#encontros,
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage="live"]>#combates{
+ display:block!important;
+}
+body.hub-narrative-modern #sessions-list .session-card[data-session-stage]:not([data-session-stage="overview"])>.hub-modern-next-session{
+ display:none!important;
+}
+body.hub-narrative-modern #sessions-list .session-plan-overview-grid,
+body.hub-narrative-modern #sessions-list .session-plan-creation-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;
+}
+body.hub-narrative-modern #sessions-list .session-plan-overview-group{
+ min-width:0;padding:15px;border:1px solid var(--nm-border);border-radius:12px;
+ background:var(--nm-raised);
+}
+body.hub-narrative-modern #sessions-list .session-plan-overview-group h3{margin:0 0 9px}
+body.hub-narrative-modern #sessions-list .session-plan-overview-group .campaign-reference-row,
+body.hub-narrative-modern #sessions-list .session-plan-creation-grid .campaign-reference-row{
+ display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+body.hub-narrative-modern #sessions-list #session-adventure-creation{
+ display:none;gap:18px;
+}
+body.hub-narrative-modern #sessions-list .session-development-creation{
+ display:grid;gap:10px;border-top:1px solid var(--nm-border);padding-top:16px;
+}
+body.hub-narrative-modern #sessions-list .session-plan-creation-grid>div{
+ min-width:0;display:grid;gap:10px;
+ padding:15px;border:1px solid var(--nm-border);border-radius:12px;
+}
+@media(max-width:760px){
+ body.hub-narrative-modern #sessions-list .session-plan-overview-grid,
+ body.hub-narrative-modern #sessions-list .session-plan-creation-grid{grid-template-columns:minmax(0,1fr)}
+}
 body.hub-narrative-modern #sessions-list .hub-modern-session-overview-description{
  margin:5px 0 13px;line-height:1.55;color:var(--nm-ink);
 }
