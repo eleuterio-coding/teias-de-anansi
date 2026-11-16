@@ -98,10 +98,11 @@ function levelDetail(level,areaCount=0){
    '</div></details></article>';
 }
 function factionSection(exploration,a,c){
- return '<section class="card explore-faction-section" id="faccoes"><h2>Adicionar Facções</h2>'+
+ return '<section class="card explore-faction-section" id="faccoes"><h2>Facções</h2>'+
  '<details class="adventure-monsters-attached adventure-attached-list" '+(factionAttachedOpen?'open':'')+'><summary>Facções adicionadas à Aventura ('+exploration.factions.length+')</summary><div class="explore-faction-grid">'+exploration.factions.map(f=>'<article class="story-card" data-ex-faction="'+esc(f.id)+'"><button type="button" class="explore-area-drag-handle explore-faction-drag-handle" data-ex-faction-grip="'+esc(f.id)+'" title="Arraste para reorganizar esta facção" aria-label="Arrastar facção '+esc(f.name)+' para reorganizar">⠿</button><div class="explore-faction-head"><strong>'+esc(f.name)+'</strong><span class="badge">'+esc(STANCES[f.stance])+'</span></div>'+
   (expandedFactionId===f.id?'<div class="explore-fields">'+
     field('Nome','name',f.name)+
+     field('Local de atuação','operationArea',f.operationArea)+
     '<label>Relação com o grupo<select data-ex-field="stance">'+selectOptions(STANCES,f.stance)+'</select></label>'+
     field('Objetivo / motivação (privado)','objective',f.objective,'textarea')+
     field('Relação / consequências (privado)','relationship',f.relationship,'textarea')+
@@ -113,7 +114,7 @@ function factionSection(exploration,a,c){
     '</div><div class="row-actions"><button type="button" data-ex-save-faction>Salvar facção</button><button type="button" class="secondary" data-ex-delete="faction" data-ex-id="'+esc(f.id)+'">Excluir</button><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Fechar</button></div>':
     '<p class="mini">'+esc(f.relationship||f.publicDescription||'Sem relação registrada.')+'</p><button type="button" class="secondary" data-ex-expand-faction="'+esc(f.id)+'">Editar facção</button>')+
   '</article>').join('')+'</div></details>'+
-  '<form id="ex-new-faction" class="explore-create-form"><label>Nova facção<input name="name" required placeholder="Nome da facção"></label><button type="submit">Adicionar facção</button></form></section>'
+  '<form id="ex-new-faction" class="explore-create-form"><label>Nome da facção<input name="name" required placeholder="Nome da facção"></label><label>Local de atuação<input name="operationArea" placeholder="Cidade, região ou território"></label><label>Descrição<textarea name="description" rows="3" placeholder="Descrição da facção"></textarea></label><button type="submit">Criar facção</button></form></section>'
 }
 export function renderAdventureFactions(a,c){
  const exploration=a.exploration||{factions:[]};
@@ -246,7 +247,7 @@ export function bindAdventureExploration({getAdventure,getCampaign,save,feedback
  factions?.querySelector('#ex-new-faction')?.addEventListener('submit',event=>{
   event.preventDefault();
   const name=event.target.elements.name.value.trim();if(!name)return;
-  const result=createExplorationEntity(get(),'faction',{name});
+  const result=createExplorationEntity(get(),'faction',{name,operationArea:event.target.elements.operationArea.value,description:event.target.elements.description.value});
   if(result){expandedFactionId=result.entity.id;apply(result,'Facção criada.')}
  });
  mapRoot?.querySelectorAll('[data-ex-save-level]').forEach(button=>button.addEventListener('click',()=>{
