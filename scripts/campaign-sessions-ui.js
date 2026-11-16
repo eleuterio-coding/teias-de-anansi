@@ -5,7 +5,7 @@ import{playerTerm,playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./pr
 import{campaignAvatarHtml,bindCampaignAvatarPreviews}from'./campaign-avatar-preview.js?v=20261021-roster-zoom1';
 import{numberedAdventureTitle,numberedSessionTitle}from'./narrative-labels.js';
 import{read}from'./character-builder/state.js';
-import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261022-chronicles-final3';
+import{readCampaigns,writeCampaigns,allCampaignSessions,addCampaignSession,updateCampaignSession,startCampaignSession,finishCampaignSession,removeCampaignSession,assignCharacterToMember,unassignCharacterFromMember,readStandaloneSessions,writeStandaloneSessions,createStandaloneSession,updateStandaloneSession,removeStandaloneSession,addSessionScene,updateSessionScene,removeSessionScene,campaignUid}from'./campaign-state.js?v=20261116-aventuras-sessoes1';
 import{readAdventures,writeAdventures,updateAdventureEntity,addAdventureDevelopment,removeAdventureEntity,SCENE_TYPE_LABELS}from'./adventure-state.js?v=20261116-estrutura1';
 import{renderSessionAdventureOverview,renderSessionAdventureCreation}from'./adventure-session-structure.js?v=20261116-estrutura1';
 import{uploadImage,deleteImage,persistCampaignMediaState,imageElementHtml,imagePickerHtml,bindImagePicker,hydrateMediaImages}from'./image-media.js?v=20260925-media2';
