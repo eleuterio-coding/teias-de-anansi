@@ -1,4 +1,5 @@
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
+import{renderAdventureParchmentDashboard}from'./narrative-parchment-dashboard.js?v=20261116-pergaminho1';
 import{noteSection,bindNoteSection}from'./hub-notes.js?v=20261026-drag-fix1';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
@@ -90,7 +91,10 @@ function progress(a){const total=a.scenes.length,done=a.scenes.filter(s=>['compl
 function operationalHtml(a){
  const c=campaign();
  const activeMissions=a.missions.filter(m=>m.status==='active').length;
- const metrics=[['Progresso narrativo',progress(a)],['Exploração',(()=>{const p=explorationProgress(a.exploration);return p.visited+'/'+p.total+' áreas'})()],['Jogadores',String(a.participantUsernames.length)],['Missões ativas',String(activeMissions)]];
+ const linkedSessions=(c?.sessions||[]).filter(s=>s.adventureId===a.id);
+ const recentSession=linkedSessions.filter(s=>s.date).slice().sort((x,y)=>String(y.date).localeCompare(String(x.date)))[0];
+ const lastDate=recentSession?.date&&/^\d{4}-\d{2}-\d{2}$/.test(recentSession.date)?recentSession.date.split('-').reverse().join('/'):recentSession?.date||'—';
+ const metrics=[['Status',advStatus(a.status)],['Campanha',c?.name||'Não vinculada'],['Sessões',String(linkedSessions.length)],['Última sessão',lastDate]];
  return `<section class="campaign-product-hero adventure-product-hero">
  ${imageElementHtml(a.coverImage,a.coverImageUrl,{className:'campaign-product-hero-media',alt:''})}
  <div class="campaign-product-actions"><a class="btn campaign-product-create-action" href="mesa.html?id=${encodeURIComponent(a.campaignId)}">Abrir Campanha</a><a class="btn campaign-product-create-action" href="sessoes.html?campaign=${encodeURIComponent(a.campaignId)}&adventure=${encodeURIComponent(a.id)}">Abrir Sessões</a><button class="btn secondary" type="button" data-open-adventure-settings>Editar aventura</button></div>
@@ -364,6 +368,7 @@ function workspaceHtml(a){
   <button type="button" role="tab" id="adventure-create-tab" data-adventure-content-tab="create" aria-controls="adventure-create-content">Criação</button>
  </div>
  <div id="adventure-overview-content" class="adventure-workspace-pane" role="tabpanel" aria-labelledby="adventure-overview-tab">
+  ${renderAdventureParchmentDashboard(a,c)}
   ${renderAdventureOverview(a,c,characters)}
   ${overviewPanel('adventure-overview-settings','Editar aventura',adventureSettingsHtml(a))}
   ${overviewPanel('adventure-overview-timeline','Linha do tempo',adventureTimelineHtml(a))}
@@ -451,7 +456,24 @@ function arrangeAdventureContentWorkspace(){
  show();
 }
 
-function render(){const keepScroll=Boolean(document.querySelector('#adventure-root .adventure-shell.hub-detail-page')&&adventureId),scrollX=window.scrollX,scrollY=window.scrollY;const root=$('adventure-root');if(!root)return;campaigns=readCampaigns();characters=readCharacters();if(campaignId&&!campaignById(campaigns,campaignId))campaignId=campaigns[0]?.id||'';normalizeRefs();if(adventureId&&!adventureById(adventures,adventureId)){adventureId='';expandedSceneIds.clear()}const a=adventure();if(a)campaignId=a.campaignId;root.innerHTML=`${a?"":topHtml()}<div id="adventure-feedback" class="status" hidden></div><div class="adventure-shell ${a?"hub-detail-page":""}">${a?`${workspaceHtml(a)}`:listHtml()}</div>`;bind();arrangeAdventureContentWorkspace();updateAppShellContext();hydrateMediaImages(root).catch(()=>{});if(keepScroll){window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});requestAnimationFrame(()=>window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'}))}}
+function bindParchmentAdventureActions(){
+ const dashboard=document.querySelector('#adventure-overview-content .parchment-dashboard');
+ if(!dashboard)return;
+ dashboard.querySelectorAll('[data-adventure-quick-kind]').forEach(button=>button.addEventListener('click',()=>{
+  document.getElementById('adventure-create-tab')?.click();
+  const kind=button.dataset.adventureQuickKind;
+  document.querySelector('[data-adventure-creation-kind="'+kind+'"]')?.click();
+  document.getElementById('adventure-active-section-title')?.scrollIntoView({block:'start',behavior:'smooth'});
+ }));
+ dashboard.querySelectorAll('[data-parchment-focus]').forEach(button=>button.addEventListener('click',()=>{
+  const section=document.getElementById(button.dataset.parchmentFocus);
+  if(!section)return;
+  section.scrollIntoView({block:'start',behavior:'smooth'});
+  const heading=section.querySelector('h2,h3');
+  if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
+ }));
+}
+function render(){const keepScroll=Boolean(document.querySelector('#adventure-root .adventure-shell.hub-detail-page')&&adventureId),scrollX=window.scrollX,scrollY=window.scrollY;const root=$('adventure-root');if(!root)return;campaigns=readCampaigns();characters=readCharacters();if(campaignId&&!campaignById(campaigns,campaignId))campaignId=campaigns[0]?.id||'';normalizeRefs();if(adventureId&&!adventureById(adventures,adventureId)){adventureId='';expandedSceneIds.clear()}const a=adventure();if(a)campaignId=a.campaignId;root.innerHTML=`${a?"":topHtml()}<div id="adventure-feedback" class="status" hidden></div><div class="adventure-shell ${a?"hub-detail-page":""}">${a?`${workspaceHtml(a)}`:listHtml()}</div>`;bind();arrangeAdventureContentWorkspace();bindParchmentAdventureActions();updateAppShellContext();hydrateMediaImages(root).catch(()=>{});if(keepScroll){window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'});requestAnimationFrame(()=>window.scrollTo({left:scrollX,top:scrollY,behavior:'instant'}))}}
 function bindAdventureFields(){
  document.querySelector('[data-adventure-settings] > summary')?.addEventListener('click',event=>{adventureSettingsOpen=!event.currentTarget.parentElement.open});
  document.querySelector('[data-open-adventure-settings]')?.addEventListener('click',()=>{document.getElementById('adventure-overview-tab')?.click();const details=document.querySelector('[data-adventure-settings]');if(details){adventureSettingsOpen=true;details.open=true;details.scrollIntoView({block:'start',behavior:'smooth'});details.querySelector('summary')?.focus({preventScroll:true})}});document.querySelectorAll('[data-adventure-field]').forEach(input=>{const eventName=input.tagName==='TEXTAREA'||input.type==='text'||input.type==='url'?'input':'change';input.addEventListener(eventName,()=>{clearTimeout(saveTimer);saveTimer=setTimeout(()=>commit(updateAdventure(adventures,adventureId,{[input.dataset.adventureField]:input.type==='number'?Number(input.value):input.value}),'Aventura salva.'),eventName==='input'?350:0)})})}

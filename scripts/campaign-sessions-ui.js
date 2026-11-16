@@ -1,4 +1,5 @@
 import{updateAppShellContext}from'./app-shell.js?v=20261022-chronicles-final3';
+import{renderSessionParchmentDashboard}from'./narrative-parchment-dashboard.js?v=20261116-pergaminho2';
 import{renderNextCampaignSession}from'./campaign-next-session-ui.js?v=20261022-chronicles-final3';
 import{renderTimeline,bindStructuredDetails}from'./campaign-structured-ui.js?v=20261022-chronicles-final3';
 import{playerTerm,playerAvatarHtml,characterAvatarHtml,rememberAvatars}from'./profile-images.js?v=20261021-user1';
@@ -635,6 +636,7 @@ function sessionCard(s,restricted=false){
  ${sessionStagesHtml(restricted)}
  <div class="hub-modern-next-session">${currentCampaign?renderNextCampaignSession(currentCampaign,{canPlan:!restricted,adventures:restricted?sharedAdventures():adventures}):''}</div>
  <div class="campaign-sections campaign-editor-grid hub-detail-grid">
+ ${renderSessionParchmentDashboard(s,adv,restricted)}
  ${restricted?`
   <section id="visao-geral" class="card campaign-editor-card"><h2>Visão geral</h2>
   ${s.objective?`<p><strong>Objetivo:</strong> ${esc(s.objective)}</p>`:''}
@@ -926,6 +928,33 @@ for(const [id,eventName,setter] of [
  ])$(id)?.addEventListener(eventName,event=>{setter(event.target.value);render()});
 document.querySelectorAll('[data-session-collection-view]').forEach(button=>button.addEventListener('click',()=>{collectionView=button.dataset.sessionCollectionView;render()}));
 $('sessions-list')?.addEventListener('click',event=>{
+ const quick=event.target.closest('#session-parchment-overview [data-session-parchment]');
+ const jump=event.target.closest('#session-parchment-overview [data-parchment-focus]');
+ const session=event.target.closest('.session-card');
+ if(session&&quick){
+  const destination=quick.dataset.sessionParchment;
+  if(destination==='edit'){
+   session.querySelector('[data-session-stage-button="overview"]')?.click();
+   const editor=session.querySelector('#visao-geral .hub-modern-edit-panel');
+   if(editor){editor.open=true;sessionEditPanelOpen=true;editor.scrollIntoView({block:'start',behavior:'smooth'});editor.querySelector('summary')?.focus({preventScroll:true})}
+  }else{
+   session.querySelector('[data-session-stage-button="'+destination+'"]')?.click();
+   const sectionId=quick.dataset.sessionScroll;
+   const section=sectionId?session.querySelector('#'+sectionId):null;
+   section?.scrollIntoView({block:'start',behavior:'smooth'});
+   if(quick.dataset.sessionFocusInput==='development')section?.querySelector('[data-session-development-description]')?.focus({preventScroll:true});
+  }
+  return;
+ }
+ if(session&&jump){
+  const id=jump.dataset.parchmentFocus;
+  if(id==='participantes'&&!session.querySelector('#participantes.roster-readonly')){
+   session.querySelector('[data-session-stage-button="create"]')?.click();
+  }
+  const section=session.querySelector('#'+id);
+  if(section){section.scrollIntoView({block:'start',behavior:'smooth'});const h=section.querySelector('h2,h3');if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
+  return;
+ }
  const button=event.target.closest('[data-session-stage-button]');if(!button)return;
  const card=button.closest('.session-card');if(!card)return;
  sessionViewStage=button.dataset.sessionStageButton;card.dataset.sessionStage=sessionViewStage;
