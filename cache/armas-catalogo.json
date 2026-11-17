@@ -46,7 +46,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "javelin",
@@ -78,7 +79,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "club",
@@ -94,7 +96,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "sickle",
@@ -110,7 +113,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "greatclub",
@@ -126,7 +130,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "spear",
@@ -143,7 +148,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "mace",
@@ -157,7 +163,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "handaxe",
@@ -174,7 +181,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "light-hammer",
@@ -191,7 +199,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "shortbow",
@@ -208,7 +217,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "light-crossbow",
@@ -226,7 +236,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "dart",
@@ -243,7 +254,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "sling",
@@ -259,7 +271,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "halberd",
@@ -277,7 +290,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "whip",
@@ -294,7 +308,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "scimitar",
@@ -311,7 +326,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "shortsword",
@@ -328,7 +344,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "greatsword",
@@ -345,7 +362,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "longsword",
@@ -361,7 +379,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "glaive",
@@ -379,7 +398,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "lance",
@@ -397,7 +417,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "morningstar",
@@ -411,7 +432,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "battleaxe",
@@ -427,7 +449,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "greataxe",
@@ -444,7 +467,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "maul",
@@ -461,7 +485,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "flail",
@@ -475,7 +500,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "warhammer",
@@ -491,7 +517,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "war-pick",
@@ -505,7 +532,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "pike",
@@ -523,7 +551,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "rapier",
@@ -539,7 +568,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "trident",
@@ -556,7 +586,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "longbow",
@@ -574,7 +605,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "hand-crossbow",
@@ -592,7 +624,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "heavy-crossbow",
@@ -611,7 +644,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "musket",
@@ -629,7 +663,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "pistol",
@@ -646,7 +681,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "blowgun",
@@ -663,7 +699,8 @@
       "ruleset": "5.5e",
       "status": "atual",
       "fonte": "livro-jogador-2024",
-      "descricao": ""
+      "descricao": "",
+      "observacao_descricao": "Sem descrição narrativa cadastrada: consulte os dados mecânicos de dano e propriedades."
     },
     {
       "id": "eberron-2019:bumerangue",
@@ -680,7 +717,8 @@
       "status": "suplementar",
       "natureza": "suplementar",
       "fonte": "eberron-2019",
-      "descricao": "Se você errar um ataque com arma usando um bumerangue, ele retorna para a sua mão."
+      "descricao": "Se você errar um ataque com arma usando um bumerangue, ele retorna para a sua mão.",
+      "preco_status": "Não informado no catálogo de origem — não estimar nem presumir valor."
     },
     {
       "id": "erlw-pdf24-1:double-bladed-scimitar",
@@ -714,7 +752,8 @@
       "status": "suplementar",
       "natureza": "suplementar",
       "fonte": "tumba-aniquilacao",
-      "descricao": "Uma arma tradicional de Chult, pronunciada IÍC-ul-ua. Consiste em uma haste de madeira de 90 cm com uma lâmina de 45 cm. Embora possa ser arremessada, não é bem balanceada para isso."
+      "descricao": "Uma arma tradicional de Chult, pronunciada IÍC-ul-ua. Consiste em uma haste de madeira de 90 cm com uma lâmina de 45 cm. Embora possa ser arremessada, não é bem balanceada para isso.",
+      "preco_status": "Não informado no catálogo de origem — não estimar nem presumir valor."
     }
   ],
   "regras_por_fonte": {}
