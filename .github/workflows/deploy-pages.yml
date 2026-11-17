@@ -351,6 +351,45 @@ jobs:
         shell: bash
         run: rm -f dados/regras-atuais-ptbr.generated.json
 
+      # Prévia 2.0 compilada separadamente: mantém a raiz publicada intacta.
+      - name: Proteger checksum da página principal
+        run: sha256sum index.html > "$RUNNER_TEMP/teias-main-index.sha256"
+
+      - name: Obter código de prévia da branch 2.0
+        uses: actions/checkout@v4
+        with:
+          ref: rebuild/teias-2.0
+          path: __teias_v2_source
+          persist-credentials: false
+
+      - name: Configurar Node.js da prévia
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Instalar dependências da prévia
+        working-directory: __teias_v2_source/v2
+        run: npm install --no-audit --no-fund
+
+      - name: Compilar Vue 3 + Vite da prévia
+        working-directory: __teias_v2_source/v2
+        run: npm run build
+
+      - name: Montar /v2 sem alterar a página inicial
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s __teias_v2_source/v2/dist/index.html
+          mkdir -p v2
+          cp -R __teias_v2_source/v2/dist/. v2/
+          rm -rf __teias_v2_source
+          sha256sum -c "$RUNNER_TEMP/teias-main-index.sha256"
+          test -s index.html
+          test -s v2/index.html
+          grep -q '/teias-de-anansi/v2/assets/' v2/index.html
+          test ! -e v2/package.json
+          echo "Site principal preservado, prévia compilada em /v2/."
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
