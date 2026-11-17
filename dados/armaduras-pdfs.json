@@ -59,7 +59,9 @@
         "custo_materiais": "2 PO",
         "ferramenta": "Ferramentas de Coureiro ou Ferramentas de Tecelão",
         "tempo_horas": 8,
-        "cd": 13
+        "cd": 13,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Padded",
       "descricao_pt": "A armadura acolchoada é composta de camadas de tecido e enchimento costuradas entre si.",
@@ -87,7 +89,9 @@
         "custo_materiais": "3 PO",
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 16,
-        "cd": 15
+        "cd": 15,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Leather",
       "descricao_pt": "O peitoral e as proteções dos ombros desta armadura são feitos de couro endurecido por fervura em óleo. O restante da armadura é feito de materiais mais macios e flexíveis.",
@@ -115,7 +119,9 @@
         "custo_materiais": "15 PO",
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 24,
-        "cd": 17
+        "cd": 17,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Studded Leather",
       "descricao_pt": "Feita de couro resistente, mas flexível, esta armadura é reforçada por rebites ou tachas dispostos próximos uns dos outros.",
@@ -143,7 +149,9 @@
         "custo_materiais": "3 PO",
         "ferramenta": "Ferramentas de Coureiro",
         "tempo_horas": 8,
-        "cd": 13
+        "cd": 13,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Hide",
       "descricao_pt": "Esta armadura rudimentar é feita de peles e couros grossos. É comumente usada por tribos bárbaras, humanoides malignos e outros povos que não dispõem dos recursos necessários para fabricar armaduras melhores.",
@@ -171,7 +179,9 @@
         "custo_materiais": "17 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 16,
-        "cd": 15
+        "cd": 15,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Chain Shirt",
       "descricao_pt": "Feito de anéis de metal entrelaçados, um camisão de cota de malha é usado entre camadas de roupa ou couro. Esta armadura oferece uma proteção modesta à parte superior do corpo, enquanto as camadas externas abafam o som dos anéis roçando uns nos outros.",
@@ -199,7 +209,9 @@
         "custo_materiais": "17 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 24,
-        "cd": 17
+        "cd": 17,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Scale Mail",
       "descricao_pt": "Esta armadura consiste em um casaco e perneiras (e talvez uma saia) de couro, cobertos por peças de metal sobrepostas, semelhantes às escamas de um peixe. A armadura inclui manoplas.",
@@ -227,7 +239,9 @@
         "custo_materiais": "130 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 40,
-        "cd": 18
+        "cd": 18,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Breastplate",
       "descricao_pt": "Esta armadura consiste em uma peça metálica ajustada ao tórax, usada sobre uma base de couro. Embora deixe os membros relativamente desprotegidos, oferece boa proteção aos órgãos vitais de quem a veste sem restringir muito seus movimentos.",
@@ -255,7 +269,9 @@
         "custo_materiais": "250 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 80,
-        "cd": 19
+        "cd": 19,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Half Plate",
       "descricao_pt": "A meia armadura consiste em placas de metal moldadas que cobrem a maior parte do corpo de quem a veste. Não inclui proteção para as pernas além de simples caneleiras presas com tiras de couro.",
@@ -283,7 +299,9 @@
         "custo_materiais": "10 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 16,
-        "cd": 15
+        "cd": 15,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Ring Mail",
       "descricao_pt": "Esta armadura é feita de couro com pesados anéis costurados nele. Os anéis ajudam a reforçá-la contra golpes de espadas e machados. A cota de anéis é inferior à cota de malha e costuma ser usada apenas por quem não pode pagar por uma armadura melhor.",
@@ -311,7 +329,9 @@
         "custo_materiais": "25 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 32,
-        "cd": 16
+        "cd": 16,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Chain Mail",
       "descricao_pt": "Feita de anéis de metal entrelaçados, a cota de malha inclui uma camada de tecido acolchoado sob os anéis para evitar o atrito com a pele e amortecer o impacto dos golpes. A armadura inclui manoplas.",
@@ -339,7 +359,9 @@
         "custo_materiais": "70 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 40,
-        "cd": 18
+        "cd": 18,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Splint",
       "descricao_pt": "Esta armadura é feita de tiras estreitas e verticais de metal rebitadas a uma base de couro, usada sobre um acolchoamento de tecido. Uma cota de malha flexível protege as articulações.",
@@ -367,7 +389,9 @@
         "custo_materiais": "500 PO",
         "ferramenta": "Ferramentas de Ferreiro",
         "tempo_horas": 200,
-        "cd": 20
+        "cd": 20,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Plate",
       "descricao_pt": "A armadura de placas é composta de placas de metal moldadas e encaixadas umas nas outras, que cobrem todo o corpo. Um conjunto inclui manoplas, botas grossas de couro, capacete com viseira e um acolchoamento espesso sob a armadura. Fivelas e tiras distribuem o peso pelo corpo.",
@@ -395,7 +419,9 @@
         "custo_materiais": "3 PO",
         "ferramenta": "Ferramentas de Carpinteiro, Ferramentas de Ferreiro ou Ferramentas de Entalhador",
         "tempo_horas": 8,
-        "cd": 13
+        "cd": 13,
+        "natureza": "suplemento opcional; NÃO é a regra geral de fabricação do Livro do Jogador (2024)",
+        "aplicacao": "Somente se o Mestre adotar explicitamente L’Arsène’s Crafting Catalogue (2023)."
       },
       "nome_original": "Shield",
       "descricao_pt": "Um escudo é feito de madeira ou metal e é carregado em uma das mãos. Empunhar um escudo aumenta sua Classe de Armadura em 2. Você só pode se beneficiar de um escudo por vez.",
@@ -405,5 +431,11 @@
   "auditoria": {
     "itens_magicos": "excluidos_por_taxonomia",
     "deduplicacao": "O catálogo conserva somente os 13 equipamentos mundanos do Livro do Jogador (2024)."
+  },
+  "regra_fabricacao_prioritaria": {
+    "fonte": "Livro do Jogador (2024)",
+    "url": "https://www.dndbeyond.com/sources/dnd/br-2024/equipment",
+    "regra": "Materiais: metade do preço de compra (arredondar para baixo); tempo: teto(preço em PO / 10) dias de 8 horas; proficiência na ferramenta exigida.",
+    "cd": "A regra geral do Livro do Jogador (2024) não estabelece CD fixa de fabricação."
   }
 }
