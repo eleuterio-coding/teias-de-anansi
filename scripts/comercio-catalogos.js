@@ -55,6 +55,8 @@ async function carregarPrecos(){
     const translated=HubBiblioteca.equipamento(x[0]);const url=link('equipamentos-aventura.html',x[0]);
     add(nome,translated,x[3],url,group.livro);
     for(const v of x[5]?.variantes||[])if(v.custo)add(nome,translated+' — '+HubBiblioteca.equipamento(v.nome),v.custo,url,group.livro);
+    // Item legado do editor de personagem: não atribuir preço sem fonte documental.
+    if(x[0]==='Clothes, Traveler’s')add(nome,'Roupas Comuns','Não informado',link('equipamentos-aventura.html','Roupas Comuns'),'Antecedentes legados');
    }
   }
  }

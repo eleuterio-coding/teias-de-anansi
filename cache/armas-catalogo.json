@@ -747,13 +747,13 @@
       ],
       "maestria": null,
       "peso": "Não informado",
-      "custo": "Não informado",
+      "custo": "1 PO",
       "ruleset": "5e",
       "status": "suplementar",
       "natureza": "suplementar",
       "fonte": "tumba-aniquilacao",
       "descricao": "Uma arma tradicional de Chult, pronunciada IÍC-ul-ua. Consiste em uma haste de madeira de 90 cm com uma lâmina de 45 cm. Embora possa ser arremessada, não é bem balanceada para isso.",
-      "preco_status": "Não informado no catálogo de origem — não estimar nem presumir valor."
+      "custo_fonte": "Tomb of Annihilation (2017), capítulo 1, p. 32; preço de 1 GP documentado na descrição oficial da Yklwa."
     }
   ],
   "regras_por_fonte": {}

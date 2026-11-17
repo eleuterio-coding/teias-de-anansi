@@ -470,3 +470,11 @@ body.hub-shell-enabled.hub-content-library .hub-app-content .subclasse .selo-liv
 body.hub-shell-enabled.hub-content-library .hub-app-content .subclasse .ficha{
   grid-template-columns:repeat(auto-fit,minmax(185px,1fr));
 }
+
+/* Quadros econômicos oficiais, separados de variantes editoriais ou suplementares. */
+.hub-fabricacao{margin:14px 0;padding:12px 14px;border:1px solid #8885;border-radius:10px;line-height:1.55}
+.hub-fabricacao h3{font-size:1rem;margin:0 0 8px}
+.hub-fabricacao p{margin:7px 0}
+.hub-fabricacao small{display:block;opacity:.76;margin-top:7px}
+.armor-craft-alternative{margin-top:12px;padding-top:10px;border-top:1px solid #8885}
+.armor-craft-alternative summary{cursor:pointer;font-weight:650}

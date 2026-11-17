@@ -179,7 +179,7 @@ document.getElementById('busca').addEventListener('input',render);
 filtro.addEventListener('change',render);
 render();
 window.carregarPrecos();
-if(location.hash==="#moedas")requestAnimationFrame(()=>document.getElementById("moedas")?.scrollIntoView({block:"center"}));
+if(["#moedas","#pergaminhos"].includes(location.hash))requestAnimationFrame(()=>document.querySelector(location.hash)?.scrollIntoView({block:"center"}));
 </script>
 <script type="module" src="scripts/hub-ux.js?v=20261028-library-hub-layout1"></script>
 </body>
