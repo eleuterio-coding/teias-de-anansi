@@ -30,7 +30,7 @@ assert.ok(H.magicHtml({nome:'Poção de Clarividência',bloco:'Poção, rara'},'
 assert.ok(H.magicHtml({nome:'Poção de Voo',bloco:'Poção, muito rara'},'Muito rara').includes('20.000'));
 assert.ok(H.magicHtml({nome:'Poções de Cura'},'Raridade variável').includes('25 PO'));
 for(const path of ['scripts/fabricacao-catalogo.js','scripts/comercio-catalogos.js'])assert.doesNotThrow(()=>new Function(read(path)));
-for(const page of ['armas.html','armaduras.html','ferramentas.html','equipamentos-aventura.html','itens-magicos.html'])assert.ok(read(page).includes('fabricacao-catalogo.js'),path+' sem referências de fabricação');
+for(const page of ['armas.html','armaduras.html','ferramentas.html','equipamentos-aventura.html','itens-magicos.html'])assert.ok(read(page).includes('fabricacao-catalogo.js'),page+' sem referências de fabricação');
 const commerce=read('comercio-e-despesas.html');
 assert.ok(commerce.includes('comercio-catalogos.js')&&commerce.includes('Pergaminhos de Magia — custo de fabricação por nível'));
 assert.equal(gear.phb.itens.length+gear.heroes.itens.length,88);
