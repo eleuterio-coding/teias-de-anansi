@@ -8,13 +8,13 @@
 - Não haverá autocadastro, cadastro público, criação autônoma de contas ou definição independente de credenciais por jogadores.
 - Cada usuário terá credenciais individuais, protegidas. Senhas não devem aparecer em texto claro no código, no GitHub, em logs ou em documentos; a futura implementação deverá usar mecanismos apropriados de autenticação e armazenamento seguro.
 - Preservar todas as contas existentes, seus vínculos, perfis, permissões e acesso. Nenhuma exclusão, redefinição ou troca de credencial ocorre por esta decisão.
-- A entrega/distribuição de credenciais e eventuais mudanças futuras serão controladas pelo proprietário em canal privado; não registrar nomes, e-mails, IDs, senhas ou outros dados pessoais neste planejamento.
+- A entrega/distribuição de credenciais e eventuais mudanças futuras serão controladas exclusivamente pelo proprietário, por meio seguro à sua escolha, sem impor canal externo de confirmação; não registrar nomes, e-mails, IDs, senhas ou outros dados pessoais neste planejamento.
 - O futuro desenho técnico deve considerar o método de login atual e eventual necessidade de migração compatível, **sem tocar no ambiente real nesta etapa**.
 
 ## Restrições e pendências preservadas
 
 - [x] Registrar documentalmente a regra de autenticação V2.
-- [ ] D1.3 — pendente. Preservar: escolha de operador/revisor, aceite individual e confirmação expressa do proprietário; sem exigir verificação adicional de identidade. Nenhuma designação ou contato autorizado nesta etapa.
+- [ ] D1.3 — pendente. A escolha de eventual operador/revisor cabe ao proprietário. O procedimento **não exige aceite individual, confirmação adicional do proprietário, confirmação por WhatsApp, Signal ou outros canais externos, nem verificação adicional de identidade**. Nenhuma designação, contato ou operação é realizada por este registro documental.
 - [ ] G2.1 — pendente; não aprovada para execução.
 - [ ] G1 — pendente; não aprovada para execução.
 - [ ] G2 — pendente; não aprovada para execução (inclusive G2.1).
