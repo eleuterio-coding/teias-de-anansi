@@ -83,6 +83,61 @@ A ficha completa permanece restrita ao Mestre e ao jogador responsável pelo per
 
 **Nota de escopo:** esta aprovação estabelece os fluxos e a matriz de visibilidade, sem autorizar edição, criação, exclusão de contas, alteração de permissões existentes ou conexão ao Firebase real.
 
+## 01.02 — Edição-base de D&D (decisão anterior consolidada documentalmente em 18/11/2026)
+
+**Status:** exigência de escolher uma edição-base **dispensada/retirada** do planejamento; não se estabelece D&D 2024/5.5e, D&D 2014 ou outra edição como base única obrigatória. Esta é uma decisão de escopo, e não uma implementação. O Checklist Mestre original permanece inalterado.
+
+## 01.03 — Compatibilidade de livros e regras (decisão anterior consolidada documentalmente em 18/11/2026)
+
+**Status:** decisão de planejamento aprovada.
+
+- Os conteúdos de regras dos livros que forem incluídos no Hub serão considerados compatíveis para fins de catalogação e poderão **coexistir**, sem exclusão automática por serem de edições ou fontes diferentes.
+- Caso existam **versões diferentes da mesma regra**, a decisão sobre qual versão deve ser aplicada em cada situação **ainda precisa ser definida especificamente**. A compatibilidade geral não determina, por si só, uma precedência universal entre versões.
+- A identificação das fontes, diferenças e eventuais conflitos deve ser preservada no planejamento da Biblioteca e do motor de regras, sem implementação nesta etapa.
+
+## 01.07 — Prioridades e ordem de construção (decisão anterior consolidada documentalmente em 18/11/2026)
+
+**Status:** sequência de planejamento aprovada anteriormente; não significa que as etapas tenham sido implementadas.
+
+Ordem aprovada:
+1. Estrutura e layout.
+2. Usuários e permissões.
+3. Catalogação e extração dos livros.
+4. Biblioteca e Regras da Casa.
+5. Motor de regras.
+6. Personagens e fichas.
+7. Campanhas.
+8. Aventuras e sessões.
+9. NPCs e encontros.
+10. Combate e ferramentas.
+11. Painel Geral e configurações.
+12. Testes e publicação, como etapas de validação e entrega, **não como um 12º bloco funcional**.
+
+Os onze blocos correspondem ao escopo aprovado em 01.04. As etapas de testes, homologação e publicação continuam transversais/finais.
+
+## 01.08 — Critérios de aprovação por módulo (decisão anterior consolidada documentalmente em 18/11/2026)
+
+**Status:** critérios aprovados para futura homologação, sem presumir que qualquer módulo já esteja implementado ou testado.
+
+Um módulo somente poderá ser considerado aprovado quando:
+1. Todas as funcionalidades planejadas para o módulo estiverem completas.
+2. Funcionar sem erros impeditivos.
+3. Os dados pertinentes puderem ser salvos e recuperados corretamente.
+4. As permissões de acesso funcionarem corretamente.
+5. Apresentar padrão visual consistente em computador e celular.
+6. Houver **aprovação final do proprietário**.
+
+## 01.09 — Consolidação documental da Fase 01 (registrada em 18/11/2026)
+
+- [x] Consolidar a decisão de 01.02 sem impor edição-base única.
+- [x] Consolidar a decisão de 01.03 de coexistência de conteúdos, com a aplicação de versões conflitantes ainda a definir.
+- [x] Consolidar a ordem de construção previamente aprovada em 01.07.
+- [x] Consolidar os seis critérios de aprovação de 01.08.
+- [x] Manter válidas as decisões aprovadas em 01.04, 01.05 e 01.06 e a regra de autenticação.
+- [x] Consolidar as decisões no presente Markdown, **sem alterar o Checklist Mestre original**.
+
+**Status:** 01.09 concluída **apenas no âmbito documental**. As verificações técnicas e operacionais continuam pendentes das respectivas fases; o Checklist Mestre original e demais arquivos não foram alterados por este registro.
+
 ## Restrições e pendências preservadas
 
 - [x] Registrar documentalmente a regra de autenticação V2.
