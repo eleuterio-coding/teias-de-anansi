@@ -36,7 +36,52 @@ O Teias de Anansi V2 será planejado com **11 blocos funcionais**, preservando o
 - Não haverá manutenção obrigatória de uma V1 paralela permanente; a V2 somente substituirá a anterior depois de aprovada e homologada.
 - Nenhuma funcionalidade anterior será eliminada sem inventário e decisão específica.
 - As contas, vínculos, permissões e configurações Firebase existentes deverão ser preservados, sem nenhuma alteração real nesta etapa.
-- As definições de fluxo e visibilidade das tarefas **01.05 e 01.06** serão apresentadas separadamente para conferência; **não são aprovadas por este registro de 01.04**.
+- O registro de 01.04 aprovou apenas o escopo. As decisões 01.05 e 01.06 foram aprovadas documentalmente em etapa posterior, conforme seções abaixo; nenhuma implementação foi autorizada.
+
+## 01.05 — Fluxos do Mestre e dos jogadores (aprovada documentalmente em 18/11/2026)
+
+**Status:** proposta aprovada para planejamento; fluxo não implementado, não testado e não homologado.
+
+**Fluxo do Mestre:**
+- Acessar o painel administrativo e gerenciar personagens e sua atribuição.
+- Organizar campanhas, preparar aventuras e sessões e conduzir NPCs, encontros e informações narrativas.
+- Consultar todas as informações do Hub, definir as revelações aos jogadores e editar a Biblioteca e as Regras da Casa.
+- Criar e editar personagens e atribuir fichas a jogadores.
+
+**Fluxo de cada jogador:**
+- Acessar o próprio painel e consultar integralmente a Biblioteca e as Regras da Casa.
+- Criar os próprios personagens, sem limite de quantidade definido nesta etapa, e editar somente as fichas sob sua responsabilidade ou expressamente autorizadas.
+- Acompanhar campanhas, aventuras e sessões das quais participa, respeitando a visibilidade definida pelo Mestre.
+- Consultar personagens de outros jogadores somente pela ficha pública prevista em 01.06.
+
+A autenticação continua subordinada à regra já aprovada: **somente o proprietário define nome de usuário e senha de todos os usuários**; não há autocadastro nem requisitos de confirmação adicional.
+
+## 01.06 — Matriz de visibilidade e permissões (aprovada documentalmente em 18/11/2026)
+
+**Status:** regra de planejamento aprovada; nenhuma permissão real alterada nem acesso ao Firebase realizado.
+
+| Conteúdo | Mestre | Jogador |
+| --- | --- | --- |
+| Biblioteca e Regras da Casa | Consulta e edição | Consulta completa |
+| Personagens próprios | Acesso completo | Criação e edição autorizada |
+| Fichas de colegas | Acesso completo | Somente ficha pública |
+| Campanhas | Controle completo | Campanhas em que participa |
+| Histórico de campanhas | Acesso completo | Conforme liberação do Mestre |
+| Aventuras e sessões | Acesso completo | Conteúdo autorizado |
+| NPCs e mapas | Acesso completo | Elementos revelados |
+| Segredos e notas privadas | Acesso exclusivo | Sem acesso |
+| Administração e usuários | Controle exclusivo | Sem acesso |
+
+**Ficha pública de personagens de outros jogadores — exatamente cinco campos:**
+1. Nome.
+2. Espécie.
+3. Classe.
+4. Nível.
+5. Aparência.
+
+A ficha completa permanece restrita ao Mestre e ao jogador responsável pelo personagem. O Mestre controla a liberação do histórico de campanhas e dos conteúdos narrativos. O bloqueio de informações deve ser aplicado pelas regras efetivas de acesso aos dados, não apenas ocultando elementos na interface; verificações com contas reais são etapas posteriores e não autorizadas aqui.
+
+**Nota de escopo:** esta aprovação estabelece os fluxos e a matriz de visibilidade, sem autorizar edição, criação, exclusão de contas, alteração de permissões existentes ou conexão ao Firebase real.
 
 ## Restrições e pendências preservadas
 
