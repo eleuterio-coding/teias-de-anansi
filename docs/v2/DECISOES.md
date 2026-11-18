@@ -138,6 +138,17 @@ Um módulo somente poderá ser considerado aprovado quando:
 
 **Status:** 01.09 concluída **apenas no âmbito documental**. As verificações técnicas e operacionais continuam pendentes das respectivas fases; o Checklist Mestre original e demais arquivos não foram alterados por este registro.
 
+## 02.01 — Repositório e endereço de publicação da V2 (aprovada documentalmente em 18/11/2026)
+
+**Status:** decisão de planejamento aprovada. Não configura publicação, implantação ou migração.
+
+- **Repositório mantido:** `eleuterio-coding/teias-de-anansi` — https://github.com/eleuterio-coding/teias-de-anansi
+- **Endereço de publicação planejado:** https://eleuterio-coding.github.io/teias-de-anansi/
+- **Hospedagem prevista:** GitHub Pages, preservando o projeto e o endereço já adotados.
+- A V2 será reconstruída sem substituir a aplicação atual até a homologação e autorização expressa do proprietário.
+- Nenhum código de produção, workflow, arquivo de configuração, conta, credencial, permissão ou serviço Firebase é alterado por esta decisão.
+- **Próxima tarefa: 02.02 — identificar documentalmente os arquivos essenciais para preservar usuários, permissões e integração Firebase.** O inventário será apresentado separadamente para conferência, sem classificar arquivos como removíveis antes de análise.
+
 ## Restrições e pendências preservadas
 
 - [x] Registrar documentalmente a regra de autenticação V2.
