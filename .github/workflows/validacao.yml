@@ -1,0 +1,21 @@
+name: Validação do Hub
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  compilacao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+      - name: Verificar tipos
+        run: npm run typecheck
+      - name: Gerar build
+        run: npm run build
