@@ -1,9 +1,4 @@
-import {
-  getApps,
-  initializeApp,
-  type FirebaseApp,
-  type FirebaseOptions,
-} from 'firebase/app';
+import { getApps, initializeApp, type FirebaseApp, type FirebaseOptions } from 'firebase/app';
 
 export const HUB_FIREBASE_APP_NAME = 'teias-de-anansi-hub';
 
@@ -20,7 +15,9 @@ export function prepareHubFirebaseApp(options: FirebaseOptions): FirebaseApp {
   if (existing) {
     for (const key of ['apiKey', 'authDomain', 'projectId', 'appId'] as const) {
       if (existing.options[key] !== options[key]) {
-        throw new Error('Projeto Firebase divergente da instancia existente; nenhuma troca executada.');
+        throw new Error(
+          'Projeto Firebase divergente da instancia existente; nenhuma troca executada.',
+        );
       }
     }
     return existing;

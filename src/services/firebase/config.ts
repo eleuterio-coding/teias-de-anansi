@@ -29,7 +29,8 @@ export function resolveFirebaseWebConfig(env: Record<string, unknown>): Firebase
   const missing = REQUIRED_FIREBASE_ENV_FIELDS.filter((key) => !readPublicValue(env, key));
   if (missing.length > 0) {
     return {
-      status: missing.length === REQUIRED_FIREBASE_ENV_FIELDS.length ? 'unconfigured' : 'incomplete',
+      status:
+        missing.length === REQUIRED_FIREBASE_ENV_FIELDS.length ? 'unconfigured' : 'incomplete',
       missing,
     };
   }
