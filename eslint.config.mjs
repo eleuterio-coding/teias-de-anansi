@@ -8,6 +8,10 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ['*.cjs'],
+    languageOptions: { globals: { module: 'readonly' } },
+  },
+  {
     files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
     rules: { 'no-undef': 'off' },
   },
