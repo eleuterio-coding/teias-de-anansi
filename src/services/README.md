@@ -1,3 +1,10 @@
-# Serviços e integrações
+# Servicos e integracoes
 
-Reservado à comunicação com serviços externos, incluindo adaptadores para Firebase Authentication e Firestore. O item 1.07 preparará a integração; não incluir service accounts, senhas, tokens administrativos ou outros segredos no frontend. Este item não acessou o Firebase.
+Diretorio reservado a integracoes isoladas da interface. O item **1.07** adicionou
+`src/services/firebase/` para preparar a configuracao publica do SDK Web, o
+aplicativo nomeado e adaptadores explicitos para Authentication e Firestore.
+
+**Nao ha nenhuma chamada no bootstrap React**, nem login, leitura, escrita ou
+alteracoes de regras. A conexao real, a autorizacao e a verificacao das cinco
+contas existentes pertencem a Etapa 3. Consulte
+`docs/etapas/etapa-1/1.07-firebase-planejado.md`.
