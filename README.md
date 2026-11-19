@@ -9,7 +9,7 @@ Reconstrução do **Hub privado de RPG** em **oito etapas**, com aprovação exp
 
 ## Estado do projeto
 
-Os itens **1.01–1.08 foram aprovados** pelo Mestre. O item **1.09 — Prova de execução** está autorizado, em execução e aguardará aprovação expressa ao fim dos testes.
+Os itens **1.01–1.08 foram aprovados** pelo Mestre. O item **1.09 — Prova de execução** foi compilado e testado com sucesso em um navegador local automatizado; **aguarda aprovação expressa do Mestre**. Nenhuma publicação foi realizada.
 
 A aplicação atual possui apenas navegação e módulos provisórios. **Não há login em funcionamento, ficha, campanha ou biblioteca real**. O SDK Firebase foi preparado em `src/services/firebase/`, mas não é chamado na inicialização; nenhuma leitura/escrita ou alteração remota foi executada.
 
@@ -59,3 +59,14 @@ O projeto Firebase **historicamente** tinha o ID `teais-de-anansi` (grafia do re
 ## Continuidade
 
 Os procedimentos para desenvolver, revisar, registrar testes, tratar falhas e respeitar os limites gratuitos estão em [docs/MANUTENCAO.md](docs/MANUTENCAO.md). A prova de execução está documentada em [1.09 — Prova de execução](docs/etapas/etapa-1/1.09-prova-de-execucao.md). O próximo trabalho só pode começar após aprovação expressa do Mestre.
+
+## Prova de execução sem deploy (item 1.09)
+
+A execução [44635275870](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870) do GitHub Actions foi concluída com sucesso: **37 testes automatizados** em seis arquivos, TypeScript, ESLint, Prettier, limites preventivos, build Vite e verificação dos caminhos de GitHub Pages.
+
+Um servidor temporário `127.0.0.1:4173` serviu a aplicação compilada. O **Google Chrome headless** carregou a página inicial, a Biblioteca provisória e a página 404; capturas PNG (1280×900) e relatório JSON foram arquivados, sem acesso ao Firebase.
+
+- [Capturas e relatório da prova](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14583058977)
+- [Build compilado para inspeção](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14584125674)
+
+Artefatos temporários de sete dias, **não são publicação de site**. O aceite do item 1.09 e eventual início da Etapa 2 dependem de decisões expressas e separadas do Mestre.

@@ -3,7 +3,7 @@
 **Data de referência:** 19/11/2026  
 **Versão de fundação:** 0.1.0  
 **Branch:** `feature/etapa-1-fundacao-8-etapas`  
-**Estado geral:** Etapa 1, item 1.09 em prova de execução; aguarda aceite do Mestre.
+**Estado geral:** Etapa 1, item 1.09 executado e testado com sucesso; aguarda aceite do Mestre.
 
 ## Controle do escopo autorizado
 
@@ -17,7 +17,7 @@
 | 1.06 | Base e build GitHub Pages sem deploy | Aprovado |
 | 1.07 | Adaptadores Firebase sem acesso ao serviço | Aprovado |
 | 1.08 | Qualidade, manutenção, scripts e documentação | Aprovado |
-| **1.09** | **Prova de execução e apresentação da base** | **Em validação / aguarda aprovação** |
+| **1.09** | **Prova de execução e apresentação da base** | **Testado / aguardando aprovação** |
 
 ## Componentes existentes
 
@@ -57,3 +57,17 @@ O item 1.08 foi aprovado. A prova específica do item 1.09 é registrada em `doc
 - Verificação do GitHub após os testes: `main` permaneceu em `23ea59b0341261e97aeab9d5bc0ecfac8500132b`.
 
 **Nota de rastreabilidade:** documentos de itens anteriores podem conter o estado "aguardando aprovação" registrado na data da respectiva entrega. Para o estado **atual** dos aceites 1.01–1.08, prevalece a tabela deste documento. O item 1.09 está autorizado, mas ainda depende de aceite; a Etapa 2 não foi iniciada.
+
+## Resultado verificável do item 1.09
+
+- [GitHub Actions 44635275870](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870): **success**.
+- **37 testes aprovados em seis arquivos**; TypeScript, ESLint, Prettier, limites preventivos, build e caminhos Pages aprovados.
+- Servidor `vite preview` iniciado localmente no runner em `127.0.0.1:4173`.
+- HTTP 200 para `index.html` e duas referências estáticas a JavaScript e CSS.
+- `/usr/bin/google-chrome` em modo headless renderizou `#/`, `#/biblioteca` e `#/rota-inexistente`.
+- Três [capturas PNG e relatório](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14583058977) gerados. As imagens foram abertas e inspecionadas após a execução: layout provisório legível e títulos corretos.
+- [Artefato compilado](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14584125674), sem publicação.
+- `main` conferida no commit `23ea59b0341261e97aeab9d5bc0ecfac8500132b`. Firebase real e contas não foram acessados/alterados.
+- Limitação: não houve teste manual de usuários nem acesso pelo domínio público; a identidade visual continua reservada à Etapa 2.
+
+**Decisão pendente:** aceite formal do item 1.09, encerramento da Etapa 1 e eventual autorização separada da Etapa 2. Não há avanço automático.
