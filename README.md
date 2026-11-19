@@ -9,7 +9,7 @@ Reconstrução do **Hub privado de RPG** em **oito etapas**, com aprovação exp
 
 ## Estado do projeto
 
-Os itens **1.01–1.07 foram aprovados** pelo Mestre. O item **1.08 — Qualidade e manutenção** está em desenvolvimento/validação e exige aprovação própria. O item **1.09 — Prova de execução** ainda não está autorizado.
+Os itens **1.01–1.07 foram aprovados** pelo Mestre. O item **1.08 — Qualidade e manutenção** foi implementado e testado, mas ainda exige aprovação do Mestre. O item **1.09 — Prova de execução** ainda não está autorizado.
 
 A aplicação atual possui apenas navegação e módulos provisórios. **Não há login em funcionamento, ficha, campanha ou biblioteca real**. O SDK Firebase foi preparado em `src/services/firebase/`, mas não é chamado na inicialização; nenhuma leitura/escrita ou alteração remota foi executada.
 

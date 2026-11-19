@@ -3,7 +3,7 @@
 **Data de referência:** 19/11/2026  
 **Versão de fundação:** 0.1.0  
 **Branch:** `feature/etapa-1-fundacao-8-etapas`  
-**Estado geral:** Etapa 1 em desenvolvimento, item 1.08 aguardando validação/aceite.
+**Estado geral:** Etapa 1 em desenvolvimento, item 1.08 implementado e aguardando aceite.
 
 ## Controle do escopo autorizado
 
@@ -45,3 +45,15 @@
 ## Prova de qualidade
 
 O resultado do workflow do item 1.08 será registrado em `docs/etapas/etapa-1/1.08-qualidade-manutencao.md`. Compilar e testar durante a manutenção **não constitui início do item 1.09**, que depende de autorização própria.
+
+
+## Resultado da verificação do item 1.08
+
+- GitHub Actions: [execução 44632922174](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44632922174) — **sucesso**.
+- **37 testes aprovados em seis arquivos**, com testes Firebase simulados e recuperação de interface.
+- `npm ci`, TypeScript, ESLint, Prettier, `npm run verify:boundaries`, build Vite e `npm run pages:check`: **aprovados**.
+- Um artefato temporário `dist/` foi produzido para inspeção, **não publicado**.
+- O workflow final mantém `permissions: contents: read` e não usa comandos de deploy.
+- Verificação do GitHub após os testes: `main` permaneceu em `23ea59b0341261e97aeab9d5bc0ecfac8500132b`.
+
+**Nota de rastreabilidade:** documentos de itens anteriores podem conter o estado "aguardando aprovação" registrado na data da respectiva entrega. Para o estado **atual** dos aceites 1.01–1.08, prevalece a tabela deste documento. O item 1.09 permanece não autorizado.
