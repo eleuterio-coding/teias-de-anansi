@@ -33,13 +33,14 @@
 - `src/data/navigation.ts` — contrato de navegação dos módulos;
 - `src/App.tsx` — visão geral, rotas e placeholders;
 - `src/styles.css` — identidade e responsividade;
+- `.github/workflows/validacao.yml` — CI sem deploy;
 - `index.html`, `src/main.tsx`, `vite.config.ts`, `tsconfig*`, `package*.json` — fundação do projeto.
 
 ## Verificações e correções
 
-- TypeScript: a conferir após instalar as dependências.
-- Build para produção: a conferir após instalar as dependências.
-- Navegação: manual em navegador a conferir.
+- TypeScript: aprovado no GitHub Actions (`npm run typecheck`, 19/11/2026).
+- Build para produção: aprovado no GitHub Actions (`npm run build`, 19/11/2026).
+- Navegação: revisão manual em navegador ainda pendente de aprovação.
 - Firebase: não acessado nem alterado.
 - GitHub Pages: não publicado, aguardando etapa prevista no fluxo.
 
