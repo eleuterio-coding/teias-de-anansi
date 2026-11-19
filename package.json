@@ -16,7 +16,9 @@
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\"",
-    "pages:check": "node scripts/verify-pages-build.mjs"
+    "pages:check": "node scripts/verify-pages-build.mjs",
+    "verify:boundaries": "node scripts/verify-boundaries.mjs",
+    "check": "npm run typecheck && npm run lint && npm run test:run && npm run format:check && npm run verify:boundaries && npm run build && npm run pages:check"
   },
   "dependencies": {
     "react": "18.3.1",

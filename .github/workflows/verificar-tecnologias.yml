@@ -32,6 +32,8 @@ jobs:
         run: npm run test:run
       - name: Conferir Prettier
         run: npm run format:check
+      - name: Validar limites preventivos da fundacao
+        run: npm run verify:boundaries
       - name: Compilar aplicacao minima
         run: npm run build
       - name: Validar referencias do build para GitHub Pages
