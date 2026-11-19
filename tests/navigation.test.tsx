@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AppContent } from '../src/app/App';
+import { moduleRoutes } from '../src/app/routes';
 import { LoadingState } from '../src/app/LoadingState';
 import { PageErrorBoundary } from '../src/app/PageErrorBoundary';
 
@@ -43,6 +44,14 @@ describe('Navegação inicial', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Pular para o conteúdo' }));
     expect(document.activeElement?.id).toBe('main-content');
     expect(screen.getByRole('heading', { name: 'Página não encontrada' })).toBeDefined();
+  });
+
+  it.each(moduleRoutes)('abre diretamente a rota provisória $label', async ({ path, label }) => {
+    mount(path);
+    expect(await screen.findByRole('heading', { name: label })).toBeDefined();
+    expect(
+      screen.getByText('Esta página não consulta nem apresenta informações reais do Hub.'),
+    ).toBeDefined();
   });
 
   it('exibe página não encontrada para caminho inválido', () => {
