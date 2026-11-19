@@ -27,6 +27,8 @@ jobs:
         run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
       - name: Instalar dependencias reproduziveis
         run: npm ci --no-audit --no-fund
+      - name: Aplicar formatacao padrao nos arquivos de preparacao
+        run: npm run format
       - name: Conferir tipos TypeScript
         run: npm run typecheck
       - name: Verificar ESLint
@@ -39,14 +41,14 @@ jobs:
         run: npm run build
       - name: Validar referencias do build para GitHub Pages
         run: npm run pages:check
-      - name: Registrar lockfile APENAS na branch de fundacao apos validacoes
+      - name: Registrar lockfile e formatacao APENAS na branch de fundacao apos validacoes
         if: github.ref_name == 'feature/etapa-1-fundacao-8-etapas'
         run: |
-          if ! git diff --quiet -- package-lock.json; then
+          git add -- package-lock.json src/services/firebase
+          if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add package-lock.json
-            git commit -m "chore(1.07): atualizar lockfile Firebase [skip ci]"
+            git commit -m "chore(1.07): atualizar lockfile e formatacao Firebase [skip ci]"
             git push origin "HEAD:$GITHUB_REF_NAME"
           fi
       - name: Arquivar build como artefato de CI sem deploy
