@@ -14,9 +14,13 @@ export function AppContent() {
 
   return (
     <div className="app-root">
-      <a className="skip-link" href="#main-content">
+      <button
+        type="button"
+        className="skip-link"
+        onClick={() => document.getElementById('main-content')?.focus()}
+      >
         Pular para o conteúdo
-      </a>
+      </button>
       <header className="app-header">
         <h1>Teias de Anansi</h1>
         <p>Hub de RPG — estrutura provisória</p>

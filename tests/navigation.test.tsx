@@ -38,6 +38,13 @@ describe('Navegação inicial', () => {
     expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
   });
 
+  it('pula a navegação para o conteúdo sem alterar a rota hash', () => {
+    mount('/caminho-que-nao-existe');
+    fireEvent.click(screen.getByRole('button', { name: 'Pular para o conteúdo' }));
+    expect(document.activeElement?.id).toBe('main-content');
+    expect(screen.getByRole('heading', { name: 'Página não encontrada' })).toBeDefined();
+  });
+
   it('exibe página não encontrada para caminho inválido', () => {
     mount('/caminho-que-nao-existe');
     expect(screen.getByRole('heading', { name: 'Página não encontrada' })).toBeDefined();
