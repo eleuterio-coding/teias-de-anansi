@@ -1,4 +1,4 @@
-name: Verificar tecnologias - etapa 1.04
+name: Validar tecnologias, navegação e build Pages - etapa 1
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
       - feature/etapa-1-fundacao-8-etapas
   workflow_dispatch:
 
-# Lockfile já versionado; validação somente leitura, sem publicação.
+# Apenas leitura. Nenhuma permissão pages:write ou id-token:write.
 permissions:
   contents: read
 
 jobs:
-  tecnologias:
+  validacao:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -34,6 +34,12 @@ jobs:
         run: npm run format:check
       - name: Compilar aplicação mínima
         run: npm run build
-      - name: Garantir ausência de publicação
-        run: |
-          echo "Verificação técnica concluída sem deployment ou alterações no Firebase."
+      - name: Validar referências do build para GitHub Pages
+        run: npm run pages:check
+      - name: Arquivar build apenas como artefato de CI (sem deploy)
+        uses: actions/upload-artifact@v4
+        with:
+          name: teias-de-anansi-build-${{ github.sha }}
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7

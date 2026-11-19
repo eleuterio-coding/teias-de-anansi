@@ -15,7 +15,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\"",
+    "pages:check": "node scripts/verify-pages-build.mjs"
   },
   "dependencies": {
     "react": "18.3.1",
