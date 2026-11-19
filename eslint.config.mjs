@@ -12,6 +12,10 @@ export default tseslint.config(
     languageOptions: { globals: { module: 'readonly' } },
   },
   {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: { globals: { console: 'readonly' } },
+  },
+  {
     files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
     rules: { 'no-undef': 'off' },
   },
