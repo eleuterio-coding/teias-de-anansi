@@ -1,4 +1,4 @@
-name: Validar tecnologias, navegacao e Firebase planejado - etapa 1
+name: Validar fundacao e prova de execucao - etapa 1
 
 on:
   push:
@@ -38,6 +38,15 @@ jobs:
         run: npm run build
       - name: Validar referencias do build para GitHub Pages
         run: npm run pages:check
+      - name: Provar execucao do build em servidor e Chrome locais
+        run: npm run proof:preview
+      - name: Arquivar evidencias de execucao sem publicar
+        uses: actions/upload-artifact@v4
+        with:
+          name: teias-prova-execucao-${{ github.sha }}
+          path: proof/
+          if-no-files-found: error
+          retention-days: 7
       - name: Arquivar build somente como artefato de CI (sem deploy)
         uses: actions/upload-artifact@v4
         with:

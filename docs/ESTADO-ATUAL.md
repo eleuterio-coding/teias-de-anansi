@@ -3,7 +3,7 @@
 **Data de referência:** 19/11/2026  
 **Versão de fundação:** 0.1.0  
 **Branch:** `feature/etapa-1-fundacao-8-etapas`  
-**Estado geral:** Etapa 1 em desenvolvimento, item 1.08 implementado e aguardando aceite.
+**Estado geral:** Etapa 1, item 1.09 em prova de execução; aguarda aceite do Mestre.
 
 ## Controle do escopo autorizado
 
@@ -16,8 +16,8 @@
 | 1.05 | Navegação, rotas e estados básicos | Aprovado |
 | 1.06 | Base e build GitHub Pages sem deploy | Aprovado |
 | 1.07 | Adaptadores Firebase sem acesso ao serviço | Aprovado |
-| **1.08** | **Qualidade, manutenção, scripts e documentação** | **Aguardando aprovação** |
-| 1.09 | Prova de execução e apresentação da base | **Não iniciado / não autorizado** |
+| 1.08 | Qualidade, manutenção, scripts e documentação | Aprovado |
+| **1.09** | **Prova de execução e apresentação da base** | **Em validação / aguarda aprovação** |
 
 ## Componentes existentes
 
@@ -44,7 +44,7 @@
 
 ## Prova de qualidade
 
-O resultado do workflow do item 1.08 será registrado em `docs/etapas/etapa-1/1.08-qualidade-manutencao.md`. Compilar e testar durante a manutenção **não constitui início do item 1.09**, que depende de autorização própria.
+O item 1.08 foi aprovado. A prova específica do item 1.09 é registrada em `docs/etapas/etapa-1/1.09-prova-de-execucao.md`; esse teste usa apenas servidor e navegador locais do runner, sem deploy.
 
 
 ## Resultado da verificação do item 1.08
@@ -56,4 +56,4 @@ O resultado do workflow do item 1.08 será registrado em `docs/etapas/etapa-1/1.
 - O workflow final mantém `permissions: contents: read` e não usa comandos de deploy.
 - Verificação do GitHub após os testes: `main` permaneceu em `23ea59b0341261e97aeab9d5bc0ecfac8500132b`.
 
-**Nota de rastreabilidade:** documentos de itens anteriores podem conter o estado "aguardando aprovação" registrado na data da respectiva entrega. Para o estado **atual** dos aceites 1.01–1.08, prevalece a tabela deste documento. O item 1.09 permanece não autorizado.
+**Nota de rastreabilidade:** documentos de itens anteriores podem conter o estado "aguardando aprovação" registrado na data da respectiva entrega. Para o estado **atual** dos aceites 1.01–1.08, prevalece a tabela deste documento. O item 1.09 está autorizado, mas ainda depende de aceite; a Etapa 2 não foi iniciada.

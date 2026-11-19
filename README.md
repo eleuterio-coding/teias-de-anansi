@@ -9,7 +9,7 @@ Reconstrução do **Hub privado de RPG** em **oito etapas**, com aprovação exp
 
 ## Estado do projeto
 
-Os itens **1.01–1.07 foram aprovados** pelo Mestre. O item **1.08 — Qualidade e manutenção** foi implementado e testado, mas ainda exige aprovação do Mestre. O item **1.09 — Prova de execução** ainda não está autorizado.
+Os itens **1.01–1.08 foram aprovados** pelo Mestre. O item **1.09 — Prova de execução** está autorizado, em execução e aguardará aprovação expressa ao fim dos testes.
 
 A aplicação atual possui apenas navegação e módulos provisórios. **Não há login em funcionamento, ficha, campanha ou biblioteca real**. O SDK Firebase foi preparado em `src/services/firebase/`, mas não é chamado na inicialização; nenhuma leitura/escrita ou alteração remota foi executada.
 
@@ -41,7 +41,7 @@ O Vite informa a URL local. A rota inicial usa o fragmento `/#/`, e páginas de 
 | `npm run build` | Compila localmente para `dist/`. |
 | `npm run pages:check` | Confere links JS/CSS gerados para o GitHub Pages; requer build. |
 | `npm run check` | Executa, em ordem, todas as verificações acima (exceto `dev`). |
-| `npm run preview` | Prévia local do build; não publica no GitHub Pages. |
+| `npm run preview` | Prévia local do build; não publica no GitHub Pages. |\n| `npm run proof:preview` | Inicia a prévia em localhost:4173, verifica assets e três rotas com Chrome/Chromium headless; gera capturas em `proof/` (requer build e navegador instalado). |
 
 O GitHub Actions executa as verificações na branch isolada e disponibiliza `dist/` por sete dias como **artefato de CI**, não como site publicado. O workflow tem permissões somente de leitura.
 
@@ -58,4 +58,4 @@ O projeto Firebase **historicamente** tinha o ID `teais-de-anansi` (grafia do re
 
 ## Continuidade
 
-Os procedimentos para desenvolver, revisar, registrar testes, tratar falhas e respeitar os limites gratuitos estão em [docs/MANUTENCAO.md](docs/MANUTENCAO.md). O próximo trabalho só pode começar após aprovação expressa do Mestre.
+Os procedimentos para desenvolver, revisar, registrar testes, tratar falhas e respeitar os limites gratuitos estão em [docs/MANUTENCAO.md](docs/MANUTENCAO.md). A prova de execução está documentada em [1.09 — Prova de execução](docs/etapas/etapa-1/1.09-prova-de-execucao.md). O próximo trabalho só pode começar após aprovação expressa do Mestre.
