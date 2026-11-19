@@ -1,0 +1,50 @@
+name: Verificar tecnologias - etapa 1.04
+
+on:
+  push:
+    branches:
+      - feature/etapa-1-fundacao-8-etapas
+  workflow_dispatch:
+
+# Permissão de escrita usada apenas para versionar o lockfile na branch isolada.
+permissions:
+  contents: write
+
+jobs:
+  tecnologias:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obter código da branch
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependências e resolver versões
+        run: npm install --no-audit --no-fund
+      - name: Registrar lockfile apenas na branch de fundação
+        if: github.event_name == 'push' && github.ref_name == 'feature/etapa-1-fundacao-8-etapas'
+        run: |
+          if [ -n "$(git ls-files --others --exclude-standard -- package-lock.json)" ] || ! git diff --quiet -- package-lock.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add package-lock.json
+            git commit -m "chore(1.04): fixar resoluções no package-lock [skip ci]"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+      - name: Confirmar instalação reproduzível
+        run: npm ci --no-audit --no-fund
+      - name: Conferir tipos TypeScript
+        run: npm run typecheck
+      - name: Verificar ESLint
+        run: npm run lint
+      - name: Executar Vitest
+        run: npm run test:run
+      - name: Conferir Prettier
+        run: npm run format:check
+      - name: Compilar aplicação mínima
+        run: npm run build
+      - name: Garantir ausência de publicação
+        run: |
+          echo "Verificação técnica concluída sem deployment ou alterações no Firebase."
