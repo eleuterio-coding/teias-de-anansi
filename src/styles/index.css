@@ -2,4 +2,152 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tokens e identidade visual serão definidos e aprovados na Etapa 2. */
+/*
+ * Estilos mínimos para legibilidade e foco de teclado.
+ * Não representam o Design System, reservado à etapa 2.
+ */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  color: #202020;
+  background: #fff;
+}
+
+a {
+  color: #154d7a;
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #154d7a;
+  outline-offset: 3px;
+}
+
+.app-root {
+  max-width: 76rem;
+  margin: 0 auto;
+}
+
+.app-header,
+.app-footer {
+  padding: 1rem;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.app-header p {
+  margin: 0.25rem 0 0;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: minmax(10rem, 13rem) minmax(0, 1fr);
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.app-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+}
+
+.app-nav a[aria-current='page'] {
+  font-weight: 700;
+}
+
+main {
+  min-width: 0;
+  min-height: 12rem;
+  padding: 1.5rem;
+}
+
+main h2 {
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+main h3 {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+main p {
+  margin-bottom: 1rem;
+}
+
+.module-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.module-links li {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.module-links span,
+.app-footer {
+  font-size: 0.875rem;
+}
+
+.page-state {
+  padding: 1rem 0;
+}
+
+.status-code {
+  font-weight: 700;
+}
+
+.action-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.action-links button {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid currentColor;
+}
+
+.skip-link {
+  position: absolute;
+  top: -10rem;
+  left: 1rem;
+  padding: 0.5rem;
+  background: #fff;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .app-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: 0;
+    border-bottom: 1px solid #ccc;
+  }
+}
