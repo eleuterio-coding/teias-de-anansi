@@ -1,0 +1,291 @@
+/*
+ * Teias de Anansi 2.0 — Etapa 2.07
+ * Formulários padronizados: materiais editoriais discretos e controles legíveis.
+ * Nenhum hex local; os tokens de 2.02 são a fonte única de cor e dimensão.
+ */
+
+.ds-form-panel {
+  display: grid;
+  gap: var(--ds-space-6);
+  min-width: 0;
+  padding: var(--ds-space-6);
+  border: 1px solid var(--ds-border-control);
+  border-top: 2px solid var(--ds-accent);
+  border-radius: var(--ds-radius-lg);
+  background: var(--ds-panel);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.ds-form-panel-header {
+  display: grid;
+  gap: var(--ds-space-2);
+  padding-bottom: var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-form-panel-header h2 {
+  margin: 0;
+  color: var(--ds-fg);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-xl);
+  line-height: var(--ds-leading-heading);
+}
+
+.ds-form-panel-header p,
+.ds-form-section-header p {
+  max-width: 68ch;
+  margin: 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-form-panel-body {
+  display: grid;
+  gap: var(--ds-space-6);
+  min-width: 0;
+}
+
+.ds-form-section {
+  display: grid;
+  gap: var(--ds-space-4);
+  min-width: 0;
+}
+
+.ds-form-section + .ds-form-section {
+  padding-top: var(--ds-space-6);
+  border-top: 1px solid var(--ds-border);
+}
+
+.ds-form-section-header {
+  display: grid;
+  gap: var(--ds-space-2);
+}
+
+.ds-form-section-header h3 {
+  margin: 0;
+  color: var(--ds-fg);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-lg);
+  font-weight: 600;
+  line-height: var(--ds-leading-heading);
+}
+
+.ds-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-4);
+  align-items: start;
+}
+
+.ds-form-field {
+  display: grid;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.ds-form-label {
+  display: block;
+  color: var(--ds-fg);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+}
+
+.ds-form-required {
+  color: var(--ds-fg-secondary);
+  font-weight: 400;
+}
+
+.ds-form-control {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ds-control-height);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border: 1px solid var(--ds-border-control);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+  font-family: var(--ds-font-body);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-leading-body);
+}
+
+.ds-form-control:hover:not(:disabled) {
+  border-color: var(--ds-accent);
+}
+
+.ds-form-control:focus-visible,
+.ds-form-native-choice:focus-visible {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+
+.ds-form-control[aria-invalid='true'],
+.ds-form-native-choice[aria-invalid='true'] {
+  border-color: var(--ds-danger-text);
+}
+
+.ds-form-control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ds-form-control::placeholder {
+  color: var(--ds-fg-muted);
+  opacity: 1;
+}
+
+.ds-form-textarea {
+  display: block;
+  min-height: 110px;
+  resize: vertical;
+}
+
+.ds-form-control[type='number'] {
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-form-control option {
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+}
+
+.ds-form-hint {
+  margin: 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.ds-form-error {
+  margin: 0;
+  color: var(--ds-danger-text);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ds-form-choice-field {
+  display: grid;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.ds-form-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-3);
+  min-height: var(--ds-hit-target);
+  padding: var(--ds-space-2) 0;
+}
+
+.ds-form-native-choice {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  border: 1px solid var(--ds-border-control);
+  accent-color: var(--ds-accent);
+  cursor: pointer;
+}
+
+.ds-form-native-choice:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ds-form-choice-label {
+  flex: 1;
+  min-width: 0;
+  color: var(--ds-fg);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.ds-form-choice:has(.ds-form-native-choice:disabled) .ds-form-choice-label {
+  color: var(--ds-fg-muted);
+  cursor: not-allowed;
+}
+
+.ds-form-fieldset {
+  display: grid;
+  gap: var(--ds-space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ds-form-fieldset legend {
+  margin: 0 0 var(--ds-space-2);
+  padding: 0;
+}
+
+.ds-form-choice-options {
+  display: grid;
+  gap: var(--ds-space-1);
+}
+
+.ds-form-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  padding-top: var(--ds-space-4);
+  border-top: 1px solid var(--ds-border);
+}
+
+.ds-form-error-summary {
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-danger-text);
+  border-left: 3px solid var(--ds-danger-text);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-panel-raised);
+}
+
+.ds-form-error-summary strong {
+  color: var(--ds-fg);
+}
+
+.ds-form-error-summary ul {
+  display: grid;
+  gap: var(--ds-space-2);
+  margin: var(--ds-space-3) 0 0;
+  padding-left: var(--ds-space-4);
+}
+
+.ds-form-error-target {
+  min-height: var(--ds-hit-target);
+  padding: var(--ds-space-2) 0;
+  border: 0;
+  color: var(--ds-danger-text);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.ds-form-error-target:focus-visible {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .ds-form-panel {
+    padding: var(--ds-space-4);
+    gap: var(--ds-space-4);
+  }
+
+  .ds-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ds-form-panel-actions {
+    flex-direction: column;
+  }
+
+  .ds-form-panel-actions > .ds-button {
+    width: 100%;
+  }
+}
