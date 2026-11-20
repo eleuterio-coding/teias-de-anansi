@@ -10,8 +10,8 @@
   z-index: 110;
   display: grid;
   gap: var(--ds-space-3);
-  width: min(420px, calc(100vw - 2 * var(--ds-space-4)));
-  max-height: calc(100dvh - 2 * var(--ds-space-4));
+  width: min(420px, calc(100vw - var(--ds-space-8)));
+  max-height: calc(100dvh - var(--ds-space-8));
   overflow-y: auto;
   pointer-events: none;
 }
@@ -125,8 +125,8 @@
   .ds-toast-stack {
     right: var(--ds-space-3);
     bottom: var(--ds-space-3);
-    width: calc(100vw - 2 * var(--ds-space-3));
-    max-height: calc(100dvh - 2 * var(--ds-space-3));
+    width: calc(100vw - var(--ds-space-6));
+    max-height: calc(100dvh - var(--ds-space-6));
   }
 
   .ds-toast {
