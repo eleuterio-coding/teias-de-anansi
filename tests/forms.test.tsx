@@ -202,7 +202,7 @@ describe('Formulários padronizados — Etapa 2.07', () => {
       />,
     );
     expect(screen.getByRole('group', { name: 'Escolha' }).hasAttribute('disabled')).toBe(true);
-    expect(screen.getByRole('radio', { name: 'Primeira opção' }).hasAttribute('disabled')).toBe(
+    expect(screen.getByRole('radio', { name: 'Primeira opção' }).matches(':disabled')).toBe(
       true,
     );
   });
