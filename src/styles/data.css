@@ -224,6 +224,27 @@
   font-size: var(--ds-text-sm);
 }
 
+.ds-data-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-height: 120px;
+  padding: var(--ds-space-6);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+  color: var(--ds-fg-secondary);
+  background: var(--ds-panel);
+}
+
+.ds-data-loading-mark {
+  flex: 0 0 auto;
+  width: var(--ds-space-4);
+  height: var(--ds-space-4);
+  border: 2px solid var(--ds-border-control);
+  border-top-color: var(--ds-accent);
+  border-radius: var(--ds-radius-full);
+}
+
 .ds-empty-state {
   display: flex;
   flex-direction: column;
