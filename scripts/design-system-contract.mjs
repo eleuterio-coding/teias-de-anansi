@@ -188,6 +188,9 @@ export function validateModule(module) {
     }
   }
 
+  if (!sourceFiles.some(({ path }) => path === 'README.md')) {
+    issues.push(violation('MODULE_README', id + ': README.md do módulo ausente'));
+  }
   if (entryText == null || !/\bexport\s+default\b/.test(entryText)) {
     issues.push(violation('MODULE_ENTRY', id + ': index.tsx deve ter export default'));
   }
