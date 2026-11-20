@@ -279,42 +279,6 @@ button:focus-visible {
   gap: var(--ds-space-2);
 }
 
-.hub-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: var(--ds-control-height);
-  padding: var(--ds-space-2) var(--ds-space-4);
-  border: 1px solid var(--ds-border-control);
-  border-radius: var(--ds-radius-md);
-  font-weight: 600;
-  text-decoration: none;
-  transition:
-    background-color var(--ds-motion-base) var(--ds-ease),
-    color var(--ds-motion-base) var(--ds-ease);
-}
-
-.hub-action-primary {
-  border-color: var(--ds-accent);
-  color: var(--ds-on-accent);
-  background: var(--ds-accent);
-}
-
-.hub-action-primary:hover {
-  color: var(--ds-on-accent);
-  background: var(--ds-fg);
-}
-
-.hub-action-secondary {
-  color: var(--ds-fg);
-  background: var(--ds-panel);
-}
-
-.hub-action-secondary:hover {
-  color: var(--ds-fg);
-  background: var(--ds-panel-raised);
-}
-
 .hub-main-content {
   min-width: 0;
   min-height: 260px;
