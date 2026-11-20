@@ -1,0 +1,227 @@
+/*
+ * Teias de Anansi — Etapa 2.04: comportamento responsivo do AppShell.
+ * Desktop >= 1024px; tablet 768–1023px; celular <= 767px.
+ * Nenhuma cor independente: somente tokens semânticos de tokens.css.
+ */
+
+@media (max-width: 1023px) {
+  .hub-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hub-topbar {
+    min-height: 76px;
+    padding: var(--ds-space-3) var(--ds-space-6);
+  }
+
+  .hub-menu-trigger,
+  .hub-drawer-close {
+    display: grid;
+    place-items: center;
+    flex: 0 0 var(--ds-hit-target);
+    width: var(--ds-hit-target);
+    height: var(--ds-hit-target);
+    padding: var(--ds-space-2);
+    border: 1px solid var(--ds-border-control);
+    border-radius: var(--ds-radius-md);
+    color: var(--ds-fg);
+    background: var(--ds-panel);
+  }
+
+  .hub-menu-trigger:hover,
+  .hub-drawer-close:hover {
+    background: var(--ds-panel-raised);
+  }
+
+  .hub-menu-trigger svg,
+  .hub-drawer-close svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .hub-drawer-backdrop {
+    position: fixed;
+    z-index: 70;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: rgb(0 0 0 / 72%);
+  }
+
+  .hub-sidebar {
+    position: fixed;
+    z-index: 80;
+    inset: 0 auto 0 0;
+    width: min(320px, calc(100vw - 48px));
+    max-width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--ds-space-4);
+    border-right: 1px solid var(--ds-border-control);
+    border-bottom: 0;
+    background: var(--ds-bg-deep);
+    box-shadow: var(--ds-shadow-lg);
+    transform: translateX(-105%);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      transform var(--ds-motion-slow) var(--ds-ease),
+      visibility var(--ds-motion-slow);
+  }
+
+  .hub-sidebar.is-open {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .hub-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-space-4);
+    min-height: 52px;
+    margin-bottom: var(--ds-space-4);
+    padding-bottom: var(--ds-space-4);
+    border-bottom: 1px solid var(--ds-border);
+  }
+
+  .hub-drawer-header span {
+    color: var(--ds-accent);
+    font-family: var(--ds-font-display);
+    font-size: var(--ds-text-lg);
+  }
+
+  .hub-sidebar-heading {
+    display: none;
+  }
+
+  .hub-main-nav {
+    flex-direction: column;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .hub-sidebar-note {
+    margin-top: var(--ds-space-8);
+  }
+
+  .hub-page {
+    padding: var(--ds-space-6);
+  }
+
+  .hub-main-content {
+    padding: var(--ds-space-6);
+  }
+}
+
+@media (max-width: 767px) {
+  .hub-topbar {
+    gap: var(--ds-space-2);
+    padding: var(--ds-space-3) var(--ds-space-4);
+  }
+
+  .hub-web-mark {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hub-brand-copy strong {
+    font-size: var(--ds-text-lg);
+  }
+
+  .hub-brand-copy small {
+    font-size: var(--ds-text-xs);
+    letter-spacing: 0;
+  }
+
+  .hub-preview-label {
+    display: none;
+  }
+
+  .hub-page {
+    padding: var(--ds-space-4);
+  }
+
+  .hub-page-header {
+    margin-bottom: var(--ds-space-4);
+  }
+
+  .hub-breadcrumb {
+    margin-bottom: var(--ds-space-4);
+    overflow-wrap: anywhere;
+  }
+
+  .hub-page-intro {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--ds-space-4);
+    padding-bottom: var(--ds-space-4);
+  }
+
+  .hub-page-intro h1 {
+    font-size: clamp(1.65rem, 7vw, var(--ds-text-2xl));
+    overflow-wrap: anywhere;
+  }
+
+  .hub-page-actions,
+  .hub-action {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hub-main-content {
+    min-height: 220px;
+    padding: var(--ds-space-4);
+  }
+
+  .module-links {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  }
+
+  .hub-footer {
+    padding: var(--ds-space-4);
+  }
+}
+
+@media (max-width: 390px) {
+  .hub-topbar {
+    padding: var(--ds-space-2) var(--ds-space-3);
+  }
+
+  .hub-topbar-start {
+    gap: var(--ds-space-2);
+  }
+
+  .hub-brand {
+    gap: var(--ds-space-2);
+  }
+
+  .hub-brand-copy strong {
+    font-size: var(--ds-text-md);
+  }
+
+  .hub-brand-copy small {
+    display: none;
+  }
+
+  .hub-page {
+    padding: var(--ds-space-3);
+  }
+
+  .hub-main-content {
+    padding: var(--ds-space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hub-sidebar {
+    transition: none;
+  }
+}
