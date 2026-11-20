@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import {
   extractModuleRoutes,
+  isReservedPlaceholder,
   validateBootstrap,
   validateModule,
   validateRouter,
@@ -41,8 +42,16 @@ const directories = readdirSync(moduleRoot, { withFileTypes: true })
   .map((entry) => entry.name);
 
 const routeOwners = new Map();
+let reservedCount = 0;
+let implementedCount = 0;
 for (const id of directories) {
   const location = join(moduleRoot, id);
+  const sourceFiles = collectFiles(location);
+  if (isReservedPlaceholder(id, sourceFiles)) {
+    reservedCount += 1;
+    continue;
+  }
+  implementedCount += 1;
   const manifestPath = join(location, 'module.json');
   const entryPath = join(location, 'index.tsx');
   const manifestText = existsSync(manifestPath) ? readFileSync(manifestPath, 'utf8') : null;
@@ -52,7 +61,7 @@ for (const id of directories) {
     id,
     manifestText,
     entryText,
-    sourceFiles: collectFiles(location),
+    sourceFiles,
     knownRoutes: routeCatalog,
     testExists: existsSync(join(ROOT, 'tests/modules', id + '.test.tsx')),
     documentationExists: existsSync(join(ROOT, 'docs/modules', id + '.md')),
@@ -88,8 +97,9 @@ assert.equal(
 );
 console.log(
   'Padrão do Hub verificado: layout global e ' +
-    directories.length +
-    ' módulo(s) com contrato válido.',
+    implementedCount +
+    ' módulo(s) implementado(s) com contrato válido; ' +
+    reservedCount + ' pasta(s) reservada(s) preservada(s).',
 );
 console.log(
   'Os oito módulos oficiais permanecem placeholders até sua etapa; ' +
