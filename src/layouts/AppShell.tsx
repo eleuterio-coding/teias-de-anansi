@@ -159,7 +159,7 @@ export function AppShell({ children }: AppShellProps) {
     ].filter((element): element is HTMLElement => element !== null);
     const previousInert = background.map((element) => ({
       element,
-      inert: element.inert,
+      inert: Boolean(element.inert),
     }));
     previousInert.forEach(({ element }) => {
       element.inert = true;
