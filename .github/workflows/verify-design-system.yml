@@ -1,0 +1,30 @@
+name: Verificar Etapa 2 — Design System
+
+on:
+  push:
+    branches:
+      - feature/etapa-2-design-system-20261120
+
+permissions:
+  contents: read
+
+jobs:
+  verificacao:
+    name: Tipos, lint, testes, formatação e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obter arquivos da branch
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Instalar dependências fixadas
+        run: npm ci
+
+      - name: Verificar base sem publicar
+        run: npm run check
