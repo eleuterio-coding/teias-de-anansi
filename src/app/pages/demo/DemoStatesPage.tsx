@@ -5,7 +5,6 @@ import {
   Alert,
   Button,
   Card,
-  type BadgeTone,
 } from '../../../components/ui';
 import { DemoScaffold } from './DemoScaffold';
 
@@ -119,7 +118,7 @@ export default function DemoStatesPage() {
       <Card title="Alerta contextual">
         {inlineAlert ? (
           <Alert
-            tone={'info' satisfies BadgeTone}
+            tone="info"
             title="Mensagem na própria página"
             onDismiss={() => setInlineAlert(false)}
           >
