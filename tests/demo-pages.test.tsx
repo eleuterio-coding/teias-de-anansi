@@ -119,7 +119,7 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
     });
     fireEvent.click(
       screen.getByRole('checkbox', {
-        name: 'Confirmo que estas informações são fictícias',
+        name: /Confirmo que estas informações são fictícias/,
       }),
     );
     expect(screen.queryByRole('alert')).toBeNull();
