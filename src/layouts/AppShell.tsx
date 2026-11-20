@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { moduleRoutes } from '../app/routes';
+import { demoRoutes } from '../app/demo-routes';
 import { HubLink } from '../components/ui';
 
 type AppShellProps = {
@@ -70,6 +71,15 @@ function resolvePage(pathname: string) {
     };
   }
 
+  const demo = demoRoutes.find((route) => route.path === pathname);
+  if (demo) {
+    return {
+      title: demo.label,
+      description: 'Página de demonstração com dados e interações fictícios.',
+      section: 'Design System · Etapa 2.10',
+    };
+  }
+
   const module = moduleRoutes.find((route) => route.path === pathname);
   if (module) {
     return {
@@ -99,6 +109,7 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = location.pathname.replace(/\/+$/, '') || '/';
   const page = resolvePage(pathname);
   const onHome = pathname === '/';
+  const inLab = demoRoutes.some((route) => route.path === pathname);
   const [compact, setCompact] = useState(isCompactViewport);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -312,6 +323,12 @@ export function AppShell({ children }: AppShellProps) {
               </NavLink>
             ))}
           </nav>
+          <nav className="hub-demo-sidebar-nav" aria-label="Laboratório de interface">
+            <p className="hub-sidebar-heading">Avaliação visual</p>
+            <NavLink end to="/laboratorio" className={navLinkClass} onClick={navigateFromMenu}>
+              Laboratório de interface
+            </NavLink>
+          </nav>
           <p className="hub-sidebar-note">
             Navegação demonstrativa, sem informações privadas.
           </p>
@@ -328,6 +345,11 @@ export function AppShell({ children }: AppShellProps) {
                     <li>
                       <Link to="/">Início</Link>
                     </li>
+                    {inLab && pathname !== '/laboratorio' && (
+                      <li>
+                        <Link to="/laboratorio">Laboratório de interface</Link>
+                      </li>
+                    )}
                     <li aria-current="page">{page.title}</li>
                   </>
                 )}
@@ -343,6 +365,10 @@ export function AppShell({ children }: AppShellProps) {
                 {onHome ? (
                   <HubLink variant="primary" to="/biblioteca">
                     Explorar Biblioteca
+                  </HubLink>
+                ) : inLab && pathname !== '/laboratorio' ? (
+                  <HubLink variant="secondary" to="/laboratorio">
+                    Visão do laboratório
                   </HubLink>
                 ) : (
                   <HubLink variant="secondary" to="/">
