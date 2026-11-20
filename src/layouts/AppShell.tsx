@@ -39,7 +39,8 @@ function resolvePage(pathname: string) {
   if (module) {
     return {
       title: module.label,
-      description: 'Espaço reservado para desenvolvimento na ' + module.etapa.toLowerCase() + '.',
+      description:
+        'Espaço reservado para desenvolvimento na ' + module.etapa.toLowerCase() + '.',
       section: module.etapa,
     };
   }
@@ -56,7 +57,8 @@ function resolvePage(pathname: string) {
  * Não acessa Firebase, autenticação ou dados privados.
  */
 export function AppShell({ children }: AppShellProps) {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const pathname = location.pathname.replace(/\/+$/, '') || '/';
   const page = resolvePage(pathname);
   const onHome = pathname === '/';
 
@@ -129,7 +131,7 @@ export function AppShell({ children }: AppShellProps) {
                 <h1 id="hub-page-title">{page.title}</h1>
                 <p className="hub-page-description">{page.description}</p>
               </div>
-              <div className="hub-page-actions" aria-label="Ações da página">
+              <nav className="hub-page-actions" aria-label="Ações da página">
                 {onHome ? (
                   <Link className="hub-action hub-action-primary" to="/biblioteca">
                     Explorar Biblioteca
@@ -139,11 +141,16 @@ export function AppShell({ children }: AppShellProps) {
                     Visão geral
                   </Link>
                 )}
-              </div>
+              </nav>
             </div>
           </div>
 
-          <main id="main-content" className="hub-main-content" tabIndex={-1} aria-labelledby="hub-page-title">
+          <main
+            id="main-content"
+            className="hub-main-content"
+            tabIndex={-1}
+            aria-labelledby="hub-page-title"
+          >
             {children}
           </main>
         </div>
