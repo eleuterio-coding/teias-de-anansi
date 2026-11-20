@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Etapa 2.03 — estrutura global. Cores e medidas vêm de tokens.css. */
+/* Etapas 2.03 e 2.04 — estrutura global. Cores e medidas vêm de tokens.css. */
 :root {
   font-family: var(--ds-font-body);
   line-height: var(--ds-leading-body);
@@ -14,7 +14,7 @@
 }
 
 html {
-  min-width: 320px;
+  min-width: 0;
 }
 
 body {
@@ -58,6 +58,19 @@ button:focus-visible {
   background: var(--ds-bg);
 }
 
+.hub-topbar-start {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-width: 0;
+}
+
+.hub-menu-trigger,
+.hub-drawer-header,
+.hub-drawer-backdrop {
+  display: none;
+}
+
 .hub-topbar {
   display: flex;
   align-items: center;
@@ -70,6 +83,7 @@ button:focus-visible {
 }
 
 .hub-brand {
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   gap: var(--ds-space-3);
@@ -418,53 +432,3 @@ button:focus-visible {
   top: var(--ds-space-2);
 }
 
-@media (max-width: 760px) {
-  /* Proteção inicial contra overflow. A política responsiva completa será 2.04. */
-  .hub-topbar {
-    padding: var(--ds-space-4);
-  }
-
-  .hub-workspace {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .hub-sidebar {
-    padding: var(--ds-space-3) var(--ds-space-4);
-    border-right: 0;
-    border-bottom: 1px solid var(--ds-border);
-  }
-
-  .hub-sidebar-heading,
-  .hub-sidebar-note {
-    display: none;
-  }
-
-  .hub-main-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: var(--ds-space-1);
-  }
-
-  .hub-nav-link {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
-
-  .hub-page {
-    padding: var(--ds-space-4);
-  }
-
-  .hub-main-content {
-    padding: var(--ds-space-4);
-  }
-}
-
-@media (max-width: 440px) {
-  .hub-preview-label {
-    display: none;
-  }
-
-  .hub-brand-copy strong {
-    font-size: var(--ds-text-lg);
-  }
-}
