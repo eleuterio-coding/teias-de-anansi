@@ -1,0 +1,107 @@
+/*
+ * Teias de Anansi 2.0 — Tokens de identidade visual
+ * Etapa 2.02: especificação proposta, ainda não importada no app.
+ * NÃO indica aprovação, integração ou propagação visual concluída.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Paleta original do universo de Anansi */
+  --ds-black: #171715;
+  --ds-gold: #d5a437;
+  --ds-red: #9d382c;
+  --ds-green: #315c43;
+  --ds-ochre: #93633e;
+  --ds-indigo: #243d65;
+
+  /* Materiais, superfície e tinta */
+  --ds-ink-deep: #12110f;
+  --ds-surface-1: #1b1a17;
+  --ds-surface-2: #24211d;
+  --ds-leather: #3c2a1e;
+  --ds-ivory: #f1e8d6;
+  --ds-text-soft: #cdbfa8;
+  --ds-text-muted: #a7967e;
+  --ds-bronze-subtle: #4e3c29;
+  --ds-bronze-strong: #877453;
+
+  /* Tokens semânticos que componentes deverão consumir */
+  --ds-bg: var(--ds-black);
+  --ds-bg-deep: var(--ds-ink-deep);
+  --ds-panel: var(--ds-surface-1);
+  --ds-panel-raised: var(--ds-surface-2);
+  --ds-panel-special: var(--ds-leather);
+  --ds-fg: var(--ds-ivory);
+  --ds-fg-secondary: var(--ds-text-soft);
+  --ds-fg-muted: var(--ds-text-muted);
+  --ds-accent: var(--ds-gold);
+  --ds-on-accent: var(--ds-black);
+  --ds-border: var(--ds-bronze-subtle);
+  --ds-border-control: var(--ds-bronze-strong);
+  --ds-focus: var(--ds-gold);
+
+  /* Estados: sempre combinar com texto/ícone identificando o estado */
+  --ds-success-bg: var(--ds-green);
+  --ds-success-fg: var(--ds-ivory);
+  --ds-success-text: #9cd6ac;
+  --ds-danger-bg: var(--ds-red);
+  --ds-danger-fg: var(--ds-ivory);
+  --ds-danger-text: #ed9181;
+  --ds-info-bg: var(--ds-indigo);
+  --ds-info-fg: var(--ds-ivory);
+  --ds-info-text: #91b0d8;
+  --ds-warning-bg: #4b3424;
+  --ds-warning-fg: #e8bd61;
+
+  /* Tipografia */
+  --ds-font-display: "Fraunces", Georgia, serif;
+  --ds-font-body: "Inter", system-ui, sans-serif;
+  --ds-text-xs: 0.75rem;
+  --ds-text-sm: 0.875rem;
+  --ds-text-md: 1rem;
+  --ds-text-lg: 1.125rem;
+  --ds-text-xl: 1.5rem;
+  --ds-text-2xl: 2rem;
+  --ds-text-hero: 2.75rem;
+  --ds-leading-body: 1.55;
+  --ds-leading-heading: 1.2;
+
+  /* Espaçamento */
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-12: 3rem;
+  --ds-space-16: 4rem;
+
+  /* Bordas, sombras, controles */
+  --ds-radius-sm: 4px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 12px;
+  --ds-radius-xl: 16px;
+  --ds-radius-full: 9999px;
+  --ds-border-width: 1px;
+  --ds-border-width-strong: 2px;
+  --ds-shadow-sm: 0 2px 8px #00000030;
+  --ds-shadow-md: 0 8px 24px #00000040;
+  --ds-shadow-lg: 0 20px 48px #00000070;
+  --ds-shadow-focus: 0 0 0 3px var(--ds-focus);
+  --ds-control-height: 44px;
+  --ds-hit-target: 44px;
+
+  /* Interações */
+  --ds-motion-fast: 120ms;
+  --ds-motion-base: 180ms;
+  --ds-motion-slow: 260ms;
+  --ds-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ds-motion-fast: 0ms;
+    --ds-motion-base: 0ms;
+    --ds-motion-slow: 0ms;
+  }
+}
