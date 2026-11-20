@@ -262,11 +262,7 @@ export function AppShell({ children }: AppShellProps) {
           >
             <MenuIcon />
           </button>
-          <Link
-            className="hub-brand"
-            to="/"
-            aria-label="Teias de Anansi — ir para o início"
-          >
+          <Link className="hub-brand" to="/" aria-label="Teias de Anansi — ir para o início">
             <WebMark />
             <span className="hub-brand-copy">
               <strong>Teias de Anansi</strong>
@@ -329,9 +325,7 @@ export function AppShell({ children }: AppShellProps) {
               Laboratório de interface
             </NavLink>
           </nav>
-          <p className="hub-sidebar-note">
-            Navegação demonstrativa, sem informações privadas.
-          </p>
+          <p className="hub-sidebar-note">Navegação demonstrativa, sem informações privadas.</p>
         </aside>
 
         <div className="hub-page">
@@ -390,9 +384,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </div>
 
-      <footer className="hub-footer">
-        Prévia do Hub · Sem autenticação ou dados privados.
-      </footer>
+      <footer className="hub-footer">Prévia do Hub · Sem autenticação ou dados privados.</footer>
     </div>
   );
 }

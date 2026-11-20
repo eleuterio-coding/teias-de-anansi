@@ -1,10 +1,4 @@
-import {
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 
 export type TabItem = {
   id: string;
@@ -21,13 +15,7 @@ export type TabsProps = {
   onValueChange?: (id: string) => void;
 };
 
-export function Tabs({
-  items,
-  label,
-  value,
-  defaultValue,
-  onValueChange,
-}: TabsProps) {
+export function Tabs({ items, label, value, defaultValue, onValueChange }: TabsProps) {
   const uid = useId();
   const [internal, setInternal] = useState(defaultValue);
   const refs = useRef(new Map<string, HTMLButtonElement>());

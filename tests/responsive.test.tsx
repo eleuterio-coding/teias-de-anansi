@@ -1,11 +1,4 @@
-import {
-  act,
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AppContent } from '../src/app/App';
@@ -26,16 +19,10 @@ function mockCompactViewport(initial = true) {
       return compact;
     },
     onchange: null,
-    addEventListener: (
-      type: string,
-      listener: (event: MediaQueryListEvent) => void,
-    ) => {
+    addEventListener: (type: string, listener: (event: MediaQueryListEvent) => void) => {
       if (type === 'change') listeners.add(listener);
     },
-    removeEventListener: (
-      type: string,
-      listener: (event: MediaQueryListEvent) => void,
-    ) => {
+    removeEventListener: (type: string, listener: (event: MediaQueryListEvent) => void) => {
       if (type === 'change') listeners.delete(listener);
     },
   }));
@@ -44,9 +31,7 @@ function mockCompactViewport(initial = true) {
     resize(next: boolean) {
       compact = next;
       act(() => {
-        listeners.forEach((listener) =>
-          listener({ matches: next } as MediaQueryListEvent),
-        );
+        listeners.forEach((listener) => listener({ matches: next } as MediaQueryListEvent));
       });
     },
   };
@@ -78,9 +63,7 @@ describe('Responsividade do AppShell — item 2.04', () => {
     });
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     expect(trigger.getAttribute('aria-controls')).toBe('hub-sidebar');
-    expect(document.getElementById('hub-sidebar')?.getAttribute('aria-hidden')).toBe(
-      'true',
-    );
+    expect(document.getElementById('hub-sidebar')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('abre a gaveta como diálogo e bloqueia rolagem de fundo', () => {
@@ -93,9 +76,7 @@ describe('Responsividade do AppShell — item 2.04', () => {
     expect(trigger.getAttribute('aria-expanded')).toBe('true');
     expect(dialog.getAttribute('aria-modal')).toBe('true');
     expect(document.body.style.overflow).toBe('hidden');
-    expect(
-      within(dialog).getByRole('navigation', { name: 'Navegação principal' }),
-    ).toBeDefined();
+    expect(within(dialog).getByRole('navigation', { name: 'Navegação principal' })).toBeDefined();
     expect(document.activeElement).toBe(
       within(dialog).getByRole('button', { name: 'Fechar navegação' }),
     );
@@ -123,9 +104,7 @@ describe('Responsividade do AppShell — item 2.04', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
 
     openMenu();
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Fechar menu de navegação' }),
-    );
+    fireEvent.click(screen.getByRole('button', { name: 'Fechar menu de navegação' }));
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
@@ -154,9 +133,7 @@ describe('Responsividade do AppShell — item 2.04', () => {
     fireEvent.click(within(dialog).getByRole('link', { name: 'Biblioteca' }));
 
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(
-      await screen.findByRole('heading', { name: 'Biblioteca', level: 1 }),
-    ).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
     expect(document.activeElement?.id).toBe('main-content');
   });
 
@@ -168,22 +145,14 @@ describe('Responsividade do AppShell — item 2.04', () => {
     viewport.resize(false);
 
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(document.getElementById('hub-sidebar')?.hasAttribute('aria-hidden')).toBe(
-      false,
-    );
+    expect(document.getElementById('hub-sidebar')?.hasAttribute('aria-hidden')).toBe(false);
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeDefined();
     expect(
-      screen.getByRole('navigation', { name: 'Navegação principal' }),
-    ).toBeDefined();
-    expect(
-      screen.getByRole('button', { name: 'Abrir menu de navegação' }).getAttribute(
-        'aria-expanded',
-      ),
+      screen.getByRole('button', { name: 'Abrir menu de navegação' }).getAttribute('aria-expanded'),
     ).toBe('false');
 
     viewport.resize(true);
-    expect(document.getElementById('hub-sidebar')?.getAttribute('aria-hidden')).toBe(
-      'true',
-    );
+    expect(document.getElementById('hub-sidebar')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('não transforma menu persistente em diálogo no desktop', () => {

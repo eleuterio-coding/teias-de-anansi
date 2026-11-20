@@ -80,8 +80,8 @@ export default function DemoFormsPage() {
       <Card title="Sobre esta experiência">
         <p>
           Os dados digitados ficam apenas na memória da página. A ação
-          <strong> Validar exemplo</strong> verifica campos localmente e não cria
-          um tomo, personagem ou campanha.
+          <strong> Validar exemplo</strong> verifica campos localmente e não cria um tomo,
+          personagem ou campanha.
         </p>
       </Card>
 

@@ -241,10 +241,7 @@ describe('Mensagens de sistema — item 2.08', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     expect(() =>
       render(
-        <NotifyButton
-          label="Sem contexto"
-          notice={{ title: 'Aviso', message: 'Não exibido.' }}
-        />,
+        <NotifyButton label="Sem contexto" notice={{ title: 'Aviso', message: 'Não exibido.' }} />,
       ),
     ).toThrow('useToast deve ser usado dentro de ToastProvider.');
   });
@@ -276,9 +273,7 @@ describe('Mensagens de sistema — item 2.08', () => {
     );
     expect(screen.getByRole('status').textContent).toContain('Alteração concluída');
 
-    rerender(
-      <OperationFeedback state="warning" message="Verifique as informações." />,
-    );
+    rerender(<OperationFeedback state="warning" message="Verifique as informações." />);
     expect(screen.getByRole('alert').textContent).toContain('Atenção necessária');
   });
 

@@ -25,9 +25,7 @@ export function ActionMenu({ label, items }: ActionMenuProps) {
     if (!open) return;
     const id = options[focused]?.id;
     if (!id) return;
-    const buttons = containerRef.current?.querySelectorAll<HTMLButtonElement>(
-      '[role="menuitem"]',
-    );
+    const buttons = containerRef.current?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
     const button = Array.from(buttons ?? []).find((element) => element.dataset.itemId === id);
     button?.focus();
   }, [open, focused, options]);

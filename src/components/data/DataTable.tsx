@@ -50,11 +50,12 @@ export function DataTable<T>({
             {columns.map((column) => {
               const sortable = Boolean(column.sortValue && onSortChange);
               const active = sort?.columnId === column.id;
-              const order = !sortable || !active
-                ? 'none'
-                : sort.direction === 'asc'
-                  ? 'ascending'
-                  : 'descending';
+              const order =
+                !sortable || !active
+                  ? 'none'
+                  : sort.direction === 'asc'
+                    ? 'ascending'
+                    : 'descending';
 
               return (
                 <th
@@ -70,7 +71,9 @@ export function DataTable<T>({
                       onClick={() => onSortChange?.(column.id)}
                     >
                       {column.header}
-                      <span aria-hidden="true">{active ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}</span>
+                      <span aria-hidden="true">
+                        {active ? (sort.direction === 'asc' ? '↑' : '↓') : '↕'}
+                      </span>
                     </button>
                   ) : (
                     column.header

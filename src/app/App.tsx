@@ -36,9 +36,7 @@ export function AppContent() {
                 <Route
                   key={module.path}
                   path={module.path}
-                  element={
-                    <SectionPlaceholder label={module.label} etapa={module.etapa} />
-                  }
+                  element={<SectionPlaceholder label={module.label} etapa={module.etapa} />}
                 />
               ))}
               <Route path="*" element={<NotFoundPage />} />

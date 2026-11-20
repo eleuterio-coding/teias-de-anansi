@@ -10,7 +10,9 @@ export function Accordion({ title, children, className = '', ...rest }: Accordio
     <details {...rest} className={['ds-accordion', className].filter(Boolean).join(' ')}>
       <summary className="ds-accordion-summary">
         <span>{title}</span>
-        <span className="ds-accordion-chevron" aria-hidden="true">⌄</span>
+        <span className="ds-accordion-chevron" aria-hidden="true">
+          ⌄
+        </span>
       </summary>
       <div className="ds-accordion-content">{children}</div>
     </details>

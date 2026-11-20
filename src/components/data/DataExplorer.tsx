@@ -30,7 +30,10 @@ export type DataExplorerProps<T> = {
 const collator = new Intl.Collator('pt-BR', { numeric: true, sensitivity: 'base' });
 
 function normalize(text: string) {
-  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('pt-BR');
 }
 
 function compare(a: SortValue, b: SortValue) {
@@ -63,9 +66,7 @@ export function DataExplorer<T>({
 
   const sortableColumns = columns.filter((column) => column.sortValue !== undefined);
   const selectedColumn = sortableColumns.find((column) => column.id === sortBy);
-  const activeSort = selectedColumn
-    ? { columnId: selectedColumn.id, direction }
-    : undefined;
+  const activeSort = selectedColumn ? { columnId: selectedColumn.id, direction } : undefined;
 
   const matching = useMemo(() => {
     const needle = normalize(search.trim());
@@ -216,12 +217,7 @@ export function DataExplorer<T>({
           }
         />
       ) : view === 'list' && renderListItem ? (
-        <DataList
-          items={visible}
-          label={label}
-          getKey={getKey}
-          renderItem={renderListItem}
-        />
+        <DataList items={visible} label={label} getKey={getKey} renderItem={renderListItem} />
       ) : (
         <DataTable
           items={visible}

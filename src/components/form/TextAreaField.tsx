@@ -1,10 +1,7 @@
 import type { TextareaHTMLAttributes } from 'react';
 import { FieldHelpText, FieldLabel, useFieldIds } from './field';
 
-export type TextAreaFieldProps = Omit<
-  TextareaHTMLAttributes<HTMLTextAreaElement>,
-  'children'
-> & {
+export type TextAreaFieldProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'> & {
   label: string;
   hint?: string;
   error?: string;
@@ -29,7 +26,9 @@ export function TextAreaField({
 
   return (
     <div className={['ds-form-field', className].filter(Boolean).join(' ')}>
-      <FieldLabel htmlFor={inputId} required={required}>{label}</FieldLabel>
+      <FieldLabel htmlFor={inputId} required={required}>
+        {label}
+      </FieldLabel>
       <textarea
         {...rest}
         id={inputId}

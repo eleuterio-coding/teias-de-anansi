@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import {
-  DataExplorer,
-  ProgressMeter,
-  type DataColumn,
-} from '../../../components/data';
+import { DataExplorer, ProgressMeter, type DataColumn } from '../../../components/data';
 import { Badge, Button, Card } from '../../../components/ui';
 import { DemoScaffold } from './DemoScaffold';
 
@@ -69,9 +65,7 @@ const columns: DataColumn<ExampleRecord>[] = [
 ];
 
 export default function DemoDataPage() {
-  const [displayMode, setDisplayMode] = useState<'records' | 'empty' | 'loading'>(
-    'records',
-  );
+  const [displayMode, setDisplayMode] = useState<'records' | 'empty' | 'loading'>('records');
   const items = displayMode === 'records' ? exampleRecords : [];
 
   return (
@@ -104,8 +98,8 @@ export default function DemoDataPage() {
           </Button>
         </div>
         <p className="hub-demo-help">
-          A opção de carregamento é uma simulação visual: não existe requisição
-          ao servidor. Os registros são constantes no próprio código.
+          A opção de carregamento é uma simulação visual: não existe requisição ao servidor. Os
+          registros são constantes no próprio código.
         </p>
       </Card>
 
@@ -128,7 +122,9 @@ export default function DemoDataPage() {
           <div className="hub-demo-list-entry">
             <div>
               <strong>{record.title}</strong>
-              <p>{categoryLabels[record.category]} · {record.pages} páginas</p>
+              <p>
+                {categoryLabels[record.category]} · {record.pages} páginas
+              </p>
             </div>
             <Badge tone={record.reviewed ? 'success' : 'warning'}>
               {record.reviewed ? 'Revisado' : 'Rascunho'}

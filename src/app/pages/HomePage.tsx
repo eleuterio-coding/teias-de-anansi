@@ -13,8 +13,8 @@ export default function HomePage() {
         variant="ornate"
       >
         <p>
-          Explore os componentes, a apresentação de dados, os formulários e os
-          estados de sistema sem criar registros ou ativar módulos do RPG.
+          Explore os componentes, a apresentação de dados, os formulários e os estados de sistema
+          sem criar registros ou ativar módulos do RPG.
         </p>
         <HubLink variant="primary" to="/laboratorio">
           Acessar demonstrações

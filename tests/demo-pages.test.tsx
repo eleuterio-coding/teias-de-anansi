@@ -22,18 +22,14 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
   it.each(demoRoutes)('abre $label sem dados reais', async ({ path, label }) => {
     mount(path);
     expect(await screen.findByRole('heading', { level: 1, name: label })).toBeDefined();
-    expect(
-      await screen.findByRole('navigation', { name: 'Páginas demonstrativas' }),
-    ).toBeDefined();
+    expect(await screen.findByRole('navigation', { name: 'Páginas demonstrativas' })).toBeDefined();
     expect(screen.getByText('Demonstração · dados fictícios')).toBeDefined();
     expect(screen.getByRole('main', { name: label })).toBeDefined();
   });
 
   it('mantém os módulos do RPG em preparação', async () => {
     mount('/personagens');
-    expect(
-      await screen.findByRole('heading', { name: 'Módulo em preparação' }),
-    ).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
     expect(screen.queryByText('Demonstração · dados fictícios')).toBeNull();
   });
 
@@ -50,11 +46,10 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
     mount('/laboratorio');
     const nav = await screen.findByRole('navigation', { name: 'Páginas demonstrativas' });
     fireEvent.click(within(nav).getByRole('link', { name: 'Formulários' }));
-    expect(
-      await screen.findByRole('heading', { name: 'Formulários', level: 1 }),
-    ).toBeDefined();
-    expect(screen.getByRole('navigation', { name: 'Localização da página' }).textContent)
-      .toContain('Laboratório de interface');
+    expect(await screen.findByRole('heading', { name: 'Formulários', level: 1 })).toBeDefined();
+    expect(screen.getByRole('navigation', { name: 'Localização da página' }).textContent).toContain(
+      'Laboratório de interface',
+    );
   });
 
   it('altera e reinicia contador exclusivamente local', async () => {

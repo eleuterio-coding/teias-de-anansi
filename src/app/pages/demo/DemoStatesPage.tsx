@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { DataLoading, EmptyState } from '../../../components/data';
 import { OperationFeedback, useToast } from '../../../components/feedback';
-import {
-  Alert,
-  Button,
-  Card,
-} from '../../../components/ui';
+import { Alert, Button, Card } from '../../../components/ui';
 import { DemoScaffold } from './DemoScaffold';
 
 type FeedbackState = 'idle' | 'loading' | 'success' | 'warning' | 'error';
@@ -58,17 +54,16 @@ export default function DemoStatesPage() {
               {message.title}
             </Button>
           ))}
-          <Button variant="ghost" onClick={clear}>Dispensar todas</Button>
+          <Button variant="ghost" onClick={clear}>
+            Dispensar todas
+          </Button>
         </div>
         <p className="hub-demo-help">
           Informações e sucessos expiram; atenção e erros permanecem até serem fechados.
         </p>
       </Card>
 
-      <Card
-        title="Estado da operação"
-        description="Selecione um estado para observar a mensagem."
-      >
+      <Card title="Estado da operação" description="Selecione um estado para observar a mensagem.">
         <div className="hub-demo-actions" role="group" aria-label="Selecionar estado fictício">
           {(['idle', 'loading', 'success', 'warning', 'error'] as const).map((status) => (
             <Button
@@ -78,13 +73,15 @@ export default function DemoStatesPage() {
               aria-pressed={state === status}
               onClick={() => setState(status)}
             >
-              {({
-                idle: 'Ocioso',
-                loading: 'Carregando',
-                success: 'Sucesso',
-                warning: 'Atenção',
-                error: 'Erro',
-              })[status]}
+              {
+                {
+                  idle: 'Ocioso',
+                  loading: 'Carregando',
+                  success: 'Sucesso',
+                  warning: 'Atenção',
+                  error: 'Erro',
+                }[status]
+              }
             </Button>
           ))}
         </div>

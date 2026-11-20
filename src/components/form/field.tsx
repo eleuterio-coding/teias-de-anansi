@@ -31,8 +31,16 @@ export function FieldHelpText({
 }: FieldHelp & { hintId?: string; errorId?: string }) {
   return (
     <>
-      {hint && <p id={hintId} className="ds-form-hint">{hint}</p>}
-      {error && <p id={errorId} className="ds-form-error">{error}</p>}
+      {hint && (
+        <p id={hintId} className="ds-form-hint">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={errorId} className="ds-form-error">
+          {error}
+        </p>
+      )}
     </>
   );
 }

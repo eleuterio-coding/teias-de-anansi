@@ -38,9 +38,7 @@ describe('Formulários padronizados — Etapa 2.07', () => {
     expect(input.getAttribute('name')).toBe('title');
     expect(input.getAttribute('required')).toBe('');
     expect(input.getAttribute('aria-invalid')).toBe('true');
-    expect(input.getAttribute('aria-describedby')).toBe(
-      'nome-tomo-hint nome-tomo-error',
-    );
+    expect(input.getAttribute('aria-describedby')).toBe('nome-tomo-hint nome-tomo-error');
     expect(screen.getByText('O título é obrigatório.').id).toBe('nome-tomo-error');
   });
 
@@ -149,13 +147,7 @@ describe('Formulários padronizados — Etapa 2.07', () => {
   });
 
   it('exibe erro de checkbox sem depender somente da cor', () => {
-    render(
-      <CheckboxField
-        id="consentimento"
-        label="Confirmo"
-        error="Você precisa confirmar."
-      />,
-    );
+    render(<CheckboxField id="consentimento" label="Confirmo" error="Você precisa confirmar." />);
     const checkbox = screen.getByRole('checkbox', { name: 'Confirmo' });
     expect(checkbox.getAttribute('aria-invalid')).toBe('true');
     expect(checkbox.getAttribute('aria-describedby')).toBe('consentimento-error');
@@ -201,12 +193,8 @@ describe('Formulários padronizados — Etapa 2.07', () => {
         options={[{ value: 'a', label: 'Primeira opção' }]}
       />,
     );
-    expect(
-      screen.getByRole('group', { name: 'Escolha' }).hasAttribute('disabled'),
-    ).toBe(true);
-    expect(screen.getByRole('radio', { name: 'Primeira opção' }).matches(':disabled')).toBe(
-      true,
-    );
+    expect(screen.getByRole('group', { name: 'Escolha' }).hasAttribute('disabled')).toBe(true);
+    expect(screen.getByRole('radio', { name: 'Primeira opção' }).matches(':disabled')).toBe(true);
   });
 
   it('organiza seções e mantém a hierarquia editorial', () => {
@@ -215,9 +203,7 @@ describe('Formulários padronizados — Etapa 2.07', () => {
         <TextField label="Nome" value="" onChange={() => undefined} />
       </FormSection>,
     );
-    expect(
-      screen.getByRole('heading', { name: 'Identidade do cenário', level: 3 }),
-    ).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Identidade do cenário', level: 3 })).toBeDefined();
     expect(screen.getByText('Campos descritivos.')).toBeDefined();
     expect(screen.getByRole('textbox', { name: 'Nome' })).toBeDefined();
   });
@@ -229,7 +215,11 @@ describe('Formulários padronizados — Etapa 2.07', () => {
         title="Rascunho local"
         description="Nenhum dado será salvo."
         onSubmit={onSubmit}
-        footer={<Button type="submit" variant="primary">Verificar</Button>}
+        footer={
+          <Button type="submit" variant="primary">
+            Verificar
+          </Button>
+        }
       >
         <TextField label="Nome" name="name" required value="" onChange={() => undefined} />
       </FormPanel>,
@@ -241,9 +231,7 @@ describe('Formulários padronizados — Etapa 2.07', () => {
     const wasNotCancelled = form.dispatchEvent(event);
     expect(wasNotCancelled).toBe(false);
     expect(onSubmit).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByRole('button', { name: 'Verificar' }).getAttribute('type'),
-    ).toBe('submit');
+    expect(screen.getByRole('button', { name: 'Verificar' }).getAttribute('type')).toBe('submit');
   });
 
   it('não mostra resumo de erros quando não há problemas', () => {
@@ -295,9 +283,9 @@ describe('Formulários padronizados — Etapa 2.07', () => {
     render(<Example />);
     fireEvent.submit(screen.getByRole('form', { name: 'Novo capítulo fictício' }));
     expect(screen.getByRole('alert')).toBeDefined();
-    expect(
-      screen.getByRole('textbox', { name: /Capítulo/ }).getAttribute('aria-invalid'),
-    ).toBe('true');
+    expect(screen.getByRole('textbox', { name: /Capítulo/ }).getAttribute('aria-invalid')).toBe(
+      'true',
+    );
 
     fireEvent.change(screen.getByRole('textbox', { name: /Capítulo/ }), {
       target: { value: 'A Primeira Teia' },

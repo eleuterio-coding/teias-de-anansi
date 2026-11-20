@@ -39,7 +39,8 @@ export function CheckboxField({
           className="ds-form-native-choice"
         />
         <label htmlFor={inputId} className="ds-form-choice-label">
-          {label}{required && <span className="ds-form-required"> (obrigatório)</span>}
+          {label}
+          {required && <span className="ds-form-required"> (obrigatório)</span>}
         </label>
       </div>
       <FieldHelpText hint={hint} error={error} hintId={hintId} errorId={errorId} />

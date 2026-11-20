@@ -7,12 +7,7 @@ export type FormSectionProps = {
   className?: string;
 };
 
-export function FormSection({
-  title,
-  description,
-  children,
-  className = '',
-}: FormSectionProps) {
+export function FormSection({ title, description, children, className = '' }: FormSectionProps) {
   const id = useId();
   return (
     <section

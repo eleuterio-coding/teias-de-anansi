@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { ToastContext } from './toast-context';
 import { ToastNotice } from './ToastNotice';
@@ -32,12 +26,11 @@ export function ToastProvider({ children }: ToastProviderProps) {
   const notify = useCallback((input: ToastInput) => {
     const tone = input.tone ?? 'info';
     const requested = input.durationMs;
-    const defaultDuration = tone === 'warning' || tone === 'danger'
-      ? 0
-      : DEFAULT_DURATION_MS;
-    const durationMs = requested === undefined || !Number.isFinite(requested)
-      ? defaultDuration
-      : Math.max(0, Math.min(60000, requested));
+    const defaultDuration = tone === 'warning' || tone === 'danger' ? 0 : DEFAULT_DURATION_MS;
+    const durationMs =
+      requested === undefined || !Number.isFinite(requested)
+        ? defaultDuration
+        : Math.max(0, Math.min(60000, requested));
 
     nextId.current += 1;
     const id = 'toast-' + nextId.current;
@@ -69,11 +62,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
         createPortal(
           <aside className="ds-toast-stack" aria-label="Notificações do sistema">
             {notices.slice(0, MAX_VISIBLE).map((notice) => (
-              <ToastNotice
-                key={notice.id}
-                notice={notice}
-                onDismiss={dismiss}
-              />
+              <ToastNotice key={notice.id} notice={notice} onDismiss={dismiss} />
             ))}
           </aside>,
           document.body,

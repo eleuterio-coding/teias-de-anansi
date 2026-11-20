@@ -17,8 +17,8 @@ export function DemoScaffold({ title, description, children }: Props) {
         <h2 id="demo-section-title">{title}</h2>
         <p>{description}</p>
         <p className="hub-demo-disclaimer">
-          Ambiente local de avaliação do Design System. Os controles não
-          consultam, alteram ou salvam dados reais do RPG.
+          Ambiente local de avaliação do Design System. Os controles não consultam, alteram ou
+          salvam dados reais do RPG.
         </p>
       </div>
 
@@ -28,9 +28,7 @@ export function DemoScaffold({ title, description, children }: Props) {
             key={route.path}
             end
             to={route.path}
-            className={({ isActive }) =>
-              'hub-demo-link' + (isActive ? ' is-active' : '')
-            }
+            className={({ isActive }) => 'hub-demo-link' + (isActive ? ' is-active' : '')}
           >
             {route.label}
           </NavLink>

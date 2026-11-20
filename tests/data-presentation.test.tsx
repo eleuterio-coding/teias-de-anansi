@@ -125,9 +125,7 @@ describe('Apresentação de dados — item 2.06', () => {
       <ProgressMeter label="Leitura" value={17} max={20} description="Etapas concluídas" />,
     );
     expect(screen.getByText('85%')).toBeDefined();
-    expect(screen.getByRole('progressbar', { name: 'Leitura' }).getAttribute('value')).toBe(
-      '17',
-    );
+    expect(screen.getByRole('progressbar', { name: 'Leitura' }).getAttribute('value')).toBe('17');
     rerender(<ProgressMeter label="Leitura" value={500} max={20} />);
     expect(screen.getByText('100%')).toBeDefined();
     rerender(<ProgressMeter label="Leitura" value={-4} max={20} />);
@@ -146,18 +144,12 @@ describe('Apresentação de dados — item 2.06', () => {
       <Pagination page={1} pageSize={2} totalItems={5} onPageChange={onPageChange} />,
     );
     expect(screen.getByText('Exibindo 1–2 de 5 resultados')).toBeDefined();
-    expect(screen.getByRole('button', { name: 'Anterior' }).hasAttribute('disabled')).toBe(
-      true,
-    );
+    expect(screen.getByRole('button', { name: 'Anterior' }).hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Próxima' }));
     expect(onPageChange).toHaveBeenCalledWith(2);
-    rerender(
-      <Pagination page={3} pageSize={2} totalItems={5} onPageChange={onPageChange} />,
-    );
+    rerender(<Pagination page={3} pageSize={2} totalItems={5} onPageChange={onPageChange} />);
     expect(screen.getByText('Exibindo 5–5 de 5 resultados')).toBeDefined();
-    expect(screen.getByRole('button', { name: 'Próxima' }).hasAttribute('disabled')).toBe(
-      true,
-    );
+    expect(screen.getByRole('button', { name: 'Próxima' }).hasAttribute('disabled')).toBe(true);
   });
 
   it('renderiza tabela com cabeçalho, linhas e ordenação semântica', () => {
@@ -243,9 +235,10 @@ describe('Apresentação de dados — item 2.06', () => {
       target: { value: 'level' },
     });
     const names = () =>
-      within(screen.getByRole('table')).getAllByRole('row').slice(1).map(
-        (row) => row.querySelector('td')?.textContent,
-      );
+      within(screen.getByRole('table'))
+        .getAllByRole('row')
+        .slice(1)
+        .map((row) => row.querySelector('td')?.textContent);
     expect(names()).toEqual(['Tomo 2', 'Zéfiro', 'Tomo 10', 'Árvore Ancestral']);
     fireEvent.click(screen.getByRole('button', { name: 'Ordenação crescente' }));
     expect(names()).toEqual(['Árvore Ancestral', 'Tomo 10', 'Zéfiro', 'Tomo 2']);
@@ -256,27 +249,23 @@ describe('Apresentação de dados — item 2.06', () => {
     fireEvent.change(screen.getByRole('combobox', { name: 'Ordenar por' }), {
       target: { value: 'name' },
     });
-    const names = within(screen.getByRole('table')).getAllByRole('row').slice(1).map(
-      (row) => row.querySelector('td')?.textContent,
-    );
+    const names = within(screen.getByRole('table'))
+      .getAllByRole('row')
+      .slice(1)
+      .map((row) => row.querySelector('td')?.textContent);
     expect(names.indexOf('Tomo 2')).toBeLessThan(names.indexOf('Tomo 10'));
   });
 
   it('alterna tabela e lista sem perder busca ou ordenação', () => {
-    render(
-      <DataExplorer
-        {...base}
-        renderListItem={(item) => <strong>{item.name}</strong>}
-      />,
-    );
+    render(<DataExplorer {...base} renderListItem={(item) => <strong>{item.name}</strong>} />);
     fireEvent.change(screen.getByRole('searchbox', { name: 'Buscar registros' }), {
       target: { value: 'tomo' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Lista' }));
     expect(screen.queryByRole('table')).toBeNull();
-    expect(within(screen.getByRole('list', { name: 'Registros fictícios' })).getAllByRole(
-      'listitem',
-    )).toHaveLength(2);
+    expect(
+      within(screen.getByRole('list', { name: 'Registros fictícios' })).getAllByRole('listitem'),
+    ).toHaveLength(2);
     fireEvent.click(screen.getByRole('button', { name: 'Tabela' }));
     expect(screen.getByRole('table', { name: 'Registros fictícios' })).toBeDefined();
   });
@@ -337,9 +326,7 @@ describe('Apresentação de dados — item 2.06', () => {
     expect(screen.getByRole('status').textContent).toContain('Carregando registros');
     expect(screen.queryByText('Nenhum registro disponível')).toBeNull();
     expect(screen.getByRole('searchbox').hasAttribute('disabled')).toBe(true);
-    expect(screen.getByRole('combobox', { name: 'Categoria' }).hasAttribute('disabled')).toBe(
-      true,
-    );
+    expect(screen.getByRole('combobox', { name: 'Categoria' }).hasAttribute('disabled')).toBe(true);
     expect(screen.queryByRole('navigation', { name: 'Paginação dos resultados' })).toBeNull();
 
     rerender(<DataExplorer {...base} items={[]} loading={false} />);

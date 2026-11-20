@@ -23,7 +23,11 @@ afterEach(() => {
 describe('Biblioteca de componentes — item 2.05', () => {
   it('usa botão sem submissão implícita e executa clique', () => {
     const onClick = vi.fn();
-    render(<Button variant="primary" onClick={onClick}>Criar</Button>);
+    render(
+      <Button variant="primary" onClick={onClick}>
+        Criar
+      </Button>,
+    );
 
     const button = screen.getByRole('button', { name: 'Criar' });
     expect(button.getAttribute('type')).toBe('button');
@@ -33,7 +37,11 @@ describe('Biblioteca de componentes — item 2.05', () => {
 
   it('bloqueia repetição quando botão está carregando', () => {
     const onClick = vi.fn();
-    render(<Button loading onClick={onClick}>Salvar</Button>);
+    render(
+      <Button loading onClick={onClick}>
+        Salvar
+      </Button>,
+    );
 
     const button = screen.getByRole('button', { name: /Salvar/ });
     expect(button.hasAttribute('disabled')).toBe(true);
@@ -45,17 +53,21 @@ describe('Biblioteca de componentes — item 2.05', () => {
   it('cria links internos e externos de maneira segura', () => {
     render(
       <MemoryRouter>
-        <HubLink to="/biblioteca" variant="primary">Biblioteca</HubLink>
-        <HubLink href="https://example.com" target="_blank">Referência</HubLink>
+        <HubLink to="/biblioteca" variant="primary">
+          Biblioteca
+        </HubLink>
+        <HubLink href="https://example.com" target="_blank">
+          Referência
+        </HubLink>
       </MemoryRouter>,
     );
 
     expect(screen.getByRole('link', { name: 'Biblioteca' }).getAttribute('href')).toBe(
       '/biblioteca',
     );
-    expect(
-      screen.getByRole('link', { name: 'Referência' }).getAttribute('rel'),
-    ).toBe('noopener noreferrer');
+    expect(screen.getByRole('link', { name: 'Referência' }).getAttribute('rel')).toBe(
+      'noopener noreferrer',
+    );
   });
 
   it('renderiza cards editoriais e etiquetas com texto legível', () => {
@@ -149,10 +161,7 @@ describe('Biblioteca de componentes — item 2.05', () => {
 
   it('fecha menu com Escape e devolve foco ao acionador', () => {
     render(
-      <ActionMenu
-        label="Opções"
-        items={[{ id: 'copy', label: 'Copiar', onSelect: vi.fn() }]}
-      />,
+      <ActionMenu label="Opções" items={[{ id: 'copy', label: 'Copiar', onSelect: vi.fn() }]} />,
     );
 
     const trigger = screen.getByRole('button', { name: /Opções/ });
@@ -269,9 +278,7 @@ describe('Biblioteca de componentes — item 2.05', () => {
       />,
     );
 
-    expect(screen.getByRole('button', { name: /Confirmar/ }).hasAttribute('disabled')).toBe(
-      true,
-    );
+    expect(screen.getByRole('button', { name: /Confirmar/ }).hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: /Confirmar/ }));
     expect(onConfirm).not.toHaveBeenCalled();
   });

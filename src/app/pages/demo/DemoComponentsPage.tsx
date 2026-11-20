@@ -96,7 +96,9 @@ export default function DemoComponentsPage() {
               },
             ]}
           />
-          <p className="hub-demo-result" role="status">{selectedAction}</p>
+          <p className="hub-demo-result" role="status">
+            {selectedAction}
+          </p>
           <HubLink to="/laboratorio/dados">Abrir página de dados</HubLink>
         </Card>
       </div>
@@ -124,8 +126,8 @@ export default function DemoComponentsPage() {
         <Card title="Painel expansível">
           <Accordion title="Ler uma anotação fictícia">
             <p>
-              Esta anotação não é um registro de campanha. O painel pode ser
-              aberto e fechado por teclado ou toque.
+              Esta anotação não é um registro de campanha. O painel pode ser aberto e fechado por
+              teclado ou toque.
             </p>
           </Accordion>
         </Card>

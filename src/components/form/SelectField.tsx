@@ -38,7 +38,9 @@ export function SelectField({
 
   return (
     <div className={['ds-form-field', className].filter(Boolean).join(' ')}>
-      <FieldLabel htmlFor={inputId} required={required}>{label}</FieldLabel>
+      <FieldLabel htmlFor={inputId} required={required}>
+        {label}
+      </FieldLabel>
       <select
         {...rest}
         id={inputId}
@@ -47,7 +49,11 @@ export function SelectField({
         aria-describedby={describedBy}
         className="ds-form-control"
       >
-        {placeholder && <option value="" disabled>{placeholder}</option>}
+        {placeholder && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
         {options.map((option) => (
           <option key={option.value} value={option.value} disabled={option.disabled}>
             {option.label}

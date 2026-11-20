@@ -132,7 +132,9 @@ export function Dialog({
       >
         <header className="ds-dialog-header">
           <div>
-            <h2 id={uid + '-title'} className="ds-dialog-title">{title}</h2>
+            <h2 id={uid + '-title'} className="ds-dialog-title">
+              {title}
+            </h2>
             {description && (
               <p id={uid + '-description'} className="ds-dialog-description">
                 {description}

@@ -54,8 +54,8 @@
   --ds-warning-fg: #e8bd61;
 
   /* Tipografia */
-  --ds-font-display: "Fraunces", Georgia, serif;
-  --ds-font-body: "Inter", system-ui, sans-serif;
+  --ds-font-display: 'Fraunces', Georgia, serif;
+  --ds-font-body: 'Inter', system-ui, sans-serif;
   --ds-text-xs: 0.75rem;
   --ds-text-sm: 0.875rem;
   --ds-text-md: 1rem;

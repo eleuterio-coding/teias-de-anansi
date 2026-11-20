@@ -55,9 +55,9 @@ export default function DemoOverviewPage() {
 
       <Accordion title="O que esta demonstração não faz">
         <p>
-          Não cria personagens, campanhas, sessões, contas ou registros;
-          não utiliza autenticação e não acessa Firebase. Os módulos oficiais
-          continuam como páginas reservadas para suas próprias etapas.
+          Não cria personagens, campanhas, sessões, contas ou registros; não utiliza autenticação e
+          não acessa Firebase. Os módulos oficiais continuam como páginas reservadas para suas
+          próprias etapas.
         </p>
       </Accordion>
     </DemoScaffold>

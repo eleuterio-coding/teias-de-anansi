@@ -42,16 +42,13 @@ export function RadioGroupField({
 
   return (
     <fieldset
-      className={
-        ['ds-form-fieldset', 'ds-form-choice-group', className]
-          .filter(Boolean)
-          .join(' ')
-      }
+      className={['ds-form-fieldset', 'ds-form-choice-group', className].filter(Boolean).join(' ')}
       disabled={disabled}
       aria-describedby={describedBy}
     >
       <legend className="ds-form-label">
-        {legend}{required && <span className="ds-form-required"> (obrigatório)</span>}
+        {legend}
+        {required && <span className="ds-form-required"> (obrigatório)</span>}
       </legend>
       <div className="ds-form-choice-options">
         {options.map((option, index) => (
@@ -69,10 +66,7 @@ export function RadioGroupField({
               onChange={() => onChange(option.value)}
               className="ds-form-native-choice"
             />
-            <label
-              htmlFor={groupId + '-option-' + index}
-              className="ds-form-choice-label"
-            >
+            <label htmlFor={groupId + '-option-' + index} className="ds-form-choice-label">
               {option.label}
             </label>
           </div>

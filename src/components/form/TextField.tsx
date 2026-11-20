@@ -30,7 +30,9 @@ export function TextField({
 
   return (
     <div className={['ds-form-field', className].filter(Boolean).join(' ')}>
-      <FieldLabel htmlFor={inputId} required={required}>{label}</FieldLabel>
+      <FieldLabel htmlFor={inputId} required={required}>
+        {label}
+      </FieldLabel>
       <input
         {...rest}
         id={inputId}
