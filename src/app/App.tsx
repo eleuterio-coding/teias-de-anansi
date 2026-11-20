@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { AppShell } from '../layouts/AppShell';
 import { ToastProvider } from '../components/feedback';
+import { AppShell } from '../layouts/AppShell';
 import { LoadingState } from './LoadingState';
 import { PageErrorBoundary } from './PageErrorBoundary';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -18,21 +18,21 @@ export function AppContent() {
     <ToastProvider>
       <AppShell>
         <PageErrorBoundary key={location.pathname}>
-        <Suspense fallback={<LoadingState />}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            {moduleRoutes.map((module) => (
-              <Route
-                key={module.path}
-                path={module.path}
-                element={
-                  <SectionPlaceholder label={module.label} etapa={module.etapa} />
-                }
-              />
-            ))}
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Suspense>
+          <Suspense fallback={<LoadingState />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              {moduleRoutes.map((module) => (
+                <Route
+                  key={module.path}
+                  path={module.path}
+                  element={
+                    <SectionPlaceholder label={module.label} etapa={module.etapa} />
+                  }
+                />
+              ))}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Suspense>
         </PageErrorBoundary>
       </AppShell>
     </ToastProvider>
