@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.10 em 20/11/2026, ciente das pendências de execução dos testes, build, tecnologias assistivas e validação visual. Autorizou implementar o item 2.11 na mesma branch isolada, sem alterar `main` nem publicar. O 2.12 continua condicionado a aceite específico.
+**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.11 em 20/11/2026 e autorizou executar o 2.12 na mesma branch isolada, para resolver nove falhas, revalidar build e registrar pendências. Não autorizou merge em `main`, publicação ou ativação do Firebase.
 
 ## Objetivo
 
@@ -23,8 +23,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.08 | Mensagens de sistema | **Aprovado em 20/11/2026**, com pendências declaradas de testes, build e revisão visual |
 | 2.09 | Acessibilidade | **Aprovado em 20/11/2026**, com pendências declaradas de execução, build e testes assistivos |
 | 2.10 | Páginas demonstrativas | **Aprovado pelo Mestre em 20/11/2026**, com pendências declaradas de testes, build e inspeção visual |
-| 2.11 | Padrão obrigatório de desenvolvimento | Contrato e 24 testes escritos, verificação integrada; aguarda execução e aceite |
-| 2.12 | Testes de consistência | Não iniciado |
+| 2.11 | Padrão obrigatório de desenvolvimento | **Aprovado pelo Mestre em 20/11/2026**; contrato com 24/24 testes executados no CI |
+| 2.12 | Testes de consistência | **CI aprovado:** 148/148 Vitest, 24/24 contrato, lint, tipos, formatação, build e Pages; inspeções manuais pendentes; aguarda aceite |
 
 ## Documentos
 
@@ -59,6 +59,7 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [Verificador do padrão](../../../scripts/verify-design-system.mjs).
 - [Testes positivos e negativos](../../../scripts/design-system-contract.test.mjs).
 - [Modelo obrigatório de documento por módulo](../../modules/README.md).
+- [2.12 — Testes de consistência e relatório de CI](2.12-testes-de-consistencia.md).
 
 ## Limites de trabalho
 

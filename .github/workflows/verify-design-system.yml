@@ -47,23 +47,3 @@ jobs:
       - name: Conferir artefato Pages sem publicar (2.12)
         if: ${{ always() && steps.independent_build.outcome == 'success' }}
         run: npm run pages:check
-
-      - name: Preparar conteúdo formatado para revisão, sem push (2.12)
-        if: ${{ always() && steps.install.outcome == 'success' }}
-        shell: bash
-        run: |
-          npm run format >/dev/null
-          node --input-type=module <<'NODE'
-          import { execFileSync } from 'node:child_process';
-          import { readFileSync } from 'node:fs';
-          const names = execFileSync('git', ['diff', '--name-only', '-z'], { encoding: 'utf8' })
-            .split(String.fromCharCode(0)).filter(Boolean);
-          for (const path of names) {
-            const encoded = encodeURIComponent(readFileSync(path, 'utf8'));
-            const chunks = encoded.match(/.{1,3000}/g) ?? [''];
-            chunks.forEach((chunk, index) =>
-              console.log('FORMAT_PATCH|' + path + '|' + index + '|' + chunks.length + '|' + chunk),
-            );
-          }
-          console.log('FORMAT_TOTAL|' + names.length);
-          NODE

@@ -130,8 +130,11 @@ As nove reservas da Etapa 1 continuam apenas com README e não foram ativadas.
 ## Escopo e testes
 
 A galeria demonstrativa de 2.10 não ativa módulos reais do RPG.
-A auditoria completa em dispositivos e tecnologias assistivas permanece
-pendente, assim como a consistência global prevista para o item 2.12.
+A consistência automática foi revisada no 2.12: **148/148 testes Vitest** e
+**24/24 testes do contrato**, além de tipos, lint, formato e build, aprovados
+no GitHub Actions. Relatório: docs/etapas/etapa-2/2.12-testes-de-consistencia.md.
+A auditoria em dispositivos reais e tecnologias assistivas ainda permanece
+pendente; aprovação automatizada não autoriza merge/publicação.
 
 Os testes da biblioteca estão em `tests/components-interaction.test.tsx`,
 `tests/data-presentation.test.tsx`, `tests/forms.test.tsx` e
