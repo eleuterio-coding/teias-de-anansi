@@ -136,7 +136,7 @@ describe('Responsividade do AppShell — item 2.04', () => {
     openMenu();
     const dialog = screen.getByRole('dialog', { name: 'Menu de navegação' });
     const first = within(dialog).getByRole('button', { name: 'Fechar navegação' });
-    const last = within(dialog).getByRole('link', { name: 'Preferências' });
+    const last = within(dialog).getByRole('link', { name: 'Laboratório de interface' });
 
     expect(document.activeElement).toBe(first);
     fireEvent.keyDown(document, { key: 'Tab', shiftKey: true });
