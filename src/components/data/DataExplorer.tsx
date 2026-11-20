@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import { Button } from '../ui';
 import { DataList } from './DataList';
+import { DataLoading } from './DataLoading';
 import { DataTable, type DataColumn, type SortDirection, type SortValue } from './DataTable';
 import { EmptyState } from './EmptyState';
 import { FilterSelect, type FilterOption } from './FilterSelect';
@@ -23,6 +24,7 @@ export type DataExplorerProps<T> = {
   pageSize?: number;
   renderListItem?: (item: T) => ReactNode;
   initialView?: 'table' | 'list';
+  loading?: boolean;
 };
 
 const collator = new Intl.Collator('pt-BR', { numeric: true, sensitivity: 'base' });
@@ -49,6 +51,7 @@ export function DataExplorer<T>({
   pageSize = 10,
   renderListItem,
   initialView = 'table',
+  loading = false,
 }: DataExplorerProps<T>) {
   const [search, setSearch] = useState('');
   const [filterValue, setFilterValue] = useState('');
@@ -116,6 +119,7 @@ export function DataExplorer<T>({
           <SearchField
             label="Buscar registros"
             value={search}
+            disabled={loading}
             onChange={(next) => {
               setSearch(next);
               setPageState(1);
@@ -127,6 +131,7 @@ export function DataExplorer<T>({
             label={filter.label}
             value={filterValue}
             options={filterOptions}
+            disabled={loading}
             onChange={(next) => {
               setFilterValue(next);
               setPageState(1);
@@ -138,6 +143,7 @@ export function DataExplorer<T>({
             label="Ordenar por"
             value={sortBy}
             options={sortOptions}
+            disabled={loading}
             onChange={(next) => {
               setSortBy(next);
               setDirection('asc');
@@ -149,6 +155,7 @@ export function DataExplorer<T>({
           <Button
             size="sm"
             variant="secondary"
+            disabled={loading}
             aria-label={direction === 'asc' ? 'Ordenação crescente' : 'Ordenação decrescente'}
             onClick={() => {
               setDirection((previous) => (previous === 'asc' ? 'desc' : 'asc'));
@@ -166,6 +173,7 @@ export function DataExplorer<T>({
             size="sm"
             variant={view === 'table' ? 'primary' : 'secondary'}
             aria-pressed={view === 'table'}
+            disabled={loading}
             onClick={() => setView('table')}
           >
             Tabela
@@ -174,6 +182,7 @@ export function DataExplorer<T>({
             size="sm"
             variant={view === 'list' ? 'primary' : 'secondary'}
             aria-pressed={view === 'list'}
+            disabled={loading}
             onClick={() => setView('list')}
           >
             Lista
@@ -181,7 +190,9 @@ export function DataExplorer<T>({
         </div>
       )}
 
-      {matching.length === 0 ? (
+      {loading ? (
+        <DataLoading />
+      ) : matching.length === 0 ? (
         <EmptyState
           title={items.length === 0 ? 'Nenhum registro disponível' : 'Nenhum resultado encontrado'}
           description={
@@ -222,12 +233,14 @@ export function DataExplorer<T>({
         />
       )}
 
-      <Pagination
-        page={page}
-        pageSize={size}
-        totalItems={matching.length}
-        onPageChange={setPageState}
-      />
+      {!loading && (
+        <Pagination
+          page={page}
+          pageSize={size}
+          totalItems={matching.length}
+          onPageChange={setPageState}
+        />
+      )}
     </section>
   );
 }
