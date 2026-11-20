@@ -18,7 +18,7 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.03 | Estrutura global do Hub | **Aprovado pelo Mestre em 20/11/2026**, com pendência declarada de testes |
 | 2.04 | Responsividade | **Aprovado em 20/11/2026**, com pendências declaradas de testes e inspeção visual |
 | 2.05 | Componentes de interação | **Aprovado pelo Mestre em 20/11/2026**, com pendências de teste e validação visual declaradas |
-| 2.06 | Apresentação de dados | Em implementação na branch isolada; testes e revisão pendentes |
+| 2.06 | Apresentação de dados | Componentes e testes escritos na branch; aguardando execução de testes e aceite do Mestre |
 | 2.07 | Formulários padronizados | Não iniciado |
 | 2.08 | Mensagens de sistema | Não iniciado |
 | 2.09 | Acessibilidade | Não iniciado |
@@ -38,7 +38,7 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [Guia de componentes](../../../src/components/README.md).
 - [CSS da biblioteca UI](../../../src/styles/components.css).
 - [2.06 — Apresentação de dados](2.06-apresentacao-de-dados.md).
-- [Biblioteca de dados](../../../src/components/data/).
+- [Guia da biblioteca de dados](../../../src/components/data/README.md).
 - [CSS de apresentação de dados](../../../src/styles/data.css).
 
 ## Limites de trabalho
