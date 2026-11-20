@@ -57,7 +57,7 @@ jobs:
           import { execFileSync } from 'node:child_process';
           import { readFileSync } from 'node:fs';
           const names = execFileSync('git', ['diff', '--name-only', '-z'], { encoding: 'utf8' })
-            .split('\\0').filter(Boolean);
+            .split(String.fromCharCode(0)).filter(Boolean);
           for (const path of names) {
             const encoded = encodeURIComponent(readFileSync(path, 'utf8'));
             const chunks = encoded.match(/.{1,3000}/g) ?? [''];
