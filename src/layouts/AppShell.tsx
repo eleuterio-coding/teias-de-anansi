@@ -39,8 +39,7 @@ function resolvePage(pathname: string) {
   if (module) {
     return {
       title: module.label,
-      description:
-        'Espaço reservado para desenvolvimento na ' + module.etapa.toLowerCase() + '.',
+      description: 'Área prevista para ' + module.etapa.toLowerCase() + '.',
       section: module.etapa,
     };
   }
@@ -50,6 +49,10 @@ function resolvePage(pathname: string) {
     description: 'Esta rota não faz parte das áreas cadastradas no Hub.',
     section: 'Navegação',
   };
+}
+
+function navLinkClass({ isActive }: { isActive: boolean }) {
+  return isActive ? 'hub-nav-link is-active' : 'hub-nav-link';
 }
 
 /**
@@ -73,14 +76,20 @@ export function AppShell({ children }: AppShellProps) {
       </button>
 
       <header className="hub-topbar">
-        <Link className="hub-brand" to="/" aria-label="Teias de Anansi — ir para o início">
+        <Link
+          className="hub-brand"
+          to="/"
+          aria-label="Teias de Anansi — ir para o início"
+        >
           <WebMark />
           <span className="hub-brand-copy">
             <strong>Teias de Anansi</strong>
             <small>Hub de RPG · O Grande Tear</small>
           </span>
         </Link>
-        <span className="hub-preview-label">Prévia estrutural · sem dados reais</span>
+        <span className="hub-preview-label">
+          Prévia estrutural · sem dados reais
+        </span>
       </header>
 
       <div className="hub-workspace">
@@ -90,7 +99,7 @@ export function AppShell({ children }: AppShellProps) {
             <NavLink
               end
               to="/"
-              className={({ isActive }) => 'hub-nav-link' + (isActive ? ' is-active' : '')}
+              className={navLinkClass}
             >
               Início
             </NavLink>
@@ -98,14 +107,14 @@ export function AppShell({ children }: AppShellProps) {
               <NavLink
                 key={module.path}
                 to={module.path}
-                className={({ isActive }) => 'hub-nav-link' + (isActive ? ' is-active' : '')}
+                className={navLinkClass}
               >
                 {module.label}
               </NavLink>
             ))}
           </nav>
           <p className="hub-sidebar-note">
-            Navegação demonstrativa. Os módulos ainda não apresentam informações privadas.
+            Navegação demonstrativa, sem informações privadas.
           </p>
         </aside>
 
@@ -133,7 +142,10 @@ export function AppShell({ children }: AppShellProps) {
               </div>
               <nav className="hub-page-actions" aria-label="Ações da página">
                 {onHome ? (
-                  <Link className="hub-action hub-action-primary" to="/biblioteca">
+                  <Link
+                    className="hub-action hub-action-primary"
+                    to="/biblioteca"
+                  >
                     Explorar Biblioteca
                   </Link>
                 ) : (
@@ -157,7 +169,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       <footer className="hub-footer">
-        Teias de Anansi 2.0 · Estrutura demonstrativa, sem autenticação ou conteúdo de jogo.
+        Prévia do Hub · Sem autenticação ou dados privados.
       </footer>
     </div>
   );
