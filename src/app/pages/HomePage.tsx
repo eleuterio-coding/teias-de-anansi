@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Card, HubLink } from '../../components/ui';
 import { moduleRoutes } from '../routes';
 
 export default function HomePage() {
@@ -11,8 +11,10 @@ export default function HomePage() {
       <ul className="module-links">
         {moduleRoutes.map((module) => (
           <li key={module.path}>
-            <Link to={module.path}>{module.label}</Link>
-            <span>{module.etapa}</span>
+            <Card>
+              <HubLink to={module.path}>{module.label}</HubLink>
+              <span>{module.etapa}</span>
+            </Card>
           </li>
         ))}
       </ul>
