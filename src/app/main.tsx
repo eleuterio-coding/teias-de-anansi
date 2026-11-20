@@ -8,6 +8,7 @@ import '../styles/components.css';
 import '../styles/data.css';
 import '../styles/forms.css';
 import '../styles/feedback.css';
+import '../styles/demo.css';
 
 const root = document.getElementById('root');
 
