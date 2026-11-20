@@ -162,6 +162,19 @@ describe('Biblioteca de componentes — item 2.05', () => {
     expect(document.activeElement).toBe(trigger);
   });
 
+  it('fecha menu ao interagir fora dele', () => {
+    render(
+      <ActionMenu
+        label="Mais opções"
+        items={[{ id: 'copy', label: 'Copiar', onSelect: vi.fn() }]}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /Mais opções/ }));
+    expect(screen.getByRole('menu')).toBeDefined();
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
   it('abre modal com foco gerenciado, fecha por Escape e restaura rolagem', () => {
     const onClose = vi.fn();
     render(
@@ -184,25 +197,43 @@ describe('Biblioteca de componentes — item 2.05', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('restaura foco ao desmontar modal controlado', () => {
-    const { rerender } = render(
+  it('restaura o foco de origem e a rolagem ao fechar o modal', () => {
+    const onClose = vi.fn();
+    const view = (open: boolean) => (
       <>
         <button type="button">Origem</button>
-        <Dialog open title="Janela" onClose={vi.fn()}>
+        <Dialog open={open} title="Janela" onClose={onClose}>
           Conteúdo
         </Dialog>
-      </>,
+      </>
     );
+    const { rerender } = render(view(false));
+    const origin = screen.getByRole('button', { name: 'Origem' });
+    origin.focus();
 
-    rerender(
-      <>
-        <button type="button">Origem</button>
-        <Dialog open={false} title="Janela" onClose={vi.fn()}>
-          Conteúdo
-        </Dialog>
-      </>,
-    );
+    rerender(view(true));
+    expect(document.body.style.overflow).toBe('hidden');
+    rerender(view(false));
+
+    expect(document.activeElement).toBe(origin);
     expect(document.body.style.overflow).toBe('');
+  });
+
+  it('fecha modal após clicar no fundo, mas não ao clicar no conteúdo', () => {
+    const onClose = vi.fn();
+    render(
+      <Dialog open title="Janela" onClose={onClose}>
+        Conteúdo
+      </Dialog>,
+    );
+    const dialog = screen.getByRole('dialog', { name: 'Janela' });
+    fireEvent.mouseDown(dialog);
+    expect(onClose).not.toHaveBeenCalled();
+
+    const backdrop = dialog.parentElement;
+    if (!backdrop) throw new Error('Backdrop não encontrada');
+    fireEvent.mouseDown(backdrop);
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it('exige confirmação explícita sem executar ação automaticamente', () => {
