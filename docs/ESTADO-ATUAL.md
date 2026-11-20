@@ -3,7 +3,7 @@
 **Data de referência:** 19/11/2026  
 **Versão de fundação:** 0.1.0  
 **Branch:** `feature/etapa-1-fundacao-8-etapas`  
-**Estado geral:** Etapa 1, item 1.09 executado e testado com sucesso; aguarda aceite do Mestre.
+**Estado geral:** Etapa 1 concluída e aprovada pelo Mestre em 20/11/2026. Etapa 2 não autorizada nem iniciada.
 
 ## Controle do escopo autorizado
 
@@ -17,7 +17,7 @@
 | 1.06 | Base e build GitHub Pages sem deploy | Aprovado |
 | 1.07 | Adaptadores Firebase sem acesso ao serviço | Aprovado |
 | 1.08 | Qualidade, manutenção, scripts e documentação | Aprovado |
-| **1.09** | **Prova de execução e apresentação da base** | **Testado / aguardando aprovação** |
+| **1.09** | **Prova de execução e apresentação da base** | **Aprovado em 20/11/2026** |
 
 ## Componentes existentes
 
@@ -56,7 +56,7 @@ O item 1.08 foi aprovado. A prova específica do item 1.09 é registrada em `doc
 - O workflow final mantém `permissions: contents: read` e não usa comandos de deploy.
 - Verificação do GitHub após os testes: `main` permaneceu em `23ea59b0341261e97aeab9d5bc0ecfac8500132b`.
 
-**Nota de rastreabilidade:** documentos de itens anteriores podem conter o estado "aguardando aprovação" registrado na data da respectiva entrega. Para o estado **atual** dos aceites 1.01–1.08, prevalece a tabela deste documento. O item 1.09 está autorizado, mas ainda depende de aceite; a Etapa 2 não foi iniciada.
+**Nota de rastreabilidade:** documentos de itens anteriores podem conter estados históricos "aguardando aprovação". O aceite atual de **todos os itens 1.01–1.09** e o encerramento formal da Etapa 1 foram expressos pelo Mestre em **20/11/2026**. A Etapa 2 não foi autorizada e não foi iniciada.
 
 ## Resultado verificável do item 1.09
 
@@ -70,4 +70,4 @@ O item 1.08 foi aprovado. A prova específica do item 1.09 é registrada em `doc
 - `main` conferida no commit `23ea59b0341261e97aeab9d5bc0ecfac8500132b`. Firebase real e contas não foram acessados/alterados.
 - Limitação: não houve teste manual de usuários nem acesso pelo domínio público; a identidade visual continua reservada à Etapa 2.
 
-**Decisão pendente:** aceite formal do item 1.09, encerramento da Etapa 1 e eventual autorização separada da Etapa 2. Não há avanço automático.
+**Decisão registrada em 20/11/2026:** Mestre aprovou o item 1.09 e declarou **encerrada a Etapa 1 — Fundação da aplicação**. Determinou expressamente: **não iniciar a Etapa 2 sem autorização**, preservar `main`, site publicado e Firebase. Nenhum avanço automático.

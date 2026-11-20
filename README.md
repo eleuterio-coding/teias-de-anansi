@@ -9,7 +9,7 @@ Reconstrução do **Hub privado de RPG** em **oito etapas**, com aprovação exp
 
 ## Estado do projeto
 
-Os itens **1.01–1.08 foram aprovados** pelo Mestre. O item **1.09 — Prova de execução** foi compilado e testado com sucesso em um navegador local automatizado; **aguarda aprovação expressa do Mestre**. Nenhuma publicação foi realizada.
+**Etapa 1 — Fundação da aplicação encerrada e aprovada em 20/11/2026.** Os itens **1.01 a 1.09** receberam aceite expresso do Mestre. A próxima Etapa 2 — Design System **não foi iniciada nem autorizada**. Nenhuma publicação foi realizada.
 
 A aplicação atual possui apenas navegação e módulos provisórios. **Não há login em funcionamento, ficha, campanha ou biblioteca real**. O SDK Firebase foi preparado em `src/services/firebase/`, mas não é chamado na inicialização; nenhuma leitura/escrita ou alteração remota foi executada.
 
@@ -41,7 +41,8 @@ O Vite informa a URL local. A rota inicial usa o fragmento `/#/`, e páginas de 
 | `npm run build` | Compila localmente para `dist/`. |
 | `npm run pages:check` | Confere links JS/CSS gerados para o GitHub Pages; requer build. |
 | `npm run check` | Executa, em ordem, todas as verificações acima (exceto `dev`). |
-| `npm run preview` | Prévia local do build; não publica no GitHub Pages. |\n| `npm run proof:preview` | Inicia a prévia em localhost:4173, verifica assets e três rotas com Chrome/Chromium headless; gera capturas em `proof/` (requer build e navegador instalado). |
+| `npm run preview` | Prévia local do build; não publica no GitHub Pages. |
+| `npm run proof:preview` | Inicia a prévia em localhost:4173, verifica assets e três rotas com Chrome/Chromium headless; gera capturas em `proof/` (requer build e navegador instalado). |
 
 O GitHub Actions executa as verificações na branch isolada e disponibiliza `dist/` por sete dias como **artefato de CI**, não como site publicado. O workflow tem permissões somente de leitura.
 
@@ -69,4 +70,4 @@ Um servidor temporário `127.0.0.1:4173` serviu a aplicação compilada. O **Goo
 - [Capturas e relatório da prova](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14583058977)
 - [Build compilado para inspeção](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44635275870/artifacts/14584125674)
 
-Artefatos temporários de sete dias, **não são publicação de site**. O aceite do item 1.09 e eventual início da Etapa 2 dependem de decisões expressas e separadas do Mestre.
+Artefatos temporários de sete dias, **não são publicação de site**. O item 1.09 e o encerramento da Etapa 1 foram aprovados em 20/11/2026. A Etapa 2 exige **nova autorização expressa**; nenhum merge, deploy ou contato com o Firebase foi autorizado.
