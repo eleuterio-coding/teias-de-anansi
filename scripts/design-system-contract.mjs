@@ -67,11 +67,11 @@ const TAILWIND_LITERAL_COLOR =
   /\b(?:bg|text|border|from|via|to)-(?:red|blue|green|amber|yellow|gray|grey|slate|zinc|rose|pink|orange|purple|teal|emerald|cyan|indigo|stone|lime|fuchsia|sky)-\d{2,3}\b/i;
 
 const IMPORT_DIRECT_COMPONENT =
-  /(?:from\s*|import\s*\()['"][^'"]*(?:components\/(?:ui|data|form|feedback)\/(?:[^'"]+))['"]/;
+  /(?:from\s*|import\s*(?:\(|\s))['"][^'"]*(?:components\/(?:ui|data|form|feedback)\/(?:[^'"]+))['"]/;
 const IMPORT_FIREBASE =
-  /(?:from\s*|import\s*\()['"][^'"]*(?:firebase(?:\/[^'"]*)?|services\/firebase[^'"]*)['"]/i;
+  /(?:from\s*|import\s*(?:\(|\s))['"][^'"]*(?:firebase(?:\/[^'"]*)?|services\/firebase[^'"]*)['"]/i;
 const IMPORT_LOCAL_STYLES =
-  /(?:from\s*|import\s*\()['"][^'"]*(?:\/styles\/[^'"]+\.css|\.\/[^'"]+\.css)['"]/i;
+  /(?:from\s*|import\s*(?:\(|\s))['"][^'"]*(?:\/styles\/[^'"]+\.css|\.\/[^'"]+\.css)['"]/i;
 
 function violation(code, detail) {
   return { code, detail };
