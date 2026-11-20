@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre aprovou os itens 2.01, 2.02, 2.03 e 2.04 em 20/11/2026, mantendo explícitas as pendências de execução de testes do shell e da responsividade. Autorizou implementar o item 2.05 na mesma branch isolada, sem alterar `main` nem publicar.
+**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.05 em 20/11/2026, ciente das pendências de testes automatizados e de validação visual. Autorizou iniciar 2.06 na mesma branch isolada, sem merge em `main` nem publicação.
 
 ## Objetivo
 
@@ -17,8 +17,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.02 | Tokens de identidade visual | **Aprovado em 20/11/2026**; integrado ao shell em 2.03 |
 | 2.03 | Estrutura global do Hub | **Aprovado pelo Mestre em 20/11/2026**, com pendência declarada de testes |
 | 2.04 | Responsividade | **Aprovado em 20/11/2026**, com pendências declaradas de testes e inspeção visual |
-| 2.05 | Componentes de interação | Implementação e testes escritos; aguardando validação e aceite do Mestre |
-| 2.06 | Apresentação de dados | Não iniciado |
+| 2.05 | Componentes de interação | **Aprovado pelo Mestre em 20/11/2026**, com pendências de teste e validação visual declaradas |
+| 2.06 | Apresentação de dados | Em implementação na branch isolada; testes e revisão pendentes |
 | 2.07 | Formulários padronizados | Não iniciado |
 | 2.08 | Mensagens de sistema | Não iniciado |
 | 2.09 | Acessibilidade | Não iniciado |
@@ -37,6 +37,9 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [2.05 — Componentes de interação](2.05-componentes-interacao.md).
 - [Guia de componentes](../../../src/components/README.md).
 - [CSS da biblioteca UI](../../../src/styles/components.css).
+- [2.06 — Apresentação de dados](2.06-apresentacao-de-dados.md).
+- [Biblioteca de dados](../../../src/components/data/).
+- [CSS de apresentação de dados](../../../src/styles/data.css).
 
 ## Limites de trabalho
 
