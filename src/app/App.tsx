@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { AppShell } from '../layouts/AppShell';
+import { ToastProvider } from '../components/feedback';
 import { LoadingState } from './LoadingState';
 import { PageErrorBoundary } from './PageErrorBoundary';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -14,8 +15,9 @@ export function AppContent() {
   const location = useLocation();
 
   return (
-    <AppShell>
-      <PageErrorBoundary key={location.pathname}>
+    <ToastProvider>
+      <AppShell>
+        <PageErrorBoundary key={location.pathname}>
         <Suspense fallback={<LoadingState />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -31,8 +33,9 @@ export function AppContent() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
-      </PageErrorBoundary>
-    </AppShell>
+        </PageErrorBoundary>
+      </AppShell>
+    </ToastProvider>
   );
 }
 
