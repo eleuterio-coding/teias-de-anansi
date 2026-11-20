@@ -102,12 +102,21 @@ exclusivamente os tokens de Anansi em `src/styles/feedback.css`, importado
 na entrada da aplicação. Nenhuma mensagem de sucesso é disparada sem uma
 ação efetiva do módulo consumidor.
 
+## Revisão transversal de acessibilidade (2.09)
+
+As correções de relacionamento entre abas, isolação de fundo de modais e
+gaveta compacta, gestão do foco e título da rota estão detalhadas em
+[2.09 — Acessibilidade](../../docs/etapas/etapa-2/2.09-acessibilidade.md).
+O código de regressão está em `tests/accessibility.test.tsx` e a verificação
+de contraste foi adicionada ao `npm run check` como `npm run verify:a11y`.
+
 ## Escopo e testes
 
 A galeria de páginas demonstrativas fica reservada ao item 2.10.
-Acessibilidade aprofundada requer a auditoria 2.09 e a verificação global 2.12.
+A auditoria completa em dispositivos e tecnologias assistivas permanece
+pendente, assim como a consistência global prevista para o item 2.12.
 
 Os testes da biblioteca estão em `tests/components-interaction.test.tsx`,
 `tests/data-presentation.test.tsx`, `tests/forms.test.tsx` e
-`tests/system-feedback.test.tsx`.
+`tests/system-feedback.test.tsx` e `tests/accessibility.test.tsx`.
 Não declarar esses testes aprovados até haver execução verificável de CI ou local.
