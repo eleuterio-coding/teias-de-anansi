@@ -91,12 +91,23 @@ Os estilos usam exclusivamente tokens aprovados, em `src/styles/forms.css`,
 importado uma vez na entrada. A camada consumidora controla valores, regras de
 validação, envio e autorização; a biblioteca não salva dados.
 
+## Mensagens de sistema (2.08)
+
+O padrão global de notificações e estados de operação está na pasta
+[feedback/](feedback/), com o [guia de uso](feedback/README.md).
+
+O `ToastProvider` integra o AppShell, enquanto `OperationFeedback` reaproveita
+o `Alert` da 2.05 para evitar implementações duplicadas. Os estilos usam
+exclusivamente os tokens de Anansi em `src/styles/feedback.css`, importado
+na entrada da aplicação. Nenhuma mensagem de sucesso é disparada sem uma
+ação efetiva do módulo consumidor.
+
 ## Escopo e testes
 
-A galeria de páginas demonstrativas fica reservada ao item 2.10. Mensagens
-de sistema avançadas permanecem para 2.08. Acessibilidade aprofundada
-requer a auditoria 2.09 e a verificação global 2.12.
+A galeria de páginas demonstrativas fica reservada ao item 2.10.
+Acessibilidade aprofundada requer a auditoria 2.09 e a verificação global 2.12.
 
 Os testes da biblioteca estão em `tests/components-interaction.test.tsx`,
-`tests/data-presentation.test.tsx` e `tests/forms.test.tsx`.
+`tests/data-presentation.test.tsx`, `tests/forms.test.tsx` e
+`tests/system-feedback.test.tsx`.
 Não declarar esses testes aprovados até haver execução verificável de CI ou local.
