@@ -1,3 +1,5 @@
+export { DataLoading } from './DataLoading';
+export type { DataLoadingProps } from './DataLoading';
 export { EmptyState } from './EmptyState';
 export type { EmptyStateProps } from './EmptyState';
 export { SearchField } from './SearchField';
