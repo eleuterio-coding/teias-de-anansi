@@ -26,5 +26,8 @@ jobs:
       - name: Instalar dependências fixadas
         run: npm ci
 
+      - name: Verificar contrato obrigatório dos módulos (2.11)
+        run: npm run verify:design-system
+
       - name: Verificar base sem publicar
         run: npm run check
