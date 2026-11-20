@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.05 em 20/11/2026, ciente das pendências de testes automatizados e de validação visual. Autorizou iniciar 2.06 na mesma branch isolada, sem merge em `main` nem publicação.
+**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.06 em 20/11/2026, ciente das pendências de testes automatizados, build e validação visual. Autorizou implementar o 2.07 na mesma branch isolada, sem alterar `main` nem publicar.
 
 ## Objetivo
 
@@ -18,8 +18,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.03 | Estrutura global do Hub | **Aprovado pelo Mestre em 20/11/2026**, com pendência declarada de testes |
 | 2.04 | Responsividade | **Aprovado em 20/11/2026**, com pendências declaradas de testes e inspeção visual |
 | 2.05 | Componentes de interação | **Aprovado pelo Mestre em 20/11/2026**, com pendências de teste e validação visual declaradas |
-| 2.06 | Apresentação de dados | Componentes e testes escritos na branch; aguardando execução de testes e aceite do Mestre |
-| 2.07 | Formulários padronizados | Não iniciado |
+| 2.06 | Apresentação de dados | **Aprovado em 20/11/2026**, com pendências declaradas de execução, build e revisão visual |
+| 2.07 | Formulários padronizados | Implementação e 14 cenários de testes escritos; aguardando execução e aceite |
 | 2.08 | Mensagens de sistema | Não iniciado |
 | 2.09 | Acessibilidade | Não iniciado |
 | 2.10 | Páginas demonstrativas | Não iniciado |
@@ -40,6 +40,9 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [2.06 — Apresentação de dados](2.06-apresentacao-de-dados.md).
 - [Guia da biblioteca de dados](../../../src/components/data/README.md).
 - [CSS de apresentação de dados](../../../src/styles/data.css).
+- [2.07 — Formulários padronizados](2.07-formularios-padronizados.md).
+- [Guia da biblioteca de formulários](../../../src/components/form/README.md).
+- [CSS de formulários](../../../src/styles/forms.css).
 
 ## Limites de trabalho
 
