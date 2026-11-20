@@ -80,12 +80,23 @@ importados uma única vez na entrada da aplicação. Os módulos deverão
 fornecer seus registros **após** a verificação de permissões;
 a biblioteca não consulta Firebase.
 
+## Formulários padronizados (2.07)
+
+Campos de texto, área de texto, seleção, checkbox, radio, organização de
+formulários e mensagens de validação foram adicionados em [form/](form/).
+Leia o [guia de uso](form/README.md) e importe pelo ponto único
+`src/components/form/index.ts`.
+
+Os estilos usam exclusivamente tokens aprovados, em `src/styles/forms.css`,
+importado uma vez na entrada. A camada consumidora controla valores, regras de
+validação, envio e autorização; a biblioteca não salva dados.
+
 ## Escopo e testes
 
-Os componentes são a entrega 2.05, mas a galeria de páginas demonstrativas
-fica reservada ao item 2.10. Formulários completos, tabelas e mensagens de
-sistema avançadas permanecem para 2.06–2.08. Acessibilidade aprofundada
-ainda requer a auditoria 2.09 e a verificação global 2.12.
+A galeria de páginas demonstrativas fica reservada ao item 2.10. Mensagens
+de sistema avançadas permanecem para 2.08. Acessibilidade aprofundada
+requer a auditoria 2.09 e a verificação global 2.12.
 
-Os cenários de comportamento estão em `tests/components-interaction.test.tsx`.
+Os testes da biblioteca estão em `tests/components-interaction.test.tsx`,
+`tests/data-presentation.test.tsx` e `tests/forms.test.tsx`.
 Não declarar esses testes aprovados até haver execução verificável de CI ou local.
