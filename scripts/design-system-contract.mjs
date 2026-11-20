@@ -18,6 +18,17 @@ export const SHARED_STYLES = [
 
 export const SHARED_LIBRARIES = ['ui', 'data', 'form', 'feedback'];
 
+// Reservas estabelecidas na Etapa 1; não são módulos implementados.
+export const RESERVED_PLACEHOLDER_IDS = new Set([
+  'usuarios', 'biblioteca', 'personagens', 'campanhas', 'aventuras',
+  'npcs', 'sessoes', 'area-jogador', 'preferencias',
+]);
+
+export function isReservedPlaceholder(id, sourceFiles) {
+  return RESERVED_PLACEHOLDER_IDS.has(id) &&
+    sourceFiles.length === 1 && sourceFiles[0].path === 'README.md';
+}
+
 const SHARED_COMPONENT_NAMES = new Set([
   'Button',
   'HubLink',
