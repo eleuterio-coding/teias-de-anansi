@@ -110,13 +110,22 @@ gaveta compacta, gestão do foco e título da rota estão detalhadas em
 O código de regressão está em `tests/accessibility.test.tsx` e a verificação
 de contraste foi adicionada ao `npm run check` como `npm run verify:a11y`.
 
+## Páginas demonstrativas integradas (2.10)
+
+A galeria de cinco páginas foi criada em `src/app/pages/demo/`, com rotas
+específicas em `src/app/demo-routes.ts`. Todas as páginas usam as bibliotecas
+existentes e **somente dados fictícios em memória**. O registro de escopo e
+testes está em
+[2.10 — Páginas demonstrativas](../../docs/etapas/etapa-2/2.10-paginas-demonstrativas.md).
+
 ## Escopo e testes
 
-A galeria de páginas demonstrativas fica reservada ao item 2.10.
+A galeria demonstrativa de 2.10 não ativa módulos reais do RPG.
 A auditoria completa em dispositivos e tecnologias assistivas permanece
 pendente, assim como a consistência global prevista para o item 2.12.
 
 Os testes da biblioteca estão em `tests/components-interaction.test.tsx`,
 `tests/data-presentation.test.tsx`, `tests/forms.test.tsx` e
-`tests/system-feedback.test.tsx` e `tests/accessibility.test.tsx`.
+`tests/system-feedback.test.tsx`, `tests/accessibility.test.tsx` e
+`tests/demo-pages.test.tsx`.
 Não declarar esses testes aprovados até haver execução verificável de CI ou local.
