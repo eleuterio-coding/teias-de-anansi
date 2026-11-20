@@ -87,7 +87,7 @@ export default function DemoFormsPage() {
 
       <FormPanel
         title="Ficha editorial fictícia"
-        description="Exemplo de formulário para testar os componentes, sem vínculo com regras de RPG."
+        description="Exemplo de formulário para testar os componentes, sem regras de RPG."
         onSubmit={validateExample}
         footer={
           <>
