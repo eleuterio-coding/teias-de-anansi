@@ -3,7 +3,7 @@
 **Definição:** Etapa 2.11, 20/11/2026.  
 **Branch:** feature/etapa-2-design-system-20261120.  
 **Escopo:** todos os módulos funcionais futuros do Hub.  
-**Estado:** especificação e verificador escritos; execução do CI e aceite do Mestre a confirmar.
+**Estado:** especificação escrita e verificador **executado com êxito** em CI; suíte geral bloqueada por testes de componentes anteriores; aguarda aceite do Mestre.
 
 Este padrão preserva a identidade visual **Fantasia Sombria Editorial — Grimório
 ancestral de luxo** aprovada em 2.01, os tokens aprovados em 2.02 e as
@@ -134,7 +134,7 @@ do contrato. Não há autorização de deploy no workflow da Etapa 2.
 
 - scripts/design-system-contract.mjs: funções puras de análise estática
   de bootstrap, roteador e novos módulos.
-- scripts/design-system-contract.test.mjs: **23 cenários escritos** com
+- scripts/design-system-contract.test.mjs: **24 cenários escritos e executados** com
   exemplos positivos e negativos usando o executor nativo node:test.
 - scripts/verify-design-system.mjs: examina a estrutura real do workspace,
   preservando exclusivamente as nove reservas README-only.
@@ -166,11 +166,13 @@ modelo de documento por módulo em docs/modules/README.md.
 | --- | --- |
 | Regras, arquitetura e modelo dos novos módulos | Documentados |
 | Verificador de importações, rotas, pastas, CSS e I/O | Código escrito |
-| Testes positivos/negativos do contrato | 23 escritos |
+| Testes positivos/negativos do contrato | **24/24 aprovados no CI** |
 | Integração de verificação a npm run check | Configurada |
-| Execução integral de npm run check com resultado verificável | **Pendente** |
+| Execução integral de npm run check com resultado verificável | **Falhou: 9 testes de itens anteriores; build não executado** |
 | Inspeção visual, acessibilidade, segurança de dados | **Pendente** |
 | Merge para main, publicação ou ativação de Firebase | **Não autorizado** |
+
+**Registro de CI:** [run 44804504906](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44804504906), SHA `0321be8c5de6046a63dee3570cf4874748024029`: 24 testes de contrato passaram; a suíte geral chegou a 139 testes aprovados e 9 falhas. Os problemas de acessibilidade, demos, responsividade e feedback devem ser tratados separadamente, sem mascarar o resultado.
 
 O item **2.12 — Testes de consistência** permanece separado e só será
 iniciado após aprovação específica do 2.11.
