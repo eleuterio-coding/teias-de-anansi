@@ -23,7 +23,7 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
     mount(path);
     expect(await screen.findByRole('heading', { level: 1, name: label })).toBeDefined();
     expect(
-      screen.getByRole('navigation', { name: 'Páginas demonstrativas' }),
+      await screen.findByRole('navigation', { name: 'Páginas demonstrativas' }),
     ).toBeDefined();
     expect(screen.getByText('Demonstração · dados fictícios')).toBeDefined();
     expect(screen.getByRole('main', { name: label })).toBeDefined();
