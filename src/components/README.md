@@ -68,6 +68,18 @@ Hub (sem regras de jogo), use a biblioteca e não reproduza CSS ou JSX paralelo.
 />
 ```
 
+## Componentes de apresentação de dados (2.06)
+
+A biblioteca de tabelas, listas, buscas, filtros, ordenação, paginação,
+progresso e estados vazios/carregamento está em [data/](data/).
+Consulte o [guia de apresentação de dados](data/README.md) e importe
+os componentes por `src/components/data/index.ts`.
+
+Os novos estilos ficam exclusivamente em `src/styles/data.css`,
+importados uma única vez na entrada da aplicação. Os módulos deverão
+fornecer seus registros **após** a verificação de permissões;
+a biblioteca não consulta Firebase.
+
 ## Escopo e testes
 
 Os componentes são a entrega 2.05, mas a galeria de páginas demonstrativas
