@@ -32,6 +32,8 @@ describe('Navegação inicial', () => {
     fireEvent.click(within(nav).getByRole('link', { name: 'Biblioteca' }));
 
     expect(await screen.findByRole('heading', { name: 'Biblioteca' })).toBeDefined();
+    // O título do AppShell é síncrono; aguardar também o módulo carregado por lazy().
+    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
     expect(within(nav).getByRole('link', { name: 'Biblioteca' }).getAttribute('aria-current')).toBe(
       'page',
     );
@@ -50,7 +52,7 @@ describe('Navegação inicial', () => {
     mount(path);
     expect(await screen.findByRole('heading', { name: label })).toBeDefined();
     expect(
-      screen.getByText('Esta página não consulta nem apresenta informações reais do Hub.'),
+      await screen.findByText('Esta página não consulta nem apresenta informações reais do Hub.'),
     ).toBeDefined();
   });
 
