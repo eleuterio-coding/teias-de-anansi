@@ -113,6 +113,8 @@ rota, nem contém fichas/campanhas reais.
 - Controle de foco `focus-visible` com dourado, erro com texto legível
   e vermelho terroso claro; sem depender apenas de cor.
 - Campos e agrupamentos reorganizam-se em uma coluna no celular.
+- Para áreas de texto ou controles que precisem ocupar as duas colunas,
+  use `className="ds-form-span-full"` no campo dentro de `FormSection`.
 - Usar `FormSection` para organização editorial; usar
   `RadioGroupField`/fieldset para uma escolha exclusiva.
 - Não usar componentes genéricos de formulário para simular ações que
