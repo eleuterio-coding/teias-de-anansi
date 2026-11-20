@@ -15,6 +15,7 @@
 
 html {
   min-width: 0;
+  scroll-padding-block: var(--ds-space-8);
 }
 
 body {
