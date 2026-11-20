@@ -1,5 +1,6 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { ReactNode } from 'react';
 import {
   OperationFeedback,
   ToastProvider,
@@ -25,7 +26,7 @@ function ClearButton() {
   );
 }
 
-function renderNotices(children: React.ReactNode) {
+function renderNotices(children: ReactNode) {
   return render(<ToastProvider>{children}</ToastProvider>);
 }
 
