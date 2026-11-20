@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 
 export type ActionMenuItem = {
   id: string;
@@ -19,7 +19,7 @@ export function ActionMenu({ label, items }: ActionMenuProps) {
   const [focused, setFocused] = useState(0);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const options = items.filter((item) => !item.disabled);
+  const options = useMemo(() => items.filter((item) => !item.disabled), [items]);
 
   useEffect(() => {
     if (!open) return;
