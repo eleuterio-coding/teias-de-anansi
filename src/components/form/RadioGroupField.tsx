@@ -42,7 +42,11 @@ export function RadioGroupField({
 
   return (
     <fieldset
-      className={['ds-form-fieldset', 'ds-form-choice-group', className].filter(Boolean).join(' ')}
+      className={
+        ['ds-form-fieldset', 'ds-form-choice-group', className]
+          .filter(Boolean)
+          .join(' ')
+      }
       disabled={disabled}
       aria-describedby={describedBy}
     >
