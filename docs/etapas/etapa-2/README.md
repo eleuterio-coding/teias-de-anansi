@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre iniciou a Etapa 2 em 20/11/2026, aprovou expressamente os itens 2.01 e 2.02 e depois aprovou o item 2.03, ciente de que seus testes automatizados ainda não haviam sido confirmados. Autorizou o item 2.04 em branch isolada, sem alterar `main` nem publicar.
+**Autorização:** o Mestre aprovou os itens 2.01, 2.02, 2.03 e 2.04 em 20/11/2026, mantendo explícitas as pendências de execução de testes do shell e da responsividade. Autorizou implementar o item 2.05 na mesma branch isolada, sem alterar `main` nem publicar.
 
 ## Objetivo
 
@@ -16,8 +16,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.01 | Direção artística | **Aprovado em 20/11/2026** |
 | 2.02 | Tokens de identidade visual | **Aprovado em 20/11/2026**; integrado ao shell em 2.03 |
 | 2.03 | Estrutura global do Hub | **Aprovado pelo Mestre em 20/11/2026**, com pendência declarada de testes |
-| 2.04 | Responsividade | Implementado para revisão; testes automatizados escritos, execução não confirmada |
-| 2.05 | Componentes de interação | Não iniciado |
+| 2.04 | Responsividade | **Aprovado em 20/11/2026**, com pendências declaradas de testes e inspeção visual |
+| 2.05 | Componentes de interação | Implementação e testes escritos; aguardando validação e aceite do Mestre |
 | 2.06 | Apresentação de dados | Não iniciado |
 | 2.07 | Formulários padronizados | Não iniciado |
 | 2.08 | Mensagens de sistema | Não iniciado |
@@ -34,6 +34,9 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [2.03 — Estrutura global do Hub](2.03-estrutura-global.md).
 - [2.04 — Responsividade](2.04-responsividade.md).
 - [CSS responsivo compartilhado](../../../src/styles/responsive.css).
+- [2.05 — Componentes de interação](2.05-componentes-interacao.md).
+- [Guia de componentes](../../../src/components/README.md).
+- [CSS da biblioteca UI](../../../src/styles/components.css).
 
 ## Limites de trabalho
 
