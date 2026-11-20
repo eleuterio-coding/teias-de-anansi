@@ -7,6 +7,7 @@ import '../styles/responsive.css';
 import '../styles/components.css';
 import '../styles/data.css';
 import '../styles/forms.css';
+import '../styles/feedback.css';
 
 const root = document.getElementById('root');
 
