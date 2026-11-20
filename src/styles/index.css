@@ -326,14 +326,15 @@ button:focus-visible {
   list-style: none;
 }
 
-.module-links li {
+.module-links .ds-card {
+  height: 100%;
+  background: var(--ds-panel-raised);
+}
+
+.module-links .ds-card-content {
   display: flex;
   flex-direction: column;
   gap: var(--ds-space-1);
-  padding: var(--ds-space-4);
-  border: 1px solid var(--ds-border);
-  border-radius: var(--ds-radius-md);
-  background: var(--ds-panel-raised);
 }
 
 .module-links a {
