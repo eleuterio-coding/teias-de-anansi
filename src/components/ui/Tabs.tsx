@@ -88,17 +88,19 @@ export function Tabs({
           </button>
         ))}
       </div>
-      {activeIndex >= 0 && (
+      {items.map((item, index) => (
         <div
-          id={uid + '-panel-' + activeIndex}
+          key={item.id}
+          id={uid + '-panel-' + index}
           role="tabpanel"
-          aria-labelledby={uid + '-tab-' + activeIndex}
-          tabIndex={0}
+          aria-labelledby={uid + '-tab-' + index}
+          hidden={item.id !== selected}
+          tabIndex={item.id === selected ? 0 : -1}
           className="ds-tab-panel"
         >
-          {items[activeIndex].content}
+          {index === activeIndex ? item.content : null}
         </div>
-      )}
+      ))}
     </div>
   );
 }
