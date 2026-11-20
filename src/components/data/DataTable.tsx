@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { EmptyState } from './EmptyState';
+import { DataLoading } from './DataLoading';
 
 export type SortDirection = 'asc' | 'desc';
 export type SortValue = string | number | null | undefined;
@@ -21,6 +22,7 @@ export type DataTableProps<T> = {
   onSortChange?: (columnId: string) => void;
   emptyTitle?: string;
   emptyDescription?: string;
+  loading?: boolean;
 };
 
 export function DataTable<T>({
@@ -32,7 +34,9 @@ export function DataTable<T>({
   onSortChange,
   emptyTitle = 'Nenhum registro encontrado',
   emptyDescription,
+  loading = false,
 }: DataTableProps<T>) {
+  if (loading) return <DataLoading />;
   if (items.length === 0) {
     return <EmptyState title={emptyTitle} description={emptyDescription} />;
   }
