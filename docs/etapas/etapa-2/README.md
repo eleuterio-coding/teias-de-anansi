@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.11 em 20/11/2026 e autorizou executar o 2.12 na mesma branch isolada, para resolver nove falhas, revalidar build e registrar pendências. Não autorizou merge em `main`, publicação ou ativação do Firebase.
+**Encerramento:** o Mestre aprovou expressamente todos os itens 2.01–2.12 em 20/11/2026. A Etapa 2 está concluída quanto à implementação e validação automatizada, conforme a [CI final #44815698745](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44815698745). A inspeção visual e a auditoria com tecnologias assistivas permanecem pendentes. A Etapa 3 está autorizada somente para planejamento documental em branch nova; não houve merge na `main`, publicação ou ativação do Firebase.
 
 ## Objetivo
 
@@ -24,7 +24,7 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.09 | Acessibilidade | **Aprovado em 20/11/2026**, com pendências declaradas de execução, build e testes assistivos |
 | 2.10 | Páginas demonstrativas | **Aprovado pelo Mestre em 20/11/2026**, com pendências declaradas de testes, build e inspeção visual |
 | 2.11 | Padrão obrigatório de desenvolvimento | **Aprovado pelo Mestre em 20/11/2026**; contrato com 24/24 testes executados no CI |
-| 2.12 | Testes de consistência | **CI aprovado:** 148/148 Vitest, 24/24 contrato, lint, tipos, formatação, build e Pages; inspeções manuais pendentes; aguarda aceite |
+| 2.12 | Testes de consistência | **Aprovado pelo Mestre em 20/11/2026:** CI verde com 148/148 Vitest e 24/24 contrato, tipos, lint, formatação, build e Pages; inspeções manuais pendentes |
 
 ## Documentos
 
