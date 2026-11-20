@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   SHARED_STYLES,
+  RESERVED_PLACEHOLDER_IDS,
+  isReservedPlaceholder,
   extractModuleRoutes,
   validateBootstrap,
   validateModule,
@@ -227,5 +229,25 @@ test('roteador preserva HashRouter, AppShell, fronteira de erros e catálogo', (
   assert.deepEqual(
     new Set(errors.map(({ code }) => code)),
     new Set(['ROUTER_HASH', 'ROUTER_SHELL', 'ROUTER_ERROR', 'ROUTER_CATALOG']),
+  );
+});
+
+test('reconhece somente reservas estabelecidas pela Etapa 1', () => {
+  assert.equal(RESERVED_PLACEHOLDER_IDS.size, 9);
+  assert.equal(isReservedPlaceholder('biblioteca', [{ path: 'README.md' }]), true);
+  assert.equal(isReservedPlaceholder('usuarios', [{ path: 'README.md' }]), true);
+});
+
+test('rejeita dispensa para pasta nova não autorizada', () => {
+  assert.equal(isReservedPlaceholder('inventado', [{ path: 'README.md' }]), false);
+});
+
+test('reserva perde dispensa ao receber código de implementação', () => {
+  assert.equal(
+    isReservedPlaceholder('personagens', [
+      { path: 'README.md' },
+      { path: 'index.tsx', content: 'export default function Page() {}' },
+    ]),
+    false,
   );
 });
