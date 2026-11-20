@@ -44,7 +44,10 @@ export default function DemoStatesPage() {
       title="Estados e mensagens"
       description="Feedback de ações e estados de conteúdo apresentados sem chamadas ao servidor."
     >
-      <Card title="Notificações globais" description="As mensagens são criadas apenas após cada clique.">
+      <Card
+        title="Notificações globais"
+        description="As mensagens são criadas apenas após cada clique."
+      >
         <div className="hub-demo-actions">
           {exampleMessages.map((message) => (
             <Button
@@ -62,7 +65,10 @@ export default function DemoStatesPage() {
         </p>
       </Card>
 
-      <Card title="Estado da operação" description="Selecione um estado para observar a mensagem.">
+      <Card
+        title="Estado da operação"
+        description="Selecione um estado para observar a mensagem."
+      >
         <div className="hub-demo-actions" role="group" aria-label="Selecionar estado fictício">
           {(['idle', 'loading', 'success', 'warning', 'error'] as const).map((status) => (
             <Button
