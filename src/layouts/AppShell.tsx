@@ -104,6 +104,8 @@ export function AppShell({ children }: AppShellProps) {
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const menuPanelRef = useRef<HTMLElement>(null);
   const previousPathRef = useRef(location.pathname);
+  const restoreFocusRef = useRef(false);
+  const focusMainRef = useRef(false);
 
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;
@@ -117,20 +119,40 @@ export function AppShell({ children }: AppShellProps) {
   }, []);
 
   useEffect(() => {
+    document.title = page.title + ' | Teias de Anansi';
     if (previousPathRef.current !== location.pathname) {
       previousPathRef.current = location.pathname;
+      focusMainRef.current = true;
       setMenuOpen(false);
     }
-  }, [location.pathname]);
+  }, [location.pathname, page.title]);
 
   useEffect(() => {
     if (!compact) setMenuOpen(false);
   }, [compact]);
 
+  // Menu recolhido não pode continuar no percurso do teclado.
+  useEffect(() => {
+    if (menuPanelRef.current) menuPanelRef.current.inert = compact && !menuOpen;
+  }, [compact, menuOpen]);
+
   useEffect(() => {
     if (!compact || !menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+    const background = [
+      document.querySelector<HTMLElement>('.hub-topbar'),
+      document.querySelector<HTMLElement>('.hub-page'),
+      document.querySelector<HTMLElement>('.hub-footer'),
+      document.querySelector<HTMLElement>('.hub-skip-link'),
+    ].filter((element): element is HTMLElement => element !== null);
+    const previousInert = background.map((element) => ({
+      element,
+      inert: element.inert,
+    }));
+    previousInert.forEach(({ element }) => {
+      element.inert = true;
+    });
     document.body.style.overflow = 'hidden';
 
     const panel = menuPanelRef.current;
@@ -142,8 +164,9 @@ export function AppShell({ children }: AppShellProps) {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault();
+        restoreFocusRef.current = true;
         setMenuOpen(false);
-        menuTriggerRef.current?.focus();
+        return;
       }
 
       if (event.key !== 'Tab') return;
@@ -163,22 +186,45 @@ export function AppShell({ children }: AppShellProps) {
       }
     }
 
+    function keepFocusInside(event: FocusEvent) {
+      if (panel && !panel.contains(event.target as Node)) {
+        focusable()[0]?.focus();
+      }
+    }
+
     document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('focusin', keepFocusInside);
     return () => {
       document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('focusin', keepFocusInside);
+      previousInert.forEach(({ element, inert }) => {
+        element.inert = inert;
+      });
       document.body.style.overflow = previousOverflow;
     };
   }, [compact, menuOpen]);
 
+  useEffect(() => {
+    if (menuOpen) return;
+    if (focusMainRef.current) {
+      focusMainRef.current = false;
+      restoreFocusRef.current = false;
+      document.getElementById('main-content')?.focus();
+    } else if (restoreFocusRef.current) {
+      restoreFocusRef.current = false;
+      menuTriggerRef.current?.focus();
+    }
+  }, [menuOpen, location.pathname]);
+
   function closeMenu() {
+    restoreFocusRef.current = true;
     setMenuOpen(false);
-    menuTriggerRef.current?.focus();
   }
 
   function navigateFromMenu() {
     if (compact) {
+      focusMainRef.current = true;
       setMenuOpen(false);
-      document.getElementById('main-content')?.focus();
     }
   }
 
