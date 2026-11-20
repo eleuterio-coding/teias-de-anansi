@@ -24,10 +24,26 @@ jobs:
           cache: npm
 
       - name: Instalar dependências fixadas
+        id: install
         run: npm ci
 
       - name: Verificar contrato obrigatório dos módulos (2.11)
         run: npm run verify:design-system
 
-      - name: Verificar base sem publicar
+      - name: Verificar base integrada (2.12)
         run: npm run check
+
+      # Executar auditorias mesmo se o Vitest interromper o check geral.
+      # Nenhuma dessas etapas publica ou escreve no repositório.
+      - name: Conferir formatação independentemente (2.12)
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        run: npm run format:check
+
+      - name: Compilar independentemente (2.12)
+        id: independent_build
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        run: npm run build
+
+      - name: Conferir artefato Pages sem publicar (2.12)
+        if: ${{ always() && steps.independent_build.outcome == 'success' }}
+        run: npm run pages:check
