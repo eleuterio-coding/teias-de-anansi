@@ -18,8 +18,9 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"*.{json,js,mjs,cjs,ts,html}\"",
     "pages:check": "node scripts/verify-pages-build.mjs",
     "verify:boundaries": "node scripts/verify-boundaries.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test:run && npm run format:check && npm run verify:boundaries && npm run build && npm run pages:check",
-    "proof:preview": "node scripts/verify-preview.mjs"
+    "check": "npm run typecheck && npm run lint && npm run test:run && npm run format:check && npm run verify:boundaries && npm run verify:a11y && npm run build && npm run pages:check",
+    "proof:preview": "node scripts/verify-preview.mjs",
+    "verify:a11y": "node scripts/verify-accessibility-colors.mjs"
   },
   "dependencies": {
     "react": "18.3.1",
