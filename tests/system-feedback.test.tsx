@@ -190,11 +190,11 @@ describe('Mensagens de sistema — item 2.08', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Mensagem de foco' }));
     const close = screen.getByRole('button', { name: 'Dispensar notificação: Foco' });
-    close.focus();
+    act(() => close.focus());
     act(() => vi.advanceTimersByTime(4000));
     expect(screen.getByText('Leitura por teclado.')).toBeDefined();
 
-    close.blur();
+    act(() => close.blur());
     act(() => vi.advanceTimersByTime(1000));
     expect(screen.queryByText('Leitura por teclado.')).toBeNull();
   });
