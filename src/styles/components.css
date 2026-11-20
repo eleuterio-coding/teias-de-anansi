@@ -306,6 +306,11 @@
   cursor: not-allowed;
 }
 
+/* A relação aria-controls exige painéis existentes; ocultos não recebem foco. */
+.ds-tab-panel[hidden] {
+  display: none;
+}
+
 .ds-tab-panel {
   min-width: 0;
   padding: var(--ds-space-6) 0;
