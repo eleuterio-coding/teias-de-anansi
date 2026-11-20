@@ -1,0 +1,340 @@
+/*
+ * Teias de Anansi — Etapa 2.06
+ * Apresentação de dados: sem texturas, cores locais ou valores hexadecimais.
+ * Exclusivamente tokens aprovados do Design System.
+ */
+
+.ds-data-field {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.ds-data-field label {
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+}
+
+.ds-data-field input,
+.ds-data-field select {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ds-control-height);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border: 1px solid var(--ds-border-control);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+  font: inherit;
+}
+
+.ds-data-field input:focus-visible,
+.ds-data-field select:focus-visible {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+
+.ds-data-field input:disabled,
+.ds-data-field select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ds-search-control {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.ds-search-control input {
+  flex: 1 1 auto;
+}
+
+.ds-explorer {
+  display: grid;
+  gap: var(--ds-space-4);
+  min-width: 0;
+}
+
+.ds-explorer-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-space-3);
+  min-width: 0;
+  padding-bottom: var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.ds-explorer-toolbar > .ds-button {
+  flex: 0 0 auto;
+}
+
+.ds-explorer-view {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+}
+
+.ds-table-scroll {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+}
+
+.ds-table-scroll:focus-visible {
+  outline: 3px solid var(--ds-focus);
+  outline-offset: 2px;
+}
+
+.ds-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--ds-fg);
+  font-size: var(--ds-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-data-table caption {
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+  color: var(--ds-fg-secondary);
+  background: var(--ds-panel-raised);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+  text-align: left;
+  caption-side: top;
+}
+
+.ds-data-table th,
+.ds-data-table td {
+  padding: var(--ds-space-3) var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+  vertical-align: middle;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.ds-data-table th {
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ds-data-table tbody tr {
+  background: var(--ds-panel);
+}
+
+.ds-data-table tbody tr:nth-child(even) {
+  background: var(--ds-panel-raised);
+}
+
+.ds-data-table tbody tr:hover {
+  background: var(--ds-panel-special);
+}
+
+.ds-data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ds-data-table .ds-table-align-center {
+  text-align: center;
+}
+
+.ds-data-table .ds-table-align-end {
+  text-align: right;
+}
+
+.ds-table-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+  min-width: max-content;
+  min-height: var(--ds-hit-target);
+  padding: 0;
+  border: none;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ds-table-sort span {
+  color: var(--ds-accent);
+}
+
+.ds-table-sort:hover {
+  color: var(--ds-accent);
+}
+
+.ds-data-list {
+  display: grid;
+  gap: var(--ds-space-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ds-data-list-item {
+  min-width: 0;
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-panel-raised);
+}
+
+.ds-data-list-item > :first-child {
+  margin-top: 0;
+}
+
+.ds-data-list-item > :last-child {
+  margin-bottom: 0;
+}
+
+.ds-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  padding-top: var(--ds-space-3);
+  border-top: 1px solid var(--ds-border);
+}
+
+.ds-pagination-summary {
+  margin: 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-pagination-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-8);
+  border: 1px dashed var(--ds-border-control);
+  border-radius: var(--ds-radius-lg);
+  color: var(--ds-fg-secondary);
+  background: var(--ds-panel);
+  text-align: center;
+}
+
+.ds-empty-ornament {
+  color: var(--ds-accent);
+  font-size: var(--ds-text-xl);
+}
+
+.ds-empty-title {
+  color: var(--ds-fg);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-lg);
+}
+
+.ds-empty-state p {
+  max-width: 48ch;
+  margin: 0;
+}
+
+.ds-empty-action {
+  margin-top: var(--ds-space-3);
+}
+
+.ds-progress {
+  display: grid;
+  gap: var(--ds-space-2);
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ds-progress-heading {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  color: var(--ds-fg);
+  font-size: var(--ds-text-sm);
+  font-weight: 600;
+}
+
+.ds-progress-value {
+  color: var(--ds-accent);
+}
+
+.ds-progress progress {
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: var(--ds-space-3);
+  overflow: hidden;
+  border: 1px solid var(--ds-border-control);
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-panel-raised);
+}
+
+.ds-progress progress::-webkit-progress-bar {
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-panel-raised);
+}
+
+.ds-progress progress::-webkit-progress-value {
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-accent);
+}
+
+.ds-progress progress::-moz-progress-bar {
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-accent);
+}
+
+.ds-progress p {
+  margin: 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+@media (max-width: 767px) {
+  .ds-explorer-toolbar {
+    align-items: stretch;
+  }
+
+  .ds-data-field,
+  .ds-explorer-toolbar > .ds-button {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .ds-pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ds-pagination-controls {
+    justify-content: space-between;
+  }
+
+  .ds-table-scroll {
+    max-width: 100%;
+  }
+
+  .ds-empty-state {
+    padding: var(--ds-space-6) var(--ds-space-4);
+  }
+}
