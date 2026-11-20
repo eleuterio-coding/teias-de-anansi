@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre determinou iniciar a Etapa 2 em 20/11/2026. Em seguida, aprovou expressamente os itens 2.01 e 2.02 e autorizou implementar o item 2.03 na branch isolada, sem alterações em `main` ou publicação.
+**Autorização:** o Mestre iniciou a Etapa 2 em 20/11/2026, aprovou expressamente os itens 2.01 e 2.02 e depois aprovou o item 2.03, ciente de que seus testes automatizados ainda não haviam sido confirmados. Autorizou o item 2.04 em branch isolada, sem alterar `main` nem publicar.
 
 ## Objetivo
 
@@ -15,8 +15,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | --- | --- | --- |
 | 2.01 | Direção artística | **Aprovado em 20/11/2026** |
 | 2.02 | Tokens de identidade visual | **Aprovado em 20/11/2026**; integrado ao shell em 2.03 |
-| 2.03 | Estrutura global do Hub | Implementado na branch para revisão; aguardando testes e aceite |
-| 2.04 | Responsividade | Não iniciado |
+| 2.03 | Estrutura global do Hub | **Aprovado pelo Mestre em 20/11/2026**, com pendência declarada de testes |
+| 2.04 | Responsividade | Implementado para revisão; testes automatizados escritos, execução não confirmada |
 | 2.05 | Componentes de interação | Não iniciado |
 | 2.06 | Apresentação de dados | Não iniciado |
 | 2.07 | Formulários padronizados | Não iniciado |
@@ -32,6 +32,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [2.02 — Tokens de identidade visual](2.02-tokens-identidade-visual.md).
 - [Arquivo CSS de tokens](../../../src/styles/tokens.css).
 - [2.03 — Estrutura global do Hub](2.03-estrutura-global.md).
+- [2.04 — Responsividade](2.04-responsividade.md).
+- [CSS responsivo compartilhado](../../../src/styles/responsive.css).
 
 ## Limites de trabalho
 
