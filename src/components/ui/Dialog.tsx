@@ -47,7 +47,7 @@ export function Dialog({
     const siblings = Array.from(document.body.children).filter(
       (node): node is HTMLElement => node instanceof HTMLElement && node !== backdrop,
     );
-    const previousInert = siblings.map((node) => ({ node, inert: node.inert }));
+    const previousInert = siblings.map((node) => ({ node, inert: Boolean(node.inert) }));
     previousInert.forEach(({ node }) => {
       node.inert = true;
     });
