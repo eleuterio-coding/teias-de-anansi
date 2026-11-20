@@ -29,6 +29,7 @@ function moduleFixture(overrides = {}) {
     manifestText: JSON.stringify(goodManifest),
     entryText: 'export default function Biblioteca() { return null; }\n',
     sourceFiles: [
+      { path: 'README.md', content: '# Módulo em desenvolvimento' },
       {
         path: 'index.tsx',
         content: [
@@ -91,6 +92,15 @@ test('contrato rejeita rótulo e etapa diferentes do catálogo', () => {
   const errors = codes(moduleFixture({ manifestText: JSON.stringify(manifest) }));
   assert.ok(errors.includes('MODULE_ROUTE_LABEL'));
   assert.ok(errors.includes('MODULE_ROUTE_STAGE'));
+});
+
+test('contrato requer README no módulo funcional', () => {
+  const errors = codes(
+    moduleFixture({
+      sourceFiles: [{ path: 'index.tsx', content: 'export default function X() {}' }],
+    }),
+  );
+  assert.ok(errors.includes('MODULE_README'));
 });
 
 test('contrato requer entrada React, teste e documentação por módulo', () => {
