@@ -77,6 +77,11 @@
   align-items: start;
 }
 
+/* Opção explícita para campos longos em grades editoriais. */
+.ds-form-span-full {
+  grid-column: 1 / -1;
+}
+
 .ds-form-field {
   display: grid;
   gap: var(--ds-space-2);
