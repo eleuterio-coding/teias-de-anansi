@@ -34,47 +34,84 @@ export function Dialog({
   useEffect(() => {
     if (!open) return;
 
-    const previousFocus = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
+    const panel = panelRef.current;
+    const backdrop = panel?.parentElement;
+    if (!panel || !backdrop) return;
+
+    const previousFocus =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
+
+    // aria-modal sozinho não impede leitura/foco no conteúdo atrás da janela.
+    // Isolamos os irmãos do portal e restauramos os estados anteriores ao fechar.
+    const siblings = Array.from(document.body.children).filter(
+      (node): node is HTMLElement => node instanceof HTMLElement && node !== backdrop,
+    );
+    const previousInert = siblings.map((node) => ({ node, inert: node.inert }));
+    previousInert.forEach(({ node }) => {
+      node.inert = true;
+    });
     document.body.style.overflow = 'hidden';
 
-    const panel = panelRef.current;
-    const elements = () => Array.from(panel?.querySelectorAll<HTMLElement>(focusableSelector) ?? []);
-    (elements()[0] ?? panel)?.focus();
+    const elements = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+        (element) => !element.matches(':disabled') && !element.closest('[hidden]'),
+      );
+
+    (elements()[0] ?? panel).focus();
 
     function onKeys(event: KeyboardEvent) {
-      if (event.key === 'Escape' && !blockedRef.current) {
+      if (event.key === 'Escape') {
         event.preventDefault();
-        closeHandlerRef.current();
+        event.stopPropagation();
+        if (!blockedRef.current) closeHandlerRef.current();
+        return;
       }
+
       if (event.key !== 'Tab') return;
       const controls = elements();
+
       if (controls.length === 0) {
         event.preventDefault();
         panel?.focus();
         return;
       }
+
       const first = controls[0];
       const last = controls[controls.length - 1];
-      if (event.shiftKey && (document.activeElement === first || document.activeElement === panel)) {
+      if (
+        event.shiftKey &&
+        (document.activeElement === first || document.activeElement === panel)
+      ) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (
+        !event.shiftKey &&
+        (document.activeElement === last || !panel?.contains(document.activeElement))
+      ) {
         event.preventDefault();
         first.focus();
       }
     }
 
-    document.addEventListener('keydown', onKeys);
+    function keepFocusInside(event: FocusEvent) {
+      if (!panel?.contains(event.target as Node)) {
+        (elements()[0] ?? panel)?.focus();
+      }
+    }
+
+    document.addEventListener('keydown', onKeys, true);
+    document.addEventListener('focusin', keepFocusInside);
     return () => {
-      document.removeEventListener('keydown', onKeys);
+      document.removeEventListener('keydown', onKeys, true);
+      document.removeEventListener('focusin', keepFocusInside);
+      previousInert.forEach(({ node, inert }) => {
+        node.inert = inert;
+      });
       document.body.style.overflow = previousOverflow;
-      previousFocus?.focus();
+      if (previousFocus?.isConnected) previousFocus.focus();
     };
   }, [open]);
-
   if (!open) return null;
 
   return createPortal(
