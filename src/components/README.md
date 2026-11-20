@@ -118,6 +118,15 @@ existentes e **somente dados fictícios em memória**. O registro de escopo e
 testes está em
 [2.10 — Páginas demonstrativas](../../docs/etapas/etapa-2/2.10-paginas-demonstrativas.md).
 
+## Padrão obrigatório de desenvolvimento (2.11)
+
+Cada módulo oficial futuro deve utilizar as bibliotecas públicas e atender ao
+[contrato arquitetural](../../docs/arquitetura/padrao-obrigatorio-de-desenvolvimento.md).
+O comando `npm run verify:design-system`, adicionado ao `npm run check`,
+exige manifesto, documentação, testes, rotas autorizadas e impede estilos
+ausentes dos tokens e acessos de interface proibidos em novos módulos.
+As nove reservas da Etapa 1 continuam apenas com README e não foram ativadas.
+
 ## Escopo e testes
 
 A galeria demonstrativa de 2.10 não ativa módulos reais do RPG.
