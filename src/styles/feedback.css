@@ -1,0 +1,141 @@
+/*
+ * Teias de Anansi — Etapa 2.08: mensagens do sistema.
+ * Notificações e estados de operação consomem apenas tokens da identidade 2.02.
+ */
+
+.ds-toast-stack {
+  position: fixed;
+  right: var(--ds-space-4);
+  bottom: var(--ds-space-4);
+  z-index: 110;
+  display: grid;
+  gap: var(--ds-space-3);
+  width: min(420px, calc(100vw - 2 * var(--ds-space-4)));
+  max-height: calc(100dvh - 2 * var(--ds-space-4));
+  overflow-y: auto;
+  pointer-events: none;
+}
+
+.ds-toast {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  min-width: 0;
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border-control);
+  border-left: 3px solid var(--ds-info-text);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+  box-shadow: var(--ds-shadow-lg);
+  pointer-events: auto;
+}
+
+.ds-toast--success {
+  border-left-color: var(--ds-success-text);
+}
+
+.ds-toast--warning {
+  border-left-color: var(--ds-warning-fg);
+}
+
+.ds-toast--danger {
+  border-left-color: var(--ds-danger-text);
+}
+
+.ds-toast-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ds-toast-title {
+  display: block;
+  margin-bottom: var(--ds-space-1);
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-leading-heading);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ds-toast-message {
+  margin: 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.ds-toast .ds-button {
+  flex: 0 0 auto;
+}
+
+.ds-operation-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  min-height: var(--ds-control-height);
+  padding: var(--ds-space-4);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+}
+
+.ds-operation-loading strong {
+  font-size: var(--ds-text-md);
+  font-weight: 600;
+}
+
+.ds-operation-loading p {
+  margin: var(--ds-space-1) 0 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+.ds-operation-indicator {
+  flex: 0 0 auto;
+  width: var(--ds-space-4);
+  height: var(--ds-space-4);
+  border: 2px solid var(--ds-border-control);
+  border-top-color: var(--ds-accent);
+  border-radius: var(--ds-radius-full);
+  animation: ds-feedback-spin 900ms linear infinite;
+}
+
+@keyframes ds-feedback-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ds-alert-message > p:first-child {
+  margin-top: 0;
+}
+
+.ds-alert-message > p:last-child {
+  margin-bottom: 0;
+}
+
+.ds-alert-message .ds-button {
+  margin-top: var(--ds-space-3);
+}
+
+@media (max-width: 767px) {
+  .ds-toast-stack {
+    right: var(--ds-space-3);
+    bottom: var(--ds-space-3);
+    width: calc(100vw - 2 * var(--ds-space-3));
+    max-height: calc(100dvh - 2 * var(--ds-space-3));
+  }
+
+  .ds-toast {
+    padding: var(--ds-space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-operation-indicator {
+    animation: none;
+  }
+}
