@@ -123,6 +123,10 @@ export function AppShell({ children }: AppShellProps) {
   }, [location.pathname]);
 
   useEffect(() => {
+    if (!compact) setMenuOpen(false);
+  }, [compact]);
+
+  useEffect(() => {
     if (!compact || !menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
