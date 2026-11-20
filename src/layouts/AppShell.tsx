@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { moduleRoutes } from '../app/routes';
+import { HubLink } from '../components/ui';
 
 type AppShellProps = {
   children: ReactNode;
@@ -294,13 +295,13 @@ export function AppShell({ children }: AppShellProps) {
               </div>
               <nav className="hub-page-actions" aria-label="Ações da página">
                 {onHome ? (
-                  <Link className="hub-action hub-action-primary" to="/biblioteca">
+                  <HubLink variant="primary" to="/biblioteca">
                     Explorar Biblioteca
-                  </Link>
+                  </HubLink>
                 ) : (
-                  <Link className="hub-action hub-action-secondary" to="/">
+                  <HubLink variant="secondary" to="/">
                     Visão geral
-                  </Link>
+                  </HubLink>
                 )}
               </nav>
             </div>
