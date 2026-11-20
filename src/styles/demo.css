@@ -1,0 +1,166 @@
+/*
+ * Etapa 2.10 — apresentação das páginas de demonstração.
+ * Sem novas cores: superfícies, tinta, bordas e espaçamentos usam os tokens 2.02.
+ * Os módulos de RPG permanecem provisórios e sem dados reais.
+ */
+
+.hub-demo {
+  display: grid;
+  gap: var(--ds-space-6);
+  min-width: 0;
+}
+
+.hub-demo-intro {
+  display: grid;
+  justify-items: start;
+  gap: var(--ds-space-3);
+}
+
+.hub-demo-intro h2 {
+  margin: 0;
+  font-family: var(--ds-font-display);
+  color: var(--ds-fg);
+  line-height: var(--ds-leading-heading);
+}
+
+.hub-demo-intro p {
+  max-width: 74ch;
+  margin: 0;
+  color: var(--ds-fg-secondary);
+}
+
+.hub-demo-disclaimer {
+  padding-left: var(--ds-space-3);
+  border-left: 3px solid var(--ds-accent);
+  font-size: var(--ds-text-sm);
+}
+
+.hub-demo-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  padding-bottom: var(--ds-space-4);
+  border-bottom: 1px solid var(--ds-border);
+}
+
+.hub-demo-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ds-hit-target);
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border: 1px solid var(--ds-border-control);
+  border-radius: var(--ds-radius-md);
+  color: var(--ds-fg-secondary);
+  background: var(--ds-panel-raised);
+  font-size: var(--ds-text-sm);
+  text-decoration: none;
+}
+
+.hub-demo-link:hover,
+.hub-demo-link.is-active {
+  color: var(--ds-fg);
+  border-color: var(--ds-accent);
+  background: var(--ds-panel-special);
+}
+
+.hub-demo-link[aria-current='page'] {
+  font-weight: 600;
+  color: var(--ds-accent);
+}
+
+.hub-demo-body {
+  display: grid;
+  gap: var(--ds-space-6);
+  min-width: 0;
+}
+
+.hub-demo-body > * {
+  min-width: 0;
+}
+
+.hub-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: var(--ds-space-4);
+}
+
+.hub-demo-grid .ds-card {
+  min-width: 0;
+  height: 100%;
+}
+
+.hub-demo-grid .ds-card-content {
+  display: grid;
+  align-content: start;
+  gap: var(--ds-space-3);
+}
+
+.hub-demo-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+  min-width: 0;
+}
+
+.hub-demo-result {
+  padding: var(--ds-space-3);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-fg);
+  background: var(--ds-panel-raised);
+  font-size: var(--ds-text-sm);
+  overflow-wrap: anywhere;
+}
+
+.hub-demo-help {
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+.hub-demo-list-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--ds-space-3);
+  min-width: 0;
+}
+
+.hub-demo-list-entry p {
+  margin: var(--ds-space-1) 0 0;
+  color: var(--ds-fg-secondary);
+  font-size: var(--ds-text-sm);
+}
+
+.hub-demo-sidebar-nav {
+  display: grid;
+  gap: var(--ds-space-2);
+  padding-top: var(--ds-space-4);
+  border-top: 1px solid var(--ds-border);
+}
+
+@media (max-width: 1023px) {
+  .hub-demo-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .hub-demo {
+    gap: var(--ds-space-4);
+  }
+
+  .hub-demo-links {
+    gap: var(--ds-space-2);
+  }
+
+  .hub-demo-link {
+    flex: 1 1 100%;
+  }
+
+  .hub-demo-actions > .ds-button {
+    flex: 1 1 auto;
+  }
+}
