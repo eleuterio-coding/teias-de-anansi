@@ -3,7 +3,7 @@
 **Data de início:** 20/11/2026  
 **Branch isolada:** `feature/etapa-2-design-system-20261120`  
 **Origem:** `feature/etapa-1-fundacao-8-etapas` (Etapa 1 concluída e aprovada)  
-**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.07 em 20/11/2026, com ciência das pendências de testes, build e validação visual. Autorizou implementar o 2.08 na mesma branch isolada, sem alterar `main`, publicar ou ativar Firebase.
+**Autorização:** o Mestre aprovou expressamente os itens 2.01–2.08 em 20/11/2026, com ciência das pendências de execução dos testes, build e validação visual. Autorizou o item 2.09 como revisão transversal de acessibilidade, na branch isolada, sem alterar `main` nem publicar.
 
 ## Objetivo
 
@@ -20,8 +20,8 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 | 2.05 | Componentes de interação | **Aprovado pelo Mestre em 20/11/2026**, com pendências de teste e validação visual declaradas |
 | 2.06 | Apresentação de dados | **Aprovado em 20/11/2026**, com pendências declaradas de execução, build e revisão visual |
 | 2.07 | Formulários padronizados | **Aprovado em 20/11/2026**, com pendências declaradas de testes, build e revisão visual |
-| 2.08 | Mensagens de sistema | Implementado na branch para revisão; testes escritos, execução não confirmada |
-| 2.09 | Acessibilidade | Não iniciado |
+| 2.08 | Mensagens de sistema | **Aprovado em 20/11/2026**, com pendências declaradas de testes, build e revisão visual |
+| 2.09 | Acessibilidade | Correções e testes registrados na branch; aguarda execução e aceite |
 | 2.10 | Páginas demonstrativas | Não iniciado |
 | 2.11 | Padrão obrigatório de desenvolvimento | Não iniciado |
 | 2.12 | Testes de consistência | Não iniciado |
@@ -46,6 +46,9 @@ Consolidar uma identidade visual centralizada e componentes obrigatórios para t
 - [2.08 — Mensagens de sistema](2.08-mensagens-de-sistema.md).
 - [Guia da biblioteca de feedback](../../../src/components/feedback/README.md).
 - [CSS de feedback do sistema](../../../src/styles/feedback.css).
+- [2.09 — Acessibilidade transversal](2.09-acessibilidade.md).
+- [2.09 — Roteiro manual de auditoria](2.09-mapa-de-auditoria.md).
+- [Teste de contraste dos tokens](../../../scripts/verify-accessibility-colors.mjs).
 
 ## Limites de trabalho
 
