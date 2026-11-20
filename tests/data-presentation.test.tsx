@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   DataExplorer,
   DataList,
+  DataLoading,
   DataTable,
   EmptyState,
   FilterSelect,
@@ -300,6 +301,49 @@ describe('Apresentação de dados — item 2.06', () => {
     expect(screen.getByText('Nenhum resultado encontrado')).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
     expect(screen.getByRole('table')).toBeDefined();
+  });
+
+  it('prioriza carregamento em vez de resultado vazio', () => {
+    const { rerender } = render(<DataLoading />);
+    expect(screen.getByRole('status').textContent).toContain('Carregando registros');
+
+    rerender(
+      <DataTable
+        items={[] as RecordItem[]}
+        columns={columns}
+        getKey={(item) => item.id}
+        caption="Registros fictícios"
+        loading
+      />,
+    );
+    expect(screen.getByRole('status')).toBeDefined();
+    expect(screen.queryByText('Nenhum registro encontrado')).toBeNull();
+
+    rerender(
+      <DataList
+        items={[] as RecordItem[]}
+        label="Registros fictícios"
+        getKey={(item) => item.id}
+        renderItem={(item) => item.name}
+        loading
+      />,
+    );
+    expect(screen.getByRole('status')).toBeDefined();
+    expect(screen.queryByText('Nenhum registro encontrado')).toBeNull();
+  });
+
+  it('desabilita controles e esconde paginação durante carregamento', () => {
+    const { rerender } = render(<DataExplorer {...base} items={[]} loading />);
+    expect(screen.getByRole('status').textContent).toContain('Carregando registros');
+    expect(screen.queryByText('Nenhum registro disponível')).toBeNull();
+    expect(screen.getByRole('searchbox').hasAttribute('disabled')).toBe(true);
+    expect(screen.getByRole('combobox', { name: 'Categoria' }).hasAttribute('disabled')).toBe(
+      true,
+    );
+    expect(screen.queryByRole('navigation', { name: 'Paginação dos resultados' })).toBeNull();
+
+    rerender(<DataExplorer {...base} items={[]} loading={false} />);
+    expect(screen.getByText('Nenhum registro disponível')).toBeDefined();
   });
 
   it('permite usar o explorador apenas com tabela, sem filtros ou lista', () => {
