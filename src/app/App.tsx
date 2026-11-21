@@ -9,6 +9,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { moduleRoutes } from './routes';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SectionPlaceholder = lazy(() => import('./pages/SectionPlaceholder'));
 const DemoOverviewPage = lazy(() => import('./pages/demo/DemoOverviewPage'));
 const DemoComponentsPage = lazy(() => import('./pages/demo/DemoComponentsPage'));
@@ -27,6 +28,7 @@ export function AppContent() {
           <Suspense fallback={<LoadingState />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/entrar" element={<LoginPage />} />
               <Route path={demoRoutes[0].path} element={<DemoOverviewPage />} />
               <Route path={demoRoutes[1].path} element={<DemoComponentsPage />} />
               <Route path={demoRoutes[2].path} element={<DemoDataPage />} />

@@ -63,6 +63,14 @@ function CloseIcon() {
 }
 
 function resolvePage(pathname: string) {
+  if (pathname === '/entrar') {
+    return {
+      title: 'Acesso ao Hub',
+      description: 'Entre com seu usuario e senha de sempre.',
+      section: 'Conta · Etapa 3',
+    };
+  }
+
   if (pathname === '/') {
     return {
       title: 'Início',
@@ -270,7 +278,12 @@ export function AppShell({ children }: AppShellProps) {
             </span>
           </Link>
         </div>
-        <span className="hub-preview-label">Prévia estrutural · sem dados reais</span>
+        <div className="hub-topbar-end">
+          <span className="hub-preview-label">Prévia estrutural · módulos em preparação</span>
+          <HubLink variant="secondary" to="/entrar">
+            Acessar Hub
+          </HubLink>
+        </div>
       </header>
 
       <div className="hub-workspace">
