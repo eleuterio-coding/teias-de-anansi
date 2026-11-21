@@ -1,0 +1,31 @@
+name: Verificar Etapa 3 — integracao Firebase (offline)
+
+on:
+  push:
+    branches:
+      - feature/etapa-3-usuarios-acesso-20261120
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Validar contratos e build sem acessar Firebase
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obter codigo da branch
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci --no-audit --no-fund
+      - name: Conferir regras de projeto e seguranca local
+        run: npm run verify:boundaries
+      - name: Executar testes do contrato historico Firebase
+        run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
+      - name: Conferir codigo e compilacao completa
+        run: npm run check
