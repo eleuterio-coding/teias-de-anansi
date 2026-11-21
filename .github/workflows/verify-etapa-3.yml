@@ -29,3 +29,32 @@ jobs:
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
       - name: Conferir codigo e compilacao completa
         run: npm run check
+
+  firestore-emulator:
+    name: Permissoes Firestore — projeto demo e Rules propostas (sem deploy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GCLOUD_PROJECT: demo-teias-305
+      FIRESTORE_EMULATOR_HOST: 127.0.0.1:8089
+      FIREBASE_CLI_DISABLE_TELEMETRY: '1'
+      CI: 'true'
+    steps:
+      - name: Obter branch isolada
+        uses: actions/checkout@v4
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Java 21 para Firestore Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Dependencias da aplicacao sem secrets
+        run: npm ci --no-audit --no-fund
+      - name: Instalar ferramentas de teste temporariamente sem editar lockfile
+        run: npm install --no-save --no-package-lock --ignore-scripts --legacy-peer-deps --no-audit --no-fund @firebase/rules-unit-testing@6.0.0 firebase-tools@15.37.0
+      - name: Comparar rules implantadas historicamente e proposta com identidades ficticias
+        run: npx firebase emulators:exec --only firestore --project demo-teias-305 --config tests/firestore-emulator/firebase.json "node tests/firestore-emulator/run.mjs"
