@@ -1,4 +1,6 @@
 import crypto from 'node:crypto';
+import { Buffer } from 'node:buffer';
+import { URLSearchParams } from 'node:url';
 
 // 3.01: apenas consultas GET a APIs administrativas do projeto historico.
 // POST e usado unicamente para trocar a credencial existente por token OAuth.
