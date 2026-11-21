@@ -6,7 +6,7 @@
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
 **CI da Etapa 2 aprovada:** [execução #44815698745](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44815698745).
 
-O Mestre aprovou a Etapa 2 no que se refere à implementação e aos testes automatizados, ciente de que inspeção visual e tecnologias assistivas ainda não foram verificadas em navegadores reais. Autorizou **somente o planejamento** da Etapa 3.
+O Mestre aprovou a Etapa 2 no que se refere à implementação e aos testes automatizados, ciente de que inspeção visual e tecnologias assistivas ainda não foram verificadas em navegadores reais. Inicialmente autorizou **somente o planejamento** da Etapa 3; em 20/11/2026, autorizou o início do **item 3.01**, mantendo as demais restrições.
 
 ## Objetivo
 
@@ -40,7 +40,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 
 ## Limites imediatos
 
-**Não autorizado por este planejamento:** implementar autenticação, conectar Firebase, consultar/listar contas reais, modificar regras, ler ou gravar documentos, alterar senhas, remover/criar contas, ativar um módulo de usuários, publicar, mudar o plano de cobrança ou alterar `main`.
+**Não autorizado neste momento:** implementar autenticação, consultar/listar contas reais, modificar regras, gravar documentos, alterar senhas, remover/criar contas, ativar um módulo de usuários, publicar, mudar o plano de cobrança ou alterar `main`. A leitura remota de configuração para **3.01**, sem alterações, depende de conexão autorizada.
 
 A autorização para iniciar **3.01** foi dada em 20/11/2026. A validação remota depende da conexão autorizada ao projeto ativo. Os itens subsequentes, especialmente alterações em Rules, gravações reais, publicação e mudanças de contas, permanecem fora do escopo atualmente executado.
 
