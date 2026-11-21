@@ -36,7 +36,7 @@ async function tokenFromServiceAccount(raw) {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
-      grant_type: 'urn:ietf:params:oauth:jwt-bearer',
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
       assertion: `${payload}.${signature}`,
     }),
   });
