@@ -47,7 +47,10 @@ export default function LoginPage() {
         },
       );
     } catch {
-      setSession({ status: 'error', message: 'A conexão do Hub não está disponível nesta prévia.' });
+      setSession({
+        status: 'error',
+        message: 'A conexão do Hub não está disponível nesta prévia.',
+      });
     }
 
     return () => {
@@ -126,8 +129,8 @@ export default function LoginPage() {
             </Alert>
           )}
           <p>
-            A autenticação está ativa. As permissões por papel e o conteúdo das campanhas
-            serão integrados nos próximos itens.
+            A autenticação está ativa. As permissões por papel e o conteúdo das campanhas serão
+            integrados nos próximos itens.
           </p>
           {operationError && (
             <Alert tone="danger" title="Não foi possível sair">
@@ -203,8 +206,8 @@ export default function LoginPage() {
           }}
         />
         <p>
-          O Hub não exige novo cadastro, e-mail pessoal ou troca de senha.
-          A sessão é mantida neste navegador até você sair.
+          O Hub não exige novo cadastro, e-mail pessoal ou troca de senha. A sessão é mantida neste
+          navegador até você sair.
         </p>
       </FormPanel>
     </section>

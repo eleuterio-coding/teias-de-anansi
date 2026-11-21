@@ -38,9 +38,7 @@ beforeEach(() => {
 describe('Etapa 3.03 — autenticação existente sem cadastro', () => {
   it('reutiliza a identidade real do projeto e do aplicativo Web, sem segredos administrativos', () => {
     expect(HUB_EXISTING_FIREBASE_WEB_OPTIONS.projectId).toBe('teais-de-anansi');
-    expect(HUB_EXISTING_FIREBASE_WEB_OPTIONS.authDomain).toBe(
-      'teais-de-anansi.firebaseapp.com',
-    );
+    expect(HUB_EXISTING_FIREBASE_WEB_OPTIONS.authDomain).toBe('teais-de-anansi.firebaseapp.com');
     expect(HUB_EXISTING_FIREBASE_WEB_OPTIONS.appId).toBe(
       '1:900723445313:web:274b847b3f3145a76c40c0',
     );

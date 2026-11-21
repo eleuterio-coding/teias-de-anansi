@@ -6,7 +6,10 @@ export default function HomePage() {
     <section aria-labelledby="home-title">
       <h2 id="home-title">Início provisório</h2>
       <p>Esta é a base de navegação do Teias de Anansi 2.0.</p>
-      <p>A entrada com as contas existentes está disponível na área de acesso. Os módulos de RPG continuam em preparação e não exibem dados privados nesta etapa.</p>
+      <p>
+        A entrada com as contas existentes está disponível na área de acesso. Os módulos de RPG
+        continuam em preparação e não exibem dados privados nesta etapa.
+      </p>
       <p>
         <HubLink variant="primary" to="/entrar">
           Acessar com minha conta

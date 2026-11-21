@@ -76,9 +76,7 @@ describe('Tela de login e logout — Etapa 3.03', () => {
   });
 
   it('mostra erro genérico de senha inválida sem dados técnicos', async () => {
-    vi.mocked(driver.signIn).mockRejectedValue(
-      new HubAuthError('Usuário ou senha incorretos.'),
-    );
+    vi.mocked(driver.signIn).mockRejectedValue(new HubAuthError('Usuário ou senha incorretos.'));
     mount();
     act(() => notify(null));
     fireEvent.change(screen.getByRole('textbox', { name: /Usuário/ }), {
@@ -97,12 +95,14 @@ describe('Tela de login e logout — Etapa 3.03', () => {
       act(() => notify(null));
     });
     mount();
-    act(() => notify({
-      uid: 'uid-ficticio',
-      username: 'rafael',
-      displayName: 'Rafael',
-      knownAccount: true,
-    }));
+    act(() =>
+      notify({
+        uid: 'uid-ficticio',
+        username: 'rafael',
+        displayName: 'Rafael',
+        knownAccount: true,
+      }),
+    );
     expect(screen.getByText(/Conta conectada: Rafael/)).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: 'Sair da conta' }));
     await waitFor(() => expect(driver.signOut).toHaveBeenCalledTimes(1));
@@ -114,26 +114,36 @@ describe('Tela de login e logout — Etapa 3.03', () => {
       new HubAuthError('Não foi possível concluir o acesso agora. Tente novamente.'),
     );
     mount();
-    act(() => notify({
-      uid: 'id',
-      username: 'bruno',
-      displayName: 'Bruno',
-      knownAccount: true,
-    }));
+    act(() =>
+      notify({
+        uid: 'id',
+        username: 'bruno',
+        displayName: 'Bruno',
+        knownAccount: true,
+      }),
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Sair da conta' }));
-    expect(await screen.findByText('Não foi possível concluir o acesso agora. Tente novamente.')).toBeDefined();
+    expect(
+      await screen.findByText('Não foi possível concluir o acesso agora. Tente novamente.'),
+    ).toBeDefined();
     expect(screen.getByText('Conta conectada: Bruno.')).toBeDefined();
   });
 
   it('identidade desconhecida nunca recebe papel Mestre por inferência', () => {
     mount();
-    act(() => notify({
-      uid: 'id',
-      username: null,
-      displayName: 'Conta autenticada',
-      knownAccount: false,
-    }));
-    expect(screen.getByText('A conta existe no Firebase, mas seu perfil ainda precisa de validação no Hub.')).toBeDefined();
+    act(() =>
+      notify({
+        uid: 'id',
+        username: null,
+        displayName: 'Conta autenticada',
+        knownAccount: false,
+      }),
+    );
+    expect(
+      screen.getByText(
+        'A conta existe no Firebase, mas seu perfil ainda precisa de validação no Hub.',
+      ),
+    ).toBeDefined();
     expect(screen.queryByText(/Você é o Mestre/)).toBeNull();
   });
 
@@ -146,7 +156,9 @@ describe('Tela de login e logout — Etapa 3.03', () => {
   });
 
   it('mostra indisponibilidade sem vazar configuração quando inicializar falha', () => {
-    mocked.getHubAuthSession.mockImplementation(() => { throw new Error('secret-data'); });
+    mocked.getHubAuthSession.mockImplementation(() => {
+      throw new Error('secret-data');
+    });
     mount();
     expect(screen.getByRole('alert').textContent).toContain('não está disponível');
     expect(screen.getByRole('alert').textContent).not.toContain('secret-data');

@@ -7,10 +7,7 @@ import {
   type Auth,
   type User,
 } from 'firebase/auth';
-import {
-  findHistoricalHubIdentity,
-  HISTORICAL_FIREBASE_USERNAME_DOMAIN,
-} from './legacy-contract';
+import { findHistoricalHubIdentity, HISTORICAL_FIREBASE_USERNAME_DOMAIN } from './legacy-contract';
 
 /** Identidade autenticada; papel e permissoes serao validados no item 3.04. */
 export type HubSessionIdentity = {
@@ -43,7 +40,9 @@ export function technicalEmailForUsername(input: string): string | null {
 }
 
 /** O nome de exibicao e apenas informativo; nunca concede papel de Mestre. */
-export function identityFromAuthenticatedUser(user: Pick<User, 'uid' | 'email'>): HubSessionIdentity {
+export function identityFromAuthenticatedUser(
+  user: Pick<User, 'uid' | 'email'>,
+): HubSessionIdentity {
   const suffix = '@' + HISTORICAL_FIREBASE_USERNAME_DOMAIN;
   const email = (user.email ?? '').trim().toLowerCase();
   const account = email.endsWith(suffix)
@@ -60,9 +59,7 @@ export function identityFromAuthenticatedUser(user: Pick<User, 'uid' | 'email'>)
 /** Mensagens seguras: nao vazar email tecnico, UID, configuracao ou stack do SDK. */
 export function readableHubAuthError(error: unknown): string {
   const code =
-    typeof error === 'object' && error !== null && 'code' in error
-      ? String(error.code)
-      : '';
+    typeof error === 'object' && error !== null && 'code' in error ? String(error.code) : '';
   switch (code) {
     case 'auth/invalid-credential':
     case 'auth/invalid-login-credentials':
