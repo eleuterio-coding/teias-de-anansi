@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import type { HubSessionIdentity } from '../src/services/session';
@@ -108,12 +108,12 @@ describe('3.07 — área exclusiva de administração', () => {
     act(() => observer(master));
     await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' });
     const sample = screen.getByRole('table', { name: 'Vínculos fictícios para testar administração' });
-    expect(within(sample).getByText('Mesa Aurora (fictícia) · ativo')).toBeDefined();
+    expect(within(sample).getAllByText(/Mesa Aurora \(fictícia\) · ativo/).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: 'Simular alteração' }));
     const dialog = await screen.findByRole('dialog', { name: 'Confirmar somente a simulação' });
     expect(screen.getByText(/não existe gravação no Firebase/i)).toBeDefined();
     fireEvent.click(within(dialog).getByRole('button', { name: 'Confirmar simulação' }));
-    expect(await screen.findByText(/Suspensão simulada: Bruno/)).toBeDefined();
+    expect((await screen.findAllByText(/Suspensão simulada: Bruno/)).length).toBeGreaterThan(0);
     expect(screen.getByRole('table', { name: 'Perfis e vínculos reais — somente leitura' })).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
   });

@@ -40,6 +40,8 @@ const seed = [
   ['users/uid-master-fixture', { uid: masterIdentity.uid, username: 'rafael', role: 'dm', displayName: 'Mestre Fictício' }],
   ['users/uid-player-fixture', { uid: playerIdentity.uid, username: 'gustavo', role: 'player', displayName: 'Jogador Fictício' }],
   ['users/uid-other-fixture', { uid: otherPlayerIdentity.uid, username: 'bruno', role: 'player', displayName: 'Outro Jogador Fictício' }],
+  ['users/uid-leo-fixture', { uid: 'uid-leo-fixture', username: 'leo', role: 'player', displayName: 'Léo Fictício' }],
+  ['users/uid-fernanda-fixture', { uid: 'uid-fernanda-fixture', username: 'fernanda', role: 'player', displayName: 'Fernanda Fictícia' }],
   ['campaigns/mesa-ficticia', { id: 'mesa-ficticia', ownerId: masterIdentity.uid, name: 'Mesa de teste fictícia' }],
   ['campaigns/outra-mesa', { id: 'outra-mesa', ownerId: 'uid-outra-pessoa', name: 'Outra mesa fictícia' }],
   ['campaigns/mesa-player-legada', { id: 'mesa-player-legada', ownerId: playerIdentity.uid, name: 'Mesa antiga de jogador, simulada' }],
@@ -47,6 +49,8 @@ const seed = [
   ['memberships/mesa-ficticia_rafael@teias.invalid', { email: masterIdentity.email, uid: masterIdentity.uid, username: 'rafael', role: 'dm', active: true, campaignId: 'mesa-ficticia', characterId: null, sessionIds: [], adventureIds: [] }],
   ['memberships/mesa-ficticia_gus@teias.invalid', { email: playerIdentity.email, uid: '', username: 'gustavo', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-gus', sessionIds: ['sess-gus'], adventureIds: ['adv-gus'] }],
   ['memberships/mesa-ficticia_bruno@teias.invalid', { email: otherPlayerIdentity.email, uid: otherPlayerIdentity.uid, username: 'bruno', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-bruno', sessionIds: ['sess-bruno'], adventureIds: ['adv-bruno'] }],
+  ['memberships/mesa-ficticia_leo@teias.invalid', { email: 'leo@teias.invalid', uid: 'uid-leo-fixture', username: 'leo', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-leo', sessionIds: [], adventureIds: [] }],
+  ['memberships/mesa-ficticia_fernanda@teias.invalid', { email: 'fernanda@teias.invalid', uid: 'uid-fernanda-fixture', username: 'fernanda', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-fernanda', sessionIds: [], adventureIds: [] }],
   ['campaigns/mesa-ficticia/shared/state', { payload: { heading: 'Somente compartilhado, dado fictício' } }],
   ['campaigns/mesa-ficticia/private/state', { payload: { secret: 'Segredo inventado para teste' } }],
   ['campaigns/mesa-ficticia/sessions/sess-gus', { payload: { name: 'Sessão Gus fictícia' } }],
@@ -157,6 +161,24 @@ async function run(mode, rules) {
     });
   });
 
+  // 3.07: o Mestre pode consultar os cinco perfis por username e
+  // os próprios vínculos administrativos filtrados por e-mail técnico,
+  // sem uma listagem desnecessária dos documentos completos.
+  for (const [username, login] of [
+    ['rafael', 'rafael'],
+    ['bruno', 'bruno'],
+    ['gustavo', 'gus'],
+    ['leo', 'leo'],
+    ['fernanda', 'fernanda'],
+  ]) {
+    await check(mode, '3.07: Mestre consulta perfil conhecido ' + username, true, () =>
+      getDocs(query(collection(master, 'users'), where('username', '==', username))));
+    await check(mode, '3.07: Mestre consulta vínculo conhecido ' + username, true, () =>
+      getDocs(query(collection(master, 'memberships'), where('email', '==', login + '@teias.invalid'))));
+  }
+  await check(mode, '3.07: Jogador não consulta perfil alheio na proposta', baseline, () =>
+    getDocs(query(collection(player, 'users'), where('username', '==', 'bruno'))));
+
   // Exposicoes do legado: devem passar na baseline e ser negadas na proposta.
   await check(mode, 'EXPOSURE: Leitura de perfil de outro jogador', baseline, () => getDoc(doc(player, 'users/uid-other-fixture')));
   await check(mode, 'EXPOSURE: Lista geral de perfis por jogador', baseline, () => getDocs(collection(player, 'users')));
@@ -170,6 +192,10 @@ async function run(mode, rules) {
   await check(mode, 'EXPOSURE: Jogador proprietário de mesa legada ler notas privadas', baseline, () => getDoc(doc(player, 'campaigns/mesa-player-legada/private/state')));
   await check(mode, 'EXPOSURE: Jogador proprietário de mesa legada alterar dados da mesa', baseline, () => updateDoc(doc(player, 'campaigns/mesa-player-legada'), { name: 'Alterada por jogador fictício' }));
   await check(mode, 'EXPOSURE: Jogador apagar próprio perfil', baseline, () => deleteDoc(doc(player, 'users/uid-player-fixture')));
+  // Escrita 3.07 exercitada APENAS no emulador com payload inventado.
+  await check(mode, '3.07: Mestre pode simular atualizacao de membership no emulador', true, () =>
+    updateDoc(doc(master, 'memberships/mesa-ficticia_bruno@teias.invalid'), { updatedAt: 'ficticio' }));
+
   } finally {
     await env.cleanup();
   }

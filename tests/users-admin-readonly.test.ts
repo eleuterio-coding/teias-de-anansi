@@ -69,7 +69,7 @@ beforeEach(() => {
     if (condition.op !== '==') throw Error('Consulta não filtrada');
     if (source.name === 'users' && condition.field === 'username') {
       return { docs: profiles[condition.value] ? [{
-        id: profiles[condition.value].uid,
+        id: accounts.find(([username]) => username === condition.value)?.[3],
         data: () => profiles[condition.value],
       }] : [] };
     }
