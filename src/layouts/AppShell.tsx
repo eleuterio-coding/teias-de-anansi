@@ -110,7 +110,7 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
 
 /**
  * AppShell único: desktop persistente, tablet e celular com gaveta.
- * Não acessa Firebase, autenticação ou dados privados.
+ * O shell nao acessa Firebase nem dados privados diretamente; a rota de entrada usa servicos.
  */
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
@@ -397,7 +397,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </div>
 
-      <footer className="hub-footer">Prévia do Hub · Sem autenticação ou dados privados.</footer>
+      <footer className="hub-footer">Prévia do Hub · Login integrado · Módulos de RPG em preparação.</footer>
     </div>
   );
 }
