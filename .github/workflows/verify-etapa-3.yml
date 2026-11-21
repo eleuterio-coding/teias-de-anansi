@@ -36,10 +36,12 @@ jobs:
         run: |
           npx prettier --write src/services/firebase/legacy-contract.ts tests/firebase-legacy-contract.test.ts
           echo "__BEGIN_FORMATTED_LEGACY_CONTRACT__"
-          cat src/services/firebase/legacy-contract.ts
+          base64 -w0 src/services/firebase/legacy-contract.ts
+          echo
           echo "__END_FORMATTED_LEGACY_CONTRACT__"
           echo "__BEGIN_FORMATTED_LEGACY_TEST__"
-          cat tests/firebase-legacy-contract.test.ts
+          base64 -w0 tests/firebase-legacy-contract.test.ts
+          echo
           echo "__END_FORMATTED_LEGACY_TEST__"
       - name: Conferir codigo e compilacao completa
         run: npm run check
