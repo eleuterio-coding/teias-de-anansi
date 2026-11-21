@@ -18,9 +18,9 @@ describe('Contrato historico, offline, sem acessar usuarios reais', () => {
   it('registra exatamente um Mestre e quatro Jogadores', () => {
     expect(HISTORICAL_HUB_IDENTITIES).toHaveLength(5);
     expect(HISTORICAL_HUB_IDENTITIES.filter((item) => item.expectedRole === 'dm')).toHaveLength(1);
-    expect(
-      HISTORICAL_HUB_IDENTITIES.filter((item) => item.expectedRole === 'player'),
-    ).toHaveLength(4);
+    expect(HISTORICAL_HUB_IDENTITIES.filter((item) => item.expectedRole === 'player')).toHaveLength(
+      4,
+    );
   });
 
   it('preserva o alias historico do login de Gustavo', () => {
@@ -63,8 +63,9 @@ describe('Contrato historico, offline, sem acessar usuarios reais', () => {
   });
 
   it('distingue coerencia documental de verificacao remota', () => {
-    expect(
-      checkHistoricalFirebaseConfig(resolveFirebaseWebConfig(example)),
-    ).toEqual({ status: 'matches-history', projectId: HISTORICAL_FIREBASE_PROJECT_ID });
+    expect(checkHistoricalFirebaseConfig(resolveFirebaseWebConfig(example))).toEqual({
+      status: 'matches-history',
+      projectId: HISTORICAL_FIREBASE_PROJECT_ID,
+    });
   });
 });
