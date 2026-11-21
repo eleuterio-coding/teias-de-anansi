@@ -1,0 +1,216 @@
+// Acesso do Hub: Rafael é o único Mestre; demais contas são Jogadores.
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function loginEmail() {
+      return request.auth.token.email;
+    }
+
+    function isHubMaster() {
+      return signedIn() && loginEmail() == 'rafael@teias.invalid';
+    }
+
+    function membershipId(campaignId) {
+      return campaignId + '_' + loginEmail();
+    }
+
+    function membershipPath(campaignId) {
+      return /databases/$(database)/documents/memberships/$(membershipId(campaignId));
+    }
+
+    function campaignPath(campaignId) {
+      return /databases/$(database)/documents/campaigns/$(campaignId);
+    }
+
+    function isMember(campaignId) {
+      return signedIn()
+        && exists(membershipPath(campaignId))
+        && get(membershipPath(campaignId)).data.active == true;
+    }
+
+    function memberRole(campaignId) {
+      return get(membershipPath(campaignId)).data.role;
+    }
+
+    function memberCharacterId(campaignId) {
+      return get(membershipPath(campaignId)).data.characterId;
+    }
+
+    function isOwner(campaignId) {
+      return signedIn()
+        && exists(campaignPath(campaignId))
+        && get(campaignPath(campaignId)).data.ownerId == request.auth.uid;
+    }
+
+    function canManage(campaignId) {
+      return isHubMaster() || isOwner(campaignId);
+    }
+
+    function isPlayer(campaignId) {
+      return isMember(campaignId) && memberRole(campaignId) == 'player';
+    }
+
+    function assignedSession(campaignId, sessionId) {
+      return isPlayer(campaignId)
+        && 'sessionIds' in get(membershipPath(campaignId)).data
+        && sessionId in get(membershipPath(campaignId)).data.sessionIds;
+    }
+
+    function assignedAdventure(campaignId, adventureId) {
+      return isPlayer(campaignId)
+        && 'adventureIds' in get(membershipPath(campaignId)).data
+        && adventureId in get(membershipPath(campaignId)).data.adventureIds;
+    }
+
+    function linkedCharacter(campaignId, characterId) {
+      return isPlayer(campaignId)
+        && memberCharacterId(campaignId) == characterId;
+    }
+
+    function characterDeleted(characterId) {
+      return exists(/databases/$(database)/documents/characterTombstones/$(characterId));
+    }
+
+    function ownsMedia(data) {
+      return signedIn() && data.ownerId == request.auth.uid;
+    }
+
+    function canReadMedia(data) {
+      return ownsMedia(data)
+        || (
+          data.campaignId != null
+          && (
+            canManage(data.campaignId)
+            || (data.entityType == 'campaign' && isMember(data.campaignId))
+            || (data.entityType == 'adventure' && assignedAdventure(data.campaignId, data.entityId))
+            || (data.entityType == 'session' && assignedSession(data.campaignId, data.entityId))
+          )
+        );
+    }
+
+    match /media/{mediaId} {
+      allow read: if canReadMedia(resource.data);
+      allow create: if signedIn()
+        && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.entityType in ['campaign', 'adventure', 'session']
+        && request.resource.data.mime == 'image/webp'
+        && request.resource.data.size > 0
+        && request.resource.data.size <= 1800000
+        && request.resource.data.entityId is string
+        && request.resource.data.entityId.size() > 0
+        && (
+          request.resource.data.campaignId == null
+          || canManage(request.resource.data.campaignId)
+        );
+      allow update: if ownsMedia(resource.data)
+        && request.resource.data.ownerId == resource.data.ownerId
+        && request.resource.data.campaignId == resource.data.campaignId
+        && request.resource.data.entityType == resource.data.entityType
+        && request.resource.data.entityId == resource.data.entityId
+        && request.resource.data.mime == 'image/webp'
+        && request.resource.data.size > 0
+        && request.resource.data.size <= 1800000
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
+      allow delete: if ownsMedia(resource.data)
+        && (
+          resource.data.campaignId == null
+          || canManage(resource.data.campaignId)
+        );
+
+      match /chunks/{chunkId} {
+        allow read: if exists(/databases/$(database)/documents/media/$(mediaId))
+          && canReadMedia(get(/databases/$(database)/documents/media/$(mediaId)).data);
+        allow create, update, delete: if exists(/databases/$(database)/documents/media/$(mediaId))
+          && ownsMedia(get(/databases/$(database)/documents/media/$(mediaId)).data)
+          && (
+            get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId == null
+            || canManage(get(/databases/$(database)/documents/media/$(mediaId)).data.campaignId)
+          );
+      }
+    }
+
+    match /users/{uid} {
+      allow read: if signedIn();
+      allow create, update, delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
+
+      match /characters/{characterId} {
+        allow read: if signedIn() && (request.auth.uid == uid || isHubMaster());
+        allow create, update: if signedIn()
+          && (
+            isHubMaster()
+            || (request.auth.uid == uid && !characterDeleted(characterId))
+          );
+        allow delete: if signedIn() && (request.auth.uid == uid || isHubMaster());
+      }
+    }
+
+    match /campaigns/{campaignId} {
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow read: if canManage(campaignId) || isMember(campaignId);
+      allow update, delete: if canManage(campaignId);
+
+      match /shared/{documentId} {
+        allow read: if canManage(campaignId) || isMember(campaignId);
+        allow create, update, delete: if canManage(campaignId);
+      }
+
+      match /private/{documentId} {
+        allow read, create, update, delete: if canManage(campaignId);
+      }
+
+      match /sessions/{sessionId} {
+        allow read: if canManage(campaignId) || assignedSession(campaignId, sessionId);
+        allow create, update, delete: if canManage(campaignId);
+      }
+
+      match /adventureViews/{adventureId} {
+        allow read: if canManage(campaignId) || assignedAdventure(campaignId, adventureId);
+        allow create, update, delete: if canManage(campaignId);
+      }
+
+      match /adventures/{adventureId} {
+        allow read, create, update, delete: if canManage(campaignId);
+      }
+
+      match /characters/{characterId} {
+        allow read: if canManage(campaignId) || isMember(campaignId);
+        allow create, update: if canManage(campaignId)
+          || (
+            !characterDeleted(characterId)
+            && linkedCharacter(campaignId, characterId)
+            && request.resource.data.characterId == characterId
+            && request.resource.data.ownerUid == request.auth.uid
+          );
+        allow delete: if canManage(campaignId)
+          || (
+            linkedCharacter(campaignId, characterId)
+            && resource.data.ownerUid == request.auth.uid
+          );
+      }
+    }
+
+    match /characterTombstones/{characterId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isHubMaster();
+    }
+
+    match /memberships/{memberId} {
+      allow read: if signedIn()
+        && (
+          resource.data.email == loginEmail()
+          || canManage(resource.data.campaignId)
+          || isMember(resource.data.campaignId)
+        );
+      allow create: if signedIn() && canManage(request.resource.data.campaignId);
+      allow update, delete: if signedIn() && canManage(resource.data.campaignId);
+    }
+  }
+}
