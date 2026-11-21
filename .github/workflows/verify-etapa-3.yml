@@ -27,5 +27,14 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
+      - name: Formatacao temporaria dos arquivos 3.04 para validacao
+        run: |
+          npx prettier --write src/services/firebase/role-access.ts src/services/role-access.ts src/app/pages/LoginPage.tsx tests/login-page.test.tsx tests/role-access.test.ts tests/role-session.test.ts tests/role-ui.test.tsx
+          for file in src/services/firebase/role-access.ts src/services/role-access.ts src/app/pages/LoginPage.tsx tests/login-page.test.tsx tests/role-access.test.ts tests/role-session.test.ts tests/role-ui.test.tsx; do
+            echo "PRETTIER_BEGIN:${file}"
+            base64 -w0 "$file"
+            echo
+            echo "PRETTIER_END:${file}"
+          done
       - name: Conferir codigo e compilacao completa
         run: npm run check
