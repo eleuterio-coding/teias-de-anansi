@@ -183,7 +183,12 @@ async function main() {
       characterAssignments: active.filter((row) => field(row, 'characterId')).length,
       sessionAssignments: active.reduce((n, row) => n + listField(row, 'sessionIds').length, 0),
       adventureAssignments: active.reduce((n, row) => n + listField(row, 'adventureIds').length, 0),
-      references: { campaignPresent: 0, campaignMissing: 0, campaignUnverified: 0, characterPresent: 0, characterMissing: 0, characterUnverified: 0 },
+      references: {
+        campaignPresent: 0, campaignMissing: 0, campaignUnverified: 0,
+        characterPresent: 0, characterMissing: 0, characterUnverified: 0,
+        sessionPresent: 0, sessionMissing: 0, sessionUnverified: 0,
+        adventurePresent: 0, adventureMissing: 0, adventureUnverified: 0,
+      },
     };
     for (const row of active) {
       const cid = field(row, 'campaignId');
@@ -191,13 +196,30 @@ async function main() {
       const campaign = await referenceExists(token, ['campaigns', cid]);
       summary.references[campaign === 'present' ? 'campaignPresent' : campaign === 'missing' ? 'campaignMissing' : 'campaignUnverified']++;
       const charId = field(row, 'characterId');
-      if (!charId) continue;
-      const character = await referenceExists(token, ['campaigns', cid, 'characters', charId]);
-      summary.references[character === 'present' ? 'characterPresent' : character === 'missing' ? 'characterMissing' : 'characterUnverified']++;
+      if (charId) {
+        const character = await referenceExists(token, ['campaigns', cid, 'characters', charId]);
+        summary.references[character === 'present' ? 'characterPresent' : character === 'missing' ? 'characterMissing' : 'characterUnverified']++;
+      }
+      for (const value of listField(row, 'sessionIds')) {
+        if (!value.stringValue) { summary.references.sessionUnverified++; continue; }
+        const session = await referenceExists(token, ['campaigns', cid, 'sessions', value.stringValue]);
+        summary.references[session === 'present' ? 'sessionPresent' : session === 'missing' ? 'sessionMissing' : 'sessionUnverified']++;
+      }
+      for (const value of listField(row, 'adventureIds')) {
+        if (!value.stringValue) { summary.references.adventureUnverified++; continue; }
+        const adventure = await referenceExists(token, ['campaigns', cid, 'adventureViews', value.stringValue]);
+        summary.references[adventure === 'present' ? 'adventurePresent' : adventure === 'missing' ? 'adventureMissing' : 'adventureUnverified']++;
+      }
     }
     if (summary.auth !== 'present-enabled') allAuthConfirmed = false;
-    if (profile !== 'present' || profileRole !== 'matches' || profileUsername !== 'matches' || profileUid === 'mismatch') allProfilesConfirmed = false;
-    if (!summary.rolesConsistent || summary.mismatchedUidLinks || summary.references.campaignMissing || summary.references.characterMissing || summary.references.campaignUnverified || summary.references.characterUnverified) allLinksConfirmed = false;
+    if (profile !== 'present' || profileRole !== 'matches' || profileUsername !== 'matches' || profileUid !== 'matches') allProfilesConfirmed = false;
+    if (
+      active.length === 0 ||
+      !summary.rolesConsistent ||
+      summary.mismatchedUidLinks ||
+      (identity.expectedRole === 'player' && summary.characterAssignments === 0) ||
+      Object.entries(summary.references).some(([key, count]) => (key.endsWith('Missing') || key.endsWith('Unverified')) && count > 0)
+    ) allLinksConfirmed = false;
     report.push(summary);
   }
   console.log('Auditoria 3.02 — resultados sem identificadores ou dados pessoais privados:');
