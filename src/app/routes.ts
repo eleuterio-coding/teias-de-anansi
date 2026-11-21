@@ -21,3 +21,11 @@ export const moduleRoutes = [
 ] as const;
 
 export type ModuleRoute = (typeof moduleRoutes)[number];
+
+/** Área administrativa da Etapa 3; não altera o catálogo dos oito módulos RPG. */
+export const usersAdminRoute = {
+  path: '/usuarios',
+  label: 'Usuários e vínculos',
+  etapa: 'Etapa 3',
+  allowedRoles: ['dm'],
+} as const;

@@ -200,6 +200,9 @@ export default function LoginPage() {
                     <HubLink to="/personagens" variant="secondary">
                       Abrir Personagens
                     </HubLink>
+                    <HubLink to="/usuarios" variant="secondary">
+                      Administrar usuários
+                    </HubLink>
                   </nav>
                 ) : (
                   <nav aria-label="Ações do Jogador" className="hub-session-actions">

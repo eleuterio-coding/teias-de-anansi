@@ -63,6 +63,14 @@ function CloseIcon() {
 }
 
 function resolvePage(pathname: string) {
+  if (pathname === '/usuarios') {
+    return {
+      title: 'Usuários e vínculos',
+      description: 'Consulta administrativa e simulações locais, sem alteração de contas.',
+      section: 'Administração · Etapa 3',
+    };
+  }
+
   if (pathname === '/entrar') {
     return {
       title: 'Acesso ao Hub',

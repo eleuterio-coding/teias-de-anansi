@@ -6,11 +6,12 @@ import { AppShell } from '../layouts/AppShell';
 import { LoadingState } from './LoadingState';
 import { PageErrorBoundary } from './PageErrorBoundary';
 import { NotFoundPage } from './pages/NotFoundPage';
-import { moduleRoutes } from './routes';
+import { moduleRoutes, usersAdminRoute } from './routes';
 import { ProtectedModuleRoute } from './ProtectedModuleRoute';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
+const UsersAdminPage = lazy(() => import('./pages/UsersAdminPage'));
 const SectionPlaceholder = lazy(() => import('./pages/SectionPlaceholder'));
 const DemoOverviewPage = lazy(() => import('./pages/demo/DemoOverviewPage'));
 const DemoComponentsPage = lazy(() => import('./pages/demo/DemoComponentsPage'));
@@ -30,6 +31,14 @@ export function AppContent() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/entrar" element={<LoginPage />} />
+              <Route
+                path={usersAdminRoute.path}
+                element={
+                  <ProtectedModuleRoute route={usersAdminRoute}>
+                    <UsersAdminPage />
+                  </ProtectedModuleRoute>
+                }
+              />
               <Route path={demoRoutes[0].path} element={<DemoOverviewPage />} />
               <Route path={demoRoutes[1].path} element={<DemoComponentsPage />} />
               <Route path={demoRoutes[2].path} element={<DemoDataPage />} />

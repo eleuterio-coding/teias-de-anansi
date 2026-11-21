@@ -13,7 +13,7 @@ type GateState =
   | { status: 'unavailable' }
   | { status: 'allowed'; uid: string; access: Extract<HubRoleAccess, { status: 'verified' }> };
 
-type Props = { route: ModuleRoute; children: ReactNode };
+type Props = { route: Pick<ModuleRoute, 'allowedRoles'>; children: ReactNode };
 
 /** Ação condicionada ao papel, revalida sessão e vínculos no momento do clique. */
 function CheckOwnCampaigns({ uid }: { uid: string }) {
