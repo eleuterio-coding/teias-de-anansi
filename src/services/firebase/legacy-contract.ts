@@ -14,7 +14,12 @@ export const HISTORICAL_HUB_IDENTITIES = [
   { username: 'bruno', authUsername: 'bruno', displayName: 'Bruno', expectedRole: 'player' },
   { username: 'gustavo', authUsername: 'gus', displayName: 'Gustavo', expectedRole: 'player' },
   { username: 'leo', authUsername: 'leo', displayName: 'Léo', expectedRole: 'player' },
-  { username: 'fernanda', authUsername: 'fernanda', displayName: 'Fernanda', expectedRole: 'player' },
+  {
+    username: 'fernanda',
+    authUsername: 'fernanda',
+    displayName: 'Fernanda',
+    expectedRole: 'player',
+  },
 ] as const;
 
 export type HistoricalHubIdentity = (typeof HISTORICAL_HUB_IDENTITIES)[number];
