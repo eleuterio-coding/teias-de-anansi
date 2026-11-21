@@ -48,7 +48,7 @@ describe('Navegação inicial', () => {
     expect(within(nav).getByRole('link', { name: 'Biblioteca' }).getAttribute('aria-current')).toBe(
       'page',
     );
-    fireEvent.click(screen.getByRole('link', { name: 'Voltar ao início' }));
+    fireEvent.click(screen.getByRole('link', { name: 'Visão geral' }));
     expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
   });
 

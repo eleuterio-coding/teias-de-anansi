@@ -51,7 +51,7 @@ beforeEach(() => {
     'campaigns/mesa-ficticia/adventureViews/adv-gus': { ficticia: true },
     'campaigns/mesa-ficticia/private/secret': { segredo: 'ficticio' },
   };
-  memberships = [member];
+  memberships = [{ ...member, sessionIds: [...member.sessionIds], adventureIds: [...member.adventureIds] }];
   mocks.verifyHubRole.mockResolvedValue({
     status: 'verified', role: 'player', displayName: 'Gustavo', campaignCount: 1,
   });
