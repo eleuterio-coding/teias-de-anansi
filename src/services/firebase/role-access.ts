@@ -123,7 +123,7 @@ export async function verifyHubRole(
 
     const savedName = trim(profile.displayName);
     const displayName =
-      savedName.length > 0 && savedName.length <= 80 && !/[\u0000-\u001f\u007f]/.test(savedName)
+      savedName.length > 0 && savedName.length <= 80 && !Array.from(savedName).some((character) => { const code = character.codePointAt(0); return code !== undefined && (code < 32 || code === 127); })
         ? savedName
         : account.displayName;
 
