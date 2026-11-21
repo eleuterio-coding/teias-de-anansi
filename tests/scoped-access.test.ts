@@ -241,11 +241,13 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
   });
 
   it('Mestre consulta ficha vinculada de outro jogador; Jogador não pode solicitar ID alheio', async () => {
-    expect(await readHubScopedDocument(gus, db, {
-      kind: 'character',
-      campaignId: 'mesa-ficticia',
-      documentId: 'char-bruno',
-    })).toEqual({ status: 'denied' });
+    expect(
+      await readHubScopedDocument(gus, db, {
+        kind: 'character',
+        campaignId: 'mesa-ficticia',
+        documentId: 'char-bruno',
+      }),
+    ).toEqual({ status: 'denied' });
     expect(mocks.getDocFromServer).not.toHaveBeenCalledWith({
       path: 'campaigns/mesa-ficticia/characters/char-bruno',
     });
@@ -255,13 +257,15 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
       displayName: 'Mestre',
       campaignCount: 1,
     });
-    memberships = [{
-      email: master.email,
-      uid: master.uid,
-      role: 'dm',
-      active: true,
-      campaignId: 'mesa-ficticia',
-    }];
+    memberships = [
+      {
+        email: master.email,
+        uid: master.uid,
+        role: 'dm',
+        active: true,
+        campaignId: 'mesa-ficticia',
+      },
+    ];
     const result = await readHubScopedDocument(master, db, {
       kind: 'character',
       campaignId: 'mesa-ficticia',

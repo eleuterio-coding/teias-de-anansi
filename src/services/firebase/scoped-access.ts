@@ -127,7 +127,8 @@ export async function readHubScopedDocument(
           request.kind === 'private' ||
           request.kind === 'adventure' ||
           request.kind === 'character'
-        ) return { status: 'denied' };
+        )
+          return { status: 'denied' };
         if (
           request.kind === 'session' &&
           !(
