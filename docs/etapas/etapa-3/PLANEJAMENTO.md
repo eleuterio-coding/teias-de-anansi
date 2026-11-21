@@ -1,7 +1,7 @@
 # Planejamento detalhado — Etapa 3: Firebase, Usuários e Acesso
 
 **Data de elaboração:** 20/11/2026  
-**Estado:** proposta para análise; **nenhum item 3.01–3.09 autorizado para execução**.  
+**Estado:** **item 3.01 concluído e auditado em 20/11/2026**; itens 3.02–3.09 aguardam início específico.  
 **Branch documental:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Base:** `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`, commit com CI verde da Etapa 2.
 
@@ -27,7 +27,7 @@ Os participantes indicados historicamente são Rafael (Mestre/administrador), Br
 
 | Item | Trabalho futuro proposto | Critério verificável para aprovação individual | Limite / dependência |
 | --- | --- | --- | --- |
-| **3.01 — Identificar o Firebase** | Inventariar, inicialmente em leitura autorizada, projeto/app Web ativo, Auth, Firestore, coleções e caminhos; comparar com documentação histórica | Relatório de correspondências e divergências, com evidência redigida sem segredos | **Primeira autorização necessária**. Nenhuma conexão remota neste planejamento. Não trocar projeto/configuração |
+| **3.01 — Identificar o Firebase** | Inventariar, inicialmente em leitura autorizada, projeto/app Web ativo, Auth, Firestore, coleções e caminhos; comparar com documentação histórica | Relatório de correspondências e divergências, com evidência redigida sem segredos | **Concluído**, com leitura autorizada, em [auditoria #44843476230](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44843476230); nenhuma troca de projeto/configuração |
 | **3.02 — Inventariar cinco contas** | Validar identidades, UIDs e vínculos das cinco contas preexistentes, com acesso administrativo autorizado e mínimo | Matriz de presença, papéis e vínculos com identificadores protegidos; diferenças explicitadas | Depende de 3.01; sem senha, criação, remoção ou redefinição |
 | **3.03 — Login conhecido** | Integrar Auth através de `src/services/firebase` e UI compartilhada; entrada, saída, persistência controlada de sessão e mensagens de erros | Testes de autenticação, logout, sessão expirada, credencial inválida e rede indisponível | Só após confirmar método histórico e autorização específica para ativar integração; sem obstáculo novo |
 | **3.04 — Perfis e papéis** | Derivar Mestre/Jogador de fonte autorizada; mostrar ações e navegação adequadas, sem cadastrar papéis extras | Perfis corretos em testes de ambos os papéis; negação ao usuário sem perfil autorizado | Não confiar em username hardcoded ou aparência da interface como prova de privilégio |
@@ -93,8 +93,8 @@ Registrar cada execução: SHA, ambiente, conta representada por identificador n
 
 ## 6. Gates de aprovação
 
-1. **Planejamento (atual):** aprovar ou ajustar este documento e a branch documental.
-2. **3.01:** autorização específica para inventário do projeto Firebase existente — definir se há acesso remoto somente leitura e sua forma; nenhuma alteração de dados.
+1. **Planejamento:** aprovado no início da Etapa 3; 3.01 foi executado em branch isolada.
+2. **3.01:** concluído; inventário histórico, consulta remota real de projeto, app Web, Auth, Firestore e Rules, sem alteração de dados. Ver [3.01-inventario-historico.md](3.01-inventario-historico.md).
 3. **3.02:** autorização distinta para conferir identidades reais e vínculos (dados privados; acesso mínimo).
 4. **3.03 e 3.04:** autorização para implementar autenticação e papéis na branch, inicialmente sob testes simulados; ativação real depende da configuração aprovada.
 5. **3.05:** autorização expressa para propor, revisar e, separadamente, aplicar eventuais alterações de Rules.
@@ -116,8 +116,8 @@ Não existem ações destrutivas ou reversões de dados aprovadas neste momento.
 
 ## 8. Branch, escopo documental e não execução
 
-A branch `feature/etapa-3-usuarios-acesso-20261120` foi derivada exclusivamente do commit validado `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4` da Etapa 2. Esta entrega adiciona/atualiza **somente documentação** para a futura Etapa 3; não altera scripts, componentes, rotas, Rules ou configuração Firebase.
+A branch `feature/etapa-3-usuarios-acesso-20261120` foi derivada exclusivamente do commit validado `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4` da Etapa 2. A implantação do item 3.01 adicionou documentação, um contrato histórico e seus testes, um script de auditoria remoto **somente leitura** e um workflow de CI **sem deploy**. Não alterou rotas, Rules, dados ou configuração Firebase em produção.
 
-**Não realizado:** conexão Firebase, listagem de usuários, autenticação real, operações Firestore, manipulação de senhas, novos testes em produção, deploy, merge ou alteração da `main`.
+**Não realizado:** listagem de UIDs de usuários, login real de usuários, escrita Firestore, manipulação de senhas, alteração de Rules, deploy, merge ou alteração da `main`. **Realizado:** acesso administrativo de **leitura** ao projeto e metadados do Firestore, Auth e Rules no item 3.01.
 
-**Próximo ato permitido:** submeter o planejamento à aprovação do Mestre. Após aceite, solicitar autorização do item 3.01, começando pelo inventário documental/local e delimitando qualquer leitura remota de forma explícita.
+**Próximo item:** 3.02 — verificação individual das cinco identidades e vínculos, exclusivamente após avanço pelo botão solicitado na conversa. Mantêm-se os limites de não criar, alterar ou redefinir contas e de não expor UIDs/dados sensíveis.
