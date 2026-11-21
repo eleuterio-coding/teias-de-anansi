@@ -3,10 +3,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import type { HubAuthDriver, HubSessionIdentity } from '../src/services/session';
 
-const mocked = vi.hoisted(() => ({ getHubAuthSession: vi.fn() }));
+const mocked = vi.hoisted(() => ({
+  getHubAuthSession: vi.fn(),
+  getHubRoleForCurrentSession: vi.fn(),
+}));
 vi.mock('../src/services/session', () => ({
   getHubAuthSession: mocked.getHubAuthSession,
   HubAuthError: class HubAuthError extends Error {},
+}));
+
+vi.mock('../src/services/role-access', () => ({
+  getHubRoleForCurrentSession: mocked.getHubRoleForCurrentSession,
 }));
 
 import LoginPage from '../src/app/pages/LoginPage';
@@ -37,6 +44,10 @@ beforeEach(() => {
     signOut: vi.fn().mockResolvedValue(undefined),
   };
   mocked.getHubAuthSession.mockReturnValue(driver);
+  mocked.getHubRoleForCurrentSession.mockResolvedValue({
+    status: 'denied',
+    reason: 'missing-membership',
+  });
 });
 
 afterEach(() => {
