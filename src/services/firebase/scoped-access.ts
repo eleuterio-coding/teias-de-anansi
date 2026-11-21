@@ -152,10 +152,11 @@ export async function readHubScopedDocument(
         request.kind === 'adventure' ? 'adventures' :
         request.kind === 'session' ? 'sessions' :
         request.kind === 'adventureView' ? 'adventureViews' : request.kind;
+      if (!('documentId' in request)) return { status: 'denied' };
       path = ['campaigns', request.campaignId, group, request.documentId];
     }
 
-    const snapshot = await getDocFromServer(doc(db, ...path));
+    const snapshot = await getDocFromServer(doc(db, path.join('/')));
     if (!snapshot.exists()) return { status: 'missing' };
     const data = snapshot.data() as Record<string, unknown>;
 

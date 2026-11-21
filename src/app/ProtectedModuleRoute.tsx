@@ -71,7 +71,7 @@ export function ProtectedModuleRoute({ route, children }: Props) {
   useEffect(() => {
     let active = true;
     let sequence = 0;
-    let unsubscribe = () => undefined;
+    let unsubscribe: () => void = () => undefined;
 
     async function check(user: HubSessionIdentity) {
       const current = ++sequence;
