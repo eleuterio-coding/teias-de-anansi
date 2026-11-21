@@ -7,6 +7,7 @@ import { LoadingState } from './LoadingState';
 import { PageErrorBoundary } from './PageErrorBoundary';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { moduleRoutes } from './routes';
+import { ProtectedModuleRoute } from './ProtectedModuleRoute';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -38,7 +39,11 @@ export function AppContent() {
                 <Route
                   key={module.path}
                   path={module.path}
-                  element={<SectionPlaceholder label={module.label} etapa={module.etapa} />}
+                  element={
+                    <ProtectedModuleRoute route={module}>
+                      <SectionPlaceholder label={module.label} etapa={module.etapa} />
+                    </ProtectedModuleRoute>
+                  }
                 />
               ))}
               <Route path="*" element={<NotFoundPage />} />
