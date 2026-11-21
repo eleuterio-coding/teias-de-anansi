@@ -42,6 +42,8 @@ const seed = [
   ['users/uid-other-fixture', { uid: otherPlayerIdentity.uid, username: 'bruno', role: 'player', displayName: 'Outro Jogador Fictício' }],
   ['campaigns/mesa-ficticia', { id: 'mesa-ficticia', ownerId: masterIdentity.uid, name: 'Mesa de teste fictícia' }],
   ['campaigns/outra-mesa', { id: 'outra-mesa', ownerId: 'uid-outra-pessoa', name: 'Outra mesa fictícia' }],
+  ['campaigns/mesa-player-legada', { id: 'mesa-player-legada', ownerId: playerIdentity.uid, name: 'Mesa antiga de jogador, simulada' }],
+  ['campaigns/mesa-player-legada/private/state', { payload: { secret: 'Nota privada fictícia em mesa legada' } }],
   ['memberships/mesa-ficticia_rafael@teias.invalid', { email: masterIdentity.email, uid: masterIdentity.uid, username: 'rafael', role: 'dm', active: true, campaignId: 'mesa-ficticia', characterId: null, sessionIds: [], adventureIds: [] }],
   ['memberships/mesa-ficticia_gus@teias.invalid', { email: playerIdentity.email, uid: '', username: 'gustavo', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-gus', sessionIds: ['sess-gus'], adventureIds: ['adv-gus'] }],
   ['memberships/mesa-ficticia_bruno@teias.invalid', { email: otherPlayerIdentity.email, uid: otherPlayerIdentity.uid, username: 'bruno', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-bruno', sessionIds: ['sess-bruno'], adventureIds: ['adv-bruno'] }],
@@ -149,6 +151,8 @@ async function run(mode, rules) {
   await check(mode, 'EXPOSURE: Criação de mídia sem campanha por jogador', baseline, () => setDoc(doc(player, 'media/midia-orfao'), { ownerId: playerIdentity.uid, campaignId: null, entityType: 'campaign', entityId: 'qualquer', mime: 'image/webp', size: 3 }));
   await check(mode, 'EXPOSURE: Modificar ownerId da campanha pelo Mestre', baseline, () => updateDoc(doc(master, 'campaigns/mesa-ficticia'), { ownerId: playerIdentity.uid }));
   await check(mode, 'EXPOSURE: Jogador alterar role do próprio perfil', baseline, () => updateDoc(doc(player, 'users/uid-player-fixture'), { role: 'dm' }));
+  await check(mode, 'EXPOSURE: Jogador proprietário de mesa legada ler notas privadas', baseline, () => getDoc(doc(player, 'campaigns/mesa-player-legada/private/state')));
+  await check(mode, 'EXPOSURE: Jogador proprietário de mesa legada alterar dados da mesa', baseline, () => updateDoc(doc(player, 'campaigns/mesa-player-legada'), { name: 'Alterada por jogador fictício' }));
   await check(mode, 'EXPOSURE: Jogador apagar próprio perfil', baseline, () => deleteDoc(doc(player, 'users/uid-player-fixture')));
   } finally {
     await env.cleanup();
@@ -168,7 +172,7 @@ try {
   }));
   // O legado tem exposicoes conhecidas; a suite compara, nao as aceita.
   assert.equal(failed, 0, 'Existem divergencias entre comportamento esperado e regras emuladas.');
-  assert.equal(facts.length, 10, 'A suite deixou de reproduzir alguma permissao historica.');
+  assert.equal(facts.length, 12, 'A suite deixou de reproduzir alguma permissao historica.');
   console.log('SUCCESS: baseline documentada; proposta satisfaz criterios avaliados.');
 } catch (error) {
   console.error('Auditoria emulada inconclusiva:', error instanceof Error ? error.message : 'falha desconhecida');

@@ -48,7 +48,9 @@ service cloud.firestore {
     }
 
     function canManage(campaignId) {
-      return isHubMaster() || isOwner(campaignId);
+      // Ha um unico Mestre no Hub. Propriedade de uma campanha antiga,
+      // isoladamente, nao autoriza um Jogador a acessar dados do Mestre.
+      return isHubMaster();
     }
 
     function isPlayer(campaignId) {

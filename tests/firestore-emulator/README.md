@@ -3,7 +3,7 @@
 **Somente teste:** dados completamente fictícios e projeto Firebase de demonstração `demo-teias-305`; não apontar o emulador ao projeto de produção. Este diretório **não** é utilizado para deploy.
 
 - `baseline.rules`: cópia literal da versão das regras que o item 3.01 identificou como idêntica à implantada em produção.
-- `proposal.rules`: proposta experimental com alterações restritas de leitura de perfis, vínculos, fichas compartilhadas, criação de campanhas e mídias sem campanha, bem como edição de `ownerId` e de campos identitários.
+- `proposal.rules`: proposta experimental com alterações restritas de leitura de perfis, vínculos, fichas compartilhadas, criação de campanhas e mídias sem campanha, bem como edição de `ownerId` e de campos identitários. A proposta também impede que propriedade de campanha antiga conceda administração a Jogador.
 - `run.mjs`: testa **ambas** as versões por identidades fictícias no Firestore Emulator, identificando permissões indevidas do legado e confirmando a negação na proposta.
 - `firebase.json`: configura **apenas** Firestore Emulator local na porta 8089, sem Hosting e sem recursos remotos.
 
