@@ -1,6 +1,6 @@
 # Etapa 3 — Usuários e Acesso
 
-**Situação:** 3.01 iniciado em leitura documental; confirmação remota do Firebase pendente. Demais itens 3.02–3.09 ainda não iniciados.  
+**Situação:** 3.01 em andamento: inventário histórico e verificação local do contrato preparados; confirmação remota do Firebase pendente. Demais itens 3.02–3.09 não iniciados.  
 **Planejamento iniciado:** 20/11/2026.  
 **Branch isolada:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
@@ -18,7 +18,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 
 | Item | Planejamento | Situação |
 | --- | --- | --- |
-| 3.01 | Identificação do Firebase existente | Iniciado; inventário histórico registrado; confirmação do projeto ativo pendente |
+| 3.01 | Identificação do Firebase existente | Contrato histórico e sete testes escritos (não executados nesta sessão); verificação remota pendente |
 | 3.02 | Inventário controlado de cinco contas e vínculos | Proposto; exige autorização específica |
 | 3.03 | Login, saída, sessão e erros conhecidos | Proposto; não implementado |
 | 3.04 | Papéis Mestre/Jogador existentes | Proposto; não implementado |
@@ -36,6 +36,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 - `main` permanece preservada com “Novo início”, sem merge da reconstrução.
 - A CI existente de Design System monitora a branch da Etapa 2; a eventual configuração de CI específica para a branch da Etapa 3 dependerá da autorização de implementação.
 - O levantamento documental 3.01 foi registrado em [3.01-inventario-historico.md](3.01-inventario-historico.md). Foram identificados o projeto, o método de login e as regras **históricas**, sem confirmar o estado remoto.
+- **Implementação preparatória 3.01:** `src/services/firebase/legacy-contract.ts` identifica as cinco contas **esperadas** e compara configurações locais com o `projectId` e `authDomain` históricos, sem conexões nem privilégios. `tests/firebase-legacy-contract.test.ts` define sete cenários offline. **Não foram executados aqui** por ausência de checkout com dependências instaladas; nenhum relatório de CI é atribuído a esses testes.
 - Ainda não foram consultados dados, regras implantadas ou contas reais do Firebase.
 
 ## Limites imediatos
