@@ -170,4 +170,7 @@ try {
   assert.equal(failed, 0, 'Existem divergencias entre comportamento esperado e regras emuladas.');
   assert.equal(facts.length, 10, 'A suite deixou de reproduzir alguma permissao historica.');
   console.log('SUCCESS: baseline documentada; proposta satisfaz criterios avaliados.');
+} catch (error) {
+  console.error('Auditoria emulada inconclusiva:', error instanceof Error ? error.message : 'falha desconhecida');
+  process.exitCode = 1;
 }
