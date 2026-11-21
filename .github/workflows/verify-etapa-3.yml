@@ -27,10 +27,5 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Auditar cinco identidades e vinculos no Firebase real somente em leitura (3.02)
-        continue-on-error: true
-        env:
-          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
-        run: node scripts/audit-firebase-users-readonly.mjs
       - name: Conferir codigo e compilacao completa
         run: npm run check
