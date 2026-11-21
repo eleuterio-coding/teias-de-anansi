@@ -1,6 +1,6 @@
 # Etapa 3 — Usuários e Acesso
 
-**Situação:** **3.01 e 3.02 verificados no Firebase real; 3.03 implementado e validado em CI**; itens 3.04–3.09 não iniciados. O avanço será solicitado pelo botão da conversa.  
+**Situação:** **3.01 e 3.02 verificados no Firebase real; 3.03 e 3.04 implementados e validados em CI**; itens 3.05–3.09 não iniciados. O avanço será solicitado pelo botão da conversa.  
 **Planejamento iniciado:** 20/11/2026.  
 **Branch isolada:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
@@ -21,7 +21,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 | 3.01 | Identificação do Firebase existente | **Finalizado:** projeto/app Web/Auth/Firestore/Rules confirmados em consulta remota somente leitura; 18 testes específicos e 155 gerais aprovados |
 | 3.02 | Inventário controlado de cinco contas e vínculos | **Finalizado:** cinco contas reais ativas, perfis e UIDs correspondentes, seis vínculos ativos e referências de personagens/sessões/aventuras verificadas |
 | 3.03 | Login, saída, sessão e erros conhecidos | **Finalizado em branch:** login e logout do Auth existente, persistência local, restauração de sessão e mensagens de erro; 27 novos testes, CI aprovada (182/182). Login com senhas reais fica para 3.09 |
-| 3.04 | Papéis Mestre/Jogador existentes | Proposto; não implementado |
+| 3.04 | Papéis Mestre/Jogador existentes | **Finalizado em branch:** papéis verificados por Auth UID, perfil Firestore, membership ativa e, para Mestre, propriedade da campanha; UI específica, revogação e falha segura testadas; 205/205 testes aprovados |
 | 3.05 | Regras e acesso efetivo aos documentos | Proposto; não implementado |
 | 3.06 | Proteção de rotas, consultas e ações | Proposto; não implementado |
 | 3.07 | Área administrativa mínima para vínculos | Proposto; não implementado |
@@ -31,7 +31,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 ## Situação técnica de partida
 
 - A Etapa 2 foi aprovada em 20/11/2026. Sua branch original não deve receber novos itens da Etapa 3.
-- `src/services/firebase/` mantém os adaptadores de configuração e inicialização e agora o **serviço Auth do item 3.03**, chamado explicitamente pela rota `/entrar`. O bootstrap continua sem ligação direta ao Firebase; nenhuma leitura ou escrita no Firestore é realizada ao entrar.
+- `src/services/firebase/` mantém a autenticação 3.03 e agora a **verificação de papel 3.04 em leituras somente de servidor**, iniciada após autenticação na rota `/entrar`. O bootstrap não acessa Firebase e o login não escreve no Firestore.
 - `src/modules/usuarios/` continua apenas com `README.md`, reserva da Fundação. Não há rota oficial de usuários no catálogo atual.
 - `main` permanece preservada com “Novo início”, sem merge da reconstrução.
 - A CI da Etapa 3 monitora esta branch, executa validações de projeto, Vitest, TypeScript, ESLint, Prettier, contrato de Design System e build **sem deploy**.
@@ -41,12 +41,13 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 - O item **3.02** conferiu via API administrativa de leitura as cinco contas reais, seus UIDs e perfis no Firestore e seis vínculos existentes, sem divulgar os identificadores. Também verificou referências de quatro fichas, doze sessões e oito visões de aventuras. Evidências em [3.02-contas-e-vinculos.md](3.02-contas-e-vinculos.md), [CI #44902355786](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44902355786) e [CI #44902526056](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44902526056).
 - A verificação administrativa **não é um teste de login dos cinco usuários nem das regras de autorização na perspectiva de cada jogador**. O item 3.03 tem testes simulados de autenticação; login real e matriz de autorização permanecem para 3.05/3.09.
 - O item **3.03** disponibilizou `/entrar` pela página global do Hub e integrou o Firebase Web público já existente: [relatório 3.03](3.03-login-e-sessao.md) e [CI #44903994998](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44903994998), **182 testes aprovados**.
+- O item **3.04** usa Auth UID, documentos `users/{uid}`, vínculos `memberships` e propriedade real `campaigns/{id}.ownerId` para validar Mestre/Jogador, em modo **somente leitura** no cliente autenticado. Mostra ações diferenciadas na área de conta, sem conceder privilégios nem ler conteúdos de campanha. [Relatório 3.04](3.04-perfis-e-papeis.md), [CI #44905296167](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44905296167), **205 testes aprovados**.
 
 ## Limites imediatos
 
-**Não autorizado neste momento:** iniciar 3.04 antes do avanço solicitado na conversa; modificar Rules, gravar documentos, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
+**Não autorizado neste momento:** iniciar 3.05 antes do avanço solicitado na conversa; modificar Rules, gravar documentos, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
 
-A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03**, implementado e validado tecnicamente em 21/11/2026. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.04–3.09 não foram iniciados**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
+A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03 e 3.04**, implementados e validados tecnicamente em 21/11/2026. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.05–3.09 não foram iniciados**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
 
 ## Continuidade da conversa
 
