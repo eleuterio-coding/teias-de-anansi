@@ -2,15 +2,19 @@ import crypto from 'node:crypto';
 import { Buffer } from 'node:buffer';
 import { URLSearchParams } from 'node:url';
 
-import { HISTORICAL_HUB_IDENTITIES } from '../src/services/firebase/legacy-contract.ts';
-
 // Auditoria 3.02: somente GET de Authentication e Firestore.
 // POST é usado exclusivamente para obter token OAuth. Não há escrita no Firebase.
 // Nunca imprimir token, UID, e-mail, IDs de campanha, documento ou ficha.
 const projectId = 'teais-de-anansi';
 const credentialsRaw = process.env.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI || '';
 const base = 'https://firestore.googleapis.com/v1/projects/' + projectId + '/databases/(default)/documents';
-const expected = HISTORICAL_HUB_IDENTITIES;
+const expected = [
+  { username: 'rafael', authUsername: 'rafael', displayName: 'Rafael', expectedRole: 'dm' },
+  { username: 'bruno', authUsername: 'bruno', displayName: 'Bruno', expectedRole: 'player' },
+  { username: 'gustavo', authUsername: 'gus', displayName: 'Gustavo', expectedRole: 'player' },
+  { username: 'leo', authUsername: 'leo', displayName: 'Léo', expectedRole: 'player' },
+  { username: 'fernanda', authUsername: 'fernanda', displayName: 'Fernanda', expectedRole: 'player' },
+];
 const normalized = (value) => String(value || '').trim().toLowerCase();
 const field = (row, key) => row?.fields?.[key]?.stringValue ?? '';
 const boolField = (row, key) => row?.fields?.[key]?.booleanValue;
