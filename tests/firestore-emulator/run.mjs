@@ -141,6 +141,22 @@ async function run(mode, rules) {
   await check(mode, 'Estranho sem vínculo não lê sessão', false, () => getDoc(doc(outsider, 'campaigns/mesa-ficticia/sessions/sess-gus')));
   await check(mode, 'Outro jogador da mesa não lê ficha pessoal de Gus', false, () => getDoc(doc(other, 'users/uid-player-fixture/characters/char-gus')));
 
+  // 3.06: acesso direto por ID nao contorna atribuicao. A revogacao do
+  // membership passa a ser efetiva na proxima leitura, inclusive por URL.
+  await env.withSecurityRulesDisabled(async (context) => {
+    await updateDoc(doc(context.firestore(), 'memberships/mesa-ficticia_gus@teias.invalid'), {
+      active: false,
+    });
+  });
+  await check(mode, '3.06: após revogação, URL da campanha não é acessível', false, () => getDoc(doc(player, 'campaigns/mesa-ficticia')));
+  await check(mode, '3.06: após revogação, URL da própria sessão não é acessível', false, () => getDoc(doc(player, 'campaigns/mesa-ficticia/sessions/sess-gus')));
+  await check(mode, '3.06: após revogação, URL da própria ficha não é acessível', false, () => getDoc(doc(player, 'campaigns/mesa-ficticia/characters/char-gus')));
+  await env.withSecurityRulesDisabled(async (context) => {
+    await updateDoc(doc(context.firestore(), 'memberships/mesa-ficticia_gus@teias.invalid'), {
+      active: true,
+    });
+  });
+
   // Exposicoes do legado: devem passar na baseline e ser negadas na proposta.
   await check(mode, 'EXPOSURE: Leitura de perfil de outro jogador', baseline, () => getDoc(doc(player, 'users/uid-other-fixture')));
   await check(mode, 'EXPOSURE: Lista geral de perfis por jogador', baseline, () => getDocs(collection(player, 'users')));
