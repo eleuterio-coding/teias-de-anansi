@@ -13,6 +13,7 @@ import { verifyHubRole } from './role-access';
 export type HubReadRequest =
   | { kind: 'own-profile' }
   | { kind: 'own-membership' | 'campaign' | 'own-character'; campaignId: string }
+  | { kind: 'character'; campaignId: string; documentId: string }
   | {
       kind: 'shared' | 'session' | 'adventureView' | 'private' | 'adventure';
       campaignId: string;
@@ -122,7 +123,11 @@ export async function readHubScopedDocument(
       path = ['campaigns', request.campaignId, 'characters', id];
     } else {
       if (role.role === 'player') {
-        if (request.kind === 'private' || request.kind === 'adventure') return { status: 'denied' };
+        if (
+          request.kind === 'private' ||
+          request.kind === 'adventure' ||
+          request.kind === 'character'
+        ) return { status: 'denied' };
         if (
           request.kind === 'session' &&
           !(
@@ -149,7 +154,9 @@ export async function readHubScopedDocument(
             ? 'sessions'
             : request.kind === 'adventureView'
               ? 'adventureViews'
-              : request.kind;
+              : request.kind === 'character'
+                ? 'characters'
+                : request.kind;
       if (!('documentId' in request)) return { status: 'denied' };
       path = ['campaigns', request.campaignId, group, request.documentId];
     }

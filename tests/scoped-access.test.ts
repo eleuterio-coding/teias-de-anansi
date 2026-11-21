@@ -240,6 +240,36 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
     ).toEqual({ status: 'denied' });
   });
 
+  it('Mestre consulta ficha vinculada de outro jogador; Jogador não pode solicitar ID alheio', async () => {
+    expect(await readHubScopedDocument(gus, db, {
+      kind: 'character',
+      campaignId: 'mesa-ficticia',
+      documentId: 'char-bruno',
+    })).toEqual({ status: 'denied' });
+    expect(mocks.getDocFromServer).not.toHaveBeenCalledWith({
+      path: 'campaigns/mesa-ficticia/characters/char-bruno',
+    });
+    mocks.verifyHubRole.mockResolvedValue({
+      status: 'verified',
+      role: 'dm',
+      displayName: 'Mestre',
+      campaignCount: 1,
+    });
+    memberships = [{
+      email: master.email,
+      uid: master.uid,
+      role: 'dm',
+      active: true,
+      campaignId: 'mesa-ficticia',
+    }];
+    const result = await readHubScopedDocument(master, db, {
+      kind: 'character',
+      campaignId: 'mesa-ficticia',
+      documentId: 'char-bruno',
+    });
+    expect(result).toMatchObject({ status: 'ok', data: { characterId: 'char-bruno' } });
+  });
+
   it('revogação do vínculo impede nova leitura e nova ação', async () => {
     memberships[0].active = false;
     expect(
