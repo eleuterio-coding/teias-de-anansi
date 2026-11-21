@@ -123,7 +123,7 @@ describe('3.07 — área exclusiva de administração', () => {
     act(() => observer(master));
     await screen.findByRole('button', { name: 'Simular alteração' });
     fireEvent.click(screen.getByRole('button', { name: 'Simular alteração' }));
-    let dialog = await screen.findByRole('dialog', { name: 'Confirmar somente a simulação' });
+    const dialog = await screen.findByRole('dialog', { name: 'Confirmar somente a simulação' });
     fireEvent.click(within(dialog).getByRole('button', { name: 'Confirmar simulação' }));
     expect(await screen.findByText(/Suspensão simulada: Bruno/)).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: 'Desfazer última simulação' }));
