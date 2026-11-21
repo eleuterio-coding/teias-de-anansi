@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { FormErrorSummary, FormPanel, TextField } from '../../components/form';
+import {
+  getHubRoleForCurrentSession,
+  type HubRoleAccess,
+} from '../../services/role-access';
 import { Alert, Button, Card, HubLink } from '../../components/ui';
 import {
   getHubAuthSession,
@@ -17,8 +21,9 @@ type SessionView =
 const genericMessage = 'Não foi possível concluir o acesso agora. Tente novamente.';
 
 /**
- * Esta pagina so usa o servico de sessao. Nao le perfis/FireStore,
- * nao cria usuarios e nao atribui permissoes Mestre/Jogador (item 3.04).
+ * A UI so consulta a fachada de servico para permissao. O papel de interface
+ * deriva de Auth + perfil + memberships de servidor; nunca somente do nome.
+ * Acesso efetivo a documentos/rotas fica para os itens 3.05 e 3.06.
  */
 export default function LoginPage() {
   const [session, setSession] = useState<SessionView>({ status: 'loading' });
@@ -27,6 +32,12 @@ export default function LoginPage() {
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
+  const [roleRevision, setRoleRevision] = useState(0);
+  const [roleResult, setRoleResult] = useState<{
+    uid: string;
+    revision: number;
+    access: HubRoleAccess;
+  } | null>(null);
   const [operationError, setOperationError] = useState('');
   const driverRef = useRef<HubAuthDriver | null>(null);
 
@@ -39,6 +50,8 @@ export default function LoginPage() {
       unsubscribe = driver.observe(
         (user) => {
           if (!active) return;
+          setRoleResult(null);
+          setRoleRevision((revision) => revision + 1);
           setSession(user ? { status: 'signed-in', identity: user } : { status: 'signed-out' });
           setOperationError('');
         },
@@ -59,6 +72,23 @@ export default function LoginPage() {
       unsubscribe();
     };
   }, [retryCount]);
+
+  const authenticatedUid = session.status === 'signed-in' ? session.identity.uid : null;
+  useEffect(() => {
+    if (!authenticatedUid) return;
+    let active = true;
+    const uid = authenticatedUid;
+    void getHubRoleForCurrentSession(uid)
+      .then((access) => {
+        if (active) setRoleResult({ uid, revision: roleRevision, access });
+      })
+      .catch(() => {
+        if (active) setRoleResult({ uid, revision: roleRevision, access: { status: 'unavailable' } });
+      });
+    return () => {
+      active = false;
+    };
+  }, [authenticatedUid, roleRevision]);
 
   const usernameError = submitted && !username.trim() ? 'Informe seu usuário.' : '';
   const passwordError = submitted && !password ? 'Informe sua senha.' : '';
@@ -128,16 +158,78 @@ export default function LoginPage() {
               A conta existe no Firebase, mas seu perfil ainda precisa de validação no Hub.
             </Alert>
           )}
-          <p>
-            A autenticação está ativa. As permissões por papel e o conteúdo das campanhas serão
-            integrados nos próximos itens.
-          </p>
+          {(() => {
+            const access =
+              roleResult?.uid === session.identity.uid &&
+              roleResult.revision === roleRevision
+                ? roleResult.access
+                : null;
+            if (access === null) {
+              return <p role="status">Conferindo perfil e vínculos no Firebase…</p>;
+            }
+            if (access.status === 'unavailable') {
+              return (
+                <Alert tone="warning" title="Permissões indisponíveis">
+                  Não foi possível conferir as permissões com o Firebase. Acesso às áreas
+                  associadas ao papel suspenso até nova verificação.
+                </Alert>
+              );
+            }
+            if (access.status === 'denied') {
+              return (
+                <Alert tone="warning" title="Perfil não autorizado">
+                  Sua sessão está autenticada, mas não há um papel confirmado pelos perfis
+                  e vínculos existentes. Nenhuma permissão foi concedida.
+                </Alert>
+              );
+            }
+            return (
+              <>
+                <p>
+                  Perfil confirmado: <strong>{access.role === 'dm' ? 'Mestre' : 'Jogador'}</strong>
+                  {' · '}
+                  {access.displayName}.
+                </p>
+                <p>
+                  {access.campaignCount === 1
+                    ? '1 vínculo ativo confirmado.'
+                    : access.campaignCount + ' vínculos ativos confirmados.'}
+                </p>
+                {access.role === 'dm' ? (
+                  <nav aria-label="Ações do Mestre" className="hub-session-actions">
+                    <HubLink to="/campanhas" variant="primary">
+                      Abrir Campanhas
+                    </HubLink>
+                    <HubLink to="/personagens" variant="secondary">
+                      Abrir Personagens
+                    </HubLink>
+                  </nav>
+                ) : (
+                  <nav aria-label="Ações do Jogador" className="hub-session-actions">
+                    <HubLink to="/area-jogador" variant="primary">
+                      Abrir Área do jogador
+                    </HubLink>
+                    <HubLink to="/personagens" variant="secondary">
+                      Abrir Personagens
+                    </HubLink>
+                  </nav>
+                )}
+                <p>
+                  Estas seções ainda são prévias sem dados privados. Permissões de leitura e
+                  escrita serão verificadas nas próximas etapas.
+                </p>
+              </>
+            );
+          })()}
           {operationError && (
             <Alert tone="danger" title="Não foi possível sair">
               {operationError}
             </Alert>
           )}
           <div className="hub-session-actions">
+            <Button variant="secondary" onClick={() => setRoleRevision((revision) => revision + 1)}>
+              Atualizar permissões
+            </Button>
             <Button variant="primary" onClick={() => void logout()} loading={pending}>
               Sair da conta
             </Button>
