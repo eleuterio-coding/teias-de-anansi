@@ -69,6 +69,7 @@ export async function verifyHubRole(
     ? findHistoricalHubIdentity(email.slice(0, -suffix.length))
     : null;
   if (!account || email !== account.authUsername + suffix) return denied('unknown-account');
+  const acceptedUsernames: readonly string[] = [account.username, account.authUsername];
 
   try {
     const profileSnapshot = await getDocFromServer(doc(db, 'users', user.uid));
@@ -77,7 +78,7 @@ export async function verifyHubRole(
     const role = profile.role;
     if (
       trim(profile.uid) !== user.uid ||
-      ![account.username, account.authUsername].includes(lower(profile.username)) ||
+      !acceptedUsernames.includes(lower(profile.username)) ||
       (role !== 'dm' && role !== 'player')
     ) {
       return denied('profile-mismatch');
@@ -101,7 +102,7 @@ export async function verifyHubRole(
         trim(member.campaignId).length === 0 ||
         trim(member.role) !== role ||
         (trim(member.uid).length > 0 && trim(member.uid) !== user.uid) ||
-        ![account.username, account.authUsername].includes(lower(member.username))
+        !acceptedUsernames.includes(lower(member.username))
       ) {
         return denied('membership-mismatch');
       }
