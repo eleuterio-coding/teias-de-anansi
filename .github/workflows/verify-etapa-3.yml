@@ -27,15 +27,6 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Formatacao temporaria 3.06 em runner sem publicar
-        run: |
-          npx prettier --write src/app/routes.ts src/app/App.tsx src/app/ProtectedModuleRoute.tsx src/services/firebase/scoped-access.ts src/services/scoped-access.ts tests/navigation.test.tsx tests/layout.test.tsx tests/demo-pages.test.tsx tests/github-pages-routing.test.tsx tests/scoped-access.test.ts tests/scoped-session.test.ts tests/protected-routes.test.tsx
-          for file in src/app/routes.ts src/app/App.tsx src/app/ProtectedModuleRoute.tsx src/services/firebase/scoped-access.ts src/services/scoped-access.ts tests/navigation.test.tsx tests/layout.test.tsx tests/demo-pages.test.tsx tests/github-pages-routing.test.tsx tests/scoped-access.test.ts tests/scoped-session.test.ts tests/protected-routes.test.tsx; do
-            echo "PRETTIER_BEGIN:${file}"
-            base64 -w0 "$file"
-            echo
-            echo "PRETTIER_END:${file}"
-          done
       - name: Conferir codigo e compilacao completa
         run: npm run check
 

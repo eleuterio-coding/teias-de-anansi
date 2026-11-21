@@ -33,7 +33,12 @@ const master: HubSessionIdentity = {
   displayName: 'Rafael',
   knownAccount: true,
 };
-const playerAccess = { status: 'verified', role: 'player', displayName: 'Gustavo', campaignCount: 1 };
+const playerAccess = {
+  status: 'verified',
+  role: 'player',
+  displayName: 'Gustavo',
+  campaignCount: 1,
+};
 const masterAccess = { status: 'verified', role: 'dm', displayName: 'Rafael', campaignCount: 2 };
 
 let observer: (identity: HubSessionIdentity | null) => void;
@@ -80,7 +85,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('Jogador não entra na rota de Mestre pela URL', async () => {
     mount('/campanhas');
     act(() => observer(player));
-    expect(await screen.findByText(/O seu perfil ou vínculo não permite abrir esta área/)).toBeDefined();
+    expect(
+      await screen.findByText(/O seu perfil ou vínculo não permite abrir esta área/),
+    ).toBeDefined();
     expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Conferir meus vínculos' })).toBeNull();
   });
@@ -137,18 +144,24 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('resposta atrasada não reautoriza após logout', async () => {
     let release!: (value: typeof masterAccess) => void;
     mocks.getHubRoleForCurrentSession.mockImplementationOnce(
-      () => new Promise<typeof masterAccess>((resolve) => { release = resolve; }),
+      () =>
+        new Promise<typeof masterAccess>((resolve) => {
+          release = resolve;
+        }),
     );
     mount('/campanhas');
     act(() => observer(master));
     act(() => observer(null));
-    await act(async () => { release(masterAccess); });
+    await act(async () => {
+      release(masterAccess);
+    });
     expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
     expect(screen.getByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
   });
 
   it('rejeição do servidor e erro de rede ocultam módulo e permitem retry', async () => {
-    mocks.getHubRoleForCurrentSession.mockResolvedValueOnce({ status: 'unavailable' })
+    mocks.getHubRoleForCurrentSession
+      .mockResolvedValueOnce({ status: 'unavailable' })
       .mockResolvedValueOnce(masterAccess);
     mount('/campanhas');
     act(() => observer(master));
@@ -176,21 +189,25 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   });
 
   it('ação negada ou sem rede mostra estado seguro', async () => {
-    mocks.checkCurrentUserCampaignAccess.mockResolvedValueOnce({ status: 'denied' })
+    mocks.checkCurrentUserCampaignAccess
+      .mockResolvedValueOnce({ status: 'denied' })
       .mockResolvedValueOnce({ status: 'unavailable' });
     mount('/area-jogador');
     act(() => observer(player));
     await screen.findByRole('heading', { name: 'Módulo em preparação' });
     fireEvent.click(screen.getByRole('button', { name: 'Conferir meus vínculos' }));
-    expect(await screen.findByText(/Seu perfil ou vínculo não autoriza esta consulta/)).toBeDefined();
+    expect(
+      await screen.findByText(/Seu perfil ou vínculo não autoriza esta consulta/),
+    ).toBeDefined();
     fireEvent.click(screen.getByRole('button', { name: 'Conferir meus vínculos' }));
     expect(await screen.findByText(/Não foi possível consultar o Firebase/)).toBeDefined();
   });
 
   it('laboratório e página inicial permanecem públicos sem inicializar Auth', async () => {
     const first = mount('/laboratorio');
-    expect(await screen.findByRole('heading', { name: 'Laboratório de interface', level: 1 }))
-      .toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Laboratório de interface', level: 1 }),
+    ).toBeDefined();
     first.unmount();
     mount('/');
     expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();

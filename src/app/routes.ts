@@ -12,7 +12,12 @@ export const moduleRoutes = [
   { path: '/npcs', label: 'NPCs', etapa: 'Etapa 6', allowedRoles: ['dm'] },
   { path: '/sessoes', label: 'Sessões', etapa: 'Etapa 7', allowedRoles: ['dm'] },
   { path: '/area-jogador', label: 'Área do jogador', etapa: 'Etapa 7', allowedRoles: ['player'] },
-  { path: '/preferencias', label: 'Preferências', etapa: 'Etapa 7', allowedRoles: ['dm', 'player'] },
+  {
+    path: '/preferencias',
+    label: 'Preferências',
+    etapa: 'Etapa 7',
+    allowedRoles: ['dm', 'player'],
+  },
 ] as const;
 
 export type ModuleRoute = (typeof moduleRoutes)[number];

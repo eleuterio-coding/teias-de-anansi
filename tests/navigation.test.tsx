@@ -6,7 +6,6 @@ import { moduleRoutes } from '../src/app/routes';
 import { LoadingState } from '../src/app/LoadingState';
 import { PageErrorBoundary } from '../src/app/PageErrorBoundary';
 
-
 // Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
 vi.mock('../src/services/session', () => ({
   getHubAuthSession: () => ({
@@ -62,9 +61,7 @@ describe('Navegação inicial', () => {
   it.each(moduleRoutes)('abre diretamente a rota provisória $label', async ({ path, label }) => {
     mount(path);
     expect(await screen.findByRole('heading', { name: label })).toBeDefined();
-    expect(
-      await screen.findByText(/Esta área exige uma sessão autenticada do Hub/),
-    ).toBeDefined();
+    expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
   });
 
   it('exibe página não encontrada para caminho inválido', () => {

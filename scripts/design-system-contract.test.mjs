@@ -207,6 +207,21 @@ test('catálogo estático extrai caminho, rótulo e etapa sem executar código',
   assert.deepEqual(baseRoutes.get('/campanhas'), { label: 'Campanhas', stage: 6 });
 });
 
+test('catálogo extrai rotas protegidas com papeis oficiais sem executar código', () => {
+  const source = [
+    "{ path: '/personagens', label: 'Personagens', etapa: 'Etapa 5', allowedRoles: ['dm', 'player'] },",
+    "{ path: '/campanhas', label: 'Campanhas', etapa: 'Etapa 6', allowedRoles: ['dm'] },",
+  ].join('\n');
+  assert.deepEqual(extractModuleRoutes(source).get('/personagens'), {
+    label: 'Personagens',
+    stage: 5,
+  });
+  assert.deepEqual(extractModuleRoutes(source).get('/campanhas'), {
+    label: 'Campanhas',
+    stage: 6,
+  });
+});
+
 test('bootstrap exige ordem dos estilos centrais', () => {
   const imports = SHARED_STYLES.map((name) => "import '../styles/" + name + "';").join('\n');
   const code = "import App from './App';\n" + imports;

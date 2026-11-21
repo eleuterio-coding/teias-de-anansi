@@ -7,9 +7,13 @@ const mock = vi.hoisted(() => ({
   readHubScopedDocument: vi.fn(),
   checkOwnCampaignAccess: vi.fn(),
 }));
-vi.mock('../src/services/firebase/app', () => ({ prepareHubFirebaseApp: mock.prepareHubFirebaseApp }));
+vi.mock('../src/services/firebase/app', () => ({
+  prepareHubFirebaseApp: mock.prepareHubFirebaseApp,
+}));
 vi.mock('../src/services/firebase/auth', () => ({ prepareHubAuth: mock.prepareHubAuth }));
-vi.mock('../src/services/firebase/firestore', () => ({ prepareHubFirestore: mock.prepareHubFirestore }));
+vi.mock('../src/services/firebase/firestore', () => ({
+  prepareHubFirestore: mock.prepareHubFirestore,
+}));
 vi.mock('../src/services/firebase/scoped-access', () => ({
   readHubScopedDocument: mock.readHubScopedDocument,
   checkOwnCampaignAccess: mock.checkOwnCampaignAccess,
@@ -34,14 +38,19 @@ beforeEach(() => {
 
 describe('3.06 — ações dependem de UID autenticado corrente', () => {
   it('nega UID de outra pessoa ANTES de consultar Firestore', async () => {
-    expect(await readCurrentUserDocument('uid-alheio', { kind: 'own-profile' })).toEqual({ status: 'denied' });
+    expect(await readCurrentUserDocument('uid-alheio', { kind: 'own-profile' })).toEqual({
+      status: 'denied',
+    });
     expect(mock.prepareHubFirestore).not.toHaveBeenCalled();
     expect(mock.readHubScopedDocument).not.toHaveBeenCalled();
     expect(await checkCurrentUserCampaignAccess('uid-alheio')).toEqual({ status: 'denied' });
   });
 
   it('permite ação do usuário corrente sem passar UID de outro usuário', async () => {
-    expect(await checkCurrentUserCampaignAccess(user.uid)).toEqual({ status: 'ok', activeCampaigns: 1 });
+    expect(await checkCurrentUserCampaignAccess(user.uid)).toEqual({
+      status: 'ok',
+      activeCampaigns: 1,
+    });
     expect(mock.checkOwnCampaignAccess).toHaveBeenCalledWith(user, {});
   });
 
@@ -50,7 +59,9 @@ describe('3.06 — ações dependem de UID autenticado corrente', () => {
       auth.currentUser = null;
       return { status: 'ok', data: { secret: 'ficticio' } };
     });
-    expect(await readCurrentUserDocument(user.uid, { kind: 'own-profile' })).toEqual({ status: 'denied' });
+    expect(await readCurrentUserDocument(user.uid, { kind: 'own-profile' })).toEqual({
+      status: 'denied',
+    });
   });
 
   it('descarta ação caso sessão mude antes da resposta', async () => {

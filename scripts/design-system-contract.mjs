@@ -79,12 +79,12 @@ function violation(code, detail) {
 
 /**
  * A leitura da lista de rotas é estática: nunca avaliamos src/app/routes.ts.
- * Mantemos um contrato simples (path, label, etapa), vigente na Etapa 2.
+ * Mantemos os campos obrigatórios (path, label, etapa) e aceitamos apenas\n * os dois papéis oficiais (dm/player) nos metadados da Etapa 3.
  */
 export function extractModuleRoutes(source) {
   const routes = new Map();
   const pattern =
-    /\{\s*path:\s*['"]([^'"]+)['"]\s*,\s*label:\s*['"]([^'"]+)['"]\s*,\s*etapa:\s*['"]Etapa (\d+)['"]\s*\}/g;
+    /\{\s*path:\s*['"]([^'"]+)['"]\s*,\s*label:\s*['"]([^'"]+)['"]\s*,\s*etapa:\s*['"]Etapa (\d+)['"]\s*(?:,\s*allowedRoles:\s*\[(?:['"](?:dm|player)['"]\s*,?\s*)+\])?\s*\}/g;
   for (const match of source.matchAll(pattern)) {
     routes.set(match[1], { label: match[2], stage: Number(match[3]) });
   }

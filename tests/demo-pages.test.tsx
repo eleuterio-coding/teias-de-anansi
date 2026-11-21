@@ -4,7 +4,6 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppContent } from '../src/app/App';
 import { demoRoutes } from '../src/app/demo-routes';
 
-
 // Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
 vi.mock('../src/services/session', () => ({
   getHubAuthSession: () => ({
