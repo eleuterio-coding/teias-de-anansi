@@ -8,10 +8,7 @@ import {
   where,
   type Firestore,
 } from 'firebase/firestore';
-import {
-  HISTORICAL_FIREBASE_USERNAME_DOMAIN,
-  HISTORICAL_HUB_IDENTITIES,
-} from './legacy-contract';
+import { HISTORICAL_FIREBASE_USERNAME_DOMAIN, HISTORICAL_HUB_IDENTITIES } from './legacy-contract';
 import { verifyHubRole } from './role-access';
 
 type AuthIdentity = Pick<User, 'uid' | 'email'>;
@@ -99,7 +96,9 @@ export async function loadMasterRosterReadOnly(
           !safeId(data.campaignId) ||
           data.role !== identity.expectedRole ||
           (data.uid && data.uid !== profileDoc.id) ||
-          ![identity.username, identity.authUsername].includes(normalized(data.username) as typeof identity.username)
+          ![identity.username, identity.authUsername].includes(
+            normalized(data.username) as typeof identity.username,
+          )
         ) {
           return { status: 'incomplete' };
         }
@@ -114,16 +113,17 @@ export async function loadMasterRosterReadOnly(
 
     // Nome de campanha é obtido apenas de documentos que pertencem ao
     // Mestre atual. Nunca exponha IDs privados, mesmo quando falta nome.
-    const campaignIds = [...new Set(details.flatMap((item) =>
-      item.relations.map((relation) => relation.campaignId),
-    ))];
+    const campaignIds = [
+      ...new Set(details.flatMap((item) => item.relations.map((relation) => relation.campaignId))),
+    ];
     const campaigns = new Map<string, string>();
     for (const [index, id] of campaignIds.entries()) {
       const campaign = await getDocFromServer(doc(db, 'campaigns', id));
       if (!campaign.exists() || campaign.data().ownerId !== user.uid)
         return { status: 'incomplete' };
       const name = campaign.data().name;
-      campaigns.set(id,
+      campaigns.set(
+        id,
         typeof name === 'string' && name.trim() && name.trim().length <= 90
           ? name.trim()
           : 'Campanha ' + (index + 1),
@@ -152,7 +152,8 @@ export async function loadMasterRosterReadOnly(
       error !== null &&
       'code' in error &&
       error.code === 'permission-denied'
-    ) return { status: 'denied' };
+    )
+      return { status: 'denied' };
     return { status: 'unavailable' };
   }
 }

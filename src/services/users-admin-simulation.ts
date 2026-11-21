@@ -62,11 +62,13 @@ export function simulateMembershipChange(
     next.push({ userKey: user.key, campaignKey: campaign.key, active: true });
     operation = 'Inclusão';
   } else if (command.action === 'suspend') {
-    if (!existing?.active) return { status: 'denied', reason: 'Não há vínculo ativo para suspender.' };
+    if (!existing?.active)
+      return { status: 'denied', reason: 'Não há vínculo ativo para suspender.' };
     next[index] = { ...existing, active: false };
     operation = 'Suspensão';
   } else if (command.action === 'reactivate') {
-    if (!existing || existing.active) return { status: 'denied', reason: 'Não há vínculo suspenso para reativar.' };
+    if (!existing || existing.active)
+      return { status: 'denied', reason: 'Não há vínculo suspenso para reativar.' };
     next[index] = { ...existing, active: true };
     operation = 'Reativação';
   } else if (command.action === 'remove') {

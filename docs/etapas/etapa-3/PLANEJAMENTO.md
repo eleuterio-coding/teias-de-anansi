@@ -1,13 +1,13 @@
 # Planejamento detalhado — Etapa 3: Firebase, Usuários e Acesso
 
 **Data de elaboração:** 20/11/2026  
-**Estado:** **3.01–3.05 concluídos; 3.06 implementado e validado em CI em 21/11/2026**, sem modificar produção; itens 3.07–3.09 aguardam início específico.  
+**Estado:** **3.01–3.06 concluídos; 3.07 implementado e validado em CI em 21/11/2026**, sem modificar produção; itens 3.08–3.09 aguardam início específico.  
 **Branch documental:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Base:** `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`, commit com CI verde da Etapa 2.
 
 ## 1. Escopo de referência e decisões já tomadas
 
-O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05 e 3.06** da Etapa 3. Esta proposta não modifica retroativamente o documento original.
+O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06 e 3.07** da Etapa 3. Esta proposta não modifica retroativamente o documento original.
 
 **Objetivo aprovado para planejamento:** preservar as cinco contas legadas, as informações do Mestre e dos jogadores, e recuperar autenticação e separação de dados sem exigir novas credenciais ou mecanismos adicionais.
 
@@ -33,7 +33,7 @@ Os participantes indicados historicamente são Rafael (Mestre/administrador), Br
 | **3.04 — Perfis e papéis** | Derivar Mestre/Jogador de fonte autorizada; mostrar ações e navegação adequadas, sem cadastrar papéis extras | Perfis corretos em testes de ambos os papéis; negação ao usuário sem perfil autorizado | **Concluído na branch:** leitura de perfil e vínculos do servidor, confirmação adicional de ownership do Mestre, UI por papel; [CI #44905296167](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44905296167) 205/205 aprovada; nenhuma Rule modificada |
 | **3.05 — Regras de dados** | Auditar regras publicadas (versão comprovada em 3.01), propor ajustes mínimos sem deploy e reproduzir os cenários com emulador | **Concluído:** 92/92 testes de duas versões, 12 permissões excessivas históricas, matriz `get/list/create/update/delete`. [Relatório](3.05-auditoria-rules.md) e [CI #44906723651](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44906723651) | A proposta **não foi aplicada**. Publicação exige autorização separada, adaptação do cliente, cópia e plano de reversão |
 | **3.06 — Rotas e conteúdo** | Guardas por sessão e role, leitura de servidor com vínculo específico e ações com UID corrente; sem conteúdo privado no bundle | **Concluído na branch:** 238/238 Vitest e 98/98 verificações do emulador, incluindo URL, refresh, logout, revogação, negação cruzada e erro de rede. [Relatório 3.06](3.06-rotas-consultas-acoes.md) | Guardas React protegem a UI; servidor continua sob Rules antigas até publicação separada da proposta 3.05 |
-| **3.07 — Administração mínima** | Painel privado do Mestre para visualizar usuários e administrar vínculos que as regras permitirem | Jogador não acessa painel nem modifica relações; ações permitidas testadas e auditáveis | Não criar novas contas pelo navegador; novas contas, se necessárias, ficam em processo privilegiado e aprovado à parte |
+| **3.07 — Administração mínima** | Painel privado do Mestre com cinco perfis/vínculos em modo leitura, e laboratório independente de ações simuladas | **Concluído:** [relatório 3.07](3.07-administracao-usuarios.md); 265/265 Vitest e 122/122 emulador. Login real do Mestre pendente de 3.09 | **Sem writers reais**, sem cadastro e sem alteração de Rules; o módulo original segue reservado, rota global protegida `/usuarios` |
 | **3.08 — Estados de erro** | Integrar `OperationFeedback`, `Alert`, `FormErrorSummary` e padrões de rota para sessão inválida, acesso negado, ausências e rede | Textos claros, sem expor detalhes privados; tentativas seguras e sem repetição automática indevida | Reutilizar Design System 2.05–2.09 |
 | **3.09 — Verificação com contas reais** | Validar entradas/saídas e a matriz de acesso com as cinco identidades existentes, com plano de execução e consentimentos | Evidência dos cinco logins e de operações permitidas/negadas; sem mudança de senha ou dados legítimos | **Autorização expressa adicional para testes remotos**; primeiro emulador/fixtures sintéticas quando possível; nenhuma escrita em dados reais não previamente aprovada |
 
@@ -98,7 +98,7 @@ Registrar cada execução: SHA, ambiente, conta representada por identificador n
 3. **3.02:** concluído em 21/11/2026; cinco contas verificadas via Authentication, cinco perfis e seis memberships consistentes; validação adicional de referências de sessões e aventuras. Ver [3.02-contas-e-vinculos.md](3.02-contas-e-vinculos.md).
 4. **3.03:** concluído em 21/11/2026, com [relatório de login](3.03-login-e-sessao.md) e testes simulados; **3.04:** concluído em 21/11/2026, com [relatório de papéis](3.04-perfis-e-papeis.md) e testes simulados. Login real individual permanece em 3.09.
 5. **3.05:** proposta e testes concluídos em 21/11/2026. Publicação de Rules **não autorizada** nem efetuada; depende de revisão de compatibilidade, backup/diff e aprovação específica.
-6. **3.06:** implementado e validado no código com testes de acesso. **3.07–3.08** exigem autorização específica e continuam pendentes.
+6. **3.06:** implementado e validado no código com testes de acesso. **3.07** concluído com UI e simulações sem escrita; **3.08** exige autorização específica e continua pendente.
 7. **3.09:** aprovação explícita do procedimento de validação com cinco contas reais, limitada a operações previamente revisadas.
 8. **Encerramento:** exigir CI, evidência de segurança, documentação e aceite do Mestre antes de considerar a Etapa 3 concluída. A Etapa 4 e publicação não são autorizadas automaticamente.
 
@@ -116,8 +116,8 @@ Não existem ações destrutivas ou reversões de dados aprovadas neste momento.
 
 ## 8. Branch, escopo documental e não execução
 
-A branch `feature/etapa-3-usuarios-acesso-20261120` foi derivada exclusivamente do commit validado `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4` da Etapa 2. A implantação dos itens 3.01 a 3.06 adicionou documentação, contrato histórico, scripts de auditoria remotos somente leitura, serviço de login/logout, consulta de papel por Auth/Firestore, página global de acesso por perfil, Rules de baseline e proposta **isoladas para testes**, matriz do emulador, guardas de rotas, consultas restritas por vínculo e ações de conferência, além dos testes de regressão. O workflow de CI permanece **sem deploy**. Não alterou rotas, Rules, dados ou configuração Firebase em produção.
+A branch `feature/etapa-3-usuarios-acesso-20261120` foi derivada exclusivamente do commit validado `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4` da Etapa 2. A implantação dos itens 3.01 a 3.07 adicionou documentação, contrato histórico, scripts de auditoria remotos somente leitura, serviço de login/logout, consulta de papel por Auth/Firestore, página global de acesso por perfil, Rules de baseline e proposta **isoladas para testes**, matriz do emulador, guardas de rotas, consultas restritas por vínculo, ações de conferência e painel exclusivo do Mestre com simulações locais de vínculos, além dos testes de regressão. O workflow de CI permanece **sem deploy**. Não alterou rotas, Rules, dados ou configuração Firebase em produção.
 
 **Não realizado:** login real com senha dos cinco usuários, escrita Firestore, manipulação de senhas, alteração de Rules, deploy, merge ou alteração da `main`. **Realizado:** acesso administrativo de **leitura** ao projeto e metadados do Firestore, Auth e Rules no item 3.01, seguido de verificação de contas reais/UIDs e vínculos do Firestore no 3.02. Nenhum UID foi exposto nos relatórios. **3.03 e 3.04:** implementados em código, com autenticação via SDK Firebase Web e conferência de papéis por fontes remotas, testes unitários/UI simulados sem senha real, sem publicação.
 
-**Próximo item:** 3.07 — área administrativa mínima do Mestre para vínculos, exclusivamente após avanço pelo botão solicitado na conversa; nenhuma publicação de Rules está incluída. Mantêm-se os limites de não criar, alterar ou redefinir contas e de não expor UIDs/dados sensíveis.
+**Próximo item:** 3.08 — estados e mensagens de erro, exclusivamente após avanço pelo botão solicitado na conversa; nenhuma publicação de Rules está incluída. Mantêm-se os limites de não criar, alterar ou redefinir contas e de não expor UIDs/dados sensíveis.

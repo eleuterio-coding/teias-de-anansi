@@ -14,3 +14,7 @@ Os testes positivos de sessão/atribuição e os testes negativos de acesso por 
 ## Cobertura adicionada no 3.06
 
 Foram acrescentados três casos para cada conjunto de regras (6 verificações adicionais), em que um vínculo fictício é revogado e, sem nova sessão, consultas diretas por ID à campanha, à sessão atribuída e à ficha atribuída passam a ser **negadas**. A suíte passa de **92 para 98 verificações**; ambos os conjuntos de regras foram testados, sem utilizar a produção. A CI da Etapa 3 continua executando a versão vigente das duas suítes.
+
+## Cobertura do item 3.07
+
+Foram acrescentadas consultas individuais (com `where`) aos cinco perfis fictícios e às cinco memberships correspondentes, sempre sob identidade Mestre, e uma consulta transversal de jogador que demonstra a divergência conhecida entre `baseline.rules` e `proposal.rules`. A atualização de uma membership fictícia por Mestre também é testada **somente no emulador**; nenhuma escrita real foi autorizada. As duas versões somam **122 verificações com 0 falhas**, mantendo as 12 exposições históricas já registradas.

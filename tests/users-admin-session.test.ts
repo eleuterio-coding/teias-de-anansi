@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
-  app: vi.fn(), auth: vi.fn(), firestore: vi.fn(), roster: vi.fn(),
+  app: vi.fn(),
+  auth: vi.fn(),
+  firestore: vi.fn(),
+  roster: vi.fn(),
 }));
 vi.mock('../src/services/firebase/app', () => ({
   prepareHubFirebaseApp: mocks.app,
@@ -26,7 +29,12 @@ beforeEach(() => {
   mocks.app.mockReturnValue({});
   mocks.auth.mockReturnValue(auth);
   mocks.firestore.mockReturnValue({ label: 'db' });
-  mocks.roster.mockResolvedValue({ status: 'ok', entries: [], activeMembershipCount: 0, campaignCount: 0 });
+  mocks.roster.mockResolvedValue({
+    status: 'ok',
+    entries: [],
+    activeMembershipCount: 0,
+    campaignCount: 0,
+  });
 });
 
 describe('3.07 — serviço com sessão corrente', () => {

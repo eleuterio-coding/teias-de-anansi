@@ -25,19 +25,33 @@ vi.mock('../src/services/scoped-access', () => ({
 import { AppContent } from '../src/app/App';
 
 const master: HubSessionIdentity = {
-  uid: 'uid-m-ficticio', username: 'rafael', displayName: 'Rafael', knownAccount: true,
+  uid: 'uid-m-ficticio',
+  username: 'rafael',
+  displayName: 'Rafael',
+  knownAccount: true,
 };
 const player: HubSessionIdentity = {
-  uid: 'uid-p-ficticio', username: 'gustavo', displayName: 'Gustavo', knownAccount: true,
+  uid: 'uid-p-ficticio',
+  username: 'gustavo',
+  displayName: 'Gustavo',
+  knownAccount: true,
 };
 const masters = { status: 'verified', role: 'dm', displayName: 'Rafael', campaignCount: 2 };
 const players = { status: 'verified', role: 'player', displayName: 'Gustavo', campaignCount: 1 };
 const entries = [
-  { key: 'rafael', displayName: 'Rafael', role: 'dm',
-    memberships: [{ campaign: 'Campanha fictícia A', active: true, hasCharacter: false },
-      { campaign: 'Campanha fictícia B', active: true, hasCharacter: false }] },
+  {
+    key: 'rafael',
+    displayName: 'Rafael',
+    role: 'dm',
+    memberships: [
+      { campaign: 'Campanha fictícia A', active: true, hasCharacter: false },
+      { campaign: 'Campanha fictícia B', active: true, hasCharacter: false },
+    ],
+  },
   ...['Bruno', 'Gustavo', 'Léo', 'Fernanda'].map((displayName) => ({
-    key: displayName.toLowerCase(), displayName, role: 'player',
+    key: displayName.toLowerCase(),
+    displayName,
+    role: 'player',
     memberships: [{ campaign: 'Campanha fictícia A', active: true, hasCharacter: true }],
   })),
 ];
@@ -65,7 +79,10 @@ beforeEach(() => {
   });
   mock.getHubRoleForCurrentSession.mockResolvedValue(masters);
   mock.getCurrentMasterRoster.mockResolvedValue({
-    status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6,
+    status: 'ok',
+    entries,
+    campaignCount: 2,
+    activeMembershipCount: 6,
   });
   mock.checkCurrentUserCampaignAccess.mockResolvedValue({ status: 'ok', activeCampaigns: 2 });
 });
@@ -86,7 +103,9 @@ describe('3.07 — área exclusiva de administração', () => {
     mock.getHubRoleForCurrentSession.mockResolvedValue(players);
     mount();
     act(() => observer(player));
-    expect(await screen.findByText(/O seu perfil ou vínculo não permite abrir esta área/)).toBeDefined();
+    expect(
+      await screen.findByText(/O seu perfil ou vínculo não permite abrir esta área/),
+    ).toBeDefined();
     expect(mock.getCurrentMasterRoster).not.toHaveBeenCalled();
     expect(screen.queryByRole('button', { name: 'Simular alteração' })).toBeNull();
   });
@@ -94,7 +113,9 @@ describe('3.07 — área exclusiva de administração', () => {
   it('Mestre vê cinco perfis existentes e vínculos com fonte de leitura separada', async () => {
     mount();
     act(() => observer(master));
-    expect(await screen.findByRole('heading', { name: 'Administração de usuários e vínculos' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Administração de usuários e vínculos' }),
+    ).toBeDefined();
     expect(await screen.findByText(/5 perfis conferidos/)).toBeDefined();
     const table = screen.getByRole('table', { name: 'Perfis e vínculos reais — somente leitura' });
     expect(within(table).getAllByRole('row')).toHaveLength(6);
@@ -107,14 +128,20 @@ describe('3.07 — área exclusiva de administração', () => {
     mount();
     act(() => observer(master));
     await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' });
-    const sample = screen.getByRole('table', { name: 'Vínculos fictícios para testar administração' });
-    expect(within(sample).getAllByText(/Mesa Aurora \(fictícia\) · ativo/).length).toBeGreaterThan(0);
+    const sample = screen.getByRole('table', {
+      name: 'Vínculos fictícios para testar administração',
+    });
+    expect(within(sample).getAllByText(/Mesa Aurora \(fictícia\) · ativo/).length).toBeGreaterThan(
+      0,
+    );
     fireEvent.click(screen.getByRole('button', { name: 'Simular alteração' }));
     const dialog = await screen.findByRole('dialog', { name: 'Confirmar somente a simulação' });
     expect(screen.getByText(/não existe gravação no Firebase/i)).toBeDefined();
     fireEvent.click(within(dialog).getByRole('button', { name: 'Confirmar simulação' }));
     expect((await screen.findAllByText(/Suspensão simulada: Bruno/)).length).toBeGreaterThan(0);
-    expect(screen.getByRole('table', { name: 'Perfis e vínculos reais — somente leitura' })).toBeDefined();
+    expect(
+      screen.getByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
   });
 
@@ -134,29 +161,45 @@ describe('3.07 — área exclusiva de administração', () => {
   });
 
   it('consulta negada ou incompleta não exibe lista parcial e permite atualização', async () => {
-    mock.getCurrentMasterRoster.mockResolvedValueOnce({ status: 'incomplete' })
+    mock.getCurrentMasterRoster
+      .mockResolvedValueOnce({ status: 'incomplete' })
       .mockResolvedValueOnce({ status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6 });
     mount();
     act(() => observer(master));
-    expect(await screen.findByText(/Um perfil, vínculo ou campanha não correspondeu ao inventário/)).toBeDefined();
-    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' })).toBeNull();
+    expect(
+      await screen.findByText(/Um perfil, vínculo ou campanha não correspondeu ao inventário/),
+    ).toBeDefined();
+    expect(
+      screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Atualizar leitura' }));
-    expect(await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' })).toBeDefined();
+    expect(
+      await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(2);
   });
 
   it('ao sair durante leitura, desmonta painel e descarta a resposta atrasada', async () => {
     let release!: (value: unknown) => void;
-    mock.getCurrentMasterRoster.mockImplementationOnce(() => new Promise((resolve) => {
-      release = resolve;
-    }));
+    mock.getCurrentMasterRoster.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          release = resolve;
+        }),
+    );
     mount();
     act(() => observer(master));
     await screen.findByText(/Conferindo os perfis e vínculos existentes/);
     act(() => observer(null));
-    expect(screen.queryByRole('heading', { name: 'Administração de usuários e vínculos' })).toBeNull();
-    await act(async () => release({ status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6 }));
-    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' })).toBeNull();
+    expect(
+      screen.queryByRole('heading', { name: 'Administração de usuários e vínculos' }),
+    ).toBeNull();
+    await act(async () =>
+      release({ status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6 }),
+    );
+    expect(
+      screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeNull();
   });
 
   it('falha de observador não mostra painel nem detalhes internos', async () => {

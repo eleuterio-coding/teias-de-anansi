@@ -55,30 +55,47 @@ beforeEach(() => {
     'mesa-a': { ownerId: master.uid, name: 'Aventura A fictícia' },
     'mesa-b': { ownerId: master.uid, name: 'Aventura B fictícia' },
   };
-  profiles = Object.fromEntries(accounts.map(([username, , role, uid]) => [
-    username, { uid, username, role },
-  ]));
+  profiles = Object.fromEntries(
+    accounts.map(([username, , role, uid]) => [username, { uid, username, role }]),
+  );
   memberships = links.map((link) => ({ ...link }));
   mock.verifyHubRole.mockResolvedValue({
-    status: 'verified', role: 'dm', displayName: 'Mestre', campaignCount: 2,
+    status: 'verified',
+    role: 'dm',
+    displayName: 'Mestre',
+    campaignCount: 2,
   });
-  mock.getDocsFromServer.mockImplementation(async ({ source, condition }: {
-    source: { name: string };
-    condition: { field: string; op: string; value: string };
-  }) => {
-    if (condition.op !== '==') throw Error('Consulta não filtrada');
-    if (source.name === 'users' && condition.field === 'username') {
-      return { docs: profiles[condition.value] ? [{
-        id: accounts.find(([username]) => username === condition.value)?.[3],
-        data: () => profiles[condition.value],
-      }] : [] };
-    }
-    if (source.name === 'memberships' && condition.field === 'email') {
-      return { docs: memberships.filter((link) => link.email === condition.value)
-        .map((item) => ({ data: () => item })) };
-    }
-    throw Error('Listagem geral não autorizada');
-  });
+  mock.getDocsFromServer.mockImplementation(
+    async ({
+      source,
+      condition,
+    }: {
+      source: { name: string };
+      condition: { field: string; op: string; value: string };
+    }) => {
+      if (condition.op !== '==') throw Error('Consulta não filtrada');
+      if (source.name === 'users' && condition.field === 'username') {
+        return {
+          docs: profiles[condition.value]
+            ? [
+                {
+                  id: accounts.find(([username]) => username === condition.value)?.[3],
+                  data: () => profiles[condition.value],
+                },
+              ]
+            : [],
+        };
+      }
+      if (source.name === 'memberships' && condition.field === 'email') {
+        return {
+          docs: memberships
+            .filter((link) => link.email === condition.value)
+            .map((item) => ({ data: () => item })),
+        };
+      }
+      throw Error('Listagem geral não autorizada');
+    },
+  );
   mock.getDocFromServer.mockImplementation(async ({ path }: { path: string }) => {
     const data = campaigns[path.replace(/^campaigns\//, '')];
     return { exists: () => Boolean(data), data: () => data };
@@ -108,12 +125,18 @@ describe('3.07 — consulta de administração exclusiva do Mestre', () => {
   it('consolida cinco contas e seis vínculos, sem retornar UIDs nem emails técnicos', async () => {
     const result = await loadMasterRosterReadOnly(master, db);
     expect(result).toMatchObject({
-      status: 'ok', activeMembershipCount: 6, campaignCount: 2,
+      status: 'ok',
+      activeMembershipCount: 6,
+      campaignCount: 2,
     });
     if (result.status !== 'ok') throw Error('Inventário esperado');
     expect(result.entries).toHaveLength(5);
     expect(result.entries.map((entry) => entry.displayName)).toEqual([
-      'Rafael', 'Bruno', 'Gustavo', 'Léo', 'Fernanda',
+      'Rafael',
+      'Bruno',
+      'Gustavo',
+      'Léo',
+      'Fernanda',
     ]);
     expect(result.entries[0]).toMatchObject({ role: 'dm' });
     expect(result.entries[0].memberships).toHaveLength(2);

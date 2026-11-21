@@ -1,14 +1,9 @@
 import { prepareHubFirebaseApp } from './firebase/app';
 import { prepareHubAuth } from './firebase/auth';
 import { prepareHubFirestore } from './firebase/firestore';
-import {
-  HISTORICAL_FIREBASE_PROJECT_ID,
-} from './firebase/legacy-contract';
+import { HISTORICAL_FIREBASE_PROJECT_ID } from './firebase/legacy-contract';
 import { HUB_EXISTING_FIREBASE_WEB_OPTIONS } from './firebase/public-web-options';
-import {
-  loadMasterRosterReadOnly,
-  type MasterRosterResult,
-} from './firebase/users-admin-readonly';
+import { loadMasterRosterReadOnly, type MasterRosterResult } from './firebase/users-admin-readonly';
 
 export type { MasterRosterEntry, MasterRosterResult } from './firebase/users-admin-readonly';
 

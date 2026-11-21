@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import { DataTable, type DataColumn } from '../../components/data';
 import { SelectField } from '../../components/form';
 import { Alert, Button, Card, ConfirmDialog, HubLink } from '../../components/ui';
-import { getCurrentMasterRoster, type MasterRosterEntry, type MasterRosterResult } from '../../services/users-admin';
+import {
+  getCurrentMasterRoster,
+  type MasterRosterEntry,
+  type MasterRosterResult,
+} from '../../services/users-admin';
 import {
   INITIAL_SIMULATED_MEMBERSHIPS,
   SIMULATED_CAMPAIGNS,
@@ -18,7 +22,7 @@ const columns: readonly DataColumn<MasterRosterEntry>[] = [
   {
     id: 'role',
     header: 'Papel confirmado',
-    cell: (item) => item.role === 'dm' ? 'Mestre' : 'Jogador',
+    cell: (item) => (item.role === 'dm' ? 'Mestre' : 'Jogador'),
   },
   {
     id: 'memberships',
@@ -51,14 +55,16 @@ function ExistingAccountsReadOnly() {
       .catch(() => {
         if (active) setResult({ status: 'unavailable' });
       });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [version]);
 
   return (
     <Card title="Cinco contas existentes — leitura do Firebase" variant="ornate">
       <p>
-        Perfis e vínculos consultados somente pelo Mestre autenticado, sem alterar registros.
-        Nenhum UID, e-mail técnico ou identificador de campanha é apresentado nesta tela.
+        Perfis e vínculos consultados somente pelo Mestre autenticado, sem alterar registros. Nenhum
+        UID, e-mail técnico ou identificador de campanha é apresentado nesta tela.
       </p>
       {result === null && <p role="status">Conferindo os perfis e vínculos existentes…</p>}
       {result?.status === 'denied' && (
@@ -68,8 +74,8 @@ function ExistingAccountsReadOnly() {
       )}
       {result?.status === 'incomplete' && (
         <Alert tone="warning" title="Registros precisam de conferência">
-          Um perfil, vínculo ou campanha não correspondeu ao inventário. A lista não será
-          exibida parcialmente e nenhum registro será corrigido automaticamente.
+          Um perfil, vínculo ou campanha não correspondeu ao inventário. A lista não será exibida
+          parcialmente e nenhum registro será corrigido automaticamente.
         </Alert>
       )}
       {result?.status === 'unavailable' && (
@@ -80,8 +86,8 @@ function ExistingAccountsReadOnly() {
       {result?.status === 'ok' && (
         <>
           <p role="status">
-            {result.entries.length} perfis conferidos · {result.activeMembershipCount} vínculos ativos ·{' '}
-            {result.campaignCount} campanhas identificadas.
+            {result.entries.length} perfis conferidos · {result.activeMembershipCount} vínculos
+            ativos · {result.campaignCount} campanhas identificadas.
           </p>
           <DataTable
             caption="Perfis e vínculos reais — somente leitura"
@@ -134,7 +140,9 @@ function MembershipLaboratory() {
       .filter((item) => item.userKey === key)
       .map((relation) => {
         const campaign = SIMULATED_CAMPAIGNS.find((item) => item.key === relation.campaignKey);
-        return (campaign?.name ?? 'Campanha fictícia') + (relation.active ? ' · ativo' : ' · suspenso');
+        return (
+          (campaign?.name ?? 'Campanha fictícia') + (relation.active ? ' · ativo' : ' · suspenso')
+        );
       });
 
   function confirmLocalChange() {
@@ -168,8 +176,8 @@ function MembershipLaboratory() {
   return (
     <Card title="Laboratório de vínculos — 100% fictício">
       <Alert tone="info" title="Modo de simulação">
-        Os vínculos, campanhas e alterações abaixo são inventados e mantidos apenas na memória
-        desta página. As ações NÃO salvam dados, não criam contas e não usam o Firestore.
+        Os vínculos, campanhas e alterações abaixo são inventados e mantidos apenas na memória desta
+        página. As ações NÃO salvam dados, não criam contas e não usam o Firestore.
       </Alert>
       <DataTable
         caption="Vínculos fictícios para testar administração"
@@ -179,7 +187,7 @@ function MembershipLaboratory() {
           {
             id: 'role',
             header: 'Papel no exemplo',
-            cell: (item) => item.role === 'dm' ? 'Mestre (imutável)' : 'Jogador',
+            cell: (item) => (item.role === 'dm' ? 'Mestre (imutável)' : 'Jogador'),
           },
           {
             id: 'campaigns',
@@ -225,12 +233,10 @@ function MembershipLaboratory() {
           options={Object.entries(actionLabels).map(([value, label]) => ({ value, label }))}
         />
         <div className="hub-session-actions">
-          <Button type="submit" variant="primary">Simular alteração</Button>
-          <Button
-            disabled={laboratory.history.length === 0}
-            onClick={undo}
-            variant="secondary"
-          >
+          <Button type="submit" variant="primary">
+            Simular alteração
+          </Button>
+          <Button disabled={laboratory.history.length === 0} onClick={undo} variant="secondary">
             Desfazer última simulação
           </Button>
           <Button
@@ -248,7 +254,11 @@ function MembershipLaboratory() {
       {laboratory.messages.length > 0 && (
         <section aria-label="Histórico local das simulações">
           <h4>Histórico local (não persistido)</h4>
-          <ol>{laboratory.messages.map((message, index) => <li key={index}>{message}</li>)}</ol>
+          <ol>
+            {laboratory.messages.map((message, index) => (
+              <li key={index}>{message}</li>
+            ))}
+          </ol>
         </section>
       )}
       <ConfirmDialog
