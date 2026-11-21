@@ -397,7 +397,9 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </div>
 
-      <footer className="hub-footer">Prévia do Hub · Login integrado · Módulos de RPG em preparação.</footer>
+      <footer className="hub-footer">
+        Prévia do Hub · Login integrado · Módulos de RPG em preparação.
+      </footer>
     </div>
   );
 }
