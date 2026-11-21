@@ -1,6 +1,6 @@
 # Etapa 3 — Usuários e Acesso
 
-**Situação:** **3.01 e 3.02 verificados no Firebase real; 3.03 e 3.04 implementados e validados em CI**; itens 3.05–3.09 não iniciados. O avanço será solicitado pelo botão da conversa.  
+**Situação:** **3.01–3.04 concluídos nos respectivos escopos; 3.05 auditado e validado no Firestore Emulator** (proposta **não publicada**). Itens 3.06–3.09 não iniciados. O avanço será solicitado pelo botão da conversa.  
 **Planejamento iniciado:** 20/11/2026.  
 **Branch isolada:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
@@ -22,7 +22,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 | 3.02 | Inventário controlado de cinco contas e vínculos | **Finalizado:** cinco contas reais ativas, perfis e UIDs correspondentes, seis vínculos ativos e referências de personagens/sessões/aventuras verificadas |
 | 3.03 | Login, saída, sessão e erros conhecidos | **Finalizado em branch:** login e logout do Auth existente, persistência local, restauração de sessão e mensagens de erro; 27 novos testes, CI aprovada (182/182). Login com senhas reais fica para 3.09 |
 | 3.04 | Papéis Mestre/Jogador existentes | **Finalizado em branch:** papéis verificados por Auth UID, perfil Firestore, membership ativa e, para Mestre, propriedade da campanha; UI específica, revogação e falha segura testadas; 205/205 testes aprovados |
-| 3.05 | Regras e acesso efetivo aos documentos | Proposto; não implementado |
+| 3.05 | Regras e acesso efetivo aos documentos | **Finalizado como auditoria/proposta:** 92/92 verificações de emulador aprovadas; 12 permissões amplas reproduzidas e bloqueadas na proposta; **Rules de produção inalteradas** |
 | 3.06 | Proteção de rotas, consultas e ações | Proposto; não implementado |
 | 3.07 | Área administrativa mínima para vínculos | Proposto; não implementado |
 | 3.08 | Estados e mensagens de erro | Proposto; não implementado |
@@ -42,12 +42,13 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 - A verificação administrativa **não é um teste de login dos cinco usuários nem das regras de autorização na perspectiva de cada jogador**. O item 3.03 tem testes simulados de autenticação; login real e matriz de autorização permanecem para 3.05/3.09.
 - O item **3.03** disponibilizou `/entrar` pela página global do Hub e integrou o Firebase Web público já existente: [relatório 3.03](3.03-login-e-sessao.md) e [CI #44903994998](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44903994998), **182 testes aprovados**.
 - O item **3.04** usa Auth UID, documentos `users/{uid}`, vínculos `memberships` e propriedade real `campaigns/{id}.ownerId` para validar Mestre/Jogador, em modo **somente leitura** no cliente autenticado. Mostra ações diferenciadas na área de conta, sem conceder privilégios nem ler conteúdos de campanha. [Relatório 3.04](3.04-perfis-e-papeis.md), [CI #44905296167](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44905296167), **205 testes aprovados**.
+- O item **3.05** comparou Rules implantadas verificadas em 3.01 com [Rules propostas para avaliação](../../tests/firestore-emulator/proposal.rules), testando identidades **fictícias** e permissões `get/list/create/update/delete` no Firestore Emulator. [Relatório 3.05](3.05-auditoria-rules.md), [CI #44906723651](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44906723651). **92 testes de emulador aprovados, 12 excessos identificados, nenhum deploy**.
 
 ## Limites imediatos
 
-**Não autorizado neste momento:** iniciar 3.05 antes do avanço solicitado na conversa; modificar Rules, gravar documentos, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
+**Não autorizado neste momento:** iniciar 3.06 antes de avanço solicitado na conversa; aplicar `proposal.rules` ou quaisquer alterações de Rules em produção **sem aprovação separada**; gravar documentos reais, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
 
-A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03 e 3.04**, implementados e validados tecnicamente em 21/11/2026. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.05–3.09 não foram iniciados**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
+A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03 e 3.04**, implementados e validados tecnicamente, e **3.05**, auditado no emulador com ajustes apenas propostos, em 21/11/2026. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.06–3.09 não foram iniciados**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
 
 ## Continuidade da conversa
 
