@@ -1,6 +1,6 @@
 # Etapa 3 — Usuários e Acesso
 
-**Situação:** planejamento autorizado, execução funcional ainda não autorizada.  
+**Situação:** 3.01 iniciado em leitura documental; confirmação remota do Firebase pendente. Demais itens 3.02–3.09 ainda não iniciados.  
 **Planejamento iniciado:** 20/11/2026.  
 **Branch isolada:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
@@ -18,7 +18,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 
 | Item | Planejamento | Situação |
 | --- | --- | --- |
-| 3.01 | Identificação do Firebase existente | Proposto; exige autorização específica |
+| 3.01 | Identificação do Firebase existente | Iniciado; inventário histórico registrado; confirmação do projeto ativo pendente |
 | 3.02 | Inventário controlado de cinco contas e vínculos | Proposto; exige autorização específica |
 | 3.03 | Login, saída, sessão e erros conhecidos | Proposto; não implementado |
 | 3.04 | Papéis Mestre/Jogador existentes | Proposto; não implementado |
@@ -35,10 +35,15 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 - `src/modules/usuarios/` continua apenas com `README.md`, reserva da Fundação. Não há rota oficial de usuários no catálogo atual.
 - `main` permanece preservada com “Novo início”, sem merge da reconstrução.
 - A CI existente de Design System monitora a branch da Etapa 2; a eventual configuração de CI específica para a branch da Etapa 3 dependerá da autorização de implementação.
-- Não foram consultados dados, regras ou contas reais do Firebase nesta atividade de planejamento.
+- O levantamento documental 3.01 foi registrado em [3.01-inventario-historico.md](3.01-inventario-historico.md). Foram identificados o projeto, o método de login e as regras **históricas**, sem confirmar o estado remoto.
+- Ainda não foram consultados dados, regras implantadas ou contas reais do Firebase.
 
 ## Limites imediatos
 
 **Não autorizado por este planejamento:** implementar autenticação, conectar Firebase, consultar/listar contas reais, modificar regras, ler ou gravar documentos, alterar senhas, remover/criar contas, ativar um módulo de usuários, publicar, mudar o plano de cobrança ou alterar `main`.
 
-A execução começará somente com aprovação específica de **3.01**, item por item.
+A autorização para iniciar **3.01** foi dada em 20/11/2026. A validação remota depende da conexão autorizada ao projeto ativo. Os itens subsequentes, especialmente alterações em Rules, gravações reais, publicação e mudanças de contas, permanecem fora do escopo atualmente executado.
+
+## Continuidade da conversa
+
+Ao **finalizar e validar** cada item 3.01–3.09, o assistente deve registrar a conclusão com evidências verificáveis e apresentar no chat um botão **Seguir para 3.XX** que somente solicita o próximo item; o botão não faz deploy nem altera Firebase automaticamente. Não avançar um item que ainda tenha critério de aprovação pendente.
