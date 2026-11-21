@@ -1,7 +1,18 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from '../src/app/App';
 import { moduleRoutes } from '../src/app/routes';
+
+
+// Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
+vi.mock('../src/services/session', () => ({
+  getHubAuthSession: () => ({
+    observe: (onSession: (user: null) => void) => {
+      onSession(null);
+      return () => undefined;
+    },
+  }),
+}));
 
 afterEach(() => {
   cleanup();

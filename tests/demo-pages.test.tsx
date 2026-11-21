@@ -4,6 +4,17 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppContent } from '../src/app/App';
 import { demoRoutes } from '../src/app/demo-routes';
 
+
+// Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
+vi.mock('../src/services/session', () => ({
+  getHubAuthSession: () => ({
+    observe: (onSession: (user: null) => void) => {
+      onSession(null);
+      return () => undefined;
+    },
+  }),
+}));
+
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
@@ -29,7 +40,7 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
 
   it('mantém os módulos do RPG em preparação', async () => {
     mount('/personagens');
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
     expect(screen.queryByText('Demonstração · dados fictícios')).toBeNull();
   });
 

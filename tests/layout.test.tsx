@@ -1,8 +1,19 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import { AppContent } from '../src/app/App';
 import { moduleRoutes } from '../src/app/routes';
+
+
+// Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
+vi.mock('../src/services/session', () => ({
+  getHubAuthSession: () => ({
+    observe: (onSession: (user: null) => void) => {
+      onSession(null);
+      return () => undefined;
+    },
+  }),
+}));
 
 afterEach(() => {
   cleanup();
@@ -54,7 +65,7 @@ describe('Estrutura global do Hub — item 2.03', () => {
     expect(screen.getByRole('heading', { name: label, level: 1 })).toBeDefined();
     expect(screen.getByRole('main', { name: label })).toBeDefined();
     expect(screen.getByRole('link', { name: 'Visão geral' })).toBeDefined();
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
   });
 
   it('navega pelas ações da página sem criar registros', async () => {

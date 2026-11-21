@@ -6,6 +6,17 @@ import { moduleRoutes } from '../src/app/routes';
 import { LoadingState } from '../src/app/LoadingState';
 import { PageErrorBoundary } from '../src/app/PageErrorBoundary';
 
+
+// Sem entrar no Firebase real: essas suítes validam o shell público e o bloqueio padrão.
+vi.mock('../src/services/session', () => ({
+  getHubAuthSession: () => ({
+    observe: (onSession: (user: null) => void) => {
+      onSession(null);
+      return () => undefined;
+    },
+  }),
+}));
+
 afterEach(() => {
   cleanup();
   vi.restoreAllMocks();
@@ -32,8 +43,8 @@ describe('Navegação inicial', () => {
     fireEvent.click(within(nav).getByRole('link', { name: 'Biblioteca' }));
 
     expect(await screen.findByRole('heading', { name: 'Biblioteca' })).toBeDefined();
-    // O título do AppShell é síncrono; aguardar também o módulo carregado por lazy().
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    // O shell é público, mas a área do módulo só libera conteúdo após autenticar.
+    expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
     expect(within(nav).getByRole('link', { name: 'Biblioteca' }).getAttribute('aria-current')).toBe(
       'page',
     );
@@ -52,7 +63,7 @@ describe('Navegação inicial', () => {
     mount(path);
     expect(await screen.findByRole('heading', { name: label })).toBeDefined();
     expect(
-      await screen.findByText('Esta página não consulta nem apresenta informações reais do Hub.'),
+      await screen.findByText(/Esta área exige uma sessão autenticada do Hub/),
     ).toBeDefined();
   });
 
