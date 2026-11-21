@@ -58,11 +58,11 @@ describe('Etapa 3.03 — autenticação existente sem cadastro', () => {
     expect(technicalEmailForUsername(username)).toBe(technical + '@teias.invalid');
   });
 
-  it('não encaminha email arbitrário ou nome desconhecido ao SDK', () => {
+  it('não encaminha email arbitrário ou nome desconhecido ao SDK', async () => {
     expect(technicalEmailForUsername('outro')).toBeNull();
     expect(technicalEmailForUsername('usuario@dominio.com')).toBeNull();
     const driver = createHubAuthDriver(auth);
-    expect(driver.signIn('inexistente', 'senha-ficticia')).rejects.toThrow(
+    await expect(driver.signIn('inexistente', 'senha-ficticia')).rejects.toThrow(
       'Usuário ou senha incorretos',
     );
     expect(mocked.signInWithEmailAndPassword).not.toHaveBeenCalled();

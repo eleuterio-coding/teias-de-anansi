@@ -26,6 +26,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [operationError, setOperationError] = useState('');
   const driverRef = useRef<HubAuthDriver | null>(null);
 
@@ -54,7 +55,7 @@ export default function LoginPage() {
       driverRef.current = null;
       unsubscribe();
     };
-  }, []);
+  }, [retryCount]);
 
   const usernameError = submitted && !username.trim() ? 'Informe seu usuário.' : '';
   const passwordError = submitted && !password ? 'Informe sua senha.' : '';
@@ -99,6 +100,17 @@ export default function LoginPage() {
         <Alert tone="danger" title="Acesso indisponível">
           {session.message}
         </Alert>
+        <div className="hub-session-actions">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setSession({ status: 'loading' });
+              setRetryCount((count) => count + 1);
+            }}
+          >
+            Tentar novamente
+          </Button>
+        </div>
       </div>
     );
   }

@@ -151,4 +151,14 @@ describe('Tela de login e logout — Etapa 3.03', () => {
     expect(screen.getByRole('alert').textContent).toContain('não está disponível');
     expect(screen.getByRole('alert').textContent).not.toContain('secret-data');
   });
+
+  it('permite tentar novamente quando o observador de sessao falha', () => {
+    mount();
+    act(() => notifyError('Não foi possível conectar.'));
+    fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
+    expect(driver.observe).toHaveBeenCalledTimes(2);
+    act(() => notify(null));
+    expect(screen.getByRole('form', { name: 'Entrar no Teias de Anansi' })).toBeDefined();
+    expect(stop).toHaveBeenCalledTimes(1);
+  });
 });
