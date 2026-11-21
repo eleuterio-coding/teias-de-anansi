@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { checkCurrentUserCampaignAccess, type HubOwnAccessResult } from '../services/scoped-access';
 import { useLocation } from 'react-router-dom';
 import { Alert, Button, HubLink } from '../components/ui';
 import { getHubAuthSession, type HubSessionIdentity } from '../services/session';
@@ -13,6 +14,49 @@ type GateState =
   | { status: 'allowed'; uid: string; access: Extract<HubRoleAccess, { status: 'verified' }> };
 
 type Props = { route: ModuleRoute; children: ReactNode };
+
+/** Ação condicionada ao papel, revalida sessão e vínculos no momento do clique. */
+function CheckOwnCampaigns({ uid }: { uid: string }) {
+  const [result, setResult] = useState<HubOwnAccessResult | null>(null);
+  const [pending, setPending] = useState(false);
+  useEffect(() => {
+    setResult(null);
+  }, [uid]);
+
+  async function verify() {
+    if (pending) return;
+    setResult(null);
+    setPending(true);
+    try {
+      setResult(await checkCurrentUserCampaignAccess(uid));
+    } catch {
+      setResult({ status: 'unavailable' });
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <section aria-label="Verificação de vínculos">
+      <Button loading={pending} variant="secondary" onClick={() => void verify()}>
+        Conferir meus vínculos
+      </Button>
+      {result?.status === 'ok' && (
+        <p role="status">Vínculos ativos confirmados: {result.activeCampaigns}.</p>
+      )}
+      {result?.status === 'denied' && (
+        <Alert tone="warning" title="Vínculo não confirmado">
+          Seu perfil ou vínculo não autoriza esta consulta.
+        </Alert>
+      )}
+      {result?.status === 'unavailable' && (
+        <Alert tone="warning" title="Conferência indisponível">
+          Não foi possível consultar o Firebase. Tente novamente.
+        </Alert>
+      )}
+    </section>
+  );
+}
 
 /**
  * Bloqueia area e acoes de modulo ate resolver Auth e papel no servidor.
@@ -124,6 +168,7 @@ export function ProtectedModuleRoute({ route, children }: Props) {
         Acesso confirmado: {state.access.role === 'dm' ? 'Mestre' : 'Jogador'}
       </p>
       {children}
+      <CheckOwnCampaigns uid={state.uid} />
     </section>
   );
 }

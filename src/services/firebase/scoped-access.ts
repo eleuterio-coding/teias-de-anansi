@@ -67,7 +67,9 @@ async function verifiedRole(user: AuthIdentity, db: Firestore) {
   return access.status === 'verified' ? access : null;
 }
 
-const statusForError = (error: unknown): HubReadResult => {
+const statusForError = (
+  error: unknown,
+): Extract<HubReadResult, { status: 'denied' | 'unavailable' }> => {
   const code =
     typeof error === 'object' && error !== null && 'code' in error
       ? String(error.code)
@@ -146,7 +148,10 @@ export async function readHubScopedDocument(
           return { status: 'denied' };
         }
       }
-      const group = request.kind === 'adventure' ? 'adventures' : request.kind;
+      const group =
+        request.kind === 'adventure' ? 'adventures' :
+        request.kind === 'session' ? 'sessions' :
+        request.kind === 'adventureView' ? 'adventureViews' : request.kind;
       path = ['campaigns', request.campaignId, group, request.documentId];
     }
 
