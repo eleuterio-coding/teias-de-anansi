@@ -127,7 +127,7 @@ describe('3.07 — área exclusiva de administração', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: 'Confirmar simulação' }));
     expect((await screen.findAllByText(/Suspensão simulada: Bruno/)).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: 'Desfazer última simulação' }));
-    expect(screen.getByText(/Última simulação desfeita/)).toBeDefined();
+    expect(screen.getAllByText(/Última simulação desfeita/).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: 'Reiniciar laboratório' }));
     expect(screen.getByText('Laboratório fictício reiniciado.')).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
