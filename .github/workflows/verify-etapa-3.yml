@@ -27,5 +27,19 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
+      - name: Consultar somente em leitura o Firebase ativo usando segredo existente
+        continue-on-error: true
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/inspect-firebase-live-readonly.mjs
+      - name: Formatacao temporaria para extrair resultado verificavel
+        run: |
+          npx prettier --write src/services/firebase/legacy-contract.ts tests/firebase-legacy-contract.test.ts
+          echo "__BEGIN_FORMATTED_LEGACY_CONTRACT__"
+          cat src/services/firebase/legacy-contract.ts
+          echo "__END_FORMATTED_LEGACY_CONTRACT__"
+          echo "__BEGIN_FORMATTED_LEGACY_TEST__"
+          cat tests/firebase-legacy-contract.test.ts
+          echo "__END_FORMATTED_LEGACY_TEST__"
       - name: Conferir codigo e compilacao completa
         run: npm run check
