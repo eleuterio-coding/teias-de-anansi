@@ -32,7 +32,10 @@ beforeEach(() => {
   mock.prepareHubAuth.mockReturnValue(auth);
   mock.prepareHubFirestore.mockReturnValue(db);
   mock.verifyHubRole.mockResolvedValue({
-    status: 'verified', role: 'player', campaignCount: 1, displayName: 'Gustavo',
+    status: 'verified',
+    role: 'player',
+    campaignCount: 1,
+    displayName: 'Gustavo',
   });
   (auth as { currentUser: typeof fakeUser | null }).currentUser = fakeUser;
 });

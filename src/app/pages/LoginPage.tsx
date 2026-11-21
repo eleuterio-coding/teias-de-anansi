@@ -1,9 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { FormErrorSummary, FormPanel, TextField } from '../../components/form';
-import {
-  getHubRoleForCurrentSession,
-  type HubRoleAccess,
-} from '../../services/role-access';
+import { getHubRoleForCurrentSession, type HubRoleAccess } from '../../services/role-access';
 import { Alert, Button, Card, HubLink } from '../../components/ui';
 import {
   getHubAuthSession,
@@ -83,7 +80,8 @@ export default function LoginPage() {
         if (active) setRoleResult({ uid, revision: roleRevision, access });
       })
       .catch(() => {
-        if (active) setRoleResult({ uid, revision: roleRevision, access: { status: 'unavailable' } });
+        if (active)
+          setRoleResult({ uid, revision: roleRevision, access: { status: 'unavailable' } });
       });
     return () => {
       active = false;
@@ -160,8 +158,7 @@ export default function LoginPage() {
           )}
           {(() => {
             const access =
-              roleResult?.uid === session.identity.uid &&
-              roleResult.revision === roleRevision
+              roleResult?.uid === session.identity.uid && roleResult.revision === roleRevision
                 ? roleResult.access
                 : null;
             if (access === null) {
@@ -170,16 +167,16 @@ export default function LoginPage() {
             if (access.status === 'unavailable') {
               return (
                 <Alert tone="warning" title="Permissões indisponíveis">
-                  Não foi possível conferir as permissões com o Firebase. Acesso às áreas
-                  associadas ao papel suspenso até nova verificação.
+                  Não foi possível conferir as permissões com o Firebase. Acesso às áreas associadas
+                  ao papel suspenso até nova verificação.
                 </Alert>
               );
             }
             if (access.status === 'denied') {
               return (
                 <Alert tone="warning" title="Perfil não autorizado">
-                  Sua sessão está autenticada, mas não há um papel confirmado pelos perfis
-                  e vínculos existentes. Nenhuma permissão foi concedida.
+                  Sua sessão está autenticada, mas não há um papel confirmado pelos perfis e
+                  vínculos existentes. Nenhuma permissão foi concedida.
                 </Alert>
               );
             }
@@ -215,8 +212,8 @@ export default function LoginPage() {
                   </nav>
                 )}
                 <p>
-                  Estas seções ainda são prévias sem dados privados. Permissões de leitura e
-                  escrita serão verificadas nas próximas etapas.
+                  Estas seções ainda são prévias sem dados privados. Permissões de leitura e escrita
+                  serão verificadas nas próximas etapas.
                 </p>
               </>
             );

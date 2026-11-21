@@ -41,7 +41,12 @@ const player: HubSessionIdentity = {
   knownAccount: true,
 };
 const verifiedMaster = { status: 'verified', role: 'dm', displayName: 'Rafael', campaignCount: 2 };
-const verifiedPlayer = { status: 'verified', role: 'player', displayName: 'Gustavo', campaignCount: 1 };
+const verifiedPlayer = {
+  status: 'verified',
+  role: 'player',
+  displayName: 'Gustavo',
+  campaignCount: 1,
+};
 
 beforeEach(() => {
   driver = {
@@ -53,7 +58,10 @@ beforeEach(() => {
     signOut: vi.fn().mockResolvedValue(undefined),
   };
   mock.getHubAuthSession.mockReturnValue(driver);
-  mock.getHubRoleForCurrentSession.mockResolvedValue({ status: 'denied', reason: 'missing-profile' });
+  mock.getHubRoleForCurrentSession.mockResolvedValue({
+    status: 'denied',
+    reason: 'missing-profile',
+  });
 });
 
 afterEach(() => {
@@ -69,7 +77,9 @@ describe('3.04 — UI condicionada a perfil autorizado', () => {
     expect(await screen.findByText(/Perfil confirmado:/)).toBeDefined();
     expect(screen.getByText('Mestre')).toBeDefined();
     expect(screen.getByRole('navigation', { name: 'Ações do Mestre' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Abrir Campanhas' }).getAttribute('href')).toBe('/campanhas');
+    expect(screen.getByRole('link', { name: 'Abrir Campanhas' }).getAttribute('href')).toBe(
+      '/campanhas',
+    );
     expect(screen.queryByRole('navigation', { name: 'Ações do Jogador' })).toBeNull();
     expect(mock.getHubRoleForCurrentSession).toHaveBeenCalledWith(master.uid);
   });
@@ -85,7 +95,10 @@ describe('3.04 — UI condicionada a perfil autorizado', () => {
   });
 
   it('nunca permite área específica só pelo username da sessão', async () => {
-    mock.getHubRoleForCurrentSession.mockResolvedValue({ status: 'denied', reason: 'profile-mismatch' });
+    mock.getHubRoleForCurrentSession.mockResolvedValue({
+      status: 'denied',
+      reason: 'profile-mismatch',
+    });
     mount();
     act(() => notify(master));
     expect(await screen.findByText(/Nenhuma permissão foi concedida/)).toBeDefined();

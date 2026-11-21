@@ -8,10 +8,7 @@ import {
   where,
   type Firestore,
 } from 'firebase/firestore';
-import {
-  HISTORICAL_FIREBASE_USERNAME_DOMAIN,
-  findHistoricalHubIdentity,
-} from './legacy-contract';
+import { HISTORICAL_FIREBASE_USERNAME_DOMAIN, findHistoricalHubIdentity } from './legacy-contract';
 
 export type HubRole = 'dm' | 'player';
 
@@ -123,7 +120,12 @@ export async function verifyHubRole(
 
     const savedName = trim(profile.displayName);
     const displayName =
-      savedName.length > 0 && savedName.length <= 80 && !Array.from(savedName).some((character) => { const code = character.codePointAt(0); return code !== undefined && (code < 32 || code === 127); })
+      savedName.length > 0 &&
+      savedName.length <= 80 &&
+      !Array.from(savedName).some((character) => {
+        const code = character.codePointAt(0);
+        return code !== undefined && (code < 32 || code === 127);
+      })
         ? savedName
         : account.displayName;
 
