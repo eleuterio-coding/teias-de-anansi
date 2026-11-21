@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import console from 'node:console';
+import process from 'node:process';
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import { initializeTestEnvironment, assertFails, assertSucceeds } from '@firebase/rules-unit-testing';
 import {
   collection,
