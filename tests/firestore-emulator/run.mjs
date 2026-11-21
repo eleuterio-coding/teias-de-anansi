@@ -31,10 +31,6 @@ if (
 const readRules = (file) => readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8');
 const baselineRules = readRules('./baseline.rules');
 const proposedRules = readRules('./proposal.rules');
-const env = await initializeTestEnvironment({
-  projectId,
-  firestore: { host: '127.0.0.1', port: 8089, rules: baselineRules },
-});
 
 const masterIdentity = { uid: 'uid-master-fixture', email: 'rafael@teias.invalid' };
 const playerIdentity = { uid: 'uid-player-fixture', email: 'gus@teias.invalid' };
@@ -82,12 +78,18 @@ async function check(mode, title, allowed, action) {
 }
 
 async function run(mode, rules) {
-  await env.clearFirestore();
+  // A versao 6 cria um ambiente por ruleset; o ambiente isolado carrega
+  // suas regras na inicializacao, sem usar API de publicacao.
+  const env = await initializeTestEnvironment({
+    projectId,
+    firestore: { host: '127.0.0.1', port: 8089, rules },
+  });
+  try {
+    await env.clearFirestore();
   await env.withSecurityRulesDisabled(async (context) => {
     const admin = context.firestore();
     for (const [path, data] of seed) await setDoc(doc(admin, path), data);
   });
-  await env.loadFirestoreRules({ rules });
   const master = env.authenticatedContext(masterIdentity.uid, { email: masterIdentity.email }).firestore();
   const player = env.authenticatedContext(playerIdentity.uid, { email: playerIdentity.email }).firestore();
   const other = env.authenticatedContext(otherPlayerIdentity.uid, { email: otherPlayerIdentity.email }).firestore();
@@ -148,6 +150,9 @@ async function run(mode, rules) {
   await check(mode, 'EXPOSURE: Modificar ownerId da campanha pelo Mestre', baseline, () => updateDoc(doc(master, 'campaigns/mesa-ficticia'), { ownerId: playerIdentity.uid }));
   await check(mode, 'EXPOSURE: Jogador alterar role do próprio perfil', baseline, () => updateDoc(doc(player, 'users/uid-player-fixture'), { role: 'dm' }));
   await check(mode, 'EXPOSURE: Jogador apagar próprio perfil', baseline, () => deleteDoc(doc(player, 'users/uid-player-fixture')));
+  } finally {
+    await env.cleanup();
+  }
 }
 
 try {
@@ -165,6 +170,4 @@ try {
   assert.equal(failed, 0, 'Existem divergencias entre comportamento esperado e regras emuladas.');
   assert.equal(facts.length, 10, 'A suite deixou de reproduzir alguma permissao historica.');
   console.log('SUCCESS: baseline documentada; proposta satisfaz criterios avaliados.');
-} finally {
-  await env.cleanup();
 }
