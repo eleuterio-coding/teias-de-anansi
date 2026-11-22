@@ -147,4 +147,17 @@ describe('3.04 — UI condicionada a perfil autorizado', () => {
     expect(screen.queryByText(/caminho\/privado/)).toBeNull();
     expect(screen.queryByRole('navigation', { name: 'Ações do Mestre' })).toBeNull();
   });
+  it('erro de papel oferece retry manual sem liberar navegação antes da confirmação', async () => {
+    mock.getHubRoleForCurrentSession
+      .mockResolvedValueOnce({ status: 'unavailable' })
+      .mockResolvedValueOnce(verifiedMaster);
+    mount();
+    act(() => notify(master));
+    expect(await screen.findByText(/Permissões indisponíveis/)).toBeDefined();
+    expect(screen.queryByRole('navigation', { name: 'Ações do Mestre' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
+    expect(await screen.findByRole('navigation', { name: 'Ações do Mestre' })).toBeDefined();
+    expect(mock.getHubRoleForCurrentSession).toHaveBeenCalledTimes(2);
+  });
+
 });

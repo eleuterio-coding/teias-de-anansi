@@ -216,4 +216,58 @@ describe('3.07 — área exclusiva de administração', () => {
     expect(mock.getHubAuthSession).not.toHaveBeenCalled();
     expect(mock.getCurrentMasterRoster).not.toHaveBeenCalled();
   });
+  it('inventário vazio usa EmptyState sem fabricar perfis nem vínculos', async () => {
+    mock.getCurrentMasterRoster.mockResolvedValueOnce({
+      status: 'ok', entries: [], campaignCount: 0, activeMembershipCount: 0,
+    });
+    mount();
+    act(() => observer(master));
+    expect(await screen.findByText('Nenhum perfil disponível')).toBeDefined();
+    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
+      .toBeNull();
+    expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
+  });
+
+  it('permissão negada não permite ver a lista, mesmo após uma resposta anterior', async () => {
+    mock.getCurrentMasterRoster.mockResolvedValueOnce({ status: 'denied' });
+    mount();
+    act(() => observer(master));
+    expect(await screen.findByText(/Somente o Mestre com sessão e vínculos confirmados/))
+      .toBeDefined();
+    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
+      .toBeNull();
+  });
+
+  it('erro de rede no inventário só repete leitura após clique explícito', async () => {
+    mock.getCurrentMasterRoster
+      .mockResolvedValueOnce({ status: 'unavailable' })
+      .mockResolvedValueOnce({
+        status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6,
+      });
+    mount();
+    act(() => observer(master));
+    expect(await screen.findByText(/Não foi possível concluir a consulta do Firestore/))
+      .toBeDefined();
+    expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
+    expect(await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
+      .toBeDefined();
+    expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(2);
+  });
+
+  it('ação de simulação inválida mostra aviso, não sucesso nem gravação', async () => {
+    mount();
+    act(() => observer(master));
+    await screen.findByRole('button', { name: 'Simular alteração' });
+    fireEvent.change(screen.getByLabelText('Ação de teste'), {
+      target: { value: 'include' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Simular alteração' }));
+    const dialog = await screen.findByRole('dialog', { name: 'Confirmar somente a simulação' });
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Confirmar simulação' }));
+    expect(await screen.findByText('O vínculo fictício já existe.')).toBeDefined();
+    expect(screen.getByText('Simulação não aplicada')).toBeDefined();
+    expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
+  });
+
 });

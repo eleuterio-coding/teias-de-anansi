@@ -184,4 +184,40 @@ describe('Tela de login e logout — Etapa 3.03', () => {
     expect(screen.getByRole('form', { name: 'Entrar no Teias de Anansi' })).toBeDefined();
     expect(stop).toHaveBeenCalledTimes(1);
   });
+  it('FormErrorSummary permite focar campos faltantes sem chamar Auth', () => {
+    mount();
+    act(() => notify(null));
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    fireEvent.click(screen.getByRole('button', { name: /Usuário: Informe seu usuário/ }));
+    expect(document.activeElement).toBe(screen.getByRole('textbox', { name: /Usuário/ }));
+    expect(driver.signIn).not.toHaveBeenCalled();
+  });
+
+  it('não expõe mensagens arbitrárias recebidas do observador de sessão', () => {
+    mount();
+    act(() => notifyError('Falha: users/uid-secreto/campaigns/mesa-privada'));
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toContain('Não foi possível concluir o acesso agora');
+    expect(alert.textContent).not.toContain('uid-secreto');
+    expect(alert.textContent).not.toContain('mesa-privada');
+  });
+
+  it('não expõe texto arbitrário de HubAuthError no formulário', async () => {
+    vi.mocked(driver.signIn).mockRejectedValue(
+      new HubAuthError('auth/error: usuario@teias.invalid: uid-interno'),
+    );
+    mount();
+    act(() => notify(null));
+    fireEvent.change(screen.getByRole('textbox', { name: /Usuário/ }), {
+      target: { value: 'gus' },
+    });
+    fireEvent.change(screen.getByLabelText(/Senha/), {
+      target: { value: 'senha-ficticia' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    expect(await screen.findByText('Não foi possível concluir o acesso agora. Tente novamente.'))
+      .toBeDefined();
+    expect(screen.queryByText(/uid-interno|@teias.invalid/)).toBeNull();
+  });
+
 });
