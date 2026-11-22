@@ -190,6 +190,48 @@ async function run(mode, rules) {
     }
   }
 
+  // Compatibilidade 3.05: payload historico com UID vazio continua valido,
+  // mas vinculos contraditorios nunca podem ampliar a visibilidade.
+  // As quatro campanhas abaixo so existem no emulador, sem dados reais.
+  const invalidLinks = [
+    { campaignId: 'mesa-uid-divergente', uid: otherPlayerIdentity.uid, email: playerIdentity.email, role: 'player' },
+    { campaignId: 'mesa-email-divergente', uid: playerIdentity.uid, email: otherPlayerIdentity.email, role: 'player' },
+    { campaignId: 'mesa-role-divergente', uid: playerIdentity.uid, email: playerIdentity.email, role: 'dm' },
+    { campaignId: 'outra-mesa', documentCampaignId: 'mesa-campanha-divergente', uid: playerIdentity.uid, email: playerIdentity.email, role: 'player' },
+  ];
+  await env.withSecurityRulesDisabled(async (context) => {
+    const admin = context.firestore();
+    for (const link of invalidLinks) {
+      const id = link.documentCampaignId || link.campaignId;
+      await setDoc(doc(admin, 'campaigns/' + id), {
+        id, ownerId: masterIdentity.uid, name: 'Campanha inconsistente ficticia',
+      });
+      await setDoc(doc(admin, 'memberships/' + id + '_' + playerIdentity.email), {
+        uid: link.uid,
+        email: link.email,
+        username: 'gustavo',
+        role: link.role,
+        active: true,
+        campaignId: link.campaignId,
+        characterId: null,
+        sessionIds: [],
+        adventureIds: [],
+      });
+    }
+  });
+  for (const link of invalidLinks) {
+    const id = link.documentCampaignId || link.campaignId;
+    await check(mode, '3.05: UID/email/papel/campanha consistentes em ' + id, baseline, () =>
+      getDoc(doc(player, 'campaigns/' + id)));
+  }
+  // Contraprova: nao basta assumir o e-mail do Mestre numa sessao com
+  // UID e perfil de jogador. No Firebase real, nenhuma senha e usada aqui.
+  const mistakenMaster = env.authenticatedContext(playerIdentity.uid, {
+    email: masterIdentity.email,
+  }).firestore();
+  await check(mode, '3.05: email do Mestre isolado nao autoriza perfil divergente', baseline, () =>
+    getDoc(doc(mistakenMaster, 'campaigns/mesa-ficticia/private/state')));
+
   // 3.06: acesso direto por ID nao contorna atribuicao. A revogacao do
   // membership passa a ser efetiva na proxima leitura, inclusive por URL.
   await env.withSecurityRulesDisabled(async (context) => {
