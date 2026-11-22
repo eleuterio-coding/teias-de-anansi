@@ -145,6 +145,51 @@ async function run(mode, rules) {
   await check(mode, 'Estranho sem vínculo não lê sessão', false, () => getDoc(doc(outsider, 'campaigns/mesa-ficticia/sessions/sess-gus')));
   await check(mode, 'Outro jogador da mesa não lê ficha pessoal de Gus', false, () => getDoc(doc(other, 'users/uid-player-fixture/characters/char-gus')));
 
+  // 3.09 — matriz sintética de cinco identidades (1 Mestre, 4 Jogadores).
+  // As contas abaixo nao sao credenciais reais; o emulador aceita claims
+  // inventadas. O teste NAO comprova login real nem autorizacao em producao.
+  const playerFixtures = [
+    { uid: 'uid-other-fixture', login: 'bruno', ownSession: 'sess-bruno' },
+    { uid: 'uid-player-fixture', login: 'gus', ownSession: 'sess-gus' },
+    { uid: 'uid-leo-fixture', login: 'leo', ownSession: null },
+    { uid: 'uid-fernanda-fixture', login: 'fernanda', ownSession: null },
+  ];
+  await check(mode, '3.09: Mestre de teste le sua propria campanha', true, () =>
+    getDoc(doc(master, 'campaigns/mesa-ficticia')));
+  await check(mode, '3.09: Mestre de teste le notas privadas da campanha', true, () =>
+    getDoc(doc(master, 'campaigns/mesa-ficticia/private/state')));
+  await check(mode, '3.09: Mestre de teste le aventura completa', true, () =>
+    getDoc(doc(master, 'campaigns/mesa-ficticia/adventures/adv-privada')));
+  for (const fixture of playerFixtures) {
+    const db = env.authenticatedContext(fixture.uid, {
+      email: fixture.login + '@teias.invalid',
+    }).firestore();
+    const memberId = 'mesa-ficticia_' + fixture.login + '@teias.invalid';
+    const foreignSession = fixture.ownSession === 'sess-gus' ? 'sess-bruno' : 'sess-gus';
+    await check(mode, '3.09: ' + fixture.login + ' le perfil proprio', true, () =>
+      getDoc(doc(db, 'users/' + fixture.uid)));
+    await check(mode, '3.09: ' + fixture.login + ' le proprio vinculo', true, () =>
+      getDoc(doc(db, 'memberships/' + memberId)));
+    await check(mode, '3.09: ' + fixture.login + ' consulta vinculo por email', true, () =>
+      getDocs(query(collection(db, 'memberships'), where('email', '==', fixture.login + '@teias.invalid'))));
+    await check(mode, '3.09: ' + fixture.login + ' le campanha vinculada', true, () =>
+      getDoc(doc(db, 'campaigns/mesa-ficticia')));
+    await check(mode, '3.09: ' + fixture.login + ' le shared', true, () =>
+      getDoc(doc(db, 'campaigns/mesa-ficticia/shared/state')));
+    await check(mode, '3.09: ' + fixture.login + ' nao le private', false, () =>
+      getDoc(doc(db, 'campaigns/mesa-ficticia/private/state')));
+    await check(mode, '3.09: ' + fixture.login + ' nao le aventura completa', false, () =>
+      getDoc(doc(db, 'campaigns/mesa-ficticia/adventures/adv-privada')));
+    await check(mode, '3.09: ' + fixture.login + ' nao le sessao alheia', false, () =>
+      getDoc(doc(db, 'campaigns/mesa-ficticia/sessions/' + foreignSession)));
+    await check(mode, '3.09: ' + fixture.login + ' nao le campanha sem vinculo', false, () =>
+      getDoc(doc(db, 'campaigns/outra-mesa')));
+    if (fixture.ownSession) {
+      await check(mode, '3.09: ' + fixture.login + ' le sessao atribuida', true, () =>
+        getDoc(doc(db, 'campaigns/mesa-ficticia/sessions/' + fixture.ownSession)));
+    }
+  }
+
   // 3.06: acesso direto por ID nao contorna atribuicao. A revogacao do
   // membership passa a ser efetiva na proxima leitura, inclusive por URL.
   await env.withSecurityRulesDisabled(async (context) => {
