@@ -212,7 +212,9 @@ describe('3.07 — área exclusiva de administração', () => {
 
   it('página inicial continua pública e não consulta painel administrativo', async () => {
     mount('/');
-    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' }),
+    ).toBeDefined();
     expect(mock.getHubAuthSession).not.toHaveBeenCalled();
     expect(mock.getCurrentMasterRoster).not.toHaveBeenCalled();
   });

@@ -44,7 +44,9 @@ describe('Estrutura global do Hub — item 2.03', () => {
     expect(screen.getByRole('main', { name: 'Início' })).toBeDefined();
     expect(screen.getAllByRole('link', { name: 'Entrar no Hub' })[0]).toBeDefined();
     expect(screen.getByRole('contentinfo')).toBeDefined();
-    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' }),
+    ).toBeDefined();
   });
 
   it.each(moduleRoutes)('mostra estrutura em $label', async ({ path, label }) => {

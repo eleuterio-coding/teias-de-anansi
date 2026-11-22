@@ -96,7 +96,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     mocks.getHubRoleForCurrentSession.mockResolvedValue(masterAccess);
     mount('/campanhas');
     act(() => observer(master));
-    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
+    expect(
+      await screen.findByText('Esta área ainda não possui conteúdo disponível.'),
+    ).toBeDefined();
     expect(screen.getByText('Acesso confirmado: Mestre')).toBeDefined();
     expect(mocks.getHubRoleForCurrentSession).toHaveBeenCalledWith(master.uid);
   });
@@ -104,7 +106,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('Jogador entra na Área do jogador e não entra em Aventuras privadas', async () => {
     const first = mount('/area-jogador');
     act(() => observer(player));
-    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
+    expect(
+      await screen.findByText('Esta área ainda não possui conteúdo disponível.'),
+    ).toBeDefined();
     first.unmount();
     mount('/aventuras');
     act(() => observer(player));
@@ -127,7 +131,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     mount('/personagens');
     expect(screen.getByText(/Verificando sessão e permissões/)).toBeDefined();
     act(() => observer(player));
-    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
+    expect(
+      await screen.findByText('Esta área ainda não possui conteúdo disponível.'),
+    ).toBeDefined();
     expect(mocks.getHubRoleForCurrentSession).toHaveBeenCalledTimes(2);
   });
 
@@ -169,7 +175,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     expect(screen.queryByText('Esta área ainda não possui conteúdo disponível.')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
     act(() => observer(master));
-    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
+    expect(
+      await screen.findByText('Esta área ainda não possui conteúdo disponível.'),
+    ).toBeDefined();
   });
 
   it('erro no observador não libera conteúdo privado', () => {
@@ -210,7 +218,9 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     ).toBeDefined();
     first.unmount();
     mount('/');
-    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' }),
+    ).toBeDefined();
     expect(mocks.getHubAuthSession).not.toHaveBeenCalled();
   });
 });

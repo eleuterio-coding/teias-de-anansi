@@ -285,9 +285,7 @@ export default function UsersAdminPage() {
   return (
     <section aria-labelledby="hub-users-admin-heading">
       <h2 id="hub-users-admin-heading">Administração de usuários e vínculos</h2>
-      <p>
-        Consulte os participantes e suas campanhas.
-      </p>
+      <p>Consulte os participantes e suas campanhas.</p>
       <ExistingAccountsReadOnly />
       {import.meta.env.DEV && <MembershipLaboratory />}
     </section>

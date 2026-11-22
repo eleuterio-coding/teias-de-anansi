@@ -32,7 +32,9 @@ function mount(path = '/') {
 describe('Navegação inicial', () => {
   it('exibe a página inicial provisória', async () => {
     mount();
-    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' }),
+    ).toBeDefined();
     expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeDefined();
   });
 
@@ -48,7 +50,9 @@ describe('Navegação inicial', () => {
     expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
     expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
     fireEvent.click(screen.getByRole('link', { name: 'Visão geral' }));
-    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
+    expect(
+      await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' }),
+    ).toBeDefined();
   });
 
   it('pula a navegação para o conteúdo sem alterar a rota hash', () => {

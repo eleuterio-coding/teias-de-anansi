@@ -333,12 +333,12 @@ export function AppShell({ children }: AppShellProps) {
             </NavLink>
           </nav>
           {import.meta.env.DEV && (
-          <nav className="hub-demo-sidebar-nav" aria-label="Laboratório de interface">
-            <p className="hub-sidebar-heading">Avaliação visual</p>
-            <NavLink end to="/laboratorio" className={navLinkClass} onClick={navigateFromMenu}>
-              Laboratório de interface
-            </NavLink>
-          </nav>
+            <nav className="hub-demo-sidebar-nav" aria-label="Laboratório de interface">
+              <p className="hub-sidebar-heading">Avaliação visual</p>
+              <NavLink end to="/laboratorio" className={navLinkClass} onClick={navigateFromMenu}>
+                Laboratório de interface
+              </NavLink>
+            </nav>
           )}
         </aside>
 
@@ -398,9 +398,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </div>
 
-      <footer className="hub-footer">
-        Teias de Anansi · Hub de RPG
-      </footer>
+      <footer className="hub-footer">Teias de Anansi · Hub de RPG</footer>
     </div>
   );
 }

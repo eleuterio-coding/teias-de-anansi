@@ -27,15 +27,6 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Normalizar arquivos de interface no runner (temporario)
-        run: |
-          npx prettier --write src/app/pages/HomePage.tsx src/layouts/AppShell.tsx src/app/pages/LoginPage.tsx src/app/App.tsx src/app/pages/SectionPlaceholder.tsx src/app/pages/UsersAdminPage.tsx src/app/ProtectedModuleRoute.tsx tests/navigation.test.tsx tests/layout.test.tsx tests/github-pages-routing.test.tsx tests/responsive.test.tsx tests/accessibility.test.tsx tests/demo-pages.test.tsx tests/protected-routes.test.tsx tests/users-admin-page.test.tsx
-          for file in src/app/pages/HomePage.tsx src/layouts/AppShell.tsx src/app/pages/LoginPage.tsx src/app/App.tsx src/app/pages/SectionPlaceholder.tsx src/app/pages/UsersAdminPage.tsx src/app/ProtectedModuleRoute.tsx tests/navigation.test.tsx tests/layout.test.tsx tests/github-pages-routing.test.tsx tests/responsive.test.tsx tests/accessibility.test.tsx tests/demo-pages.test.tsx tests/protected-routes.test.tsx tests/users-admin-page.test.tsx; do
-            echo "PRETTIER_BEGIN:${file}"
-            base64 -w0 "$file"
-            echo
-            echo "PRETTIER_END:${file}"
-          done
       - name: Conferir codigo e compilacao completa
         run: npm run check
 
