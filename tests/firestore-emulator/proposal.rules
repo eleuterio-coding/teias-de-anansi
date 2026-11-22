@@ -11,8 +11,19 @@ service cloud.firestore {
       return request.auth.token.email;
     }
 
+    function masterProfilePath() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
     function isHubMaster() {
-      return signedIn() && loginEmail() == 'rafael@teias.invalid';
+      // O e-mail identifica o login conhecido, mas nao e permissao
+      // suficiente quando o perfil e o UID da sessao divergem.
+      return signedIn()
+        && loginEmail() == 'rafael@teias.invalid'
+        && exists(masterProfilePath())
+        && get(masterProfilePath()).data.uid == request.auth.uid
+        && get(masterProfilePath()).data.username == 'rafael'
+        && get(masterProfilePath()).data.role == 'dm';
     }
 
     function membershipId(campaignId) {
@@ -27,10 +38,31 @@ service cloud.firestore {
       return /databases/$(database)/documents/campaigns/$(campaignId);
     }
 
+    function membershipUidMatches(data) {
+      // Alguns vinculos antigos nao guardam UID. Preservar esses casos,
+      // mas rejeitar IDs nao vazios que apontam para outra conta.
+      return !('uid' in data)
+        || data.uid == null
+        || data.uid == ''
+        || data.uid == request.auth.uid;
+    }
+
     function isMember(campaignId) {
+      // O ID do documento, email, campanha, UID e papel devem ser coerentes.
+      // Isto nao altera a consulta por email de memberships do cliente.
       return signedIn()
         && exists(membershipPath(campaignId))
-        && get(membershipPath(campaignId)).data.active == true;
+        && get(membershipPath(campaignId)).data.active == true
+        && get(membershipPath(campaignId)).data.email == loginEmail()
+        && get(membershipPath(campaignId)).data.campaignId == campaignId
+        && membershipUidMatches(get(membershipPath(campaignId)).data)
+        && (
+          get(membershipPath(campaignId)).data.role == 'player'
+          || (
+            isHubMaster()
+            && get(membershipPath(campaignId)).data.role == 'dm'
+          )
+        );
     }
 
     function memberRole(campaignId) {
