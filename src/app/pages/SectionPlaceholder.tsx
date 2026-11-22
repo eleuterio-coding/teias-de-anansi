@@ -5,7 +5,7 @@ type Props = {
   etapa: string;
 };
 
-export default function SectionPlaceholder({ label, etapa }: Props) {
+export default function SectionPlaceholder({ label }: Props) {
   return (
     <section aria-labelledby="module-title" className="hub-module-placeholder">
       <p className="hub-section-kicker">Teias de Anansi</p>
