@@ -22,3 +22,11 @@ Foram acrescentadas consultas individuais (com `where`) aos cinco perfis fictíc
 ## Ampliação do 3.09
 
 Foi testada no emulador uma matriz adicional com um Mestre e quatro Jogadores inteiramente fictícios: consultas próprias filtradas, campanha/shared, negação de notas privadas, aventura integral, sessão alheia e campanha sem vínculo. **204/204 verificações aprovadas** para Rules históricas e Rules propostas; **12 permissões excessivas persistem no arquivo histórico publicado**. Não há senha nem login Authentication real em nenhum desses testes. Consulte [relatório 3.09](../../docs/etapas/etapa-3/3.09-homologacao.md).
+
+## Preparação coordenada das Rules — revisão de 22/11/2026
+
+A proposta `proposal.rules` foi **reforçada** para validar também a coerência do perfil do Mestre (UID, username e papel) e dos documentos de membership (UID não vazio, email, campanha, papel, vínculo ativo). O vínculo histórico com UID ausente/vazio continua aceito para preservar a conta já existente sem migrar documentos.
+
+A CI de [reavaliação #45085033324](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45085033324) passou com **214/214 verificações**, **0 falhas**, **12 exposições históricas originais reproduzidas**, **0 alterações em produção**. São dez verificações a mais que na matriz 3.09: quatro vínculos fictícios incoerentes e uma identidade com e-mail Mestre sobre UID/perfil de Jogador, comparados na baseline e na proposta.
+
+**Atenção:** mudanças de Rules em produção exigem aprovação específica **separada** da publicação no único site GitHub Pages existente. O runbook está em [plano de publicação e rollback](../../docs/etapas/etapa-3/3.05-plano-publicacao-e-rollback.md) e a matriz de compatibilidade em [pré-publicação](../../docs/etapas/etapa-3/3.05-compatibilidade-prepublicacao.md). A suite não é mecanismo de deploy.

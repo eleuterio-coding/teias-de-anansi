@@ -13,6 +13,14 @@
 - **Segurança:** autenticação e autorização permanecem efetivas via Firebase; a proposta de Rules 3.05 não foi publicada. A prévia não deve disponibilizar conteúdo privado no bundle, senhas, tokens ou credenciais administrativas.
 - **Estado atual:** URL de prévia online não existe; logins reais e aceitação da Etapa 3 continuam pendentes. Nem `main`, GitHub Pages, Rules ou dados reais podem ser alterados por esta decisão documental.
 
+## Gate atual: Rules e site exigem publicação coordenada, mas nada está autorizado
+
+A revisão da candidata de Rules em 22/11/2026 alcançou **214/214 verificações no Firestore Emulator** e **298/298 testes gerais**, preservando os cinco perfis e seis vínculos do inventário de leitura anterior. A compatibilidade demonstrada refere-se aos fluxos atualmente implementados em código, não a todos os módulos legados ou cinco sessões reais.
+
+Documentos de entrega: [matriz de compatibilidade](3.05-compatibilidade-prepublicacao.md) e [runbook de publicação/rollback](3.05-plano-publicacao-e-rollback.md).
+
+**Não publicar agora.** Exigem decisões específicas futuras: (A) publicar Rules após nova conferência do ruleset realmente implantado, backup e compatibilidade das consultas antigas; (B) atualizar apenas o GitHub Pages já existente; (C) homologar as cinco sessões reais sem obter senhas. O rollback deve preservar o isolamento, nunca republicar automaticamente as Rules históricas excessivamente permissivas.
+
 ## 1. Escopo de referência e decisões já tomadas
 
 O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08 e auditoria parcial de 3.09** da Etapa 3. Esta proposta não modifica retroativamente o documento original.

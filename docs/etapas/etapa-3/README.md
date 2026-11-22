@@ -34,6 +34,12 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 | 3.08 | Estados e mensagens de erro | **Finalizado na branch:** componentes de feedback unificados em login, rotas e painel do Mestre, sanitização de erros, ausência de registros, recuperação manual e feedback local; **287/287 Vitest e 122/122 emulador aprovados**, sem escrita real |
 | 3.09 | Homologação das cinco contas reais | **PARCIAL:** leitura GET real validou 5 contas habilitadas, 5 perfis/UIDs e 6 vínculos; 204/204 testes de permissões fictícias e 298/298 Vitest; **logins individuais e autorização real ainda pendentes** |
 
+## Revisão pré-publicação das Rules — 22/11/2026
+
+A proposta de Firestore Security Rules do item 3.05 foi reforçada **somente nesta branch** e validada em [CI #45085033324](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45085033324): **214/214 verificações emuladas** e **298/298 testes Vitest**. Foram acrescentadas contraprovas para UID/papel/email/campanha divergentes e para perfil Mestre inconsistente, preservando o UID vazio legado. O estado das Rules de produção é **inalterado**.
+
+Consulte a [matriz de compatibilidade de consultas, perfis e rotas](3.05-compatibilidade-prepublicacao.md) e o [plano de publicação coordenada e rollback](3.05-plano-publicacao-e-rollback.md). Ainda são necessários pré-voo real, análise de módulos legados, homologação individual das cinco contas e **autorizações separadas de deploy**. **Etapa 3 permanece aberta**.
+
 ## Situação técnica de partida
 
 - A Etapa 2 foi aprovada em 20/11/2026. Sua branch original não deve receber novos itens da Etapa 3.
