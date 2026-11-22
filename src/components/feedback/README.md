@@ -118,4 +118,4 @@ A suíte automatizada foi validada em CI nas Etapas 2 e 3. A inspeção visual e
 - `ProtectedModuleRoute`: avisos consistentes para logout, negação e falha; botão de retry executa nova verificação **apenas após clique**, nunca automaticamente.
 - `UsersAdminPage`: carregamento, permissão negada, inventário inconsistente, indisponibilidade e vazio; operação simulada apresenta sucesso/aviso e nunca anuncia gravação remota.
 
-Evidência: [item 3.08](../../docs/etapas/etapa-3/3.08-estados-e-feedback.md). Testes com mocks e Firestore Emulator fictício, sem alterar Firebase de produção.
+Evidência: [item 3.08](../../../docs/etapas/etapa-3/3.08-estados-e-feedback.md). Testes com mocks e Firestore Emulator fictício, sem alterar Firebase de produção.
