@@ -15,6 +15,18 @@ A aplicação atual possui apenas navegação e módulos provisórios. **Não h�
 
 Leia [Estado atual](docs/ESTADO-ATUAL.md), [Guia de manutenção](docs/MANUTENCAO.md) e [Estrutura de pastas](docs/ESTRUTURA-DE-PASTAS.md).
 
+## Requisito do produto — Hub 100% online
+
+**Decisão de produto (22/11/2026):** o Hub é uma **aplicação Web 100% online**. Mestre e jogadores devem abrir um endereço HTTPS no navegador do computador, tablet ou smartphone; **não precisam instalar Node.js, Git, Vite, executar comandos ou baixar código** para usar ou homologar o Hub.
+
+A interface Web hospedada acessa Firebase Authentication e Firestore conforme a autorização da sessão e as Security Rules. Isso não torna seguras as Rules atuais: a proposta do item 3.05 ainda não foi publicada. Um servidor de desenvolvimento local e os emuladores são **ferramentas internas de desenvolvimento/CI**, nunca requisitos para os participantes.
+
+**Homologação 3.09:** só vale para os cinco logins reais em **prévia online separada, com URL HTTPS e controle de acesso**, acessível pelo navegador sem instalar software. A hospedagem de teste deverá ser isolada da publicação oficial e manter `main`/GitHub Pages inalterados; disponibilizar essa prévia e, se necessário, registrar seu domínio entre os domínios autorizados do Firebase Authentication **dependem de aprovação específica**. A senha é digitada unicamente pelo próprio titular no formulário, nunca enviada ao chat ou aos logs. Até essa aprovação, **nenhuma URL de homologação foi disponibilizada e o 3.09 continua parcial**.
+
+### Ferramentas exclusivas de desenvolvimento
+
+Os comandos abaixo servem apenas a desenvolvedores e à CI, **não aos usuários finais**.
+
 ## Requisitos e instalação
 
 Node.js **22** recomendado (mínimo declarado no `package.json`: 20.19.0), npm e Git.

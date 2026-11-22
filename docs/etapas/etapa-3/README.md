@@ -8,6 +8,12 @@
 
 O Mestre aprovou a Etapa 2 no que se refere à implementação e aos testes automatizados, ciente de que inspeção visual e tecnologias assistivas ainda não foram verificadas em navegadores reais. Inicialmente autorizou **somente o planejamento** da Etapa 3; em 20/11/2026, autorizou o início do **item 3.01**, mantendo as demais restrições.
 
+## Requisito obrigatório: operação 100% online
+
+O Mestre definiu em 22/11/2026 que **uso e testes manuais de aceitação são 100% via navegador**, com URL HTTPS acessível a computador, tablet e smartphone. **Não orientar os cinco participantes a baixar ZIP, instalar Node.js ou executar `npm run dev` no próprio computador.** Vite/localhost/Emulator continuam válidos exclusivamente para desenvolvimento automatizado.
+
+A homologação real 3.09 exige uma **prévia online de acesso restrito**, separada do GitHub Pages público, criada somente após **aprovação específica da hospedagem e do domínio de autenticação, se necessário**. Esse ambiente ainda **não foi implementado nem publicado**; a Etapa 3 permanece aberta. Credenciais individuais nunca são coletadas pelo assistente.
+
 ## Objetivo
 
 Restabelecer acesso ao Hub por meio das **cinco contas já existentes**, reconhecendo Mestre/Jogador e preservando seus identificadores, senhas, dados e vínculos. A segurança dos dados deve ser aplicada por autorização no Firestore e serviços, e não apenas por botões ocultos.

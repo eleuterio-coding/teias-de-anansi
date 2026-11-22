@@ -5,6 +5,14 @@
 **Branch documental:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Base:** `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`, commit com CI verde da Etapa 2.
 
+## Requisito transversal — operação e homologação totalmente online (22/11/2026)
+
+- **Produto:** Hub Web acessível por HTTPS no navegador do desktop/tablet/smartphone, sem instalação local e sem exigir `npm` do Mestre ou dos jogadores.
+- **Desenvolvimento:** Vite, localhost, testes Vitest e Firestore Emulator são infraestrutura interna de engenharia/CI; não representam o fluxo do usuário.
+- **Homologação 3.09:** cinco titulares testam suas próprias contas em **ambiente de prévia online com acesso restrito e HTTPS**, não no site público nem em um servidor local. Requer provisionamento de hospedagem separado e autorização específica para qualquer publicação de prévia; verificar se o domínio precisa ser autorizado para Firebase Authentication, sem fazer mudança sem aceite.
+- **Segurança:** autenticação e autorização permanecem efetivas via Firebase; a proposta de Rules 3.05 não foi publicada. A prévia não deve disponibilizar conteúdo privado no bundle, senhas, tokens ou credenciais administrativas.
+- **Estado atual:** URL de prévia online não existe; logins reais e aceitação da Etapa 3 continuam pendentes. Nem `main`, GitHub Pages, Rules ou dados reais podem ser alterados por esta decisão documental.
+
 ## 1. Escopo de referência e decisões já tomadas
 
 O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08 e auditoria parcial de 3.09** da Etapa 3. Esta proposta não modifica retroativamente o documento original.
