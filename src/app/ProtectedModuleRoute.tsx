@@ -1,7 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { checkCurrentUserCampaignAccess, type HubOwnAccessResult } from '../services/scoped-access';
 import { useLocation } from 'react-router-dom';
-import { Alert, Button, HubLink } from '../components/ui';
+import { Button, HubLink } from '../components/ui';
+import { HubStateFeedback, OperationFeedback } from '../components/feedback';
 import { getHubAuthSession, type HubSessionIdentity } from '../services/session';
 import { getHubRoleForCurrentSession, type HubRoleAccess } from '../services/role-access';
 import type { ModuleRoute } from './routes';
@@ -41,18 +42,34 @@ function CheckOwnCampaigns({ uid }: { uid: string }) {
       <Button loading={pending} variant="secondary" onClick={() => void verify()}>
         Conferir meus vínculos
       </Button>
+      {pending && (
+        <OperationFeedback
+          state="loading"
+          title="Conferindo seus vínculos…"
+          message="Somente documentos associados à sessão atual serão consultados."
+        />
+      )}
       {result?.status === 'ok' && (
-        <p role="status">Vínculos ativos confirmados: {result.activeCampaigns}.</p>
+        <OperationFeedback
+          state="success"
+          title="Vínculos confirmados"
+          message={`Vínculos ativos confirmados: ${result.activeCampaigns}.`}
+        />
       )}
       {result?.status === 'denied' && (
-        <Alert tone="warning" title="Vínculo não confirmado">
-          Seu perfil ou vínculo não autoriza esta consulta.
-        </Alert>
+        <OperationFeedback
+          state="warning"
+          title="Vínculo não confirmado"
+          message="Seu perfil ou vínculo não autoriza esta consulta."
+        />
       )}
       {result?.status === 'unavailable' && (
-        <Alert tone="warning" title="Conferência indisponível">
-          Não foi possível consultar o Firebase. Tente novamente.
-        </Alert>
+        <OperationFeedback
+          state="error"
+          title="Conferência indisponível"
+          message="Não foi possível consultar o Firebase. Tente novamente."
+          onRetry={() => void verify()}
+        />
       )}
     </section>
   );
@@ -122,15 +139,13 @@ export function ProtectedModuleRoute({ route, children }: Props) {
   }, [location.pathname, revision, route]);
 
   if (state.status === 'checking') {
-    return <p role="status">Verificando sessão e permissões no Firebase…</p>;
+    return <HubStateFeedback kind="checking-permissions" />;
   }
 
   if (state.status === 'signed-out') {
     return (
       <section aria-label="Área protegida do Hub">
-        <Alert tone="warning" title="Entre para continuar">
-          Esta área exige uma sessão autenticada do Hub.
-        </Alert>
+        <HubStateFeedback kind="signed-out" />
         <p>
           <HubLink to="/entrar" state={{ from: location.pathname }} variant="primary">
             Entrar no Hub
@@ -143,10 +158,10 @@ export function ProtectedModuleRoute({ route, children }: Props) {
   if (state.status === 'unavailable') {
     return (
       <section aria-label="Área protegida do Hub">
-        <Alert tone="warning" title="Não foi possível conferir as permissões">
-          A conexão ou a consulta ao Firebase falhou. Nenhum conteúdo protegido foi carregado.
-        </Alert>
-        <Button onClick={() => setRevision((n) => n + 1)}>Tentar novamente</Button>
+        <HubStateFeedback
+          kind="network-unavailable"
+          onRetry={() => setRevision((n) => n + 1)}
+        />
       </section>
     );
   }
@@ -154,9 +169,7 @@ export function ProtectedModuleRoute({ route, children }: Props) {
   if (state.status === 'denied') {
     return (
       <section aria-label="Área protegida do Hub">
-        <Alert tone="warning" title="Acesso não autorizado">
-          O seu perfil ou vínculo não permite abrir esta área.
-        </Alert>
+        <HubStateFeedback kind="access-denied" />
         <HubLink to="/entrar">Ver minha sessão</HubLink>
       </section>
     );

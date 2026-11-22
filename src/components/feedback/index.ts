@@ -4,3 +4,5 @@ export { useToast } from './useToast';
 export type { ToastControls, ToastInput, NoticeTone } from './types';
 export { OperationFeedback } from './OperationFeedback';
 export type { OperationFeedbackProps, OperationState } from './OperationFeedback';
+export { HubStateFeedback } from './HubStateFeedback';
+export type { HubFeedbackKind } from './HubStateFeedback';

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { FormErrorSummary, FormPanel, TextField } from '../../components/form';
+import { HubStateFeedback, OperationFeedback } from '../../components/feedback';
+import { safeAuthFeedback } from '../../services/feedback-messages';
 import { getHubRoleForCurrentSession, type HubRoleAccess } from '../../services/role-access';
 import { Alert, Button, Card, HubLink } from '../../components/ui';
 import {
@@ -53,7 +55,7 @@ export default function LoginPage() {
           setOperationError('');
         },
         (message) => {
-          if (active) setSession({ status: 'error', message });
+          if (active) setSession({ status: 'error', message: safeAuthFeedback(message) });
         },
       );
     } catch {
@@ -101,7 +103,7 @@ export default function LoginPage() {
       // O onAuthStateChanged publica o estado confirmado e restaurado pelo SDK.
       setPassword('');
     } catch (error) {
-      setOperationError(error instanceof HubAuthError ? error.message : genericMessage);
+      setOperationError(error instanceof HubAuthError ? safeAuthFeedback(error.message) : genericMessage);
     } finally {
       setPending(false);
     }
@@ -122,15 +124,13 @@ export default function LoginPage() {
   }
 
   if (session.status === 'loading') {
-    return <div role="status">Verificando sua sessão existente…</div>;
+    return <HubStateFeedback kind="checking-session" />;
   }
 
   if (session.status === 'error') {
     return (
       <div className="hub-login-panel">
-        <Alert tone="danger" title="Acesso indisponível">
-          {session.message}
-        </Alert>
+        <OperationFeedback state="error" title="Acesso indisponível" message={session.message} />
         <div className="hub-session-actions">
           <Button
             variant="secondary"
@@ -162,22 +162,27 @@ export default function LoginPage() {
                 ? roleResult.access
                 : null;
             if (access === null) {
-              return <p role="status">Conferindo perfil e vínculos no Firebase…</p>;
+              return (
+                <OperationFeedback state="loading" title="Conferindo perfil e vínculos no Firebase…" />
+              );
             }
             if (access.status === 'unavailable') {
               return (
-                <Alert tone="warning" title="Permissões indisponíveis">
-                  Não foi possível conferir as permissões com o Firebase. Acesso às áreas associadas
-                  ao papel suspenso até nova verificação.
-                </Alert>
+                <OperationFeedback
+                  state="error"
+                  title="Permissões indisponíveis"
+                  message="Não foi possível conferir as permissões com o Firebase. Acesso às áreas associadas ao papel suspenso até nova verificação."
+                  onRetry={() => setRoleRevision((revision) => revision + 1)}
+                />
               );
             }
             if (access.status === 'denied') {
               return (
-                <Alert tone="warning" title="Perfil não autorizado">
-                  Sua sessão está autenticada, mas não há um papel confirmado pelos perfis e
-                  vínculos existentes. Nenhuma permissão foi concedida.
-                </Alert>
+                <OperationFeedback
+                  state="warning"
+                  title="Perfil não autorizado"
+                  message="Sua sessão está autenticada, mas não há um papel confirmado pelos perfis e vínculos existentes. Nenhuma permissão foi concedida."
+                />
               );
             }
             return (
@@ -222,9 +227,7 @@ export default function LoginPage() {
             );
           })()}
           {operationError && (
-            <Alert tone="danger" title="Não foi possível sair">
-              {operationError}
-            </Alert>
+            <OperationFeedback state="error" title="Não foi possível sair" message={operationError} />
           )}
           <div className="hub-session-actions">
             <Button variant="secondary" onClick={() => setRoleRevision((revision) => revision + 1)}>
@@ -263,9 +266,14 @@ export default function LoginPage() {
           ]}
         />
         {operationError && (
-          <Alert tone="danger" title="Não foi possível entrar">
-            {operationError}
-          </Alert>
+          <OperationFeedback
+            state="error"
+            title="Não foi possível entrar"
+            message={operationError}
+          />
+        )}
+        {pending && (
+          <OperationFeedback state="loading" title="Conferindo usuário e senha…" />
         )}
         <TextField
           id="hub-login-username"

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DataTable, type DataColumn } from '../../components/data';
+import { HubStateFeedback, OperationFeedback } from '../../components/feedback';
 import { SelectField } from '../../components/form';
 import { Alert, Button, Card, ConfirmDialog, HubLink } from '../../components/ui';
 import {
@@ -66,24 +67,22 @@ function ExistingAccountsReadOnly() {
         Perfis e vínculos consultados somente pelo Mestre autenticado, sem alterar registros. Nenhum
         UID, e-mail técnico ou identificador de campanha é apresentado nesta tela.
       </p>
-      {result === null && <p role="status">Conferindo os perfis e vínculos existentes…</p>}
-      {result?.status === 'denied' && (
-        <Alert tone="warning" title="Consulta não autorizada">
-          Somente o Mestre com sessão e vínculos confirmados pode consultar esta lista.
-        </Alert>
-      )}
-      {result?.status === 'incomplete' && (
-        <Alert tone="warning" title="Registros precisam de conferência">
-          Um perfil, vínculo ou campanha não correspondeu ao inventário. A lista não será exibida
-          parcialmente e nenhum registro será corrigido automaticamente.
-        </Alert>
-      )}
+      {result === null && <HubStateFeedback kind="roster-loading" />}
+      {result?.status === 'denied' && <HubStateFeedback kind="roster-denied" />}
+      {result?.status === 'incomplete' && <HubStateFeedback kind="roster-incomplete" />}
       {result?.status === 'unavailable' && (
-        <Alert tone="warning" title="Leitura indisponível">
-          Não foi possível concluir a consulta do Firestore. Nenhum dado foi alterado.
-        </Alert>
+        <HubStateFeedback
+          kind="roster-unavailable"
+          onRetry={() => setVersion((value) => value + 1)}
+        />
       )}
-      {result?.status === 'ok' && (
+      {result?.status === 'ok' && result.entries.length === 0 && (
+        <HubStateFeedback
+          kind="roster-empty"
+          onRetry={() => setVersion((value) => value + 1)}
+        />
+      )}
+      {result?.status === 'ok' && result.entries.length > 0 && (
         <>
           <p role="status">
             {result.entries.length} perfis conferidos · {result.activeMembershipCount} vínculos
@@ -134,6 +133,7 @@ function MembershipLaboratory() {
   const [action, setAction] = useState<SimulatedAction>('suspend');
   const [confirmation, setConfirmation] = useState<SimulatedCommand | null>(null);
   const [notice, setNotice] = useState('');
+  const [noticeState, setNoticeState] = useState<'success' | 'warning'>('success');
 
   const labelsFor = (key: string) =>
     laboratory.memberships
@@ -149,6 +149,7 @@ function MembershipLaboratory() {
     if (!confirmation) return;
     const change = simulateMembershipChange(laboratory.memberships, confirmation);
     if (change.status === 'denied') {
+      setNoticeState('warning');
       setNotice(change.reason);
     } else {
       setLaboratory((previous) => ({
@@ -156,6 +157,7 @@ function MembershipLaboratory() {
         history: [...previous.history, previous.memberships],
         messages: [change.description, ...previous.messages].slice(0, 8),
       }));
+      setNoticeState('success');
       setNotice(change.description + '. Nenhum dado foi enviado ao Firebase.');
     }
     setConfirmation(null);
@@ -170,6 +172,7 @@ function MembershipLaboratory() {
         messages: ['Última simulação desfeita no navegador.', ...previous.messages].slice(0, 8),
       };
     });
+    setNoticeState('success');
     setNotice('Última simulação desfeita. Nenhum dado real foi alterado.');
   }
 
@@ -243,6 +246,7 @@ function MembershipLaboratory() {
             variant="ghost"
             onClick={() => {
               setLaboratory(initialLaboratory);
+              setNoticeState('success');
               setNotice('Laboratório fictício reiniciado.');
             }}
           >
@@ -250,7 +254,13 @@ function MembershipLaboratory() {
           </Button>
         </div>
       </form>
-      {notice && <p role="status">{notice}</p>}
+      {notice && (
+        <OperationFeedback
+          state={noticeState}
+          title={noticeState === 'success' ? 'Simulação local concluída' : 'Simulação não aplicada'}
+          message={notice}
+        />
+      )}
       {laboratory.messages.length > 0 && (
         <section aria-label="Histórico local das simulações">
           <h4>Histórico local (não persistido)</h4>
