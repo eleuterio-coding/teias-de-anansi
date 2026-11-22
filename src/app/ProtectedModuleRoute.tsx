@@ -158,10 +158,7 @@ export function ProtectedModuleRoute({ route, children }: Props) {
   if (state.status === 'unavailable') {
     return (
       <section aria-label="Área protegida do Hub">
-        <HubStateFeedback
-          kind="network-unavailable"
-          onRetry={() => setRevision((n) => n + 1)}
-        />
+        <HubStateFeedback kind="network-unavailable" onRetry={() => setRevision((n) => n + 1)} />
       </section>
     );
   }

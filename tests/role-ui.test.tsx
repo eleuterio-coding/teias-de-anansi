@@ -159,5 +159,4 @@ describe('3.04 — UI condicionada a perfil autorizado', () => {
     expect(await screen.findByRole('navigation', { name: 'Ações do Mestre' })).toBeDefined();
     expect(mock.getHubRoleForCurrentSession).toHaveBeenCalledTimes(2);
   });
-
 });

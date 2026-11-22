@@ -21,7 +21,9 @@ describe('3.08 — estados padronizados, acessíveis e sem detalhes privados', (
 
   it('informa ausência de sessão sem retry remoto', () => {
     render(<HubStateFeedback kind="signed-out" />);
-    expect(screen.getByRole('alert').textContent).toContain('Esta área exige uma sessão autenticada');
+    expect(screen.getByRole('alert').textContent).toContain(
+      'Esta área exige uma sessão autenticada',
+    );
     expect(screen.queryByRole('button')).toBeNull();
   });
 
@@ -75,7 +77,9 @@ describe('3.08 — estados padronizados, acessíveis e sem detalhes privados', (
     const retry = vi.fn();
     render(<HubStateFeedback kind="roster-empty" onRetry={retry} />);
     expect(screen.getByText('Nenhum perfil disponível')).toBeDefined();
-    expect(screen.getByText('Nenhum registro autorizado foi encontrado nesta consulta.')).toBeDefined();
+    expect(
+      screen.getByText('Nenhum registro autorizado foi encontrado nesta consulta.'),
+    ).toBeDefined();
     expect(retry).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
     expect(retry).toHaveBeenCalledTimes(1);
@@ -91,8 +95,9 @@ describe('3.08 — estados padronizados, acessíveis e sem detalhes privados', (
 describe('3.08 — sanitização de mensagens vindas do SDK', () => {
   it('mantém apenas erros conhecidos de login e rede', () => {
     expect(safeAuthFeedback('Usuário ou senha incorretos.')).toBe('Usuário ou senha incorretos.');
-    expect(safeAuthFeedback('Não foi possível conectar. Confira sua internet e tente novamente.'))
-      .toBe('Não foi possível conectar. Confira sua internet e tente novamente.');
+    expect(
+      safeAuthFeedback('Não foi possível conectar. Confira sua internet e tente novamente.'),
+    ).toBe('Não foi possível conectar. Confira sua internet e tente novamente.');
   });
 
   it('bloqueia exceções arbitrárias, UIDs, caminhos e emails técnicos', () => {
@@ -100,7 +105,10 @@ describe('3.08 — sanitização de mensagens vindas do SDK', () => {
       'Error: users/uid-real-privado',
       'firebase/auth @teias.invalid',
       'permission-denied: campaigns/campanha-interna',
-      null, undefined, {}, 123,
+      null,
+      undefined,
+      {},
+      123,
     ]) {
       expect(safeAuthFeedback(message)).toBe(GENERIC_AUTH_FAILURE);
     }

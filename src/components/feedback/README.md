@@ -108,5 +108,14 @@ import { OperationFeedback } from '../../components/feedback';
 - `tests/system-feedback.test.tsx`: cenários de foco, duração, fila,
   prioridade, fechamento e estados operacionais.
 
-A execução de `npm run check` e a inspeção visual/navegação real continuam
-pendentes até haver evidência; testes escritos não são testes aprovados.
+A suíte automatizada foi validada em CI nas Etapas 2 e 3. A inspeção visual e a navegação com tecnologias assistivas em navegador real seguem pendentes; aprovação de CI não substitui homologação visual.
+
+## Integração da Etapa 3.08
+
+- `HubStateFeedback`: catálogo fixo e seguro de estados de carregamento, sessão ausente, papel negado, indisponibilidade de rede, inventário incompleto e lista vazia; mapeado para `OperationFeedback` ou `EmptyState`.
+- `src/services/feedback-messages.ts`: somente textos de autenticação previamente aprovados podem atravessar a fronteira do SDK; exceções arbitrárias são convertidas em mensagem genérica, sem expor UID, e-mail técnico, caminho privado ou stack.
+- `LoginPage`: formulário mantém `FormErrorSummary`, mensagens de autenticação seguras, espera de Auth e verificação de papel com feedback acessível, sem criar novos fluxos de login.
+- `ProtectedModuleRoute`: avisos consistentes para logout, negação e falha; botão de retry executa nova verificação **apenas após clique**, nunca automaticamente.
+- `UsersAdminPage`: carregamento, permissão negada, inventário inconsistente, indisponibilidade e vazio; operação simulada apresenta sucesso/aviso e nunca anuncia gravação remota.
+
+Evidência: [item 3.08](../../docs/etapas/etapa-3/3.08-estados-e-feedback.md). Testes com mocks e Firestore Emulator fictício, sem alterar Firebase de produção.

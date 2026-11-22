@@ -215,9 +215,9 @@ describe('Tela de login e logout — Etapa 3.03', () => {
       target: { value: 'senha-ficticia' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Entrar' }));
-    expect(await screen.findByText('Não foi possível concluir o acesso agora. Tente novamente.'))
-      .toBeDefined();
+    expect(
+      await screen.findByText('Não foi possível concluir o acesso agora. Tente novamente.'),
+    ).toBeDefined();
     expect(screen.queryByText(/uid-interno|@teias.invalid/)).toBeNull();
   });
-
 });

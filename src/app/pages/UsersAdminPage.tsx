@@ -77,10 +77,7 @@ function ExistingAccountsReadOnly() {
         />
       )}
       {result?.status === 'ok' && result.entries.length === 0 && (
-        <HubStateFeedback
-          kind="roster-empty"
-          onRetry={() => setVersion((value) => value + 1)}
-        />
+        <HubStateFeedback kind="roster-empty" onRetry={() => setVersion((value) => value + 1)} />
       )}
       {result?.status === 'ok' && result.entries.length > 0 && (
         <>

@@ -103,7 +103,9 @@ export default function LoginPage() {
       // O onAuthStateChanged publica o estado confirmado e restaurado pelo SDK.
       setPassword('');
     } catch (error) {
-      setOperationError(error instanceof HubAuthError ? safeAuthFeedback(error.message) : genericMessage);
+      setOperationError(
+        error instanceof HubAuthError ? safeAuthFeedback(error.message) : genericMessage,
+      );
     } finally {
       setPending(false);
     }
@@ -163,7 +165,10 @@ export default function LoginPage() {
                 : null;
             if (access === null) {
               return (
-                <OperationFeedback state="loading" title="Conferindo perfil e vínculos no Firebase…" />
+                <OperationFeedback
+                  state="loading"
+                  title="Conferindo perfil e vínculos no Firebase…"
+                />
               );
             }
             if (access.status === 'unavailable') {
@@ -227,7 +232,11 @@ export default function LoginPage() {
             );
           })()}
           {operationError && (
-            <OperationFeedback state="error" title="Não foi possível sair" message={operationError} />
+            <OperationFeedback
+              state="error"
+              title="Não foi possível sair"
+              message={operationError}
+            />
           )}
           <div className="hub-session-actions">
             <Button variant="secondary" onClick={() => setRoleRevision((revision) => revision + 1)}>
@@ -272,9 +281,7 @@ export default function LoginPage() {
             message={operationError}
           />
         )}
-        {pending && (
-          <OperationFeedback state="loading" title="Conferindo usuário e senha…" />
-        )}
+        {pending && <OperationFeedback state="loading" title="Conferindo usuário e senha…" />}
         <TextField
           id="hub-login-username"
           name="username"

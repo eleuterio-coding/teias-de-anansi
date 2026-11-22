@@ -218,13 +218,17 @@ describe('3.07 — área exclusiva de administração', () => {
   });
   it('inventário vazio usa EmptyState sem fabricar perfis nem vínculos', async () => {
     mock.getCurrentMasterRoster.mockResolvedValueOnce({
-      status: 'ok', entries: [], campaignCount: 0, activeMembershipCount: 0,
+      status: 'ok',
+      entries: [],
+      campaignCount: 0,
+      activeMembershipCount: 0,
     });
     mount();
     act(() => observer(master));
     expect(await screen.findByText('Nenhum perfil disponível')).toBeDefined();
-    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
-      .toBeNull();
+    expect(
+      screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeNull();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
   });
 
@@ -232,26 +236,33 @@ describe('3.07 — área exclusiva de administração', () => {
     mock.getCurrentMasterRoster.mockResolvedValueOnce({ status: 'denied' });
     mount();
     act(() => observer(master));
-    expect(await screen.findByText(/Somente o Mestre com sessão e vínculos confirmados/))
-      .toBeDefined();
-    expect(screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
-      .toBeNull();
+    expect(
+      await screen.findByText(/Somente o Mestre com sessão e vínculos confirmados/),
+    ).toBeDefined();
+    expect(
+      screen.queryByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeNull();
   });
 
   it('erro de rede no inventário só repete leitura após clique explícito', async () => {
     mock.getCurrentMasterRoster
       .mockResolvedValueOnce({ status: 'unavailable' })
       .mockResolvedValueOnce({
-        status: 'ok', entries, campaignCount: 2, activeMembershipCount: 6,
+        status: 'ok',
+        entries,
+        campaignCount: 2,
+        activeMembershipCount: 6,
       });
     mount();
     act(() => observer(master));
-    expect(await screen.findByText(/Não foi possível concluir a consulta do Firestore/))
-      .toBeDefined();
+    expect(
+      await screen.findByText(/Não foi possível concluir a consulta do Firestore/),
+    ).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
-    expect(await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }))
-      .toBeDefined();
+    expect(
+      await screen.findByRole('table', { name: 'Perfis e vínculos reais — somente leitura' }),
+    ).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(2);
   });
 
@@ -269,5 +280,4 @@ describe('3.07 — área exclusiva de administração', () => {
     expect(screen.getByText('Simulação não aplicada')).toBeDefined();
     expect(mock.getCurrentMasterRoster).toHaveBeenCalledTimes(1);
   });
-
 });

@@ -1,6 +1,6 @@
 # Etapa 3 — Usuários e Acesso
 
-**Situação:** **3.01–3.06 concluídos; 3.07 implementado e validado em CI com mocks e Firestore Emulator**, sem publicar Rules ou o site. Itens 3.08–3.09 não iniciados. O avanço será solicitado pelo botão da conversa.  
+**Situação:** **3.01–3.08 concluídos nos escopos autorizados, 3.08 validado em CI com mocks e Firestore Emulator**, sem publicar Rules ou o site. O item 3.09 aguarda autorização e execução. O avanço será solicitado pelo botão da conversa.  
 **Planejamento iniciado:** 20/11/2026.  
 **Branch isolada:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Ponto de origem imutável:** Etapa 2, commit `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`.  
@@ -25,7 +25,7 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 | 3.05 | Regras e acesso efetivo aos documentos | **Finalizado como auditoria/proposta:** 92/92 verificações de emulador aprovadas; 12 permissões amplas reproduzidas e bloqueadas na proposta; **Rules de produção inalteradas** |
 | 3.06 | Proteção de rotas, consultas e ações | **Finalizado na branch:** guardas por sessão e papel, consultas filtradas por vínculo, ação de conferência; 238/238 Vitest e 98/98 casos de emulador aprovados; produção inalterada |
 | 3.07 | Área administrativa mínima para vínculos | **Finalizado na branch:** rota exclusiva do Mestre, leitura dos 5 perfis/vínculos existentes quando autenticado e simulador local de inclusão/suspensão/reativação/remoção; CI aprovada com 265 Vitest e 122 verificações do emulador; sem escrita real |
-| 3.08 | Estados e mensagens de erro | Proposto; não implementado |
+| 3.08 | Estados e mensagens de erro | **Finalizado na branch:** componentes de feedback unificados em login, rotas e painel do Mestre, sanitização de erros, ausência de registros, recuperação manual e feedback local; **287/287 Vitest e 122/122 emulador aprovados**, sem escrita real |
 | 3.09 | Validação autorizada com cinco contas reais | Proposto; não executado |
 
 ## Situação técnica de partida
@@ -47,11 +47,13 @@ Consulte [PLANEJAMENTO.md](PLANEJAMENTO.md) para os nove itens, dependências, t
 
 - O item **3.07** adicionou a rota global protegida `/usuarios` e seu inventário somente de leitura pelo Mestre: consultas específicas a cinco perfis conhecidos e seus vínculos existentes no Firestore; nenhum UID ou e-mail técnico retorna à UI. Um laboratório independente permite simular localmente alterações de vínculos com dados inventados, confirmação e desfazer, **sem escrever no Firebase**. [Relatório 3.07](3.07-administracao-usuarios.md) e [CI de validação #44951440995](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/44951440995). **265 testes Vitest e 122 verificações emuladas aprovados**.
 
+- O item **3.08** integrou [HubStateFeedback](../../../src/components/feedback/HubStateFeedback.tsx) e `OperationFeedback` aos estados de sessão, papel, inventário e conferência de vínculos; preservou o `FormErrorSummary` com foco nos campos inválidos e sanitizou mensagens arbitrárias do SDK. Os retries são **explícitos** e os avisos de simulação identificam claramente sucesso ou rejeição local. [Relatório 3.08](3.08-estados-e-feedback.md), [CI inicial aprovada #45021566604](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45021566604): **287 Vitest e 122 verificações emuladas**, sem deploy.
+
 ## Limites imediatos
 
-**Não autorizado neste momento:** iniciar 3.08 antes de avanço solicitado na conversa; aplicar `proposal.rules` ou quaisquer alterações de Rules em produção **sem aprovação separada**; gravar documentos reais, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
+**Não autorizado neste momento:** iniciar 3.09 ou usar as cinco contas reais antes de avanço e autorização específicos; aplicar `proposal.rules` ou quaisquer alterações de Rules em produção **sem aprovação separada**; gravar documentos reais, alterar senhas, remover/criar contas, ativar o módulo de usuários para administração, publicar, mudar o plano de cobrança ou alterar `main`. A leitura administrativa dos itens 3.01 e 3.02 foi concluída; novas leituras de produção dependerão de escopo específico.
 
-A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03 e 3.04**, implementados e validados tecnicamente, e **3.05**, auditado no emulador com ajustes apenas propostos, em 21/11/2026. Os itens **3.06 e 3.07** foram autorizados e implementados em 21/11/2026, sem publicação nem escrita remota. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.08–3.09 não foram iniciados**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
+A autorização para **3.01** resultou em conclusão em 20/11/2026. O avanço solicitado pelo usuário autorizou **3.02**, concluído em 21/11/2026, e depois **3.03 e 3.04**, implementados e validados tecnicamente, e **3.05**, auditado no emulador com ajustes apenas propostos, em 21/11/2026. Os itens **3.06 e 3.07** foram autorizados e implementados em 21/11/2026, e **3.08** em 22/11/2026, sem publicação nem escrita remota. As verificações ocorreram via GitHub Actions usando segredo administrativo já existente e operações de leitura. **3.09 não foi iniciado**, e alterações em Rules, gravações reais, publicação e mudanças de contas continuam fora do escopo executado.
 
 ## Continuidade da conversa
 

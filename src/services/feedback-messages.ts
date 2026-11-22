@@ -13,8 +13,7 @@ const ALLOWED_AUTH_MESSAGES = new Set([
   'Informe seu usuário e sua senha.',
 ]);
 
-export const GENERIC_AUTH_FAILURE =
-  'Não foi possível concluir o acesso agora. Tente novamente.';
+export const GENERIC_AUTH_FAILURE = 'Não foi possível concluir o acesso agora. Tente novamente.';
 
 export function safeAuthFeedback(message: unknown): string {
   return typeof message === 'string' && ALLOWED_AUTH_MESSAGES.has(message)

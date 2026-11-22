@@ -54,7 +54,8 @@ const FEEDBACK = {
   'roster-incomplete': {
     state: 'warning',
     title: 'Registros precisam de conferência',
-    message: 'Um perfil, vínculo ou campanha não correspondeu ao inventário. A lista não será exibida parcialmente e nenhum registro será corrigido automaticamente.',
+    message:
+      'Um perfil, vínculo ou campanha não correspondeu ao inventário. A lista não será exibida parcialmente e nenhum registro será corrigido automaticamente.',
   },
   'roster-unavailable': {
     state: 'error',
