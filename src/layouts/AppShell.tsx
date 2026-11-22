@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { moduleRoutes } from '../app/routes';
-import { useNavigationRole } from '../app/useNavigationRole';
 import { demoRoutes } from '../app/demo-routes';
 import { HubLink } from '../components/ui';
 
@@ -126,7 +125,6 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = location.pathname.replace(/\/+$/, '') || '/';
   const page = resolvePage(pathname);
   const onHome = pathname === '/';
-  const role = useNavigationRole();
   const inLab = demoRoutes.some((route) => route.path === pathname);
   const [compact, setCompact] = useState(isCompactViewport);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -330,26 +328,9 @@ export function AppShell({ children }: AppShellProps) {
             <NavLink end to="/" className={navLinkClass} onClick={navigateFromMenu}>
               Início
             </NavLink>
-            {moduleRoutes.filter((module) => role !== null && module.allowedRoles.some((allowed) => allowed === role)).map((module) => (
-              <NavLink
-                key={module.path}
-                to={module.path}
-                className={navLinkClass}
-                onClick={navigateFromMenu}
-              >
-                {module.label}
-              </NavLink>
-            ))}
-            {role === 'dm' && (
-              <NavLink to="/usuarios" className={navLinkClass} onClick={navigateFromMenu}>
-                Usuários
-              </NavLink>
-            )}
-            {role === null && (
-              <NavLink to="/entrar" className={navLinkClass} onClick={navigateFromMenu}>
-                Entrar
-              </NavLink>
-            )}
+            <NavLink to="/entrar" className={navLinkClass} onClick={navigateFromMenu}>
+              Minha conta
+            </NavLink>
           </nav>
           {import.meta.env.DEV && (
           <nav className="hub-demo-sidebar-nav" aria-label="Laboratório de interface">
