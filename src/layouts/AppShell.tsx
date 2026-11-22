@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { moduleRoutes } from '../app/routes';
+import { useNavigationRole } from '../app/useNavigationRole';
 import { demoRoutes } from '../app/demo-routes';
 import { HubLink } from '../components/ui';
 
@@ -66,8 +67,8 @@ function resolvePage(pathname: string) {
   if (pathname === '/usuarios') {
     return {
       title: 'Usuários e vínculos',
-      description: 'Consulta administrativa e simulações locais, sem alteração de contas.',
-      section: 'Administração · Etapa 3',
+      description: 'Gerencie o acesso de seus jogadores.',
+      section: 'Administração',
     };
   }
 
@@ -75,7 +76,7 @@ function resolvePage(pathname: string) {
     return {
       title: 'Acesso ao Hub',
       description: 'Entre com seu usuario e senha de sempre.',
-      section: 'Conta · Etapa 3',
+      section: 'Minha conta',
     };
   }
 
@@ -100,8 +101,8 @@ function resolvePage(pathname: string) {
   if (module) {
     return {
       title: module.label,
-      description: 'Área prevista para ' + module.etapa.toLowerCase() + '.',
-      section: module.etapa,
+      description: 'Seu espaço de ' + module.label.toLowerCase() + ' no Hub.',
+      section: 'Teias de Anansi',
     };
   }
 
@@ -125,6 +126,7 @@ export function AppShell({ children }: AppShellProps) {
   const pathname = location.pathname.replace(/\/+$/, '') || '/';
   const page = resolvePage(pathname);
   const onHome = pathname === '/';
+  const role = useNavigationRole();
   const inLab = demoRoutes.some((route) => route.path === pathname);
   const [compact, setCompact] = useState(isCompactViewport);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -287,7 +289,6 @@ export function AppShell({ children }: AppShellProps) {
           </Link>
         </div>
         <div className="hub-topbar-end">
-          <span className="hub-preview-label">Prévia estrutural · módulos em preparação</span>
           <HubLink variant="secondary" to="/entrar">
             Acessar Hub
           </HubLink>
@@ -329,7 +330,7 @@ export function AppShell({ children }: AppShellProps) {
             <NavLink end to="/" className={navLinkClass} onClick={navigateFromMenu}>
               Início
             </NavLink>
-            {moduleRoutes.map((module) => (
+            {moduleRoutes.filter((module) => role !== null && module.allowedRoles.some((allowed) => allowed === role)).map((module) => (
               <NavLink
                 key={module.path}
                 to={module.path}
@@ -339,14 +340,25 @@ export function AppShell({ children }: AppShellProps) {
                 {module.label}
               </NavLink>
             ))}
+            {role === 'dm' && (
+              <NavLink to="/usuarios" className={navLinkClass} onClick={navigateFromMenu}>
+                Usuários
+              </NavLink>
+            )}
+            {role === null && (
+              <NavLink to="/entrar" className={navLinkClass} onClick={navigateFromMenu}>
+                Entrar
+              </NavLink>
+            )}
           </nav>
+          {import.meta.env.DEV && (
           <nav className="hub-demo-sidebar-nav" aria-label="Laboratório de interface">
             <p className="hub-sidebar-heading">Avaliação visual</p>
             <NavLink end to="/laboratorio" className={navLinkClass} onClick={navigateFromMenu}>
               Laboratório de interface
             </NavLink>
           </nav>
-          <p className="hub-sidebar-note">Navegação demonstrativa, sem informações privadas.</p>
+          )}
         </aside>
 
         <div className="hub-page">
@@ -378,8 +390,8 @@ export function AppShell({ children }: AppShellProps) {
               </div>
               <nav className="hub-page-actions" aria-label="Ações da página">
                 {onHome ? (
-                  <HubLink variant="primary" to="/biblioteca">
-                    Explorar Biblioteca
+                  <HubLink variant="primary" to="/entrar">
+                    Entrar no Hub
                   </HubLink>
                 ) : inLab && pathname !== '/laboratorio' ? (
                   <HubLink variant="secondary" to="/laboratorio">
@@ -406,7 +418,7 @@ export function AppShell({ children }: AppShellProps) {
       </div>
 
       <footer className="hub-footer">
-        Prévia do Hub · Login integrado · Módulos de RPG em preparação.
+        Teias de Anansi · Hub de RPG
       </footer>
     </div>
   );

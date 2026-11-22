@@ -224,10 +224,6 @@ export default function LoginPage() {
                     </HubLink>
                   </nav>
                 )}
-                <p>
-                  Estas seções ainda são prévias sem dados privados. Permissões de leitura e escrita
-                  serão verificadas nas próximas etapas.
-                </p>
               </>
             );
           })()}
@@ -256,7 +252,7 @@ export default function LoginPage() {
     <section className="hub-login-panel" aria-label="Entrada no Hub de RPG">
       <FormPanel
         title="Entrar no Teias de Anansi"
-        description="Use o mesmo nome de usuário e a mesma senha do Hub anterior."
+        description="Use seu nome de usuário e senha."
         onSubmit={() => void submitLogin()}
         footer={
           <Button type="submit" variant="primary" loading={pending}>

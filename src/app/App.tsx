@@ -39,11 +39,11 @@ export function AppContent() {
                   </ProtectedModuleRoute>
                 }
               />
-              <Route path={demoRoutes[0].path} element={<DemoOverviewPage />} />
-              <Route path={demoRoutes[1].path} element={<DemoComponentsPage />} />
-              <Route path={demoRoutes[2].path} element={<DemoDataPage />} />
-              <Route path={demoRoutes[3].path} element={<DemoFormsPage />} />
-              <Route path={demoRoutes[4].path} element={<DemoStatesPage />} />
+              {import.meta.env.DEV && <Route path={demoRoutes[0].path} element={<DemoOverviewPage />} />}
+              {import.meta.env.DEV && <Route path={demoRoutes[1].path} element={<DemoComponentsPage />} />}
+              {import.meta.env.DEV && <Route path={demoRoutes[2].path} element={<DemoDataPage />} />}
+              {import.meta.env.DEV && <Route path={demoRoutes[3].path} element={<DemoFormsPage />} />}
+              {import.meta.env.DEV && <Route path={demoRoutes[4].path} element={<DemoStatesPage />} />}
               {moduleRoutes.map((module) => (
                 <Route
                   key={module.path}
