@@ -1,13 +1,13 @@
 # Planejamento detalhado — Etapa 3: Firebase, Usuários e Acesso
 
 **Data de elaboração:** 20/11/2026  
-**Estado:** **3.01–3.08 concluídos em seus escopos, 3.08 validado em 22/11/2026**, sem modificar produção; item 3.09 aguarda autorização explícita.  
+**Estado:** **3.01–3.08 concluídos em seus escopos, 3.08 validado em 22/11/2026**, sem modificar produção; item 3.09 iniciado com auditoria real somente leitura e testes fictícios, mas login e matriz de acesso com sessões reais pendentes; **Etapa 3 NÃO concluída**.  
 **Branch documental:** `feature/etapa-3-usuarios-acesso-20261120`.  
 **Base:** `9f9f1407d8434aeb22342890cbcc1fd3d0d101c4`, commit com CI verde da Etapa 2.
 
 ## 1. Escopo de referência e decisões já tomadas
 
-O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07 e 3.08** da Etapa 3. Esta proposta não modifica retroativamente o documento original.
+O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08 e auditoria parcial de 3.09** da Etapa 3. Esta proposta não modifica retroativamente o documento original.
 
 **Objetivo aprovado para planejamento:** preservar as cinco contas legadas, as informações do Mestre e dos jogadores, e recuperar autenticação e separação de dados sem exigir novas credenciais ou mecanismos adicionais.
 
@@ -35,7 +35,7 @@ Os participantes indicados historicamente são Rafael (Mestre/administrador), Br
 | **3.06 — Rotas e conteúdo** | Guardas por sessão e role, leitura de servidor com vínculo específico e ações com UID corrente; sem conteúdo privado no bundle | **Concluído na branch:** 238/238 Vitest e 98/98 verificações do emulador, incluindo URL, refresh, logout, revogação, negação cruzada e erro de rede. [Relatório 3.06](3.06-rotas-consultas-acoes.md) | Guardas React protegem a UI; servidor continua sob Rules antigas até publicação separada da proposta 3.05 |
 | **3.07 — Administração mínima** | Painel privado do Mestre com cinco perfis/vínculos em modo leitura, e laboratório independente de ações simuladas | **Concluído:** [relatório 3.07](3.07-administracao-usuarios.md); 265/265 Vitest e 122/122 emulador. Login real do Mestre pendente de 3.09 | **Sem writers reais**, sem cadastro e sem alteração de Rules; o módulo original segue reservado, rota global protegida `/usuarios` |
 | **3.08 — Estados de erro** | Integrar feedback compartilhado nas rotas, autenticação, inventário e simulações com texto sanitizado e retry somente manual | **Concluído na branch:** 287/287 Vitest e 122/122 emulador, [relatório 3.08](3.08-estados-e-feedback.md); sem credenciais e sem deploy | Inspeção visual real e acesso individual permanecem para homologação; Rules propostas continuam não publicadas |
-| **3.09 — Verificação com contas reais** | Validar entradas/saídas e a matriz de acesso com as cinco identidades existentes, com plano de execução e consentimentos | Evidência dos cinco logins e de operações permitidas/negadas; sem mudança de senha ou dados legítimos | **Autorização expressa adicional para testes remotos**; primeiro emulador/fixtures sintéticas quando possível; nenhuma escrita em dados reais não previamente aprovada |
+| **3.09 — Verificação com contas reais** | **PARCIAL:** auditoria GET real concluída e 204/204 testes de permissão sintéticos aprovados | Confirmados 5 perfis/Auth e 6 vínculos; **pendem cinco logins reais, logout, refresh e matriz real**. [Relatório 3.09](3.09-homologacao.md) | **Etapa 3 NÃO concluída.** Titulares precisam autorizar suas sessões. 12 permissões excessivas seguem nas Rules reais; qualquer publicação depende de aprovação separada |
 
 Esses itens são **o escopo original**, não novas subdivisões criadas para ampliar a fase.
 
@@ -120,4 +120,4 @@ A branch `feature/etapa-3-usuarios-acesso-20261120` foi derivada exclusivamente 
 
 **Não realizado:** login real com senha dos cinco usuários, escrita Firestore, manipulação de senhas, alteração de Rules, deploy, merge ou alteração da `main`. **Realizado:** acesso administrativo de **leitura** ao projeto e metadados do Firestore, Auth e Rules no item 3.01, seguido de verificação de contas reais/UIDs e vínculos do Firestore no 3.02. Nenhum UID foi exposto nos relatórios. **3.03 e 3.04:** implementados em código, com autenticação via SDK Firebase Web e conferência de papéis por fontes remotas, testes unitários/UI simulados sem senha real, sem publicação.
 
-**Próximo item:** 3.09 — homologação de leitura e login com as cinco contas existentes, **somente com autorização específica de procedimento e sem solicitar senhas ao usuário**. Nenhuma publicação de Rules nem escrita real está incluída. Mantêm-se os limites de não criar, alterar ou redefinir contas e de não expor UIDs/dados sensíveis.
+**Próximo passo:** continuar o 3.09 exclusivamente após autorização e meios seguros para sessões individuais dos cinco titulares. **Não declarar Etapa 3 concluída nem avançar para Etapa 4** sem essa evidência. Qualquer alteração de Rules requer aprovação separada. Mantêm-se os limites de não criar, alterar ou redefinir contas e de não expor UIDs/dados sensíveis.

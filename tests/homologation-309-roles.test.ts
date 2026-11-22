@@ -16,7 +16,10 @@ vi.mock('firebase/firestore', () => ({
 }));
 
 import { verifyHubRole } from '../src/services/firebase/role-access';
-import { technicalEmailForUsername, readableHubAuthError } from '../src/services/firebase/auth-session';
+import {
+  technicalEmailForUsername,
+  readableHubAuthError,
+} from '../src/services/firebase/auth-session';
 
 const db = {} as Firestore;
 const fixtures = [
@@ -24,7 +27,12 @@ const fixtures = [
   { uid: 'uid-bruno-demo', username: 'bruno', email: 'bruno@teias.invalid', role: 'player' },
   { uid: 'uid-gustavo-demo', username: 'gustavo', email: 'gus@teias.invalid', role: 'player' },
   { uid: 'uid-leo-demo', username: 'leo', email: 'leo@teias.invalid', role: 'player' },
-  { uid: 'uid-fernanda-demo', username: 'fernanda', email: 'fernanda@teias.invalid', role: 'player' },
+  {
+    uid: 'uid-fernanda-demo',
+    username: 'fernanda',
+    email: 'fernanda@teias.invalid',
+    role: 'player',
+  },
 ] as const;
 
 let profileData: Record<string, Record<string, unknown>>;
@@ -34,23 +42,22 @@ let campaigns: Record<string, Record<string, unknown>>;
 beforeEach(() => {
   vi.resetAllMocks();
   profileData = Object.fromEntries(
-    fixtures.map((item) => [
-      item.uid,
-      { uid: item.uid, username: item.username, role: item.role },
-    ]),
+    fixtures.map((item) => [item.uid, { uid: item.uid, username: item.username, role: item.role }]),
   );
   campaigns = { 'mesa-ficticia': { ownerId: fixtures[0].uid } };
   links = Object.fromEntries(
     fixtures.map((item) => [
       item.email,
-      [{
-        uid: item.uid,
-        email: item.email,
-        username: item.username,
-        role: item.role,
-        campaignId: 'mesa-ficticia',
-        active: true,
-      }],
+      [
+        {
+          uid: item.uid,
+          email: item.email,
+          username: item.username,
+          role: item.role,
+          campaignId: 'mesa-ficticia',
+          active: true,
+        },
+      ],
     ]),
   );
   io.getDocFromServer.mockImplementation(async ({ path }: { path: string }) => {
@@ -60,11 +67,18 @@ beforeEach(() => {
     return { exists: () => Boolean(record), data: () => record };
   });
   io.getDocsFromServer.mockImplementation(
-    async ({ source, condition }: {
+    async ({
+      source,
+      condition,
+    }: {
       source: { name: string };
       condition: { field: string; operator: string; value: string };
     }) => {
-      if (source.name !== 'memberships' || condition.field !== 'email' || condition.operator !== '==') {
+      if (
+        source.name !== 'memberships' ||
+        condition.field !== 'email' ||
+        condition.operator !== '=='
+      ) {
         throw new Error('Consulta de colecao sem filtro autorizado');
       }
       return { docs: (links[condition.value] ?? []).map((data) => ({ data: () => data })) };
@@ -99,28 +113,34 @@ describe('3.09 — matriz sintetica de cinco identidades, sem senhas', () => {
 
   it('Mestre precisa manter propriedade da campanha verificada', async () => {
     campaigns['mesa-ficticia'].ownerId = fixtures[1].uid;
-    expect(await verifyHubRole({ uid: fixtures[0].uid, email: fixtures[0].email }, db))
-      .toMatchObject({ status: 'denied', reason: 'master-not-confirmed' });
+    expect(
+      await verifyHubRole({ uid: fixtures[0].uid, email: fixtures[0].email }, db),
+    ).toMatchObject({ status: 'denied', reason: 'master-not-confirmed' });
   });
 
   it('vinculo inativo bloqueia papel ate nova confirmacao', async () => {
     links[fixtures[2].email][0].active = false;
-    expect(await verifyHubRole({ uid: fixtures[2].uid, email: fixtures[2].email }, db))
-      .toMatchObject({ status: 'denied', reason: 'missing-membership' });
+    expect(
+      await verifyHubRole({ uid: fixtures[2].uid, email: fixtures[2].email }, db),
+    ).toMatchObject({ status: 'denied', reason: 'missing-membership' });
   });
 
   it('falha de rede nao concede papel nem mostra caminhos internos', async () => {
     io.getDocFromServer.mockRejectedValue(new Error('users/uid-secreto'));
-    expect(await verifyHubRole({ uid: fixtures[0].uid, email: fixtures[0].email }, db))
-      .toEqual({ status: 'unavailable' });
+    expect(await verifyHubRole({ uid: fixtures[0].uid, email: fixtures[0].email }, db)).toEqual({
+      status: 'unavailable',
+    });
   });
 
   it('erro de senha ou rede tem mensagem generica segura', () => {
-    expect(readableHubAuthError({ code: 'auth/invalid-credential' }))
-      .toBe('Usuário ou senha incorretos.');
-    expect(readableHubAuthError({ code: 'auth/network-request-failed' }))
-      .toBe('Não foi possível conectar. Confira sua internet e tente novamente.');
-    expect(readableHubAuthError({ code: 'auth/unknown-secret' }))
-      .toBe('Não foi possível concluir o acesso agora. Tente novamente.');
+    expect(readableHubAuthError({ code: 'auth/invalid-credential' })).toBe(
+      'Usuário ou senha incorretos.',
+    );
+    expect(readableHubAuthError({ code: 'auth/network-request-failed' })).toBe(
+      'Não foi possível conectar. Confira sua internet e tente novamente.',
+    );
+    expect(readableHubAuthError({ code: 'auth/unknown-secret' })).toBe(
+      'Não foi possível concluir o acesso agora. Tente novamente.',
+    );
   });
 });

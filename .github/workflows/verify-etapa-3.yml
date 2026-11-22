@@ -27,13 +27,6 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Formatar teste 3.09 temporariamente no runner, sem publicar
-        run: |
-          npx prettier --write tests/homologation-309-roles.test.ts
-          echo 'PRETTIER_BEGIN:tests/homologation-309-roles.test.ts'
-          base64 -w0 tests/homologation-309-roles.test.ts
-          echo
-          echo 'PRETTIER_END:tests/homologation-309-roles.test.ts'
       - name: Conferir codigo e compilacao completa
         run: npm run check
 

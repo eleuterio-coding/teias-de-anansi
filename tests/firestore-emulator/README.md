@@ -18,3 +18,7 @@ Foram acrescentados três casos para cada conjunto de regras (6 verificações a
 ## Cobertura do item 3.07
 
 Foram acrescentadas consultas individuais (com `where`) aos cinco perfis fictícios e às cinco memberships correspondentes, sempre sob identidade Mestre, e uma consulta transversal de jogador que demonstra a divergência conhecida entre `baseline.rules` e `proposal.rules`. A atualização de uma membership fictícia por Mestre também é testada **somente no emulador**; nenhuma escrita real foi autorizada. As duas versões somam **122 verificações com 0 falhas**, mantendo as 12 exposições históricas já registradas.
+
+## Ampliação do 3.09
+
+Foi testada no emulador uma matriz adicional com um Mestre e quatro Jogadores inteiramente fictícios: consultas próprias filtradas, campanha/shared, negação de notas privadas, aventura integral, sessão alheia e campanha sem vínculo. **204/204 verificações aprovadas** para Rules históricas e Rules propostas; **12 permissões excessivas persistem no arquivo histórico publicado**. Não há senha nem login Authentication real em nenhum desses testes. Consulte [relatório 3.09](../../docs/etapas/etapa-3/3.09-homologacao.md).
