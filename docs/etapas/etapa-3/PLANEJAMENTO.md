@@ -9,7 +9,7 @@
 
 - **Produto:** Hub Web acessível por HTTPS no navegador do desktop/tablet/smartphone, sem instalação local e sem exigir `npm` do Mestre ou dos jogadores.
 - **Desenvolvimento:** Vite, localhost, testes Vitest e Firestore Emulator são infraestrutura interna de engenharia/CI; não representam o fluxo do usuário.
-- **Homologação 3.09:** cinco titulares testam suas próprias contas em **ambiente de prévia online com acesso restrito e HTTPS**, não no site público nem em um servidor local. Requer provisionamento de hospedagem separado e autorização específica para qualquer publicação de prévia; verificar se o domínio precisa ser autorizado para Firebase Authentication, sem fazer mudança sem aceite.
+- **Homologação 3.09:** cinco titulares testarão as próprias contas em **segundo GitHub Pages público e independente**, com HTTPS, sem instalação e sem alterar o Pages oficial. O conteúdo privado exige Rules corrigidas em aprovação separada: até lá, só uma página estática sem Firebase pode ser publicada. [Plano de implantação](3.09-github-pages-homologacao.md).
 - **Segurança:** autenticação e autorização permanecem efetivas via Firebase; a proposta de Rules 3.05 não foi publicada. A prévia não deve disponibilizar conteúdo privado no bundle, senhas, tokens ou credenciais administrativas.
 - **Estado atual:** URL de prévia online não existe; logins reais e aceitação da Etapa 3 continuam pendentes. Nem `main`, GitHub Pages, Rules ou dados reais podem ser alterados por esta decisão documental.
 

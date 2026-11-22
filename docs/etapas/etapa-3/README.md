@@ -12,7 +12,7 @@ O Mestre aprovou a Etapa 2 no que se refere à implementação e aos testes auto
 
 O Mestre definiu em 22/11/2026 que **uso e testes manuais de aceitação são 100% via navegador**, com URL HTTPS acessível a computador, tablet e smartphone. **Não orientar os cinco participantes a baixar ZIP, instalar Node.js ou executar `npm run dev` no próprio computador.** Vite/localhost/Emulator continuam válidos exclusivamente para desenvolvimento automatizado.
 
-A homologação real 3.09 exige uma **prévia online de acesso restrito**, separada do GitHub Pages público, criada somente após **aprovação específica da hospedagem e do domínio de autenticação, se necessário**. Esse ambiente ainda **não foi implementado nem publicado**; a Etapa 3 permanece aberta. Credenciais individuais nunca são coletadas pelo assistente.
+**Hospedagem definida em 22/11/2026:** prévia no **segundo repositório GitHub Pages público**, separado do site oficial. A página e os scripts são públicos, mas o acesso aos documentos deve ser controlado no Firebase; **não publicar o aplicativo com login real até corrigir as permissões excessivas das Rules com aprovação separada**. A primeira publicação pode ser apenas uma página de preparação sem Firebase. O repositório novo ainda precisa ser criado; a Etapa 3 permanece aberta. [Instruções de homologação](3.09-github-pages-homologacao.md).
 
 ## Objetivo
 
