@@ -23,14 +23,14 @@ describe('Navegação no subcaminho do GitHub Pages', () => {
     window.history.replaceState(null, '', '/teias-de-anansi/#/');
 
     render(<App />);
-    expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
 
     const navigation = screen.getByRole('navigation', { name: 'Navegação principal' });
-    fireEvent.click(within(navigation).getByRole('link', { name: 'Biblioteca' }));
+    fireEvent.click(within(navigation).getByRole('link', { name: 'Minha conta' }));
 
-    expect(await screen.findByRole('heading', { name: 'Biblioteca' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Acesso ao Hub' })).toBeDefined();
     expect(window.location.pathname).toBe('/teias-de-anansi/');
-    expect(window.location.hash).toBe('#/biblioteca');
+    expect(window.location.hash).toBe('#/entrar');
   });
 
   it.each(moduleRoutes)('conserva a rota $label após remontar a aplicação', async (module) => {

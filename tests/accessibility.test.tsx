@@ -184,9 +184,9 @@ describe('Auditoria transversal de acessibilidade — 2.09', () => {
     renderHub();
     fireEvent.click(screen.getByRole('button', { name: 'Abrir menu de navegação' }));
     const dialog = screen.getByRole('dialog', { name: 'Menu de navegação' });
-    fireEvent.click(within(dialog).getByRole('link', { name: 'Biblioteca' }));
+    fireEvent.click(within(dialog).getByRole('link', { name: 'Minha conta' }));
 
-    expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Acesso ao Hub', level: 1 })).toBeDefined();
     expect(screen.queryByRole('dialog', { name: 'Menu de navegação' })).toBeNull();
     expect(document.activeElement?.id).toBe('main-content');
   });

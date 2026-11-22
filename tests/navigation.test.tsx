@@ -32,23 +32,23 @@ function mount(path = '/') {
 describe('Navegação inicial', () => {
   it('exibe a página inicial provisória', async () => {
     mount();
-    expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
     expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeDefined();
   });
 
-  it('permite navegar até um módulo reservado e voltar', async () => {
-    mount();
+  it('visitante vê somente a entrada e URLs de módulos continuam protegidas', async () => {
+    const first = mount();
     const nav = screen.getByRole('navigation', { name: 'Navegação principal' });
-    fireEvent.click(within(nav).getByRole('link', { name: 'Biblioteca' }));
+    expect(within(nav).getByRole('link', { name: 'Minha conta' })).toBeDefined();
+    expect(within(nav).queryByRole('link', { name: 'Biblioteca' })).toBeNull();
+    expect(within(nav).queryByRole('link', { name: 'Campanhas' })).toBeNull();
+    first.unmount();
 
-    expect(await screen.findByRole('heading', { name: 'Biblioteca' })).toBeDefined();
-    // O shell é público, mas a área do módulo só libera conteúdo após autenticar.
+    mount('/biblioteca');
+    expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
     expect(await screen.findByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
-    expect(within(nav).getByRole('link', { name: 'Biblioteca' }).getAttribute('aria-current')).toBe(
-      'page',
-    );
     fireEvent.click(screen.getByRole('link', { name: 'Visão geral' }));
-    expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
   });
 
   it('pula a navegação para o conteúdo sem alterar a rota hash', () => {

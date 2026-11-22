@@ -78,7 +78,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     act(() => observer(null));
     expect(screen.getByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
     expect(screen.getByRole('link', { name: 'Entrar no Hub' })).toBeDefined();
-    expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
+    expect(screen.queryByText('Esta área ainda não possui conteúdo disponível.')).toBeNull();
     expect(mocks.getHubRoleForCurrentSession).not.toHaveBeenCalled();
   });
 
@@ -88,7 +88,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     expect(
       await screen.findByText(/O seu perfil ou vínculo não permite abrir esta área/),
     ).toBeDefined();
-    expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
+    expect(screen.queryByText('Esta área ainda não possui conteúdo disponível.')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Conferir meus vínculos' })).toBeNull();
   });
 
@@ -96,7 +96,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     mocks.getHubRoleForCurrentSession.mockResolvedValue(masterAccess);
     mount('/campanhas');
     act(() => observer(master));
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
     expect(screen.getByText('Acesso confirmado: Mestre')).toBeDefined();
     expect(mocks.getHubRoleForCurrentSession).toHaveBeenCalledWith(master.uid);
   });
@@ -104,7 +104,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('Jogador entra na Área do jogador e não entra em Aventuras privadas', async () => {
     const first = mount('/area-jogador');
     act(() => observer(player));
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
     first.unmount();
     mount('/aventuras');
     act(() => observer(player));
@@ -121,13 +121,13 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('em refresh da URL protegida aguarda sessão restaurada', async () => {
     const first = mount('/personagens');
     act(() => observer(player));
-    await screen.findByRole('heading', { name: 'Módulo em preparação' });
+    await screen.findByText('Esta área ainda não possui conteúdo disponível.');
     first.unmount();
     expect(stop).toHaveBeenCalled();
     mount('/personagens');
     expect(screen.getByText(/Verificando sessão e permissões/)).toBeDefined();
     act(() => observer(player));
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
     expect(mocks.getHubRoleForCurrentSession).toHaveBeenCalledTimes(2);
   });
 
@@ -135,7 +135,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     mocks.getHubRoleForCurrentSession.mockResolvedValue(masterAccess);
     mount('/campanhas');
     act(() => observer(master));
-    await screen.findByRole('heading', { name: 'Módulo em preparação' });
+    await screen.findByText('Esta área ainda não possui conteúdo disponível.');
     act(() => observer(null));
     expect(screen.getByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
     expect(screen.queryByRole('button', { name: 'Conferir meus vínculos' })).toBeNull();
@@ -155,7 +155,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     await act(async () => {
       release(masterAccess);
     });
-    expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
+    expect(screen.queryByText('Esta área ainda não possui conteúdo disponível.')).toBeNull();
     expect(screen.getByText(/Esta área exige uma sessão autenticada do Hub/)).toBeDefined();
   });
 
@@ -166,10 +166,10 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     mount('/campanhas');
     act(() => observer(master));
     expect(await screen.findByText(/A conexão ou a consulta ao Firebase falhou/)).toBeDefined();
-    expect(screen.queryByRole('heading', { name: 'Módulo em preparação' })).toBeNull();
+    expect(screen.queryByText('Esta área ainda não possui conteúdo disponível.')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
     act(() => observer(master));
-    expect(await screen.findByRole('heading', { name: 'Módulo em preparação' })).toBeDefined();
+    expect(await screen.findByText('Esta área ainda não possui conteúdo disponível.')).toBeDefined();
   });
 
   it('erro no observador não libera conteúdo privado', () => {
@@ -182,7 +182,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
   it('ação permite verificar somente vínculos próprios e não revela nomes/IDs', async () => {
     mount('/area-jogador');
     act(() => observer(player));
-    await screen.findByRole('heading', { name: 'Módulo em preparação' });
+    await screen.findByText('Esta área ainda não possui conteúdo disponível.');
     fireEvent.click(screen.getByRole('button', { name: 'Conferir meus vínculos' }));
     expect(await screen.findByText('Vínculos ativos confirmados: 1.')).toBeDefined();
     expect(mocks.checkCurrentUserCampaignAccess).toHaveBeenCalledWith(player.uid);
@@ -194,7 +194,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
       .mockResolvedValueOnce({ status: 'unavailable' });
     mount('/area-jogador');
     act(() => observer(player));
-    await screen.findByRole('heading', { name: 'Módulo em preparação' });
+    await screen.findByText('Esta área ainda não possui conteúdo disponível.');
     fireEvent.click(screen.getByRole('button', { name: 'Conferir meus vínculos' }));
     expect(
       await screen.findByText(/Seu perfil ou vínculo não autoriza esta consulta/),
@@ -210,7 +210,7 @@ describe('3.06 — proteção de rotas e ações por Auth e papel', () => {
     ).toBeDefined();
     first.unmount();
     mount('/');
-    expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
     expect(mocks.getHubAuthSession).not.toHaveBeenCalled();
   });
 });

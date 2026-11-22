@@ -130,10 +130,10 @@ describe('Responsividade do AppShell — item 2.04', () => {
 
     openMenu();
     const dialog = screen.getByRole('dialog', { name: 'Menu de navegação' });
-    fireEvent.click(within(dialog).getByRole('link', { name: 'Biblioteca' }));
+    fireEvent.click(within(dialog).getByRole('link', { name: 'Minha conta' }));
 
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Acesso ao Hub', level: 1 })).toBeDefined();
     expect(document.activeElement?.id).toBe('main-content');
   });
 

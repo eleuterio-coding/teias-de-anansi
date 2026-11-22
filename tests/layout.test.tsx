@@ -42,9 +42,9 @@ describe('Estrutura global do Hub — item 2.03', () => {
     expect(breadcrumb).toBeDefined();
     expect(screen.getByRole('heading', { name: 'Início', level: 1 })).toBeDefined();
     expect(screen.getByRole('main', { name: 'Início' })).toBeDefined();
-    expect(screen.getByRole('link', { name: 'Explorar Biblioteca' })).toBeDefined();
+    expect(screen.getAllByRole('link', { name: 'Entrar no Hub' })[0]).toBeDefined();
     expect(screen.getByRole('contentinfo')).toBeDefined();
-    expect(await screen.findByRole('heading', { name: 'Início provisório' })).toBeDefined();
+    expect(await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' })).toBeDefined();
   });
 
   it.each(moduleRoutes)('mostra estrutura em $label', async ({ path, label }) => {
@@ -56,9 +56,7 @@ describe('Estrutura global do Hub — item 2.03', () => {
     const breadcrumb = screen.getByRole('navigation', {
       name: 'Localização da página',
     });
-    const active = within(sidebar).getByRole('link', { name: label });
-
-    expect(active.getAttribute('aria-current')).toBe('page');
+    expect(within(sidebar).queryByRole('link', { name: label })).toBeNull();
     expect(within(breadcrumb).getByRole('link', { name: 'Início' })).toBeDefined();
     expect(within(breadcrumb).getByText(label).getAttribute('aria-current')).toBe('page');
     expect(screen.getByRole('heading', { name: label, level: 1 })).toBeDefined();
@@ -70,8 +68,8 @@ describe('Estrutura global do Hub — item 2.03', () => {
   it('navega pelas ações da página sem criar registros', async () => {
     mount();
 
-    fireEvent.click(screen.getByRole('link', { name: 'Explorar Biblioteca' }));
-    expect(await screen.findByRole('heading', { name: 'Biblioteca', level: 1 })).toBeDefined();
+    fireEvent.click(screen.getByRole('link', { name: 'Acessar Hub' }));
+    expect(await screen.findByRole('heading', { name: 'Acesso ao Hub', level: 1 })).toBeDefined();
 
     fireEvent.click(screen.getByRole('link', { name: 'Visão geral' }));
     expect(await screen.findByRole('heading', { name: 'Início', level: 1 })).toBeDefined();

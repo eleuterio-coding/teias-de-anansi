@@ -43,10 +43,11 @@ describe('Páginas demonstrativas — Etapa 2.10', () => {
     expect(screen.queryByText('Demonstração · dados fictícios')).toBeNull();
   });
 
-  it('permite entrar no laboratório pela página inicial', async () => {
+  it('permite abrir laboratório pelo menu exclusivo de desenvolvimento', async () => {
     mount('/');
-    await screen.findByRole('heading', { name: 'Início provisório' });
-    fireEvent.click(screen.getByRole('link', { name: 'Acessar demonstrações' }));
+    await screen.findByRole('heading', { name: 'Bem-vindo ao Teias de Anansi' });
+    const nav = screen.getByRole('navigation', { name: 'Laboratório de interface' });
+    fireEvent.click(within(nav).getByRole('link', { name: 'Laboratório de interface' }));
     expect(
       await screen.findByRole('heading', { name: 'Laboratório de interface', level: 1 }),
     ).toBeDefined();
