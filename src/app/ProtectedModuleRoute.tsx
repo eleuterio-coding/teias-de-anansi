@@ -174,11 +174,13 @@ export function ProtectedModuleRoute({ route, children }: Props) {
 
   return (
     <section data-hub-protected-role={state.access.role}>
-      <p className="hub-section-kicker">
-        Acesso confirmado: {state.access.role === 'dm' ? 'Mestre' : 'Jogador'}
-      </p>
+      {import.meta.env.DEV && (
+        <p className="hub-section-kicker">
+          Acesso confirmado: {state.access.role === 'dm' ? 'Mestre' : 'Jogador'}
+        </p>
+      )}
       {children}
-      <CheckOwnCampaigns uid={state.uid} />
+      {import.meta.env.DEV && <CheckOwnCampaigns uid={state.uid} />}
     </section>
   );
 }

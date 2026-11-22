@@ -119,7 +119,7 @@ export default function LoginPage() {
       await driverRef.current.signOut();
       // O observador confirma a saída real.
     } catch (error) {
-      setOperationError(error instanceof HubAuthError ? error.message : genericMessage);
+      setOperationError(error instanceof HubAuthError ? safeAuthFeedback(error.message) : genericMessage);
     } finally {
       setPending(false);
     }

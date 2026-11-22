@@ -62,7 +62,7 @@ function ExistingAccountsReadOnly() {
   }, [version]);
 
   return (
-    <Card title="Cinco contas existentes — leitura do Firebase" variant="ornate">
+    <Card title="Jogadores e vínculos" variant="ornate">
       <p>
         Perfis e vínculos consultados somente pelo Mestre autenticado, sem alterar registros. Nenhum
         UID, e-mail técnico ou identificador de campanha é apresentado nesta tela.
@@ -286,11 +286,10 @@ export default function UsersAdminPage() {
     <section aria-labelledby="hub-users-admin-heading">
       <h2 id="hub-users-admin-heading">Administração de usuários e vínculos</h2>
       <p>
-        Área exclusiva do Mestre: consulta dos perfis existentes e ensaio isolado de operações
-        futuras. Nenhuma alteração real está habilitada nesta etapa.
+        Consulte os participantes e suas campanhas.
       </p>
       <ExistingAccountsReadOnly />
-      <MembershipLaboratory />
+      {import.meta.env.DEV && <MembershipLaboratory />}
     </section>
   );
 }
