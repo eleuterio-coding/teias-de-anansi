@@ -1,0 +1,62 @@
+name: Homologacao — publicar SOMENTE pagina de preparacao (sem Firebase)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-homologacao
+  cancel-in-progress: false
+
+jobs:
+  publish-placeholder:
+    name: Publicar aviso sem login nem dados privados
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Preparar artefato publico sem conectar ao Firebase
+        shell: bash
+        run: |
+          mkdir -p dist
+          cat > dist/index.html <<'HTML'
+          <!doctype html>
+          <html lang="pt-BR">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <meta name="robots" content="noindex,nofollow">
+              <title>Teias de Anansi — Homologação em preparação</title>
+              <style>
+                :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+                body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #101722; color: #f1eadc; }
+                main { max-width: 38rem; padding: 2rem; }
+                h1 { font-size: clamp(1.6rem, 4vw, 2.6rem); margin-bottom: .5rem; }
+                p { line-height: 1.6; }
+                small { color: #bcb6ad; }
+              </style>
+            </head>
+            <body>
+              <main>
+                <h1>Teias de Anansi</h1>
+                <p>Ambiente de homologação em preparação.</p>
+                <p>Acesso às contas e campanhas ainda não liberado. A avaliação de permissões do Firebase permanece pendente de aprovação e homologação.</p>
+                <small>Esta página não acessa Firebase, não possui formulário de login nem contém dados de usuários.</small>
+              </main>
+            </body>
+          </html>
+          HTML
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Empacotar somente a pagina de preparacao
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publicar no GitHub Pages deste SEGUNDO repositorio
+        id: deployment
+        uses: actions/deploy-pages@v4

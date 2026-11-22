@@ -29,6 +29,8 @@ jobs:
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
       - name: Validar build da previa HTTPS sem publicar (assets na raiz)
         run: npm run build:private-preview && npm run preview:check
+      - name: Validar build do segundo GitHub Pages sem publicar
+        run: npm run build:github-homologacao && npm run homologacao:check
       - name: Conferir codigo e compilacao completa
         run: npm run check
 
