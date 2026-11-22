@@ -27,8 +27,6 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Validar build do segundo GitHub Pages sem publicar
-        run: npm run build:github-homologacao && npm run homologacao:check
       - name: Conferir codigo e compilacao completa
         run: npm run check
 

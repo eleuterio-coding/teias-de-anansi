@@ -21,9 +21,7 @@
     "check": "npm run typecheck && npm run lint && npm run test:run && npm run format:check && npm run verify:boundaries && npm run verify:a11y && npm run verify:design-system && npm run build && npm run pages:check",
     "proof:preview": "node scripts/verify-preview.mjs",
     "verify:a11y": "node scripts/verify-accessibility-colors.mjs",
-    "verify:design-system": "node --test scripts/design-system-contract.test.mjs && node scripts/verify-design-system.mjs",
-    "build:github-homologacao": "tsc --noEmit && vite build --base /teias-de-anansi-homologacao/",
-    "homologacao:check": "node scripts/verify-github-homologacao-build.mjs"
+    "verify:design-system": "node --test scripts/design-system-contract.test.mjs && node scripts/verify-design-system.mjs"
   },
   "dependencies": {
     "react": "18.3.1",

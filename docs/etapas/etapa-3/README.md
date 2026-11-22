@@ -12,7 +12,7 @@ O Mestre aprovou a Etapa 2 no que se refere à implementação e aos testes auto
 
 O Mestre definiu em 22/11/2026 que **uso e testes manuais de aceitação são 100% via navegador**, com URL HTTPS acessível a computador, tablet e smartphone. **Não orientar os cinco participantes a baixar ZIP, instalar Node.js ou executar `npm run dev` no próprio computador.** Vite/localhost/Emulator continuam válidos exclusivamente para desenvolvimento automatizado.
 
-**Hospedagem definida em 22/11/2026:** prévia no **segundo repositório GitHub Pages público**, separado do site oficial. A página e os scripts são públicos, mas o acesso aos documentos deve ser controlado no Firebase; **não publicar o aplicativo com login real até corrigir as permissões excessivas das Rules com aprovação separada**. A primeira publicação pode ser apenas uma página de preparação sem Firebase. O repositório novo ainda precisa ser criado; a Etapa 3 permanece aberta. [Instruções de homologação](3.09-github-pages-homologacao.md).
+**Hospedagem definitiva:** manter somente o **GitHub Pages existente** (`eleuterio-coding/teias-de-anansi`); não criar segundo site/repositório. A interface simples apresenta login/senha, áreas correspondentes ao papel e logout, sem marcadores de etapa ou testes para o usuário. O trabalho permanece na branch até aprovação específica de publicação, **depois** de verificar/corrigir as regras excessivamente permissivas do Firestore com autorização independente. A Etapa 3 continua aberta.
 
 ## Objetivo
 
