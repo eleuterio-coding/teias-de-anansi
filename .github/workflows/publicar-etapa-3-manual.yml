@@ -59,7 +59,8 @@ jobs:
           BASE_MAIN="23ea59b0341261e97aeab9d5bc0ecfac8500132b"
           git merge-base --is-ancestor "$BASE_MAIN" origin/main || { echo 'main mudou de linhagem: BLOQUEADO'; exit 2; }
           CHANGES="$(git diff --name-only "$BASE_MAIN" origin/main)"
-          test "$CHANGES" = ".github/workflows/publicar-etapa-3-manual.yml" || { echo 'main possui alteracoes nao autorizadas: BLOQUEADO'; exit 2; }
+          EXPECTED_CHANGES="$(printf '%s\n' '.github/workflows/publicar-etapa-3-manual.yml' '.github/workflows/verificar-pages-preflight-manual.yml')"
+          test "$CHANGES" = "$EXPECTED_CHANGES" || { echo 'main possui alteracoes nao autorizadas: BLOQUEADO'; exit 2; }
           echo "EXPECTED_MAIN_SHA=$(git rev-parse origin/main)" >> "$GITHUB_ENV"
       - name: Bloquear corte se Pages ainda usar modo de publicacao por branch
         env:
