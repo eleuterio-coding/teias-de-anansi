@@ -7,6 +7,10 @@ on:
         description: 'Digite PUBLICAR_A_E_B para executar o corte'
         required: true
         type: string
+      compatibilidade_legada:
+        description: 'Digite LEGADO_VALIDADO somente apos auditoria dos modulos/midia antigos'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -17,7 +21,7 @@ concurrency:
 
 jobs:
   publicar:
-    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B'
+    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B' && github.event.inputs.compatibilidade_legada == 'LEGADO_VALIDADO'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: etapa-3-producao
@@ -70,6 +74,10 @@ jobs:
           touch dist/.nojekyll
           if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
           if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
+      - name: Confirmar gate de compatibilidade legado antes da primeira escrita
+        shell: bash
+        run: |
+          test "${{ inputs.compatibilidade_legada }}" = 'LEGADO_VALIDADO' || { echo 'Legado nao homologado'; exit 2; }
       - name: Validar versao em producao e criar backup criptografado
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
