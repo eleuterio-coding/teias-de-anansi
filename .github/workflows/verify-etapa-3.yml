@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feature/etapa-3-usuarios-acesso-20261120
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: read
