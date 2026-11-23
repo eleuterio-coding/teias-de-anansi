@@ -1,0 +1,157 @@
+name: Publicacao manual Etapa 3 — A+B
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmacao:
+        description: 'Digite PUBLICAR_A_E_B para executar o corte'
+        required: true
+        type: string
+      candidate_sha:
+        description: 'SHA completo (40 caracteres) do codigo testado e aprovado da branch Etapa 3'
+        required: true
+        type: string
+      escopo_etapa3:
+        description: 'Digite ESCOPO_ACESSO_DOCUMENTADO: aceite limitado a usuarios/acesso; midia/RPG fora de escopo'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publicacao-etapa-3
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B' && github.event.inputs.escopo_etapa3 == 'ESCOPO_ACESSO_DOCUMENTADO'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment:
+      name: github-pages
+      url: ${{ steps.pages_deploy.outputs.page_url }}
+    env:
+      FIREBASE_CLI_DISABLE_TELEMETRY: '1'
+      CI: 'true'
+      GCLOUD_PROJECT: demo-teias-305
+      FIRESTORE_EMULATOR_HOST: 127.0.0.1:8089
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/etapa-3-usuarios-acesso-20261120
+          fetch-depth: 0
+          persist-credentials: false
+      # Este campo registra ciencia do ESCOPO, nao homologacao de todas as telas.
+      # Cinco logins reais e aceite final continuam pendentes apos A+B.
+      - name: Guardas de origem e estado
+        env:
+          APPROVED_CANDIDATE_SHA: ${{ inputs.candidate_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "eleuterio-coding/teias-de-anansi"
+          test "$GITHUB_REF" = "refs/heads/main" || { echo 'Execute dispatcher somente na main; BLOQUEADO'; exit 2; }
+          [[ "$APPROVED_CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'SHA aprovado invalido: BLOQUEADO'; exit 2; }
+          test "$(git rev-parse HEAD)" = "$APPROVED_CANDIDATE_SHA" || { echo 'Branch mudou desde homologacao: BLOQUEADO'; exit 2; }
+          BASE_MAIN="23ea59b0341261e97aeab9d5bc0ecfac8500132b"
+          git merge-base --is-ancestor "$BASE_MAIN" origin/main || { echo 'main mudou de linhagem: BLOQUEADO'; exit 2; }
+          CHANGES="$(git diff --name-only "$BASE_MAIN" origin/main)"
+          EXPECTED_CHANGES="$(printf '%s\n' '.github/workflows/publicar-etapa-3-manual.yml' '.github/workflows/verificar-pages-preflight-manual.yml')"
+          test "$CHANGES" = "$EXPECTED_CHANGES" || { echo 'main possui alteracoes nao autorizadas: BLOQUEADO'; exit 2; }
+          echo "EXPECTED_MAIN_SHA=$(git rev-parse origin/main)" >> "$GITHUB_ENV"
+      - name: Bloquear corte se Pages ainda usar modo de publicacao por branch
+        env:
+          GITHUB_TOKEN_READONLY: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            const response = await fetch("https://api.github.com/repos/eleuterio-coding/teias-de-anansi/pages", {
+              headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN_READONLY, accept: "application/vnd.github+json" }
+            });
+            if (!response.ok) throw Error("Pages settings GET HTTP " + response.status);
+            const data = await response.json();
+            if (data.build_type !== "workflow") throw Error("Pages ainda nao esta configurado em GitHub Actions: BLOQUEADO");
+            if (data.html_url !== "https://eleuterio-coding.github.io/teias-de-anansi/")
+              throw Error("Endereco do Pages divergente: BLOQUEADO");
+            console.log("Pages pronto para deploy via Actions: GET confirmado");
+          '
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Instalar dependencias travadas
+        run: npm ci --no-audit --no-fund
+      - name: Verificar aplicacao, testes e build de Pages
+        run: npm run check
+      - name: Testar processo de deploy contra Firebase simulado (sem credenciais reais)
+        run: node --test tests/deploy-etapa-3-script.test.mjs
+      - name: Validar Rules no emulador isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --ignore-scripts --legacy-peer-deps --no-audit --no-fund @firebase/rules-unit-testing@6.0.0 firebase-tools@15.37.0
+          npx firebase emulators:exec --only firestore --project demo-teias-305 --config tests/firestore-emulator/firebase.json "node tests/firestore-emulator/run.mjs"
+      - name: Inspecionar build estatico
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -d dist/assets
+          touch dist/.nojekyll
+          if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
+          if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
+      - name: Auditar metadados de midia e chunks legados (GET somente)
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/audit-media-legacy-readonly.mjs
+      - name: Validar versao em producao e criar backup criptografado
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-etapa-3-rules.mjs prepare
+      - name: Persistir backup criptografado antes do corte
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-rules-criptografado-${{ github.run_id }}
+          path: .deploy-private/rules-backup.aes256gcm.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Confirmar main intacta antes da primeira escrita
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA" || { echo 'main mudou antes do corte: BLOQUEADO'; exit 2; }
+      - name: Empacotar e validar artefato oficial do Pages antes de A
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publicar A — Firestore Rules corrigidas
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-etapa-3-rules.mjs publish
+      - name: Confirmar Rules publicadas antes de B
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-etapa-3-rules.mjs verify
+      - name: Publicar B — mesmo Pages com GitHub Actions
+        id: pages_deploy
+        uses: actions/deploy-pages@v4
+      - name: Conferir publicacao HTTP do mesmo Pages e JS compilado
+        run: node scripts/verify-live-hub-pages.mjs
+      - name: Registrar destino de publicacao (sem tokens)
+        run: echo 'Pages publicado por deploy-pages; main nao foi modificada'
+      - name: Remover temporarios
+        if: always()
+        shell: bash
+        run: rm -rf .deploy-private
+
+# ATENCAO: workflow_dispatch so aparece na UI se workflow existir na branch default.
+# Este arquivo na branch de trabalho e uma preparacao; NAO efetua deploy.
