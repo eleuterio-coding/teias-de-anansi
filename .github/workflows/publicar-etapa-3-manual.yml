@@ -50,6 +50,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = "eleuterio-coding/teias-de-anansi"
+          test "$GITHUB_REF" = "refs/heads/main" || { echo 'Execute dispatcher somente na main; BLOQUEADO'; exit 2; }
           [[ "$APPROVED_CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'SHA aprovado invalido: BLOQUEADO'; exit 2; }
           test "$(git rev-parse HEAD)" = "$APPROVED_CANDIDATE_SHA" || { echo 'Branch mudou desde homologacao: BLOQUEADO'; exit 2; }
           BASE_MAIN="23ea59b0341261e97aeab9d5bc0ecfac8500132b"
