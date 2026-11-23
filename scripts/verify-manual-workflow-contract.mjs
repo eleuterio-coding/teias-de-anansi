@@ -11,10 +11,11 @@ const order = [
   'name: Auditar metadados de midia e chunks legados',
   'node scripts/deploy-etapa-3-rules.mjs prepare',
   'actions/upload-artifact@v4',
-  'node scripts/deploy-etapa-3-rules.mjs publish',
+  'name: Confirmar main intacta antes da primeira escrita',
   'actions/upload-pages-artifact@v3',
-  'actions/deploy-pages@v4',
+  'node scripts/deploy-etapa-3-rules.mjs publish',
   'node scripts/deploy-etapa-3-rules.mjs verify',
+  'actions/deploy-pages@v4',
   'node scripts/verify-live-hub-pages.mjs',
 ];
 let previous = -1;
@@ -35,6 +36,15 @@ assert.ok(file.includes('midia/RPG fora de escopo'), 'Campo de aceite deve avisa
 assert.match(file, /pages: write/);
 assert.match(file, /id-token: write/);
 assert.match(file, /contents: read/);
+assert.match(file, /persist-credentials: false/);
+assert.ok(
+  file.indexOf('actions/upload-pages-artifact@v3') < file.indexOf('deploy-etapa-3-rules.mjs publish'),
+  'Artefato Pages deve estar pronto antes da primeira escrita em Rules',
+);
+assert.ok(
+  file.indexOf('deploy-etapa-3-rules.mjs verify') < file.indexOf('actions/deploy-pages@v4'),
+  'Rules devem estar verificadas antes de publicar o site',
+);
 assert.match(file, /build_type !== "workflow"/);
 assert.doesNotMatch(file, /git -C \.deploy-site push|git push origin HEAD:main|git worktree add/);
 assert.doesNotMatch(file, /environment: etapa-3-producao/);
