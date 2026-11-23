@@ -13,15 +13,21 @@ const sample = RPG_SOURCE_CATALOG[0];
 describe('Etapa 4.02 — Catálogo de fontes RPG', () => {
   it('possui oito referências oficiais catalogadas com origem e edição', () => {
     expect(RPG_SOURCE_CATALOG).toHaveLength(8);
-    expect(RPG_SOURCE_CATALOG.every((source) => source.origin.officialUrl.startsWith('https://'))).toBe(true);
+    expect(
+      RPG_SOURCE_CATALOG.every((source) => source.origin.officialUrl.startsWith('https://')),
+    ).toBe(true);
     expect(RPG_SOURCE_CATALOG.every((source) => source.language === 'en')).toBe(true);
     expect(RPG_SOURCE_CATALOG.map((source) => source.edition).sort()).toContain('srd-5.2.1');
     expect(RPG_SOURCE_CATALOG.map((source) => source.edition).sort()).toContain('srd-5.1');
   });
 
   it('distingue os dois SRDs CC BY 4.0 dos livros comerciais', () => {
-    expect(RPG_SOURCE_CATALOG.filter((source) => source.rights.kind === 'cc-by-4.0')).toHaveLength(2);
-    expect(RPG_SOURCE_CATALOG.filter((source) => source.rights.kind === 'reference-only')).toHaveLength(6);
+    expect(RPG_SOURCE_CATALOG.filter((source) => source.rights.kind === 'cc-by-4.0')).toHaveLength(
+      2,
+    );
+    expect(
+      RPG_SOURCE_CATALOG.filter((source) => source.rights.kind === 'reference-only'),
+    ).toHaveLength(6);
     expect(RPG_SOURCE_CATALOG.filter((source) => source.usage === 'baseline')).toHaveLength(1);
     expect(RPG_SOURCE_CATALOG.filter((source) => source.usage === 'legacy')).toHaveLength(1);
   });
