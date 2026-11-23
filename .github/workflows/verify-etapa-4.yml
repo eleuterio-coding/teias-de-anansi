@@ -25,6 +25,20 @@ jobs:
           cache: npm
       - name: Instalar dependencias fixadas
         run: npm ci --no-audit --no-fund
+      - name: Emitir formatacao para aplicacao em GitHub
+        run: |
+          echo 'FORMAT0_BEGIN'
+          npx prettier src/data/srd-license-notices.ts | base64 -w0
+          echo
+          echo 'FORMAT0_END'
+          echo 'FORMAT1_BEGIN'
+          npx prettier src/data/srd-rule-audit.ts | base64 -w0
+          echo
+          echo 'FORMAT1_END'
+          echo 'FORMAT2_BEGIN'
+          npx prettier tests/srd-rule-extraction.test.ts | base64 -w0
+          echo
+          echo 'FORMAT2_END'
       - name: Tipos
         run: npm run typecheck
       - name: Lint
