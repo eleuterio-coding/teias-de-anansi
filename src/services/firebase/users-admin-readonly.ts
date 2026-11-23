@@ -88,20 +88,35 @@ export async function loadMasterRosterReadOnly(
       const memberships = await getDocsFromServer(
         query(collection(db, 'memberships'), where('email', '==', email)),
       );
+      const links = memberships.docs.map((item) => item.data());
+      if (identity.expectedRole === 'dm') {
+        if (profileDoc.id !== user.uid) return { status: 'incomplete' };
+        // Uma membership Mestre historica guarda email e username
+        // diferentes, mas pertence ao UID real. Nao alterar o cadastro.
+        const legacy = await getDocsFromServer(
+          query(collection(db, 'memberships'), where('uid', '==', user.uid)),
+        );
+        links.push(...legacy.docs.map((item) => item.data()));
+      }
       const relations = [];
-      for (const link of memberships.docs) {
-        const data = link.data();
+      const seenCampaigns = new Set<string>();
+      for (const data of links) {
+        const canonical =
+          normalized(data.email) === email &&
+          [identity.username, identity.authUsername].includes(
+            normalized(data.username) as typeof identity.username,
+          );
+        const uidVerifiedMaster = identity.expectedRole === 'dm' && data.uid === user.uid;
         if (
-          normalized(data.email) !== email ||
           !safeId(data.campaignId) ||
           data.role !== identity.expectedRole ||
           (data.uid && data.uid !== profileDoc.id) ||
-          ![identity.username, identity.authUsername].includes(
-            normalized(data.username) as typeof identity.username,
-          )
+          !(canonical || uidVerifiedMaster)
         ) {
           return { status: 'incomplete' };
         }
+        if (seenCampaigns.has(data.campaignId)) continue;
+        seenCampaigns.add(data.campaignId);
         relations.push({
           campaignId: data.campaignId as string,
           active: data.active === true,

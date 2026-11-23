@@ -49,18 +49,27 @@ const matchesUid = (member: Membership, uid: string) =>
  * Apenas consulta filtrada pelo email autenticado, nunca listagem geral de
  * perfis, vínculos ou personagens. Requer Firestore servidor, sem cache offline.
  */
-async function ownMemberships(user: AuthIdentity, db: Firestore) {
+async function ownMemberships(user: AuthIdentity, db: Firestore, role: 'dm' | 'player') {
   const results = await getDocsFromServer(
     query(collection(db, 'memberships'), where('email', '==', identityEmail(user))),
   );
-  return results.docs
-    .map((snapshot) => snapshot.data() as Membership)
-    .filter(
-      (member) =>
-        member.email === identityEmail(user) &&
-        member.active === true &&
-        matchesUid(member, user.uid),
+  const candidates = results.docs.map((snapshot) => snapshot.data() as Membership);
+  if (role === 'dm' && identityEmail(user) === 'rafael@teias.invalid') {
+    const legacy = await getDocsFromServer(
+      query(collection(db, 'memberships'), where('uid', '==', user.uid)),
     );
+    candidates.push(...legacy.docs.map((snapshot) => snapshot.data() as Membership));
+  }
+  const allowed = candidates.filter((member) => {
+    const canonical = member.email === identityEmail(user) && matchesUid(member, user.uid);
+    const masterLegacy = role === 'dm' && member.uid === user.uid;
+    return member.active === true && member.role === role && (canonical || masterLegacy);
+  });
+  return [
+    ...new Map(
+      allowed.map((member) => [String(member.campaignId), member]),
+    ).values(),
+  ];
 }
 
 async function verifiedRole(user: AuthIdentity, db: Firestore) {
@@ -100,7 +109,7 @@ export async function readHubScopedDocument(
       return snapshot.exists() ? { status: 'ok', data: snapshot.data() } : { status: 'missing' };
     }
 
-    const memberships = await ownMemberships(user, db);
+    const memberships = await ownMemberships(user, db, role.role);
     const membership = memberships.find(
       (candidate) => candidate.campaignId === request.campaignId && candidate.role === role.role,
     );
@@ -186,7 +195,7 @@ export async function checkOwnCampaignAccess(
   try {
     const role = await verifiedRole(user, db);
     if (!role) return { status: 'denied' };
-    const memberships = await ownMemberships(user, db);
+    const memberships = await ownMemberships(user, db, role.role);
     const active = memberships.filter(
       (member) => member.role === role.role && safeSegment(member.campaignId),
     );
