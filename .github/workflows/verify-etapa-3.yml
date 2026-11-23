@@ -36,6 +36,9 @@ jobs:
         run: |
           set -euo pipefail
           ruby -e 'require "yaml"; YAML.parse_file(".github/workflows/publicar-etapa-3-manual.yml")'
+          ruby -e 'require "yaml"; YAML.parse_file(".github/workflows/verificar-pages-preflight-manual.yml")'
+          node --check scripts/verify-pages-preflight-contract.mjs
+          node scripts/verify-pages-preflight-contract.mjs
           node --check scripts/deploy-etapa-3-rules.mjs
           node --check scripts/verify-live-hub-pages.mjs
           node --check scripts/audit-media-legacy-readonly.mjs
