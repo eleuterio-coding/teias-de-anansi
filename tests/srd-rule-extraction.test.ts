@@ -12,31 +12,51 @@ describe('Etapa 4.03 — extração rastreável do SRD', () => {
     expect(SRD_RULE_EXTRACTS).toHaveLength(20);
     expect(SRD_RULE_EXTRACTS.filter((item) => item.edition === 'srd-5.2.1')).toHaveLength(14);
     expect(SRD_RULE_EXTRACTS.filter((item) => item.edition === 'srd-5.1')).toHaveLength(6);
-    expect(SRD_RULE_EXTRACTS.every((item) => item.textTreatment === 'adapted-paraphrase')).toBe(true);
+    expect(SRD_RULE_EXTRACTS.every((item) => item.textTreatment === 'adapted-paraphrase')).toBe(
+      true,
+    );
   });
 
   it('cada registro preserva fonte, seção, página, versão e estado de revisão', () => {
-    expect(SRD_RULE_EXTRACTS.every((item) =>
-      Boolean(item.sourceId && item.sourceSection && item.titlePtBr && item.version) &&
-      item.sourcePage > 0 && item.status === 'in-review')).toBe(true);
+    expect(
+      SRD_RULE_EXTRACTS.every(
+        (item) =>
+          Boolean(item.sourceId && item.sourceSection && item.titlePtBr && item.version) &&
+          item.sourcePage > 0 &&
+          item.status === 'in-review',
+      ),
+    ).toBe(true);
   });
 
   it('não permite que os registros extraídos sejam usados como regras aprovadas', () => {
-    expect(SRD_RULE_EXTRACTS.every((item) => getApprovedRuleExtract(item.id) === undefined)).toBe(true);
+    expect(SRD_RULE_EXTRACTS.every((item) => getApprovedRuleExtract(item.id) === undefined)).toBe(
+      true,
+    );
   });
 
   it('não extrai qualquer texto de livros comerciais', () => {
-    expect(SRD_RULE_EXTRACTS.every((item) =>
-      RPG_SOURCE_CATALOG.find((source) => source.id === item.sourceId)?.rights.kind === 'cc-by-4.0')).toBe(true);
+    expect(
+      SRD_RULE_EXTRACTS.every(
+        (item) =>
+          RPG_SOURCE_CATALOG.find((source) => source.id === item.sourceId)?.rights.kind ===
+          'cc-by-4.0',
+      ),
+    ).toBe(true);
   });
 
   it('mantém atribuicões oficiais distintas para os dois SRDs', () => {
     expect(SRD_LICENSE_NOTICES).toHaveLength(2);
-    expect(SRD_LICENSE_NOTICES.every((notice) =>
-      notice.officialAttribution.includes('Wizards of the Coast LLC') &&
-      notice.officialAttribution.includes('creativecommons.org/licenses/by/4.0/legalcode') &&
-      notice.adaptationNotice.includes('não são uma tradução oficial'))).toBe(true);
-    expect(findSrdLicenseNotice('wotc-srd-521-en')?.sourceUrl).toBe('https://www.dndbeyond.com/srd');
+    expect(
+      SRD_LICENSE_NOTICES.every(
+        (notice) =>
+          notice.officialAttribution.includes('Wizards of the Coast LLC') &&
+          notice.officialAttribution.includes('creativecommons.org/licenses/by/4.0/legalcode') &&
+          notice.adaptationNotice.includes('não são uma tradução oficial'),
+      ),
+    ).toBe(true);
+    expect(findSrdLicenseNotice('wotc-srd-521-en')?.sourceUrl).toBe(
+      'https://www.dndbeyond.com/srd',
+    );
     expect(findSrdLicenseNotice('wotc-phb-2024-en')).toBeUndefined();
   });
 
@@ -113,8 +133,12 @@ describe('Etapa 4.03 — extração rastreável do SRD', () => {
   });
 
   it('detecta fonte ausente ou de edição errada', () => {
-    expect(auditRuleExtracts([{ ...rule, sourceId: 'inexistente' }])[0]?.code).toBe('missing-source');
-    expect(auditRuleExtracts([{ ...rule, sourceId: 'wotc-srd-51-en' }])[0]?.code).toBe('edition-mismatch');
+    expect(auditRuleExtracts([{ ...rule, sourceId: 'inexistente' }])[0]?.code).toBe(
+      'missing-source',
+    );
+    expect(auditRuleExtracts([{ ...rule, sourceId: 'wotc-srd-51-en' }])[0]?.code).toBe(
+      'edition-mismatch',
+    );
   });
 
   it('bloqueia uso de texto derivado de livro comercial mesmo com revisão', () => {
@@ -132,7 +156,12 @@ describe('Etapa 4.03 — extração rastreável do SRD', () => {
       relatedIds: ['srd-inexistente', rule.id],
     };
     expect(auditRuleExtracts([broken]).map((issue) => issue.code)).toEqual(
-      expect.arrayContaining(['missing-reference', 'invalid-fact', 'unresolved-relation', 'self-reference']),
+      expect.arrayContaining([
+        'missing-reference',
+        'invalid-fact',
+        'unresolved-relation',
+        'self-reference',
+      ]),
     );
   });
 
@@ -143,7 +172,9 @@ describe('Etapa 4.03 — extração rastreável do SRD', () => {
       approvedBy: 'Mestre',
       approvedOn: '2026-11-23',
     };
-    expect(auditRuleExtracts([approved]).map((issue) => issue.code)).toContain('source-not-approved');
+    expect(auditRuleExtracts([approved]).map((issue) => issue.code)).toContain(
+      'source-not-approved',
+    );
     expect(getApprovedRuleExtract(approved.id, [approved])).toBeUndefined();
   });
 
@@ -160,6 +191,8 @@ describe('Etapa 4.03 — extração rastreável do SRD', () => {
         : source,
     );
     expect(auditRuleExtracts([approvedRule], sources)).toEqual([]);
-    expect(getApprovedRuleExtract(approvedRule.id, [approvedRule], sources)?.id).toBe(approvedRule.id);
+    expect(getApprovedRuleExtract(approvedRule.id, [approvedRule], sources)?.id).toBe(
+      approvedRule.id,
+    );
   });
 });
