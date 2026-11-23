@@ -63,6 +63,12 @@ const seed = [
   ['campaigns/mesa-ficticia/characters/char-bruno', { characterId: 'char-bruno', ownerUid: otherPlayerIdentity.uid, ownerUsername: 'bruno', payload: { name: 'Personagem Bruno fictício' } }],
   ['users/uid-player-fixture/characters/char-gus', { ownerId: playerIdentity.uid, payload: { name: 'Minha ficha fictícia' } }],
   ['users/uid-other-fixture/characters/char-bruno', { ownerId: otherPlayerIdentity.uid, payload: { name: 'Outra ficha fictícia' } }],
+  ['media/legado-orfao', { ownerId: masterIdentity.uid, campaignId: null, entityType: 'campaign', entityId: 'mesa-ficticia', mime: 'image/webp', size: 20 }],
+  ['media/legado-orfao/chunks/parte-01', { data: 'conteudo-ficticio-um' }],
+  ['media/legado-sessao-gus', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-gus', mime: 'image/webp', size: 24 }],
+  ['media/legado-sessao-gus/chunks/parte-01', { data: 'conteudo-ficticio-dois' }],
+  ['media/legado-sessao-bruno', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-bruno', mime: 'image/webp', size: 24 }],
+  ['media/legado-sessao-bruno/chunks/parte-01', { data: 'conteudo-ficticio-tres' }],
 ];
 
 let passed = 0;
@@ -120,6 +126,20 @@ async function run(mode, rules) {
   await check(mode, 'Mestre lê memberships de membros', true, () => getDoc(doc(master, 'memberships/mesa-ficticia_bruno@teias.invalid')));
   await check(mode, 'Mestre atualiza projeção compartilhada', true, () => updateDoc(doc(master, 'campaigns/mesa-ficticia/shared/state'), { updatedAt: 'agora-ficticio' }));
   await check(mode, 'Mestre cria sessão fictícia', true, () => setDoc(doc(master, 'campaigns/mesa-ficticia/sessions/sess-nova'), { payload: { ficticia: true } }));
+
+  // Compatibilidade 3.09: mídia órfã anterior, mídia atribuída e chunks históricos.
+  // Os dados são inteiramente sintéticos e rodam nas Rules antigas e propostas.
+  await check(mode, '3.09: Mestre le metadados de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao')));
+  await check(mode, '3.09: Mestre le chunk de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao/chunks/parte-01')));
+  await check(mode, '3.09: Mestre atualiza chunk de midia propria antiga', true, () => updateDoc(doc(master, 'media/legado-orfao/chunks/parte-01'), { updatedAt: 'agora-ficticio' }));
+  await check(mode, '3.09: Jogador nao le midia orfa do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao')));
+  await check(mode, '3.09: Jogador nao le chunk orfao do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao/chunks/parte-01')));
+  await check(mode, '3.09: Jogador le midia de sessao atribuida', true, () => getDoc(doc(player, 'media/legado-sessao-gus')));
+  await check(mode, '3.09: Jogador le chunk de sessao atribuida', true, () => getDoc(doc(player, 'media/legado-sessao-gus/chunks/parte-01')));
+  await check(mode, '3.09: Jogador nao le midia de outra sessao', false, () => getDoc(doc(player, 'media/legado-sessao-bruno')));
+  await check(mode, '3.09: Jogador nao le chunk de outra sessao', false, () => getDoc(doc(player, 'media/legado-sessao-bruno/chunks/parte-01')));
+  await check(mode, '3.09: Jogador nao altera chunk do Mestre', false, () => updateDoc(doc(player, 'media/legado-sessao-gus/chunks/parte-01'), { updatedAt: 'nao-autorizado' }));
+  await check(mode, '3.09: Visitante nao le chunk de midia', false, () => getDoc(doc(visitor, 'media/legado-sessao-gus/chunks/parte-01')));
 
   // Jogador da mesa: apenas dados de sua participacao.
   await check(mode, 'Jogador lê o próprio perfil', true, () => getDoc(doc(player, 'users/uid-player-fixture')));
