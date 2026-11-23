@@ -46,7 +46,7 @@ export const SRD_RULE_EXTRACTS: readonly SrdRuleExtract[] = [
     "category": "ability",
     "titlePtBr": "Modificadores de atributo",
     "sourceSection": "Playing the Game > The Six Abilities > Ability Modifiers",
-    "sourcePage": 5,
+    "sourcePage": 6,
     "textPtBr": "Modificador de atributo calculado pelo arredondamento para baixo de (valor − 10) / 2.",
     "textTreatment": "adapted-paraphrase",
     "facts": {
@@ -229,7 +229,7 @@ export const SRD_RULE_EXTRACTS: readonly SrdRuleExtract[] = [
     "category": "proficiency",
     "titlePtBr": "Perícia e ferramenta no mesmo teste",
     "sourceSection": "Playing the Game > Proficiency > Equipment Proficiencies > Tools",
-    "sourcePage": 8,
+    "sourcePage": 9,
     "textPtBr": "Quando o teste envolve uma ferramenta e uma perícia com as quais você tem proficiência, aplique o bônus de proficiência apenas uma vez e conceda Vantagem.",
     "textTreatment": "adapted-paraphrase",
     "facts": {
@@ -370,7 +370,7 @@ export const SRD_RULE_EXTRACTS: readonly SrdRuleExtract[] = [
     "category": "proficiency",
     "titlePtBr": "Proficiência não se soma duas vezes (2014)",
     "sourceSection": "Using Ability Scores > Proficiency Bonus",
-    "sourcePage": 76,
+    "sourcePage": 77,
     "textPtBr": "O bônus de proficiência não é aplicado duas vezes ao mesmo número; proficiências redundantes não geram bônus adicional.",
     "textTreatment": "adapted-paraphrase",
     "facts": {
