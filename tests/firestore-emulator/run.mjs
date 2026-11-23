@@ -47,6 +47,7 @@ const seed = [
   ['campaigns/mesa-player-legada', { id: 'mesa-player-legada', ownerId: playerIdentity.uid, name: 'Mesa antiga de jogador, simulada' }],
   ['campaigns/mesa-player-legada/private/state', { payload: { secret: 'Nota privada fictícia em mesa legada' } }],
   ['memberships/mesa-ficticia_rafael@teias.invalid', { email: masterIdentity.email, uid: masterIdentity.uid, username: 'rafael', role: 'dm', active: true, campaignId: 'mesa-ficticia', characterId: null, sessionIds: [], adventureIds: [] }],
+  ['memberships/mesa-ficticia_cadastro-legado', { email: 'cadastro-legado@teias.invalid', uid: masterIdentity.uid, username: 'master-antigo', role: 'dm', active: true, campaignId: 'mesa-ficticia', characterId: null, sessionIds: [], adventureIds: [] }],
   ['memberships/mesa-ficticia_gus@teias.invalid', { email: playerIdentity.email, uid: '', username: 'gustavo', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-gus', sessionIds: ['sess-gus'], adventureIds: ['adv-gus'] }],
   ['memberships/mesa-ficticia_bruno@teias.invalid', { email: otherPlayerIdentity.email, uid: otherPlayerIdentity.uid, username: 'bruno', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-bruno', sessionIds: ['sess-bruno'], adventureIds: ['adv-bruno'] }],
   ['memberships/mesa-ficticia_leo@teias.invalid', { email: 'leo@teias.invalid', uid: 'uid-leo-fixture', username: 'leo', role: 'player', active: true, campaignId: 'mesa-ficticia', characterId: 'char-leo', sessionIds: [], adventureIds: [] }],
@@ -263,6 +264,11 @@ async function run(mode, rules) {
     await check(mode, '3.07: Mestre consulta vínculo conhecido ' + username, true, () =>
       getDocs(query(collection(master, 'memberships'), where('email', '==', login + '@teias.invalid'))));
   }
+  await check(mode, 'preflight: Mestre consulta seus vinculos por UID apesar de email legado', true, () =>
+    getDocs(query(collection(master, 'memberships'), where('uid', '==', masterIdentity.uid))));
+  await check(mode, 'preflight: Jogador nao consulta membership do UID Mestre', baseline, () =>
+    getDocs(query(collection(player, 'memberships'), where('uid', '==', masterIdentity.uid))));
+
   await check(mode, '3.07: Jogador não consulta perfil alheio na proposta', baseline, () =>
     getDocs(query(collection(player, 'users'), where('username', '==', 'bruno'))));
 
