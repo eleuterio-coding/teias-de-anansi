@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   verificar:
@@ -49,6 +50,11 @@ jobs:
         env:
           GITHUB_TOKEN_READONLY: ${{ github.token }}
         run: node scripts/audit-github-actions-readonly.mjs
+      - name: Localizar execucao push de auditoria real para conferencia (GET, sem secrets Firebase)
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN_READONLY: ${{ github.token }}
+        run: node scripts/find-ci-push-runs-readonly.mjs
       - name: Conferir codigo e compilacao completa
         run: npm run check
 
