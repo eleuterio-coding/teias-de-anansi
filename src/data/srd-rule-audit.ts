@@ -102,6 +102,6 @@ export function getApprovedRuleExtract(
   if (!found || found.status !== 'approved' || !found.approvedBy?.trim() || !found.approvedOn) {
     return undefined;
   }
-  if (auditRuleExtracts([found], sources).length > 0) return undefined;
+  if (auditRuleExtracts(entries, sources).some((issue) => issue.ruleId === found.id)) return undefined;
   return found;
 }
