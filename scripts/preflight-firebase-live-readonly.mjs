@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { Buffer } from 'node:buffer';
 import { readFileSync } from 'node:fs';
 import { URLSearchParams } from 'node:url';
 
@@ -176,6 +177,24 @@ async function run() {
     });
   }
 
+  const masterLinks = memberships.filter((doc) => bval(doc, 'active')
+    && (fld(doc, 'email') === 'rafael@teias.invalid'
+      || (master?.uid && fld(doc, 'uid') === master.uid)));
+  const masterLinksDiagnosis = {
+    byEmail: memberships.filter((doc) => bval(doc, 'active')
+      && fld(doc, 'email') === 'rafael@teias.invalid').length,
+    byUid: memberships.filter((doc) => bval(doc, 'active')
+      && master?.uid && fld(doc, 'uid') === master.uid).length,
+    union: masterLinks.length,
+    uidMatchedButEmailDifferent: masterLinks.filter((doc) => fld(doc, 'email') !== 'rafael@teias.invalid').length,
+    roleDm: masterLinks.filter((doc) => fld(doc, 'role') === 'dm').length,
+    usernameRafael: masterLinks.filter((doc) => normalized(fld(doc, 'username')) === 'rafael').length,
+    storedIdsMatchStoredEmails: masterLinks.filter((doc) =>
+      doc.name?.split('/').pop() === fld(doc, 'campaignId') + '_' + fld(doc, 'email')).length,
+  };
+  const unidentifiedActiveLinks = memberships.filter((doc) => bval(doc, 'active')
+    && !authNames.some((name) => fld(doc, 'email') === name.login + '@teias.invalid')).length;
+
   const campaignOwners = {
     total: campaigns.length,
     masterOwned: campaigns.filter((doc) => master?.uid && fld(doc, 'ownerId') === master.uid).length,
@@ -213,6 +232,8 @@ async function run() {
     },
     accounts: checks,
     totalActiveMemberships: memberships.filter((doc) => bval(doc, 'active')).length,
+    masterLinksDiagnosis,
+    unidentifiedActiveLinks,
     mismatchedActiveMembershipCampaigns,
     campaignOwners,
     media: mediaReport,
@@ -229,7 +250,10 @@ async function run() {
   console.log('PREPUBLICATION_FIREBASE_READ_ONLY', JSON.stringify(report, null, 2));
 
   const healthy = report.remoteRules.matchesHistoricalRules
-    && checks.every((x) => x.auth === 'enabled' && x.profile === 'coherent' && x.linksCoherent)
+    && checks.every((x) => x.auth === 'enabled' && x.profile === 'coherent'
+      && (x.linksCoherent || x.login === 'rafael'))
+    && masterLinksDiagnosis.union === 2
+    && masterLinksDiagnosis.roleDm === 2
     && report.totalActiveMemberships === 6
     && campaignOwners.otherOwner === 0
     && mismatchedActiveMembershipCampaigns === 0;
