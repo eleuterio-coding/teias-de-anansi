@@ -67,6 +67,8 @@ const seed = [
   ['media/legado-orfao/chunks/parte-01', { data: 'conteudo-ficticio-um' }],
   ['media/legado-sem-campo', { ownerId: masterIdentity.uid, entityType: 'campaign', entityId: 'mesa-ficticia', mime: 'image/webp', size: 20 }],
   ['media/legado-sem-campo/chunks/parte-01', { data: 'conteudo-ficticio-sem-campo' }],
+  ['media/legado-campanha-removida', { ownerId: masterIdentity.uid, campaignId: 'campanha-nao-encontrada', entityType: 'session', entityId: 'sess-antiga', mime: 'image/webp', size: 24 }],
+  ['media/legado-campanha-removida/chunks/parte-01', { data: 'fragmento-ficticio-historico' }],
   ['media/legado-sessao-gus', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-gus', mime: 'image/webp', size: 24 }],
   ['media/legado-sessao-gus/chunks/parte-01', { data: 'conteudo-ficticio-dois' }],
   ['media/legado-sessao-bruno', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-bruno', mime: 'image/webp', size: 24 }],
@@ -135,6 +137,10 @@ async function run(mode, rules) {
   await check(mode, '3.09: Mestre le chunk de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao/chunks/parte-01')));
   await check(mode, '3.09: Mestre le midia antiga sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo')));
   await check(mode, '3.09: Mestre le chunk antigo sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01')));
+  await check(mode, '3.09: Mestre le midia cujo campaignId referencia campanha removida', true, () => getDoc(doc(master, 'media/legado-campanha-removida')));
+  await check(mode, '3.09: Mestre le chunk de campanha historica removida', true, () => getDoc(doc(master, 'media/legado-campanha-removida/chunks/parte-01')));
+  await check(mode, '3.09: Jogador nao le midia da campanha historica removida', false, () => getDoc(doc(player, 'media/legado-campanha-removida')));
+  await check(mode, '3.09: Jogador nao le chunk da campanha historica removida', false, () => getDoc(doc(player, 'media/legado-campanha-removida/chunks/parte-01')));
   await check(mode, '3.09: Mestre atualiza chunk de midia propria antiga', true, () => updateDoc(doc(master, 'media/legado-orfao/chunks/parte-01'), { updatedAt: 'agora-ficticio' }));
   await check(mode, '3.09: Jogador nao le midia orfa do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao')));
   await check(mode, '3.09: Jogador nao le chunk orfao do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao/chunks/parte-01')));
