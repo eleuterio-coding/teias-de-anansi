@@ -160,20 +160,43 @@ for (const item of media) {
 }
 console.log('MEDIA_LEGACY_READONLY_COUNTS', JSON.stringify(checks));
 console.log('MEDIA_LEGACY_NOTE', 'Metadata-only; 6th profile and missing campaign references are not silently deleted or accepted.');
+// The exceptions below are observations from the authenticated GET audit, not
+// guessed data migrations. If ANY count changes, stop before a deployment.
+// Passing this gate does not mean that historic UIs or all downloads work.
 const structurallySafe = Boolean(masterUid)
-  && users.length === 5
-  && campaigns.length === 3
+  && checks.userCount === 6
+  && checks.authAccountCount === 5
+  && checks.authEnabled === 5
+  && checks.authExpectedEnabled === 5
+  && checks.authUnexpectedEnabled === 0
+  && checks.authExpectedMissing === 0
+  && checks.profileWithoutActiveAuth === 1
+  && checks.activeAuthWithoutProfile === 0
+  && checks.profilesNotInFiveExpectedNames === 1
+  && checks.profilesMissingUid === 0
+  && checks.profileDocumentUidMismatch === 0
+  && checks.duplicateProfileUids === 0
+  && checks.roleDmProfiles === 1
+  && checks.rolePlayerProfiles === 5
+  && checks.roleOtherProfiles === 0
+  && checks.masterProfiles === 1
+  && checks.campaigns === 3
+  && checks.campaignsNotMasterOwned === 0
   && campaigns.length === knownCampaign.size
-  && media.length === 14
+  && checks.media === 14
+  && checks.chunks === 14
+  && checks.mediaWithNoChunks === 0
+  && checks.mediaWithMultipleChunks === 0
   && checks.mediaMissingCampaign === 1
+  && checks.mediaInvalidCampaign === 1
+  && checks.mediaWithUnknownCampaignReference === 1
   && checks.mediaMissingOwner === 0
   && checks.mediaUnknownOwner === 0
-  && checks.mediaInvalidCampaign === 0
-  && checks.mediaWithoutEntityType === 0
-  && checks.campaignsNotMasterOwned === 0;
+  && checks.mediaOwnerNotMaster === 0
+  && checks.mediaWithoutEntityType === 0;
 if (!structurallySafe) {
   console.error('MEDIA_LEGACY_GATE_BLOCKED: unexpected metadata; no writes attempted.');
   process.exitCode = 2;
 } else {
-  console.log('MEDIA_LEGACY_METADATA_CHECK_PASSED: GET-only inventory; functional compatibility and chunks behavior still require testing.');
+  console.log('MEDIA_LEGACY_METADATA_CHECK_PASSED_WITH_DOCUMENTED_EXCEPTIONS: 1 inactive historical profile, 1 media without campaignId and 1 media linked to missing campaign. Functional legacy UI compatibility and real user sessions NOT certified.');
 }
