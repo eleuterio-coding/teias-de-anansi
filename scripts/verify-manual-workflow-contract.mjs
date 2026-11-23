@@ -25,7 +25,7 @@ for (const marker of order) {
   previous = i;
 }
 assert.match(file, /workflow_dispatch:/);
-assert.match(file, /test \"\$GITHUB_REF\" = \"refs\/heads\/main\"/);
+assert.ok(file.includes('test "$GITHUB_REF" = "refs/heads/main"'), 'Manual workflow must require main');
 assert.doesNotMatch(file, /^\s+(?:push|schedule|pull_request):/m);
 assert.match(file, /github.event.inputs.confirmacao == 'PUBLICAR_A_E_B'/);
 assert.match(file, /github.event.inputs.compatibilidade_legada == 'LEGADO_VALIDADO'/);
