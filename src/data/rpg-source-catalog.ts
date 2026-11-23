@@ -190,7 +190,10 @@ export const RPG_SOURCE_CATALOG: readonly RpgSource[] = [
 ];
 
 /** Recupera uma fonte sem alterar a coleção original. */
-export function getRpgSource(id: string, sources: readonly RpgSource[] = RPG_SOURCE_CATALOG): RpgSource | undefined {
+export function getRpgSource(
+  id: string,
+  sources: readonly RpgSource[] = RPG_SOURCE_CATALOG,
+): RpgSource | undefined {
   return sources.find((source) => source.id === id);
 }
 
@@ -210,7 +213,11 @@ export function listRpgSources(
   sources: readonly RpgSource[] = RPG_SOURCE_CATALOG,
 ): RpgSource[] {
   const normalize = (value: string): string =>
-    value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim();
+    value
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLocaleLowerCase('pt-BR')
+      .trim();
   const query = normalize(filter.query ?? '');
   return sources
     .filter((source) => {
@@ -220,9 +227,15 @@ export function listRpgSources(
       if (filter.usage && source.usage !== filter.usage) return false;
       if (filter.rights && source.rights.kind !== filter.rights) return false;
       if (filter.reviewStatus && source.reviewStatus !== filter.reviewStatus) return false;
-      return normalize([source.title, source.id, source.version, source.origin.publisher].join(' ')).includes(query);
+      return normalize(
+        [source.title, source.id, source.version, source.origin.publisher].join(' '),
+      ).includes(query);
     })
-    .sort((a, b) => a.title.localeCompare(b.title, 'pt-BR', { sensitivity: 'base' }) || a.id.localeCompare(b.id));
+    .sort(
+      (a, b) =>
+        a.title.localeCompare(b.title, 'pt-BR', { sensitivity: 'base' }) ||
+        a.id.localeCompare(b.id),
+    );
 }
 
 /**
@@ -230,21 +243,31 @@ export function listRpgSources(
  * O item 4.03 ainda definirá o processo de extração/atribuição/controle de versões.
  */
 export function canExtractSourceText(source: RpgSource): boolean {
-  return source.reviewStatus === 'approved' &&
+  return (
+    source.reviewStatus === 'approved' &&
     source.rights.kind === 'cc-by-4.0' &&
     Boolean(source.reviewedBy?.trim()) &&
-    Boolean(source.reviewedOn);
+    Boolean(source.reviewedOn)
+  );
 }
 
 export interface SourceCatalogIssue {
-  code: 'duplicate-id' | 'duplicate-edition-title' | 'missing-required' | 'invalid-year' |
-    'invalid-url' | 'missing-license' | 'approval-without-review';
+  code:
+    | 'duplicate-id'
+    | 'duplicate-edition-title'
+    | 'missing-required'
+    | 'invalid-year'
+    | 'invalid-url'
+    | 'missing-license'
+    | 'approval-without-review';
   sourceId: string;
   detail: string;
 }
 
 /** Auditoria de metadados para 4.02; NÃO substitui a auditoria de conteúdos do item 4.14. */
-export function auditRpgSources(sources: readonly RpgSource[] = RPG_SOURCE_CATALOG): SourceCatalogIssue[] {
+export function auditRpgSources(
+  sources: readonly RpgSource[] = RPG_SOURCE_CATALOG,
+): SourceCatalogIssue[] {
   const issues: SourceCatalogIssue[] = [];
   const ids = new Set<string>();
   const titles = new Set<string>();
@@ -254,25 +277,36 @@ export function auditRpgSources(sources: readonly RpgSource[] = RPG_SOURCE_CATAL
     if (ids.has(source.id)) add('duplicate-id', 'Identificador duplicado');
     ids.add(source.id);
     const key = [source.edition, source.language, source.title.toLocaleLowerCase('en')].join('|');
-    if (titles.has(key)) add('duplicate-edition-title', 'Título duplicado na mesma edição e idioma');
+    if (titles.has(key))
+      add('duplicate-edition-title', 'Título duplicado na mesma edição e idioma');
     titles.add(key);
-    if (![source.id, source.title, source.version, source.language, source.origin.publisher, source.metadataCheckedOn].every(
-      (value) => typeof value === 'string' && value.trim().length > 0,
-    )) add('missing-required', 'Campo textual obrigatório vazio');
+    if (
+      ![
+        source.id,
+        source.title,
+        source.version,
+        source.language,
+        source.origin.publisher,
+        source.metadataCheckedOn,
+      ].every((value) => typeof value === 'string' && value.trim().length > 0)
+    )
+      add('missing-required', 'Campo textual obrigatório vazio');
     if (!Number.isInteger(source.year) || source.year < 1974 || source.year > 2100) {
       add('invalid-year', 'Ano da publicação inválido');
     }
     try {
-      if (new URL(source.origin.officialUrl).protocol !== 'https:') add('invalid-url', 'Fonte exige HTTPS');
+      if (new URL(source.origin.officialUrl).protocol !== 'https:')
+        add('invalid-url', 'Fonte exige HTTPS');
     } catch {
       add('invalid-url', 'Endereço de origem inválido');
     }
-    if (source.rights.kind === 'cc-by-4.0' &&
-      (!source.rights.attribution.trim() || source.rights.licenseUrl !== LICENSE)) {
+    if (
+      source.rights.kind === 'cc-by-4.0' &&
+      (!source.rights.attribution.trim() || source.rights.licenseUrl !== LICENSE)
+    ) {
       add('missing-license', 'Fonte CC BY 4.0 requer atribuição e URL da licença');
     }
-    if (source.reviewStatus === 'approved' &&
-      (!source.reviewedBy?.trim() || !source.reviewedOn)) {
+    if (source.reviewStatus === 'approved' && (!source.reviewedBy?.trim() || !source.reviewedOn)) {
       add('approval-without-review', 'Aprovação exige revisor e data registrados');
     }
   }
