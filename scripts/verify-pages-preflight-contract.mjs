@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+
+const file = readFileSync('.github/workflows/verificar-pages-preflight-manual.yml', 'utf8');
+assert.match(file, /workflow_dispatch:/);
+assert.doesNotMatch(file, /^\s+(?:push|pull_request|schedule):/m);
+assert.match(file, /id-token: write/);
+assert.match(file, /pages: write/);
+assert.match(file, /contents: read/);
+assert.match(file, /name: github-pages/);
+assert.match(file, /refs\/heads\/main/);
+assert.match(file, /PREFLIGHT_OIDC_OK/);
+assert.match(file, /PREFLIGHT_PAGES_GET_OK/);
+assert.match(file, /PREFLIGHT_LIMITATION:/);
+assert.match(file, /ACTIONS_ID_TOKEN_REQUEST_URL/);
+assert.doesNotMatch(file, /uses: actions\/checkout|uses: actions\/deploy-pages|uses: actions\/upload-pages-artifact/);
+assert.doesNotMatch(file, /^\s+FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI:/m);
+assert.doesNotMatch(file, /node scripts\/deploy-etapa-3-rules|git push|gh api --method POST/);
+assert.ok(file.includes('console.log(\'PREFLIGHT_OIDC_OK:'), 'OIDC must log only success marker');
+assert.ok(file.includes('source='), 'Pages Source must be reported without altering it');
+console.log('PREFLIGHT_CONTRACT_OK: manual only, main/github-pages, OIDC, GET-only, no secrets, no deploy');
