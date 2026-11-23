@@ -1,4 +1,6 @@
 import crypto from 'node:crypto';
+import { Buffer } from 'node:buffer';
+import { URLSearchParams } from 'node:url';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
 const PROJECT = 'teais-de-anansi';
