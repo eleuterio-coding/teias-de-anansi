@@ -12,7 +12,7 @@ if (account.project_id !== PROJECT || !account.private_key || !account.client_em
 const encode = (v) => Buffer.from(JSON.stringify(v)).toString('base64url');
 const now = Math.floor(Date.now() / 1000);
 const jwt = encode({ alg: 'RS256', typ: 'JWT' }) + '.' + encode({
-  iss: account.client_email, scope: 'https://www.googleapis.com/auth/datastore',
+  iss: account.client_email, scope: 'https://www.googleapis.com/auth/cloud-platform',
   aud: 'https://oauth2.googleapis.com/token', iat: now, exp: now + 900,
 });
 const signature = crypto.sign('RSA-SHA256', Buffer.from(jwt), account.private_key).toString('base64url');
@@ -49,6 +49,49 @@ async function fetchDocuments(relative, fields) {
   }
   throw Error('Unexpected pagination limit');
 }
+async function authAccountsReadOnly() {
+  const expectedEmails = new Set([
+    'rafael@teias.invalid', 'bruno@teias.invalid', 'gus@teias.invalid',
+    'leo@teias.invalid', 'fernanda@teias.invalid',
+  ]);
+  const activeUids = new Set();
+  const seenEmails = new Set();
+  let allAccounts = 0;
+  let enabledAccounts = 0;
+  let unexpectedEnabled = 0;
+  let expectedEnabled = 0;
+  let next = '';
+  for (let page = 0; page < 30; page++) {
+    const url = new URL('https://identitytoolkit.googleapis.com/v1/projects/' + PROJECT + '/accounts:batchGet');
+    url.searchParams.set('maxResults', '1000');
+    if (next) url.searchParams.set('nextPageToken', next);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { authorization: 'Bearer ' + token },
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!response.ok) throw Error('Auth read-only inventory HTTP ' + response.status);
+    const result = await response.json();
+    for (const person of result.users || []) {
+      allAccounts++;
+      const enabled = person.disabled !== true;
+      const email = String(person.email || '').trim().toLowerCase();
+      if (email) seenEmails.add(email);
+      if (!enabled) continue;
+      enabledAccounts++;
+      if (person.localId) activeUids.add(person.localId);
+      if (expectedEmails.has(email)) expectedEnabled++;
+      else unexpectedEnabled++;
+    }
+    next = result.nextPageToken || '';
+    if (!next) return {
+      activeUids, allAccounts, enabledAccounts, unexpectedEnabled, expectedEnabled,
+      expectedMissing: [...expectedEmails].filter(email => !seenEmails.has(email)).length,
+    };
+  }
+  throw Error('Auth read-only inventory pagination limit');
+}
+const auth = await authAccountsReadOnly();
 const field = (d, name) => d.fields?.[name]?.stringValue || null;
 const id = (d) => d.name?.split('/').pop() || '';
 const users = await fetchDocuments('users', ['uid', 'role', 'username']);
@@ -67,6 +110,13 @@ const knownCampaign = new Map(campaigns.map(d => [id(d), field(d, 'ownerId')]));
 const masterUid = master.length === 1 ? field(master[0], 'uid') : null;
 const checks = {
   userCount: users.length,
+  authAccountCount: auth.allAccounts,
+  authEnabled: auth.enabledAccounts,
+  authExpectedEnabled: auth.expectedEnabled,
+  authUnexpectedEnabled: auth.unexpectedEnabled,
+  authExpectedMissing: auth.expectedMissing,
+  profileWithoutActiveAuth: users.filter(d => !auth.activeUids.has(field(d, 'uid'))).length,
+  activeAuthWithoutProfile: [...auth.activeUids].filter(uid => !users.some(d => field(d, 'uid') === uid)).length,
   masterProfiles: master.length,
   campaigns: campaigns.length,
   media: media.length,
