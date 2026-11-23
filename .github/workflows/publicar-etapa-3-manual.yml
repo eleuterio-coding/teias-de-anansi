@@ -7,6 +7,10 @@ on:
         description: 'Digite PUBLICAR_A_E_B para executar o corte'
         required: true
         type: string
+      candidate_sha:
+        description: 'SHA completo (40 caracteres) do codigo testado e aprovado da branch Etapa 3'
+        required: true
+        type: string
       compatibilidade_legada:
         description: 'Digite LEGADO_VALIDADO somente apos auditoria dos modulos/midia antigos'
         required: true
@@ -40,10 +44,14 @@ jobs:
           ref: feature/etapa-3-usuarios-acesso-20261120
           fetch-depth: 0
       - name: Guardas de origem e estado
+        env:
+          APPROVED_CANDIDATE_SHA: ${{ inputs.candidate_sha }}
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = "eleuterio-coding/teias-de-anansi"
+          [[ "$APPROVED_CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'SHA aprovado invalido: BLOQUEADO'; exit 2; }
+          test "$(git rev-parse HEAD)" = "$APPROVED_CANDIDATE_SHA" || { echo 'Branch mudou desde homologacao: BLOQUEADO'; exit 2; }
           BASE_MAIN="23ea59b0341261e97aeab9d5bc0ecfac8500132b"
           git merge-base --is-ancestor "$BASE_MAIN" origin/main || { echo 'main mudou de linhagem: BLOQUEADO'; exit 2; }
           CHANGES="$(git diff --name-only "$BASE_MAIN" origin/main)"
