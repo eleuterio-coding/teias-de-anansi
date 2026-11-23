@@ -1,4 +1,6 @@
 import test from 'node:test';
+import process from 'node:process';
+import { Buffer } from 'node:buffer';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import os from 'node:os';
