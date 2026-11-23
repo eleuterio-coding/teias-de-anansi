@@ -55,6 +55,13 @@ const users = await fetchDocuments('users', ['uid', 'role', 'username']);
 const campaigns = await fetchDocuments('campaigns', ['ownerId']);
 const media = await fetchDocuments('media', ['ownerId', 'campaignId', 'entityType', 'entityId', 'mime', 'size']);
 const master = users.filter(d => field(d, 'role') === 'dm' && field(d, 'username') === 'rafael');
+const expectedUsernames = new Set(['rafael', 'bruno', 'gustavo', 'leo', 'fernanda']);
+const roles = { dm: 0, player: 0, other: 0 };
+for (const user of users) {
+  const role = field(user, 'role');
+  if (role === 'dm' || role === 'player') roles[role]++;
+  else roles.other++;
+}
 const knownUid = new Set(users.map(d => field(d, 'uid')).filter(Boolean));
 const knownCampaign = new Map(campaigns.map(d => [id(d), field(d, 'ownerId')]));
 const masterUid = master.length === 1 ? field(master[0], 'uid') : null;
@@ -64,6 +71,16 @@ const checks = {
   campaigns: campaigns.length,
   media: media.length,
   chunks: 0,
+  profilesNotInFiveExpectedNames: users.filter(d => !expectedUsernames.has(field(d, 'username'))).length,
+  profilesMissingUid: users.filter(d => !field(d, 'uid')).length,
+  profileDocumentUidMismatch: users.filter(d => field(d, 'uid') !== id(d)).length,
+  duplicateProfileUids: users.length - new Set(users.map(d => field(d, 'uid'))).size,
+  roleDmProfiles: roles.dm,
+  rolePlayerProfiles: roles.player,
+  roleOtherProfiles: roles.other,
+  mediaWithNoChunks: 0,
+  mediaWithMultipleChunks: 0,
+  mediaWithUnknownCampaignReference: 0,
   mediaMissingCampaign: 0,
   mediaMissingOwner: 0,
   mediaUnknownOwner: 0,
@@ -79,14 +96,20 @@ for (const item of media) {
   if (ownerId && !knownUid.has(ownerId)) checks.mediaUnknownOwner++;
   if (ownerId && ownerId !== masterUid) checks.mediaOwnerNotMaster++;
   if (!campaignId) checks.mediaMissingCampaign++;
-  if (campaignId && !knownCampaign.has(campaignId)) checks.mediaInvalidCampaign++;
+  if (campaignId && !knownCampaign.has(campaignId)) {
+    checks.mediaInvalidCampaign++;
+    checks.mediaWithUnknownCampaignReference++;
+  }
   if (!field(item, 'entityType')) checks.mediaWithoutEntityType++;
   // Select a deliberately nonexistent field to enumerate chunk document names,
   // without fetching the content, binary payload or any private text.
   const chunks = await fetchDocuments('media/' + encodeURIComponent(id(item)) + '/chunks', ['_audit_never_fetch_payload_']);
   checks.chunks += chunks.length;
+  if (chunks.length === 0) checks.mediaWithNoChunks++;
+  if (chunks.length > 1) checks.mediaWithMultipleChunks++;
 }
 console.log('MEDIA_LEGACY_READONLY_COUNTS', JSON.stringify(checks));
+console.log('MEDIA_LEGACY_NOTE', 'Metadata-only; 6th profile and missing campaign references are not silently deleted or accepted.');
 const structurallySafe = Boolean(masterUid)
   && users.length === 5
   && campaigns.length === 3
