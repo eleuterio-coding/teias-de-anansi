@@ -21,6 +21,14 @@ Documentos de entrega: [matriz de compatibilidade](3.05-compatibilidade-prepubli
 
 **Não publicar agora.** Exigem decisões específicas futuras: (A) publicar Rules após nova conferência do ruleset realmente implantado, backup e compatibilidade das consultas antigas; (B) atualizar apenas o GitHub Pages já existente; (C) homologar as cinco sessões reais sem obter senhas. O rollback deve preservar o isolamento, nunca republicar automaticamente as Rules históricas excessivamente permissivas.
 
+## Pré-voo REAL de 23/11/2026 — sem acesso manual ao Firebase
+
+Verificado por GET administrativo: Rules reais continuam idênticas à baseline (`aad19cc6…`), cinco contas habilitadas, cinco perfis coerentes, seis memberships ativas, **três campanhas com proprietário Mestre**, 14 documentos de mídia (um legado sem campanha). O Mestre tem dois vínculos por UID, mas apenas um pelo e-mail de login — a leitura do Hub foi adaptada **somente em código** para reconhecer ambos, sem alterar o Firebase.
+
+Teste de permissão IAM somente leitura confirmou a credencial GitHub apta a criar Ruleset e atualizar release; Pages atual é **legacy**, origem **`main`/`/`**, título **Novo início**. O domínio GitHub Pages não consta na lista de domínios autorizados retornada, o que não prova defeito do login por senha; confirmar com titulares no navegador. **302 testes da aplicação + 218 do emulador** aprovados em [CI #45164567466](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45164567466).
+
+**Relatório com evidências e ações A/B, inclusive backup e rollback:** [3.09-preflight-real-2026-11-23.md](3.09-preflight-real-2026-11-23.md). **Nenhuma Rule nem site foi publicada; a Etapa 3 continua aberta.**
+
 ## 1. Escopo de referência e decisões já tomadas
 
 O plano de reconstrução v0.1 de 19/11/2026 define **exatamente nove itens 3.01–3.09** para esta etapa. A versão arquivada do plano ainda traz a marca histórica “pendente de análise do Mestre”; as **aprovações posteriores no diálogo** encerraram as Etapas 1 e 2, autorizaram o planejamento e, posteriormente, os itens **3.01, 3.02, 3.03, 3.04, 3.05, 3.06, 3.07, 3.08 e auditoria parcial de 3.09** da Etapa 3. Esta proposta não modifica retroativamente o documento original.

@@ -14,6 +14,14 @@ O Mestre definiu em 22/11/2026 que **uso e testes manuais de aceitação são 10
 
 **Hospedagem definitiva:** manter somente o **GitHub Pages existente** (`eleuterio-coding/teias-de-anansi`); não criar segundo site/repositório. A interface simples apresenta login/senha, áreas correspondentes ao papel e logout, sem marcadores de etapa ou testes para o usuário. O trabalho permanece na branch até aprovação específica de publicação, **depois** de verificar/corrigir as regras excessivamente permissivas do Firestore com autorização independente. A Etapa 3 continua aberta.
 
+## Pré-voo REAL de 23/11/2026 — sem acesso manual ao Firebase
+
+Verificado por GET administrativo: Rules reais continuam idênticas à baseline (`aad19cc6…`), cinco contas habilitadas, cinco perfis coerentes, seis memberships ativas, **três campanhas com proprietário Mestre**, 14 documentos de mídia (um legado sem campanha). O Mestre tem dois vínculos por UID, mas apenas um pelo e-mail de login — a leitura do Hub foi adaptada **somente em código** para reconhecer ambos, sem alterar o Firebase.
+
+Teste de permissão IAM somente leitura confirmou a credencial GitHub apta a criar Ruleset e atualizar release; Pages atual é **legacy**, origem **`main`/`/`**, título **Novo início**. O domínio GitHub Pages não consta na lista de domínios autorizados retornada, o que não prova defeito do login por senha; confirmar com titulares no navegador. **302 testes da aplicação + 218 do emulador** aprovados em [CI #45164567466](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45164567466).
+
+**Relatório com evidências e ações A/B, inclusive backup e rollback:** [3.09-preflight-real-2026-11-23.md](3.09-preflight-real-2026-11-23.md). **Nenhuma Rule nem site foi publicada; a Etapa 3 continua aberta.**
+
 ## Objetivo
 
 Restabelecer acesso ao Hub por meio das **cinco contas já existentes**, reconhecendo Mestre/Jogador e preservando seus identificadores, senhas, dados e vínculos. A segurança dos dados deve ser aplicada por autorização no Firestore e serviços, e não apenas por botões ocultos.

@@ -30,3 +30,7 @@ A proposta `proposal.rules` foi **reforçada** para validar também a coerência
 A CI de [reavaliação #45085033324](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45085033324) passou com **214/214 verificações**, **0 falhas**, **12 exposições históricas originais reproduzidas**, **0 alterações em produção**. São dez verificações a mais que na matriz 3.09: quatro vínculos fictícios incoerentes e uma identidade com e-mail Mestre sobre UID/perfil de Jogador, comparados na baseline e na proposta.
 
 **Atenção:** mudanças de Rules em produção exigem aprovação específica **separada** da publicação no único site GitHub Pages existente. O runbook está em [plano de publicação e rollback](../../docs/etapas/etapa-3/3.05-plano-publicacao-e-rollback.md) e a matriz de compatibilidade em [pré-publicação](../../docs/etapas/etapa-3/3.05-compatibilidade-prepublicacao.md). A suite não é mecanismo de deploy.
+
+## Pré-voo de 23/11/2026 — cliente Mestre com cadastro legado
+
+A suite foi expandida de 214 para **218 verificações** e demonstra, sob ambas as versões de Rules, consulta de membership pelo UID do Mestre com e-mail/nome legados, além de negação de listagem pelo UID do Mestre quando a consulta parte de um Jogador. A baseline continua com **12 permissões excessivas conhecidas**, bloqueadas na proposta. Os testes de aplicação (Vitest) são **302/302**; [CI #45164567466](https://github.com/eleuterio-coding/teias-de-anansi/actions/runs/45164567466) foi aprovada. Não há deploy de Rules nem uso de identidades reais no emulador.
