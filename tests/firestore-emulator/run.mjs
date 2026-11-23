@@ -266,7 +266,7 @@ async function run(mode, rules) {
   }
   await check(mode, 'preflight: Mestre consulta seus vinculos por UID apesar de email legado', true, () =>
     getDocs(query(collection(master, 'memberships'), where('uid', '==', masterIdentity.uid))));
-  await check(mode, 'preflight: Jogador nao consulta membership do UID Mestre', baseline, () =>
+  await check(mode, 'preflight: Jogador nao consulta membership do UID Mestre', false, () =>
     getDocs(query(collection(player, 'memberships'), where('uid', '==', masterIdentity.uid))));
 
   await check(mode, '3.07: Jogador não consulta perfil alheio na proposta', baseline, () =>
