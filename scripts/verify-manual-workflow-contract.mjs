@@ -36,6 +36,16 @@ assert.ok(file.includes('midia/RPG fora de escopo'), 'Campo de aceite deve avisa
 assert.match(file, /pages: write/);
 assert.match(file, /id-token: write/);
 assert.match(file, /contents: read/);
+assert.match(file, /EXPECTED_CHANGES/);
+const allowedMainDiff = [
+  '.github/workflows/publicar-etapa-3-manual.yml',
+  '.github/workflows/verificar-pages-preflight-manual.yml',
+];
+for (const path of allowedMainDiff) {
+  assert.ok(file.includes("'" + path + "'"), 'Guard da main nao contempla exatamente: ' + path);
+}
+assert.doesNotMatch(file, /test "\$CHANGES" = "\.github\/workflows\/publicar-etapa-3-manual.yml"/);
+
 assert.match(file, /persist-credentials: false/);
 assert.ok(
   file.indexOf('actions/upload-pages-artifact@v3') < file.indexOf('deploy-etapa-3-rules.mjs publish'),
