@@ -34,6 +34,7 @@ jobs:
           ruby -e 'require "yaml"; YAML.parse_file(".github/workflows/publicar-etapa-3-manual.yml")'
           node --check scripts/deploy-etapa-3-rules.mjs
           node --check scripts/verify-live-hub-pages.mjs
+          node --check scripts/audit-media-legacy-readonly.mjs
           node --check tests/deploy-etapa-3-script.test.mjs
           node --check tests/deploy-etapa-3-mock-fetch.mjs
       - name: Testar deploy A+B contra Firebase totalmente simulado (sem secrets)
