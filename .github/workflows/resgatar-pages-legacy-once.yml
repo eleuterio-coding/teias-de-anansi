@@ -83,6 +83,8 @@ jobs:
           git -C published config user.name "github-actions[bot]"
           git -C published config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git -C published add -A
+          git -C published restore --staged README.md
+          git -C published restore README.md
           STAGED="$(git -C published diff --cached --name-only)"
           test -n "$STAGED" || { echo 'Nenhum arquivo para site'; exit 2; }
           if printf '%s\n' "$STAGED" | grep -E '^(\.github/|README\.md$|docs/|scripts/|src/|tests/)' ; then
