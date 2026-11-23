@@ -13,7 +13,9 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: publicacao-etapa-3
@@ -24,7 +26,9 @@ jobs:
     if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B' && github.event.inputs.compatibilidade_legada == 'LEGADO_VALIDADO'
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    environment: etapa-3-producao
+    environment:
+      name: github-pages
+      url: ${{ steps.pages_deploy.outputs.page_url }}
     env:
       FIREBASE_CLI_DISABLE_TELEMETRY: '1'
       CI: 'true'
@@ -45,6 +49,23 @@ jobs:
           CHANGES="$(git diff --name-only "$BASE_MAIN" origin/main)"
           test "$CHANGES" = ".github/workflows/publicar-etapa-3-manual.yml" || { echo 'main possui alteracoes nao autorizadas: BLOQUEADO'; exit 2; }
           echo "EXPECTED_MAIN_SHA=$(git rev-parse origin/main)" >> "$GITHUB_ENV"
+      - name: Bloquear corte se Pages ainda usar modo de publicacao por branch
+        env:
+          GITHUB_TOKEN_READONLY: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module -e '
+            const response = await fetch("https://api.github.com/repos/eleuterio-coding/teias-de-anansi/pages", {
+              headers: { authorization: "Bearer " + process.env.GITHUB_TOKEN_READONLY, accept: "application/vnd.github+json" }
+            });
+            if (!response.ok) throw Error("Pages settings GET HTTP " + response.status);
+            const data = await response.json();
+            if (data.build_type !== "workflow") throw Error("Pages ainda nao esta configurado em GitHub Actions: BLOQUEADO");
+            if (data.html_url !== "https://eleuterio-coding.github.io/teias-de-anansi/")
+              throw Error("Endereco do Pages divergente: BLOQUEADO");
+            console.log("Pages pronto para deploy via Actions: GET confirmado");
+          '
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -93,33 +114,31 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs publish
-      - name: Publicar B — mesmo Pages via main
+      - name: Confirmar que a main permanece inalterada antes do deploy de Pages
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA" || { echo 'main mudou durante corte: BLOQUEADO'; exit 2; }
-          git worktree add --detach .deploy-site origin/main
-          git -C .deploy-site config user.name "github-actions[bot]"
-          git -C .deploy-site config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          cp -a dist/. .deploy-site/
-          git -C .deploy-site add -A
-          if ! git -C .deploy-site diff --cached --quiet; then
-            git -C .deploy-site commit -m "deploy: Etapa 3 — interface validada"
-            git -C .deploy-site push origin HEAD:main
-          fi
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA" || { echo 'main alterada durante corte: BLOQUEADO'; exit 2; }
+      - name: Empacotar build oficial do Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publicar B — mesmo Pages com GitHub Actions
+        id: pages_deploy
+        uses: actions/deploy-pages@v4
       - name: Confirmar Rules publicadas
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs verify
       - name: Conferir publicacao HTTP do mesmo Pages e JS compilado
         run: node scripts/verify-live-hub-pages.mjs
-      - name: Registrar commit final sem dados privados
-        run: git ls-remote origin refs/heads/main
+      - name: Registrar destino de publicacao (sem tokens)
+        run: echo 'Pages publicado por deploy-pages; main nao foi modificada'
       - name: Remover temporarios
         if: always()
         shell: bash
-        run: rm -rf .deploy-private .deploy-site
+        run: rm -rf .deploy-private
 
 # ATENCAO: workflow_dispatch so aparece na UI se workflow existir na branch default.
 # Este arquivo na branch de trabalho e uma preparacao; NAO efetua deploy.
