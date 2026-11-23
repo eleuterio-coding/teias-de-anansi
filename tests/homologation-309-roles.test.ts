@@ -76,12 +76,18 @@ beforeEach(() => {
     }) => {
       if (
         source.name !== 'memberships' ||
-        condition.field !== 'email' ||
+        !['email', 'uid'].includes(condition.field) ||
         condition.operator !== '=='
       ) {
         throw new Error('Consulta de colecao sem filtro autorizado');
       }
-      return { docs: (links[condition.value] ?? []).map((data) => ({ data: () => data })) };
+      const matched =
+        condition.field === 'email'
+          ? links[condition.value] ?? []
+          : Object.values(links)
+              .flat()
+              .filter((link) => link.uid === condition.value);
+      return { docs: matched.map((data) => ({ data: () => data })) };
     },
   );
 });
