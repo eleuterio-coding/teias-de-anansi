@@ -142,6 +142,7 @@ async function run(mode, rules) {
   // provocar uma negacao nas expressoes de update/delete da Rules atual.
   await check(mode, '3.09: Mestre nao atualiza chunk quando campaignId esta ausente', false, () => updateDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01'), { updatedAt: 'teste-ficticio' }));
   await check(mode, '3.09: Mestre nao atualiza metadados de midia sem campaignId', false, () => updateDoc(doc(master, 'media/legado-sem-campo'), { updatedAt: 'teste-ficticio' }));
+  await check(mode, '3.09: Mestre nao exclui midia com campaignId ausente', false, () => deleteDoc(doc(master, 'media/legado-sem-campo')));
   await check(mode, '3.09: Jogador nao acessa midia antiga sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo')));
   await check(mode, '3.09: Jogador nao acessa chunk antigo sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo/chunks/parte-01')));
 
