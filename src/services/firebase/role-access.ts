@@ -114,7 +114,6 @@ export async function verifyHubRole(
 
     for (const member of active) {
       if (
-        lower(member.email) !== email ||
         trim(member.campaignId).length === 0 ||
         trim(member.role) !== role ||
         (trim(member.uid).length > 0 && trim(member.uid) !== user.uid) ||
