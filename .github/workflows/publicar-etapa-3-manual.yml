@@ -22,7 +22,6 @@ jobs:
     timeout-minutes: 40
     environment: etapa-3-producao
     env:
-      FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
       FIREBASE_CLI_DISABLE_TELEMETRY: '1'
       CI: 'true'
       GCLOUD_PROJECT: demo-teias-305
@@ -37,7 +36,6 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REPOSITORY" = "eleuterio-coding/teias-de-anansi"
-          test -n "$FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI"
           test "$(git rev-parse origin/main)" = "23ea59b0341261e97aeab9d5bc0ecfac8500132b" || { echo 'main alterada: BLOQUEADO'; exit 2; }
       - uses: actions/setup-node@v4
         with:
@@ -51,6 +49,8 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Verificar aplicacao, testes e build de Pages
         run: npm run check
+      - name: Testar processo de deploy contra Firebase simulado (sem credenciais reais)
+        run: node --test tests/deploy-etapa-3-script.test.mjs
       - name: Validar Rules no emulador isolado
         shell: bash
         run: |
@@ -63,9 +63,12 @@ jobs:
           set -euo pipefail
           test -f dist/index.html
           test -d dist/assets
+          touch dist/.nojekyll
           if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
           if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
       - name: Validar versao em producao e criar backup criptografado
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs prepare
       - name: Persistir backup criptografado antes do corte
         uses: actions/upload-artifact@v4
@@ -75,6 +78,8 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Publicar A — Firestore Rules corrigidas
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs publish
       - name: Publicar B — mesmo Pages via main
         shell: bash
@@ -92,6 +97,8 @@ jobs:
             git -C .deploy-site push origin HEAD:main
           fi
       - name: Confirmar Rules publicadas
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs verify
       - name: Registrar commit final sem dados privados
         run: git ls-remote origin refs/heads/main
