@@ -43,6 +43,7 @@ jobs:
         with:
           ref: feature/etapa-3-usuarios-acesso-20261120
           fetch-depth: 0
+          persist-credentials: false
       # Este campo registra ciencia do ESCOPO, nao homologacao de todas as telas.
       # Cinco logins reais e aceite final continuam pendentes apos A+B.
       - name: Guardas de origem e estado
@@ -121,27 +122,27 @@ jobs:
           path: .deploy-private/rules-backup.aes256gcm.json
           if-no-files-found: error
           retention-days: 30
-      - name: Publicar A — Firestore Rules corrigidas
-        env:
-          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
-        run: node scripts/deploy-etapa-3-rules.mjs publish
-      - name: Confirmar que a main permanece inalterada antes do deploy de Pages
+      - name: Confirmar main intacta antes da primeira escrita
         shell: bash
         run: |
           set -euo pipefail
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA" || { echo 'main alterada durante corte: BLOQUEADO'; exit 2; }
-      - name: Empacotar build oficial do Pages
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA" || { echo 'main mudou antes do corte: BLOQUEADO'; exit 2; }
+      - name: Empacotar e validar artefato oficial do Pages antes de A
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
-      - name: Publicar B — mesmo Pages com GitHub Actions
-        id: pages_deploy
-        uses: actions/deploy-pages@v4
-      - name: Confirmar Rules publicadas
+      - name: Publicar A — Firestore Rules corrigidas
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-etapa-3-rules.mjs publish
+      - name: Confirmar Rules publicadas antes de B
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs verify
+      - name: Publicar B — mesmo Pages com GitHub Actions
+        id: pages_deploy
+        uses: actions/deploy-pages@v4
       - name: Conferir publicacao HTTP do mesmo Pages e JS compilado
         run: node scripts/verify-live-hub-pages.mjs
       - name: Registrar destino de publicacao (sem tokens)
