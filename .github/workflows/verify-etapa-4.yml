@@ -21,28 +21,24 @@ jobs:
       - name: Preparar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: npm
       - name: Instalar dependencias fixadas
         run: npm ci --no-audit --no-fund
-      - name: Mostrar arquivos formatados para correcao remota
-        run: |
-          echo 'FORMATTED_CATALOG_BEGIN'
-          npx prettier src/data/rpg-source-catalog.ts | base64 -w0
-          echo
-          echo 'FORMATTED_CATALOG_END'
-          echo 'FORMATTED_TESTS_BEGIN'
-          npx prettier tests/rpg-source-catalog.test.ts | base64 -w0
-          echo
-          echo 'FORMATTED_TESTS_END'
       - name: Tipos
         run: npm run typecheck
       - name: Lint
         run: npm run lint
       - name: Testes do catalogo 4.02
         run: npx vitest run tests/rpg-source-catalog.test.ts
+      - name: Suite completa de regressao
+        run: npm run test:run
       - name: Formatacao
         run: npm run format:check
+      - name: Limites preventivos
+        run: npm run verify:boundaries
+      - name: Acessibilidade de tokens
+        run: npm run verify:a11y
       - name: Contratos da arquitetura
         run: npm run verify:design-system
       - name: Build apenas para inspecao de CI
