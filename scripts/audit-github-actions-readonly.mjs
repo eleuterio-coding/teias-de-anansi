@@ -27,6 +27,7 @@ const pages = await read('pages', '/pages');
 const workflowPermissions = await read('actions-permissions', '/actions/permissions/workflow');
 const environments = await read('environments', '/environments');
 const pagesEnvironment = await read('github-pages-environment', '/environments/github-pages');
+const pagesEnvironmentBranches = await read('github-pages-branch-policies', '/environments/github-pages/deployment-branch-policies?per_page=100');
 const report = {
   defaultBranch: repo?.default_branch || 'unverified',
   pagesUrl: pages?.html_url || 'unverified',
@@ -44,6 +45,9 @@ const report = {
   pagesEnvironmentProtectionRuleTypes: Array.isArray(pagesEnvironment?.protection_rules)
     ? pagesEnvironment.protection_rules.map(rule => rule.type)
     : [],
+  pagesEnvironmentBranchPolicies: Array.isArray(pagesEnvironmentBranches?.branch_policies)
+    ? pagesEnvironmentBranches.branch_policies.map(item => item.name)
+    : 'unverified',
 };
 console.log('GITHUB_ACTIONS_PAGES_READ_ONLY', JSON.stringify(report));
 const repoOk = report.defaultBranch === 'main' && report.pagesUrl === 'https://eleuterio-coding.github.io/teias-de-anansi/';
