@@ -100,6 +100,8 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/deploy-etapa-3-rules.mjs verify
+      - name: Conferir publicacao HTTP do mesmo Pages e JS compilado
+        run: node scripts/verify-live-hub-pages.mjs
       - name: Registrar commit final sem dados privados
         run: git ls-remote origin refs/heads/main
       - name: Remover temporarios
