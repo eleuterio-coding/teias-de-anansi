@@ -27,6 +27,8 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
+      - name: Testar deploy A+B contra Firebase totalmente simulado (sem secrets)
+        run: node --test tests/deploy-etapa-3-script.test.mjs
       - name: Conferir codigo e compilacao completa
         run: npm run check
 
