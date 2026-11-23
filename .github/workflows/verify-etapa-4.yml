@@ -1,4 +1,4 @@
-name: Verificar Etapa 4 — Catalogo de Fontes (offline)
+name: Verificar Etapa 4 — Biblioteca (offline)
 
 on:
   push:
@@ -29,8 +29,8 @@ jobs:
         run: npm run typecheck
       - name: Lint
         run: npm run lint
-      - name: Testes do catalogo 4.02
-        run: npx vitest run tests/rpg-source-catalog.test.ts
+      - name: Testes da extracao 4.02 e 4.03
+        run: npx vitest run tests/rpg-source-catalog.test.ts tests/srd-rule-extraction.test.ts
       - name: Suite completa de regressao
         run: npm run test:run
       - name: Formatacao
