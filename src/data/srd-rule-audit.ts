@@ -62,15 +62,27 @@ export function auditRuleExtracts(
       }
     }
 
-    if (!entry.id.trim() || !entry.titlePtBr.trim() || !entry.sourceSection.trim() ||
-      !entry.textPtBr.trim() || !entry.version.trim() || !entry.sourceCheckedOn.trim() ||
-      !Number.isInteger(entry.sourcePage) || entry.sourcePage < 1) {
+    if (
+      !entry.id.trim() ||
+      !entry.titlePtBr.trim() ||
+      !entry.sourceSection.trim() ||
+      !entry.textPtBr.trim() ||
+      !entry.version.trim() ||
+      !entry.sourceCheckedOn.trim() ||
+      !Number.isInteger(entry.sourcePage) ||
+      entry.sourcePage < 1
+    ) {
       add(entry.id, 'missing-reference', 'Registro incompleto ou página inválida');
     }
 
-    if (!Object.values(entry.facts).every((value) =>
-      typeof value === 'string' || typeof value === 'boolean' ||
-      (typeof value === 'number' && Number.isFinite(value)))) {
+    if (
+      !Object.values(entry.facts).every(
+        (value) =>
+          typeof value === 'string' ||
+          typeof value === 'boolean' ||
+          (typeof value === 'number' && Number.isFinite(value)),
+      )
+    ) {
       add(entry.id, 'invalid-fact', 'Fato estruturado inválido ou não finito');
     }
 
@@ -102,6 +114,7 @@ export function getApprovedRuleExtract(
   if (!found || found.status !== 'approved' || !found.approvedBy?.trim() || !found.approvedOn) {
     return undefined;
   }
-  if (auditRuleExtracts(entries, sources).some((issue) => issue.ruleId === found.id)) return undefined;
+  if (auditRuleExtracts(entries, sources).some((issue) => issue.ruleId === found.id))
+    return undefined;
   return found;
 }
