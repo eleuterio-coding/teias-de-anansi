@@ -89,7 +89,26 @@ export async function verifyHubRole(
     const membershipSnapshot = await getDocsFromServer(
       query(collection(db, 'memberships'), where('email', '==', email)),
     );
-    const memberships = membershipSnapshot.docs.map((entry) => entry.data());
+    const candidates = membershipSnapshot.docs.map((entry) => entry.data());
+    if (role === 'dm') {
+      // O Mestre tem uma membership antiga cujo email/username mudaram,
+      // mas o UID segue coerente. Nao reescrever o Firebase: conferir
+      // tambem por UID, apos validar perfil e email autentico de Mestre.
+      const byUid = await getDocsFromServer(
+        query(collection(db, 'memberships'), where('uid', '==', user.uid)),
+      );
+      candidates.push(...byUid.docs.map((entry) => entry.data()));
+    }
+    const memberships = [
+      ...new Map(
+        candidates.map((member) => [
+          [trim(member.campaignId), trim(member.uid), lower(member.email), trim(member.role)].join(
+            '|',
+          ),
+          member,
+        ]),
+      ).values(),
+    ];
     const active = memberships.filter((member) => member.active === true);
     if (active.length === 0) return denied('missing-membership');
 
@@ -99,7 +118,10 @@ export async function verifyHubRole(
         trim(member.campaignId).length === 0 ||
         trim(member.role) !== role ||
         (trim(member.uid).length > 0 && trim(member.uid) !== user.uid) ||
-        !acceptedUsernames.includes(lower(member.username))
+        !(
+          (lower(member.email) === email && acceptedUsernames.includes(lower(member.username))) ||
+          (role === 'dm' && trim(member.uid) === user.uid)
+        )
       ) {
         return denied('membership-mismatch');
       }
