@@ -160,6 +160,8 @@ async function run(mode, rules) {
   await check(mode, '3.09: Visitante nao le chunk de midia', false, () => getDoc(doc(visitor, 'media/legado-sessao-gus/chunks/parte-01')));
   // Excluir somente apos todas as verificacoes do documento ficticio.
   await check(mode, '3.09: Mestre exclui midia com campaignId ausente', true, () => deleteDoc(doc(master, 'media/legado-sem-campo')));
+  await check(mode, '3.09: Chunk orfao apos exclusao do pai nao fica legivel ao Mestre', false, () => getDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01')));
+  await check(mode, '3.09: Chunk orfao apos exclusao do pai nao fica legivel ao Jogador', false, () => getDoc(doc(player, 'media/legado-sem-campo/chunks/parte-01')));
 
   // Jogador da mesa: apenas dados de sua participacao.
   await check(mode, 'Jogador lê o próprio perfil', true, () => getDoc(doc(player, 'users/uid-player-fixture')));
