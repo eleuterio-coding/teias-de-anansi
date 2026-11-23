@@ -1,0 +1,1 @@
+import{j as a}from"./index-Znu1Dy7h.js";function i({message:s="Carregando registros…"}){return a.jsxs("div",{role:"status","aria-live":"polite",className:"ds-data-loading",children:[a.jsx("span",{className:"ds-data-loading-mark","aria-hidden":"true"}),a.jsx("span",{children:s})]})}export{i as D};
