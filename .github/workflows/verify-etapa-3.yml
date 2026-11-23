@@ -80,3 +80,30 @@ jobs:
         run: npm install --no-save --no-package-lock --ignore-scripts --legacy-peer-deps --no-audit --no-fund @firebase/rules-unit-testing@6.0.0 firebase-tools@15.37.0
       - name: Comparar rules implantadas historicamente e proposta com identidades ficticias
         run: npx firebase emulators:exec --only firestore --project demo-teias-305 --config tests/firestore-emulator/firebase.json "node tests/firestore-emulator/run.mjs"
+
+  auditoria-legado-real:
+    name: Midias e chunks reais — somente GET, apenas push autorizado
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feature/etapa-3-usuarios-acesso-20261120'
+    needs:
+      - verificar
+      - firestore-emulator
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Obter o mesmo commit validado pela CI
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Preparar Node sem instalar dependencias
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Conferir sintaxe da auditoria sem secrets
+        run: node --check scripts/audit-media-legacy-readonly.mjs
+      - name: Ler apenas metadados de usuarios, campanhas, midias e chunks
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/audit-media-legacy-readonly.mjs
