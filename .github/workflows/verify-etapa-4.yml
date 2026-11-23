@@ -1,0 +1,41 @@
+name: Verificar Etapa 4 — Catalogo de Fontes (offline)
+
+on:
+  push:
+    branches:
+      - 'feature/etapa-4-*'
+  workflow_dispatch:
+
+# Somente leitura; não publica GitHub Pages nem acessa Firebase.
+permissions:
+  contents: read
+
+jobs:
+  catalogo:
+    name: TypeScript, testes de fontes, lint e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Obter codigo sem secrets
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Instalar dependencias fixadas
+        run: npm ci --no-audit --no-fund
+      - name: Tipos
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Testes do catalogo 4.02
+        run: npx vitest run tests/rpg-source-catalog.test.ts
+      - name: Formatacao
+        run: npm run format:check
+      - name: Contratos da arquitetura
+        run: npm run verify:design-system
+      - name: Build apenas para inspecao de CI
+        run: npm run build
+      - name: Caminhos do GitHub Pages sem deploy
+        run: npm run pages:check
