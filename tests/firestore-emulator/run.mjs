@@ -65,6 +65,8 @@ const seed = [
   ['users/uid-other-fixture/characters/char-bruno', { ownerId: otherPlayerIdentity.uid, payload: { name: 'Outra ficha fictícia' } }],
   ['media/legado-orfao', { ownerId: masterIdentity.uid, campaignId: null, entityType: 'campaign', entityId: 'mesa-ficticia', mime: 'image/webp', size: 20 }],
   ['media/legado-orfao/chunks/parte-01', { data: 'conteudo-ficticio-um' }],
+  ['media/legado-sem-campo', { ownerId: masterIdentity.uid, entityType: 'campaign', entityId: 'mesa-ficticia', mime: 'image/webp', size: 20 }],
+  ['media/legado-sem-campo/chunks/parte-01', { data: 'conteudo-ficticio-sem-campo' }],
   ['media/legado-sessao-gus', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-gus', mime: 'image/webp', size: 24 }],
   ['media/legado-sessao-gus/chunks/parte-01', { data: 'conteudo-ficticio-dois' }],
   ['media/legado-sessao-bruno', { ownerId: masterIdentity.uid, campaignId: 'mesa-ficticia', entityType: 'session', entityId: 'sess-bruno', mime: 'image/webp', size: 24 }],
@@ -131,6 +133,8 @@ async function run(mode, rules) {
   // Os dados são inteiramente sintéticos e rodam nas Rules antigas e propostas.
   await check(mode, '3.09: Mestre le metadados de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao')));
   await check(mode, '3.09: Mestre le chunk de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao/chunks/parte-01')));
+  await check(mode, '3.09: Mestre le midia antiga sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo')));
+  await check(mode, '3.09: Mestre le chunk antigo sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01')));
   await check(mode, '3.09: Mestre atualiza chunk de midia propria antiga', true, () => updateDoc(doc(master, 'media/legado-orfao/chunks/parte-01'), { updatedAt: 'agora-ficticio' }));
   await check(mode, '3.09: Jogador nao le midia orfa do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao')));
   await check(mode, '3.09: Jogador nao le chunk orfao do Mestre', false, () => getDoc(doc(player, 'media/legado-orfao/chunks/parte-01')));
