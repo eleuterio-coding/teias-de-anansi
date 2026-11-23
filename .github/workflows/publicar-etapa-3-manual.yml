@@ -78,6 +78,10 @@ jobs:
         shell: bash
         run: |
           test "${{ inputs.compatibilidade_legada }}" = 'LEGADO_VALIDADO' || { echo 'Legado nao homologado'; exit 2; }
+      - name: Auditar metadados de midia e chunks legados (GET somente)
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/audit-media-legacy-readonly.mjs
       - name: Validar versao em producao e criar backup criptografado
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
