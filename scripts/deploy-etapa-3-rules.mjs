@@ -88,7 +88,7 @@ if (mode === 'prepare') {
   });
   if (!ruleset.name?.startsWith('projects/' + PROJECT + '/rulesets/')) throw Error('Failed to create versioned ruleset');
   // Immutable candidate is created first. Only this PATCH changes active permissions.
-  const release = await api('PATCH', RELEASE + '?updateMask=rulesetName', { name: RELEASE, rulesetName: ruleset.name });
+  const release = await api('PATCH', RELEASE, { release: { name: RELEASE, rulesetName: ruleset.name }, updateMask: 'rulesetName' });
   if (release.rulesetName !== ruleset.name) throw Error('Release response did not confirm new ruleset');
   const updated = await active();
   if (updated.release.rulesetName !== ruleset.name) throw Error('Updated ruleset mismatch');
