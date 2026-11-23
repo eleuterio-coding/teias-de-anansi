@@ -1,0 +1,110 @@
+name: Resgate unico Site 404 - compilar e publicar branch main legacy
+on:
+  push:
+    branches:
+      - feature/etapa-3-usuarios-acesso-20261120
+    paths:
+      - .github/workflows/resgatar-pages-legacy-once.yml
+permissions:
+  contents: write
+  pages: write
+  actions: read
+concurrency:
+  group: site-pages-404-recovery-once
+  cancel-in-progress: false
+jobs:
+  resgatar:
+    name: Compilar versao testada, restaurar index e assets na main
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Validar fonte de publicacao e main sem alteracoes inesperadas
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const base='https://api.github.com/repos/eleuterio-coding/teias-de-anansi';
+          const token=process.env.GH_TOKEN;
+          async function get(path) {
+            const r=await fetch(base+path,{headers:{
+              authorization:'Bearer '+token,
+              accept:'application/vnd.github+json',
+              'x-github-api-version':'2022-11-28'
+            },signal:AbortSignal.timeout(20000)});
+            assert.ok(r.ok,'GET '+path+' HTTP '+r.status);
+            return r.json();
+          }
+          const page=await get('/pages');
+          assert.equal(page.build_type,'legacy','Pages nao esta no modo legacy');
+          assert.equal(page.source?.branch,'main');
+          assert.equal(page.source?.path,'/');
+          assert.equal(page.html_url,'https://eleuterio-coding.github.io/teias-de-anansi/');
+          const main=await get('/commits/main');
+          assert.equal(main.sha,'31b7513a470631d842b679fb77d748df0fcd02d2','main alterada, resgate bloqueado');
+          console.log('RESGATE_PRECHECK_OK: Pages legacy main/raiz e URL do Hub conferidos');
+          NODE
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/etapa-3-usuarios-acesso-20261120
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Dependencias e verificacoes completas antes de publicar
+        run: |
+          npm ci --no-audit --no-fund
+          npm run check
+      - name: Conferir arquivos build antes de qualquer escrita
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s dist/index.html
+          test -d dist/assets
+          touch dist/.nojekyll
+          node scripts/verify-pages-build.mjs
+          if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
+          if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
+          echo 'RESGATE_BUILD_OK: Vite output validado; nenhum secret incluso'
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: published
+          fetch-depth: 2
+          persist-credentials: true
+      - name: Publicar artefatos estaticos na main sem mexer nos workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C published rev-parse HEAD)" = "31b7513a470631d842b679fb77d748df0fcd02d2" || exit 2
+          cp -a dist/. published/
+          git -C published config user.name "github-actions[bot]"
+          git -C published config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C published add -A
+          STAGED="$(git -C published diff --cached --name-only)"
+          test -n "$STAGED" || { echo 'Nenhum arquivo para site'; exit 2; }
+          if printf '%s\n' "$STAGED" | grep -E '^(\.github/|README\.md$|docs/|scripts/|src/|tests/)' ; then
+            echo 'RESGATE_BLOQUEADO: arquivos fora do build'; exit 2
+          fi
+          printf '%s\n' "$STAGED" | grep -qx 'index.html'
+          git -C published commit -m "fix(pages): restaurar Hub compilado na raiz da publicacao legacy"
+          git -C published fetch origin main
+          test "$(git -C published rev-parse origin/main)" = "31b7513a470631d842b679fb77d748df0fcd02d2" || { echo 'main mudou: BLOQUEADO'; exit 2; }
+          git -C published push origin HEAD:main
+          echo "RESGATE_MAIN_COMMIT=$(git -C published rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RESGATE_MAIN_PUBLICADA: arquivos estaticos adicionados; nenhuma Rule alterada"
+      - name: Solicitar build explicito do Pages legacy apos push com GITHUB_TOKEN
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const base='https://api.github.com/repos/eleuterio-coding/teias-de-anansi';
+          const head={'authorization':'Bearer '+process.env.GH_TOKEN,
+            'accept':'application/vnd.github+json','x-github-api-version':'2022-11-28'};
+          const r=await fetch(base+'/pages/builds',{method:'POST',headers:head,signal:AbortSignal.timeout(20000)});
+          console.log('RESGATE_PAGES_BUILD_REQUEST_HTTP',r.status);
+          if(!r.ok)console.log('RESGATE_BUILD_NEEDS_USER_AUTHORED_COMMIT: GITHUB_TOKEN nao iniciou build; main contem arquivos');
+          NODE
