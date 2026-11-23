@@ -1,0 +1,104 @@
+name: Publicacao manual Etapa 3 — A+B
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmacao:
+        description: 'Digite PUBLICAR_A_E_B para executar o corte'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publicacao-etapa-3
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: etapa-3-producao
+    env:
+      FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+      FIREBASE_CLI_DISABLE_TELEMETRY: '1'
+      CI: 'true'
+      GCLOUD_PROJECT: demo-teias-305
+      FIRESTORE_EMULATOR_HOST: 127.0.0.1:8089
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/etapa-3-usuarios-acesso-20261120
+          fetch-depth: 0
+      - name: Guardas de origem e estado
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = "eleuterio-coding/teias-de-anansi"
+          test -n "$FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI"
+          test "$(git rev-parse origin/main)" = "23ea59b0341261e97aeab9d5bc0ecfac8500132b" || { echo 'main alterada: BLOQUEADO'; exit 2; }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Instalar dependencias travadas
+        run: npm ci --no-audit --no-fund
+      - name: Verificar aplicacao, testes e build de Pages
+        run: npm run check
+      - name: Validar Rules no emulador isolado
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock --ignore-scripts --legacy-peer-deps --no-audit --no-fund @firebase/rules-unit-testing@6.0.0 firebase-tools@15.37.0
+          npx firebase emulators:exec --only firestore --project demo-teias-305 --config tests/firestore-emulator/firebase.json "node tests/firestore-emulator/run.mjs"
+      - name: Inspecionar build estatico
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -d dist/assets
+          if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
+          if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
+      - name: Validar versao em producao e criar backup criptografado
+        run: node scripts/deploy-etapa-3-rules.mjs prepare
+      - name: Persistir backup criptografado antes do corte
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-rules-criptografado-${{ github.run_id }}
+          path: .deploy-private/rules-backup.aes256gcm.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publicar A — Firestore Rules corrigidas
+        run: node scripts/deploy-etapa-3-rules.mjs publish
+      - name: Publicar B — mesmo Pages via main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "23ea59b0341261e97aeab9d5bc0ecfac8500132b" || { echo 'main mudou durante corte: BLOQUEADO'; exit 2; }
+          git worktree add --detach .deploy-site origin/main
+          git -C .deploy-site config user.name "github-actions[bot]"
+          git -C .deploy-site config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp -a dist/. .deploy-site/
+          git -C .deploy-site add -A
+          if ! git -C .deploy-site diff --cached --quiet; then
+            git -C .deploy-site commit -m "deploy: Etapa 3 — interface validada"
+            git -C .deploy-site push origin HEAD:main
+          fi
+      - name: Confirmar Rules publicadas
+        run: node scripts/deploy-etapa-3-rules.mjs verify
+      - name: Registrar commit final sem dados privados
+        run: git ls-remote origin refs/heads/main
+      - name: Remover temporarios
+        if: always()
+        shell: bash
+        run: rm -rf .deploy-private .deploy-site
+
+# ATENCAO: workflow_dispatch so aparece na UI se workflow existir na branch default.
+# Este arquivo na branch de trabalho e uma preparacao; NAO efetua deploy.
