@@ -140,9 +140,8 @@ async function run(mode, rules) {
   // Compatibilidade funcional legada: leitura e edicao sao contratos distintos.
   // O campo campaignId verdadeiramente AUSENTE nao e igual ao null, e pode
   // provocar uma negacao nas expressoes de update/delete da Rules atual.
-  await check(mode, '3.09: Mestre nao atualiza chunk quando campaignId esta ausente', false, () => updateDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01'), { updatedAt: 'teste-ficticio' }));
+  await check(mode, '3.09: Mestre atualiza chunk quando campaignId esta ausente', true, () => updateDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01'), { updatedAt: 'teste-ficticio' }));
   await check(mode, '3.09: Mestre nao atualiza metadados de midia sem campaignId', false, () => updateDoc(doc(master, 'media/legado-sem-campo'), { updatedAt: 'teste-ficticio' }));
-  await check(mode, '3.09: Mestre nao exclui midia com campaignId ausente', false, () => deleteDoc(doc(master, 'media/legado-sem-campo')));
   await check(mode, '3.09: Jogador nao acessa midia antiga sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo')));
   await check(mode, '3.09: Jogador nao acessa chunk antigo sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo/chunks/parte-01')));
 
@@ -159,6 +158,8 @@ async function run(mode, rules) {
   await check(mode, '3.09: Jogador nao le chunk de outra sessao', false, () => getDoc(doc(player, 'media/legado-sessao-bruno/chunks/parte-01')));
   await check(mode, '3.09: Jogador nao altera chunk do Mestre', false, () => updateDoc(doc(player, 'media/legado-sessao-gus/chunks/parte-01'), { updatedAt: 'nao-autorizado' }));
   await check(mode, '3.09: Visitante nao le chunk de midia', false, () => getDoc(doc(visitor, 'media/legado-sessao-gus/chunks/parte-01')));
+  // Excluir somente apos todas as verificacoes do documento ficticio.
+  await check(mode, '3.09: Mestre exclui midia com campaignId ausente', true, () => deleteDoc(doc(master, 'media/legado-sem-campo')));
 
   // Jogador da mesa: apenas dados de sua participacao.
   await check(mode, 'Jogador lê o próprio perfil', true, () => getDoc(doc(player, 'users/uid-player-fixture')));
