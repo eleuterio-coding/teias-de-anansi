@@ -1,4 +1,6 @@
 import crypto from 'node:crypto';
+import { Buffer } from 'node:buffer';
+import { URLSearchParams } from 'node:url';
 
 const PROJECT = 'teais-de-anansi';
 const PREFIX = 'https://firestore.googleapis.com/v1/projects/' + PROJECT + '/databases/(default)/documents';
