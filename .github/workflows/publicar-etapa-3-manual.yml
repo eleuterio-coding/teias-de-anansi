@@ -11,8 +11,8 @@ on:
         description: 'SHA completo (40 caracteres) do codigo testado e aprovado da branch Etapa 3'
         required: true
         type: string
-      compatibilidade_legada:
-        description: 'Digite LEGADO_VALIDADO somente apos auditoria dos modulos/midia antigos'
+      escopo_etapa3:
+        description: 'Digite ESCOPO_ACESSO_DOCUMENTADO: aceite limitado a usuarios/acesso; midia/RPG fora de escopo'
         required: true
         type: string
 
@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   publicar:
-    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B' && github.event.inputs.compatibilidade_legada == 'LEGADO_VALIDADO'
+    if: github.event.inputs.confirmacao == 'PUBLICAR_A_E_B' && github.event.inputs.escopo_etapa3 == 'ESCOPO_ACESSO_DOCUMENTADO'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment:
@@ -43,6 +43,8 @@ jobs:
         with:
           ref: feature/etapa-3-usuarios-acesso-20261120
           fetch-depth: 0
+      # Este campo registra ciencia do ESCOPO, nao homologacao de todas as telas.
+      # Cinco logins reais e aceite final continuam pendentes apos A+B.
       - name: Guardas de origem e estado
         env:
           APPROVED_CANDIDATE_SHA: ${{ inputs.candidate_sha }}
