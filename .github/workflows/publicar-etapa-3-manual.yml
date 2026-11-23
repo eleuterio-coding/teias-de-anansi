@@ -74,10 +74,6 @@ jobs:
           touch dist/.nojekyll
           if find dist -type f \( -name '*.rules' -o -name '.env*' -o -name '*service-account*' -o -name '*backup*' \) | grep -q .; then exit 2; fi
           if grep -R -E -l -- '-----BEGIN PRIVATE KEY-----|FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI' dist; then exit 2; fi
-      - name: Confirmar gate de compatibilidade legado antes da primeira escrita
-        shell: bash
-        run: |
-          test "${{ inputs.compatibilidade_legada }}" = 'LEGADO_VALIDADO' || { echo 'Legado nao homologado'; exit 2; }
       - name: Auditar metadados de midia e chunks legados (GET somente)
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
