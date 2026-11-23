@@ -137,6 +137,14 @@ async function run(mode, rules) {
   await check(mode, '3.09: Mestre le chunk de midia orfa antiga', true, () => getDoc(doc(master, 'media/legado-orfao/chunks/parte-01')));
   await check(mode, '3.09: Mestre le midia antiga sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo')));
   await check(mode, '3.09: Mestre le chunk antigo sem campo campaignId', true, () => getDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01')));
+  // Compatibilidade funcional legada: leitura e edicao sao contratos distintos.
+  // O campo campaignId verdadeiramente AUSENTE nao e igual ao null, e pode
+  // provocar uma negacao nas expressoes de update/delete da Rules atual.
+  await check(mode, '3.09: Mestre nao atualiza chunk quando campaignId esta ausente', false, () => updateDoc(doc(master, 'media/legado-sem-campo/chunks/parte-01'), { updatedAt: 'teste-ficticio' }));
+  await check(mode, '3.09: Mestre nao atualiza metadados de midia sem campaignId', false, () => updateDoc(doc(master, 'media/legado-sem-campo'), { updatedAt: 'teste-ficticio' }));
+  await check(mode, '3.09: Jogador nao acessa midia antiga sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo')));
+  await check(mode, '3.09: Jogador nao acessa chunk antigo sem campaignId', false, () => getDoc(doc(player, 'media/legado-sem-campo/chunks/parte-01')));
+
   await check(mode, '3.09: Mestre le midia cujo campaignId referencia campanha removida', true, () => getDoc(doc(master, 'media/legado-campanha-removida')));
   await check(mode, '3.09: Mestre le chunk de campanha historica removida', true, () => getDoc(doc(master, 'media/legado-campanha-removida/chunks/parte-01')));
   await check(mode, '3.09: Jogador nao le midia da campanha historica removida', false, () => getDoc(doc(player, 'media/legado-campanha-removida')));
