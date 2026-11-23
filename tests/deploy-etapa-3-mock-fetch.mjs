@@ -1,4 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
+import process from 'node:process';
 
 const stateFile = process.env.MOCK_FIREBASE_STATE_FILE;
 if (!stateFile) throw Error('MOCK_FIREBASE_STATE_FILE is required');
@@ -7,7 +8,7 @@ const proposed = readFileSync('tests/firestore-emulator/proposal.rules', 'utf8')
 const rulesetPrefix = 'projects/teais-de-anansi/rulesets/';
 const releaseName = 'projects/teais-de-anansi/releases/cloud.firestore';
 
-const response = (value, status = 200) => new Response(JSON.stringify(value), {
+const response = (value, status = 200) => new globalThis.Response(JSON.stringify(value), {
   status,
   headers: { 'content-type': 'application/json' },
 });
