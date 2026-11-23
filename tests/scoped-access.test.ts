@@ -80,11 +80,11 @@ beforeEach(() => {
       source: { name: string };
       condition: { field: string; value: string };
     }) => {
-      if (source.name !== 'memberships' || condition.field !== 'email')
+      if (source.name !== 'memberships' || !['email', 'uid'].includes(condition.field))
         throw new Error('Listagem geral indevida');
       return {
         docs: memberships
-          .filter((x) => x.email === condition.value)
+          .filter((x) => x[condition.field] === condition.value)
           .map((data) => ({ data: () => data })),
       };
     },
@@ -238,6 +238,37 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
         documentId: 'secret',
       }),
     ).toEqual({ status: 'denied' });
+  });
+
+  it('Mestre le dados da propria campanha por membership legada associada ao UID', async () => {
+    mocks.verifyHubRole.mockResolvedValue({
+      status: 'verified',
+      role: 'dm',
+      displayName: 'Rafael',
+      campaignCount: 1,
+    });
+    memberships = [{
+      email: 'cadastro-antigo@teias.invalid',
+      username: 'master-historico',
+      uid: master.uid,
+      active: true,
+      role: 'dm',
+      campaignId: 'mesa-ficticia',
+    }];
+    const result = await readHubScopedDocument(master, db, {
+      kind: 'private',
+      campaignId: 'mesa-ficticia',
+      documentId: 'secret',
+    });
+    expect(result).toMatchObject({ status: 'ok' });
+    expect(mocks.getDocsFromServer).toHaveBeenCalledWith({
+      source: { name: 'memberships' },
+      condition: { field: 'uid', operator: '==', value: master.uid },
+    });
+    documents['campaigns/mesa-ficticia'].ownerId = 'outro-uid';
+    expect(await readHubScopedDocument(master, db, {
+      kind: 'private', campaignId: 'mesa-ficticia', documentId: 'secret',
+    })).toEqual({ status: 'denied' });
   });
 
   it('Mestre consulta ficha vinculada de outro jogador; Jogador não pode solicitar ID alheio', async () => {

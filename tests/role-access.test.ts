@@ -70,9 +70,16 @@ beforeEach(() => {
   io.getDocsFromServer.mockImplementation(
     async (reference: { constraint: { field: string; op: string; value: string } }) => {
       const { field, op, value } = reference.constraint;
-      if (field !== 'email' || op !== '==') throw new Error('Consulta ampla proibida');
+      if (op !== '==' || !['email', 'uid'].includes(field))
+        throw new Error('Consulta ampla proibida');
+      const matching =
+        field === 'email'
+          ? links[value] ?? []
+          : Object.values(links)
+              .flat()
+              .filter((item) => item.uid === value);
       return {
-        docs: (links[value] ?? []).map((data) => ({
+        docs: matching.map((data) => ({
           data: () => data,
         })),
       };
@@ -89,7 +96,31 @@ describe('Etapa 3.04 — papel confirmado por Auth e Firestore', () => {
       campaignCount: 2,
     });
     expect(io.getDocFromServer).toHaveBeenCalledTimes(3);
-    expect(io.getDocsFromServer).toHaveBeenCalledTimes(1);
+    expect(io.getDocsFromServer).toHaveBeenCalledTimes(2);
+  });
+
+  it('Mestre reconhece vinculo antigo por UID mesmo com email e username diferentes', async () => {
+    links['rafael@teias.invalid'] = [links['rafael@teias.invalid'][0]];
+    links['legacy'] = [membership('legado@teias.invalid', 'dm', 'cadastro-antigo', master.uid, 'mesa-2')];
+    await expect(verifyHubRole(master, db)).resolves.toMatchObject({
+      status: 'verified',
+      role: 'dm',
+      campaignCount: 2,
+    });
+    expect(io.getDocsFromServer).toHaveBeenCalledWith({
+      base: { name: 'memberships' },
+      constraint: { field: 'uid', op: '==', value: master.uid },
+    });
+  });
+
+  it('nega vinculo Mestre por UID quando campanha pertence a outro usuario', async () => {
+    links['rafael@teias.invalid'] = [links['rafael@teias.invalid'][0]];
+    links['legacy'] = [membership('legado@teias.invalid', 'dm', 'antigo', master.uid, 'mesa-2')];
+    campaigns['mesa-2'].ownerId = player.uid;
+    await expect(verifyHubRole(master, db)).resolves.toEqual({
+      status: 'denied',
+      reason: 'master-not-confirmed',
+    });
   });
 
   it('reconhece Jogador pela conta existente, perfil e membership ativa', async () => {

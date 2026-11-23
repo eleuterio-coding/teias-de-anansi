@@ -86,10 +86,10 @@ beforeEach(() => {
             : [],
         };
       }
-      if (source.name === 'memberships' && condition.field === 'email') {
+      if (source.name === 'memberships' && ['email', 'uid'].includes(condition.field)) {
         return {
           docs: memberships
-            .filter((link) => link.email === condition.value)
+            .filter((link) => link[condition.field] === condition.value)
             .map((item) => ({ data: () => item })),
         };
       }
@@ -148,7 +148,7 @@ describe('3.07 — consulta de administração exclusiva do Mestre', () => {
 
   it('executa buscas específicas por username e email, sem listar coleções inteiras', async () => {
     await loadMasterRosterReadOnly(master, db);
-    expect(mock.getDocsFromServer).toHaveBeenCalledTimes(10);
+    expect(mock.getDocsFromServer).toHaveBeenCalledTimes(11);
     expect(mock.getDocsFromServer).toHaveBeenCalledWith({
       source: { name: 'users' },
       condition: { field: 'username', op: '==', value: 'gustavo' },
@@ -158,6 +158,24 @@ describe('3.07 — consulta de administração exclusiva do Mestre', () => {
       condition: { field: 'email', op: '==', value: 'gus@teias.invalid' },
     });
     expect(mock.getDocFromServer).toHaveBeenCalledTimes(2);
+  });
+
+  it('lista dois vinculos Mestre incluindo cadastro antigo por UID sem expor email', async () => {
+    memberships[1] = {
+      ...memberships[1],
+      email: 'cadastro-antigo@teias.invalid',
+      username: 'master-antigo',
+      uid: master.uid,
+    };
+    const result = await loadMasterRosterReadOnly(master, db);
+    expect(result).toMatchObject({ status: 'ok', activeMembershipCount: 6 });
+    if (result.status !== 'ok') throw Error('Resultado inesperado');
+    expect(result.entries[0].memberships).toHaveLength(2);
+    expect(JSON.stringify(result)).not.toContain('cadastro-antigo');
+    expect(mock.getDocsFromServer).toHaveBeenCalledWith({
+      source: { name: 'memberships' },
+      condition: { field: 'uid', op: '==', value: master.uid },
+    });
   });
 
   it('não mostra lista parcial se perfil não existir', async () => {
