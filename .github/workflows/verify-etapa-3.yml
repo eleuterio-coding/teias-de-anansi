@@ -23,7 +23,7 @@ jobs:
       - name: Preparar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: npm
       - name: Instalar dependencias
         run: npm ci --no-audit --no-fund
@@ -113,3 +113,18 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
         run: node scripts/audit-media-legacy-readonly.mjs
+      - name: Preparar backup criptografado da versao real sem publicar Rules
+        env:
+          FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
+        run: node scripts/deploy-etapa-3-rules.mjs prepare
+      - name: Preservar backup cifrado da release atual como artefato privado
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-firestore-preflight-criptografado-${{ github.run_id }}
+          path: .deploy-private/rules-backup.aes256gcm.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Apagar copia local ao encerrar
+        if: always()
+        run: rm -rf .deploy-private
+
