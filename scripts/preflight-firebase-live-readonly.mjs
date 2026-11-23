@@ -11,7 +11,8 @@ import { URLSearchParams } from 'node:url';
  */
 const projectId = 'teais-de-anansi';
 const rawCredentials = process.env.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI || '';
-const base = 'https://firestore.googleapis.com/v1/projects/' + projectId + '/databases/(default)/documents';
+const base =
+  'https://firestore.googleapis.com/v1/projects/' + projectId + '/databases/(default)/documents';
 const authNames = [
   { login: 'rafael', profile: 'rafael', role: 'dm', activeLinks: 2 },
   { login: 'bruno', profile: 'bruno', role: 'player', activeLinks: 1 },
@@ -19,7 +20,10 @@ const authNames = [
   { login: 'leo', profile: 'leo', role: 'player', activeLinks: 1 },
   { login: 'fernanda', profile: 'fernanda', role: 'player', activeLinks: 1 },
 ];
-const normalized = (value) => String(value || '').trim().toLowerCase();
+const normalized = (value) =>
+  String(value || '')
+    .trim()
+    .toLowerCase();
 const fld = (doc, name) => doc?.fields?.[name]?.stringValue ?? null;
 const bval = (doc, name) => doc?.fields?.[name]?.booleanValue === true;
 const hash = (text) => crypto.createHash('sha256').update(text).digest('hex');
@@ -27,7 +31,11 @@ const hash = (text) => crypto.createHash('sha256').update(text).digest('hex');
 async function oauth(raw) {
   if (!raw) throw Error('existing-secret-unavailable');
   const credentials = JSON.parse(raw);
-  if (credentials.project_id !== projectId || !credentials.client_email || !credentials.private_key) {
+  if (
+    credentials.project_id !== projectId ||
+    !credentials.client_email ||
+    !credentials.private_key
+  ) {
     throw Error('service-account-project-mismatch');
   }
   const now = Math.floor(Date.now() / 1000);
@@ -35,13 +43,16 @@ async function oauth(raw) {
   const header = enc({ alg: 'RS256', typ: 'JWT' });
   const claims = enc({
     iss: credentials.client_email,
-    scope: 'https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/firebase',
+    scope:
+      'https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/firebase',
     aud: 'https://oauth2.googleapis.com/token',
     iat: now,
     exp: now + 1200,
   });
   const payload = header + '.' + claims;
-  const signature = crypto.sign('RSA-SHA256', Buffer.from(payload), credentials.private_key).toString('base64url');
+  const signature = crypto
+    .sign('RSA-SHA256', Buffer.from(payload), credentials.private_key)
+    .toString('base64url');
   const response = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -97,7 +108,9 @@ async function authAccounts(token) {
   const results = new Map();
   let next = '';
   for (let page = 0; page < 30; page++) {
-    const url = new URL('https://identitytoolkit.googleapis.com/v1/projects/' + projectId + '/accounts:batchGet');
+    const url = new URL(
+      'https://identitytoolkit.googleapis.com/v1/projects/' + projectId + '/accounts:batchGet',
+    );
     url.searchParams.set('maxResults', '1000');
     if (next) url.searchParams.set('nextPageToken', next);
     const res = await request(token, 'GET', url);
@@ -120,7 +133,8 @@ async function run() {
   const token = await oauth(rawCredentials);
   const historical = readFileSync('tests/firestore-emulator/baseline.rules', 'utf8').trim();
   const proposal = readFileSync('tests/firestore-emulator/proposal.rules', 'utf8').trim();
-  const releaseUrl = 'https://firebaserules.googleapis.com/v1/projects/' + projectId + '/releases/cloud.firestore';
+  const releaseUrl =
+    'https://firebaserules.googleapis.com/v1/projects/' + projectId + '/releases/cloud.firestore';
   const release = await request(token, 'GET', releaseUrl);
   if (!release.ok) throw Error('rules-release-http-' + release.status);
   const name = release.data.rulesetName;
@@ -135,12 +149,25 @@ async function run() {
   }
   const rulesSource = files[0].content.trim();
 
-  const identityConfig = await request(token, 'GET', 'https://identitytoolkit.googleapis.com/admin/v2/projects/' + projectId + '/config');
-  const domains = identityConfig.ok && Array.isArray(identityConfig.data.authorizedDomains)
-    ? identityConfig.data.authorizedDomains : null;
+  const identityConfig = await request(
+    token,
+    'GET',
+    'https://identitytoolkit.googleapis.com/admin/v2/projects/' + projectId + '/config',
+  );
+  const domains =
+    identityConfig.ok && Array.isArray(identityConfig.data.authorizedDomains)
+      ? identityConfig.data.authorizedDomains
+      : null;
 
   const accounts = await authAccounts(token);
-  const memberships = await listDocs(token, 'memberships', ['email', 'uid', 'role', 'active', 'campaignId', 'username']);
+  const memberships = await listDocs(token, 'memberships', [
+    'email',
+    'uid',
+    'role',
+    'active',
+    'campaignId',
+    'username',
+  ]);
   const campaigns = await listDocs(token, 'campaigns', ['ownerId']);
   const media = await listDocs(token, 'media', ['ownerId', 'campaignId', 'entityType']);
 
@@ -153,21 +180,30 @@ async function run() {
     let profileOk = false;
     if (account?.uid) {
       const url = new URL(base + '/users/' + encodeURIComponent(account.uid));
-      for (const field of ['uid', 'username', 'role']) url.searchParams.append('mask.fieldPaths', field);
+      for (const field of ['uid', 'username', 'role'])
+        url.searchParams.append('mask.fieldPaths', field);
       const result = await request(token, 'GET', url);
-      profileOk = result.ok && fld(result.data, 'uid') === account.uid
-        && normalized(fld(result.data, 'username')) === person.profile
-        && fld(result.data, 'role') === person.role;
+      profileOk =
+        result.ok &&
+        fld(result.data, 'uid') === account.uid &&
+        normalized(fld(result.data, 'username')) === person.profile &&
+        fld(result.data, 'role') === person.role;
     }
-    const activeLinks = memberships.filter((doc) => fld(doc, 'email') === email && bval(doc, 'active'));
-    const linksOk = activeLinks.length === person.activeLinks && activeLinks.every((doc) => {
-      const id = doc.name?.split('/').pop();
-      return Boolean(account)
-        && id === fld(doc, 'campaignId') + '_' + email
-        && fld(doc, 'role') === person.role
-        && (!fld(doc, 'uid') || fld(doc, 'uid') === account.uid)
-        && normalized(fld(doc, 'username')) === person.profile;
-    });
+    const activeLinks = memberships.filter(
+      (doc) => fld(doc, 'email') === email && bval(doc, 'active'),
+    );
+    const linksOk =
+      activeLinks.length === person.activeLinks &&
+      activeLinks.every((doc) => {
+        const id = doc.name?.split('/').pop();
+        return (
+          Boolean(account) &&
+          id === fld(doc, 'campaignId') + '_' + email &&
+          fld(doc, 'role') === person.role &&
+          (!fld(doc, 'uid') || fld(doc, 'uid') === account.uid) &&
+          normalized(fld(doc, 'username')) === person.profile
+        );
+      });
     checks.push({
       login: person.profile,
       auth: identities.length === 1 && account.enabled ? 'enabled' : 'not-confirmed',
@@ -177,43 +213,61 @@ async function run() {
     });
   }
 
-  const masterLinks = memberships.filter((doc) => bval(doc, 'active')
-    && (fld(doc, 'email') === 'rafael@teias.invalid'
-      || (master?.uid && fld(doc, 'uid') === master.uid)));
+  const masterLinks = memberships.filter(
+    (doc) =>
+      bval(doc, 'active') &&
+      (fld(doc, 'email') === 'rafael@teias.invalid' ||
+        (master?.uid && fld(doc, 'uid') === master.uid)),
+  );
   const masterLinksDiagnosis = {
-    byEmail: memberships.filter((doc) => bval(doc, 'active')
-      && fld(doc, 'email') === 'rafael@teias.invalid').length,
-    byUid: memberships.filter((doc) => bval(doc, 'active')
-      && master?.uid && fld(doc, 'uid') === master.uid).length,
+    byEmail: memberships.filter(
+      (doc) => bval(doc, 'active') && fld(doc, 'email') === 'rafael@teias.invalid',
+    ).length,
+    byUid: memberships.filter(
+      (doc) => bval(doc, 'active') && master?.uid && fld(doc, 'uid') === master.uid,
+    ).length,
     union: masterLinks.length,
-    uidMatchedButEmailDifferent: masterLinks.filter((doc) => fld(doc, 'email') !== 'rafael@teias.invalid').length,
+    uidMatchedButEmailDifferent: masterLinks.filter(
+      (doc) => fld(doc, 'email') !== 'rafael@teias.invalid',
+    ).length,
     roleDm: masterLinks.filter((doc) => fld(doc, 'role') === 'dm').length,
-    usernameRafael: masterLinks.filter((doc) => normalized(fld(doc, 'username')) === 'rafael').length,
-    storedIdsMatchStoredEmails: masterLinks.filter((doc) =>
-      doc.name?.split('/').pop() === fld(doc, 'campaignId') + '_' + fld(doc, 'email')).length,
+    usernameRafael: masterLinks.filter((doc) => normalized(fld(doc, 'username')) === 'rafael')
+      .length,
+    storedIdsMatchStoredEmails: masterLinks.filter(
+      (doc) => doc.name?.split('/').pop() === fld(doc, 'campaignId') + '_' + fld(doc, 'email'),
+    ).length,
   };
-  const unidentifiedActiveLinks = memberships.filter((doc) => bval(doc, 'active')
-    && !authNames.some((name) => fld(doc, 'email') === name.login + '@teias.invalid')).length;
+  const unidentifiedActiveLinks = memberships.filter(
+    (doc) =>
+      bval(doc, 'active') &&
+      !authNames.some((name) => fld(doc, 'email') === name.login + '@teias.invalid'),
+  ).length;
 
   const campaignOwners = {
     total: campaigns.length,
-    masterOwned: campaigns.filter((doc) => master?.uid && fld(doc, 'ownerId') === master.uid).length,
-    otherOwner: campaigns.filter((doc) => !master?.uid || fld(doc, 'ownerId') !== master.uid).length,
+    masterOwned: campaigns.filter((doc) => master?.uid && fld(doc, 'ownerId') === master.uid)
+      .length,
+    otherOwner: campaigns.filter((doc) => !master?.uid || fld(doc, 'ownerId') !== master.uid)
+      .length,
   };
   const mediaReport = {
     total: media.length,
     campaignIdMissingOrNull: media.filter((doc) => !fld(doc, 'campaignId')).length,
   };
   const knownCampaigns = new Set(campaigns.map((doc) => doc.name?.split('/').pop()));
-  const mismatchedActiveMembershipCampaigns = memberships.filter((doc) =>
-    bval(doc, 'active') && !knownCampaigns.has(fld(doc, 'campaignId'))).length;
+  const mismatchedActiveMembershipCampaigns = memberships.filter(
+    (doc) => bval(doc, 'active') && !knownCampaigns.has(fld(doc, 'campaignId')),
+  ).length;
 
   // IAM permissions test is POST but read-only; does NOT grant permissions,
   // create a ruleset, modify a release or publish anything.
   const intended = ['firebaserules.rulesets.create', 'firebaserules.releases.update'];
-  const iam = await request(token, 'POST',
+  const iam = await request(
+    token,
+    'POST',
     'https://cloudresourcemanager.googleapis.com/v1/projects/' + projectId + ':testIamPermissions',
-    { permissions: intended });
+    { permissions: intended },
+  );
   const returned = iam.ok ? iam.data.permissions || [] : [];
 
   const report = {
@@ -237,8 +291,12 @@ async function run() {
     mismatchedActiveMembershipCampaigns,
     campaignOwners,
     media: mediaReport,
-    authorizedGitHubDomain: domains === null ? 'unverified'
-      : domains.includes('eleuterio-coding.github.io') ? 'configured' : 'missing',
+    authorizedGitHubDomain:
+      domains === null
+        ? 'unverified'
+        : domains.includes('eleuterio-coding.github.io')
+          ? 'configured'
+          : 'missing',
     firebaseRulesPublishPermissions: iam.ok
       ? {
           rulesetsCreate: returned.includes(intended[0]) ? 'granted' : 'not-granted',
@@ -249,14 +307,19 @@ async function run() {
   };
   console.log('PREPUBLICATION_FIREBASE_READ_ONLY', JSON.stringify(report, null, 2));
 
-  const healthy = report.remoteRules.matchesHistoricalRules
-    && checks.every((x) => x.auth === 'enabled' && x.profile === 'coherent'
-      && (x.linksCoherent || x.login === 'rafael'))
-    && masterLinksDiagnosis.union === 2
-    && masterLinksDiagnosis.roleDm === 2
-    && report.totalActiveMemberships === 6
-    && campaignOwners.otherOwner === 0
-    && mismatchedActiveMembershipCampaigns === 0;
+  const healthy =
+    report.remoteRules.matchesHistoricalRules &&
+    checks.every(
+      (x) =>
+        x.auth === 'enabled' &&
+        x.profile === 'coherent' &&
+        (x.linksCoherent || x.login === 'rafael'),
+    ) &&
+    masterLinksDiagnosis.union === 2 &&
+    masterLinksDiagnosis.roleDm === 2 &&
+    report.totalActiveMemberships === 6 &&
+    campaignOwners.otherOwner === 0 &&
+    mismatchedActiveMembershipCampaigns === 0;
   if (!healthy) {
     console.log('GATE: BLOCKED — divergences require review; no write was attempted.');
     process.exitCode = 2;

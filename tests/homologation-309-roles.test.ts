@@ -83,7 +83,7 @@ beforeEach(() => {
       }
       const matched =
         condition.field === 'email'
-          ? links[condition.value] ?? []
+          ? (links[condition.value] ?? [])
           : Object.values(links)
               .flat()
               .filter((link) => link.uid === condition.value);

@@ -65,11 +65,7 @@ async function ownMemberships(user: AuthIdentity, db: Firestore, role: 'dm' | 'p
     const masterLegacy = role === 'dm' && member.uid === user.uid;
     return member.active === true && member.role === role && (canonical || masterLegacy);
   });
-  return [
-    ...new Map(
-      allowed.map((member) => [String(member.campaignId), member]),
-    ).values(),
-  ];
+  return [...new Map(allowed.map((member) => [String(member.campaignId), member])).values()];
 }
 
 async function verifiedRole(user: AuthIdentity, db: Firestore) {

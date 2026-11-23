@@ -74,7 +74,7 @@ beforeEach(() => {
         throw new Error('Consulta ampla proibida');
       const matching =
         field === 'email'
-          ? links[value] ?? []
+          ? (links[value] ?? [])
           : Object.values(links)
               .flat()
               .filter((item) => item.uid === value);
@@ -101,7 +101,9 @@ describe('Etapa 3.04 — papel confirmado por Auth e Firestore', () => {
 
   it('Mestre reconhece vinculo antigo por UID mesmo com email e username diferentes', async () => {
     links['rafael@teias.invalid'] = [links['rafael@teias.invalid'][0]];
-    links['legacy'] = [membership('legado@teias.invalid', 'dm', 'cadastro-antigo', master.uid, 'mesa-2')];
+    links['legacy'] = [
+      membership('legado@teias.invalid', 'dm', 'cadastro-antigo', master.uid, 'mesa-2'),
+    ];
     await expect(verifyHubRole(master, db)).resolves.toMatchObject({
       status: 'verified',
       role: 'dm',

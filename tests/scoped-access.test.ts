@@ -247,14 +247,16 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
       displayName: 'Rafael',
       campaignCount: 1,
     });
-    memberships = [{
-      email: 'cadastro-antigo@teias.invalid',
-      username: 'master-historico',
-      uid: master.uid,
-      active: true,
-      role: 'dm',
-      campaignId: 'mesa-ficticia',
-    }];
+    memberships = [
+      {
+        email: 'cadastro-antigo@teias.invalid',
+        username: 'master-historico',
+        uid: master.uid,
+        active: true,
+        role: 'dm',
+        campaignId: 'mesa-ficticia',
+      },
+    ];
     const result = await readHubScopedDocument(master, db, {
       kind: 'private',
       campaignId: 'mesa-ficticia',
@@ -266,9 +268,13 @@ describe('3.06 — consultas restritas à sessão e vínculo ativo', () => {
       condition: { field: 'uid', operator: '==', value: master.uid },
     });
     documents['campaigns/mesa-ficticia'].ownerId = 'outro-uid';
-    expect(await readHubScopedDocument(master, db, {
-      kind: 'private', campaignId: 'mesa-ficticia', documentId: 'secret',
-    })).toEqual({ status: 'denied' });
+    expect(
+      await readHubScopedDocument(master, db, {
+        kind: 'private',
+        campaignId: 'mesa-ficticia',
+        documentId: 'secret',
+      }),
+    ).toEqual({ status: 'denied' });
   });
 
   it('Mestre consulta ficha vinculada de outro jogador; Jogador não pode solicitar ID alheio', async () => {

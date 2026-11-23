@@ -27,15 +27,6 @@ jobs:
         run: npm run verify:boundaries
       - name: Executar testes do contrato historico Firebase
         run: npx vitest run tests/firebase-config.test.ts tests/firebase-adapters.test.ts tests/firebase-legacy-contract.test.ts
-      - name: Formatacao transitoria das alteracoes antes do check
-        run: |
-          npx prettier --write scripts/preflight-firebase-live-readonly.mjs scripts/preflight-github-pages-live-readonly.mjs src/services/firebase/role-access.ts src/services/firebase/scoped-access.ts src/services/firebase/users-admin-readonly.ts tests/role-access.test.ts tests/scoped-access.test.ts tests/users-admin-readonly.test.ts tests/homologation-309-roles.test.ts
-          for file in scripts/preflight-firebase-live-readonly.mjs scripts/preflight-github-pages-live-readonly.mjs src/services/firebase/role-access.ts src/services/firebase/scoped-access.ts src/services/firebase/users-admin-readonly.ts tests/role-access.test.ts tests/scoped-access.test.ts tests/users-admin-readonly.test.ts tests/homologation-309-roles.test.ts; do
-            echo "FORMAT_BEGIN:${file}"
-            base64 -w0 "$file"
-            echo
-            echo "FORMAT_END:${file}"
-          done
       - name: Conferir codigo e compilacao completa
         run: npm run check
 
@@ -67,27 +58,3 @@ jobs:
         run: npm install --no-save --no-package-lock --ignore-scripts --legacy-peer-deps --no-audit --no-fund @firebase/rules-unit-testing@6.0.0 firebase-tools@15.37.0
       - name: Comparar rules implantadas historicamente e proposta com identidades ficticias
         run: npx firebase emulators:exec --only firestore --project demo-teias-305 --config tests/firestore-emulator/firebase.json "node tests/firestore-emulator/run.mjs"
-
-
-  preflight-live-readonly:
-    name: Conferir Rules e GitHub Pages existentes (SOMENTE LEITURA)
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    permissions:
-      contents: read
-      pages: read
-    env:
-      FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_TEIAS_DE_ANANSI }}
-      GITHUB_TOKEN: ${{ github.token }}
-    steps:
-      - name: Obter exclusivamente a branch isolada
-        uses: actions/checkout@v4
-      - name: Preparar Node.js 22 sem instalar dependencias
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Auditar Firebase por GET e testar permissoes IAM sem criar ou publicar
-        run: node scripts/preflight-firebase-live-readonly.mjs
-      - name: Auditar GitHub Pages e hospedagem existente por GET
-        if: always()
-        run: node scripts/preflight-github-pages-live-readonly.mjs
