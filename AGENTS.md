@@ -28,7 +28,7 @@ A entrada e saída da sessão são funções auxiliares, não áreas adicionais.
 - Todas as páginas do Hub usam o mesmo componente de layout global: cabeçalho, menu, conteúdo e rodapé; manter a mesma folha de estilos compartilhada.
 - Não criar layouts, temas ou estilos exclusivos por módulo ou sistema de RPG.
 - Nesta etapa, apenas links, rotas protegidas e áreas vazias para receber informações posteriormente. Não criar exemplos, dados fictícios ou elementos visuais novos.
-- Manter o registro de áreas em `assets/hub-areas.js` como fonte única para as rotas protegidas e o menu conforme o papel. Preservar a rota existente `/usuarios` para Administração.
+- Manter o registro de áreas em `assets/hub-areas.js` como fonte única para as rotas protegidas e o menu conforme o papel. Preservar a rota existente `/usuarios` para Administração; a consulta de usuários existente fica em `/usuarios/vinculos`. As subáreas derivam do mesmo registro central e usam a mesma proteção por papel.
 
 ## Ordem determinística
 1. Autenticação e permissões.
@@ -44,4 +44,4 @@ A entrada e saída da sessão são funções auxiliares, não áreas adicionais.
 Validar cada etapa antes de avançar. Priorizar soluções simples, manter a sessão existente e não publicar conteúdo protegido no repositório público. Não declarar a segurança validada sem testes reais das permissões.
 
 ## Estado da estrutura
-Início, login Firebase, sessão e consulta de usuários pelo Mestre foram preservados. Compêndio, Personagens, Campanhas e Ferramentas têm rotas vazias, usando o layout global e a verificação de papéis existente. As regras do Firebase em produção e os testes autenticados ainda precisam ser validados.
+As seis áreas principais e 27 subáreas estão estruturadas. As páginas de grupo exibem apenas listas de links; as páginas finais permanecem vazias, exceto a consulta de usuários preexistente. O Início oferece acesso rápido após confirmação do papel. Login, sessão e layout global foram preservados. A sintaxe JavaScript e a lógica do registro de rotas e papéis foram verificadas; a publicação no GitHub Pages, as regras do Firebase em produção e os testes autenticados ainda precisam ser validados. A visibilidade futura dos registros individuais dependerá das regras do Firestore.
