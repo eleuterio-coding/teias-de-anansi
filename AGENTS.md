@@ -24,6 +24,12 @@
 
 A entrada e saída da sessão são funções auxiliares, não áreas adicionais. Usar a mesma estrutura para todos os sistemas de RPG.
 
+## Layout e navegação (obrigatório)
+- Todas as páginas do Hub usam o mesmo componente de layout global: cabeçalho, menu, conteúdo e rodapé; manter a mesma folha de estilos compartilhada.
+- Não criar layouts, temas ou estilos exclusivos por módulo ou sistema de RPG.
+- Nesta etapa, apenas links, rotas protegidas e áreas vazias para receber informações posteriormente. Não criar exemplos, dados fictícios ou elementos visuais novos.
+- Manter o registro de áreas em `assets/hub-areas.js` como fonte única para as rotas protegidas e o menu conforme o papel. Preservar a rota existente `/usuarios` para Administração.
+
 ## Ordem determinística
 1. Autenticação e permissões.
 2. Estrutura e navegação.
@@ -37,5 +43,5 @@ A entrada e saída da sessão são funções auxiliares, não áreas adicionais.
 
 Validar cada etapa antes de avançar. Priorizar soluções simples, manter a sessão existente e não publicar conteúdo protegido no repositório público. Não declarar a segurança validada sem testes reais das permissões.
 
-## Estado inicial
-A publicação existente contém início, login Firebase, sessão e consulta de usuários pelo Mestre. Estas diretrizes especificam a evolução desejada; não representam a implementação ou validação das novas áreas.
+## Estado da estrutura
+Início, login Firebase, sessão e consulta de usuários pelo Mestre foram preservados. Compêndio, Personagens, Campanhas e Ferramentas têm rotas vazias, usando o layout global e a verificação de papéis existente. As regras do Firebase em produção e os testes autenticados ainda precisam ser validados.
