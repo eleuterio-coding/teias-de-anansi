@@ -45,3 +45,6 @@ Validar cada etapa antes de avançar. Priorizar soluções simples, manter a ses
 
 ## Estado da estrutura
 As seis áreas principais e 27 subáreas estão estruturadas. As páginas de grupo exibem apenas listas de links; as páginas finais permanecem vazias, exceto a consulta de usuários preexistente. O Início oferece acesso rápido após confirmação do papel. Login, sessão e layout global foram preservados. A sintaxe JavaScript e a lógica do registro de rotas e papéis foram verificadas; a publicação no GitHub Pages, as regras do Firebase em produção e os testes autenticados ainda precisam ser validados. A visibilidade futura dos registros individuais dependerá das regras do Firestore.
+
+## Preparação do Compêndio
+Contrato estrutural inicial `hub-compendio/1.0` em `assets/compendio-contract.js`, documentado em `docs/COMPENDIO.md`. Administração oferece validação local de JSON usando o layout compartilhado. Nenhuma gravação ou importação autorizada, inclusive para arquivos estruturalmente válidos. A compatibilidade com o RPG Extractor e a política de persistência do Firestore continuam pendentes.
