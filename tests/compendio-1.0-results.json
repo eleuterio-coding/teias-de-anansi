@@ -1,0 +1,90 @@
+{
+  "contract": "hub-compendio/1.0",
+  "sourceBlob": "8d0f7948f8ae4e9e209bfcc443c2f7bf9914000e",
+  "appBlob": "1d1269c11e4988f12ece54678a3f44e32aadf2e7",
+  "tests": [
+    {
+      "name": "isolamento por edição",
+      "pass": true
+    },
+    {
+      "name": "bloqueio de importação em estrutura válida",
+      "pass": true
+    },
+    {
+      "name": "versão incompatível",
+      "pass": true
+    },
+    {
+      "name": "duplicidade de registro",
+      "pass": true
+    },
+    {
+      "name": "duplicidade de sistema",
+      "pass": true
+    },
+    {
+      "name": "publicação inexistente",
+      "pass": true
+    },
+    {
+      "name": "mistura de sistema e publicação",
+      "pass": true
+    },
+    {
+      "name": "categoria desconhecida",
+      "pass": true
+    },
+    {
+      "name": "visibilidade desconhecida",
+      "pass": true
+    },
+    {
+      "name": "localizador ausente",
+      "pass": true
+    },
+    {
+      "name": "direitos ausentes",
+      "pass": true
+    },
+    {
+      "name": "envelope externo não aceito",
+      "pass": true
+    },
+    {
+      "name": "dados não estruturados",
+      "pass": true
+    },
+    {
+      "name": "raiz nula",
+      "pass": true
+    },
+    {
+      "name": "arquivo JSON válido",
+      "pass": true
+    },
+    {
+      "name": "JSON ilegível",
+      "pass": true
+    },
+    {
+      "name": "limite de tamanho",
+      "pass": true
+    },
+    {
+      "name": "sintaxe do aplicativo",
+      "pass": true
+    },
+    {
+      "name": "validação restrita ao mestre",
+      "pass": true
+    },
+    {
+      "name": "layout global existente",
+      "pass": true
+    }
+  ],
+  "passed": 20,
+  "total": 20,
+  "scope": "Execução JavaScript isolada do contrato com fixtures sintéticas em memória, análise sintática e conferências estáticas do aplicativo. Sem navegador ou Firebase."
+}
